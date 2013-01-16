@@ -46,10 +46,10 @@ public class Team implements Structure {
 	}
 	
 	public String getRookieYear() {
-			if(rookieYear != -1 || rookieYear != 0)
+			if(rookieYear != -1 && rookieYear != 0)
 				return Integer.toString(rookieYear);
 			
-			return null;
+			return "";
 	}
 	
 	public String getWebsite() {

@@ -21,12 +21,18 @@
             android:text="Save" />
 
         <Button
+            android:id="@+id/remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:text="Remove Team" />
+
+        <Button
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
             android:text="Cancel" />
-
     </LinearLayout>
 
     <TextView
@@ -39,17 +45,20 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="24sp" />
 
-    <FrameLayout
-        android:id="@+id/FrameLayout1"
+    <RelativeLayout
+        android:id="@+id/RelativeLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout1"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1" >
 
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" >
 
             <RelativeLayout
                 android:id="@+id/RelativeLayout01"
@@ -216,6 +225,6 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </RelativeLayout>
         </ScrollView>
-    </FrameLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

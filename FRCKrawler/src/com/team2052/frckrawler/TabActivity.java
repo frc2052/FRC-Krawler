@@ -4,25 +4,35 @@ package com.team2052.frckrawler;
  * Class: TabActivity
  * 
  * Summary: This class takes care of the tabs and their selection on the side of a
- * superuser's main activities. To make a new tab, the programmer must add a button,
+ * superuser's activities. To make a new tab, the programmer must add a button,
  * a selection integer, a listener for the button, and the action of what to do when
- * it is pressed.
+ * it is pressed. Most activities that the superuser sees should extend this class.
  *****/
 
-import com.example.frckrawler.R;
+import java.util.WeakHashMap;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.example.frckrawler.R;
+
 public class TabActivity extends Activity {
 	
-	private static int selectedActivity = 0;
-	
 	protected TabListener listener;
+	
+	private static int selectedActivity = 0;
+	private static final WeakHashMap<Integer, TabActivity> instances = 
+			new WeakHashMap<Integer, TabActivity>();
+	
+	public void onCreate(Bundle savedInstanceState) {
+		
+		super.onCreate(savedInstanceState);
+		instances.put(getTaskId(), this);
+	}
 	
 	/*****
 	 * Method: setContentView
@@ -41,13 +51,23 @@ public class TabActivity extends Activity {
 			((Button)findViewById(R.id.teamsSelectionButton)).setOnClickListener(listener);
 			((Button)findViewById(R.id.usersSelectionButton)).setOnClickListener(listener);
 			((Button)findViewById(R.id.gamesSelectionButton)).setOnClickListener(listener);
-			((Button)findViewById(R.id.eventsSelectionButton)).setOnClickListener(listener);
 			
 		} catch(NullPointerException e) {
 			
 			System.out.println("Error: The tab listeners were not created. " +
 					"The given layout did not have the proper IDs.");
 		}
+	}
+	
+	private void destroyAllInstances() {
+		
+		TabActivity[] arr = new TabActivity[0];
+		instances.values().toArray(arr);
+		
+		for(TabActivity a : arr)
+			a.finish();
+		
+		instances.clear();
 	}
 	
 	
@@ -65,11 +85,10 @@ public class TabActivity extends Activity {
 		public static final int TEAMS = 0;
 		public static final int USERS = 1;
 		public static final int GAMES = 2;
-		public static final int EVENTS = 3;
 	
-		private Activity user;
+		private TabActivity user;
 	
-		public TabListener(Activity _user) {
+		public TabListener(TabActivity _user) {
 		
 			user = _user;
 		}
@@ -86,7 +105,7 @@ public class TabActivity extends Activity {
 						i = new Intent(user, TeamsActivity.class);
 						user.startActivity(i);
 						selectedActivity = TEAMS;
-						user.finish();
+						user.destroyAllInstances();
 					}
 				
 					break;
@@ -98,7 +117,7 @@ public class TabActivity extends Activity {
 						i = new Intent(user, UsersActivity.class);
 						user.startActivity(i);
 						selectedActivity = USERS;
-						user.finish();
+						user.destroyAllInstances();
 					}
 				
 					break;
@@ -110,19 +129,7 @@ public class TabActivity extends Activity {
 						i = new Intent(user, GamesActivity.class);
 						user.startActivity(i);
 						selectedActivity = GAMES;
-						user.finish();
-					}
-				
-					break;
-				
-				case R.id.eventsSelectionButton :
-				
-					if(selectedActivity != EVENTS) {
-					
-						i = new Intent(user, EventsActivity.class);
-						user.startActivity(i);
-						selectedActivity = EVENTS;
-						user.finish();
+						user.destroyAllInstances();
 					}
 				
 					break;

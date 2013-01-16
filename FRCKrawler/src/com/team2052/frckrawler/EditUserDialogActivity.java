@@ -1,6 +1,8 @@
 package com.team2052.frckrawler;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,7 +13,7 @@ import com.team2052.frckrawler.database.DatabaseContract;
 import com.team2052.frckrawler.database.DatabaseManager;
 import com.team2052.frckrawler.database.structures.User;
 
-public class EditUserDialogActivity extends Activity implements OnClickListener{
+public class EditUserDialogActivity extends Activity implements OnClickListener, DialogInterface.OnClickListener {
 	
 	public static final String USER_ID_EXTRA = "com.team2052.frckrawler.userID";
 	
@@ -23,6 +25,7 @@ public class EditUserDialogActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.dialogactivity_edit_user);
 		
 		((Button)findViewById(R.id.saveUser)).setOnClickListener(this);
+		((Button)findViewById(R.id.remove)).setOnClickListener(this);
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 		
 		dbManager = DatabaseManager.getInstance(this);
@@ -40,6 +43,14 @@ public class EditUserDialogActivity extends Activity implements OnClickListener{
 		((TextView)findViewById(R.id.nameVal)).setText(u.getName());
 		((CheckBox)findViewById(R.id.superuserVal)).setChecked(u.isSuperuser());
 	} 
+	
+	
+	/*****
+	 * Method: onClick
+	 * 
+	 * Summary: This method is the callback method for the Views that
+	 * belong to this Activity.
+	 *****/
 	
 	public void onClick(View v) {
 		
@@ -77,6 +88,47 @@ public class EditUserDialogActivity extends Activity implements OnClickListener{
 				finish();
 			
 				break;
+				
+			case R.id.remove: 
+				
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				
+				builder.setMessage("Are you sure you want to remove this user from the database? " +
+						"They will be cast into the cold void of cyberspace for eternity.");
+				builder.setTitle("");
+				builder.setPositiveButton("Yes", this);
+				builder.setNegativeButton("No", this);
+				
+				builder.show();
+				
+				break;
+		}
+	}
+	
+	
+	/*****
+	 * Method: onClick
+	 * 
+	 * @param dialog
+	 * @param which
+	 * 
+	 * Summary: This method is the callback for the AlertDialog
+	 * that pops up when the user wants to delete a user. It 
+	 * does nothing, or removes the user, depending on what
+	 * the user wants.
+	 *****/
+	
+	public void onClick(DialogInterface dialog, int which) {
+		
+		if(which == DialogInterface.BUTTON_POSITIVE) {
+			
+			dbManager.removeUser(Integer.parseInt(getIntent().getStringExtra(USER_ID_EXTRA)));
+			dialog.dismiss();
+			finish();
+			
+		} else {
+			
+			dialog.dismiss();
 		}
 		
 	}

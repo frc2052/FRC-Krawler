@@ -651,6 +651,60 @@ public class DatabaseManager {
 		return e;
 	}
 	
+	
+	/*****
+	 * Method: updateEvents
+	 * 
+	 * @param queryCols
+	 * @param queryVals
+	 * @param updateCols
+	 * @param updateVals
+	 * 
+	 * @return True if the table was updated successfully, false if the query or
+	 * update arrays are different lengths or if one of the values in the updateCols
+	 * array is the event id.
+	 * 
+	 * Summary: This method updates the Events table similarly to how teams,
+	 * and users are updated.
+	 *****/
+	
+	public synchronized boolean updateEvents(String queryCols[], String queryVals[], 
+			String updateCols[], String updateVals[]) {
+		
+		if(updateCols.length != updateVals.length) //They must be the same so that every value
+			return false; //has something to map to and that there are no blank ones.
+		
+		if(queryCols.length != queryVals.length)
+			return false;
+		
+		for(String s : updateCols) { //Does not allow the caller to update the team number.
+			if(s.equals(DatabaseContract.COL_EVENT_ID))
+				return false;
+		}
+		
+		ContentValues vals = new ContentValues();
+		
+		for(int i = 0; i < updateCols.length; i++)
+			vals.put(updateCols[i], updateVals[i]);
+		
+		String queryString = new String();
+		
+		if(queryCols.length > 0)
+			queryString += queryCols[0] + " LIKE ?";
+		
+		for(int i = 1; i < queryCols.length; i++) {
+			queryString += " AND " + queryCols[i] + " LIKE ?";
+		}
+		
+		helper.getWritableDatabase().update(DatabaseContract.TABLE_COMPETITIONS, vals, 
+				queryString, queryVals);
+		
+		helper.close();
+		
+		return true;
+	}
+	
+	
 	/*****
 	 * Method: addComment
 	 * 

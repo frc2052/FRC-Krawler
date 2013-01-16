@@ -31,6 +31,10 @@
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name="com.team2052.frckrawler.AddUserDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name="com.team2052.frckrawler.AddGameDialogActivity"
+            	  android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name="com.team2052.frckrawler.EditGameDialogActivity"
+            	  android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>

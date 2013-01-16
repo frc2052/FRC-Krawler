@@ -18,6 +18,8 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 		
 		((Button)findViewById(R.id.addTeamAccept)).setOnClickListener(this);
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
+		
+		((Spinner)findViewById(R.id.stateVal)).setSelection(24);
 	}
 	
 	public void onClick(View v) {
@@ -38,7 +40,7 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 			
 			try {
 				
-				DatabaseManager.getInstance(this).addTeam(
+				if(DatabaseManager.getInstance(this).addTeam(
 						Integer.parseInt(((TextView)findViewById(R.id.numberVal)).getText().toString()), 
 						((TextView)findViewById(R.id.nameVal)).getText().toString(), 
 						((TextView)findViewById(R.id.schoolVal)).getText().toString(), 
@@ -46,9 +48,13 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 						rookieYear, 
 						((TextView)findViewById(R.id.websiteVal)).getText().toString(), 
 						((Spinner)findViewById(R.id.stateVal)).getSelectedItem().toString(), 
-						((TextView)findViewById(R.id.colorsVal)).getText().toString());
+						((TextView)findViewById(R.id.colorsVal)).getText().toString()))
 				
-				finish();
+					finish();
+				
+				else
+					Toast.makeText(this, "Could not add team to database. " +
+							"Number is already taken.", Toast.LENGTH_LONG);
 				
 			} catch (NumberFormatException e) {
 				Toast.makeText(this, "Please enter a team number.", Toast.LENGTH_SHORT).show();

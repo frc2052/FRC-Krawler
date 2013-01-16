@@ -7,6 +7,8 @@ package com.team2052.frckrawler;
  *****/
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +20,7 @@ import com.team2052.frckrawler.database.DatabaseManager;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.gui.MyTextView;
 
-public class EditTeamDialogActivity extends Activity implements OnClickListener {
+public class EditTeamDialogActivity extends Activity implements OnClickListener, DialogInterface.OnClickListener {
 	
 	public static final String TEAM_NUMBER_EXTRA_KEY = "com.team2052.frckrawler.editTeamNumber";
 	
@@ -30,6 +32,7 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener 
 		setContentView(R.layout.dialogactivity_edit_team);
 		
 		((Button)findViewById(R.id.saveButton)).setOnClickListener(this);
+		((Button)findViewById(R.id.remove)).setOnClickListener(this);
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 		
 		dbManager = DatabaseManager.getInstance(this);
@@ -76,7 +79,7 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener 
 			
 			String rookieYear = ((TextView)findViewById(R.id.rookieYearVal)).getText().toString();
 			
-			if(rookieYear.equals("0"))
+			if(rookieYear.equals("0") || rookieYear.equals("-1"))
 				rookieYear = "";
 			
 			String[] queryVals = new String[] {((TextView)findViewById(R.id.numberVal)).
@@ -109,6 +112,47 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener 
 		} else if(v.getId() == R.id.cancel) {
 			
 			finish();
+			
+		} else if(v.getId() == R.id.remove) {
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			
+			builder.setMessage("Are you sure you want to remove this team from the database? " +
+					"This will remove all robots, contacts, and match data they have from the database and " +
+					"they will be cast into the cold void of cyberspace for eternity.");
+			builder.setTitle("");
+			builder.setPositiveButton("Yes", this);
+			builder.setNegativeButton("No", this);
+			
+			builder.show();
 		}
+	}
+	
+	
+	/*****
+	 * Method: onClick
+	 * 
+	 * @param dialog
+	 * @param which
+	 * 
+	 * Summary: This method is the callback for the AlertDialog
+	 * that pops up when the user wants to delete a team. It 
+	 * does nothing, or removes the team, depending on what
+	 * the user wants.
+	 *****/
+	
+	public void onClick(DialogInterface dialog, int which) {
+		
+		if(which == DialogInterface.BUTTON_POSITIVE) {
+			
+			dbManager.removeTeam(getIntent().getIntExtra(TEAM_NUMBER_EXTRA_KEY, -1));
+			dialog.dismiss();
+			finish();
+			
+		} else {
+			
+			dialog.dismiss();
+		}
+		
 	}
 }

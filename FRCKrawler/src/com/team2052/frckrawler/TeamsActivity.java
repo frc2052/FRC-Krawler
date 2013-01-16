@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -19,7 +20,6 @@ import com.team2052.frckrawler.gui.MyTextView;
 public class TeamsActivity extends TabActivity implements OnClickListener {
 	
 	private final Object ADD_TEAMS_TAG = new Object();
-	private final Object TEAM_ROW_TAG = new Object();
 	
 	private Team[] teams;
 	private DatabaseManager dbManager;
@@ -63,10 +63,13 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 					new MyTextView(this, teams[i].getRookieYear(), 18),
 					new MyTextView(this, teams[i].getWebsite(), 18),
 					new MyTextView(this, teams[i].getStatePostalCode(), 18),
-					new MyTextView(this, teams[i].getColors(), 18)
+					new MyTextView(this, teams[i].getColors(), 18),
+					new MyButton(this, "Robots", this, teams[i].getNumber()),
+					new MyButton(this, "Contacts", this, teams[i].getNumber()),
+					new MyButton(this, "Comments", this, teams[i].getNumber())
 			}, color);
 			
-			row.setTag(TEAM_ROW_TAG);
+			row.setTag(Integer.valueOf(teams[i].getNumber()));
 			
 			table.addView(row);
 		}

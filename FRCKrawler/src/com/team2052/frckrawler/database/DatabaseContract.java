@@ -94,7 +94,7 @@ public class DatabaseContract {
 	
 	public static final String TABLE_COMMENTS = "comments";
 	
-	//Team number, use COL_NUMBER;
+	//Team number, use COL_TEAM_NUMBER;
 	//User ID, use COL_USER_ID;
 	public static final String COL_EVENT_ID = "eventid";
 	public static final String COL_COMMENT = "comment";

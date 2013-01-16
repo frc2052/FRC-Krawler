@@ -34,12 +34,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Games" />
-
-            <Button
-                android:id="@+id/eventsSelectionButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Events" />
         </LinearLayout>
     </ScrollView>
 
@@ -52,7 +46,9 @@
         <RelativeLayout
             android:id="@+id/teamsContent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" >
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -74,7 +70,8 @@
                 android:layout_above="@+id/linearLayout1"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true" >
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" >
 
                 <HorizontalScrollView
                     android:id="@+id/horizontalScroller"
