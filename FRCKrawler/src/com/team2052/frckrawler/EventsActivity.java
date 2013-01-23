@@ -5,17 +5,16 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.*;
 
 import com.example.frckrawler.R;
 import com.team2052.frckrawler.database.DatabaseManager;
 import com.team2052.frckrawler.database.structures.Event;
-import com.team2052.frckrawler.gui.MyButton;
-import com.team2052.frckrawler.gui.MyTableRow;
-import com.team2052.frckrawler.gui.MyTextView;
+import com.team2052.frckrawler.gui.*;
 
-public class EventsActivity extends TabActivity implements OnClickListener {
+public class EventsActivity extends StackableTabActivity implements OnClickListener {
+	
+	private static final int EDIT_EVENT_ID = 1;
 	
 	private DatabaseManager dbManager;
 	
@@ -31,7 +30,7 @@ public class EventsActivity extends TabActivity implements OnClickListener {
 		
 		super.onStart();
 		
-		Event[] events = dbManager.getAllEvents();
+		Event[] events = dbManager.getEventsByColumns(databaseKeys, parents);
 		TableLayout table = (TableLayout)findViewById(R.id.eventsDataTable);
 		TableRow descriptorsRow = (TableRow)findViewById(R.id.descriptorsRow);
 		
@@ -47,9 +46,12 @@ public class EventsActivity extends TabActivity implements OnClickListener {
 			else
 				color = Color.TRANSPARENT;
 			
+			MyButton editEvent = new MyButton(this, "Edit Event", this, 
+					Integer.valueOf(events[i].getEventID()));
+			editEvent.setId(EDIT_EVENT_ID);
+			
 			table.addView(new MyTableRow(this, new View[] {
-					new MyButton(this, "Edit Event", this, 
-							Integer.valueOf(events[i].getEventID())),
+					editEvent,
 					new MyTextView(this, events[i].getEventName()),
 					new MyTextView(this, events[i].getLocation()),
 					new MyTextView(this, events[i].getGameName()),
@@ -61,17 +63,22 @@ public class EventsActivity extends TabActivity implements OnClickListener {
 	
 	public void onClick(View v) {
 		
-		if(v.getId() == R.id.addEventButton) {
+		Intent i;
+		
+		switch(v.getId()) {
+			case R.id.addEventButton:
 			
-			Intent i = new Intent(this, AddEventDialogActivity.class);
-			startActivity(i);
+				i = new Intent(this, AddEventDialogActivity.class);
+				startActivity(i);
+				
+				break;
+				
+			case EDIT_EVENT_ID:
 			
-		} else {
-			
-			Intent i = new Intent(this, EditEventDialogActivity.class);
-			i.putExtra(EditEventDialogActivity.EVENT_ID_EXTRA, 
-					((Integer)v.getTag()).intValue());
-			startActivity(i);
+				i = new Intent(this, EditEventDialogActivity.class);
+				i.putExtra(EditEventDialogActivity.EVENT_ID_EXTRA, 
+						((Integer)v.getTag()).intValue());
+				startActivity(i);
 		}
 	}
 }

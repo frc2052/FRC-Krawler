@@ -1,5 +1,7 @@
 package com.team2052.frckrawler;
 
+import com.example.frckrawler.R;
+
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -10,6 +12,7 @@ public class EditEventDialogActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.dialogactivity_edit_event);
 	}
 
 }

@@ -619,7 +619,7 @@ public class DatabaseManager {
 	 *****/
 	
 	
-	public synchronized Event[] getEventsByCol(String[] cols, String[] vals) {
+	public synchronized Event[] getEventsByColumns(String[] cols, String[] vals) {
 		
 		String queryString = "SELECT * FROM " + DatabaseContract.TABLE_COMPETITIONS + " WHERE";
 		
@@ -854,6 +854,85 @@ public class DatabaseManager {
 		helper.getWritableDatabase().delete(DatabaseContract.TABLE_CONTACTS, 
 				DatabaseContract.COL_CONTACT_ID + " LIKE ?", 
 				new String[] {Integer.toString(id)});
+	}
+	
+	
+	/*****
+	 * Method: getAllContacts
+	 * 
+	 * Summary: Gets all contacts from the database.
+	 *****/
+	
+	public synchronized Contact[] getAllContacts() {
+		
+		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + 
+						DatabaseContract.TABLE_CONTACTS, null);
+		Contact[] contacts = new Contact[c.getCount()];
+		
+		for(int i = 0; i < contacts.length; i++) {
+			
+			c.moveToNext();
+			
+			contacts[i] = new Contact(
+					c.getInt(c.getColumnIndex(DatabaseContract.COL_TEAM_NUMBER)),
+					c.getInt(c.getColumnIndex(DatabaseContract.COL_CONTACT_ID)),
+					c.getString(c.getColumnIndex(DatabaseContract.COL_CONTACT_NAME)),
+					c.getString(c.getColumnIndex(DatabaseContract.COL_EMAIL)),
+					c.getString(c.getColumnIndex(DatabaseContract.COL_ADDRESS)),
+					c.getString(c.getColumnIndex(DatabaseContract.COL_PHONE_NUMBER))
+					);
+		}
+		
+		helper.close();
+		
+		return contacts;
+	}
+	
+	
+	/*****
+	 * Method: getContactsByColumns
+	 * 
+	 * @param cols
+	 * @param vals
+	 * @return an array of contacts or null if the passed arrays
+	 * were not the same length
+	 * 
+	 * Summary: Gets an array of contacts based on the cols and vals arrays
+	 *****/
+	
+	public synchronized Contact[] getContactsByColumns(String[] cols, String[] vals) {
+		
+		if(cols.length != vals.length)
+			return null;
+		
+		if(cols.length < 1)
+			return new Contact[0];
+		
+		String queryString = "SELECT * FROM " + DatabaseContract.TABLE_CONTACTS + " WHERE " + cols[0] + " LIKE ?";
+		
+		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
+			queryString += " AND " + cols[i] + " LIKE ?";
+			
+		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
+		Contact[] contacts = new Contact[c.getCount()];
+		
+		for(int i = 0; i < contacts.length; i++) {
+			
+			c.moveToNext();
+			
+			contacts[i] = new Contact(
+					c.getInt(c.getColumnIndex(DatabaseContract.COL_TEAM_NUMBER)),
+					c.getInt(c.getColumnIndex(DatabaseContract.COL_CONTACT_ID)),
+					c.getString(c.getColumnIndex(DatabaseContract.COL_CONTACT_NAME)),
+					c.getString(c.getColumnIndex(DatabaseContract.COL_EMAIL)),
+					c.getString(c.getColumnIndex(DatabaseContract.COL_ADDRESS)),
+					c.getString(c.getColumnIndex(DatabaseContract.COL_PHONE_NUMBER))
+					);
+		}
+		
+		helper.close();
+		
+		return contacts;
 	}
 	
 	
