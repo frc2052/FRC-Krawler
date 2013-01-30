@@ -141,22 +141,21 @@ public class DatabaseContract {
 	//Team number, use COL_NUMBER
 	//Robot ID, use COL_ROBOT_ID
 	public static final String COL_GAME_NAME = "gamename";
-	public static final String COL_NUMBER_WHEELS = "numberwheels";
-	public static final String COL_WHEEL_TYPE = "wheeltype";
-	public static final String COL_DRIVETRAIN = "drivetrain";
+	public static final String COL_COMMENTS = "comments";
 	public static final String[] COL_KEYS = 
-		{"d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "d10", "d11", "d12", "d13", "d14", "d15"};
+		{"d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "d10", 
+		"d11", "d12", "d13", "d14", "d15", "d16", "d17", "d18", "d19"};
 	
 	public static final String CREATE_TABLE_ROBOTS = 
 			"CREATE TABLE " + TABLE_ROBOTS + " (" + COL_TEAM_NUMBER + INT + ", " + COL_ROBOT_ID + 
-					INT + ", " + COL_GAME_NAME + STRING + ", " + COL_NUMBER_WHEELS + INT + ", " + 
-					COL_WHEEL_TYPE + STRING + ", " + COL_DRIVETRAIN + STRING + ", " + COL_KEYS[0] + ANY + 
+					INT + ", " + COL_GAME_NAME + STRING + ", " + COL_COMMENTS + STRING + ", " + COL_KEYS[0] + ANY + 
 					", " + COL_KEYS[1] + ANY + ", " + COL_KEYS[2] + ANY + ", " + COL_KEYS[3] + ANY + 
 					", " + COL_KEYS[4] + ANY + ", " + COL_KEYS[5] + ANY + ", " + COL_KEYS[6] + ANY + 
 					", " + COL_KEYS[7] + ANY + ", " + COL_KEYS[8] + ANY + ", " + COL_KEYS[9] + ANY + 
 					", " + COL_KEYS[10] + ANY + ", " + COL_KEYS[11] + ANY + ", " + COL_KEYS[12] + ANY + 
-					", " + COL_KEYS[13] + ANY + ", " + COL_KEYS[14] + ANY + ", " + 
-					COL_KEYS[15] + ANY + ")";
+					", " + COL_KEYS[13] + ANY + ", " + COL_KEYS[14] + ANY + 
+					", " + COL_KEYS[15] + ANY + ", " + COL_KEYS[16] + ANY + ", " + COL_KEYS[17] + ANY +
+					", " + COL_KEYS[18] + ANY + ", " + COL_KEYS[19] + ANY + ")";
 	
 	
 	
@@ -193,25 +192,21 @@ public class DatabaseContract {
 	//User ID, use COL_USER_ID
 	public static final String COL_MATCH_NUMBER = "matchnumber";
 	public static final String COL_MATCH_TYPE = "matchtype";
-	public static final String COL_AUTO_SCORE = "autoscore";
-	public static final String COL_TELEOP_SCORE = "teleopscore";
-	public static final String COL_PENALTIES = "penalties";
-	public static final String COL_COMMENTS = "comments";
-	public static final String COL_DRIVER_RATING = "driverrating";
+	//Comments, use COL_COMMENTS
+	
 	//Keys, use COL_KEYS[]
 	
 	public static final String CREATE_TABLE_MATCH_PERF = 
 			"CREATE TABLE " + TABLE_MATCH_PERF + " (" + COL_ROBOT_ID + INT + ", " + 
 					COL_EVENT_ID + INT + ", " + COL_USER_ID + INT + ", " + 
 					COL_MATCH_NUMBER + INT + ", " + COL_MATCH_TYPE + STRING + ", " +
-					COL_AUTO_SCORE + INT + ", " + COL_TELEOP_SCORE + INT + ", " +
-					COL_PENALTIES + INT + ", " + COL_COMMENTS + STRING + ", " +
-					COL_DRIVER_RATING + INT + ", " + COL_KEYS[0] + ANY + ", " + COL_KEYS[1] + ANY + 
+					COL_COMMENTS + STRING + ", " + COL_KEYS[0] + ANY + ", " + COL_KEYS[1] + ANY + 
 					", " + COL_KEYS[2] + ANY + ", " + COL_KEYS[3] + ANY + ", " + COL_KEYS[4] + ANY + 
 					", " + COL_KEYS[5] + ANY + ", " + COL_KEYS[6] + ANY + ", " + COL_KEYS[7] + ANY + 
 					", " + COL_KEYS[8] + ANY + ", " + COL_KEYS[9] + ANY + ", " + COL_KEYS[10] + ANY + 
 					", " + COL_KEYS[11] + ANY + ", " + COL_KEYS[12] + ANY + ", " + COL_KEYS[13] + ANY + 
-					", " + COL_KEYS[14] + ANY + ", " + COL_KEYS[15] + ANY + ")";
+					", " + COL_KEYS[14] + ANY + ", " + COL_KEYS[15] + ANY + ", " + COL_KEYS[16] + ANY +
+					", " + COL_KEYS[17] + ANY + ", " + COL_KEYS[18] + ANY + ", " + COL_KEYS[19] + ANY + ")";
 	
 	
 	

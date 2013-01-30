@@ -31,4 +31,26 @@ public class StackableTabActivity extends TabActivity {
 		for(String s : parents)
 			l.addView(new SidewaysTextView(this, s));
 	}
+	
+	
+	/****
+	 * Method: getAddressoOfDatabaseKey
+	 * 
+	 * @param key
+	 * @return
+	 * 
+	 * Summary: returns the first address of the string passed as
+	 * a parameter or -1 if it wasn't in the database.
+	 *****/
+	
+	protected int getAddressOfDatabaseKey(String key) {
+		
+		for(int i = 0; i < databaseKeys.length; i++) {
+			
+			if(databaseKeys[i].equals(key))
+				return i;
+		}
+		
+		return -1;
+	}
 }

@@ -8,7 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DatabaseManager;
+import com.team2052.frckrawler.database.*;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.gui.*;
 
@@ -69,6 +69,8 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 			case R.id.addEventButton:
 			
 				i = new Intent(this, AddEventDialogActivity.class);
+				i.putExtra(AddEventDialogActivity.GAME_NAME_EXTRA,
+						parents[getAddressOfDatabaseKey(DatabaseContract.COL_GAME_NAME)]);
 				startActivity(i);
 				
 				break;

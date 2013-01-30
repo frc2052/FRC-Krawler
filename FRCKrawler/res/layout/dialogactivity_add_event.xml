@@ -35,7 +35,108 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.51"
             android:text="Cancel" />
-
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textView1" >
+
+        <Spinner
+            android:id="@+id/game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/eventName"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" />
+
+        <EditText
+            android:id="@+id/eventName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/date"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/game"
+            android:ems="10" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/date"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/date"
+            android:ems="10" />
+
+        <EditText
+            android:id="@+id/fmsID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/location"
+            android:layout_below="@+id/location"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/fmsID"
+            android:layout_alignBottom="@+id/fmsID"
+            android:layout_alignParentLeft="true"
+            android:text="FMS ID"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/location"
+            android:layout_alignBottom="@+id/location"
+            android:layout_alignParentLeft="true"
+            android:text="Location"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/date"
+            android:layout_alignParentLeft="true"
+            android:text="Date"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/eventName"
+            android:layout_alignBottom="@+id/eventName"
+            android:layout_alignParentLeft="true"
+            android:text="Event Name"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="24dp"
+            android:text="Game Name"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <DatePicker
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/eventName"
+            android:layout_toRightOf="@+id/textView6" />
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -802,6 +802,40 @@ public class DatabaseManager {
 		return comments;
 	}
 	
+	public synchronized Comment[] getCommentsByColumns(String[] cols, String[] vals) {
+		
+		if(cols.length != vals.length)
+			return null;
+		
+		if(cols.length < 1)
+			return new Comment[0];
+		
+		String queryString = "SELECT * FROM " + DatabaseContract.TABLE_COMMENTS + " WHERE " + cols[0] + " LIKE ?";
+		
+		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
+			queryString += " AND " + cols[i] + " LIKE ?";
+			
+		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
+		Comment[] comments = new Comment[c.getCount()];
+		
+		for(int i = 0; i < comments.length; i++) {
+			
+			c.moveToNext();
+			
+			comments[i] = new Comment(
+					c.getInt(c.getColumnIndex(DatabaseContract.COL_TEAM_NUMBER)),
+					c.getInt(c.getColumnIndex(DatabaseContract.COL_USER_ID)),
+					c.getInt(c.getColumnIndex(DatabaseContract.COL_EVENT_ID)),
+					c.getString(c.getColumnIndex(DatabaseContract.COL_COMMENT)),
+					new Date(c.getLong(c.getColumnIndex(DatabaseContract.COL_DATE_STAMP)))
+					);
+		}
+		
+		helper.close();
+		
+		return comments;
+	}
+	
 	/*****
 	 * Method: addContact
 	 * 
@@ -1088,9 +1122,6 @@ public class DatabaseManager {
 		values.put(DatabaseContract.COL_GAME_NAME, gameName);
 		values.put(DatabaseContract.COL_ROBOT_ID, createID(DatabaseContract.TABLE_ROBOTS, 
 				DatabaseContract.COL_ROBOT_ID));
-		values.put(DatabaseContract.COL_NUMBER_WHEELS, numberOfWheels);
-		values.put(DatabaseContract.COL_WHEEL_TYPE, wheelType);
-		values.put(DatabaseContract.COL_DRIVETRAIN, driveTrain);
 		
 		db.insert(DatabaseContract.TABLE_ROBOTS, null, values);
 		helper.close();
@@ -1467,7 +1498,13 @@ public class DatabaseManager {
 		return true;
 	}
 	
-	public synchronized void insertMatchData() {
+	public synchronized void insertMatchData(int robotID) {
+		
+		
+	}
+	
+	
+	public synchronized void getMatchData(int robotID) {
 		
 		
 	}
