@@ -58,7 +58,7 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 			
 			table.addView(new MyTableRow(this, new View[] {
 					editButton,
-					new MyTextView(this, games[i].getName()),
+					new MyTextView(this, games[i].getName(), 18),
 					eventsButton,
 					metricsButton
 			}, color));

@@ -29,9 +29,9 @@ public class CommentsActivity extends StackableTabActivity implements OnClickLis
 		((Button)findViewById(R.id.addComment)).setOnClickListener(this);
 	}
 	
-	public void onStart() {
+	public void onResume() {
 		
-		super.onStart();
+		super.onResume();
 		
 		TableLayout table = (TableLayout)findViewById(R.id.commentsDataTable);
 		TableRow row = (TableRow)findViewById(R.id.descriptorsRow);
@@ -51,9 +51,9 @@ public class CommentsActivity extends StackableTabActivity implements OnClickLis
 			
 			table.addView(new MyTableRow(this, new View[] {
 					new MyButton(this, "Edit Comment", this, Integer.valueOf(i)),
-					new MyTextView(this, Integer.toString(c[i].getUserID())),
-					new MyTextView(this, c[i].getText()),
-					new MyTextView(this, c[i].getTimeStamp().toString())
+					new MyTextView(this, Integer.toString(c[i].getUserID()), 18),
+					new MyTextView(this, c[i].getText(), 18),
+					new MyTextView(this, c[i].getTimeStamp().toString(), 18)
 			}, color));
 		}
 	}

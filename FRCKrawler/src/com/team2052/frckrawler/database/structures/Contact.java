@@ -15,9 +15,9 @@ public class Contact implements Structure {
 	private String address;
 	private String phoneNumber;
 	
-	public Contact(String _name, String _email, String _address, String _phoneNumber) {
+	public Contact(int _team, String _name, String _email, String _address, String _phoneNumber) {
 		
-		this(-1, -1, _name, _email, _address, _phoneNumber);
+		this(_team, -1, _name, _email, _address, _phoneNumber);
 	}
 	
 	public Contact(int _team, int _contactID, String _name, String _email, 

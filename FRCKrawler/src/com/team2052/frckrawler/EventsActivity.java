@@ -23,12 +23,14 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_events);
 		
+		findViewById(R.id.addEventButton).setOnClickListener(this);
+		
 		dbManager = DatabaseManager.getInstance(this);
 	}
 	
-	public void onStart() {
+	public void onResume() {
 		
-		super.onStart();
+		super.onResume();
 		
 		Event[] events = dbManager.getEventsByColumns(databaseKeys, parents);
 		TableLayout table = (TableLayout)findViewById(R.id.eventsDataTable);
@@ -52,11 +54,11 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 			
 			table.addView(new MyTableRow(this, new View[] {
 					editEvent,
-					new MyTextView(this, events[i].getEventName()),
-					new MyTextView(this, events[i].getLocation()),
-					new MyTextView(this, events[i].getGameName()),
-					new MyTextView(this, events[i].getDateStamp().toString()),
-					new MyTextView(this, events[i].getFMSID())
+					new MyTextView(this, events[i].getEventName(), 18),
+					new MyTextView(this, events[i].getLocation(), 18),
+					new MyTextView(this, events[i].getGameName(), 18),
+					new MyTextView(this, events[i].getDateStamp().toString(), 18),
+					new MyTextView(this, events[i].getFMSID(), 18)
 			}, color));
 		}
 	}
@@ -79,7 +81,7 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 			
 				i = new Intent(this, EditEventDialogActivity.class);
 				i.putExtra(EditEventDialogActivity.EVENT_ID_EXTRA, 
-						((Integer)v.getTag()).intValue());
+						(v.getTag().toString()));
 				startActivity(i);
 		}
 	}

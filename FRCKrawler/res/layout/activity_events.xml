@@ -40,10 +40,10 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/treeView"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/scrollView1" >
+        android:layout_alignParentTop="true" >
 
         <LinearLayout
             android:id="@+id/linearLayout1"
@@ -101,6 +101,13 @@
                                 android:layout_height="wrap_content" >
 
                                 <TextView
+                                    android:id="@+id/textView2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=" "
+                                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                                <TextView
                                     android:id="@+id/name"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -148,6 +155,13 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/scrollView1" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </LinearLayout>
 

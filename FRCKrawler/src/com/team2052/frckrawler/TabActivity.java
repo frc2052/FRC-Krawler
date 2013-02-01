@@ -59,6 +59,19 @@ public class TabActivity extends Activity {
 		}
 	}
 	
+	protected void setNoRootActivitySelected() {
+		
+		selectedActivity = TabListener.NONE;
+	}
+	
+	
+	/*****
+	 * Method: destroyAllInstances
+	 * 
+	 * Summary: Destroys all instances of this class that were
+	 * stored in the instances HashMap.
+	 *****/
+	
 	private void destroyAllInstances() {
 		
 		TabActivity[] arr = new TabActivity[0];
@@ -81,7 +94,8 @@ public class TabActivity extends Activity {
 	 *****/
 
 	protected class TabListener implements OnClickListener {
-	
+		
+		public static final int NONE = -1;
 		public static final int TEAMS = 0;
 		public static final int USERS = 1;
 		public static final int GAMES = 2;

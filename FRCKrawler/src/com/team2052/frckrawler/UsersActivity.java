@@ -5,12 +5,17 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import com.example.frckrawler.R;
+import com.team2052.frckrawler.database.DatabaseContract;
 import com.team2052.frckrawler.database.DatabaseManager;
 import com.team2052.frckrawler.database.structures.User;
-import com.team2052.frckrawler.gui.*;
+import com.team2052.frckrawler.gui.MyButton;
+import com.team2052.frckrawler.gui.MyTableRow;
+import com.team2052.frckrawler.gui.MyTextView;
 
 public class UsersActivity extends TabActivity implements OnClickListener{
 	

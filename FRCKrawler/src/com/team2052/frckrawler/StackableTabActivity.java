@@ -20,6 +20,8 @@ public class StackableTabActivity extends TabActivity {
 		
 		parents = getIntent().getStringArrayExtra(PARENTS_EXTRA);
 		databaseKeys = getIntent().getStringArrayExtra(PARENT_KEYS_EXTRA);
+		
+		setNoRootActivitySelected();
 	}
 	
 	public void onStart() {

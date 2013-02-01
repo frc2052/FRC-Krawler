@@ -47,6 +47,10 @@
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name="com.team2052.frckrawler.EditContactDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name="com.team2052.frckrawler.AddEventDialogActivity"
+            	  android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name="com.team2052.frckrawler.EditEventDialogActivity"
+            	  android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>

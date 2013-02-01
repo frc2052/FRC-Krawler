@@ -942,7 +942,8 @@ public class DatabaseManager {
 		if(cols.length < 1)
 			return new Contact[0];
 		
-		String queryString = "SELECT * FROM " + DatabaseContract.TABLE_CONTACTS + " WHERE " + cols[0] + " LIKE ?";
+		String queryString = "SELECT * FROM " + DatabaseContract.TABLE_CONTACTS + " WHERE " 
+				+ cols[0] + " LIKE ?";
 		
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
 			queryString += " AND " + cols[i] + " LIKE ?";
@@ -967,6 +968,44 @@ public class DatabaseManager {
 		helper.close();
 		
 		return contacts;
+	}
+	
+	
+	public synchronized boolean updateContacts(String queryCols[], String queryVals[], 
+			String updateCols[], String updateVals[]) {
+		
+		if(updateCols.length != updateVals.length) //They must be the same so that every value
+			return false; //has something to map to and that there are no blank ones.
+		
+		if(queryCols.length != queryVals.length)
+			return false;
+		
+		for(String s : updateCols) { //Does not allow the caller to update the team number.
+			if(s.equals(DatabaseContract.COL_CONTACT_ID) || 
+					s.equals(DatabaseContract.COL_TEAM_NUMBER))
+				return false;
+		}
+		
+		ContentValues vals = new ContentValues();
+		
+		for(int i = 0; i < updateCols.length; i++)
+			vals.put(updateCols[i], updateVals[i]);
+		
+		String queryString = new String();
+		
+		if(queryCols.length > 0)
+			queryString += queryCols[0] + " LIKE ?";
+		
+		for(int i = 1; i < queryCols.length; i++) {
+			queryString += " AND " + queryCols[i] + " LIKE ?";
+		}
+		
+		helper.getWritableDatabase().update(DatabaseContract.TABLE_CONTACTS, vals, 
+				queryString, queryVals);
+		
+		helper.close();
+		
+		return true;
 	}
 	
 	
@@ -1462,7 +1501,7 @@ public class DatabaseManager {
 	 * THE FLEXIBLE COLUMNS! FIX IT!
 	 */
 	
-	public synchronized boolean updateRobot(String queryCols[], String queryVals[], 
+	public synchronized boolean updateRobots(String queryCols[], String queryVals[], 
 			String updateCols[], String updateVals[]) {
 		
 		if(updateCols.length != updateVals.length) //They must be the same so that every value

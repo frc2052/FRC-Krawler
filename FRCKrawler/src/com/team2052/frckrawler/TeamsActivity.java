@@ -55,10 +55,12 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		
 		for(int i = 0; i < teams.length; i++) {
 			
-			int color = Color.TRANSPARENT;
+			int color;
 			
-			if(i % 2 != 0)
+			if(i % 2 == 0)
 				color = Color.BLUE;
+			else
+				color = Color.TRANSPARENT;
 			
 			MyButton editTeam = new MyButton(this, "Edit Team", this, 
 					teams[i].getNumber());

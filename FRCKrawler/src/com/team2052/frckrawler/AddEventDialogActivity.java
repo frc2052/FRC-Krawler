@@ -28,19 +28,6 @@ public class AddEventDialogActivity extends Activity implements OnClickListener 
 		
 		((Button)findViewById(R.id.addEvent)).setOnClickListener(this);
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
-		
-		//Construct the choices for the spinner
-		Game[] games = DatabaseManager.getInstance(this).getAllGames();
-		String[] choices = new String[games.length];
-		
-		for(int i = 0; i < games.length; i++)
-			choices[i] = games[i].getName();
-		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.id.textView1, choices);
-		
-		Spinner spinner = ((Spinner)findViewById(R.id.game));
-		spinner.setAdapter(adapter);
-		spinner.setSelection(0);
 	}
 	
 	public void onClick(View v) {
@@ -55,7 +42,7 @@ public class AddEventDialogActivity extends Activity implements OnClickListener 
 			
 			DatabaseManager.getInstance(this).addEvent(new Event(
 					((EditText)findViewById(R.id.eventName)).getText().toString(),
-					(String)((Spinner)findViewById(R.id.game)).getSelectedItem(),
+					getIntent().getStringExtra(GAME_NAME_EXTRA),
 					new GregorianCalendar(year, month, day, 0, 0).getTime(),
 					((EditText)findViewById(R.id.location)).getText().toString(),
 					((EditText)findViewById(R.id.fmsID)).getText().toString()
