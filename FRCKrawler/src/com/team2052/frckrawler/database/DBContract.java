@@ -20,7 +20,7 @@ import android.database.sqlite.SQLiteDatabase;
  * @author Charles Hofer
  *****/
 
-public class DatabaseContract {
+public class DBContract {
 	
 	
 	/*****
@@ -37,12 +37,6 @@ public class DatabaseContract {
 	 * Scouting Metric Map
 	 * 
 	 * The scouting data types are the input method for the scouts.
-	 * 
-	 * 0 - BOOLEAN
-	 * 1 - COUNTER
-	 * 2 - SLIDER
-	 * 3 - CHOOSER
-	 * 4 - TEXT
 	 *****/
 	
 	public static final int BOOLEAN = 0;
@@ -50,8 +44,9 @@ public class DatabaseContract {
 	public static final int SLIDER = 2;
 	public static final int CHOOSER = 3;
 	public static final int TEXT = 4;
+	public static final int MATH = 5;
 	
-	public static final int HIGHEST_TYPE = 4;
+	public static final int HIGHEST_TYPE = 5;
 	
 	/*****
 	 * Schema
@@ -142,24 +137,29 @@ public class DatabaseContract {
 	//Robot ID, use COL_ROBOT_ID
 	public static final String COL_GAME_NAME = "gamename";
 	public static final String COL_COMMENTS = "comments";
-	public static final String[] COL_KEYS = 
-		{"d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "d10", 
-		"d11", "d12", "d13", "d14", "d15", "d16", "d17", "d18", "d19"};
+	public static String[] COL_KEYS = new String[50];
+	private static String COL_KEYS_LIST;
+	
+	static {
+		
+		for(int i = 0; i < COL_KEYS.length; i++) {
+			COL_KEYS[i] = "d" + i;
+			COL_KEYS_LIST += COL_KEYS[i] + ANY;
+			
+			if(i < COL_KEYS.length - 1) {
+				COL_KEYS_LIST += ", ";
+			}
+		}
+	}
 	
 	public static final String CREATE_TABLE_ROBOTS = 
 			"CREATE TABLE " + TABLE_ROBOTS + " (" + COL_TEAM_NUMBER + INT + ", " + COL_ROBOT_ID + 
-					INT + ", " + COL_GAME_NAME + STRING + ", " + COL_COMMENTS + STRING + ", " + COL_KEYS[0] + ANY + 
-					", " + COL_KEYS[1] + ANY + ", " + COL_KEYS[2] + ANY + ", " + COL_KEYS[3] + ANY + 
-					", " + COL_KEYS[4] + ANY + ", " + COL_KEYS[5] + ANY + ", " + COL_KEYS[6] + ANY + 
-					", " + COL_KEYS[7] + ANY + ", " + COL_KEYS[8] + ANY + ", " + COL_KEYS[9] + ANY + 
-					", " + COL_KEYS[10] + ANY + ", " + COL_KEYS[11] + ANY + ", " + COL_KEYS[12] + ANY + 
-					", " + COL_KEYS[13] + ANY + ", " + COL_KEYS[14] + ANY + 
-					", " + COL_KEYS[15] + ANY + ", " + COL_KEYS[16] + ANY + ", " + COL_KEYS[17] + ANY +
-					", " + COL_KEYS[18] + ANY + ", " + COL_KEYS[19] + ANY + ")";
+					INT + ", " + COL_GAME_NAME + STRING + ", " + COL_COMMENTS + STRING + ", " + 
+					COL_KEYS_LIST + ")";
 	
 	
 	
-	public static final String TABLE_COMPETITIONS = "competitions";
+	public static final String TABLE_EVENTS = "events";
 	
 	//Game ID, use COL_GAME_NAME
 	//Event ID, use COL_EVENT_ID
@@ -169,7 +169,7 @@ public class DatabaseContract {
 	public static final String COL_FMS_EVENT_ID = "fmseventid";
 	
 	public static final String CREATE_TABLE_COMPETITIONS =
-			"CREATE TABLE " + TABLE_COMPETITIONS + " (" + COL_GAME_NAME + STRING + ", " + 
+			"CREATE TABLE " + TABLE_EVENTS + " (" + COL_GAME_NAME + STRING + ", " + 
 					COL_EVENT_ID + INT + ", " + COL_EVENT_NAME + STRING + ", " + 
 					COL_DATE_STAMP + INT + ", " + COL_LOCATION +STRING + ", " + 
 					COL_FMS_EVENT_ID + STRING + ")";
@@ -187,6 +187,7 @@ public class DatabaseContract {
 	
 	public static final String TABLE_MATCH_PERF = "matchperformance";
 	
+	public static final String COL_DATA_ID = "matchid";
 	//Robot ID, use COL_ROBOT_ID
 	//Event ID, use EVENT_ID
 	//User ID, use COL_USER_ID
@@ -197,16 +198,25 @@ public class DatabaseContract {
 	//Keys, use COL_KEYS[]
 	
 	public static final String CREATE_TABLE_MATCH_PERF = 
-			"CREATE TABLE " + TABLE_MATCH_PERF + " (" + COL_ROBOT_ID + INT + ", " + 
-					COL_EVENT_ID + INT + ", " + COL_USER_ID + INT + ", " + 
+			"CREATE TABLE " + TABLE_MATCH_PERF + " (" + COL_DATA_ID + INT + ", " +
+					COL_ROBOT_ID + INT + ", " + COL_EVENT_ID + INT + ", " + COL_USER_ID + INT + ", " + 
 					COL_MATCH_NUMBER + INT + ", " + COL_MATCH_TYPE + STRING + ", " +
-					COL_COMMENTS + STRING + ", " + COL_KEYS[0] + ANY + ", " + COL_KEYS[1] + ANY + 
-					", " + COL_KEYS[2] + ANY + ", " + COL_KEYS[3] + ANY + ", " + COL_KEYS[4] + ANY + 
-					", " + COL_KEYS[5] + ANY + ", " + COL_KEYS[6] + ANY + ", " + COL_KEYS[7] + ANY + 
-					", " + COL_KEYS[8] + ANY + ", " + COL_KEYS[9] + ANY + ", " + COL_KEYS[10] + ANY + 
-					", " + COL_KEYS[11] + ANY + ", " + COL_KEYS[12] + ANY + ", " + COL_KEYS[13] + ANY + 
-					", " + COL_KEYS[14] + ANY + ", " + COL_KEYS[15] + ANY + ", " + COL_KEYS[16] + ANY +
-					", " + COL_KEYS[17] + ANY + ", " + COL_KEYS[18] + ANY + ", " + COL_KEYS[19] + ANY + ")";
+					COL_COMMENTS + STRING + ", " + COL_KEYS_LIST + ")";
+	
+	
+	
+	public static final String TABLE_DRIVER_DATA = "driverdata";
+	
+	//Robot ID, use COL_ROBOT_ID
+	//Event ID, use COL_EVENT_ID
+	//Match Number, use COL_MATCH_NUMBER
+	//Comments, use COL_COMMENTS
+	//Keys, use COL_KEYS
+	
+	public static final String CREATE_TABLE_DRIVER_DATA = 
+			"CREATE TABLE " + TABLE_DRIVER_DATA + " (" + COL_ROBOT_ID + INT + ", " +
+					COL_EVENT_ID + INT + ", " + COL_MATCH_NUMBER + INT + ", " +
+					COL_COMMENTS + STRING + ", " + COL_KEYS_LIST + ")";
 	
 	
 	
@@ -223,22 +233,26 @@ public class DatabaseContract {
 	 * 2 - SLIDER
 	 * 3 - CHOOSER
 	 * 4 - TEXT
+	 * 5 - MATH
 	 */
 	
 	public static final String TABLE_ROBOT_METRICS = "robotmetrics";
 	
 	//Game ID, use COL_GAME_NAME
+	public static final String COL_METRIC_ID = "metricid";
 	public static final String COL_METRIC_NAME = "metricname";
 	public static final String COL_DESCRIPTION = "description";
 	public static final String COL_METRIC_KEY = "metrickey";
 	public static final String COL_TYPE = "type";
 	public static final String COL_RANGE = "range";
+	public static final String COL_DISPLAY = "display";
 	
 	public static final String CREATE_TABLE_ROBOT_METRICS =
-			"CREATE TABLE " + TABLE_ROBOT_METRICS + " (" + 
+			"CREATE TABLE " + TABLE_ROBOT_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
 					COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
 					COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + INT + ", " + 
-					COL_TYPE + INT + ", " + COL_RANGE + STRING + ")";
+					COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
+					")";
 	
 	
 	
@@ -250,14 +264,44 @@ public class DatabaseContract {
 	//Key, use COL_KEY
 	//Type, use COL_TYPE
 	//Range, use COL_RANGE
+	//Display, use COL_DISPLAY
 	
 	public static final String CREATE_TABLE_MATCH_PERF_METRICS = 
-			"CREATE TABLE " + TABLE_MATCH_PERF_METRICS + " (" + 
+			"CREATE TABLE " + TABLE_MATCH_PERF_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
 					COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
 					COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
-					COL_TYPE + INT + ", " + COL_RANGE + STRING + ")";
+					COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
+					")";
 	
 	
+	
+	public static final String TABLE_DRIVER_METRICS = "drivermetrics";
+	
+		//Game ID, use COL_GAME_NAME
+		//Metric Name, use COL_METRIC_NAME
+		//Description, use COL_DESCRIPTION
+		//Key, use COL_KEY
+		//Type, use COL_TYPE
+		//Range, use COL_RANGE
+		//
+	
+	public static final String CREATE_TABLE_DRIVER_METRICS = 
+			"CREATE TABLE " + TABLE_DRIVER_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
+					COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
+					COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
+					COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
+					")";
+	
+	
+	
+	public static final String TABLE_EVENT_ROBOTS = "eventrobots";
+	
+	//Event ID, use COL_EVENT_ID
+	//Robot ID, use COL_ROBOT_ID
+	
+	public static final String CREATE_TABLE_EVENT_ROBOTS = 
+			"CREATE TABLE " + TABLE_EVENT_ROBOTS + " (" + COL_EVENT_ID + INT + ", " +
+					COL_ROBOT_ID + INT + ")";
 	
 	//Additions may be made to this contract to include tables for Awards and OPR or CCWM
 	
@@ -288,6 +332,9 @@ public class DatabaseContract {
 		database.execSQL(CREATE_TABLE_MATCH_PERF);
 		database.execSQL(CREATE_TABLE_ROBOT_METRICS);
 		database.execSQL(CREATE_TABLE_MATCH_PERF_METRICS);
+		database.execSQL(CREATE_TABLE_EVENT_ROBOTS);
+		database.execSQL(CREATE_TABLE_DRIVER_DATA);
+		database.execSQL(CREATE_TABLE_DRIVER_METRICS);
 	}
 	
 	/*****
@@ -305,13 +352,16 @@ public class DatabaseContract {
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_PICTURES);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_ROBOTS);
-		database.execSQL("DROP TABLE IF EXISTS " + TABLE_COMPETITIONS);
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENTS);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_GAMES);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_MATCH_PERF);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_MATCH_PERF_METRICS);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_ROBOT_METRICS);
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENT_ROBOTS);
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_DRIVER_DATA);
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_DRIVER_METRICS);
 	}
 	
-	private DatabaseContract() {}
+	private DBContract() {}
 
 }

@@ -11,8 +11,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DatabaseContract;
-import com.team2052.frckrawler.database.DatabaseManager;
+import com.team2052.frckrawler.database.DBContract;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
@@ -28,7 +28,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 	private final Object ADD_TEAMS_TAG = new Object();
 	
 	private Team[] teams;
-	private DatabaseManager dbManager;
+	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -39,7 +39,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		addTeams.setTag(ADD_TEAMS_TAG);
 		addTeams.setOnClickListener(this);
 		
-		dbManager = DatabaseManager.getInstance(this);
+		dbManager = DBManager.getInstance(this);
 	}
 	
 	public void onResume() {
@@ -121,9 +121,11 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				
 				i = new Intent(this, RobotsActivity.class);
 				i.putExtra(StackableTabActivity.PARENTS_EXTRA, 
-						new String[] {((Integer)v.getTag()).toString()});
-				i.putExtra(StackableTabActivity.PARENT_KEYS_EXTRA, 
-						new String[] {DatabaseContract.COL_TEAM_NUMBER});
+						new String[] {v.getTag().toString()});
+				i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, 
+						new String[] {v.getTag().toString()});
+				i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, 
+						new String[] {DBContract.COL_TEAM_NUMBER});
 				startActivity(i);
 				
 				break;
@@ -132,9 +134,11 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				
 				i = new Intent(this, ContactsActivity.class);
 				i.putExtra(StackableTabActivity.PARENTS_EXTRA, 
-						new String[] {((Integer)v.getTag()).toString()});
-				i.putExtra(StackableTabActivity.PARENT_KEYS_EXTRA, 
-						new String[] {DatabaseContract.COL_TEAM_NUMBER});
+						new String[] {v.getTag().toString()});
+				i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, 
+						new String[] {v.getTag().toString()});
+				i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, 
+						new String[] {DBContract.COL_TEAM_NUMBER});
 				startActivity(i);
 				
 				break;
@@ -143,9 +147,11 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				
 				i = new Intent(this, CommentsActivity.class);
 				i.putExtra(StackableTabActivity.PARENTS_EXTRA, 
-						new String[] {((Integer)v.getTag()).toString()});
-				i.putExtra(StackableTabActivity.PARENT_KEYS_EXTRA, 
-						new String[] {DatabaseContract.COL_TEAM_NUMBER});
+						new String[] {v.getTag().toString()});
+				i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, 
+						new String[] {v.getTag().toString()});
+				i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, 
+						new String[] {DBContract.COL_TEAM_NUMBER});
 				startActivity(i);
 				
 				break;

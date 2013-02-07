@@ -9,13 +9,13 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DatabaseManager;
+import com.team2052.frckrawler.database.DBManager;
 
 public class EditGameDialogActivity extends Activity implements OnClickListener, DialogInterface.OnClickListener{
 	
 	public static final String GAME_NAME_EXTRA = "com.team2052.frckrawler.editGameExtra";
 	
-	private DatabaseManager dbManager;
+	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -26,7 +26,7 @@ public class EditGameDialogActivity extends Activity implements OnClickListener,
 		((Button)findViewById(R.id.remove)).setOnClickListener(this);
 		((Button)findViewById(R.id.save)).setOnClickListener(this);
 		
-		dbManager = DatabaseManager.getInstance(this);
+		dbManager = DBManager.getInstance(this);
 	}
 	
 	public void onResume() {

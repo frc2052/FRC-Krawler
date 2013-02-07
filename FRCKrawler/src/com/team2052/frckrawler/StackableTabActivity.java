@@ -9,9 +9,11 @@ import android.widget.LinearLayout;
 public class StackableTabActivity extends TabActivity {
 	
 	public static final String PARENTS_EXTRA = "com.team2052.frckrawler.parentsArrayExtra";
-	public static final String PARENT_KEYS_EXTRA = "com.team2052.frckrawler.parentsKeysExtra";
+	public static final String DB_VALUES_EXTRA = "com.team2052.frckrawler.dbValsExtra";
+	public static final String DB_KEYS_EXTRA = "com.team2052.frckrawler.dbKeysExtra";
 	
 	protected String[] parents;
+	protected String[] databaseValues;
 	protected String[] databaseKeys;
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -19,7 +21,8 @@ public class StackableTabActivity extends TabActivity {
 		super.onCreate(savedInstanceState);
 		
 		parents = getIntent().getStringArrayExtra(PARENTS_EXTRA);
-		databaseKeys = getIntent().getStringArrayExtra(PARENT_KEYS_EXTRA);
+		databaseValues = getIntent().getStringArrayExtra(DB_VALUES_EXTRA);
+		databaseKeys = getIntent().getStringArrayExtra(DB_KEYS_EXTRA);
 		
 		setNoRootActivitySelected();
 	}

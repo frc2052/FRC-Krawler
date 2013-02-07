@@ -7,7 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DatabaseManager;
+import com.team2052.frckrawler.database.DBManager;
 
 public class AddTeamDialogActivity extends Activity implements OnClickListener {
 	
@@ -40,7 +40,7 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 			
 			try {
 				
-				if(DatabaseManager.getInstance(this).addTeam(
+				if(DBManager.getInstance(this).addTeam(
 						Integer.parseInt(((TextView)findViewById(R.id.numberVal)).getText().toString()), 
 						((TextView)findViewById(R.id.nameVal)).getText().toString(), 
 						((TextView)findViewById(R.id.schoolVal)).getText().toString(), 

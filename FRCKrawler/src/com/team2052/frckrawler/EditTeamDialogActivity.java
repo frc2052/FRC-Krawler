@@ -15,8 +15,8 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DatabaseContract;
-import com.team2052.frckrawler.database.DatabaseManager;
+import com.team2052.frckrawler.database.DBContract;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.gui.MyTextView;
 
@@ -24,7 +24,7 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 	
 	public static final String TEAM_NUMBER_EXTRA_KEY = "com.team2052.frckrawler.editTeamNumber";
 	
-	private DatabaseManager dbManager;
+	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -35,7 +35,7 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 		((Button)findViewById(R.id.remove)).setOnClickListener(this);
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 		
-		dbManager = DatabaseManager.getInstance(this);
+		dbManager = DBManager.getInstance(this);
 	}
 	
 	public void onResume() {
@@ -43,7 +43,7 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 		super.onResume();
 		
 		Team t;
-		Team[] arr = (dbManager.getTeamsByColumns(new String[] {DatabaseContract.COL_TEAM_NUMBER}, 
+		Team[] arr = (dbManager.getTeamsByColumns(new String[] {DBContract.COL_TEAM_NUMBER}, 
 				new String[] {Integer.toString(getIntent().getIntExtra(TEAM_NUMBER_EXTRA_KEY, -1))}));
 		
 		if(arr.length > 0)
@@ -85,13 +85,13 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 			String[] queryVals = new String[] {((TextView)findViewById(R.id.numberVal)).
 					getText().toString()};
 			String[] updateCols = new String[] {
-					DatabaseContract.COL_TEAM_NAME,
-					DatabaseContract.COL_SCHOOL,
-					DatabaseContract.COL_CITY,
-					DatabaseContract.COL_ROOKIE_YEAR,
-					DatabaseContract.COL_WEBSITE,
-					DatabaseContract.COL_STATE_POSTAL_CODE,
-					DatabaseContract.COL_COLORS
+					DBContract.COL_TEAM_NAME,
+					DBContract.COL_SCHOOL,
+					DBContract.COL_CITY,
+					DBContract.COL_ROOKIE_YEAR,
+					DBContract.COL_WEBSITE,
+					DBContract.COL_STATE_POSTAL_CODE,
+					DBContract.COL_COLORS
 			};
 			
 			String[] updateVals = new String[] {
@@ -104,7 +104,7 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 					((TextView)findViewById(R.id.colorsVal)).getText().toString()
 			};
 			
-			dbManager.updateTeams(new String[] {DatabaseContract.COL_TEAM_NUMBER}, 
+			dbManager.updateTeams(new String[] {DBContract.COL_TEAM_NUMBER}, 
 					queryVals, updateCols, updateVals);
 			
 			finish();

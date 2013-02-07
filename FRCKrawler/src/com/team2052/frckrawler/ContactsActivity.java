@@ -34,7 +34,7 @@ public class ContactsActivity extends StackableTabActivity implements OnClickLis
 		table.removeAllViews();
 		table.addView(descriptorsRow);
 		
-		Contact[] contacts = DatabaseManager.getInstance(this).
+		Contact[] contacts = DBManager.getInstance(this).
 				getContactsByColumns(databaseKeys, parents);
 		
 		for(int i = 0; i < contacts.length; i++) {
@@ -70,7 +70,7 @@ public class ContactsActivity extends StackableTabActivity implements OnClickLis
 				i = new Intent(this, AddContactDialogActivity.class);
 				i.putExtra(AddContactDialogActivity.TEAM_NUMBER_EXTRA, 
 						Integer.parseInt(parents[getAddressOfDatabaseKey
-						                           (DatabaseContract.COL_TEAM_NUMBER)]));
+						                           (DBContract.COL_TEAM_NUMBER)]));
 				startActivity(i);
 				
 				break;

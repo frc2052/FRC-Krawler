@@ -10,8 +10,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DatabaseContract;
-import com.team2052.frckrawler.database.DatabaseManager;
+import com.team2052.frckrawler.database.DBContract;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Comment;
 import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
@@ -39,7 +39,7 @@ public class CommentsActivity extends StackableTabActivity implements OnClickLis
 		table.removeAllViews();
 		table.addView(row);
 		
-		Comment[] c = DatabaseManager.getInstance(this).
+		Comment[] c = DBManager.getInstance(this).
 				getCommentsByColumns(databaseKeys, parents);
 		
 		for(int i = 0; i < c.length; i++) {
@@ -67,7 +67,7 @@ public class CommentsActivity extends StackableTabActivity implements OnClickLis
 				
 				i = new Intent(this, AddCommentDialogActivity.class);
 				i.putExtra(AddCommentDialogActivity.TEAM_NUMBER_EXTRA, 
-						parents[getAddressOfDatabaseKey(DatabaseContract.COL_TEAM_NUMBER)]);
+						parents[getAddressOfDatabaseKey(DBContract.COL_TEAM_NUMBER)]);
 				startActivity(i);
 				
 				break;

@@ -3,6 +3,7 @@ package com.team2052.frckrawler.database;
 import java.util.*;
 
 import com.team2052.frckrawler.database.structures.*;
+import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatchException;
 
 import android.content.*;
 import android.database.*;
@@ -23,12 +24,12 @@ import android.database.sqlite.*;
  * @author Charles Hofer
  *****/
 
-public class DatabaseManager {
+public class DBManager {
 	
 	
-	private static DatabaseManager instance = null;
+	private static DBManager instance = null;
 	
-	private DatabaseHelper helper;
+	private DBHelper helper;
 	private Context context;
 	
 	/*****
@@ -40,12 +41,12 @@ public class DatabaseManager {
 	 * the constructor. Calls should be made to getInstance() instead.
 	 *****/
 	
-	private DatabaseManager(Context _context) {
+	private DBManager(Context _context) {
 		
 		//calling getApplicationContext() assures that no resources are held on to that should have been released.
 		context = _context.getApplicationContext();
 		
-		helper = new DatabaseHelper(context);
+		helper = new DBHelper(context);
 	}
 	
 	
@@ -58,11 +59,11 @@ public class DatabaseManager {
 	 * called instead of the constructor.
 	 *****/
 	
-	public static DatabaseManager getInstance(Context _context) {
+	public static DBManager getInstance(Context _context) {
 		
 		if(instance == null){	//If a manager has not been created yet
 			
-			instance = new DatabaseManager(_context.getApplicationContext());
+			instance = new DBManager(_context.getApplicationContext());
 		}
 		
 		return instance;
@@ -87,12 +88,12 @@ public class DatabaseManager {
 	public synchronized void addUser(String name, boolean superuser) {
 		
 		ContentValues values = new ContentValues();
-		values.put(DatabaseContract.COL_USER_ID, createID(DatabaseContract.TABLE_USERS, 
-				DatabaseContract.COL_USER_ID));
-		values.put(DatabaseContract.COL_USER_NAME, name);
-		values.put(DatabaseContract.COL_SUPERUSER, superuser);
+		values.put(DBContract.COL_USER_ID, createID(DBContract.TABLE_USERS, 
+				DBContract.COL_USER_ID));
+		values.put(DBContract.COL_USER_NAME, name);
+		values.put(DBContract.COL_SUPERUSER, superuser);
 		
-		helper.getWritableDatabase().insert(DatabaseContract.TABLE_USERS, null, values);
+		helper.getWritableDatabase().insert(DBContract.TABLE_USERS, null, values);
 		
 		helper.close();
 	}
@@ -115,8 +116,8 @@ public class DatabaseManager {
 	
 	public synchronized void removeUser(int id) {
 		
-		helper.getWritableDatabase().delete(DatabaseContract.TABLE_USERS, 
-				DatabaseContract.COL_USER_ID + " LIKE ?", new String[] {Integer.toString(id)});
+		helper.getWritableDatabase().delete(DBContract.TABLE_USERS, 
+				DBContract.COL_USER_ID + " LIKE ?", new String[] {Integer.toString(id)});
 		
 		helper.close();
 	}
@@ -131,7 +132,7 @@ public class DatabaseManager {
 	public synchronized User[] getAllUsers() {
 		
 		Cursor c = helper.getReadableDatabase().rawQuery(
-				"SELECT * FROM " + DatabaseContract.TABLE_USERS, null);
+				"SELECT * FROM " + DBContract.TABLE_USERS, null);
 		User[] u = new User[c.getCount()];
 		
 		for(int i = 0; i < c.getCount(); i++) {
@@ -139,9 +140,9 @@ public class DatabaseManager {
 			c.moveToNext();
 			
 			u[i] = new User(
-					c.getString(c.getColumnIndex(DatabaseContract.COL_USER_NAME)),
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_SUPERUSER)),
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_USER_ID))
+					c.getString(c.getColumnIndex(DBContract.COL_USER_NAME)),
+					c.getInt(c.getColumnIndex(DBContract.COL_SUPERUSER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_USER_ID))
 					);
 		}
 		
@@ -172,11 +173,13 @@ public class DatabaseManager {
 		if(cols.length < 1 || vals.length < 1)
 			return new User[0];
 		
-		String queryString = "SELECT * FROM " + DatabaseContract.TABLE_USERS + 
+		String queryString = "SELECT * FROM " + DBContract.TABLE_USERS + 
 				" WHERE " + cols[0] + " LIKE ?";
 		
 		for(int i = 1; 1 < cols.length; i++)
 			queryString += " AND " + cols[i] + " LIKE ?";
+		
+		queryString += " ORDER BY " + DBContract.COL_USER_NAME + " ASC";
 		
 		Cursor c = helper.getReadableDatabase().rawQuery(queryString, vals);
 		User[] u = new User[c.getCount()];
@@ -186,9 +189,9 @@ public class DatabaseManager {
 			c.moveToNext();
 			
 			u[i] = new User(
-					c.getString(c.getColumnIndex(DatabaseContract.COL_USER_NAME)),
-					Boolean.getBoolean(c.getString(c.getColumnIndex(DatabaseContract.COL_SUPERUSER))),
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_USER_ID))
+					c.getString(c.getColumnIndex(DBContract.COL_USER_NAME)),
+					Boolean.getBoolean(c.getString(c.getColumnIndex(DBContract.COL_SUPERUSER))),
+					c.getInt(c.getColumnIndex(DBContract.COL_USER_ID))
 					);
 		}
 		
@@ -219,7 +222,7 @@ public class DatabaseManager {
 			return false;
 		
 		for(String s : updateCols) { //Does not allow the caller to update the user's id.
-			if(s.equals(DatabaseContract.COL_USER_ID))
+			if(s.equals(DBContract.COL_USER_ID))
 				return false;
 		}
 		
@@ -237,7 +240,7 @@ public class DatabaseManager {
 			queryString += " AND " + queryCols[i] + " LIKE ?";
 		}
 		
-		helper.getWritableDatabase().update(DatabaseContract.TABLE_USERS, vals, 
+		helper.getWritableDatabase().update(DBContract.TABLE_USERS, vals, 
 				queryString, queryVals);
 		
 		helper.close();
@@ -258,11 +261,11 @@ public class DatabaseManager {
 	public synchronized void setSuperuer(String username, boolean superuser) {
 		
 		ContentValues vals = new ContentValues();
-		vals.put(DatabaseContract.COL_SUPERUSER, superuser);
+		vals.put(DBContract.COL_SUPERUSER, superuser);
 		
-		helper.getWritableDatabase().update(DatabaseContract.TABLE_USERS, 
+		helper.getWritableDatabase().update(DBContract.TABLE_USERS, 
 				vals, 
-				DatabaseContract.COL_USER_NAME + " LIKE ?", 
+				DBContract.COL_USER_NAME + " LIKE ?", 
 				new String[] {username});
 		
 		helper.close();
@@ -306,22 +309,22 @@ public class DatabaseManager {
 			return false;
 		
 		//If there is not already a team with that number...
-		if(!hasValue(DatabaseContract.TABLE_TEAMS, 
-				DatabaseContract.COL_TEAM_NUMBER, Integer.toString(number))) {
+		if(!hasValue(DBContract.TABLE_TEAMS, 
+				DBContract.COL_TEAM_NUMBER, Integer.toString(number))) {
 			
 			SQLiteDatabase db = helper.getWritableDatabase();
 			
 			ContentValues values = new ContentValues();
-			values.put(DatabaseContract.COL_TEAM_NUMBER, number);
-			values.put(DatabaseContract.COL_TEAM_NAME, name);
-			values.put(DatabaseContract.COL_SCHOOL, school);
-			values.put(DatabaseContract.COL_CITY, city);
-			values.put(DatabaseContract.COL_ROOKIE_YEAR, rookieYear);
-			values.put(DatabaseContract.COL_WEBSITE, website);
-			values.put(DatabaseContract.COL_STATE_POSTAL_CODE, statePostalCode);
-			values.put(DatabaseContract.COL_COLORS, colors);
+			values.put(DBContract.COL_TEAM_NUMBER, number);
+			values.put(DBContract.COL_TEAM_NAME, name);
+			values.put(DBContract.COL_SCHOOL, school);
+			values.put(DBContract.COL_CITY, city);
+			values.put(DBContract.COL_ROOKIE_YEAR, rookieYear);
+			values.put(DBContract.COL_WEBSITE, website);
+			values.put(DBContract.COL_STATE_POSTAL_CODE, statePostalCode);
+			values.put(DBContract.COL_COLORS, colors);
 		
-			db.insert(DatabaseContract.TABLE_TEAMS, null, values);	//Add it to the database
+			db.insert(DBContract.TABLE_TEAMS, null, values);	//Add it to the database
 			helper.close();
 			
 			return true;
@@ -353,17 +356,17 @@ public class DatabaseManager {
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
-		Cursor c = db.query(DatabaseContract.TABLE_ROBOTS, 		//Find the team's robots
-				new String[] {DatabaseContract.COL_ROBOT_ID}, 
-				DatabaseContract.COL_TEAM_NUMBER + " LIKE ?", 
+		Cursor c = db.query(DBContract.TABLE_ROBOTS, 		//Find the team's robots
+				new String[] {DBContract.COL_ROBOT_ID}, 
+				DBContract.COL_TEAM_NUMBER + " LIKE ?", 
 				new String[] {Integer.toString(number)},
 				null, null, null);
 		
 		while(c.moveToNext()) {	//While this team still has robots...
 			
-			String[] value = {c.getString(c.getColumnIndex(DatabaseContract.COL_ROBOT_ID))};
+			String[] value = {c.getString(c.getColumnIndex(DBContract.COL_ROBOT_ID))};
 			
-			db.delete(DatabaseContract.TABLE_MATCH_PERF, DatabaseContract.COL_ROBOT_ID + " LIKE ?", 
+			db.delete(DBContract.TABLE_MATCH_PERF, DBContract.COL_ROBOT_ID + " LIKE ?", 
 					value);
 			
 			//Get pictures from the file system based on robot ids and delete them
@@ -371,10 +374,10 @@ public class DatabaseManager {
 		
 		String[] value = {Integer.toString(number)};
 		
-		db.delete(DatabaseContract.TABLE_CONTACTS, DatabaseContract.COL_TEAM_NUMBER + " LIKE ?", value);
-		db.delete(DatabaseContract.TABLE_ROBOTS, DatabaseContract.COL_TEAM_NUMBER + " LIKE ?", value);
-		db.delete(DatabaseContract.TABLE_COMMENTS, DatabaseContract.COL_TEAM_NUMBER + " LIKE ?", value);
-		db.delete(DatabaseContract.TABLE_TEAMS, DatabaseContract.COL_TEAM_NUMBER + " LIKE ?", value);
+		db.delete(DBContract.TABLE_CONTACTS, DBContract.COL_TEAM_NUMBER + " LIKE ?", value);
+		db.delete(DBContract.TABLE_ROBOTS, DBContract.COL_TEAM_NUMBER + " LIKE ?", value);
+		db.delete(DBContract.TABLE_COMMENTS, DBContract.COL_TEAM_NUMBER + " LIKE ?", value);
+		db.delete(DBContract.TABLE_TEAMS, DBContract.COL_TEAM_NUMBER + " LIKE ?", value);
 		
 		helper.close();
 		
@@ -391,21 +394,21 @@ public class DatabaseManager {
 	public synchronized Team[] getAllTeams() {
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
-		Cursor c = db.rawQuery(DatabaseContract.SELECT_ALL_TEAM_DATA, null);
+		Cursor c = db.rawQuery(DBContract.SELECT_ALL_TEAM_DATA, null);
 		Team[] t = new Team[c.getCount()];
 		
 		for(int i = 0; i < c.getCount(); i++) {
 			
 			c.moveToNext();
 			
-			t[i] = new Team(c.getInt(c.getColumnIndex(DatabaseContract.COL_TEAM_NUMBER)), 
-					c.getString(c.getColumnIndex(DatabaseContract.COL_TEAM_NAME)), 
-					c.getString(c.getColumnIndex(DatabaseContract.COL_SCHOOL)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_CITY)),
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_ROOKIE_YEAR)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_WEBSITE)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_STATE_POSTAL_CODE)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_COLORS)));
+			t[i] = new Team(c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)), 
+					c.getString(c.getColumnIndex(DBContract.COL_TEAM_NAME)), 
+					c.getString(c.getColumnIndex(DBContract.COL_SCHOOL)),
+					c.getString(c.getColumnIndex(DBContract.COL_CITY)),
+					c.getInt(c.getColumnIndex(DBContract.COL_ROOKIE_YEAR)),
+					c.getString(c.getColumnIndex(DBContract.COL_WEBSITE)),
+					c.getString(c.getColumnIndex(DBContract.COL_STATE_POSTAL_CODE)),
+					c.getString(c.getColumnIndex(DBContract.COL_COLORS)));
 		}
 		
 		helper.close();
@@ -439,10 +442,12 @@ public class DatabaseManager {
 		if(cols.length < 1)
 			return new Team[0];
 		
-		String queryString = "SELECT * FROM " + DatabaseContract.TABLE_TEAMS + " WHERE " + cols[0] + " LIKE ?";
+		String queryString = "SELECT * FROM " + DBContract.TABLE_TEAMS + " WHERE " + cols[0] + " LIKE ?";
 		
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
 			queryString += " AND " + cols[i] + " LIKE ?";
+		
+		queryString += " ORDER BY " + DBContract.COL_TEAM_NUMBER + " ASC";
 			
 		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
 		Team[] t = new Team[c.getCount()];
@@ -451,14 +456,14 @@ public class DatabaseManager {
 			
 			c.moveToNext();
 			
-			t[i] = new Team(c.getInt(c.getColumnIndex(DatabaseContract.COL_TEAM_NUMBER)), 
-					c.getString(c.getColumnIndex(DatabaseContract.COL_TEAM_NAME)), 
-					c.getString(c.getColumnIndex(DatabaseContract.COL_SCHOOL)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_CITY)),
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_ROOKIE_YEAR)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_WEBSITE)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_STATE_POSTAL_CODE)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_COLORS)));
+			t[i] = new Team(c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)), 
+					c.getString(c.getColumnIndex(DBContract.COL_TEAM_NAME)), 
+					c.getString(c.getColumnIndex(DBContract.COL_SCHOOL)),
+					c.getString(c.getColumnIndex(DBContract.COL_CITY)),
+					c.getInt(c.getColumnIndex(DBContract.COL_ROOKIE_YEAR)),
+					c.getString(c.getColumnIndex(DBContract.COL_WEBSITE)),
+					c.getString(c.getColumnIndex(DBContract.COL_STATE_POSTAL_CODE)),
+					c.getString(c.getColumnIndex(DBContract.COL_COLORS)));
 		}
 		
 		helper.close();
@@ -485,7 +490,7 @@ public class DatabaseManager {
 			return false;
 		
 		for(String s : updateCols) { //Does not allow the caller to update the team number.
-			if(s.equals(DatabaseContract.COL_TEAM_NUMBER))
+			if(s.equals(DBContract.COL_TEAM_NUMBER))
 				return false;
 		}
 		
@@ -503,7 +508,7 @@ public class DatabaseManager {
 			queryString += " AND " + queryCols[i] + " LIKE ?";
 		}
 		
-		helper.getWritableDatabase().update(DatabaseContract.TABLE_TEAMS, vals, 
+		helper.getWritableDatabase().update(DBContract.TABLE_TEAMS, vals, 
 				queryString, queryVals);
 		
 		helper.close();
@@ -532,18 +537,18 @@ public class DatabaseManager {
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
-		int newID = createID(DatabaseContract.TABLE_COMPETITIONS, DatabaseContract.COL_EVENT_ID);
+		int newID = createID(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID);
 		
 		ContentValues values = new ContentValues();
-		values.put(DatabaseContract.COL_EVENT_ID, newID);
-		values.put(DatabaseContract.COL_EVENT_NAME, name);
-		values.put(DatabaseContract.COL_GAME_NAME, gameName);
-		values.put(DatabaseContract.COL_LOCATION, location);
+		values.put(DBContract.COL_EVENT_ID, newID);
+		values.put(DBContract.COL_EVENT_NAME, name);
+		values.put(DBContract.COL_GAME_NAME, gameName);
+		values.put(DBContract.COL_LOCATION, location);
 		
 		if(date != null)	//If a date has been set...
-			values.put(DatabaseContract.COL_DATE_STAMP, date.getTime());
+			values.put(DBContract.COL_DATE_STAMP, date.getTime());
 		
-		db.insert(DatabaseContract.TABLE_COMPETITIONS, null, values);
+		db.insert(DBContract.TABLE_EVENTS, null, values);
 		
 		helper.close();
 	}
@@ -567,9 +572,11 @@ public class DatabaseManager {
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
-		db.delete(DatabaseContract.TABLE_MATCH_PERF, DatabaseContract.COL_EVENT_ID + " LIKE ?", 
+		db.delete(DBContract.TABLE_MATCH_PERF, DBContract.COL_EVENT_ID + " LIKE ?", 
 				new String[] {Integer.toString(eventID)});
-		db.delete(DatabaseContract.TABLE_COMPETITIONS, DatabaseContract.COL_EVENT_ID + " LIKE ?", 
+		db.delete(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID + " LIKE ?", 
+				new String[] {Integer.toString(eventID)});
+		db.delete(DBContract.TABLE_EVENT_ROBOTS, DBContract.COL_EVENT_ID + " LIKE ?", 
 				new String[] {Integer.toString(eventID)});
 		
 		helper.close();
@@ -586,7 +593,7 @@ public class DatabaseManager {
 	public synchronized Event[] getAllEvents() {
 		
 		Cursor c = helper.getReadableDatabase().rawQuery(
-				"SELECT * FROM " + DatabaseContract.TABLE_COMPETITIONS, null);
+				"SELECT * FROM " + DBContract.TABLE_EVENTS, null);
 		
 		Event[] e = new Event[c.getCount()];
 		
@@ -595,12 +602,12 @@ public class DatabaseManager {
 			c.moveToNext();
 			
 			e[i] = new Event(
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_EVENT_ID)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_EVENT_NAME)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_GAME_NAME)),
-					new Date(c.getLong(c.getColumnIndex(DatabaseContract.COL_DATE_STAMP))),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_LOCATION)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_FMS_EVENT_ID))
+					c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_EVENT_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
+					new Date(c.getLong(c.getColumnIndex(DBContract.COL_DATE_STAMP))),
+					c.getString(c.getColumnIndex(DBContract.COL_LOCATION)),
+					c.getString(c.getColumnIndex(DBContract.COL_FMS_EVENT_ID))
 					);
 		}
 		
@@ -621,7 +628,13 @@ public class DatabaseManager {
 	
 	public synchronized Event[] getEventsByColumns(String[] cols, String[] vals) {
 		
-		String queryString = "SELECT * FROM " + DatabaseContract.TABLE_COMPETITIONS + " WHERE";
+		if(cols.length != vals.length)
+			return null;
+		
+		if(cols.length == 0)
+			return new Event[0];
+		
+		String queryString = "SELECT * FROM " + DBContract.TABLE_EVENTS + " WHERE";
 		
 		if(cols.length > 0)	//Special case for first entry because it should not include the AND
 			queryString += " " + cols[0] + " LIKE ?";
@@ -637,12 +650,12 @@ public class DatabaseManager {
 			c.moveToNext();
 			
 			e[i] = new Event(
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_EVENT_ID)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_EVENT_NAME)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_GAME_NAME)),
-					new Date(c.getLong(c.getColumnIndex(DatabaseContract.COL_DATE_STAMP))),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_LOCATION)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_FMS_EVENT_ID))
+					c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_EVENT_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
+					new Date(c.getLong(c.getColumnIndex(DBContract.COL_DATE_STAMP))),
+					c.getString(c.getColumnIndex(DBContract.COL_LOCATION)),
+					c.getString(c.getColumnIndex(DBContract.COL_FMS_EVENT_ID))
 					);
 		}
 		
@@ -678,7 +691,7 @@ public class DatabaseManager {
 			return false;
 		
 		for(String s : updateCols) { //Does not allow the caller to update the team number.
-			if(s.equals(DatabaseContract.COL_EVENT_ID))
+			if(s.equals(DBContract.COL_EVENT_ID))
 				return false;
 		}
 		
@@ -696,7 +709,7 @@ public class DatabaseManager {
 			queryString += " AND " + queryCols[i] + " LIKE ?";
 		}
 		
-		helper.getWritableDatabase().update(DatabaseContract.TABLE_COMPETITIONS, vals, 
+		helper.getWritableDatabase().update(DBContract.TABLE_EVENTS, vals, 
 				queryString, queryVals);
 		
 		helper.close();
@@ -726,16 +739,16 @@ public class DatabaseManager {
 			Date dateStamp) {
 		
 		ContentValues values = new ContentValues();
-		values.put(DatabaseContract.COL_TEAM_NUMBER, teamNumber);
-		values.put(DatabaseContract.COL_EVENT_ID, eventID);
-		values.put(DatabaseContract.COL_USER_ID, userID);
-		values.put(DatabaseContract.COL_COMMENT, comment);
+		values.put(DBContract.COL_TEAM_NUMBER, teamNumber);
+		values.put(DBContract.COL_EVENT_ID, eventID);
+		values.put(DBContract.COL_USER_ID, userID);
+		values.put(DBContract.COL_COMMENT, comment);
 		
 		if(dateStamp != null) {
-			values.put(DatabaseContract.COL_DATE_STAMP, dateStamp.getTime());
+			values.put(DBContract.COL_DATE_STAMP, dateStamp.getTime());
 		}
 		
-		helper.getWritableDatabase().insert(DatabaseContract.TABLE_COMMENTS, null, values);
+		helper.getWritableDatabase().insert(DBContract.TABLE_COMMENTS, null, values);
 		
 		helper.close();
 	}
@@ -763,9 +776,9 @@ public class DatabaseManager {
 		if(dateStamp != null) {
 			
 			helper.getWritableDatabase().execSQL("DELETE FROM " + 
-					DatabaseContract.TABLE_COMMENTS + " WHERE " + 
-					DatabaseContract.COL_TEAM_NUMBER + "='" + teamNumber + 
-					"' AND " + DatabaseContract.COL_DATE_STAMP + 
+					DBContract.TABLE_COMMENTS + " WHERE " + 
+					DBContract.COL_TEAM_NUMBER + "='" + teamNumber + 
+					"' AND " + DBContract.COL_DATE_STAMP + 
 					"='" + dateStamp.getTime() + "'");
 		}
 	}
@@ -780,7 +793,7 @@ public class DatabaseManager {
 	public synchronized Comment[] getAllComments() {
 		
 		Cursor c = helper.getReadableDatabase().rawQuery(
-				"SELECT * FROM " + DatabaseContract.TABLE_COMMENTS, null);
+				"SELECT * FROM " + DBContract.TABLE_COMMENTS, null);
 		
 		Comment[] comments = new Comment[c.getCount()];
 		
@@ -789,11 +802,11 @@ public class DatabaseManager {
 			c.moveToNext();
 			
 			comments[i] = new Comment(
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_TEAM_NUMBER)),
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_USER_ID)),
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_EVENT_ID)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_COMMENT)),
-					new Date(c.getInt(c.getColumnIndex(DatabaseContract.COL_DATE_STAMP)))
+					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_USER_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_COMMENT)),
+					new Date(c.getInt(c.getColumnIndex(DBContract.COL_DATE_STAMP)))
 					);
 		}
 		
@@ -810,7 +823,7 @@ public class DatabaseManager {
 		if(cols.length < 1)
 			return new Comment[0];
 		
-		String queryString = "SELECT * FROM " + DatabaseContract.TABLE_COMMENTS + " WHERE " + cols[0] + " LIKE ?";
+		String queryString = "SELECT * FROM " + DBContract.TABLE_COMMENTS + " WHERE " + cols[0] + " LIKE ?";
 		
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
 			queryString += " AND " + cols[i] + " LIKE ?";
@@ -823,11 +836,11 @@ public class DatabaseManager {
 			c.moveToNext();
 			
 			comments[i] = new Comment(
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_TEAM_NUMBER)),
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_USER_ID)),
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_EVENT_ID)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_COMMENT)),
-					new Date(c.getLong(c.getColumnIndex(DatabaseContract.COL_DATE_STAMP)))
+					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_USER_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_COMMENT)),
+					new Date(c.getLong(c.getColumnIndex(DBContract.COL_DATE_STAMP)))
 					);
 		}
 		
@@ -857,15 +870,15 @@ public class DatabaseManager {
 			String address, String phoneNumber) {
 		
 		ContentValues values = new ContentValues();
-		values.put(DatabaseContract.COL_TEAM_NUMBER, teamNumber);
-		values.put(DatabaseContract.COL_CONTACT_ID, createID(DatabaseContract.TABLE_CONTACTS, 
-				DatabaseContract.COL_CONTACT_ID));
-		values.put(DatabaseContract.COL_CONTACT_NAME, name);
-		values.put(DatabaseContract.COL_EMAIL, email);
-		values.put(DatabaseContract.COL_ADDRESS, address);
-		values.put(DatabaseContract.COL_PHONE_NUMBER, phoneNumber);
+		values.put(DBContract.COL_TEAM_NUMBER, teamNumber);
+		values.put(DBContract.COL_CONTACT_ID, createID(DBContract.TABLE_CONTACTS, 
+				DBContract.COL_CONTACT_ID));
+		values.put(DBContract.COL_CONTACT_NAME, name);
+		values.put(DBContract.COL_EMAIL, email);
+		values.put(DBContract.COL_ADDRESS, address);
+		values.put(DBContract.COL_PHONE_NUMBER, phoneNumber);
 		
-		helper.getWritableDatabase().insert(DatabaseContract.TABLE_CONTACTS, null, values);
+		helper.getWritableDatabase().insert(DBContract.TABLE_CONTACTS, null, values);
 		helper.close();
 	}
 	
@@ -885,8 +898,8 @@ public class DatabaseManager {
 	
 	public synchronized void removeContact(int id) {
 		
-		helper.getWritableDatabase().delete(DatabaseContract.TABLE_CONTACTS, 
-				DatabaseContract.COL_CONTACT_ID + " LIKE ?", 
+		helper.getWritableDatabase().delete(DBContract.TABLE_CONTACTS, 
+				DBContract.COL_CONTACT_ID + " LIKE ?", 
 				new String[] {Integer.toString(id)});
 	}
 	
@@ -900,7 +913,7 @@ public class DatabaseManager {
 	public synchronized Contact[] getAllContacts() {
 		
 		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + 
-						DatabaseContract.TABLE_CONTACTS, null);
+						DBContract.TABLE_CONTACTS, null);
 		Contact[] contacts = new Contact[c.getCount()];
 		
 		for(int i = 0; i < contacts.length; i++) {
@@ -908,12 +921,12 @@ public class DatabaseManager {
 			c.moveToNext();
 			
 			contacts[i] = new Contact(
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_TEAM_NUMBER)),
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_CONTACT_ID)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_CONTACT_NAME)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_EMAIL)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_ADDRESS)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_PHONE_NUMBER))
+					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_CONTACT_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_CONTACT_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_EMAIL)),
+					c.getString(c.getColumnIndex(DBContract.COL_ADDRESS)),
+					c.getString(c.getColumnIndex(DBContract.COL_PHONE_NUMBER))
 					);
 		}
 		
@@ -942,7 +955,7 @@ public class DatabaseManager {
 		if(cols.length < 1)
 			return new Contact[0];
 		
-		String queryString = "SELECT * FROM " + DatabaseContract.TABLE_CONTACTS + " WHERE " 
+		String queryString = "SELECT * FROM " + DBContract.TABLE_CONTACTS + " WHERE " 
 				+ cols[0] + " LIKE ?";
 		
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
@@ -956,12 +969,12 @@ public class DatabaseManager {
 			c.moveToNext();
 			
 			contacts[i] = new Contact(
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_TEAM_NUMBER)),
-					c.getInt(c.getColumnIndex(DatabaseContract.COL_CONTACT_ID)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_CONTACT_NAME)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_EMAIL)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_ADDRESS)),
-					c.getString(c.getColumnIndex(DatabaseContract.COL_PHONE_NUMBER))
+					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_CONTACT_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_CONTACT_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_EMAIL)),
+					c.getString(c.getColumnIndex(DBContract.COL_ADDRESS)),
+					c.getString(c.getColumnIndex(DBContract.COL_PHONE_NUMBER))
 					);
 		}
 		
@@ -981,8 +994,8 @@ public class DatabaseManager {
 			return false;
 		
 		for(String s : updateCols) { //Does not allow the caller to update the team number.
-			if(s.equals(DatabaseContract.COL_CONTACT_ID) || 
-					s.equals(DatabaseContract.COL_TEAM_NUMBER))
+			if(s.equals(DBContract.COL_CONTACT_ID) || 
+					s.equals(DBContract.COL_TEAM_NUMBER))
 				return false;
 		}
 		
@@ -1000,7 +1013,7 @@ public class DatabaseManager {
 			queryString += " AND " + queryCols[i] + " LIKE ?";
 		}
 		
-		helper.getWritableDatabase().update(DatabaseContract.TABLE_CONTACTS, vals, 
+		helper.getWritableDatabase().update(DBContract.TABLE_CONTACTS, vals, 
 				queryString, queryVals);
 		
 		helper.close();
@@ -1027,13 +1040,13 @@ public class DatabaseManager {
 	
 	public synchronized boolean addGame(String name) {
 		
-		if(!hasValue(DatabaseContract.TABLE_GAMES, DatabaseContract.COL_GAME_NAME, name)) {
+		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, name)) {
 			//If the name is not taken...
 			
 			ContentValues values = new ContentValues();	//Add it to the
-			values.put(DatabaseContract.COL_GAME_NAME, name);	//games table
+			values.put(DBContract.COL_GAME_NAME, name);	//games table
 			
-			helper.getWritableDatabase().insert(DatabaseContract.TABLE_GAMES, null, values);
+			helper.getWritableDatabase().insert(DBContract.TABLE_GAMES, null, values);
 			helper.close();
 			
 			return true;
@@ -1053,7 +1066,7 @@ public class DatabaseManager {
 	 * Summary: Removes a game from the database based on the id parameter passed.
 	 * Be careful using this method. It also removes all competitions, matches, 
 	 * pictures, and robots that are associated with this game. This removes a whole
-	 * season worth of data from the database.
+	 * season's worth of data from the database.
 	 * 
 	 * @return True if the game was removed, false if it was not. This happens
 	 * if the string passed as a parameter was not found in the database.
@@ -1066,40 +1079,40 @@ public class DatabaseManager {
 	
 	public synchronized boolean removeGame(String name) {
 		
-		if(!hasValue(DatabaseContract.TABLE_GAMES, DatabaseContract.COL_GAME_NAME, name))	
+		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, name))	
 			//If this is not the name of a real game...
 			return false;	//tell the caller that the operation failed.
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
-		Cursor c = db.query(DatabaseContract.TABLE_ROBOTS, 
-				new String[] {DatabaseContract.COL_ROBOT_ID}, 
-				DatabaseContract.COL_GAME_NAME + " LIKE ?", 
+		Cursor c = db.query(DBContract.TABLE_ROBOTS, 
+				new String[] {DBContract.COL_ROBOT_ID}, 
+				DBContract.COL_GAME_NAME + " LIKE ?", 
 				new String[] {name}, 
 				null,null, null);
 		
 		for(int robotCount = 0; robotCount < c.getCount(); robotCount++) {
 			
 			c.moveToNext();
-			removeRobot(c.getInt(c.getColumnIndex(DatabaseContract.COL_ROBOT_ID)));
+			removeRobot(c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)));
 		}
 		
 		db = helper.getWritableDatabase();	//Reopen because the removeRobot method closed it.
 		
-		db.delete(DatabaseContract.TABLE_MATCH_PERF_METRICS, 
-				DatabaseContract.COL_GAME_NAME + " LIKE ?", 
+		db.delete(DBContract.TABLE_MATCH_PERF_METRICS, 
+				DBContract.COL_GAME_NAME + " LIKE ?", 
 				new String[] {name});
 		
-		db.delete(DatabaseContract.TABLE_ROBOT_METRICS, 
-				DatabaseContract.COL_GAME_NAME + " LIKE ?", 
+		db.delete(DBContract.TABLE_ROBOT_METRICS, 
+				DBContract.COL_GAME_NAME + " LIKE ?", 
 				new String[] {name});
 		
-		db.delete(DatabaseContract.TABLE_COMPETITIONS, 
-				DatabaseContract.COL_GAME_NAME + 
+		db.delete(DBContract.TABLE_EVENTS, 
+				DBContract.COL_GAME_NAME + 
 				" LIKE ?", new String[] {name});
 		
-		db.delete(DatabaseContract.TABLE_GAMES, 
-				DatabaseContract.COL_GAME_NAME + 
+		db.delete(DBContract.TABLE_GAMES, 
+				DBContract.COL_GAME_NAME + 
 				" LIKE ?", new String[] {name});
 		
 		helper.close();
@@ -1117,13 +1130,13 @@ public class DatabaseManager {
 	
 	public synchronized Game[] getAllGames() {
 		
-		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + DatabaseContract.TABLE_GAMES, null);
+		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + DBContract.TABLE_GAMES, null);
 		Game[] g = new Game[c.getCount()];
 		
 		for(int i = 0; i < g.length; i++) {
 			
 			c.moveToNext();
-			g[i] = new Game(c.getString(c.getColumnIndex(DatabaseContract.COL_GAME_NAME)));
+			g[i] = new Game(c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)));
 		}
 		
 		helper.close();
@@ -1148,21 +1161,33 @@ public class DatabaseManager {
 	 * passed gameName string was not an actual game name.
 	 *****/
 	
-	public synchronized boolean addRobot(int teamNumber, String gameName, int numberOfWheels, 
-			String wheelType, String driveTrain) {
+	public synchronized boolean addRobot(Robot robot) {
 		
-		if(!hasValue(DatabaseContract.TABLE_GAMES, DatabaseContract.COL_GAME_NAME, gameName))
+		return addRobot(robot.getTeamNumber(), robot.getGame(), 
+				robot.getComments(), robot.getMetricValues());
+	}
+	
+	public synchronized boolean addRobot(int teamNumber, String gameName, String comments,
+			MetricValue[] vals) {
+		
+		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, gameName))
 			return false;
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
-		values.put(DatabaseContract.COL_TEAM_NUMBER, teamNumber);
-		values.put(DatabaseContract.COL_GAME_NAME, gameName);
-		values.put(DatabaseContract.COL_ROBOT_ID, createID(DatabaseContract.TABLE_ROBOTS, 
-				DatabaseContract.COL_ROBOT_ID));
+		values.put(DBContract.COL_TEAM_NUMBER, teamNumber);
+		values.put(DBContract.COL_GAME_NAME, gameName);
+		values.put(DBContract.COL_ROBOT_ID, createID(DBContract.TABLE_ROBOTS, 
+				DBContract.COL_ROBOT_ID));
+		values.put(DBContract.COL_COMMENTS, comments);
 		
-		db.insert(DatabaseContract.TABLE_ROBOTS, null, values);
+		for(MetricValue v : vals) {
+			
+			values.put(v.getMetric().getKey(), v.getValue());
+		}
+		
+		db.insert(DBContract.TABLE_ROBOTS, null, values);
 		helper.close();
 		
 		return true;
@@ -1184,7 +1209,7 @@ public class DatabaseManager {
 	
 	public synchronized boolean removeRobot(int robotID) {
 		
-		if(!hasValue(DatabaseContract.TABLE_ROBOTS, DatabaseContract.COL_ROBOT_ID, 
+		if(!hasValue(DBContract.TABLE_ROBOTS, DBContract.COL_ROBOT_ID, 
 				Integer.toString(robotID)))
 			return false;
 		
@@ -1192,15 +1217,92 @@ public class DatabaseManager {
 		
 		//Remove all pictures
 		
-		db.delete(DatabaseContract.TABLE_MATCH_PERF, DatabaseContract.COL_ROBOT_ID + " LIKE ?", 
+		db.delete(DBContract.TABLE_MATCH_PERF, DBContract.COL_ROBOT_ID + " LIKE ?", 
 				new String[] {Integer.toString(robotID)});
-		db.delete(DatabaseContract.TABLE_ROBOTS, DatabaseContract.COL_ROBOT_ID + " LIKE ?", 
+		db.delete(DBContract.TABLE_ROBOTS, DBContract.COL_ROBOT_ID + " LIKE ?", 
+				new String[] {Integer.toString(robotID)});
+		db.delete(DBContract.TABLE_EVENT_ROBOTS, 
+				DBContract.COL_ROBOT_ID + " LIKE ?", 
 				new String[] {Integer.toString(robotID)});
 		helper.close();
 		
 		return true;
 	}
 	
+	
+	/*****
+	 * Method: getRobotsByColumns
+	 * 
+	 * @param cols
+	 * @param vals
+	 * @return
+	 * 
+	 * Summary: returns a list of robots created by the cols
+	 * and vals specified.
+	 */
+	
+	public synchronized Robot[] getRobotsByColumns(String[] cols, String[] vals) {
+		
+		if(cols.length != vals.length)
+			return null;
+		
+		if(cols.length < 1)
+			return new Robot[0];
+		
+		String queryString = "SELECT * FROM " + DBContract.TABLE_ROBOTS + 
+				" WHERE " + cols[0] + " LIKE ?";
+		
+		for(int i = 1; i < cols.length; i++) //Builds a string for the query with cols
+			queryString += " AND " + cols[i] + " LIKE ?";
+		
+		queryString += " ORDER BY " + DBContract.COL_TEAM_NUMBER + " ASC";
+			
+		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
+		Robot[] r = new Robot[c.getCount()];
+		
+		helper.close();
+		
+		String lastRobotGame = null;
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			
+			c.moveToNext();
+			
+			String thisRobotGame = c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME));
+			ArrayList<MetricValue> metricVals = new ArrayList<MetricValue>();
+			
+			if(lastRobotGame == null || !thisRobotGame.equals(lastRobotGame)) {
+				
+				Metric[] metrics = this.getRobotMetricsByColumns
+						(new String[] {DBContract.COL_GAME_NAME}, new String[] {thisRobotGame});
+				
+				for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
+					
+					try {
+						metricVals.add(
+							new MetricValue(
+								metrics[metricCount],
+								c.getString(c.getColumnIndex(metrics[metricCount].getKey()))
+							));
+					} catch(MetricTypeMismatchException e) {
+						System.out.println(e.getMessage());
+					}
+				}
+			}
+			
+			r[i] = new Robot(
+					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
+					metricVals.toArray(new MetricValue[0])
+					);
+			
+			lastRobotGame = thisRobotGame;
+		}
+		
+		return r;
+	}
 	
 	/*****
 	 * Method: addRobotMetric
@@ -1221,19 +1323,13 @@ public class DatabaseManager {
 	 */
 	
 	public synchronized boolean addRobotMetric(String name, String game, int type, 
-			String[] range, String description) {
+			String[] range, String description, boolean displayed) {
 		
-		if(hasValue(DatabaseContract.TABLE_ROBOT_METRICS, DatabaseContract.COL_GAME_NAME, game) && 
-				hasValue(DatabaseContract.TABLE_ROBOT_METRICS, DatabaseContract.COL_METRIC_NAME, name))
-			return false;	//There is already a type with this name for this game.
-		
-		if(!hasValue(DatabaseContract.TABLE_GAMES, DatabaseContract.COL_GAME_NAME, game))
+		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, game))
 			return false;	//This game is not in the database.
 		
-		if(type < 0 || type > DatabaseContract.HIGHEST_TYPE)
+		if(type < 0 || type > DBContract.HIGHEST_TYPE)
 			return false;	//This is not a real type.
-		
-		SQLiteDatabase db = helper.getWritableDatabase();
 		
 		String rangeInput = new String();
 		
@@ -1244,43 +1340,48 @@ public class DatabaseManager {
 		}
 		
 		ContentValues values = new ContentValues();	//New values for the ROBOT_METRICS table
-		values.put(DatabaseContract.COL_METRIC_NAME, name);
-		values.put(DatabaseContract.COL_GAME_NAME, game);
-		values.put(DatabaseContract.COL_TYPE, type);
-		values.put(DatabaseContract.COL_RANGE, rangeInput);
-		values.put(DatabaseContract.COL_DESCRIPTION, description);
+		values.put(DBContract.COL_METRIC_ID, createID(
+				DBContract.TABLE_ROBOT_METRICS, DBContract.COL_METRIC_ID));
+		values.put(DBContract.COL_METRIC_NAME, name);
+		values.put(DBContract.COL_GAME_NAME, game);
+		values.put(DBContract.COL_TYPE, type);
+		values.put(DBContract.COL_RANGE, rangeInput);
+		values.put(DBContract.COL_DESCRIPTION, description);
+		values.put(DBContract.COL_DISPLAY, displayed);
 		
-		Cursor c = db.query(DatabaseContract.TABLE_ROBOT_METRICS,	//Check to see who has
-							new String[] {DatabaseContract.COL_METRIC_KEY}, //what keys already
-							DatabaseContract.COL_GAME_NAME + " LIKE ?", 
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		Cursor c = db.query(DBContract.TABLE_ROBOT_METRICS,	//Check to see who has
+							new String[] {DBContract.COL_METRIC_KEY}, //what keys already
+							DBContract.COL_GAME_NAME + " LIKE ?", 
 							new String[] {game}, 
 							null, null, 
-							DatabaseContract.COL_METRIC_KEY + " ASC");
+							DBContract.COL_METRIC_KEY + " ASC");
 		
-		for(int key = 0; key < DatabaseContract.COL_KEYS.length; key++) {	//Cycle through
+		for(int key = 0; key < DBContract.COL_KEYS.length; key++) {	//Cycle through
 																			//all possible keys.
 			if(!c.moveToNext() ||
-					!DatabaseContract.COL_KEYS[key].equals(c.getString(c.getColumnIndex(DatabaseContract.COL_METRIC_KEY)))) {
+					!DBContract.COL_KEYS[key].equals(c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)))) {
 				
-				values.put(DatabaseContract.COL_METRIC_KEY, //Assign this key to the new
-						DatabaseContract.COL_KEYS[key]);	//metric
+				values.put(DBContract.COL_METRIC_KEY, //Assign this key to the new
+						DBContract.COL_KEYS[key]);	//metric
 				
 				ContentValues nullValue = new ContentValues();	//Make a null CV
-				nullValue.putNull(DatabaseContract.COL_KEYS[key]);
+				nullValue.putNull(DBContract.COL_KEYS[key]);
 				
-				db.update(DatabaseContract.TABLE_ROBOTS,	//Put the null
+				db.update(DBContract.TABLE_ROBOTS,	//Put the null
 						nullValue, 							//value into the
-						DatabaseContract.COL_GAME_NAME + " LIKE ?",//robots table
+						DBContract.COL_GAME_NAME + " LIKE ?",//robots table
 						new String[] {game});
 				
 				break;	//exit the loop, no need to continue
 			}
 			
-			if(key == 15)	//Return false because no more metrics can
+			if(key == DBContract.COL_KEYS.length)	//Return false because no more metrics can
 				return false;	//be added. Limit reached.
 		}
 		
-		db.insert(DatabaseContract.TABLE_ROBOT_METRICS, null, values);
+		db.insert(DBContract.TABLE_ROBOT_METRICS, null, values);
 		db.close();
 		
 		return true;
@@ -1299,37 +1400,92 @@ public class DatabaseManager {
 	 * not a valid metric, i.e. it isn't in the database.
 	 *****/
 	
-	public synchronized boolean removeRobotMetric(String name, String game) {
+	public synchronized boolean removeRobotMetric(int metricID) {
 		
-		if(!hasValue(DatabaseContract.TABLE_ROBOT_METRICS, DatabaseContract.COL_METRIC_NAME, name) && 
-				!hasValue(DatabaseContract.TABLE_ROBOT_METRICS, DatabaseContract.COL_GAME_NAME, game))
+		if(!hasValue(DBContract.TABLE_ROBOT_METRICS, DBContract.COL_METRIC_ID, 
+				Integer.toString(metricID)))
 			return false;
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
-		Cursor c = db.query(DatabaseContract.TABLE_ROBOT_METRICS, 
-							new String[] {DatabaseContract.COL_METRIC_KEY}, 
-							DatabaseContract.COL_GAME_NAME + " LIKE ? AND " + 
-							DatabaseContract.COL_METRIC_NAME + " LIKE ?", 
-							new String[] {game, name}, 
+		Cursor c = db.query(DBContract.TABLE_ROBOT_METRICS, 
+							new String[] {DBContract.COL_METRIC_KEY, 
+								DBContract.COL_GAME_NAME}, 
+							DBContract.COL_METRIC_ID + " LIKE ?", 
+							new String[] {Integer.toString(metricID)}, 
 							null, null, null);
 		
 		c.moveToFirst();
-		String key = c.getString(c.getColumnIndex(DatabaseContract.COL_METRIC_KEY));
+		String key = c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY));
+		String game = c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME));
 		
 		ContentValues nullVal = new ContentValues();
 		nullVal.putNull(key);
 		
-		db.update(DatabaseContract.TABLE_ROBOTS, nullVal, 
-					DatabaseContract.COL_GAME_NAME + " LIKE ?", new String[] {game});
+		db.update(DBContract.TABLE_ROBOTS, nullVal, 
+					DBContract.COL_GAME_NAME + " LIKE ?", new String[] {game});
 		
-		db.delete(DatabaseContract.TABLE_ROBOT_METRICS, 
-				  DatabaseContract.COL_GAME_NAME + " LIKE ? AND " + DatabaseContract.COL_METRIC_NAME + " LIKE ?", 
-				  new String[] {game, name});
+		db.delete(DBContract.TABLE_ROBOT_METRICS, 
+				  DBContract.COL_METRIC_ID + " LIKE ?", 
+				  new String[] {Integer.toString(metricID)});
 		
 		helper.close();
 		
 		return true;
+	}
+	
+	public synchronized Metric[] getRobotMetricsByColumns(String[] cols, String[] vals) {
+		
+		if(cols.length != vals.length)
+			return null;
+		
+		if(cols.length < 1)
+			return new Metric[0];
+		
+		String queryString = "SELECT * FROM " + DBContract.TABLE_ROBOT_METRICS + 
+				" WHERE " + cols[0] + " LIKE ?";
+		
+		for(int i = 1; i < cols.length; i++) //Builds a string for the query with coos
+			queryString += " AND " + cols[i] + " LIKE ?";
+			
+		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
+		Metric[] m = new Metric[c.getCount()];
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			
+			c.moveToNext();
+			
+			String rangeString = c.getString(c.getColumnIndex(DBContract.COL_RANGE));
+			ArrayList<Object> rangeArrList = new ArrayList<Object>();
+			
+			String currentRangeValString = new String();
+			
+			for(int character = 0; character < rangeString.length(); character++) {
+				
+				if(rangeString.charAt(character) != ':')
+					currentRangeValString += rangeString.charAt(character);
+				
+				else {
+					rangeArrList.add(currentRangeValString);
+					currentRangeValString = new String();
+				}
+			}
+			
+			m[i] = new Metric(
+					c.getInt(c.getColumnIndex(DBContract.COL_METRIC_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_METRIC_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_DESCRIPTION)),
+					c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)),
+					c.getInt(c.getColumnIndex(DBContract.COL_TYPE)),
+					rangeArrList.toArray(),
+					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0)
+					);
+		}
+		
+		helper.close();
+		
+		return m;
 	}
 	
 	
@@ -1350,78 +1506,85 @@ public class DatabaseManager {
 	 * through 4.
 	 */
 	
-	public synchronized boolean addMatchPerformanceMetric(String name, String game, int type, String[] range, String description) {
+	public synchronized boolean addMatchPerformanceMetric(Metric metric) {
 		
-		if(hasValue(DatabaseContract.TABLE_MATCH_PERF_METRICS, DatabaseContract.COL_GAME_NAME, game) && 
-				hasValue(DatabaseContract.TABLE_MATCH_PERF_METRICS, DatabaseContract.COL_METRIC_NAME, name))
-			return false;	//There is already a type with this name for this game.
+		return addMatchPerformanceMetric(metric.getMetricName(), metric.getGameName(),
+				metric.getType(), metric.getRange(), metric.getDescription(), 
+				metric.isDisplayed());
+	}
+	
+	public synchronized boolean addMatchPerformanceMetric(String name, String game, 
+			int type, Object[] range, String description, boolean displayed) {
 		
-		if(!hasValue(DatabaseContract.TABLE_GAMES, DatabaseContract.COL_GAME_NAME, game))
+		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, game))
 			return false;	//This game is not in the database.
 		
-		if(type < 0 || type > DatabaseContract.HIGHEST_TYPE)
+		if(type < 0 || type > DBContract.HIGHEST_TYPE)
 			return false;	//This is not a real type.
-		
-		SQLiteDatabase db = helper.getWritableDatabase();
 		
 		String rangeInput = new String();
 		
 		if(range != null) {
 		
-			for(String r :  range)	//Create the string for the range.
-				rangeInput += r + ":";	//The range is stored in one cell.
+			for(Object r :  range)	//Create the string for the range.
+				rangeInput += r.toString() + ":";	//The range is stored in one cell.
 		}
 		
-		ContentValues values = new ContentValues();	//New values for the MATCH_PERF_METRICS table
-		values.put(DatabaseContract.COL_METRIC_NAME, name);
-		values.put(DatabaseContract.COL_GAME_NAME, game);
-		values.put(DatabaseContract.COL_TYPE, type);
-		values.put(DatabaseContract.COL_RANGE, rangeInput);
-		values.put(DatabaseContract.COL_DESCRIPTION, description);
+		ContentValues values = new ContentValues();	//New values for the MATCH_PERF_METRICS
+		values.put(DBContract.COL_METRIC_ID, createID(
+				DBContract.TABLE_MATCH_PERF_METRICS, DBContract.COL_METRIC_ID));
+		values.put(DBContract.COL_METRIC_NAME, name);
+		values.put(DBContract.COL_GAME_NAME, game);
+		values.put(DBContract.COL_TYPE, type);
+		values.put(DBContract.COL_RANGE, rangeInput);
+		values.put(DBContract.COL_DESCRIPTION, description);
+		values.put(DBContract.COL_DISPLAY, displayed);
 		
-		Cursor c = db.query(DatabaseContract.TABLE_MATCH_PERF_METRICS,	//Check to see who has
-							new String[] {DatabaseContract.COL_METRIC_KEY}, //what keys already
-							DatabaseContract.COL_GAME_NAME + " LIKE ?", 
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		Cursor c = db.query(DBContract.TABLE_MATCH_PERF_METRICS,	//Check to see who has
+							new String[] {DBContract.COL_METRIC_KEY}, //what keys already
+							DBContract.COL_GAME_NAME + " LIKE ?", 
 							new String[] {game}, 
 							null, null, 
-							DatabaseContract.COL_METRIC_KEY + " ASC");
+							DBContract.COL_METRIC_KEY + " ASC");
 		
-		for(int key = 0; key < DatabaseContract.COL_KEYS.length; key++) {	//Cycle through
+		for(int key = 0; key < DBContract.COL_KEYS.length; key++) {	//Cycle through
 																			//all possible keys.
 			if(!c.moveToNext() ||
-					!DatabaseContract.COL_KEYS[key].equals(c.getString(c.getColumnIndex(DatabaseContract.COL_METRIC_KEY)))) {
+					!DBContract.COL_KEYS[key].equals(c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)))) {
 				
-				values.put(DatabaseContract.COL_METRIC_KEY, //Assign this key to the new
-						DatabaseContract.COL_KEYS[key]);	//metric
+				values.put(DBContract.COL_METRIC_KEY, //Assign this key to the new
+						DBContract.COL_KEYS[key]);	//metric
 				
-				Cursor eventCursor = db.query(DatabaseContract.TABLE_COMPETITIONS, //Select the competitions for this game
-											  new String[] {DatabaseContract.COL_EVENT_ID}, 
-											  DatabaseContract.COL_GAME_NAME + " LIKE ?", 
+				Cursor eventCursor = db.query(DBContract.TABLE_EVENTS, //Select the competitions for this game
+											  new String[] {DBContract.COL_EVENT_ID}, 
+											  DBContract.COL_GAME_NAME + " LIKE ?", 
 											  new String[] {game}, 
 											  null, null, null);
 				
 				ContentValues nullValue = new ContentValues();	//Make a null CV
-				nullValue.putNull(DatabaseContract.COL_KEYS[key]);
+				nullValue.putNull(DBContract.COL_KEYS[key]);
 				
 				for(int eventCount = 0; eventCount < eventCursor.getCount(); eventCount++) {	//Cycle through all the comps
 					
 					eventCursor.moveToNext();
 					
-					db.update(DatabaseContract.TABLE_MATCH_PERF, //Set the key value to null in the match table
+					db.update(DBContract.TABLE_MATCH_PERF, //Set the key value to null in the match table
 							nullValue, 
-							DatabaseContract.COL_EVENT_ID + " LIKE ?", 
+							DBContract.COL_EVENT_ID + " LIKE ?", 
 							new String[] {eventCursor.getString(
-									eventCursor.getColumnIndex(DatabaseContract.COL_EVENT_ID))});
+									eventCursor.getColumnIndex(DBContract.COL_EVENT_ID))});
 				}
 				
 				break;	//No need to continue
 			}
 			
-			if(key == 15)	//Return false because no more metrics can
+			if(key == DBContract.COL_KEYS.length)	//Return false because no more metrics can
 				return false;	//be added. Limit reached.
 		}
 		
-		db.insert(DatabaseContract.TABLE_MATCH_PERF_METRICS, null, values);
+		db.insert(DBContract.TABLE_MATCH_PERF_METRICS, null, values);
 		db.close();
 		
 		return true;
@@ -1441,46 +1604,44 @@ public class DatabaseManager {
 	 * given was not a valid game, or the name given was no the name of a metric.
 	 *****/
 	
-	public synchronized boolean removeMatchPerformaceMetric(String name, String game) {
+	public synchronized boolean removeMatchPerformaceMetric(int metricID) {
 		
-		if(!hasValue(DatabaseContract.TABLE_MATCH_PERF_METRICS, 
-				DatabaseContract.COL_METRIC_NAME, name) && 
-				!hasValue(DatabaseContract.TABLE_MATCH_PERF_METRICS, 
-						DatabaseContract.COL_GAME_NAME, game))
+		if(!hasValue(DBContract.TABLE_MATCH_PERF_METRICS, 
+				DBContract.COL_METRIC_ID, Integer.toString(metricID)))
 			return false;	//If this is not a real game or metric...
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
-		Cursor c = db.query(DatabaseContract.TABLE_MATCH_PERF_METRICS,
-				new String[] {DatabaseContract.COL_METRIC_KEY}, 
-				DatabaseContract.COL_GAME_NAME + " LIKE ? AND " + 
-						DatabaseContract.COL_METRIC_NAME + " LIKE ?", 
-				new String[] {game, name}, 
+		Cursor c = db.query(DBContract.TABLE_MATCH_PERF_METRICS,
+				new String[] {DBContract.COL_METRIC_KEY, DBContract.COL_GAME_NAME}, 
+				DBContract.COL_METRIC_ID + " LIKE ?", 
+				new String[] {Integer.toString(metricID)}, 
 				null, null, null);
 		c.moveToFirst();//Gets the key for this metric
+		String key = c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY));
+		String game = c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME));
 		
 		ContentValues nullVal = new ContentValues();//Make a null CV for it
-		nullVal.putNull(c.getString(c.getColumnIndex(DatabaseContract.COL_METRIC_KEY)));
+		nullVal.putNull(key);
 		
-		c = db.query(DatabaseContract.TABLE_COMPETITIONS, 
-				new String[] {DatabaseContract.COL_EVENT_ID}, 
-				DatabaseContract.COL_GAME_NAME + " LIKE ?", 
+		c = db.query(DBContract.TABLE_EVENTS, 
+				new String[] {DBContract.COL_EVENT_ID}, 
+				DBContract.COL_GAME_NAME + " LIKE ?", 
 				new String[] {game}, 
 				null, null, null);//Get the competitions for this game
 		
 		while(c.moveToNext()) {//While there are still more competitions...
 			
-			db.update(DatabaseContract.TABLE_MATCH_PERF, nullVal, 
-					DatabaseContract.COL_EVENT_ID + " LIKE ?", 
+			db.update(DBContract.TABLE_MATCH_PERF, nullVal, 
+					DBContract.COL_EVENT_ID + " LIKE ?", 
 					new String[] {//Set the metric at the key to null
-						c.getString(c.getColumnIndex(DatabaseContract.COL_EVENT_ID))
+						c.getString(c.getColumnIndex(DBContract.COL_EVENT_ID))
 					});
-			
 		}
 		
-		db.delete(DatabaseContract.TABLE_MATCH_PERF_METRICS, 
-				  DatabaseContract.COL_GAME_NAME + " LIKE ? AND " + DatabaseContract.COL_METRIC_NAME + " LIKE ?", 
-				  new String[] {game, name});//Delete the metric
+		db.delete(DBContract.TABLE_MATCH_PERF_METRICS, 
+				  DBContract.COL_METRIC_ID + " LIKE ?", 
+				  new String[] {Integer.toString(metricID)});//Delete the metric
 		
 		helper.close();
 		
@@ -1511,7 +1672,7 @@ public class DatabaseManager {
 			return false;
 		
 		for(String s : updateCols) { //Does not allow the caller to update the team number.
-			if(s.equals(DatabaseContract.COL_ROBOT_ID))
+			if(s.equals(DBContract.COL_ROBOT_ID))
 				return false;
 		}
 		
@@ -1529,7 +1690,7 @@ public class DatabaseManager {
 			queryString += " AND " + queryCols[i] + " LIKE ?";
 		}
 		
-		helper.getWritableDatabase().update(DatabaseContract.TABLE_ROBOTS, vals, 
+		helper.getWritableDatabase().update(DBContract.TABLE_ROBOTS, vals, 
 				queryString, queryVals);
 		
 		helper.close();
@@ -1537,15 +1698,230 @@ public class DatabaseManager {
 		return true;
 	}
 	
-	public synchronized void insertMatchData(int robotID) {
+	
+	/*****
+	 * Method: addRobotToEvent
+	 * 
+	 * @param eventID
+	 * @param robotID
+	 * @return
+	 * 
+	 * Summary: Adds the specified robot to the specified event.
+	 */
+	
+	public synchronized boolean addRobotToEvent(int eventID, int robotID) {
 		
+		if(!hasValue(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID, Integer.toString(robotID)) || 
+				!hasValue(DBContract.TABLE_ROBOTS, DBContract.COL_ROBOT_ID, Integer.toString(robotID)))
+			return false;
 		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		Cursor enteredCheck = db.rawQuery("SELECT * FROM " + DBContract.TABLE_EVENT_ROBOTS +
+				" WHERE " + DBContract.COL_EVENT_ID + " LIKE ?" +
+				" AND " + DBContract.COL_ROBOT_ID + " LIKE ?" ,
+				new String[] {Integer.toString(eventID), Integer.toString(robotID)});
+		
+		if(enteredCheck.getCount() > 0) {
+			
+			helper.close();
+			return false;
+		}
+		
+		String robotGameName;
+		String eventGameName;
+		
+		Cursor eventCursor = db.rawQuery("SELECT " + DBContract.COL_GAME_NAME + 
+				" FROM " + DBContract.TABLE_EVENTS + 
+				" WHERE " + DBContract.COL_EVENT_ID + 
+				" LIKE ?", new String[] {Integer.toString(eventID)});
+		eventCursor.moveToFirst();
+		eventGameName = eventCursor.getString(eventCursor.getColumnIndex(DBContract.COL_GAME_NAME));
+		
+		Cursor robotCursor = db.rawQuery("SELECT " + DBContract.COL_GAME_NAME + 
+				" FROM " + DBContract.TABLE_ROBOTS + 
+				" WHERE " + DBContract.COL_ROBOT_ID + 
+				" LIKE ?", new String[] {Integer.toString(robotID)});
+		robotCursor.moveToFirst();
+		robotGameName = robotCursor.getString(robotCursor.getColumnIndex(DBContract.COL_GAME_NAME));
+		
+		if(!eventGameName.equals(robotGameName)) {
+			
+			helper.close();
+			return false;
+		}
+		
+		db.execSQL("INSERT INTO " + DBContract.TABLE_EVENT_ROBOTS + 
+				" (" + DBContract.COL_EVENT_ID + ", " + DBContract.COL_ROBOT_ID + ")" +
+				" VALUES (" + Integer.toString(eventID) + ", " + Integer.toString(robotID));
+		
+		helper.close();
+		
+		return true;
 	}
 	
 	
-	public synchronized void getMatchData(int robotID) {
+	/*****
+	 * Method: removeRobotFrom Event
+	 * 
+	 * @param eventID
+	 * @param robotID
+	 * @return
+	 * 
+	 * Summary: Removes the specified robot from the specified event
+	 */
+	
+	public synchronized boolean removeRobotFromEvent(int eventID, int robotID) {
 		
+		int affectedRows = helper.getWritableDatabase().delete(
+				DBContract.TABLE_EVENT_ROBOTS, 
+				DBContract.COL_EVENT_ID + " LIKE ? AND " +
+				DBContract.COL_ROBOT_ID + " LIKE ?", 
+				new String[] {Integer.toString(eventID), Integer.toString(robotID)});
 		
+		return affectedRows > 0;
+	}
+	
+	
+	/*****
+	 * Method: getRobotsAtEvent
+	 * 
+	 * @param eventID
+	 * @return
+	 */
+	
+	public synchronized Robot[] getRobotsAtEvent(int eventID) {
+		
+		if(!hasValue(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID, 
+				Integer.toString(eventID)))
+			return null;
+		
+		SQLiteDatabase db = helper.getReadableDatabase();
+		
+		Cursor c = db.rawQuery("SELECT " + DBContract.COL_ROBOT_ID + 
+				" FROM " + DBContract.TABLE_EVENT_ROBOTS + 
+				" WHERE " + DBContract.COL_EVENT_ID + " LIKE ?", 
+				new String[] {Integer.toString(eventID)});
+		
+		String[] colArray = new String[c.getCount()];
+		String[] robotIDs = new String[c.getCount()];
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			
+			c.moveToNext();
+			
+			colArray[i] = DBContract.COL_ROBOT_ID;
+			robotIDs[i] = c.getString(c.getColumnIndex(DBContract.COL_ROBOT_ID));
+		}
+		
+		return getRobotsByColumns(colArray, robotIDs);
+	}
+	
+	public Event[] getEventsByRobot(int robotID) {
+		
+		String robotIDString = Integer.toString(robotID);
+		
+		if(!hasValue(DBContract.TABLE_ROBOTS, DBContract.COL_ROBOT_ID, robotIDString))
+			return null;
+		
+		Cursor c = helper.getReadableDatabase().rawQuery("SELECT " + DBContract.COL_EVENT_ID +
+				" FROM " + DBContract.TABLE_EVENT_ROBOTS + 
+				" WHERE " + DBContract.COL_ROBOT_ID + 
+				" LIKE ?"
+				, new String[] {robotIDString});
+		
+		String[] colArray = new String[c.getCount()];
+		String[] robotIDs = new String[c.getCount()];
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			
+			c.moveToNext();
+			
+			colArray[i] = DBContract.COL_EVENT_ID;
+			robotIDs[i] = c.getString(c.getColumnIndex(DBContract.COL_EVENT_ID));
+		}
+		
+		helper.close();
+		
+		if(colArray.length > 0)
+			return getEventsByColumns(colArray, robotIDs);
+		else
+			return new Event[0];
+			
+	}
+	
+	
+	/*****
+	 * Method: insertMatchData
+	 * 
+	 * @param data
+	 * @return true if the data was entered successfully, false
+	 * if the user, event, or robot did not exist.
+	 * 
+	 * Summary: Inserts match data from the data given.
+	 */
+	
+	public synchronized boolean insertMatchData(MatchData data) {
+		
+		return insertMatchData(data.getEventID(), data.getMatchNumber(), data.getRobotID(),
+				data.getUserID(), data.getMatchType(), data.getMetricValues(), 
+				data.getComments());
+	}
+	
+	public synchronized boolean insertMatchData(int eventID, int matchNumber, int robotID, 
+			int userID, String matchType, MetricValue[] vals, String comments) {
+		
+		if(!hasValue(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID, Integer.toString(eventID)))
+			return false;
+		if(!hasValue(DBContract.TABLE_ROBOTS, DBContract.COL_ROBOT_ID, Integer.toString(robotID)))
+			return false;
+		if(!hasValue(DBContract.TABLE_USERS, DBContract.COL_USER_ID, Integer.toString(userID)))
+			return false;
+		
+		ContentValues values = new ContentValues();
+		
+		values.put(DBContract.COL_EVENT_ID, Integer.toString(eventID));
+		values.put(DBContract.COL_MATCH_NUMBER, Integer.toString(matchNumber));
+		values.put(DBContract.COL_ROBOT_ID, Integer.toString(robotID));
+		values.put(DBContract.COL_USER_ID, Integer.toString(userID));
+		values.put(DBContract.COL_MATCH_TYPE, matchType);
+		values.put(DBContract.COL_COMMENTS, comments);
+		
+		for(MetricValue val : vals) {
+			
+			values.put(val.getMetric().getKey(), val.getValue());
+		}
+		
+		helper.getWritableDatabase().insert(DBContract.TABLE_MATCH_PERF, null, values);
+		helper.close();
+		
+		return true;
+	}
+	
+	public synchronized MatchData[] getMatchDataByColumns(String[] cols, String[] vals) {
+		
+		if(cols.length != vals.length)
+			return null;
+		
+		if(cols.length < 1)
+			return new MatchData[0];
+		
+		String queryString = "SELECT * FROM " + DBContract.TABLE_MATCH_PERF + " WHERE " + cols[0] + " LIKE ?";
+		
+		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
+			queryString += " AND " + cols[i] + " LIKE ?";
+			
+		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
+		MatchData[] d = new MatchData[c.getCount()];
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			
+			c.moveToNext();//FIX ME!
+		}
+		
+		helper.close();
+		
+		return d;
 	}
 	
 	
@@ -1624,7 +2000,7 @@ public class DatabaseManager {
 		
 			do {	//Check the ID at least once
 			
-				newID = (int)(Math.random() * 1000);
+				newID = (int)(Math.random() * 10000);
 				isTaken = false;
 				c.moveToPosition(-1);
 			

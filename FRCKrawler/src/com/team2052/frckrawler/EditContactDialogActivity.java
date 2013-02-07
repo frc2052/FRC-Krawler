@@ -10,15 +10,15 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DatabaseContract;
-import com.team2052.frckrawler.database.DatabaseManager;
+import com.team2052.frckrawler.database.DBContract;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Contact;
 
 public class EditContactDialogActivity extends Activity implements OnClickListener, DialogInterface.OnClickListener {
 	
 	public static final String CONTACT_ID_EXTRA = "com.team2052.frckrawler.contactIDExtra";
 	
-	private DatabaseManager db;
+	private DBManager db;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -29,14 +29,14 @@ public class EditContactDialogActivity extends Activity implements OnClickListen
 		((Button)findViewById(R.id.remove)).setOnClickListener(this);
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 		
-		db = DatabaseManager.getInstance(this);
+		db = DBManager.getInstance(this);
 	}
 	
 	public void onStart() {
 		
 		super.onStart();
 		
-		Contact[] arr = db.getContactsByColumns(new String[] {DatabaseContract.COL_CONTACT_ID}, 
+		Contact[] arr = db.getContactsByColumns(new String[] {DBContract.COL_CONTACT_ID}, 
 				new String[] {getIntent().getStringExtra(CONTACT_ID_EXTRA)});
 		
 		Contact c;
@@ -57,13 +57,13 @@ public class EditContactDialogActivity extends Activity implements OnClickListen
 		if(v.getId() == R.id.save) {
 			
 			db.updateContacts(
-					new String[] {DatabaseContract.COL_CONTACT_ID}, 
+					new String[] {DBContract.COL_CONTACT_ID}, 
 					new String[] {getIntent().getStringExtra(CONTACT_ID_EXTRA)}, 
 					new String[] {
-						DatabaseContract.COL_CONTACT_NAME,
-						DatabaseContract.COL_EMAIL,
-						DatabaseContract.COL_ADDRESS,
-						DatabaseContract.COL_PHONE_NUMBER
+						DBContract.COL_CONTACT_NAME,
+						DBContract.COL_EMAIL,
+						DBContract.COL_ADDRESS,
+						DBContract.COL_PHONE_NUMBER
 					}, new String[] {
 						((EditText)findViewById(R.id.nameVal)).getText().toString(),
 						((EditText)findViewById(R.id.email)).getText().toString(),

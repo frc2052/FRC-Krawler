@@ -51,6 +51,12 @@
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name="com.team2052.frckrawler.EditEventDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name="com.team2052.frckrawler.AttendingTeamsDialogActivity"
+            	  android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name="com.team2052.frckrawler.AddRobotDialogActivity"
+            	  android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name="com.team2052.frckrawler.EditRobotDialogActivity"
+            	  android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>

@@ -8,8 +8,8 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DatabaseContract;
-import com.team2052.frckrawler.database.DatabaseManager;
+import com.team2052.frckrawler.database.DBContract;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Game;
 import com.team2052.frckrawler.gui.*;
 
@@ -19,7 +19,7 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 	private static final int EVENTS_BUTTON_ID = 2;
 	private static final int METRICS_BUTTON_ID = 3;
 	
-	private DatabaseManager dbManager;
+	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -29,7 +29,7 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 		Button add = ((Button)findViewById(R.id.addGameButton));
 		add.setOnClickListener(this);
 		
-		dbManager = DatabaseManager.getInstance(this);
+		dbManager = DBManager.getInstance(this);
 	}
 	
 	public void onResume() {
@@ -97,8 +97,10 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 				i = new Intent(this, EventsActivity.class);
 				i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[] 
 						{(String)v.getTag()});
-				i.putExtra(StackableTabActivity.PARENT_KEYS_EXTRA, new String[] 
-						{DatabaseContract.COL_GAME_NAME});
+				i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, new String[] 
+						{(String)v.getTag()});
+				i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, new String[] 
+						{DBContract.COL_GAME_NAME});
 				startActivity(i);
 				
 				break;

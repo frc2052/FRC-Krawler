@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DatabaseManager;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Contact;
 
 public class AddContactDialogActivity extends Activity implements OnClickListener {
@@ -28,7 +28,7 @@ public class AddContactDialogActivity extends Activity implements OnClickListene
 		
 		if(v.getId() == R.id.addContact) {
 			
-			DatabaseManager.getInstance(this).addContact(new Contact(
+			DBManager.getInstance(this).addContact(new Contact(
 					getIntent().getIntExtra(TEAM_NUMBER_EXTRA, -1),
 					((EditText)findViewById(R.id.nameVal)).getText().toString(),
 					((EditText)findViewById(R.id.email)).getText().toString(),

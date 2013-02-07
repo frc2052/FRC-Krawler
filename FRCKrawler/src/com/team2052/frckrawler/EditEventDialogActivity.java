@@ -19,7 +19,7 @@ public class EditEventDialogActivity extends Activity implements OnClickListener
 	
 	public static final String EVENT_ID_EXTRA = "com.team2052.frckrawler.editEventID";
 	
-	private DatabaseManager db;
+	private DBManager db;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -30,14 +30,14 @@ public class EditEventDialogActivity extends Activity implements OnClickListener
 		((Button)findViewById(R.id.remove)).setOnClickListener(this);
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 		
-		db = DatabaseManager.getInstance(this);
+		db = DBManager.getInstance(this);
 	}
 	
 	public void onStart() {
 		
 		super.onStart();
 		
-		Event[] arr = db.getEventsByColumns(new String[] {DatabaseContract.COL_EVENT_ID}, 
+		Event[] arr = db.getEventsByColumns(new String[] {DBContract.COL_EVENT_ID}, 
 				new String[] {getIntent().getStringExtra(EVENT_ID_EXTRA)});
 		Event e;
 		
@@ -66,13 +66,13 @@ public class EditEventDialogActivity extends Activity implements OnClickListener
 						datePicker.getMonth(), datePicker.getDayOfMonth());
 				String time = Long.toString(date.getTime().getTime());
 				
-				db.updateEvents(new String[] {DatabaseContract.COL_EVENT_ID}, 
+				db.updateEvents(new String[] {DBContract.COL_EVENT_ID}, 
 						new String[] {getIntent().getStringExtra(EVENT_ID_EXTRA)}, 
 						new String[] {
-							DatabaseContract.COL_EVENT_NAME,
-							DatabaseContract.COL_DATE_STAMP,
-							DatabaseContract.COL_LOCATION,
-							DatabaseContract.COL_FMS_EVENT_ID
+							DBContract.COL_EVENT_NAME,
+							DBContract.COL_DATE_STAMP,
+							DBContract.COL_LOCATION,
+							DBContract.COL_FMS_EVENT_ID
 							}, 
 						new String[] {
 							((EditText)findViewById(R.id.eventName)).getText().toString(),

@@ -2,34 +2,61 @@ package com.team2052.frckrawler.database.structures;
 
 public class Metric implements Structure {
 	
+	private int id;
 	private String gameName;
 	private String metricName;
 	private String description;
 	private String key;
-	private int type;	//See DatabaseContract for keys.
-	private String[] range;
+	private int type;
+	private Object[] range;
+	private boolean display;
+	
 	/*
+	 * Types
+	 * 
+	 * 0 - BOOLEAN
+	 * 1 - COUNTER
+	 * 2 - SLIDER
+	 * 3 - CHOOSER
+	 * 4 - TEXT
+	 * 
+	 * 
 	 * The 'range' array is used different for different 'type' values
 	 * 
 	 * BOOLEAN - not used, set to null
-	 * COUNTER - first value is the lower limit, second is the upper. They are expected to be numbers.
-	 * SLIDER - first value is the lower limit, second is the upper. They are expected to be numbers.
+	 * COUNTER - first value is the lower limit, second is the upper, third is the 
+	 * incrementation. They are expected to be Integer objects.
+	 * 
+	 * SLIDER - first value is the lower limit, second is the upper. They are expected 
+	 * to be Integer objets.
+	 * 
 	 * CHOOSER - all the choosable values that the user can select
 	 * TEXT - not used, set to null
+	 * MATH - the list of metric IDs to do the operation on
 	 */
 	
-	public Metric(String _gameName, String _metricName, 
-			String _description, String _key, int _type, String[] _range) {
+	/*
+	 * WARNING! - it is not advised to use this constructor. Use the static
+	 * methods in MetricFactory instead.
+	 */
+	public Metric(int _id, String _gameName, String _metricName, 
+			String _description, String _key, int _type, Object[] _range, boolean _displayed) {
 		
+		id = _id;
 		gameName = _gameName;
 		metricName = _metricName;
 		description = _description;
 		key = _key;
 		type = _type;
 		range = _range;
+		display = _displayed;
 		
 		if(type == 0 || type == 4)
 			range = null;
+	}
+	
+	public int getID() {
+		return id;
 	}
 	
 	public String getGameName() {
@@ -52,11 +79,15 @@ public class Metric implements Structure {
 		return type;
 	}
 	
-	public String[] getRange() {
+	public Object[] getRange() {
 		return range;
 	}
 	
-	public class MetricFactory {
+	public boolean isDisplayed() {
+		return display;
+	}
+	
+	public static class MetricFactory {
 		
 		/*****
 		 * Class: MatchPerformanceFactory
@@ -66,64 +97,129 @@ public class Metric implements Structure {
 		 * for your metrics, you can use the factory.
 		 *****/
 		
-		public Metric createBooleanMetric
+		//BOOLEAN METRICS
+		public static Metric createBooleanMetric
 		(String game, String name, String description) {
 			
-			return createBooleanMetric(game, name, description, null);
+			return createBooleanMetric(game, name, description, true);
 		}
 		
-		public Metric createBooleanMetric
-		(String game, String name, String description, String key) {
+		public static Metric createBooleanMetric
+		(String game, String name, String description, boolean displayed) {
 			
-			return new Metric(game, name, description, key, 0, null);
+			return createBooleanMetric(-1, game, name, description, null, displayed);
 		}
 		
-		public Metric createCounterMetric
-		(String game, String name, String description, String[] lowerAndHigherBounds) {
+		public static Metric createBooleanMetric
+		(int id, String game, String name, String description, String key, boolean displayed) {
 			
-			return createCounterMetric(game, name, description, lowerAndHigherBounds, null);
+			return new Metric(id, game, name, description, key, 0, null, displayed);
 		}
 		
-		public Metric createCounterMetric
-		(String game, String name, String description, String[] lowerAndHigherBounds, String key) {
+		//COUNTER METRICS
+		public static Metric createCounterMetric
+		(String game, String name, String description, int min, int max, int incrementation) {
 			
-			return new Metric(game, name, description, key, 1, lowerAndHigherBounds);
+			return createCounterMetric(game, name, description, min, max, incrementation, true);
 		}
 		
-		public Metric createSliderMetric
-		(String game, String name, String description, String[] lowerAndHigherBounds) {
+		public static Metric createCounterMetric
+		(String game, String name, String description, int min, int max, int incrementation, 
+				boolean displayed) {
 			
-			return createSliderMetric(game, name, description, lowerAndHigherBounds, null);
+			return createCounterMetric(-1, game, name, description, min, max, incrementation, 
+					null, displayed);
 		}
 		
-		public Metric createSliderMetric
-		(String game, String name, String description, String[] lowerAndHigherBounds, String key) {
+		public static Metric createCounterMetric
+		(int id, String game, String name, String description, int min, int max, int incrementation, 
+				String key, boolean displayed) {
 			
-			return new Metric(game, name, description, key, 2, lowerAndHigherBounds);
+			return new Metric(id, game, name, description, key, 1, 
+					new Integer[] {Integer.valueOf(min), Integer.valueOf(max), 
+					Integer.valueOf(incrementation)}, displayed);
 		}
 		
-		public Metric createChooserMetric
+		//SLIDER METRICS
+		public static Metric createSliderMetric
+		(String game, String name, String description, int min, int max) {
+			
+			return createSliderMetric(game, name, description, min, max, true);
+		}
+		
+		public static Metric createSliderMetric
+		(String game, String name, String description, int min, int max, 
+				boolean displayed) {
+			
+			return createSliderMetric(-1, game, name, description, min, max, 
+					null, displayed);
+		}
+		
+		public static Metric createSliderMetric
+		(int id, String game, String name, String description, int min, int max, 
+				String key, boolean displayed) {
+			
+			return new Metric(id, game, name, description, key, 2, 
+					new Integer[] {Integer.valueOf(min), Integer.valueOf(max)}, displayed);
+		}
+		
+		//CHOOSER METRICS
+		public static Metric createChooserMetric
 		(String game, String name, String description, String[] choices) {
 			
-			return createCounterMetric(game, name, description, choices, null);
+			return createChooserMetric(game, name, description, choices, true);
 		}
 		
-		public Metric createChooserMetric
-		(String game, String name, String description, String[] choices, String key) {
+		public static Metric createChooserMetric
+		(String game, String name, String description, String[] choices, boolean displayed) {
 			
-			return new Metric(game, name, description, key, 3, choices);
+			return createChooserMetric(-1, game, name, description, choices, null, displayed);
 		}
 		
-		public Metric createTextMetric
+		public static Metric createChooserMetric
+		(int id, String game, String name, String description, String[] choices, 
+				String key, boolean displayed) {
+			
+			return new Metric(id, game, name, description, key, 3, choices, displayed);
+		}
+		
+		//TEXT METRICS
+		public static Metric createTextMetric
 		(String game, String name, String description) {
 			
-			return createBooleanMetric(game, name, description, null);
+			return createBooleanMetric(game, name, description, true);
 		}
 		
-		public Metric createTextMetric
-		(String game, String name, String description, String key) {
+		public static Metric createTextMetric
+		(String game, String name, String description, boolean displayed) {
 			
-			return new Metric(game, name, description, key, 4, null);
+			return createBooleanMetric(-1, game, name, description, null, displayed);
+		}
+		
+		public static Metric createTextMetric
+		(int id, String game, String name, String description, String key, boolean displayed) {
+			
+			return new Metric(id, game, name, description, key, 4, null, displayed);
+		}
+		
+		//MATH METRICS
+		public static Metric createMathMetric
+		(String game, String name, String description, Integer[] operendIDs) {
+			
+			return createMathMetric(game, name, description, operendIDs, true);
+		}
+		
+		public static Metric createMathMetric
+		(String game, String name, String description, Integer[] operendIDs, boolean displayed) {
+			
+			return createMathMetric(-1, game, name, description, operendIDs, null, displayed);
+		}
+		
+		public static Metric createMathMetric
+		(int id, String game, String name, String description, 
+				Integer[] operendIDs, String key, boolean displayed) {
+			
+			return new Metric(id, game, name, description, key, 5, operendIDs, displayed);
 		}
 	}
 }

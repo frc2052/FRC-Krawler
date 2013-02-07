@@ -31,7 +31,7 @@ public class TabActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		instances.put(getTaskId(), this);
+		instances.put(hashCode(), this);
 	}
 	
 	/*****
@@ -72,13 +72,13 @@ public class TabActivity extends Activity {
 	 * stored in the instances HashMap.
 	 *****/
 	
-	private void destroyAllInstances() {
+	private static void destroyAllInstances() {
 		
-		TabActivity[] arr = new TabActivity[0];
-		instances.values().toArray(arr);
+		TabActivity[] arr = instances.values().toArray(new TabActivity[0]);
 		
-		for(TabActivity a : arr)
+		for(TabActivity a : arr) {
 			a.finish();
+		}
 		
 		instances.clear();
 	}
@@ -119,7 +119,7 @@ public class TabActivity extends Activity {
 						i = new Intent(user, TeamsActivity.class);
 						user.startActivity(i);
 						selectedActivity = TEAMS;
-						user.destroyAllInstances();
+						destroyAllInstances();
 					}
 				
 					break;
@@ -131,7 +131,7 @@ public class TabActivity extends Activity {
 						i = new Intent(user, UsersActivity.class);
 						user.startActivity(i);
 						selectedActivity = USERS;
-						user.destroyAllInstances();
+						destroyAllInstances();
 					}
 				
 					break;
@@ -143,7 +143,7 @@ public class TabActivity extends Activity {
 						i = new Intent(user, GamesActivity.class);
 						user.startActivity(i);
 						selectedActivity = GAMES;
-						user.destroyAllInstances();
+						destroyAllInstances();
 					}
 				
 					break;

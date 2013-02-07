@@ -9,11 +9,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DatabaseManager;
+import com.team2052.frckrawler.database.DBManager;
 
 public class AddGameDialogActivity extends Activity implements OnClickListener {
 	
-	private DatabaseManager dbManager;
+	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -23,7 +23,7 @@ public class AddGameDialogActivity extends Activity implements OnClickListener {
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 		((Button)findViewById(R.id.addGame)).setOnClickListener(this);
 		
-		dbManager = DatabaseManager.getInstance(this);
+		dbManager = DBManager.getInstance(this);
 	}
 	
 	

@@ -9,15 +9,15 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DatabaseContract;
-import com.team2052.frckrawler.database.DatabaseManager;
+import com.team2052.frckrawler.database.DBContract;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.User;
 
 public class EditUserDialogActivity extends Activity implements OnClickListener, DialogInterface.OnClickListener {
 	
 	public static final String USER_ID_EXTRA = "com.team2052.frckrawler.userID";
 	
-	private DatabaseManager dbManager;
+	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -28,7 +28,7 @@ public class EditUserDialogActivity extends Activity implements OnClickListener,
 		((Button)findViewById(R.id.remove)).setOnClickListener(this);
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 		
-		dbManager = DatabaseManager.getInstance(this);
+		dbManager = DBManager.getInstance(this);
 	}
 	
 	public void onResume() {
@@ -36,7 +36,7 @@ public class EditUserDialogActivity extends Activity implements OnClickListener,
 		super.onResume();
 		
 		User[] arr = dbManager.getUsersByColumns(
-				new String[] {DatabaseContract.COL_USER_ID}, 
+				new String[] {DBContract.COL_USER_ID}, 
 				new String[] {getIntent().getStringExtra(USER_ID_EXTRA)});
 		User u = arr[0];
 		
@@ -64,7 +64,7 @@ public class EditUserDialogActivity extends Activity implements OnClickListener,
 			case R.id.saveUser :
 				
 				String[] queryCols = new String[] {
-						DatabaseContract.COL_USER_ID
+						DBContract.COL_USER_ID
 				};
 				
 				String[] queryVals = new String[] {
@@ -72,8 +72,8 @@ public class EditUserDialogActivity extends Activity implements OnClickListener,
 				};
 				
 				String[] updateCols = new String[] {
-						DatabaseContract.COL_USER_NAME,
-						DatabaseContract.COL_SUPERUSER
+						DBContract.COL_USER_NAME,
+						DBContract.COL_SUPERUSER
 				};
 				
 				String[] updateVals = new String[] {

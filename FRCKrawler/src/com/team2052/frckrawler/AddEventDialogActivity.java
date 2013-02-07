@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DatabaseManager;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.Game;
 
@@ -40,7 +40,7 @@ public class AddEventDialogActivity extends Activity implements OnClickListener 
 			int month = date.getMonth();
 			int year = date.getYear();
 			
-			DatabaseManager.getInstance(this).addEvent(new Event(
+			DBManager.getInstance(this).addEvent(new Event(
 					((EditText)findViewById(R.id.eventName)).getText().toString(),
 					getIntent().getStringExtra(GAME_NAME_EXTRA),
 					new GregorianCalendar(year, month, day, 0, 0).getTime(),
