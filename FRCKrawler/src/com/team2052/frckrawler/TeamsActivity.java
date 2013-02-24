@@ -71,9 +71,9 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			MyButton contacts = new MyButton(this, "Contacts", this, 
 					teams[i].getNumber());
 			contacts.setId(CONTACTS_BUTTON_ID);
-			MyButton comments = new MyButton(this, "Comments", this, 
+			/*MyButton comments = new MyButton(this, "Comments", this, 
 					teams[i].getNumber());
-			comments.setId(COMMENTS_BUTTON_ID);
+			comments.setId(COMMENTS_BUTTON_ID);*/
 			
 			MyTableRow row = new MyTableRow(this, new View[] {
 					editTeam,
@@ -87,7 +87,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 					new MyTextView(this, teams[i].getColors(), 18),
 					robots,
 					contacts,
-					comments
+					//comments
 			}, color);
 			
 			row.setTag(Integer.valueOf(teams[i].getNumber()));
@@ -145,7 +145,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				
 			case COMMENTS_BUTTON_ID:
 				
-				i = new Intent(this, CommentsActivity.class);
+				/*i = new Intent(this, CommentsActivity.class);
 				i.putExtra(StackableTabActivity.PARENTS_EXTRA, 
 						new String[] {v.getTag().toString()});
 				i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, 
@@ -154,7 +154,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 						new String[] {DBContract.COL_TEAM_NUMBER});
 				startActivity(i);
 				
-				break;
+				break;*/
 		}
 	}
 }

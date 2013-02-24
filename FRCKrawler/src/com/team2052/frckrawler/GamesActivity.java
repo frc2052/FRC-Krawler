@@ -44,7 +44,7 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 			
 			int color;
 			
-			if(i % 2 != 0)
+			if(i % 2 == 0)
 				color = Color.BLUE;
 			else
 				color = Color.TRANSPARENT;
@@ -106,6 +106,15 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 				break;
 				
 			case METRICS_BUTTON_ID:
+				
+				i = new Intent(this, MetricSelectionActivity.class);
+				i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[] 
+						{(String)v.getTag()});
+				i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, new String[] 
+						{(String)v.getTag()});
+				i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, new String[] 
+						{DBContract.COL_GAME_NAME});
+				startActivity(i);
 				
 				break;
 		}

@@ -5,17 +5,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.*;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DBContract;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.*;
 import com.team2052.frckrawler.database.structures.Comment;
-import com.team2052.frckrawler.gui.MyButton;
-import com.team2052.frckrawler.gui.MyTableRow;
-import com.team2052.frckrawler.gui.MyTextView;
+import com.team2052.frckrawler.gui.*;
+
+//NOT IMPLEMENTED!
 
 public class CommentsActivity extends StackableTabActivity implements OnClickListener {
 	

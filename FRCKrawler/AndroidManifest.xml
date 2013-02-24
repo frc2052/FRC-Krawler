@@ -57,6 +57,10 @@
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name="com.team2052.frckrawler.EditRobotDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name="com.team2052.frckrawler.MetricSelectionActivity"></activity>
+        <activity android:name="com.team2052.frckrawler.AddMetricDialogActivity"
+            	  android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name="com.team2052.frckrawler.PicturesActivity"></activity>
     </application>
 
 </manifest>

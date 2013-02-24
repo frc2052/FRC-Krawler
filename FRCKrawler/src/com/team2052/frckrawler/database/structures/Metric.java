@@ -36,9 +36,10 @@ public class Metric implements Structure {
 	 */
 	
 	/*
-	 * WARNING! - it is not advised to use this constructor. Use the static
+	 * WARNING! - it is not advised to use these constructors. Use the static
 	 * methods in MetricFactory instead.
 	 */
+	
 	public Metric(int _id, String _gameName, String _metricName, 
 			String _description, String _key, int _type, Object[] _range, boolean _displayed) {
 		

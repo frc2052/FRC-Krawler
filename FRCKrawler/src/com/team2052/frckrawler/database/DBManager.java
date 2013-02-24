@@ -527,13 +527,16 @@ public class DBManager {
 	 * passed as null without causing an error.
 	 *****/
 	
-	public void addEvent(Event e) {
+	public boolean addEvent(Event e) {
 		
-		addEvent(e.getEventName(), e.getGameName(), e.getLocation(), e.getDateStamp());
+		return addEvent(e.getEventName(), e.getGameName(), e.getLocation(), e.getDateStamp());
 	}
 	
-	public synchronized void addEvent(String name, String gameName, 
+	public synchronized boolean addEvent(String name, String gameName, 
 			String location, Date date) {
+		
+		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, gameName))
+			return false;
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
@@ -551,6 +554,8 @@ public class DBManager {
 		db.insert(DBContract.TABLE_EVENTS, null, values);
 		
 		helper.close();
+		
+		return true;
 	}
 	
 	
@@ -1184,7 +1189,12 @@ public class DBManager {
 		
 		for(MetricValue v : vals) {
 			
-			values.put(v.getMetric().getKey(), v.getValue());
+			String valString = new String();
+			
+			for(String val : v.getValue())
+				valString += val;
+			
+			values.put(v.getMetric().getKey(), valString);
 		}
 		
 		db.insert(DBContract.TABLE_ROBOTS, null, values);
@@ -1278,11 +1288,29 @@ public class DBManager {
 				
 				for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
 					
+					String valString = c.getString
+							(c.getColumnIndex(metrics[metricCount].getKey()));
+					ArrayList<String> valsArr = new ArrayList<String>();
+					String workingString = new String();
+					
+					for(int charCount = 0; charCount < valString.length(); charCount++) {
+						
+						if(valString.charAt(charCount) != ':'){
+							
+							workingString += valString.substring(charCount, charCount + 1);
+							
+						} else {
+							
+							valsArr.add(workingString);
+							workingString = new String();
+						}
+					}
+					
 					try {
 						metricVals.add(
 							new MetricValue(
 								metrics[metricCount],
-								c.getString(c.getColumnIndex(metrics[metricCount].getKey()))
+								valsArr.toArray(new String[0])
 							));
 					} catch(MetricTypeMismatchException e) {
 						System.out.println(e.getMessage());
@@ -1322,8 +1350,14 @@ public class DBManager {
 	 * is not a valid type, or the limit of 16 metrics has been reached.
 	 */
 	
+	public synchronized boolean addRobotMetric(Metric m) {
+		
+		return addRobotMetric(m.getMetricName(), m.getGameName(), m.getType(), m.getRange(),
+				m.getDescription(), m.isDisplayed());
+	}
+	
 	public synchronized boolean addRobotMetric(String name, String game, int type, 
-			String[] range, String description, boolean displayed) {
+			Object[] range, String description, boolean displayed) {
 		
 		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, game))
 			return false;	//This game is not in the database.
@@ -1335,8 +1369,8 @@ public class DBManager {
 		
 		if(range != null) {
 			
-			for(String r :  range)	//Create the string for the range.
-				rangeInput += r + ":";	//The range is stored in one cell.
+			for(Object r :  range)	//Create the string for the range.
+				rangeInput += r.toString() + ":";	//The range is stored in one cell.
 		}
 		
 		ContentValues values = new ContentValues();	//New values for the ROBOT_METRICS table
@@ -1486,6 +1520,92 @@ public class DBManager {
 		helper.close();
 		
 		return m;
+	}
+	
+	
+	/*****
+	 * Method: addDriverMetric
+	 * 
+	 * @param name
+	 * @param game
+	 * @param type
+	 * @param range
+	 * @param description
+	 * @param displayed
+	 * @return
+	 * 
+	 * Summary: Adds a driver metric to the database.
+	 */
+	
+	public synchronized boolean addDriverMetric(Metric m) {
+		
+		return addDriverMetric(m.getMetricName(), m.getGameName(), m.getType(), m.getRange(),
+				m.getDescription(), m.isDisplayed());
+	}
+	
+	public synchronized boolean addDriverMetric(String name, String game, int type, 
+			Object[] range, String description, boolean displayed) {
+		
+		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, game))
+			return false;	//This game is not in the database.
+		
+		if(type < 0 || type > DBContract.HIGHEST_TYPE)
+			return false;	//This is not a real type.
+		
+		String rangeInput = new String();
+		
+		if(range != null) {
+			
+			for(Object r :  range)	//Create the string for the range.
+				rangeInput += r.toString() + ":";	//The range is stored in one cell.
+		}
+		
+		ContentValues values = new ContentValues();	//New values for the ROBOT_METRICS table
+		values.put(DBContract.COL_METRIC_ID, createID(
+				DBContract.TABLE_DRIVER_METRICS, DBContract.COL_METRIC_ID));
+		values.put(DBContract.COL_METRIC_NAME, name);
+		values.put(DBContract.COL_GAME_NAME, game);
+		values.put(DBContract.COL_TYPE, type);
+		values.put(DBContract.COL_RANGE, rangeInput);
+		values.put(DBContract.COL_DESCRIPTION, description);
+		values.put(DBContract.COL_DISPLAY, displayed);
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		Cursor c = db.query(DBContract.TABLE_DRIVER_METRICS,	//Check to see who has
+							new String[] {DBContract.COL_METRIC_KEY}, //what keys already
+							DBContract.COL_GAME_NAME + " LIKE ?", 
+							new String[] {game}, 
+							null, null, 
+							DBContract.COL_METRIC_KEY + " ASC");
+		
+		for(int key = 0; key < DBContract.COL_KEYS.length; key++) {	//Cycle through
+																			//all possible keys.
+			if(!c.moveToNext() ||
+					!DBContract.COL_KEYS[key].equals(c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)))) {
+				
+				values.put(DBContract.COL_METRIC_KEY, //Assign this key to the new
+						DBContract.COL_KEYS[key]);	//metric
+				
+				ContentValues nullValue = new ContentValues();	//Make a null CV
+				nullValue.putNull(DBContract.COL_KEYS[key]);
+				
+				db.update(DBContract.TABLE_DRIVER_DATA,	//Put the null
+						nullValue, 							//value into the
+						DBContract.COL_GAME_NAME + " LIKE ?",//driver table
+						new String[] {game});
+				
+				break;	//exit the loop, no need to continue
+			}
+			
+			if(key == DBContract.COL_KEYS.length)	//Return false because no more metrics can
+				return false;	//be added. Limit reached.
+		}
+		
+		db.insert(DBContract.TABLE_DRIVER_METRICS, null, values);
+		db.close();
+		
+		return true;
 	}
 	
 	
@@ -1650,6 +1770,67 @@ public class DBManager {
 	
 	
 	/*****
+	 * Method: getMatchPerfMetricsByColumns
+	 * 
+	 * Summary: 
+	 */
+	
+	public synchronized Metric[] getMatchPerformanceMetricsByColumns
+			(String[] cols, String[] vals) {
+		
+		if(cols.length != vals.length)
+			return null;
+		
+		if(cols.length < 1)
+			return new Metric[0];
+		
+		String queryString = "SELECT * FROM " + DBContract.TABLE_MATCH_PERF_METRICS + " WHERE " + cols[0] + " LIKE ?";
+		
+		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
+			queryString += " AND " + cols[i] + " LIKE ?";
+			
+		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
+		Metric[] metrics = new Metric[c.getCount()];
+		
+		for(int i = 0; i < metrics.length; i++) {
+			
+			c.moveToNext();
+			
+			String rangeString = c.getString(c.getColumnIndex(DBContract.COL_RANGE));
+			ArrayList<Object> rangeArrList = new ArrayList<Object>();
+			
+			String currentRangeValString = new String();
+			
+			for(int character = 0; character < rangeString.length(); character++) {
+				
+				if(rangeString.charAt(character) != ':')
+					currentRangeValString += rangeString.charAt(character);
+				
+				else {
+					rangeArrList.add(currentRangeValString);
+					currentRangeValString = new String();
+				}
+			}
+			
+			metrics[i] = new Metric(
+					c.getInt(c.getColumnIndex(DBContract.COL_METRIC_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_METRIC_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_DESCRIPTION)),
+					c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)),
+					c.getInt(c.getColumnIndex(DBContract.COL_TYPE)),
+					rangeArrList.toArray(),
+					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0)
+					);
+		}
+		
+		helper.close();
+		
+		return metrics;
+	}
+	
+	
+	/*****
 	 * Method: updateRobot
 	 * 
 	 * @param queryCols
@@ -1711,7 +1892,7 @@ public class DBManager {
 	
 	public synchronized boolean addRobotToEvent(int eventID, int robotID) {
 		
-		if(!hasValue(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID, Integer.toString(robotID)) || 
+		if(!hasValue(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID, Integer.toString(eventID)) || 
 				!hasValue(DBContract.TABLE_ROBOTS, DBContract.COL_ROBOT_ID, Integer.toString(robotID)))
 			return false;
 		
@@ -1753,7 +1934,8 @@ public class DBManager {
 		
 		db.execSQL("INSERT INTO " + DBContract.TABLE_EVENT_ROBOTS + 
 				" (" + DBContract.COL_EVENT_ID + ", " + DBContract.COL_ROBOT_ID + ")" +
-				" VALUES (" + Integer.toString(eventID) + ", " + Integer.toString(robotID));
+				" VALUES (" + Integer.toString(eventID) + ", " 
+				+ Integer.toString(robotID) + ")");
 		
 		helper.close();
 		
@@ -1889,7 +2071,13 @@ public class DBManager {
 		
 		for(MetricValue val : vals) {
 			
-			values.put(val.getMetric().getKey(), val.getValue());
+			String[] arr = val.getValue();
+			String valString = new String();
+			
+			for(int i = 0; i < arr.length; i++)
+				valString += arr[i] + ":";
+			
+			values.put(val.getMetric().getKey(), valString);
 		}
 		
 		helper.getWritableDatabase().insert(DBContract.TABLE_MATCH_PERF, null, values);

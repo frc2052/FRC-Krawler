@@ -24,6 +24,15 @@ public class StackableTabActivity extends TabActivity {
 		databaseValues = getIntent().getStringArrayExtra(DB_VALUES_EXTRA);
 		databaseKeys = getIntent().getStringArrayExtra(DB_KEYS_EXTRA);
 		
+		if(parents == null)
+			parents = new String[0];
+		
+		if(databaseValues == null)
+			databaseValues = new String[0];
+		
+		if(databaseKeys == null)
+			databaseKeys = new String[0];
+		
 		setNoRootActivitySelected();
 	}
 	
@@ -33,8 +42,16 @@ public class StackableTabActivity extends TabActivity {
 		
 		LinearLayout l = (LinearLayout)findViewById(R.id.treeView);
 		
-		for(String s : parents)
-			l.addView(new SidewaysTextView(this, s));
+		if(l != null) {
+			
+			l.removeAllViews();
+			
+			for(String s : parents)
+				l.addView(new SidewaysTextView(this, s));
+		
+		} else {
+			System.out.println("WARNING! A StackableTabActivity's treeView has not been defined.");
+		}
 	}
 	
 	

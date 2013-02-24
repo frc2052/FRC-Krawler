@@ -10,8 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import com.example.frckrawler.R;
-import com.team2052.frckrawler.database.DBContract;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.*;
 import com.team2052.frckrawler.database.structures.*;
 import com.team2052.frckrawler.gui.*;
 
@@ -161,6 +160,12 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 				break;
 				
 			case PICTURES_ID:
+				
+				i = new Intent(this, PicturesActivity.class);
+				i.putExtra(PARENTS_EXTRA, parents);
+				i.putExtra(DB_VALUES_EXTRA, new String[] {v.getTag().toString()});
+				i.putExtra(DB_KEYS_EXTRA, new String[] {DBContract.COL_ROBOT_ID});
+				startActivity(i);
 				
 				break;
 		}

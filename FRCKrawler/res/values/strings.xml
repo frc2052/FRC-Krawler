@@ -59,5 +59,13 @@
         <item >WI</item>
         <item >WY</item>
     </string-array>
+    <string-array name="metric_types">
+        <item >Boolean</item>
+        <item >Counter</item>
+        <item >Slider</item>
+        <item >Chooser</item>
+        <item >Text</item>
+        <item >Math</item>
+    </string-array>
 
 </resources>

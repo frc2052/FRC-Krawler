@@ -5,6 +5,8 @@ import com.example.frckrawler.R;
 import android.app.Activity;
 import android.os.Bundle;
 
+//NOT IMPLEMENTED!
+
 public class AddCommentDialogActivity extends Activity {
 	
 	public static final String TEAM_NUMBER_EXTRA = "com.team2052.frckrawler.teamNumberExtra";
