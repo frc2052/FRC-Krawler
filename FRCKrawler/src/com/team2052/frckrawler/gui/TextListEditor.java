@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.gui;
 
+import java.util.ArrayList;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +12,7 @@ public class TextListEditor extends ListEditor implements DialogInterface.OnClic
 	private EditText t;
 	
 	public TextListEditor(Context context) {
+		
 		super(context);
 	}
 
@@ -31,17 +34,12 @@ public class TextListEditor extends ListEditor implements DialogInterface.OnClic
 		
 		if(which == DialogInterface.BUTTON_POSITIVE) {
 			
+			addValue(t.getText().toString(), t.getText().toString());
 			dialog.dismiss();
-			addValue(t.getText().toString());
 			
 		} else if(which == DialogInterface.BUTTON_NEGATIVE) {
 			
 			dialog.dismiss();
 		}
-	}
-	
-	public String[] getValues() {
-		
-		return getValuesList().toArray(new String[0]);
 	}
 }

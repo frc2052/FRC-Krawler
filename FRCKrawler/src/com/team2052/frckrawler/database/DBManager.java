@@ -1192,7 +1192,7 @@ public class DBManager {
 			String valString = new String();
 			
 			for(String val : v.getValue())
-				valString += val;
+				valString += val + ":";
 			
 			values.put(v.getMetric().getKey(), valString);
 		}
@@ -1272,26 +1272,27 @@ public class DBManager {
 		
 		helper.close();
 		
-		String lastRobotGame = null;
-		
 		for(int i = 0; i < c.getCount(); i++) {
 			
 			c.moveToNext();
 			
 			String thisRobotGame = c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME));
 			ArrayList<MetricValue> metricVals = new ArrayList<MetricValue>();
+			Metric[] metrics = new Metric[0];
 			
-			if(lastRobotGame == null || !thisRobotGame.equals(lastRobotGame)) {
+			metrics = this.getRobotMetricsByColumns
+				(new String[] {DBContract.COL_GAME_NAME}, new String[] {thisRobotGame});
 				
-				Metric[] metrics = this.getRobotMetricsByColumns
-						(new String[] {DBContract.COL_GAME_NAME}, new String[] {thisRobotGame});
-				
+			//Un-indent this stuff
 				for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
 					
 					String valString = c.getString
 							(c.getColumnIndex(metrics[metricCount].getKey()));
 					ArrayList<String> valsArr = new ArrayList<String>();
 					String workingString = new String();
+					
+					if(valString == null)
+						valString = new String();
 					
 					for(int charCount = 0; charCount < valString.length(); charCount++) {
 						
@@ -1316,7 +1317,7 @@ public class DBManager {
 						System.out.println(e.getMessage());
 					}
 				}
-			}
+			
 			
 			r[i] = new Robot(
 					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
@@ -1325,8 +1326,6 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
 					metricVals.toArray(new MetricValue[0])
 					);
-			
-			lastRobotGame = thisRobotGame;
 		}
 		
 		return r;
@@ -1587,14 +1586,6 @@ public class DBManager {
 				values.put(DBContract.COL_METRIC_KEY, //Assign this key to the new
 						DBContract.COL_KEYS[key]);	//metric
 				
-				ContentValues nullValue = new ContentValues();	//Make a null CV
-				nullValue.putNull(DBContract.COL_KEYS[key]);
-				
-				db.update(DBContract.TABLE_DRIVER_DATA,	//Put the null
-						nullValue, 							//value into the
-						DBContract.COL_GAME_NAME + " LIKE ?",//driver table
-						new String[] {game});
-				
 				break;	//exit the loop, no need to continue
 			}
 			
@@ -1608,6 +1599,56 @@ public class DBManager {
 		return true;
 	}
 	
+	
+	/*****
+	 * Method: removeDriverMetric
+	 * 
+	 * Summary: removes a driver metric from the database
+	 *****/
+	
+	public synchronized boolean removeDriverMetric(int metricID) {
+		
+		if(!hasValue(DBContract.TABLE_DRIVER_METRICS, 
+				DBContract.COL_METRIC_ID, Integer.toString(metricID)))
+			return false;	//If this is not a real game or metric...
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		Cursor c = db.query(DBContract.TABLE_DRIVER_METRICS,
+				new String[] {DBContract.COL_METRIC_KEY, DBContract.COL_GAME_NAME}, 
+				DBContract.COL_METRIC_ID + " LIKE ?", 
+				new String[] {Integer.toString(metricID)}, 
+				null, null, null);
+		c.moveToFirst();//Gets the key for this metric
+		String key = c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY));
+		String game = c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME));
+		
+		ContentValues nullVal = new ContentValues();//Make a null CV for it
+		nullVal.putNull(key);
+		
+		c = db.query(DBContract.TABLE_EVENTS, 
+				new String[] {DBContract.COL_EVENT_ID}, 
+				DBContract.COL_GAME_NAME + " LIKE ?", 
+				new String[] {game}, 
+				null, null, null);//Get the competitions for this game
+		
+		while(c.moveToNext()) {//While there are still more competitions...
+			
+			db.update(DBContract.TABLE_DRIVER_DATA, nullVal, 
+					DBContract.COL_EVENT_ID + " LIKE ?", 
+					new String[] {//Set the metric at the key to null
+						c.getString(c.getColumnIndex(DBContract.COL_EVENT_ID))
+					});
+		}
+		
+		db.delete(DBContract.TABLE_DRIVER_METRICS, 
+				  DBContract.COL_METRIC_ID + " LIKE ?", 
+				  new String[] {Integer.toString(metricID)});//Delete the metric
+		
+		helper.close();
+		
+		return true;
+	}
 	
 	/*****
 	 * Method: addMatchPerformanceMetric
@@ -1842,6 +1883,36 @@ public class DBManager {
 	 * CHARLIE! THIS MAY HAVE TO BE CHANGED FOR 
 	 * THE FLEXIBLE COLUMNS! FIX IT!
 	 */
+	public synchronized boolean updateRobots(Robot[] robots) {
+		
+		boolean allUpdated = true;
+		
+		String[] queryCols = new String[] {DBContract.COL_ROBOT_ID};
+		
+		for(int i = 0; i < robots.length; i++) {
+			
+			String[] queryVals = new String[] {Integer.toString(robots[i].getID())};
+			
+			ArrayList<String> updateCols = new ArrayList<String>();
+			ArrayList<String> updateVals = new ArrayList<String>();
+			
+			updateCols.add(DBContract.COL_COMMENTS);
+			updateVals.add(robots[i].getComments());
+			
+			for(int k = 0; k < robots[i].getMetricValues().length; k++) {
+				
+				updateCols.add(robots[i].getMetricValues()[k].getMetric().getKey());
+				updateVals.add(robots[i].getMetricValues()[k].getValueAsString());
+			}
+			
+			if(!updateRobots(queryCols, queryVals, 
+					updateCols.toArray(new String[0]), 
+					updateVals.toArray(new String[0])))
+				allUpdated = false;
+		}
+		
+		return allUpdated;
+	}
 	
 	public synchronized boolean updateRobots(String queryCols[], String queryVals[], 
 			String updateCols[], String updateVals[]) {
@@ -1853,23 +1924,23 @@ public class DBManager {
 			return false;
 		
 		for(String s : updateCols) { //Does not allow the caller to update the team number.
-			if(s.equals(DBContract.COL_ROBOT_ID))
+			if(DBContract.COL_ROBOT_ID.equals(s))
 				return false;
 		}
 		
 		ContentValues vals = new ContentValues();
 		
-		for(int i = 0; i < updateCols.length; i++)
+		for(int i = 0; i < updateVals.length; i++) {
 			vals.put(updateCols[i], updateVals[i]);
+		}
 		
 		String queryString = new String();
 		
 		if(queryCols.length > 0)
 			queryString += queryCols[0] + " LIKE ?";
 		
-		for(int i = 1; i < queryCols.length; i++) {
+		for(int i = 1; i < queryCols.length; i++) 
 			queryString += " AND " + queryCols[i] + " LIKE ?";
-		}
 		
 		helper.getWritableDatabase().update(DBContract.TABLE_ROBOTS, vals, 
 				queryString, queryVals);
@@ -2086,6 +2157,17 @@ public class DBManager {
 		return true;
 	}
 	
+	
+	/*****
+	 * Method: getMatchDataByColumns
+	 * 
+	 * @param cols
+	 * @param vals
+	 * @return
+	 * 
+	 * Summary: gets the match data by the columns and values passed in the arrays
+	 */
+	
 	public synchronized MatchData[] getMatchDataByColumns(String[] cols, String[] vals) {
 		
 		if(cols.length != vals.length)
@@ -2102,9 +2184,57 @@ public class DBManager {
 		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
 		MatchData[] d = new MatchData[c.getCount()];
 		
+		helper.close();
+		
 		for(int i = 0; i < c.getCount(); i++) {
 			
-			c.moveToNext();//FIX ME!
+			c.moveToNext();
+			
+			Event[] eventsArr = getEventsByColumns(new String[] 
+					{DBContract.COL_EVENT_ID}, 
+					new String[] {c.getString(c.getColumnIndex(DBContract.COL_EVENT_ID))});
+			
+			Metric [] metricArr = getMatchPerformanceMetricsByColumns
+					(new String[] {DBContract.COL_GAME_NAME}, 
+					new String[] {eventsArr[0].getGameName()});
+			
+			MetricValue[] dataArr = new MetricValue[metricArr.length];
+			
+			for(int k = 0; k < metricArr.length; k++) {
+				
+				ArrayList<String> valuesList = new ArrayList<String>();
+				String valueString = c.getString(c.getColumnIndex(metricArr[k].getKey()));
+				
+				String currentValsString = new String();
+				
+				for(int character = 0; character < valueString.length(); character++) {
+					
+					if(valueString.charAt(character) != ':')
+						currentValsString += valueString.charAt(character);
+					
+					else {
+						valuesList.add(currentValsString);
+						currentValsString = new String();
+					}
+				}
+				
+				try {
+					dataArr[k] = new MetricValue(metricArr[k], valuesList.toArray(new String[0]));
+				} catch (MetricTypeMismatchException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			d[i] = new MatchData(
+					c.getInt(c.getColumnIndex(DBContract.COL_DATA_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_MATCH_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_USER_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_MATCH_TYPE)),
+					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
+					dataArr
+					);
 		}
 		
 		helper.close();
@@ -2239,5 +2369,124 @@ public class DBManager {
 				null, null, null);
 		
 		return c.moveToFirst();
+	}
+	
+	/************************************************************************
+	 * SCOUT METHODS
+	 * 
+	 * Summary: These methods interact with the scout tables rather than
+	 * the main database tables.
+	 ************************************************************************/
+	
+	public synchronized Event scoutGetEvent() {
+		
+		Event event;
+		
+		Cursor c = helper.getReadableDatabase().
+				rawQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_EVENT, null);
+		c.moveToFirst();
+		
+		event = new Event(
+				c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
+				c.getString(c.getColumnIndex(DBContract.COL_EVENT_NAME)),
+				c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
+				new Date(c.getLong(c.getColumnIndex(DBContract.COL_DATE_STAMP))),
+				c.getString(c.getColumnIndex(DBContract.COL_LOCATION)),
+				c.getString(c.getColumnIndex(DBContract.COL_FMS_EVENT_ID))
+				);
+		
+		helper.close();
+		
+		return event;
+	}
+	
+	
+	/*****
+	 * Method: scoutUpdateEvent
+	 * 
+	 * @param e
+	 * 
+	 * Summary: Sets the event in the scout's event table
+	 * to the specified event.
+	 */
+	
+	public synchronized void scoutUpdateEvent(Event e) {
+		
+		if(e == null)
+			return;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		db.delete(DBContract.SCOUT_TABLE_EVENT, null, null);
+		
+		ContentValues values = new ContentValues();
+		values.put(DBContract.COL_EVENT_ID, e.getEventID());
+		values.put(DBContract.COL_EVENT_NAME, e.getEventName());
+		values.put(DBContract.COL_GAME_NAME, e.getGameName());
+		values.put(DBContract.COL_LOCATION, e.getLocation());
+		
+		if(e.getDateStamp() != null)	//If a date has been set...
+			values.put(DBContract.COL_DATE_STAMP, e.getDateStamp().getTime());
+		
+		db.insert(DBContract.TABLE_EVENTS, null, values);
+		
+		helper.close();
+	}
+	
+	
+	/*****
+	 * Method: scoutGetAllUsers
+	 * 
+	 * @return
+	 * 
+	 * Summary: Gets all the users in the scout's user table
+	 */
+	
+	public synchronized User[] scoutGetAllUsers() {
+		
+		Cursor c = helper.getReadableDatabase().rawQuery(
+				"SELECT * FROM " + DBContract.SCOUT_TABLE_USERS, null);
+		User[] u = new User[c.getCount()];
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			
+			c.moveToNext();
+			
+			u[i] = new User(
+					c.getString(c.getColumnIndex(DBContract.COL_USER_NAME)),
+					c.getInt(c.getColumnIndex(DBContract.COL_SUPERUSER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_USER_ID))
+					);
+		}
+		
+		helper.close();
+		
+		return u;
+	}
+	
+	
+	/*****
+	 * Method: scoutUpdateUsers
+	 * @param name
+	 * @param superuser
+	 *****/
+	
+	public synchronized void scoutUpdateUsers(User[] users) {
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		db.delete(DBContract.SCOUT_TABLE_USERS, null, null);
+		
+		for(int i = 0; i < users.length; i++) {
+			
+			ContentValues values = new ContentValues();
+			values.put(DBContract.COL_USER_ID, createID(DBContract.TABLE_USERS, 
+					DBContract.COL_USER_ID));
+			values.put(DBContract.COL_USER_NAME, users[i].getName());
+		
+			db.insert(DBContract.TABLE_USERS, null, values);
+		}
+		
+		helper.close();
 	}
 }

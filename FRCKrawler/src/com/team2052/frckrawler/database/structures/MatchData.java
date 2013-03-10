@@ -12,7 +12,7 @@ public class MatchData implements Structure {
 	private MetricValue[] values;
 	
 	public MatchData(int _matchID, int _event, int _matchNum, int _robot, int _user, 
-			String _matchType, String _comments, MetricValue[]_values) {
+			String _matchType, String _comments, MetricValue[] _values) {
 		
 		matchID = _matchID;
 		event = _event;

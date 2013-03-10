@@ -19,11 +19,25 @@ public class MetricValue implements Structure {
 				}
 			}
 			
-		} else {
-			
-			metric = _metric;
-			value = _value;
 		}
+			
+		metric = _metric;
+		value = _value;
+	}
+	
+	public String getValueAsString() {
+		
+		if(value == null)
+			return new String();
+		
+		String returnString = new String();
+		
+		for(int i = 0; i < value.length; i++) {
+			
+			returnString += value[i] + ":";
+		}
+		
+		return returnString;
 	}
 	
 	public Metric getMetric() {

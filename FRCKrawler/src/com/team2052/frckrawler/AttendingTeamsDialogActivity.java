@@ -75,9 +75,6 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 							box.getId());
 			}
 			
-			System.out.println(dbManager.addRobotToEvent(Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA)), 1230));
-			dbManager.printQuery("SELECT * FROM " + DBContract.TABLE_EVENT_ROBOTS, null);
-			
 			finish();
 			
 		} else if(v.getId() == R.id.cancel) {

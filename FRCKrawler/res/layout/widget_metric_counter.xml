@@ -37,7 +37,7 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="@+id/plus"
+        android:layout_alignLeft="@+id/plus"
         android:layout_below="@+id/value"
         android:text="-" />
 

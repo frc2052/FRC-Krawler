@@ -18,7 +18,8 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 	private static final int EDIT_EVENT_ID = 1;
 	private static final int ATTENDING_TEAMS_ID = 2;
 	private static final int ROBOTS_ID = 3;
-	private static final int DATA_ID = 4;
+	private static final int COMP_DATA_ID = 4;
+	private static final int DRIVER_DATA_ID = 5;
 	
 	private DBManager dbManager;
 	
@@ -64,9 +65,13 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 					Integer.valueOf(events[i].getEventID()));
 			robots.setId(ROBOTS_ID);
 			
-			MyButton data = new MyButton(this, "Data", this, 
+			MyButton data = new MyButton(this, "Match Data", this, 
 					Integer.valueOf(events[i].getEventID()));
-			data.setId(DATA_ID);
+			data.setId(COMP_DATA_ID);
+			
+			MyButton driverData = new MyButton(this, "Driver Data", this, 
+					Integer.valueOf(events[i].getEventID()));
+			driverData.setId(COMP_DATA_ID);
 			
 			table.addView(new MyTableRow(this, new View[] {
 					editEvent,
@@ -77,7 +82,8 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 					new MyTextView(this, events[i].getFMSID(), 18),
 					attendingTeams,
 					robots,
-					data
+					data,
+					driverData
 			}, color));
 		}
 	}
@@ -138,9 +144,19 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 				
 				break;
 				
-			case DATA_ID:
+			case COMP_DATA_ID:
 				
 				i = new Intent(this, CompetitionDataActivity.class);
+				i.putExtra(PARENTS_EXTRA, new String[] {});
+				i.putExtra(DB_VALUES_EXTRA, new String[] {v.getTag().toString()});
+				i.putExtra(DB_KEYS_EXTRA, new String[] {DBContract.COL_EVENT_ID});
+				startActivity(i);
+				
+				break;
+				
+			case DRIVER_DATA_ID:
+				
+				i = new Intent(this, DriverDataActivity.class);
 				i.putExtra(PARENTS_EXTRA, new String[] {});
 				i.putExtra(DB_VALUES_EXTRA, new String[] {v.getTag().toString()});
 				i.putExtra(DB_KEYS_EXTRA, new String[] {DBContract.COL_EVENT_ID});

@@ -51,6 +51,7 @@ public class TabActivity extends Activity {
 			((Button)findViewById(R.id.teamsSelectionButton)).setOnClickListener(listener);
 			((Button)findViewById(R.id.usersSelectionButton)).setOnClickListener(listener);
 			((Button)findViewById(R.id.gamesSelectionButton)).setOnClickListener(listener);
+			((Button)findViewById(R.id.bluetoothTabButton)).setOnClickListener(listener);
 			
 		} catch(NullPointerException e) {
 			
@@ -99,6 +100,7 @@ public class TabActivity extends Activity {
 		public static final int TEAMS = 0;
 		public static final int USERS = 1;
 		public static final int GAMES = 2;
+		public static final int BLUETOOTH = 3;
 	
 		private TabActivity user;
 	
@@ -143,6 +145,18 @@ public class TabActivity extends Activity {
 						i = new Intent(user, GamesActivity.class);
 						user.startActivity(i);
 						selectedActivity = GAMES;
+						destroyAllInstances();
+					}
+				
+					break;
+					
+				case R.id.bluetoothTabButton :
+					
+					if(selectedActivity != BLUETOOTH) {
+					
+						i = new Intent(user, BluetoothServerManagerActivity.class);
+						user.startActivity(i);
+						selectedActivity = BLUETOOTH;
 						destroyAllInstances();
 					}
 				

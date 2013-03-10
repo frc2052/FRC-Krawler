@@ -19,16 +19,17 @@ public class Metric implements Structure {
 	 * 2 - SLIDER
 	 * 3 - CHOOSER
 	 * 4 - TEXT
+	 * 5 - MATH
 	 * 
 	 * 
 	 * The 'range' array is used different for different 'type' values
 	 * 
 	 * BOOLEAN - not used, set to null
 	 * COUNTER - first value is the lower limit, second is the upper, third is the 
-	 * incrementation. They are expected to be Integer objects.
+	 * incrementation. They are expected to be integers.
 	 * 
 	 * SLIDER - first value is the lower limit, second is the upper. They are expected 
-	 * to be Integer objets.
+	 * to be parseable as integers.
 	 * 
 	 * CHOOSER - all the choosable values that the user can select
 	 * TEXT - not used, set to null
@@ -188,13 +189,13 @@ public class Metric implements Structure {
 		public static Metric createTextMetric
 		(String game, String name, String description) {
 			
-			return createBooleanMetric(game, name, description, true);
+			return createTextMetric(game, name, description, true);
 		}
 		
 		public static Metric createTextMetric
 		(String game, String name, String description, boolean displayed) {
 			
-			return createBooleanMetric(-1, game, name, description, null, displayed);
+			return createTextMetric(-1, game, name, description, null, displayed);
 		}
 		
 		public static Metric createTextMetric

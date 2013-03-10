@@ -56,7 +56,7 @@ public class AddMetricDialogActivity extends Activity
 							getIntent().getStringExtra(GAME_NAME_EXTRA),
 							((EditText)findViewById(R.id.name)).getText().toString(),
 							((EditText)findViewById(R.id.description)).getText().toString(),
-							((CheckBox)findViewById(R.id.displayed)).isSelected()
+							((CheckBox)findViewById(R.id.displayed)).isChecked()
 							);
 					break;
 					
@@ -69,7 +69,7 @@ public class AddMetricDialogActivity extends Activity
 							Integer.parseInt(((EditText)findViewById(R.id.min)).getText().toString()), 
 							Integer.parseInt(((EditText)findViewById(R.id.max)).getText().toString()),
 							Integer.parseInt(((EditText)findViewById(R.id.inc)).getText().toString()),
-							((CheckBox)findViewById(R.id.displayed)).isSelected()
+							((CheckBox)findViewById(R.id.displayed)).isChecked()
 							);
 					
 					break;
@@ -82,7 +82,7 @@ public class AddMetricDialogActivity extends Activity
 							((EditText)findViewById(R.id.description)).getText().toString(),
 							Integer.parseInt(((EditText)findViewById(R.id.min)).getText().toString()), 
 							Integer.parseInt(((EditText)findViewById(R.id.max)).getText().toString()),
-							((CheckBox)findViewById(R.id.displayed)).isSelected()
+							((CheckBox)findViewById(R.id.displayed)).isChecked()
 							);
 					
 					break;
@@ -93,9 +93,12 @@ public class AddMetricDialogActivity extends Activity
 							getIntent().getStringExtra(GAME_NAME_EXTRA),
 							((EditText)findViewById(R.id.name)).getText().toString(),
 							((EditText)findViewById(R.id.description)).getText().toString(),
-							list.getValuesList().toArray(new String[0]),
-							((CheckBox)findViewById(R.id.displayed)).isSelected()
+							list.getValues(),
+							((CheckBox)findViewById(R.id.displayed)).isChecked()
 							);
+					
+					for(String s : list.getValues())
+						System.out.println(s);
 					
 					break;
 					
@@ -105,20 +108,26 @@ public class AddMetricDialogActivity extends Activity
 							getIntent().getStringExtra(GAME_NAME_EXTRA),
 							((EditText)findViewById(R.id.name)).getText().toString(),
 							((EditText)findViewById(R.id.description)).getText().toString(),
-							((CheckBox)findViewById(R.id.displayed)).isSelected()
+							((CheckBox)findViewById(R.id.displayed)).isChecked()
 							);
 					
 					break;
 					
 				case DBContract.MATH:
 					
-					/*m = Metric.MetricFactory.createMathMetric(
+					String[] selectedMetrics = list.getValues();
+					Integer[] selectedMetricIDs = new Integer[selectedMetrics.length];
+					
+					for(int i = 0; i < selectedMetrics.length; i++)
+						selectedMetricIDs[i] = Integer.valueOf(selectedMetrics[i]);
+					
+					m = Metric.MetricFactory.createMathMetric(
 							getIntent().getStringExtra(GAME_NAME_EXTRA),
 							((EditText)findViewById(R.id.name)).getText().toString(),
 							((EditText)findViewById(R.id.description)).getText().toString(),
-							
-							((CheckBox)findViewById(R.id.displayed)).isSelected()
-							);*/
+							selectedMetricIDs,
+							((CheckBox)findViewById(R.id.displayed)).isChecked()
+							);
 					
 					break;
 					
@@ -128,7 +137,7 @@ public class AddMetricDialogActivity extends Activity
 							getIntent().getStringExtra(GAME_NAME_EXTRA),
 							((EditText)findViewById(R.id.name)).getText().toString(),
 							((EditText)findViewById(R.id.description)).getText().toString(),
-							((CheckBox)findViewById(R.id.displayed)).isSelected()
+							((CheckBox)findViewById(R.id.displayed)).isChecked()
 							);
 			}
 			
@@ -198,10 +207,38 @@ public class AddMetricDialogActivity extends Activity
 			
 		} else if(selectedMetricType == DBContract.MATH) {
 			
+			DBManager db = DBManager.getInstance(this);
+			Metric[] choices;
+			
+			switch(metricCategory) {
+				case MetricsActivity.MATCH_PERF_METRICS:
+					choices = db.getMatchPerformanceMetricsByColumns
+						(new String[] {DBContract.COL_GAME_NAME}, 
+								new String[] {getIntent().getStringExtra(GAME_NAME_EXTRA)});
+					break;
+				
+				case MetricsActivity.ROBOT_METRICS:
+					choices = db.getRobotMetricsByColumns
+					(new String[] {DBContract.COL_GAME_NAME}, 
+							new String[] {getIntent().getStringExtra(GAME_NAME_EXTRA)});
+					break;
+				
+				case MetricsActivity.DRIVER_METRICS:
+					/*choices = db.getDriverMetricsByColumns
+					(new String[] {DBContract.COL_GAME_NAME}, 
+							new String[] {getIntent().getStringExtra(GAME_NAME_EXTRA)});
+					break;*/
+					
+				default:
+					
+					choices = new Metric[0];
+			}
+			
 			findViewById(R.id.min).setEnabled(false);
 			findViewById(R.id.max).setEnabled(false);
 			findViewById(R.id.inc).setEnabled(false);
-			//list = new SpinnerListEditor(this);
+			list = new MathMetricListEditor(this, new String[0], choices);
+			list.setEnabled(true);
 			
 		} else if(selectedMetricType == DBContract.CHOOSER) {
 			
@@ -209,6 +246,7 @@ public class AddMetricDialogActivity extends Activity
 			findViewById(R.id.max).setEnabled(false);
 			findViewById(R.id.inc).setEnabled(false);
 			list = new TextListEditor(this);
+			list.setEnabled(true);
 			
 		} else {
 			

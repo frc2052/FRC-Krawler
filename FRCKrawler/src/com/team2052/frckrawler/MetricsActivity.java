@@ -105,7 +105,7 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 				color = Color.TRANSPARENT;
 			
 			MyButton editButton = new MyButton(this, "Edit Metric", this, 
-					Integer.valueOf(i));
+					Integer.valueOf(metrics[i].getID()));
 			editButton.setId(EDIT_BUTTON_ID);
 			
 			String descriptionString;
@@ -184,6 +184,11 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 				break;
 				
 			case EDIT_BUTTON_ID:
+				
+				i = new Intent(this, EditMetricDialogActivity.class);
+				i.putExtra(EditMetricDialogActivity.METRIC_CATEGORY_EXTRA, metricCategory);
+				i.putExtra(EditMetricDialogActivity.METRIC_ID_EXTRA, (Integer)v.getTag());
+				startActivity(i);
 				
 				break;
 		}

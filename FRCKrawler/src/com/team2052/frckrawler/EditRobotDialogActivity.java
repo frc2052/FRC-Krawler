@@ -4,9 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.*;
 
 import com.example.frckrawler.R;
+import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.structures.MetricValue;
+import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.gui.MetricWidget;
 
 public class EditRobotDialogActivity extends Activity implements OnClickListener {
 	
@@ -29,12 +34,51 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 	public void onResume() {
 		
 		super.onResume();
+		
+		Robot[] rArr = dbManager.getRobotsByColumns
+				(new String[] {DBContract.COL_ROBOT_ID},
+						new String[] {getIntent().getStringExtra(ROBOT_ID_EXTRA)});
+		Robot r = rArr[0];
+		
+		((TextView)findViewById(R.id.game)).setText(r.getGame());
+		((TextView)findViewById(R.id.comments)).setText(r.getComments());
+		
+		LinearLayout metricList = (LinearLayout)findViewById(R.id.metricList);
+		metricList.removeAllViews();
+		MetricValue[] metricVals = r.getMetricValues();
+		
+		for(int i = 0; i < metricVals.length; i++) {
+			
+			MetricWidget widget = MetricWidget.createWidget(this, metricVals[i]);
+			metricList.addView(widget);
+		}
 	}
 
 	public void onClick(View v) {
 		
 		switch(v.getId()) {
 			case R.id.save:
+				
+				LinearLayout metricList = (LinearLayout)findViewById(R.id.metricList);
+				String[] updateVals = new String[metricList.getChildCount() + 1];
+				String[] updateCols = new String[metricList.getChildCount() + 1];
+				
+				for(int i = 0; i < metricList.getChildCount(); i++) {
+					
+					MetricWidget widget = (MetricWidget)metricList.getChildAt(i);
+					updateVals[i] = widget.getMetricValue().getValueAsString();
+					updateCols[i] = widget.getMetric().getKey();
+				}
+				
+				updateVals[updateVals.length - 1] = 
+						((EditText)findViewById(R.id.comments)).getText().toString();
+				updateCols[updateCols.length - 1] = DBContract.COL_COMMENTS;
+				
+				dbManager.updateRobots(
+						new String[] {DBContract.COL_ROBOT_ID}, 
+						new String[] {getIntent().getStringExtra(ROBOT_ID_EXTRA)}, 
+						updateCols, 
+						updateVals);
 				
 				finish();
 				

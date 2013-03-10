@@ -35,7 +35,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 	
 	public void onResume() {
 		
-		super.onStart();
+		super.onResume();
 		
 		Robot[] robots = dbManager.getRobotsByColumns(databaseKeys, databaseValues);
 		Metric[] metrics;
@@ -46,11 +46,17 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			metrics = new Metric[0];
 		
 		TableLayout table = (TableLayout)findViewById(R.id.robotsDataTable);
-		TableRow descriptorsRow = (TableRow)findViewById(R.id.descriptorsRow);
+		TableRow descriptorsRow = new TableRow(this);
+		
+		descriptorsRow.addView(new TextView(this));
+		descriptorsRow.addView(new MyTextView(this, "Team #", 18));
+		descriptorsRow.addView(new MyTextView(this, "Game", 18));
+		descriptorsRow.addView(new MyTextView(this, "Comments", 18));
 		
 		for(Metric m : metrics) {
 			
-			descriptorsRow.addView(new MyTextView(this, m.getMetricName(), 18));
+			if(m != null)
+				descriptorsRow.addView(new MyTextView(this, m.getMetricName(), 18));
 		}
 		
 		table.removeAllViews();
@@ -89,17 +95,20 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			//Stops a index out of bounds exception from being thrown if there's a short comment
 			String comment;
 			
-			if(robots[i].getGame().length() >= COMMENT_CHAR_LIMIT)
+			if(robots[i].getComments().length() >= COMMENT_CHAR_LIMIT)
 				comment = robots[i].getComments().substring(0, COMMENT_CHAR_LIMIT - 1);
 			else
 				comment = robots[i].getComments();
 				
 			rowArrayList.add(new MyTextView(this, comment, 18));
+			
+			for(MetricValue m : robots[i].getMetricValues()) {
+				rowArrayList.add(new MyTextView(this, m.getValueAsString(), 18));
+				System.out.println(m.getValueAsString());
+			}
+			
 			rowArrayList.add(events);
 			rowArrayList.add(pictures);
-			
-			for(Metric m : metrics)
-				rowArrayList.add(new MyTextView(this, m.getMetricName(), 18));
 			
 			//Add the row to the table
 			table.addView(new MyTableRow(this, rowArrayList.toArray(new View[0]), color));

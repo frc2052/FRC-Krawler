@@ -138,11 +138,14 @@ public class DBContract {
 	public static final String COL_GAME_NAME = "gamename";
 	public static final String COL_COMMENTS = "comments";
 	public static String[] COL_KEYS = new String[50];
-	private static String COL_KEYS_LIST;
+	public static String COL_KEYS_LIST;
 	
 	static {
 		
+		COL_KEYS_LIST = new String("");
+		
 		for(int i = 0; i < COL_KEYS.length; i++) {
+			
 			COL_KEYS[i] = "d" + i;
 			COL_KEYS_LIST += COL_KEYS[i] + ANY;
 			
@@ -171,7 +174,7 @@ public class DBContract {
 	public static final String CREATE_TABLE_COMPETITIONS =
 			"CREATE TABLE " + TABLE_EVENTS + " (" + COL_GAME_NAME + STRING + ", " + 
 					COL_EVENT_ID + INT + ", " + COL_EVENT_NAME + STRING + ", " + 
-					COL_DATE_STAMP + INT + ", " + COL_LOCATION +STRING + ", " + 
+					COL_DATE_STAMP + INT + ", " + COL_LOCATION + STRING + ", " + 
 					COL_FMS_EVENT_ID + STRING + ")";
 	
 	
@@ -267,11 +270,11 @@ public class DBContract {
 	//Display, use COL_DISPLAY
 	
 	public static final String CREATE_TABLE_MATCH_PERF_METRICS = 
-			"CREATE TABLE " + TABLE_MATCH_PERF_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
-					COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
-					COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
-					COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
-					")";
+				"CREATE TABLE " + TABLE_MATCH_PERF_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
+						COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
+						COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
+						COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
+						")";
 	
 	
 	
@@ -303,7 +306,153 @@ public class DBContract {
 			"CREATE TABLE " + TABLE_EVENT_ROBOTS + " (" + COL_EVENT_ID + INT + ", " +
 					COL_ROBOT_ID + INT + ")";
 	
+	
+	/***************************************
+	 * SCOUT TABLES
+	 * 
+	 * These tables are used if the device is the client
+	 * to another device's database.
+	 ***************************************/
+	
+	public static final String SCOUT_TABLE_USERS = "scoutusers";
+	
+	//COL_USER_ID = "userid";
+	//COL_USER_NAME = "username";
+	
+	public static final String CREATE_SCOUT_TABLE_USERS = 
+			"CREATE TABLE " + SCOUT_TABLE_USERS + " (" + COL_USER_ID + INT + ", " + COL_USER_NAME + 
+					STRING + ")";
+	
+	
+	
+	public static final String SCOUT_TABLE_EVENT = "scoutevent";
+	
+	//Game ID, use COL_GAME_NAME
+	//Event ID, use COL_EVENT_ID
+	//COL_EVENT_NAME = "eventname";
+	//Date, use COL_DATE_STAMP
+	//COL_LOCATION = "location";
+	//COL_FMS_EVENT_ID = "fmseventid";
+	
+	public static final String CREATE_SCOUT_TABLE_EVENT =
+				"CREATE TABLE " + SCOUT_TABLE_EVENT + " (" + COL_GAME_NAME + STRING + ", " + 
+						COL_EVENT_ID + INT + ", " + COL_EVENT_NAME + STRING + ", " + 
+						COL_DATE_STAMP + INT + ", " + COL_LOCATION + STRING + ", " + 
+						COL_FMS_EVENT_ID + STRING + ")";
+	
+	
+	
+	public static final String SCOUT_TABLE_ROBOTS = "scoutrobots";
+	
+	//Team number, use COL_NUMBER
+	//Robot ID, use COL_ROBOT_ID
+	//COL_GAME_NAME = "gamename";
+	//COL_COMMENTS = "comments";
+	//COL_KEYS = new String[50];
+	//COL_KEYS_LIST;
+	public static final String COL_WAS_UPDATED = "wasupdated";
+	
+	public static final String CREATE_SCOUT_TABLE_ROBOTS = 
+			"CREATE TABLE " + SCOUT_TABLE_ROBOTS + " (" + COL_TEAM_NUMBER + INT + ", " + COL_ROBOT_ID + 
+					INT + ", " + COL_GAME_NAME + STRING + ", " + COL_COMMENTS + STRING + ", " + 
+					COL_KEYS_LIST + ", " + COL_WAS_UPDATED + ")";
+	
+	
+	
+	public static final String SCOUT_TABLE_MATCH_PERF = "scoutmatchperf";
+	
+	//"matchid";
+	//Robot ID, use COL_ROBOT_ID
+	//Event ID, use EVENT_ID
+	//User ID, use COL_USER_ID
+	//"matchnumber";
+	//"matchtype";
+	//Comments, use COL_COMMENTS
+	
+	//Keys, use COL_KEYS[]
+	
+	public static final String CREATE_SCOUT_TABLE_MATCH_PERF = 
+			"CREATE TABLE " + SCOUT_TABLE_MATCH_PERF + " (" + COL_DATA_ID + INT + ", " +
+					COL_ROBOT_ID + INT + ", " + COL_EVENT_ID + INT + ", " + COL_USER_ID + INT + ", " + 
+					COL_MATCH_NUMBER + INT + ", " + COL_MATCH_TYPE + STRING + ", " +
+					COL_COMMENTS + STRING + ", " + COL_KEYS_LIST + ")";
+	
+	
+	
+	public static final String SCOUT_TABLE_DRIVER_DATA = "scoutdriverdata";
+	
+	//Robot ID, use COL_ROBOT_ID
+	//Event ID, use COL_EVENT_ID
+	//Match Number, use COL_MATCH_NUMBER
+	//Comments, use COL_COMMENTS
+	//Keys, use COL_KEYS
+	
+	public static final String CREATE_SCOUT_TABLE_DRIVER_DATA = 
+			"CREATE TABLE " + SCOUT_TABLE_DRIVER_DATA + " (" + COL_ROBOT_ID + INT + ", " +
+					COL_EVENT_ID + INT + ", " + COL_MATCH_NUMBER + INT + ", " +
+					COL_COMMENTS + STRING + ", " + COL_KEYS_LIST + ")";
+	
+	
+	
+	public static final String SCOUT_TABLE_ROBOT_METRICS = "scoutrobotmetrics";
+	
+	//Game ID, use COL_GAME_NAME
+	//COL_METRIC_ID = "metricid";
+	//COL_METRIC_NAME = "metricname";
+	//COL_DESCRIPTION = "description";
+	//COL_METRIC_KEY = "metrickey";
+	//COL_TYPE = "type";
+	//COL_RANGE = "range";
+	//COL_DISPLAY = "display";
+	
+	public static final String CREATE_SCOUT_TABLE_ROBOT_METRICS =
+			"CREATE TABLE " + SCOUT_TABLE_ROBOT_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
+					COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
+					COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + INT + ", " + 
+					COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
+					")";
+	
+	
+	
+	public static final String SCOUT_TABLE_MATCH_PERF_METRICS = "scoutmatchmetrics";
+	
+	//Game ID, use COL_GAME_NAME
+	//Metric Name, use COL_METRIC_NAME
+	//Description, use COL_DESCRIPTION
+	//Key, use COL_KEY
+	//Type, use COL_TYPE
+	//Range, use COL_RANGE
+	//Display, use COL_DISPLAY
+	
+	public static final String CREATE_SCOUT_TABLE_MATCH_PERF_METRICS = 
+				"CREATE TABLE " + SCOUT_TABLE_MATCH_PERF_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
+						COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
+						COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
+						COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
+						")";
+	
+	public static final String SCOUT_TABLE_DRIVER_METRICS = "scoutdrivermetrics";
+	
+	//Game ID, use COL_GAME_NAME
+	//Metric Name, use COL_METRIC_NAME
+	//Description, use COL_DESCRIPTION
+	//Key, use COL_KEY
+	//Type, use COL_TYPE
+	//Range, use COL_RANGE
+	//
+
+	public static final String CREATE_SCOUT_TABLE_DRIVER_METRICS = 
+		"CREATE TABLE " + SCOUT_TABLE_DRIVER_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
+				COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
+				COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
+				COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
+				")";
+	
+	
+	
 	//Additions may be made to this contract to include tables for Awards and OPR or CCWM
+	
+	
 	
 	/*****
 	 * Common SQL statements
@@ -335,6 +484,16 @@ public class DBContract {
 		database.execSQL(CREATE_TABLE_EVENT_ROBOTS);
 		database.execSQL(CREATE_TABLE_DRIVER_DATA);
 		database.execSQL(CREATE_TABLE_DRIVER_METRICS);
+		
+		//SCOUT TABLES//
+		database.execSQL(CREATE_SCOUT_TABLE_USERS);
+		database.execSQL(CREATE_SCOUT_TABLE_EVENT);
+		database.execSQL(CREATE_SCOUT_TABLE_ROBOTS);
+		database.execSQL(CREATE_SCOUT_TABLE_MATCH_PERF);
+		database.execSQL(CREATE_SCOUT_TABLE_DRIVER_DATA);
+		database.execSQL(CREATE_SCOUT_TABLE_ROBOT_METRICS);
+		database.execSQL(CREATE_SCOUT_TABLE_MATCH_PERF_METRICS);
+		database.execSQL(CREATE_SCOUT_TABLE_DRIVER_METRICS);
 	}
 	
 	/*****
@@ -360,6 +519,16 @@ public class DBContract {
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENT_ROBOTS);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_DRIVER_DATA);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_DRIVER_METRICS);
+		
+		//SCOUT TABLES//
+		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_USERS);
+		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_EVENT);
+		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_ROBOTS);
+		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_MATCH_PERF);
+		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_DRIVER_DATA);
+		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_ROBOT_METRICS);
+		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_MATCH_PERF_METRICS);
+		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_DRIVER_METRICS);
 	}
 	
 	private DBContract() {}

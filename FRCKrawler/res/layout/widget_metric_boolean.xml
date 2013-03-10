@@ -25,14 +25,16 @@
             android:id="@+id/yes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
+            android:checked="false"
             android:text="Yes" />
 
         <RadioButton
             android:id="@+id/no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:text="No" />
+
     </RadioGroup>
 
 </RelativeLayout>

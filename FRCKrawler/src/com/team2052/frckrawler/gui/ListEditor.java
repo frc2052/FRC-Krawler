@@ -3,39 +3,42 @@ package com.team2052.frckrawler.gui;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.view.Gravity;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 
 public abstract class ListEditor extends LinearLayout implements OnClickListener {
 	
 	private static final int ADD_BUTTON_ID = 1;
 	private static final int REMOVE_BUTTON_ID = 2;
 	
-	private ArrayList<Object> values;
+	protected ArrayList<String> shownValues;
+	protected ArrayList<String> values;
+	
 	private Button addButton;
 
 	public ListEditor(Context context) {
 		
-		this(context, new Object[0]);
+		this(context, new String[0]);
 	}
 	
-	public ListEditor(Context context, Object[] list) {
+	public ListEditor(Context context, String[] list) {
 		
 		super(context);
 		setOrientation(VERTICAL);
 		
-		values = new ArrayList<Object>();
+		shownValues = new ArrayList<String>();
+		values = new ArrayList<String>();
 		
-		for(Object o : list)
+		for(String o : list)
 			values.add(o);
 		
 		addButton = new MyButton(getContext(), "Add...", this);
 		addButton.setId(ADD_BUTTON_ID);
 		addButton.setGravity(Gravity.CENTER);
+		addButton.setOnClickListener(this);
+		
+		onValuesUpdated();
 	}
 	
 	protected abstract void onAddButtonClicked();
@@ -54,14 +57,17 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
 		}
 	}
 	
-	public Object[] getValues() {
+	public String[] getShownValues() {
 		
-		return values.toArray();
+		return shownValues.toArray(new String[0]);
 	}
 	
-	public int indexOf(Object o) {
+	public String[] getValues() {
 		
-		return values.indexOf(o);
+		for(int i = 0; i < values.size(); i++)
+			System.out.println(values.get(i));
+		
+		return values.toArray(new String[0]);
 	}
 	
 	public int getValueCount() {
@@ -69,20 +75,23 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
 		return values.size();
 	}
 	
-	public void addValue(String val) {
+	public void addValue(String val, String shownVal) {
 		
+		shownValues.add(shownVal);
 		values.add(val);
 		onValuesUpdated();
 	}
 	
-	public void removeValue(Object val) {
+	public void removeValue(String val) {
 		
+		shownValues.remove(values.indexOf(val));
 		values.remove(val);
 		onValuesUpdated();
 	}
 	
 	public void removeValue(int position) {
 		
+		shownValues.remove(position);
 		values.remove(position);
 		onValuesUpdated();
 	}
@@ -91,13 +100,13 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
 		
 		removeAllViews();
 		
-		for(int i = 0; i < values.size(); i ++) {
+		for(int i = 0; i < shownValues.size(); i ++) {
 			
 			LinearLayout l = new LinearLayout(getContext());
 			l.setOrientation(LinearLayout.HORIZONTAL);
 			
 			TextView t = new TextView(getContext());
-			t.setText(values.get(i).toString());
+			t.setText(shownValues.get(i));
 			t.setTextSize(18);
 			
 			Button b = new Button(getContext());
@@ -114,14 +123,14 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
 		addView(addButton);
 	}
 	
-	public ArrayList<Object> getValuesList() {
+	public ArrayList<String> getValuesList() {
 		
 		return values;
 	}
 	
 	public void setEnabled(boolean enabled) {
 		
-		super.setEnabled(enabled);
-		addButton.setEnabled(enabled);
+		super.setEnabled(true);
+		addButton.setEnabled(true);
 	}
 }
