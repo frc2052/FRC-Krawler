@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.frckrawler"
+    package="com.team2052.frckrawler"
     android:versionCode="1"
     android:versionName="1.0" >
     
@@ -74,6 +74,7 @@
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name="com.team2052.frckrawler.EditMatchDataDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
+        <service android:name=".bluetooth.BluetoothClientService"></service>
     </application>
 
 </manifest>

@@ -6,7 +6,7 @@ import android.os.*;
 import android.view.View;
 import android.widget.*;
 
-import com.example.frckrawler.R;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.BluetoothServerService;
 import com.team2052.frckrawler.bluetooth.BluetoothServerService.CloseBinder;
 import com.team2052.frckrawler.database.*;

@@ -1,6 +1,6 @@
 package com.team2052.frckrawler;
 
-import com.example.frckrawler.R;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.BluetoothClientService;
 
 import android.app.Activity;
@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 public class ClientTestActivity extends Activity implements View.OnClickListener, 
 														DialogInterface.OnClickListener {

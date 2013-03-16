@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.example.frckrawler.R;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
 
 public class EditMetricDialogActivity extends Activity implements OnClickListener {

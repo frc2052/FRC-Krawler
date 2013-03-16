@@ -12,8 +12,10 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.database.DBContract;
@@ -39,7 +41,8 @@ public class BluetoothClientService extends Service {
 	public void onCreate() {
 		
 		super.onCreate();
-		
+		android.os.Debug.waitForDebugger();
+		Log.d("BluetoothClientService", "started!");
 		System.out.println("Server service created.");
 	}
 	
@@ -69,7 +72,22 @@ public class BluetoothClientService extends Service {
 	
 	public IBinder onBind(Intent i) {
 		
-		return null;
+		return new ClientBinder();
+	}
+	
+	
+	/*****
+	 * Class: ClientBinder
+	 * 
+	 * Summary: an interface for 
+	 *****/
+	
+	public class ClientBinder extends Binder {
+
+		public boolean isSyncCompleted() {
+			
+			return clientThread.isAlive();
+		}
 	}
 	
 	

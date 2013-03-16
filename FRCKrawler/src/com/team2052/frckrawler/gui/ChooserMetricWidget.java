@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-import com.example.frckrawler.R;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.structures.MetricValue;
 
 public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedListener {

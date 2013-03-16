@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import com.example.frckrawler.R;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.structures.MetricValue;
 
 public class CounterMetricWidget extends MetricWidget implements OnClickListener {

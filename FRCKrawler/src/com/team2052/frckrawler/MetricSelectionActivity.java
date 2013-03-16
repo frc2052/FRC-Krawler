@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.example.frckrawler.R;
+import com.team2052.frckrawler.R;
 
 public class MetricSelectionActivity extends StackableTabActivity implements OnClickListener {
 	

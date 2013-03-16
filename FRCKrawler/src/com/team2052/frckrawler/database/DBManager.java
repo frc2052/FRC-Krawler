@@ -2633,4 +2633,77 @@ public class DBManager {
 		
 		helper.close();
 	}
+	
+	
+	/*****
+	 * Method: scoutGetAllRobots
+	 * 
+	 * Summary: gets all of the teams from the scout's team table
+	 */
+	
+	public synchronized Robot[] scoutGetAllRobots() {
+		
+		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + 
+				DBContract.SCOUT_TABLE_ROBOTS + " ORDER BY " +
+				DBContract.COL_TEAM_NUMBER + " ASC", null);
+		Robot[] r = new Robot[c.getCount()];
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			
+			c.moveToNext();
+			
+			String thisRobotGame = c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME));
+			ArrayList<MetricValue> metricVals = new ArrayList<MetricValue>();
+			Metric[] metrics = new Metric[0];
+			
+			metrics = this.getRobotMetricsByColumns
+				(new String[] {DBContract.COL_GAME_NAME}, new String[] {thisRobotGame});
+				
+			//Un-indent this stuff
+			for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
+					
+				String valString = c.getString
+						(c.getColumnIndex(metrics[metricCount].getKey()));
+				ArrayList<String> valsArr = new ArrayList<String>();
+				String workingString = new String();
+					
+				if(valString == null)
+					valString = new String();
+					
+				for(int charCount = 0; charCount < valString.length(); charCount++) {
+						
+					if(valString.charAt(charCount) != ':'){
+							
+						workingString += valString.substring(charCount, charCount + 1);
+							
+					} else {
+							
+						valsArr.add(workingString);
+						workingString = new String();
+					}
+				}
+					
+				try {
+					metricVals.add(
+						new MetricValue(
+							metrics[metricCount],
+							valsArr.toArray(new String[0])
+						));
+				} catch(MetricTypeMismatchException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			
+			
+			r[i] = new Robot(
+					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
+					metricVals.toArray(new MetricValue[0])
+					);
+		}
+		
+		return r;
+	}
 }

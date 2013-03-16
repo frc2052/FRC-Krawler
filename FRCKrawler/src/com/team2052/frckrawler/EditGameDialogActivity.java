@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
-import com.example.frckrawler.R;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
 
 public class EditGameDialogActivity extends Activity implements OnClickListener, DialogInterface.OnClickListener{

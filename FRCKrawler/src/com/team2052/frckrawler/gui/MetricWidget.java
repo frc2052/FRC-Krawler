@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.*;
 import android.widget.*;
 
-import com.example.frckrawler.R;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.structures.*;
 import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatchException;

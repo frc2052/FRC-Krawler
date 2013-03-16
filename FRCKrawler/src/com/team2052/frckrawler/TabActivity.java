@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import com.example.frckrawler.R;
+import com.team2052.frckrawler.R;
 
 public class TabActivity extends Activity {
 	

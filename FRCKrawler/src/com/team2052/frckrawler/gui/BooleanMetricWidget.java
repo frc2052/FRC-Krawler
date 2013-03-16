@@ -5,7 +5,7 @@ import android.view.View.OnClickListener;
 import android.view.View;
 import android.widget.*;
 
-import com.example.frckrawler.R;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.structures.MetricValue;
 
 public class BooleanMetricWidget extends MetricWidget implements OnClickListener {

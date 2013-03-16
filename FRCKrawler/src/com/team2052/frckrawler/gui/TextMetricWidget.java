@@ -5,7 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.*;
 
-import com.example.frckrawler.R;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.structures.MetricValue;
 
 public class TextMetricWidget extends MetricWidget implements TextWatcher {
