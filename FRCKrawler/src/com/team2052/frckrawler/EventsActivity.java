@@ -146,7 +146,7 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 				
 			case COMP_DATA_ID:
 				
-				i = new Intent(this, CompetitionDataActivity.class);
+				i = new Intent(this, RawMatchDataActivity.class);
 				i.putExtra(PARENTS_EXTRA, new String[] {});
 				i.putExtra(DB_VALUES_EXTRA, new String[] {v.getTag().toString()});
 				i.putExtra(DB_KEYS_EXTRA, new String[] {DBContract.COL_EVENT_ID});

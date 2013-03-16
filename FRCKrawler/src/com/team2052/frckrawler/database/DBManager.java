@@ -1135,7 +1135,9 @@ public class DBManager {
 	
 	public synchronized Game[] getAllGames() {
 		
-		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + DBContract.TABLE_GAMES, null);
+		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + 
+				DBContract.TABLE_GAMES + " ORDER BY " + 
+				DBContract.COL_GAME_NAME + " ASC", null);
 		Game[] g = new Game[c.getCount()];
 		
 		for(int i = 0; i < g.length; i++) {
@@ -1902,7 +1904,7 @@ public class DBManager {
 			for(int k = 0; k < robots[i].getMetricValues().length; k++) {
 				
 				updateCols.add(robots[i].getMetricValues()[k].getMetric().getKey());
-				updateVals.add(robots[i].getMetricValues()[k].getValueAsString());
+				updateVals.add(robots[i].getMetricValues()[k].getValueAsDBReadableString());
 			}
 			
 			if(!updateRobots(queryCols, queryVals, 
@@ -2056,18 +2058,17 @@ public class DBManager {
 				" WHERE " + DBContract.COL_EVENT_ID + " LIKE ?", 
 				new String[] {Integer.toString(eventID)});
 		
-		String[] colArray = new String[c.getCount()];
-		String[] robotIDs = new String[c.getCount()];
+		Robot[] robotArray = new Robot[c.getCount()];
 		
 		for(int i = 0; i < c.getCount(); i++) {
 			
 			c.moveToNext();
 			
-			colArray[i] = DBContract.COL_ROBOT_ID;
-			robotIDs[i] = c.getString(c.getColumnIndex(DBContract.COL_ROBOT_ID));
+			robotArray[i] = getRobotsByColumns(new String[] {DBContract.COL_ROBOT_ID}, 
+					new String[] {c.getString(c.getColumnIndex(DBContract.COL_ROBOT_ID))})[0];
 		}
 		
-		return getRobotsByColumns(colArray, robotIDs);
+		return robotArray;
 	}
 	
 	public Event[] getEventsByRobot(int robotID) {
@@ -2128,11 +2129,13 @@ public class DBManager {
 			return false;
 		if(!hasValue(DBContract.TABLE_ROBOTS, DBContract.COL_ROBOT_ID, Integer.toString(robotID)))
 			return false;
-		if(!hasValue(DBContract.TABLE_USERS, DBContract.COL_USER_ID, Integer.toString(userID)))
-			return false;
+		/*if(!hasValue(DBContract.TABLE_USERS, DBContract.COL_USER_ID, Integer.toString(userID)))
+			return false;*/
 		
 		ContentValues values = new ContentValues();
 		
+		values.put(DBContract.COL_DATA_ID, createID(DBContract.TABLE_MATCH_PERF, 
+				DBContract.COL_DATA_ID));
 		values.put(DBContract.COL_EVENT_ID, Integer.toString(eventID));
 		values.put(DBContract.COL_MATCH_NUMBER, Integer.toString(matchNumber));
 		values.put(DBContract.COL_ROBOT_ID, Integer.toString(robotID));
@@ -2159,6 +2162,38 @@ public class DBManager {
 	
 	
 	/*****
+	 * Method: removeMatchDataByColumns
+	 * 
+	 * @param cols
+	 * @param vals
+	 * @return
+	 * 
+	 * Summary: removes match data where cols at n is equal to vals at n
+	 *****/
+	public synchronized boolean removeMatchData(int matchDataID) {
+		
+		return removeMatchDataByColumns(new String[] {DBContract.COL_DATA_ID}, 
+				new String[] {Integer.toString(matchDataID)});
+	}
+	
+	public synchronized boolean removeMatchDataByColumns(String[] cols, String[] vals) {
+		
+		if(cols.length != vals.length || cols.length < 1)
+			return false;
+		
+		String colsString = cols[0] + " LIKE ?";
+		
+		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
+			colsString += " AND " + cols[i] + " LIKE ?";
+		
+		helper.getWritableDatabase().delete(DBContract.TABLE_MATCH_PERF, 
+				colsString, vals);
+		
+		return true;
+	}
+	
+	
+	/*****
 	 * Method: getMatchDataByColumns
 	 * 
 	 * @param cols
@@ -2166,7 +2201,7 @@ public class DBManager {
 	 * @return
 	 * 
 	 * Summary: gets the match data by the columns and values passed in the arrays
-	 */
+	 *****/
 	
 	public synchronized MatchData[] getMatchDataByColumns(String[] cols, String[] vals) {
 		
@@ -2180,6 +2215,9 @@ public class DBManager {
 		
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
 			queryString += " AND " + cols[i] + " LIKE ?";
+		
+		queryString += " ORDER BY " + DBContract.COL_MATCH_TYPE + " DESC, " +
+				DBContract.COL_MATCH_NUMBER + " ASC";
 			
 		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
 		MatchData[] d = new MatchData[c.getCount()];
@@ -2207,14 +2245,16 @@ public class DBManager {
 				
 				String currentValsString = new String();
 				
-				for(int character = 0; character < valueString.length(); character++) {
+				if(valueString != null) {
+					for(int character = 0; character < valueString.length(); character++) {
 					
-					if(valueString.charAt(character) != ':')
+						if(valueString.charAt(character) != ':')
 						currentValsString += valueString.charAt(character);
 					
-					else {
+						else {
 						valuesList.add(currentValsString);
 						currentValsString = new String();
+						}
 					}
 				}
 				
@@ -2241,6 +2281,109 @@ public class DBManager {
 		
 		return d;
 	}
+	
+	
+	/*****
+	 * Method: updateMatchDataByColumns
+	 * 
+	 * Summary: updates the match data based on the passed query columns
+	 *****/
+	
+	public synchronized boolean updateMatchData(String queryCols[], String queryVals[], 
+			String updateCols[], String updateVals[]) {
+		
+		if(updateCols.length != updateVals.length) //They must be the same so that every value
+			return false; //has something to map to and that there are no blank ones.
+		
+		if(queryCols.length != queryVals.length)
+			return false;
+		
+		for(String s : updateCols) { //Does not allow the caller to update the team number.
+			if(s.equals(DBContract.COL_DATA_ID))
+				return false;
+		}
+		
+		ContentValues vals = new ContentValues();
+		
+		for(int i = 0; i < updateCols.length; i++)
+			vals.put(updateCols[i], updateVals[i]);
+		
+		String queryString = new String();
+		
+		if(queryCols.length > 0)
+			queryString += queryCols[0] + " LIKE ?";
+		
+		for(int i = 1; i < queryCols.length; i++) {
+			queryString += " AND " + queryCols[i] + " LIKE ?";
+		}
+		
+		helper.getWritableDatabase().update(DBContract.TABLE_MATCH_PERF, vals, 
+				queryString, queryVals);
+		
+		helper.close();
+		
+		return true;
+	}
+	
+	
+	/*****
+	 * Method: getCompiledEventData
+	 * 
+	 * @param e
+	 * @param database
+	 * 
+	 * Summary: gets the averaged and counted data from every robot's match
+	 */
+	
+	/*public CompiledData[] getCompiledEventData(Event e) {
+		
+		return getCompiledEventData(e.getEventID());
+	}
+	
+	public CompiledData[] getCompiledEventData(int eventID) {
+		
+		//Get the event arr
+		Event[] eventArr = this.getEventsByColumns(new String[] {DBContract.COL_EVENT_ID}, 
+				new String[] {Integer.toString(eventID)});
+		
+		//See if the given ID exists and assign it to an event object
+		if(eventArr.length < 1)
+			return null;
+		
+		Event event = eventArr[0];
+		
+		//Get the robots, and our metrics, and make CompiledData for each robot
+		Robot[] robots = getRobotsAtEvent(eventID);
+		Metric[] metrics = this.getMatchPerformanceMetricsByColumns
+				(new String[] {DBContract.COL_GAME_NAME}, new String[] {event.getGameName()});
+		CompiledData[] compiledData = new CompiledData[robots.length];
+		
+		for(int robotCount = 0; robotCount < robots.length; robotCount++) {
+			
+			//Create our array for compiled data, and get our match data
+			MetricValue[] metricVals = new MetricValue[metrics.length];
+			MatchData[] matchData = this.getMatchDataByColumns
+					(new String[] {DBContract.COL_ROBOT_ID}, 
+							new String[] {Integer.toString(robots[robotCount].getID())});
+			
+			//Compile the match data for every metric
+			for(int metricCount = 0; metricCount < metricVals.length; metricCount++) {
+				
+				String[] compiledValue = new String[0];
+				
+				switch(metrics[metricCount].getType()) {
+					case DBContract.BOOLEAN:
+						
+						
+						
+						break;
+				}
+				
+				//metricVals[metricCount] = new MetricValue(metrics[metricCount], );
+			}
+			
+		}
+	}*/
 	
 	
 	/*****
@@ -2358,7 +2501,7 @@ public class DBManager {
 	 * @return True if the value is in the column, false if it is not.
 	 */
 	
-	private boolean hasValue(String table, String column, String value) {
+	protected boolean hasValue(String table, String column, String value) {
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
@@ -2370,6 +2513,7 @@ public class DBManager {
 		
 		return c.moveToFirst();
 	}
+	
 	
 	/************************************************************************
 	 * SCOUT METHODS

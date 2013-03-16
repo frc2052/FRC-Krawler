@@ -40,7 +40,10 @@ public class StackableTabActivity extends TabActivity {
 		
 		super.onStart();
 		
-		LinearLayout l = (LinearLayout)findViewById(R.id.treeView);
+		/*****
+		 * CHARLIE! YOU MAY WANT TO FIX THIS, BUT IT IS ONLY FOR COSMETICS.
+		 */
+		/*LinearLayout l = (LinearLayout)findViewById(R.id.treeView);
 		
 		if(l != null) {
 			
@@ -51,7 +54,7 @@ public class StackableTabActivity extends TabActivity {
 		
 		} else {
 			System.out.println("WARNING! A StackableTabActivity's treeView has not been defined.");
-		}
+		}*/
 	}
 	
 	

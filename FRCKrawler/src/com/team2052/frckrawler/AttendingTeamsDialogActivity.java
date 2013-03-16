@@ -73,6 +73,8 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 					dbManager.removeRobotFromEvent(
 							Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA)), 
 							box.getId());
+				
+				System.out.println(box.isChecked());
 			}
 			
 			finish();

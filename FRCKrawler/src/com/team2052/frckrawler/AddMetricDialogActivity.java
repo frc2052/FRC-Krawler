@@ -62,7 +62,8 @@ public class AddMetricDialogActivity extends Activity
 					
 				case DBContract.COUNTER:
 					
-					m = Metric.MetricFactory.createCounterMetric(
+					try{
+						m = Metric.MetricFactory.createCounterMetric(
 							getIntent().getStringExtra(GAME_NAME_EXTRA),
 							((EditText)findViewById(R.id.name)).getText().toString(),
 							((EditText)findViewById(R.id.description)).getText().toString(),
@@ -71,12 +72,20 @@ public class AddMetricDialogActivity extends Activity
 							Integer.parseInt(((EditText)findViewById(R.id.inc)).getText().toString()),
 							((CheckBox)findViewById(R.id.displayed)).isChecked()
 							);
+					} catch(NumberFormatException e) {
+						
+						Toast.makeText(this, "Could not create metric. Make sure you " +
+								"have filled out all of the necessary fields.", 
+								Toast.LENGTH_SHORT).show();
+						return;
+					}
 					
 					break;
 					
 				case DBContract.SLIDER:
 					
-					m = Metric.MetricFactory.createSliderMetric(
+					try {
+						m = Metric.MetricFactory.createSliderMetric(
 							getIntent().getStringExtra(GAME_NAME_EXTRA),
 							((EditText)findViewById(R.id.name)).getText().toString(),
 							((EditText)findViewById(R.id.description)).getText().toString(),
@@ -84,6 +93,13 @@ public class AddMetricDialogActivity extends Activity
 							Integer.parseInt(((EditText)findViewById(R.id.max)).getText().toString()),
 							((CheckBox)findViewById(R.id.displayed)).isChecked()
 							);
+					} catch(NumberFormatException e) {
+				
+						Toast.makeText(this, "Could not create metric. Make sure you " +
+								"have filled out all of the necessary fields.", 
+								Toast.LENGTH_SHORT).show();
+						return;
+					}
 					
 					break;
 					

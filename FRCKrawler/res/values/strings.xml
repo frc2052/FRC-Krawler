@@ -67,5 +67,10 @@
         <item >Text</item>
         <item >Math</item>
     </string-array>
+    <string-array name="match_types">
+        <item >Qualifications</item>
+        <item >Finals</item>
+        <item >Practice</item>
+    </string-array>
 
 </resources>

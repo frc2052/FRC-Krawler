@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.database;
 
+import com.team2052.frckrawler.database.structures.Event;
+
 import android.database.sqlite.SQLiteDatabase;
 
 /*****
@@ -458,7 +460,8 @@ public class DBContract {
 	 * Common SQL statements
 	 *****/
 	
-	public static final String SELECT_ALL_TEAM_DATA = "SELECT * FROM " + TABLE_TEAMS;
+	public static final String SELECT_ALL_TEAM_DATA = "SELECT * FROM " + TABLE_TEAMS +
+			" ORDER BY " + COL_TEAM_NUMBER + " ASC";
 	
 	/*****
 	 * Method: creatAllTables

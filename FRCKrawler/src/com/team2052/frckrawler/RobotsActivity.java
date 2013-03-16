@@ -103,8 +103,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			rowArrayList.add(new MyTextView(this, comment, 18));
 			
 			for(MetricValue m : robots[i].getMetricValues()) {
-				rowArrayList.add(new MyTextView(this, m.getValueAsString(), 18));
-				System.out.println(m.getValueAsString());
+				rowArrayList.add(new MyTextView(this, m.getValueAsHumanReadableString(), 18));
 			}
 			
 			rowArrayList.add(events);

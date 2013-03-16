@@ -11,6 +11,12 @@ public class MatchData implements Structure {
 	private String comments;
 	private MetricValue[] values;
 	
+	public MatchData(int _event, int _matchNum, int _robot, int _user, String _matchType, 
+			String _comments, MetricValue[] _values) {
+		
+		this(-1, _event, _matchNum, _robot, _user, _matchType, _comments, _values);
+	}
+	
 	public MatchData(int _matchID, int _event, int _matchNum, int _robot, int _user, 
 			String _matchType, String _comments, MetricValue[] _values) {
 		

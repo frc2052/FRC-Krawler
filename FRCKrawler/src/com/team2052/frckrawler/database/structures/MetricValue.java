@@ -5,7 +5,7 @@ import com.team2052.frckrawler.database.DBContract;
 public class MetricValue implements Structure {
 	
 	private Metric metric;
-	private String[] value;
+	private String[] value; //Array only used for 
 	
 	public MetricValue(Metric _metric, String[] _value) throws MetricTypeMismatchException {
 		
@@ -25,7 +25,7 @@ public class MetricValue implements Structure {
 		value = _value;
 	}
 	
-	public String getValueAsString() {
+	public String getValueAsDBReadableString() {
 		
 		if(value == null)
 			return new String();
@@ -35,6 +35,24 @@ public class MetricValue implements Structure {
 		for(int i = 0; i < value.length; i++) {
 			
 			returnString += value[i] + ":";
+		}
+		
+		return returnString;
+	}
+	
+	public String getValueAsHumanReadableString() {
+		
+		if(value == null)
+			return new String();
+		
+		String returnString = new String();
+		
+		for(int i = 0; i < value.length; i++) {
+			
+			if(i != value.length - 1)
+				returnString += value[i] + ", ";
+			else
+				returnString += value[i];
 		}
 		
 		return returnString;

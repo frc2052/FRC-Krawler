@@ -66,7 +66,7 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 				for(int i = 0; i < metricList.getChildCount(); i++) {
 					
 					MetricWidget widget = (MetricWidget)metricList.getChildAt(i);
-					updateVals[i] = widget.getMetricValue().getValueAsString();
+					updateVals[i] = widget.getMetricValue().getValueAsDBReadableString();
 					updateCols[i] = widget.getMetric().getKey();
 				}
 				
