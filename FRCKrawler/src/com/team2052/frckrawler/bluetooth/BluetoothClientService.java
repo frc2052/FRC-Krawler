@@ -39,6 +39,8 @@ public class BluetoothClientService extends Service {
 	public void onCreate() {
 		
 		super.onCreate();
+		
+		System.out.println("Server service created.");
 	}
 	
 	public int onStartCommand(Intent i, int flags, int startId) {
@@ -47,10 +49,10 @@ public class BluetoothClientService extends Service {
 		
 		if(clientThread == null || !clientThread.isAlive()) {
 			
-			BluetoothDevice d = BluetoothAdapter.getDefaultAdapter().
+			BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().
 					getRemoteDevice(i.getStringExtra(SERVER_MAC_ADDRESS));
 			
-			clientThread = new BluetoothClientThread(this, d);
+			clientThread = new BluetoothClientThread(this, device);
 			clientThread.start();
 			System.out.println("Thread started.");
 		}

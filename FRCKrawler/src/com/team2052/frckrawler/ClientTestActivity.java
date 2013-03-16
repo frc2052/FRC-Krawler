@@ -49,7 +49,5 @@ public class ClientTestActivity extends Activity implements View.OnClickListener
 		Intent i = new Intent(this, BluetoothClientService.class);
 		i.putExtra(BluetoothClientService.SERVER_MAC_ADDRESS, devices[which].getAddress());
 		startService(i);
-		
-		System.out.println("Button pressed.");
 	}
 }

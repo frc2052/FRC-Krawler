@@ -37,6 +37,8 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		findViewById(R.id.addData).setOnClickListener(this);
 		
 		dbManager = DBManager.getInstance(this);
+		
+		dbManager.printQuery("SELECT * FROM " + DBContract.TABLE_MATCH_PERF, null);
 	}
 	
 	public void onResume() {

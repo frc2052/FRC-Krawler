@@ -132,7 +132,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 				updateVals[0] = Integer.toString
 						(db.getRobotsByColumns(new String[] {DBContract.COL_TEAM_NUMBER}, 
 								new String[] {((Spinner)findViewById(R.id.robot)).
-									getSelectedItem().toString()})[0].getTeamNumber());
+									getSelectedItem().toString()})[0].getID());
 				
 				updateCols[1] = DBContract.COL_MATCH_NUMBER;
 				updateVals[1] = ((EditText)findViewById(R.id.matchNumber)).getText().toString();
