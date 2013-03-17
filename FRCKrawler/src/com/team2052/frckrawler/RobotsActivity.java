@@ -4,15 +4,23 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
-import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.*;
-import com.team2052.frckrawler.database.structures.*;
-import com.team2052.frckrawler.gui.*;
+import com.team2052.frckrawler.database.DBContract;
+import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.structures.Event;
+import com.team2052.frckrawler.database.structures.Metric;
+import com.team2052.frckrawler.database.structures.MetricValue;
+import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.gui.MyButton;
+import com.team2052.frckrawler.gui.MyTableRow;
+import com.team2052.frckrawler.gui.MyTextView;
 
 public class RobotsActivity extends StackableTabActivity implements OnClickListener {
 	
@@ -36,8 +44,11 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 	public void onResume() {
 		
 		super.onResume();
+		new GetRobotsTask().execute();
+	}
+	
+	public void postResults(Robot[] robots) {
 		
-		Robot[] robots = dbManager.getRobotsByColumns(databaseKeys, databaseValues);
 		Metric[] metrics;
 		
 		if(robots.length > 0)
@@ -178,5 +189,17 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 				break;
 		}
 	}
+	
+	private class GetRobotsTask extends AsyncTask<Void, Void, Robot[]> {
 
+		protected Robot[] doInBackground(Void... params) {
+			
+			return dbManager.getRobotsByColumns(databaseKeys, databaseValues);
+		}
+		
+		protected void onPostExecute(Robot[] robots) {
+			
+			postResults(robots);
+		}
+	}
 }

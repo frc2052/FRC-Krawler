@@ -17,6 +17,13 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
+            <FrameLayout
+                android:id="@+id/progressFrame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+            </FrameLayout>
+
             <Button
                 android:id="@+id/teamsSelectionButton"
                 android:layout_width="match_parent"
@@ -59,6 +66,7 @@
             android:layout_centerHorizontal="true" >
 
             <LinearLayout
+                android:id="@+id/bottomLinearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -75,7 +83,7 @@
                 android:id="@+id/RelativeLayout2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/linearLayout1"
+                android:layout_above="@+id/bottomLinearLayout"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"

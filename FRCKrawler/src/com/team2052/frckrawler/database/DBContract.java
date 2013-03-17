@@ -1,7 +1,5 @@
 package com.team2052.frckrawler.database;
 
-import com.team2052.frckrawler.database.structures.Event;
-
 import android.database.sqlite.SQLiteDatabase;
 
 /*****

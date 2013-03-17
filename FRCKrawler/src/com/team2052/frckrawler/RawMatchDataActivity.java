@@ -4,11 +4,12 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.FrameLayout;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBContract;
@@ -21,6 +22,7 @@ import com.team2052.frckrawler.database.structures.User;
 import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
+import com.team2052.frckrawler.gui.ProgressSpinner;
 
 public class RawMatchDataActivity extends StackableTabActivity implements OnClickListener {
 	
@@ -45,95 +47,22 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		
 		super.onResume();
 		
-		MatchData[] matchData = dbManager.getMatchDataByColumns
-				(databaseKeys, databaseValues);
+		((FrameLayout)findViewById(R.id.progressFrame)).
+		addView(new ProgressSpinner(getApplicationContext()));
+		
+		new GetMatchDataTask().execute(this);
+	}
+	
+	public void postResults(MyTableRow[] rows) {
 		
 		TableLayout table = (TableLayout)findViewById(R.id.dataTable);
-		TableRow descriptorsRow = (TableRow)findViewById(R.id.descriptorsRow);
-		
-		descriptorsRow.removeAllViews();
-		
-		descriptorsRow.addView(new MyTextView(this, " ", 18));
-		descriptorsRow.addView(new MyTextView(this, "Event", 18));
-		descriptorsRow.addView(new MyTextView(this, "Team", 18));
-		descriptorsRow.addView(new MyTextView(this, "Match #", 18));
-		descriptorsRow.addView(new MyTextView(this, "User", 18));
-		descriptorsRow.addView(new MyTextView(this, "Match Type", 18));
-		descriptorsRow.addView(new MyTextView(this, "Comments", 18));
-		
-		if(matchData.length > 0) {
-			for(MetricValue v : matchData[0].getMetricValues()) {
-				
-				descriptorsRow.addView
-					(new MyTextView(this, v.getMetric().getMetricName(), 18));
-			}
-		}
-		
 		table.removeAllViews();
-		table.addView(descriptorsRow);
 		
-		for(int i = 0; i < matchData.length; i++) {
-			
-			int color;
-			
-			if(i % 2 == 0)
-				color = Color.BLUE;
-			else
-				color = Color.TRANSPARENT;
-			
-			
-			Event[] eventArr = dbManager.getEventsByColumns
-					(new String[] {DBContract.COL_EVENT_ID}, 
-							new String[] {Integer.toString(matchData[i].getEventID())});
-			
-			Robot[] robotsArr = dbManager.getRobotsByColumns
-					(new String[] {DBContract.COL_ROBOT_ID}, 
-							new String[] {Integer.toString(matchData[i].getRobotID())});
-			
-			User[] userArr = dbManager.getUsersByColumns
-					(new String[] {DBContract.COL_USER_ID}, 
-							new String[] {Integer.toString(matchData[i].getUserID())});
-			
-			MyButton editButton = new MyButton(this, "Edit Data", this);
-			editButton.setId(EDIT_BUTTON_ID);
-			editButton.setTag(Integer.valueOf(matchData[i].getMatchID()));
-			
-			ArrayList<View> viewArr = new ArrayList<View>();
-			
-			viewArr.add(editButton);
-			viewArr.add(new MyTextView(this, eventArr[0].getEventName(), 18));
-			viewArr.add(new MyTextView(this, Integer.toString(robotsArr[0].getTeamNumber()), 
-					18));
-			viewArr.add(new MyTextView(this, Integer.toString(matchData[i].getMatchNumber()), 
-					18));
-			if(userArr.length > 0)
-				viewArr.add(new MyTextView(this, userArr[0].getName(), 18));
-			else 
-				viewArr.add(new MyTextView(this, " ", 18));
-			viewArr.add(new MyTextView(this, matchData[i].getMatchType(), 18));
-			
-			//Put a character limit on the comments string
-			String displayedString = new String();
-			
-			if(matchData[i].getComments().length() < COMMENT_CHAR_LIMIT)
-				displayedString = matchData[i].getComments();
-			else
-				displayedString = matchData[i].getComments().
-					substring(0, COMMENT_CHAR_LIMIT - 1);
-				
-			viewArr.add(new MyTextView(this, displayedString, 18));
-			
-			//Add the metric data
-			MetricValue[] metricValues = matchData[i].getMetricValues();
-			
-			for(int k = 0; k < metricValues.length; k++) {
-				viewArr.add(new MyTextView(this, metricValues[k].
-						getValueAsHumanReadableString(), 18));
-			}
-			
-			//Add the data row
-			table.addView(new MyTableRow(this, viewArr.toArray(new View[0]), color));
+		for(int i = 0; i < rows.length; i++) {
+			table.addView(rows[i]);
 		}
+		
+		((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 	}
 	
 	public void onClick(View v) {
@@ -165,6 +94,111 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 				System.out.println(v.getTag());
 				
 				break;
+		}
+	}
+	
+	private class GetMatchDataTask extends AsyncTask<RawMatchDataActivity, Void, MyTableRow[]> {
+
+		protected MyTableRow[] doInBackground(RawMatchDataActivity... params) {
+			
+			RawMatchDataActivity activity = params[0];
+			
+			MatchData[] matchData = dbManager.
+					getMatchDataByColumns(databaseKeys, databaseValues);
+			MyTableRow[] rows = new MyTableRow[matchData.length + 1];
+			
+			//Create the descriptors row and add it to the array
+			MyTableRow descriptorsRow = new MyTableRow(activity);
+			
+			descriptorsRow.addView(new MyTextView(activity, " ", 18));
+			descriptorsRow.addView(new MyTextView(activity, "Event", 18));
+			descriptorsRow.addView(new MyTextView(activity, "Team", 18));
+			descriptorsRow.addView(new MyTextView(activity, "Match #", 18));
+			descriptorsRow.addView(new MyTextView(activity, "User", 18));
+			descriptorsRow.addView(new MyTextView(activity, "Match Type", 18));
+			descriptorsRow.addView(new MyTextView(activity, "Comments", 18));
+			
+			if(matchData.length > 0) {
+				for(MetricValue v : matchData[0].getMetricValues()) {
+					
+					descriptorsRow.addView
+						(new MyTextView(activity, v.getMetric().getMetricName(), 18));
+				}
+			}
+			
+			rows[0] = descriptorsRow;
+			
+			//Add a row for every data entry
+			for(int i = 0; i < matchData.length; i++) {
+				
+				int color;
+				
+				if(i % 2 == 0)
+					color = Color.BLUE;
+				else
+					color = Color.TRANSPARENT;
+				
+				
+				//These calls to the database should take very little time, so they are 
+				//"acceptable" to do without an AsyncTask
+				Event[] eventArr = dbManager.getEventsByColumns
+						(new String[] {DBContract.COL_EVENT_ID}, 
+								new String[] {Integer.toString(matchData[i].getEventID())});
+				
+				Robot[] robotsArr = dbManager.getRobotsByColumns
+						(new String[] {DBContract.COL_ROBOT_ID}, 
+								new String[] {Integer.toString(matchData[i].getRobotID())});
+				
+				User[] userArr = dbManager.getUsersByColumns
+						(new String[] {DBContract.COL_USER_ID}, 
+								new String[] {Integer.toString(matchData[i].getUserID())});
+				
+				MyButton editButton = new MyButton(activity, "Edit Data", activity);
+				editButton.setId(EDIT_BUTTON_ID);
+				editButton.setTag(Integer.valueOf(matchData[i].getMatchID()));
+				
+				ArrayList<View> viewArr = new ArrayList<View>();
+				
+				viewArr.add(editButton);
+				viewArr.add(new MyTextView(activity, eventArr[0].getEventName(), 18));
+				viewArr.add(new MyTextView(activity, Integer.toString(robotsArr[0].getTeamNumber()), 
+						18));
+				viewArr.add(new MyTextView(activity, Integer.toString(matchData[i].getMatchNumber()), 
+						18));
+				if(userArr.length > 0)
+					viewArr.add(new MyTextView(activity, userArr[0].getName(), 18));
+				else 
+					viewArr.add(new MyTextView(activity, " ", 18));
+				viewArr.add(new MyTextView(activity, matchData[i].getMatchType(), 18));
+				
+				//Put a character limit on the comments string
+				String displayedString = new String();
+				
+				if(matchData[i].getComments().length() < COMMENT_CHAR_LIMIT)
+					displayedString = matchData[i].getComments();
+				else
+					displayedString = matchData[i].getComments().
+						substring(0, COMMENT_CHAR_LIMIT - 1);
+					
+				viewArr.add(new MyTextView(activity, displayedString, 18));
+				
+				//Add the metric data
+				MetricValue[] metricValues = matchData[i].getMetricValues();
+				
+				for(int k = 0; k < metricValues.length; k++) {
+					viewArr.add(new MyTextView(activity, metricValues[k].
+							getValueAsHumanReadableString(), 18));
+				}
+				
+				rows[i + 1] = new MyTableRow(activity, viewArr.toArray(new View[0]), color);
+			}
+			
+			return rows;
+		}
+		
+		protected void onPostExecute(MyTableRow[] rows) {
+			
+			postResults(rows);
 		}
 	}
 }

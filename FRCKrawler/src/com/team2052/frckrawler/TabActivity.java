@@ -24,7 +24,7 @@ public class TabActivity extends Activity {
 	
 	protected TabListener listener;
 	
-	private static int selectedActivity = 0;
+	private static int selectedActivity = TabListener.BLUETOOTH;
 	private static final WeakHashMap<Integer, TabActivity> instances = 
 			new WeakHashMap<Integer, TabActivity>();
 	
@@ -78,7 +78,10 @@ public class TabActivity extends Activity {
 		TabActivity[] arr = instances.values().toArray(new TabActivity[0]);
 		
 		for(TabActivity a : arr) {
-			a.finish();
+			
+			try {
+				a.finish();
+			} catch(NullPointerException e) {}
 		}
 		
 		instances.clear();

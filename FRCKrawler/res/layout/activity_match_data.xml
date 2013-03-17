@@ -23,6 +23,13 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
 
+                <FrameLayout
+                    android:id="@+id/progressFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                </FrameLayout>
+
                 <Button
                     android:id="@+id/teamsSelectionButton"
                     android:layout_width="match_parent"

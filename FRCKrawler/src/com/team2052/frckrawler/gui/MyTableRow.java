@@ -16,6 +16,11 @@ import android.view.View;
 import android.widget.*;
 
 public class MyTableRow extends TableRow {
+	
+	public MyTableRow(Context _context) {
+		
+		this(_context, new String[0]);
+	}
 
 	public MyTableRow(Context _context, String[] _vals) {
 		

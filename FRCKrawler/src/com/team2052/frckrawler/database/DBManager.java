@@ -291,15 +291,23 @@ public class DBManager {
 	 * @return True if the team was added successfully. False if the team
 	 * number was less than zero, or if the team number is already taken.
 	 */
+	public boolean addTeams(Team[] t) {
+		
+		boolean allAdded = true;
+		
+		for(int i = 0; i < t.length; i++) {
+			
+			if(!addTeam(t[i]))
+				allAdded = false;
+		}
+		
+		return allAdded;
+	}
 	
 	public boolean addTeam(Team t) {
 		
-		if(t.getRookieYear() != null)
-			return addTeam(t.getNumber(), t.getName(), t.getSchool(), t.getCity(), 
-					Integer.parseInt(t.getRookieYear()), t.getWebsite(), t.getStatePostalCode(), t.getColors());
-		else
-			return addTeam(t.getNumber(), t.getName(), t.getSchool(), t.getCity(), 
-					-1, t.getWebsite(), t.getStatePostalCode(), t.getColors());
+		return addTeam(t.getNumber(), t.getName(), t.getSchool(), t.getCity(), 
+					t.getRookieYear(), t.getWebsite(), t.getStatePostalCode(), t.getColors());
 	}
 	
 	public synchronized boolean addTeam(int number, String name, String school, String city,
@@ -328,7 +336,6 @@ public class DBManager {
 			helper.close();
 			
 			return true;
-			
 		}
 		
 		helper.close();

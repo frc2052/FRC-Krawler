@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 import android.app.Service;
@@ -41,8 +43,6 @@ public class BluetoothClientService extends Service {
 	public void onCreate() {
 		
 		super.onCreate();
-		android.os.Debug.waitForDebugger();
-		Log.d("BluetoothClientService", "started!");
 		System.out.println("Server service created.");
 	}
 	
@@ -54,10 +54,10 @@ public class BluetoothClientService extends Service {
 			
 			BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().
 					getRemoteDevice(i.getStringExtra(SERVER_MAC_ADDRESS));
-			
 			clientThread = new BluetoothClientThread(this, device);
 			clientThread.start();
-			System.out.println("Thread started.");
+			
+			Toast.makeText(this, "Sync started.", Toast.LENGTH_SHORT).show();
 		}
 		
 		return START_STICKY;
@@ -110,15 +110,10 @@ public class BluetoothClientService extends Service {
 			context = _context;
 			dbManager = DBManager.getInstance(context);
 			serverDevice = _serverDevice;
-			
-			Looper.prepare();
 		}
 		
 		public void run() {
 			
-			Looper.prepare();
-			
-			Toast.makeText(context, "Sync started.", Toast.LENGTH_SHORT).show();
 			System.out.println("Client thread started.");
 				
 			try {
@@ -127,16 +122,23 @@ public class BluetoothClientService extends Service {
 				BluetoothSocket serverSocket = serverDevice.
 						createRfcommSocketToServiceRecord
 							(UUID.fromString(BluetoothInfo.UUID));
+				/*Method m = serverDevice.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
+				BluetoothSocket serverSocket = (BluetoothSocket) m.invoke(serverDevice, 1);*/
 				serverSocket.connect();
+				
+				System.out.println("Connected.");
 				
 				//Open the outstream and write saved data
 				OutputStream outStream = serverSocket.getOutputStream();
 				ObjectArrayOutputStream oStream = new ObjectArrayOutputStream(outStream);
 				
+				System.out.println("Opened out streams.");
+				
 				oStream.write(new Robot[0]);
 				oStream.write(new DriverData[0]);
 				oStream.write(new MatchData[0]);
 				
+				System.out.println("Wrote data.");
 				
 				//Get any updates
 				InputStream inStream = serverSocket.getInputStream();
@@ -164,6 +166,10 @@ public class BluetoothClientService extends Service {
 					
 					arrInStream.close();
 					
+					//Write the received arrays to the database
+					dbManager.scoutUpdateEvent(inEvent);
+					dbManager.scoutUpdateUsers(inUsers);
+					
 				} catch (ClassCastException e) {
 					e.printStackTrace();
 				} catch (ClassNotFoundException e) {
@@ -173,21 +179,27 @@ public class BluetoothClientService extends Service {
 				oStream.close();
 				serverSocket.close();
 				
-				
-				//Write the received arrays to the database
-				dbManager.scoutUpdateEvent(inEvent);
-				dbManager.scoutUpdateUsers(inUsers);
-				
 				dbManager.printQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_EVENT, null);
 				dbManager.printQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_USERS, null);
 				
-				Toast.makeText(context, "Sync complete.", Toast.LENGTH_LONG).show();
+				System.out.println("Sync complete");
 					
 			} catch (IOException e) {
+				
 				e.printStackTrace();
-			}
-			
-			Toast.makeText(context, "Sync unsuccessful.", Toast.LENGTH_LONG).show();
+				System.out.println("Sync unsuccessful");
+			} /*catch (NoSuchMethodException e1) {
+				e1.printStackTrace();
+				System.out.println("Sync unsuccessful");
+			} catch (IllegalArgumentException e1) {
+				e1.printStackTrace();
+			} catch (IllegalAccessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (InvocationTargetException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}*/
 		}
 		
 		public void closeClient() {

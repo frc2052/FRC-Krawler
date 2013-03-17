@@ -1,15 +1,21 @@
 package com.team2052.frckrawler;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.structures.Team;
 
 public class AddTeamDialogActivity extends Activity implements OnClickListener {
+	
+	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -20,6 +26,8 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 		
 		((Spinner)findViewById(R.id.stateVal)).setSelection(24);
+		
+		dbManager = DBManager.getInstance(this);
 	}
 	
 	public void onClick(View v) {
@@ -40,24 +48,43 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 			
 			try {
 				
-				if(DBManager.getInstance(this).addTeam(
-						Integer.parseInt(((TextView)findViewById(R.id.numberVal)).getText().toString()), 
+				Team team = new Team(Integer.parseInt(((TextView)findViewById(R.id.numberVal)).getText().toString()), 
 						((TextView)findViewById(R.id.nameVal)).getText().toString(), 
 						((TextView)findViewById(R.id.schoolVal)).getText().toString(), 
 						((TextView)findViewById(R.id.cityVal)).getText().toString(), 
 						rookieYear, 
 						((TextView)findViewById(R.id.websiteVal)).getText().toString(), 
 						((Spinner)findViewById(R.id.stateVal)).getSelectedItem().toString(), 
-						((TextView)findViewById(R.id.colorsVal)).getText().toString()))
+						((TextView)findViewById(R.id.colorsVal)).getText().toString());
 				
-					finish();
-				
-				else
-					Toast.makeText(this, "Could not add team to database. " +
-							"Number is already taken.", Toast.LENGTH_LONG);
+				new AddTeamTask().execute(team);
 				
 			} catch (NumberFormatException e) {
 				Toast.makeText(this, "Please enter a team number.", Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
+	
+	private class AddTeamTask extends AsyncTask<Team, Void, Boolean> {
+		
+		protected Boolean doInBackground(Team... team) {
+			
+			boolean added = true;
+			
+			try{
+				dbManager.addTeams(team);
+			} catch(NumberFormatException e) {}
+			
+			return added;
+		}
+
+		protected void onPostExecute(Boolean added) {
+			
+			if(added) {
+				finish();
+			} else {
+				Toast.makeText(getApplicationContext(), "Could not add team to database. " +
+						"Number is already taken.", Toast.LENGTH_LONG).show();
 			}
 		}
 	}

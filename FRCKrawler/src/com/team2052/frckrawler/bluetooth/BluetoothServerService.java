@@ -40,8 +40,6 @@ public class BluetoothServerService extends Service {
 			
 			hostedEvent = eventArr[0];
 			
-			serverThread.setHostedEvent(hostedEvent);
-			
 			if(!serverThread.isAlive())
 				serverThread.start();
 			
@@ -120,7 +118,6 @@ public class BluetoothServerService extends Service {
 		
 		private Context context;
 		private DBManager dbManager;
-		private Event hostedEvent;
 		
 		public BluetoothServerThread(Context _context) {
 			
@@ -222,7 +219,7 @@ public class BluetoothServerService extends Service {
 					iStream.close();
 					arrStream.close();
 					
-					//Send the revieved data to the database
+					//Send the received data to the database
 					dbManager.updateRobots(inRobots);
 					
 					for(int i = 0; i < inDriverData.length; i++) {
@@ -246,24 +243,11 @@ public class BluetoothServerService extends Service {
 					stopSelf();
 				}
 			}
-			
-			Toast.makeText(context, "Bluetooth server stopped unexpectedly.", 
-					Toast.LENGTH_LONG).show();
 		}
 		
 		public void closeServer() {
 			
 			isActive = false;
-		}
-		
-		public void setHostedEvent(Event e) {
-			
-			hostedEvent = e;
-		}
-		
-		public Event getHostedEvent() {
-			
-			return hostedEvent;
 		}
 	}
 	

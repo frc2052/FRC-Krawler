@@ -2,6 +2,7 @@ package com.team2052.frckrawler;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,8 +35,11 @@ public class UsersActivity extends TabActivity implements OnClickListener{
 	public void onResume() {
 		
 		super.onResume();
+		new GetUsersTask().execute();
+	}
+	
+	public void postResults(User[] users) {
 		
-		User[] users = dbManager.getAllUsers();
 		TableLayout table = (TableLayout)findViewById(R.id.usersDataTable);
 		TableRow descriptorsRow = (TableRow)findViewById(R.id.descriptorsRow);
 		
@@ -78,6 +82,18 @@ public class UsersActivity extends TabActivity implements OnClickListener{
 			i.putExtra(EditUserDialogActivity.USER_ID_EXTRA, ((Integer)v.getTag()).toString());
 			startActivity(i);
 		}
+	}
+	
+	private class GetUsersTask extends AsyncTask<Void, Void, User[]> {
+
+		protected User[] doInBackground(Void... params) {
+			
+			return dbManager.getAllUsers();
+		}
 		
+		protected void onPostExecute(User[] users) {
+			
+			postResults(users);
+		}
 	}
 }

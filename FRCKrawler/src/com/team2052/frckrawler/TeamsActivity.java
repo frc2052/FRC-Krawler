@@ -2,21 +2,22 @@ package com.team2052.frckrawler;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
+import com.team2052.frckrawler.gui.ProgressSpinner;
 
 public class TeamsActivity extends TabActivity implements OnClickListener {
 	
@@ -46,54 +47,27 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		
 		super.onResume();
 		
-		teams = dbManager.getAllTeams();
+		((FrameLayout)findViewById(R.id.progressFrame)).
+		addView(new ProgressSpinner(getApplicationContext()));
+		
 		TableLayout table = (TableLayout)findViewById(R.id.teamsDataTable);
 		TableRow descriptorsRow = (TableRow)findViewById(R.id.descriptorsRow);
-		
 		table.removeAllViews();
 		table.addView(descriptorsRow);
 		
+		new GetTeamsTask().execute(this);
+	}
+	
+	public void postResults(MyTableRow[] teams) {
+
+		TableLayout table = (TableLayout)findViewById(R.id.teamsDataTable);
+		
 		for(int i = 0; i < teams.length; i++) {
 			
-			int color;
-			
-			if(i % 2 == 0)
-				color = Color.BLUE;
-			else
-				color = Color.TRANSPARENT;
-			
-			MyButton editTeam = new MyButton(this, "Edit Team", this, 
-					teams[i].getNumber());
-			editTeam.setId(EDIT_BUTTON_ID);
-			MyButton robots = new MyButton(this, "Robots", this, 
-					teams[i].getNumber());
-			robots.setId(ROBOTS_BUTTON_ID);
-			MyButton contacts = new MyButton(this, "Contacts", this, 
-					teams[i].getNumber());
-			contacts.setId(CONTACTS_BUTTON_ID);
-			/*MyButton comments = new MyButton(this, "Comments", this, 
-					teams[i].getNumber());
-			comments.setId(COMMENTS_BUTTON_ID);*/
-			
-			MyTableRow row = new MyTableRow(this, new View[] {
-					editTeam,
-					new MyTextView(this, Integer.toString(teams[i].getNumber()), 18),
-					new MyTextView(this, teams[i].getName(), 18),
-					new MyTextView(this, teams[i].getSchool(), 18),
-					new MyTextView(this, teams[i].getCity(), 18),
-					new MyTextView(this, teams[i].getRookieYear(), 18),
-					new MyTextView(this, teams[i].getWebsite(), 18),
-					new MyTextView(this, teams[i].getStatePostalCode(), 18),
-					new MyTextView(this, teams[i].getColors(), 18),
-					robots,
-					contacts,
-					//comments
-			}, color);
-			
-			row.setTag(Integer.valueOf(teams[i].getNumber()));
-			
-			table.addView(row);
+			table.addView(teams[i]);
 		}
+		
+		((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 	}
 
 	public void onClick(View v) {
@@ -155,6 +129,71 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				startActivity(i);
 				
 				break;*/
+		}
+	}
+	
+	private class GetTeamsTask extends AsyncTask<TeamsActivity, Void, MyTableRow[]> {
+		
+		protected MyTableRow[] doInBackground(TeamsActivity... activities) {
+			
+			TeamsActivity activity = activities[0];
+			
+			Team[] teams = dbManager.getAllTeams();
+			MyTableRow[] rows = new MyTableRow[teams.length];
+			
+			for(int i = 0; i < teams.length; i++) {
+				
+				int color;
+				
+				if(i % 2 == 0)
+					color = Color.BLUE;
+				else
+					color = Color.TRANSPARENT;
+				
+				MyButton editTeam = new MyButton(activity, "Edit Team", activity, 
+						teams[i].getNumber());
+				editTeam.setId(EDIT_BUTTON_ID);
+				MyButton robots = new MyButton(activity, "Robots", activity, 
+						teams[i].getNumber());
+				robots.setId(ROBOTS_BUTTON_ID);
+				MyButton contacts = new MyButton(activity, "Contacts", activity, 
+						teams[i].getNumber());
+				contacts.setId(CONTACTS_BUTTON_ID);
+				/*MyButton comments = new MyButton(listener, "Comments", listener, 
+						teams[i].getNumber());
+				comments.setId(COMMENTS_BUTTON_ID);*/
+				
+				String rookieYearText = "";
+				
+				if(teams[i].getRookieYear() > 0)
+					rookieYearText = Integer.toString(teams[i].getRookieYear());
+				
+				MyTableRow row = new MyTableRow(activity, new View[] {
+						editTeam,
+						new MyTextView(activity, Integer.toString(teams[i].getNumber()), 18),
+						new MyTextView(activity, teams[i].getName(), 18),
+						new MyTextView(activity, teams[i].getSchool(), 18),
+						new MyTextView(activity, teams[i].getCity(), 18),
+						new MyTextView(activity, rookieYearText, 18),
+						new MyTextView(activity, teams[i].getWebsite(), 18),
+						new MyTextView(activity, teams[i].getStatePostalCode(), 18),
+						new MyTextView(activity, teams[i].getColors(), 18),
+						robots,
+						contacts,
+						//comments
+				}, color);
+				
+				row.setTag(Integer.valueOf(teams[i].getNumber()));
+				
+				rows[i] = row;
+			}
+			
+			return rows;
+		}
+		
+		protected void onPostExecute(MyTableRow[] rows) {
+			
+			postResults(rows);
 		}
 	}
 }

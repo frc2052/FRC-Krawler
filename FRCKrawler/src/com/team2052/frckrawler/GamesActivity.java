@@ -1,17 +1,20 @@
 package com.team2052.frckrawler;
 
-import android.content.*;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.TableLayout;
 
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Game;
-import com.team2052.frckrawler.gui.*;
+import com.team2052.frckrawler.gui.MyButton;
+import com.team2052.frckrawler.gui.MyTableRow;
+import com.team2052.frckrawler.gui.MyTextView;
 
 public class GamesActivity extends TabActivity implements OnClickListener {
 	
@@ -35,8 +38,11 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 	public void onResume() {
 		
 		super.onResume();
+		new GetGamesTask().execute();
+	}
+	
+	public void postResults(Game[] games) {
 		
-		Game[] games = dbManager.getAllGames();
 		TableLayout table = (TableLayout)findViewById(R.id.gamesDataTable);
 		table.removeAllViews();
 		
@@ -117,6 +123,19 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 				startActivity(i);
 				
 				break;
+		}
+	}
+	
+	private class GetGamesTask extends AsyncTask<Void, Void, Game[]> {
+		
+		protected Game[] doInBackground(Void... params) {
+			
+			return dbManager.getAllGames();
+		}
+		
+		protected void onPostExecute(Game[] games) {
+			
+			postResults(games);
 		}
 	}
 }

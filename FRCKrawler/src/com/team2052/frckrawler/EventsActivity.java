@@ -2,16 +2,20 @@ package com.team2052.frckrawler;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
-import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.*;
+import com.team2052.frckrawler.database.DBContract;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.Robot;
-import com.team2052.frckrawler.gui.*;
+import com.team2052.frckrawler.gui.MyButton;
+import com.team2052.frckrawler.gui.MyTableRow;
+import com.team2052.frckrawler.gui.MyTextView;
 
 public class EventsActivity extends StackableTabActivity implements OnClickListener {
 	
@@ -36,8 +40,11 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 	public void onResume() {
 		
 		super.onResume();
+		new GetEventsTask().execute();
+	}
+	
+	public void postResults(Event[] events) {
 		
-		Event[] events = dbManager.getEventsByColumns(databaseKeys, databaseValues);
 		TableLayout table = (TableLayout)findViewById(R.id.eventsDataTable);
 		TableRow descriptorsRow = (TableRow)findViewById(R.id.descriptorsRow);
 		
@@ -163,6 +170,19 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 				startActivity(i);
 				
 				break;
+		}
+	}
+	
+	private class GetEventsTask extends AsyncTask<Void, Void, Event[]> {
+		
+		protected Event[] doInBackground(Void... params) {
+			
+			return dbManager.getEventsByColumns(databaseKeys, databaseValues);
+		}
+		
+		protected void onPostExecute(Event[] events) {
+			
+			postResults(events);
 		}
 	}
 }

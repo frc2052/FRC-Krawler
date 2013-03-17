@@ -45,11 +45,8 @@ public class Team implements Structure {
 		return city;
 	}
 	
-	public String getRookieYear() {
-			if(rookieYear != -1 && rookieYear != 0)
-				return Integer.toString(rookieYear);
-			
-			return "";
+	public int getRookieYear() {
+			return rookieYear;
 	}
 	
 	public String getWebsite() {
