@@ -1,17 +1,33 @@
 package com.team2052.frckrawler.bluetooth;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.StreamCorruptedException;
 import java.util.UUID;
 
 import android.app.Service;
-import android.bluetooth.*;
-import android.content.*;
-import android.os.*;
-import android.widget.Toast;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.IBinder;
+import android.util.Log;
 
-import com.team2052.frckrawler.database.*;
-import com.team2052.frckrawler.database.structures.*;
-import com.team2052.frckrawler.io.*;
+import com.team2052.frckrawler.database.DBContract;
+import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.structures.DriverData;
+import com.team2052.frckrawler.database.structures.Event;
+import com.team2052.frckrawler.database.structures.MatchData;
+import com.team2052.frckrawler.database.structures.Metric;
+import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.database.structures.User;
+import com.team2052.frckrawler.io.ObjectArrayInputStream;
+import com.team2052.frckrawler.io.ObjectArrayOutputStream;
 
 public class BluetoothServerService extends Service {
 	
@@ -24,58 +40,48 @@ public class BluetoothServerService extends Service {
 	private BluetoothServerThread serverThread;
 	
 	public void onCreate() {
-		
 		super.onCreate();
-		
 		serverThread = new BluetoothServerThread(getApplicationContext());
 	}
 	
 	public int onStartCommand(Intent i, int flags, int startId) {
-		
 		Event[] eventArr = DBManager.getInstance(this).getEventsByColumns
 			(new String[] {DBContract.COL_EVENT_ID}, 
-				new String[] {Integer.toString(i.getIntExtra(HOSTED_EVENT_ID_EXTRA, -1))});
+				new String[] {Integer.toString
+					(i.getIntExtra(HOSTED_EVENT_ID_EXTRA, -1))});
 		
 		if(eventArr != null && eventArr.length > 0) {
-			
 			hostedEvent = eventArr[0];
 			
 			if(!serverThread.isAlive())
 				serverThread.start();
 			
 			isRunning = true;
-			
-			return START_STICKY;
-			
-		} else {
-			
-			stopSelf();
-			
-			return START_NOT_STICKY;
 		}
+			
+		return START_STICKY;
 	}
 	
 	public void onDestroy() {
-		
 		serverThread.closeServer();
-		
-		System.out.println("Bluetooth service destroyed.");
+		Log.d("FRCKrawler", "Server service destroyed.");
 	}
 	
 	public IBinder onBind(Intent i) {
-		
 		return new CloseBinder(this);
 	}
 	
 	public void closeServer() {
-		
 		isRunning = false;
 		stopSelf();
 	}
 	
 	public static Event getHostedEvent() {
-		
 		return hostedEvent;
+	}
+	
+	public static boolean isRunning() {
+		return isRunning;
 	}
 	
 	
@@ -93,12 +99,10 @@ public class BluetoothServerService extends Service {
 		private BluetoothServerService service;
 		
 		public CloseBinder(BluetoothServerService s) {
-			
 			service = s;
 		}
 		
 		public void closeServer() {
-			
 			service.closeServer(); 
 		}
 	}
@@ -112,50 +116,30 @@ public class BluetoothServerService extends Service {
 	
 	private class BluetoothServerThread extends Thread {
 		
-		private static final int TIMEOUT_TIME = 1000;
-		
 		private volatile boolean isActive;
 		
 		private Context context;
 		private DBManager dbManager;
+		private BluetoothServerSocket serverSocket;
+		private BluetoothSocket clientSocket;
 		
 		public BluetoothServerThread(Context _context) {
-			
 			isActive = false;
 			context = _context;
 			dbManager = DBManager.getInstance(context);
 		}
 		
 		public void run() {
-			
-			Looper.prepare();
-			
 			isActive = true;
 			
 			if(hostedEvent == null)
 				return;
 			
-			System.out.println("Bluetooth server thread started.");
+			Log.d("FRCKrawler", "Bluetooth server thread started.");
 			
 			while(isActive) {
 				
-				System.out.println("Starting new server cycle.");
-				
-				//Get the device and see if it is activated
-				BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-				
-				if(adapter == null) {
-					/*Toast.makeText(context, "Your device does not support Bluetooth.", 
-							Toast.LENGTH_LONG).show();*/
-					break;
-				}
-				
-				if(!adapter.enable()) {
-					
-					/*Toast.makeText(context, "Please enable Bluetooth.", 
-							Toast.LENGTH_LONG).show();*/
-					break;
-				}
+				Log.d("FRCKrawler", "Starting new server cycle.");
 				
 				//Compile the data to send
 				User[] users = dbManager.getAllUsers();
@@ -173,53 +157,43 @@ public class BluetoothServerService extends Service {
 				
 				try {
 					
-					BluetoothServerSocket serverSocket = 
-							adapter.listenUsingRfcommWithServiceRecord
+					BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+					
+					serverSocket = adapter.listenUsingRfcommWithServiceRecord
 							(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
-					BluetoothSocket clientSocket = serverSocket.accept(TIMEOUT_TIME);
+					clientSocket = serverSocket.accept();
 					serverSocket.close();
 					
 					
-					//Receive any updates
-					InputStream inputStream = clientSocket.getInputStream();
-					ObjectArrayInputStream iStream = 
-							new ObjectArrayInputStream(inputStream);
-					
-					Robot[] inRobots = new Robot[0];
-					DriverData[] inDriverData = new DriverData[0];
-					MatchData[] inMatchData = new MatchData[0];
-					
-					try {
-						
-						inRobots = iStream.readObjectArray(Robot.class);
-						inDriverData = iStream.readObjectArray(DriverData.class);
-						inMatchData = iStream.readObjectArray(MatchData.class);
-						
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					}
-					
-					//Send the event object
+					//Create our streams
 					OutputStream outputStream = clientSocket.getOutputStream();
 					ObjectOutputStream oStream = new ObjectOutputStream(outputStream);
+					InputStream inputStream = clientSocket.getInputStream();
+					ServerDataReader reader = 
+							new ServerDataReader(context, inputStream);
+					reader.start();
 					
+					//Send data
 					oStream.writeObject(hostedEvent);
 					
-					ObjectArrayOutputStream arrStream = 
+					/*ObjectArrayOutputStream arrStream = 
 							new ObjectArrayOutputStream(oStream);
 					
 					arrStream.write(users);
 					arrStream.write(robots);
 					arrStream.write(rMetrics);
 					arrStream.write(mMetrics);
-					//arrStream.write(dMetrics);
+					//arrStream.write(dMetrics);*/
 					
-					//Release resources
+					while(!reader.isFinished()) {
+						try {
+							Thread.sleep(10);
+						} catch(InterruptedException e) {}
+					}
+					
 					clientSocket.close();
-					iStream.close();
-					arrStream.close();
 					
-					//Send the received data to the database
+					/*//Send the received data to the database
 					dbManager.updateRobots(inRobots);
 					
 					for(int i = 0; i < inDriverData.length; i++) {
@@ -228,31 +202,88 @@ public class BluetoothServerService extends Service {
 					
 					for(int i = 0; i < inMatchData.length; i++) {
 						dbManager.insertMatchData(inMatchData[i]);
-					}
+					}*/
 					
-					System.out.println("Finished server cycle.");
+					Log.d("FRCKrawler", "Successful sync. Finished server cycle.");
 					
 				} catch (IOException e) {
-					
-					e.printStackTrace();
-				}
-				
-				try {
-					Thread.sleep(100);
-				} catch(InterruptedException e) {
-					stopSelf();
+					Log.d("FRCKrawler", e.getMessage());
 				}
 			}
+			
+			Log.d("FRCKrawler", "Server thread killed.");
 		}
 		
 		public void closeServer() {
+			
+			
+			try {
+				serverSocket.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+				
+			try {
+				clientSocket.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 			
 			isActive = false;
 		}
 	}
 	
-	public static boolean isRunning() {
+	
+	/*****
+	 * Class: ServerDataReader
+	 * 
+	 * @author Charles Hofer
+	 *
+	 * Summary: Reads scouting data from the supplied InputStream
+	 * and puts the scout's data in the database.
+	 */
+	
+	private class ServerDataReader extends Thread {
 		
-		return isRunning;
+		private boolean isFinished;
+		private InputStream iStream;
+		private DBManager dbManager;
+		
+		public ServerDataReader(Context _context, InputStream _iStream) {
+			
+			isFinished = false;
+			iStream = _iStream;
+			dbManager = DBManager.getInstance(_context);
+		}
+		
+		public void run() {
+			
+			Robot[] inRobots = new Robot[0];
+			DriverData[] inDriverData = new DriverData[0];
+			MatchData[] inMatchData = new MatchData[0];
+			
+			try {
+				
+				ObjectArrayInputStream inStream = 
+						new ObjectArrayInputStream(iStream);
+				
+				inRobots = inStream.readObjectArray(Robot.class);
+				inDriverData = inStream.readObjectArray(DriverData.class);
+				inMatchData = inStream.readObjectArray(MatchData.class);
+				
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (StreamCorruptedException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			isFinished = true;
+		}
+		
+		public boolean isFinished() {
+			return isFinished;
+		}
 	}
 }

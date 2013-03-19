@@ -9,9 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
@@ -39,8 +39,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		findViewById(R.id.addData).setOnClickListener(this);
 		
 		dbManager = DBManager.getInstance(this);
-		
-		dbManager.printQuery("SELECT * FROM " + DBContract.TABLE_MATCH_PERF, null);
 	}
 	
 	public void onResume() {
@@ -53,14 +51,12 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		new GetMatchDataTask().execute(this);
 	}
 	
-	public void postResults(MyTableRow[] rows) {
+	public void postResults(TableLayout table) {
 		
-		TableLayout table = (TableLayout)findViewById(R.id.dataTable);
-		table.removeAllViews();
-		
-		for(int i = 0; i < rows.length; i++) {
-			table.addView(rows[i]);
-		}
+		RelativeLayout tableParent = 
+				(RelativeLayout)findViewById(R.id.dataTableParent);
+		tableParent.removeAllViews();
+		tableParent.addView(table);
 		
 		((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 	}
@@ -97,15 +93,15 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		}
 	}
 	
-	private class GetMatchDataTask extends AsyncTask<RawMatchDataActivity, Void, MyTableRow[]> {
+	private class GetMatchDataTask extends AsyncTask<RawMatchDataActivity, Void, TableLayout> {
 
-		protected MyTableRow[] doInBackground(RawMatchDataActivity... params) {
+		protected TableLayout doInBackground(RawMatchDataActivity... params) {
 			
 			RawMatchDataActivity activity = params[0];
 			
+			TableLayout table = new TableLayout(activity);
 			MatchData[] matchData = dbManager.
 					getMatchDataByColumns(databaseKeys, databaseValues);
-			MyTableRow[] rows = new MyTableRow[matchData.length + 1];
 			
 			//Create the descriptors row and add it to the array
 			MyTableRow descriptorsRow = new MyTableRow(activity);
@@ -126,7 +122,7 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 				}
 			}
 			
-			rows[0] = descriptorsRow;
+			table.addView(descriptorsRow);
 			
 			//Add a row for every data entry
 			for(int i = 0; i < matchData.length; i++) {
@@ -190,15 +186,16 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 							getValueAsHumanReadableString(), 18));
 				}
 				
-				rows[i + 1] = new MyTableRow(activity, viewArr.toArray(new View[0]), color);
+				table.addView(new MyTableRow(activity, viewArr.toArray
+						(new View[0]), color));
 			}
 			
-			return rows;
+			return table;
 		}
 		
-		protected void onPostExecute(MyTableRow[] rows) {
+		protected void onPostExecute(TableLayout table) {
 			
-			postResults(rows);
+			postResults(table);
 		}
 	}
 }

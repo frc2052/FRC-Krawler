@@ -55,11 +55,16 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 		int stateSelection = ((ArrayAdapter<String>)stateSpinner.getAdapter()).
 				getPosition(t.getStatePostalCode());
 		
+		String rookieYearString = new String();
+		
+		if(t.getRookieYear() != -1 && t.getRookieYear() != 0)
+			rookieYearString = Integer.toString(t.getRookieYear());
+		
 		((TextView)findViewById(R.id.numberVal)).setText(Integer.toString(t.getNumber()));
 		((EditText)findViewById(R.id.nameVal)).setText(t.getName());
 		((EditText)findViewById(R.id.schoolVal)).setText(t.getSchool());
 		((EditText)findViewById(R.id.cityVal)).setText(t.getCity());
-		((EditText)findViewById(R.id.rookieYearVal)).setText(t.getRookieYear());
+		((EditText)findViewById(R.id.rookieYearVal)).setText(rookieYearString);
 		((EditText)findViewById(R.id.websiteVal)).setText(t.getWebsite());
 		stateSpinner.setSelection(stateSelection);
 		((EditText)findViewById(R.id.colorsVal)).setText(t.getColors());

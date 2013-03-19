@@ -20,11 +20,6 @@ public class SliderMetricWidget extends MetricWidget implements
 		
 		((TextView)findViewById(R.id.name)).setText(m.getMetric().getMetricName());
 		
-		if(m.getValue() != null && m.getValue().length > 0)
-			value = Integer.parseInt(m.getValue()[0]);
-		else
-			value = 0;
-		
 		min = 0;
 		max = 1;
 		
@@ -37,6 +32,14 @@ public class SliderMetricWidget extends MetricWidget implements
 			max = Integer.parseInt((String)m.getMetric().getRange()[1]);
 			s.setMax(max - min);
 		}
+		
+		if(m.getValue() != null && m.getValue().length > 0)
+			value = Integer.parseInt(m.getValue()[0]);
+		else
+			value = min;
+		
+		if(value < min || value > max)
+			value = min;
 		
 		s.setProgress(value);
 		s.setOnSeekBarChangeListener(this);

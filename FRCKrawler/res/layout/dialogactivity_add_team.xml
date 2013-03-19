@@ -132,7 +132,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/numberVal"
                     android:layout_toRightOf="@+id/textView5"
-                    android:ems="10" />
+                    android:ems="10"
+                    android:inputType="textNoSuggestions" />
 
                 <EditText
                     android:id="@+id/schoolVal"
@@ -142,7 +143,7 @@
                     android:layout_below="@+id/nameVal"
                     android:layout_toRightOf="@+id/textView5"
                     android:ems="10"
-                    android:inputType="textPersonName" />
+                    android:inputType="textNoSuggestions|textPersonName" />
 
                 <EditText
                     android:id="@+id/colorsVal"
@@ -151,7 +152,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/stateVal"
                     android:layout_toRightOf="@+id/textView5"
-                    android:ems="10" />
+                    android:ems="10"
+                    android:inputType="textNoSuggestions" />
 
                 <EditText
                     android:id="@+id/rookieYearVal"
@@ -170,7 +172,8 @@
                     android:layout_alignLeft="@+id/rookieYearVal"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/rookieYearVal"
-                    android:ems="10" />
+                    android:ems="10"
+                    android:inputType="textWebEditText" />
 
                 <Spinner
                     android:id="@+id/stateVal"
@@ -201,9 +204,10 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/schoolVal"
                     android:layout_toRightOf="@+id/textView5"
-                    android:ems="10" />
-
+                    android:ems="10"
+                    android:inputType="textNoSuggestions" />
             </RelativeLayout>
+
         </ScrollView>
     </RelativeLayout>
 

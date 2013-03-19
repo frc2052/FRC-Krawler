@@ -2,6 +2,7 @@ package com.team2052.frckrawler;
 
 import java.util.HashMap;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	private static final int COMMENT_BUTTON_ID = 1;
 	private static HashMap<Integer, Query[]> querys = new HashMap<Integer, Query[]>();
 	
+	private CompiledData[] data;
 	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,10 +65,19 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		
 		if(v.getId() == R.id.query) {
 			
+			Intent i = new Intent(this, QuerySortingDialogActivity.class);
+			i.putExtra(QuerySortingDialogActivity.EVENT_ID_EXTRA, 
+					databaseValues[getAddressOfDatabaseKey(DBContract.COL_EVENT_ID)]);
+			startActivity(i);
 			
 		} else if(v.getId() == COMMENT_BUTTON_ID) {
 			
-			
+			Intent i = new Intent(this, CommentDialogActivity.class);
+			i.putExtra(CommentDialogActivity.COMMENT_ARRAY_EXTRA, 
+					data[(Integer)v.getTag()].getMatchComments());
+			i.putExtra(CommentDialogActivity.MATCHES_ARRAY_EXTRA, 
+					data[(Integer)v.getTag()].getMatchesPlayed());
+			startActivity(i);
 		}
 	}
 	
@@ -86,8 +97,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		protected MyTableRow[] doInBackground(QueryActivity... params) {
 			
 			QueryActivity activity = params[0];
-			
-			CompiledData[] data;
 			
 			Query[] querys = getQuery(Integer.parseInt(databaseValues[
 					getAddressOfDatabaseKey(DBContract.COL_EVENT_ID)]));

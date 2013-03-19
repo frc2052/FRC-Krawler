@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.UUID;
 
 import android.app.Service;
@@ -16,11 +14,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.DriverData;
 import com.team2052.frckrawler.database.structures.Event;
@@ -43,12 +39,12 @@ public class BluetoothClientService extends Service {
 	public void onCreate() {
 		
 		super.onCreate();
-		System.out.println("Server service created.");
+		Log.d("FRCKrawler", "Server service created.");
 	}
 	
 	public int onStartCommand(Intent i, int flags, int startId) {
 		
-		System.out.println("Service started.");
+		Log.d("FRCKrawler", "Service started.");
 		
 		if(clientThread == null || !clientThread.isAlive()) {
 			
@@ -67,12 +63,17 @@ public class BluetoothClientService extends Service {
 		
 		clientThread.closeClient();
 		
-		System.out.println("Bluetooth service destroyed.");
+		Log.d("FRCKrawler", "Client service destroyed.");
 	}
 	
 	public IBinder onBind(Intent i) {
 		
 		return new ClientBinder();
+	}
+	
+	public static boolean isRunning() {
+		
+		return isRunning;
 	}
 	
 	
@@ -98,7 +99,7 @@ public class BluetoothClientService extends Service {
 	 * does handles almost everything related to the server.
 	 *****/
 	
-	private class BluetoothClientThread extends Thread{
+	private class BluetoothClientThread extends Thread {
 		
 		private Context context;
 		private DBManager dbManager;
@@ -114,7 +115,7 @@ public class BluetoothClientService extends Service {
 		
 		public void run() {
 			
-			System.out.println("Client thread started.");
+			Log.d("FRCKrawler", "Client thread started.");
 				
 			try {
 				
@@ -122,84 +123,43 @@ public class BluetoothClientService extends Service {
 				BluetoothSocket serverSocket = serverDevice.
 						createRfcommSocketToServiceRecord
 							(UUID.fromString(BluetoothInfo.UUID));
-				/*Method m = serverDevice.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
-				BluetoothSocket serverSocket = (BluetoothSocket) m.invoke(serverDevice, 1);*/
 				serverSocket.connect();
 				
-				System.out.println("Connected.");
+				Log.d("FRCKrawler", "Connected.");
 				
-				//Open the outstream and write saved data
+				//Open the streams
+				InputStream inStream = serverSocket.getInputStream();
 				OutputStream outStream = serverSocket.getOutputStream();
-				ObjectArrayOutputStream oStream = new ObjectArrayOutputStream(outStream);
+				ObjectArrayOutputStream oStream = 
+						new ObjectArrayOutputStream(outStream);
 				
-				System.out.println("Opened out streams.");
+				//Start the reading thread
+				ScoutDataReader reader = new ScoutDataReader(context, inStream);
+				reader.start();
 				
 				oStream.write(new Robot[0]);
 				oStream.write(new DriverData[0]);
 				oStream.write(new MatchData[0]);
 				
-				System.out.println("Wrote data.");
+				Log.d("FRCKrawler", "Wrote data.");
 				
-				//Get any updates
-				InputStream inStream = serverSocket.getInputStream();
-				ObjectInputStream ioStream = new ObjectInputStream(inStream);
-				
-				Event inEvent = null;
-				User[] inUsers = new User[0];
-				Robot[] inRobots = new Robot[0];
-				Metric[] inRobotMetrics = new Metric[0];
-				Metric[] inMatchMetrics = new Metric[0];
-				Metric[] inDriverMetrics = new Metric[0];
-				
-				try{
-					
-					inEvent = (Event)ioStream.readObject();
-					
-					ObjectArrayInputStream arrInStream = 
-							new ObjectArrayInputStream(ioStream);
-					
-					inUsers = arrInStream.readObjectArray(User.class);
-					inRobots = arrInStream.readObjectArray(Robot.class);
-					inRobotMetrics = arrInStream.readObjectArray(Metric.class);
-					inMatchMetrics = arrInStream.readObjectArray(Metric.class);
-					inDriverMetrics = arrInStream.readObjectArray(Metric.class);
-					
-					arrInStream.close();
-					
-					//Write the received arrays to the database
-					dbManager.scoutUpdateEvent(inEvent);
-					dbManager.scoutUpdateUsers(inUsers);
-					
-				} catch (ClassCastException e) {
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
+				while(!reader.isFinished()) {
+					try {
+						Thread.sleep(10);
+					} catch(InterruptedException e) {}
 				}
+				
+				Log.d("FRCKrawler", "Read data.");
 				
 				oStream.close();
 				serverSocket.close();
 				
-				dbManager.printQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_EVENT, null);
-				dbManager.printQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_USERS, null);
-				
-				System.out.println("Sync complete");
+				Log.d("FRCKrawler", "Sync complete");
 					
 			} catch (IOException e) {
-				
 				e.printStackTrace();
-				System.out.println("Sync unsuccessful");
-			} /*catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-				System.out.println("Sync unsuccessful");
-			} catch (IllegalArgumentException e1) {
-				e1.printStackTrace();
-			} catch (IllegalAccessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (InvocationTargetException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}*/
+				Log.d("FRCKrawler", "Sync unsuccessful");
+			}
 		}
 		
 		public void closeClient() {
@@ -208,15 +168,77 @@ public class BluetoothClientService extends Service {
 				try {
 					serverSocket.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		}
 	}
 	
-	public static boolean isRunning() {
+	
+	/*****
+	 * Class: ScoutDataReader
+	 * 
+	 * Summary: writes the scouting data to the given stream when run.
+	 */
+	
+	private class ScoutDataReader extends Thread {
 		
-		return isRunning;
+		private boolean isFinished;
+		private InputStream iStream;
+		private DBManager dbManager;
+		
+		public ScoutDataReader(Context _context, InputStream _iStream) {
+			
+			isFinished = false;
+			iStream = _iStream;
+			dbManager = DBManager.getInstance(_context);
+		}
+		
+		public void run() {
+			
+			Event inEvent = null;
+			User[] inUsers = new User[0];
+			Robot[] inRobots = new Robot[0];
+			Metric[] inRobotMetrics = new Metric[0];
+			Metric[] inMatchMetrics = new Metric[0];
+			Metric[] inDriverMetrics = new Metric[0];
+			
+			try{
+				
+				ObjectInputStream ioStream = new ObjectInputStream(iStream);
+				
+				inEvent = (Event)ioStream.readObject();
+				
+				/*ObjectArrayInputStream arrInStream = 
+						new ObjectArrayInputStream(ioStream);
+				
+				inUsers = arrInStream.readObjectArray(User.class);
+				inRobots = arrInStream.readObjectArray(Robot.class);
+				inRobotMetrics = arrInStream.readObjectArray(Metric.class);
+				inMatchMetrics = arrInStream.readObjectArray(Metric.class);
+				inDriverMetrics = arrInStream.readObjectArray(Metric.class);
+				
+				arrInStream.close();
+				
+				//Write the received arrays to the database
+				dbManager.scoutUpdateEvent(inEvent);
+				dbManager.scoutUpdateUsers(inUsers);*/
+				
+				Log.d("FRCKrawler", inEvent.getEventName());
+				
+			} catch (ClassCastException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			isFinished = true;
+		}
+		
+		public boolean isFinished() {
+			return isFinished;
+		}
 	}
 }
 

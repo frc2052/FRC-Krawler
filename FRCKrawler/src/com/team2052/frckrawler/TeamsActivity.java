@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -50,22 +51,14 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		((FrameLayout)findViewById(R.id.progressFrame)).
 		addView(new ProgressSpinner(getApplicationContext()));
 		
-		TableLayout table = (TableLayout)findViewById(R.id.teamsDataTable);
-		TableRow descriptorsRow = (TableRow)findViewById(R.id.descriptorsRow);
-		table.removeAllViews();
-		table.addView(descriptorsRow);
-		
 		new GetTeamsTask().execute(this);
 	}
 	
-	public void postResults(MyTableRow[] teams) {
+	public void postResults(TableLayout table) {
 
-		TableLayout table = (TableLayout)findViewById(R.id.teamsDataTable);
-		
-		for(int i = 0; i < teams.length; i++) {
-			
-			table.addView(teams[i]);
-		}
+		RelativeLayout v = (RelativeLayout)findViewById(R.id.teamDataTableParent);
+		v.removeAllViews();
+		v.addView(table);
 		
 		((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 	}
@@ -132,14 +125,26 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		}
 	}
 	
-	private class GetTeamsTask extends AsyncTask<TeamsActivity, Void, MyTableRow[]> {
+	private class GetTeamsTask extends AsyncTask<TeamsActivity, Void, TableLayout> {
 		
-		protected MyTableRow[] doInBackground(TeamsActivity... activities) {
+		protected TableLayout doInBackground(TeamsActivity... activities) {
 			
 			TeamsActivity activity = activities[0];
 			
+			TableLayout dataTable = new TableLayout(activity);
+			TableRow descriptorsRow = new TableRow(activity);
 			Team[] teams = dbManager.getAllTeams();
-			MyTableRow[] rows = new MyTableRow[teams.length];
+			
+			descriptorsRow.addView(new MyTextView(activity, "", 18));
+			descriptorsRow.addView(new MyTextView(activity, "#", 18));
+			descriptorsRow.addView(new MyTextView(activity, "Name", 18));
+			descriptorsRow.addView(new MyTextView(activity, "School", 18));
+			descriptorsRow.addView(new MyTextView(activity, "City", 18));
+			descriptorsRow.addView(new MyTextView(activity, "Rookie Year", 18));
+			descriptorsRow.addView(new MyTextView(activity, "Website", 18));
+			descriptorsRow.addView(new MyTextView(activity, "State", 18));
+			descriptorsRow.addView(new MyTextView(activity, "Colors", 18));
+			dataTable.addView(descriptorsRow);
 			
 			for(int i = 0; i < teams.length; i++) {
 				
@@ -185,15 +190,15 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				
 				row.setTag(Integer.valueOf(teams[i].getNumber()));
 				
-				rows[i] = row;
+				dataTable.addView(row);
 			}
 			
-			return rows;
+			return dataTable;
 		}
 		
-		protected void onPostExecute(MyTableRow[] rows) {
+		protected void onPostExecute(TableLayout table) {
 			
-			postResults(rows);
+			postResults(table);
 		}
 	}
 }

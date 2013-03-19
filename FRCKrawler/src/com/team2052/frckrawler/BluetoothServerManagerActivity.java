@@ -1,12 +1,14 @@
 package com.team2052.frckrawler;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.*;
 import android.os.*;
 import android.view.View;
 import android.widget.*;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.bluetooth.BluetoothClientService;
 import com.team2052.frckrawler.bluetooth.BluetoothServerService;
 import com.team2052.frckrawler.bluetooth.BluetoothServerService.CloseBinder;
 import com.team2052.frckrawler.database.*;
@@ -15,6 +17,7 @@ import com.team2052.frckrawler.database.structures.*;
 public class BluetoothServerManagerActivity extends TabActivity 
 							implements View.OnClickListener, DialogInterface.OnClickListener {
 	
+	private int REQUEST_BT_ENABLED = 1;
 	private DBManager dbManager;
 	private Event selectedEvent;
 	
@@ -83,12 +86,30 @@ public class BluetoothServerManagerActivity extends TabActivity
 							selectedEvent.getEventID());
 				
 					if(toggle.isChecked()) {
-					
-						startService(btIntent);
-						Toast.makeText(this, "Server started.", Toast.LENGTH_LONG).show();
+						if(BluetoothAdapter.getDefaultAdapter() == null) {
+							Toast.makeText(this, "Sorry, your device does not " +
+									"support Bluetooth. You will not be able to " +
+									"open a server and recieve data from scouts.", 
+									Toast.LENGTH_LONG).show();
+							
+							((ToggleButton)findViewById(R.id.hostToggle)).
+								setChecked(false);
+							return;
+							
+						} else {
+							if(BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+								startService(btIntent);
+								Toast.makeText(this, "Server started.", Toast.LENGTH_LONG).show();
+								
+							} else {
+								
+								Intent enableBtIntent = 
+							    		new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+							    startActivityForResult(enableBtIntent, REQUEST_BT_ENABLED);
+							}
+						}
 					
 					} else {
-					
 						this.getApplication().bindService(btIntent, 
 								new ServerCloseConnection(), Context.BIND_IMPORTANT);
 						Toast.makeText(this, "Server stopped.", Toast.LENGTH_LONG).show();
@@ -133,7 +154,16 @@ public class BluetoothServerManagerActivity extends TabActivity
 			
 			
 		}
+	}
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
-		
+		if(requestCode == REQUEST_BT_ENABLED && resultCode == RESULT_OK) {
+			
+			Intent btIntent = new Intent(this, BluetoothServerService.class);
+			btIntent.putExtra(BluetoothServerService.HOSTED_EVENT_ID_EXTRA, 
+					selectedEvent.getEventID());
+			startService(btIntent);
+		}
 	}
 }
