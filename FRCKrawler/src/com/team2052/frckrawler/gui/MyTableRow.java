@@ -40,6 +40,12 @@ public class MyTableRow extends TableRow {
 		}
 	}
 	
+	public MyTableRow(Context _context, int _color) {
+		
+		super(_context);
+		this.setBackgroundColor(_color);
+	}
+	
 	public MyTableRow(Context _context, View[] _vals) {
 		
 		this(_context, _vals, color.transparent);

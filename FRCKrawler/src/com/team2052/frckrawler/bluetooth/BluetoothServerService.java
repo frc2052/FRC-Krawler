@@ -145,15 +145,15 @@ public class BluetoothServerService extends Service {
 				BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 				
 				if(adapter == null) {
-					Toast.makeText(context, "Your device does not support Bluetooth.", 
-							Toast.LENGTH_LONG).show();
+					/*Toast.makeText(context, "Your device does not support Bluetooth.", 
+							Toast.LENGTH_LONG).show();*/
 					break;
 				}
 				
 				if(!adapter.enable()) {
 					
-					Toast.makeText(context, "Please enable Bluetooth.", 
-							Toast.LENGTH_LONG).show();
+					/*Toast.makeText(context, "Please enable Bluetooth.", 
+							Toast.LENGTH_LONG).show();*/
 					break;
 				}
 				
@@ -234,7 +234,7 @@ public class BluetoothServerService extends Service {
 					
 				} catch (IOException e) {
 					
-					System.out.println("Bluetooth timed out.");
+					e.printStackTrace();
 				}
 				
 				try {

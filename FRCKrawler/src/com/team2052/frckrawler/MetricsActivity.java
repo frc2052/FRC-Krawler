@@ -100,7 +100,7 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 			int color;
 			
 			if(i % 2 == 0)
-				color = Color.BLUE;
+				color = GlobalSettings.ROW_COLOR;
 			else
 				color = Color.TRANSPARENT;
 			

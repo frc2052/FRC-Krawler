@@ -146,7 +146,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				int color;
 				
 				if(i % 2 == 0)
-					color = Color.BLUE;
+					color = GlobalSettings.ROW_COLOR;
 				else
 					color = Color.TRANSPARENT;
 				

@@ -78,7 +78,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			int color;
 			
 			if(i % 2 == 0)
-				color = Color.BLUE;
+				color = GlobalSettings.ROW_COLOR;
 			else
 				color = Color.TRANSPARENT;
 			

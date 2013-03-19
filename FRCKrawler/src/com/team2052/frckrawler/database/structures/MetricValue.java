@@ -1,5 +1,8 @@
 package com.team2052.frckrawler.database.structures;
 
+
+import java.text.DecimalFormat;
+
 import com.team2052.frckrawler.database.DBContract;
 
 public class MetricValue implements Structure {
@@ -13,12 +16,11 @@ public class MetricValue implements Structure {
 			
 			for(String v : _value) {
 				try {
-					Integer.parseInt(v);
+					Double.parseDouble(v);
 				} catch (Exception e) {
 					throw new MetricTypeMismatchException();
 				}
 			}
-			
 		}
 			
 		metric = _metric;
@@ -49,10 +51,30 @@ public class MetricValue implements Structure {
 		
 		for(int i = 0; i < value.length; i++) {
 			
-			if(i != value.length - 1)
-				returnString += value[i] + ", ";
-			else
-				returnString += value[i];
+			boolean isDecimal = true;
+			
+			try {
+				Double.parseDouble(value[i]);
+			} catch(NumberFormatException e) {
+				isDecimal = false;
+			}
+			
+			if(isDecimal) {
+				
+				DecimalFormat format = new DecimalFormat("0.000");
+				
+				if(i != value.length - 1)
+					returnString += format.format
+							(Double.parseDouble(value[i])) + ", ";
+				else
+					returnString += format.format(Double.parseDouble(value[i]));
+			} else {
+				
+				if(i != value.length - 1)
+					returnString += value[i] + ", ";
+				else
+					returnString += value[i];
+			}
 		}
 		
 		return returnString;

@@ -307,6 +307,45 @@ public class DBContract {
 					COL_ROBOT_ID + INT + ")";
 	
 	
+	
+	public static final String TABLE_COMPILED_DATA = "compileddata";
+	
+	//Event ID, use COL_EVENT_ID
+	//Robot ID, use COL_ROBOT_ID
+	public static final String COL_ROBOT_COMMENTS = "robotcomments";
+	public static final String COL_MATCH_COMMENTS = "matchcomments";
+	public static final String[] COL_ROBOT_KEYS = new String[COL_KEYS.length];
+	public static final String[] COL_MATCH_KEYS = new String[COL_KEYS.length];
+	
+	public static final String COMPILED_DATA_ROW_KEYS;
+	
+	static {
+		
+		
+		String rowKeys = new String();
+		
+		for(int i = 0; i < COL_KEYS.length; i++) {
+			
+			COL_ROBOT_KEYS[i] = "robot" + COL_KEYS[i];
+			COL_MATCH_KEYS[i] = "match" + COL_KEYS[i];
+			rowKeys += COL_ROBOT_KEYS[i] + ANY + ", " + COL_MATCH_KEYS + ANY;
+					
+			if(i < COL_KEYS.length - 1) {
+						rowKeys += ", ";
+			}
+		}
+		
+		COMPILED_DATA_ROW_KEYS = rowKeys;
+	}
+	
+	public static final String CREATE_TABLE_COMPILED_DATA = 
+			"CREATE TABLE " + TABLE_COMPILED_DATA + " (" + COL_EVENT_ID + INT + ", " +
+					COL_ROBOT_ID + INT + ", " + COL_ROBOT_COMMENTS + STRING + ", " + 
+					COL_MATCH_COMMENTS + STRING + ", " + COMPILED_DATA_ROW_KEYS;
+	
+	
+	
+	
 	/***************************************
 	 * SCOUT TABLES
 	 * 
@@ -469,7 +508,7 @@ public class DBContract {
 	 * be added to to make the changes appear in the database.
 	 *****/
 	
-	public static void createAllTables(SQLiteDatabase database) {
+	public static void createSchema(SQLiteDatabase database) {
 		
 		database.execSQL(CREATE_TABLE_USERS);
 		database.execSQL(CREATE_TABLE_TEAMS);
@@ -504,7 +543,7 @@ public class DBContract {
 	 * This cannot be undone.
 	 *****/
 	
-	public static void dropAllTables(SQLiteDatabase database) {
+	public static void dropSchema(SQLiteDatabase database) {
 		
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAMS);

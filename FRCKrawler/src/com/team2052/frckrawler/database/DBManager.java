@@ -1,13 +1,30 @@
 package com.team2052.frckrawler.database;
 
-import java.util.*;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
-import com.team2052.frckrawler.database.structures.*;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+
+import com.team2052.frckrawler.GlobalSettings;
+import com.team2052.frckrawler.database.structures.Comment;
+import com.team2052.frckrawler.database.structures.CompiledData;
+import com.team2052.frckrawler.database.structures.Contact;
+import com.team2052.frckrawler.database.structures.Event;
+import com.team2052.frckrawler.database.structures.Game;
+import com.team2052.frckrawler.database.structures.MatchData;
+import com.team2052.frckrawler.database.structures.Metric;
+import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatchException;
-
-import android.content.*;
-import android.database.*;
-import android.database.sqlite.*;
+import com.team2052.frckrawler.database.structures.Query;
+import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.database.structures.Team;
+import com.team2052.frckrawler.database.structures.User;
 
 /*****
  * Class: DatabaseManager
@@ -2340,14 +2357,21 @@ public class DBManager {
 	 * @param database
 	 * 
 	 * Summary: gets the averaged and counted data from every robot's match
+	 * WARNING! This method could be a lengthy operation, even for small
+	 * numbers of robots, this should NEVER be called in the UI thread. An
+	 * AsyncTask or other worker thread is highly recomended.
 	 */
 	
-	/*public CompiledData[] getCompiledEventData(Event e) {
+	public CompiledData[] getCompiledEventData(Event e, Query[] querys) {
 		
-		return getCompiledEventData(e.getEventID());
+		return getCompiledEventData(e.getEventID(), querys);
 	}
 	
-	public CompiledData[] getCompiledEventData(int eventID) {
+	public CompiledData[] getCompiledEventData(int eventID, Query[] querys) {
+		
+		if(!hasValue(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID, 
+				Integer.toString(eventID)))
+			return null;
 		
 		//Get the event arr
 		Event[] eventArr = this.getEventsByColumns(new String[] {DBContract.COL_EVENT_ID}, 
@@ -2367,30 +2391,367 @@ public class DBManager {
 		
 		for(int robotCount = 0; robotCount < robots.length; robotCount++) {
 			
-			//Create our array for compiled data, and get our match data
+			//Create our array for compiled data, and get our match data for this robot
 			MetricValue[] metricVals = new MetricValue[metrics.length];
 			MatchData[] matchData = this.getMatchDataByColumns
 					(new String[] {DBContract.COL_ROBOT_ID}, 
 							new String[] {Integer.toString(robots[robotCount].getID())});
+			
+			//Array to compile comments
+			boolean isCommentsFilled = false;
+			String[] comments = new String[matchData.length];
+			
+			//Array to keep track of matches played in
+			boolean isMatchesPlayedFilled = false;
+			int[] matchesPlayed = new int[matchData.length];
 			
 			//Compile the match data for every metric
 			for(int metricCount = 0; metricCount < metricVals.length; metricCount++) {
 				
 				String[] compiledValue = new String[0];
 				
-				switch(metrics[metricCount].getType()) {
-					case DBContract.BOOLEAN:
+				if(matchData.length != 0) {
+					switch(metrics[metricCount].getType()) {
+						case DBContract.BOOLEAN:
+							
+							double yes = 0;
+							double no = 0;
 						
+							for(int matchCount = 0; matchCount < matchData.length; 
+									matchCount++) {
+								
+								//Comments
+								if(!isCommentsFilled)
+									comments[matchCount] = matchData[matchCount].
+										getComments();
+								
+								//Matches played
+								if(!isMatchesPlayedFilled)
+									matchesPlayed[matchCount] = matchData[matchCount].
+										getMatchNumber();
+								
+								String stringValue = matchData[matchCount].
+										getMetricValues()[metricCount].getValue()[0];
+								
+								if(stringValue != null && 
+										!stringValue.equals("") && 
+										!stringValue.equals("null")) {
+									
+									boolean value = Boolean.
+											parseBoolean(stringValue);
+								
+									if(value)
+										yes++;
+									else
+										no++;
+								}
+							}
+							
+							double compiledRatio = yes / (yes + no);
+							
+							compiledValue = new String[] {Double.toString(compiledRatio)};
 						
+							break;
+						
+						case DBContract.CHOOSER:
+							
+							boolean isNumeric = true;
+							Object[] range = metrics[metricCount].getRange();
+							
+							//Check to see if these metrics are numeric
+							try {
+								for(int choiceCount = 0; choiceCount < range.length; 
+										choiceCount++) {
+									Double.parseDouble((String)range[choiceCount]);
+								}
+							} catch(NumberFormatException e) {
+								isNumeric = false;
+							}
+							
+							if(isNumeric) { //Find the weighted average
+								
+								double numerator = 0;
+								double denominator = 1;
+								boolean valueIsNull = true;
+							
+								for(int matchCount = 0; matchCount < matchData.length; 
+										matchCount++) {
+									
+									//Comments
+									if(!isCommentsFilled)
+										comments[matchCount] = matchData[matchCount].
+											getComments();
+									
+									//Matches played
+									if(!isMatchesPlayedFilled)
+										matchesPlayed[matchCount] = matchData[matchCount].
+											getMatchNumber();
+									
+									String[] valueArray = matchData[matchCount].
+											getMetricValues()[metricCount].getValue();
+									
+									if(valueArray.length > 0) {
+										
+										valueIsNull = false;
+										
+										int value = Integer.parseInt(valueArray[0]);
+										double matchPlayed = matchCount + 1;
+										double weight = matchPlayed * GlobalSettings.weightingRatio;
+									
+										numerator += value * weight;
+										denominator *= weight;
+									}
+								}
+								
+								if(valueIsNull) {
+									//compiledValue = new String[] {"-1"};
+								} else {
+									double weightedAverage = numerator / denominator;
+									compiledValue = new String[] {Double.toString(weightedAverage)};
+								}
+								
+							} else { //Find the ratios for each choice
+								
+								double[] counts = new double[range.length];
+								
+								for(int matchCount = 0; matchCount < matchData.length; 
+										matchCount++) {
+									
+									//Comments
+									if(!isCommentsFilled)
+										comments[matchCount] = matchData[matchCount].
+											getComments();
+									
+									//Matches played
+									if(!isMatchesPlayedFilled)
+										matchesPlayed[matchCount] = matchData[matchCount].
+											getMatchNumber();
+									
+									String value = matchData[matchCount].
+											getMetricValues()[metricCount].getValue()[0];
+									
+									int rangeAddress = -1;
+									
+									//Find out which range number this choice is
+									for(int choiceCount = 0; choiceCount < range.length;
+											choiceCount++) {
+										if(value.equals(range[choiceCount]))
+											rangeAddress = choiceCount;
+									}
+									
+									if(rangeAddress != -1)
+										counts[rangeAddress]++;
+								}
+								
+								compiledValue = new String[range.length];
+								
+								for(int choiceCount = 0; choiceCount < compiledValue.length;
+										choiceCount++) {
+									
+									compiledValue[choiceCount] = Double.toString
+											(counts[choiceCount] / (double)matchData.length);
+								}
+							}
+							
+							break;
+						
+						case DBContract.SLIDER:
+							//Do the same things for sliders and counters
+						case DBContract.COUNTER:
+						
+							double numerator = 0;
+							double denominator = 1;
+							boolean valueIsNull = true;
+						
+							for(int matchCount = 0; matchCount < matchData.length; 
+									matchCount++) {
+								
+								//Comments
+								if(!isCommentsFilled)
+									comments[matchCount] = matchData[matchCount].
+										getComments();
+								
+								//Matches played
+								if(!isMatchesPlayedFilled)
+									matchesPlayed[matchCount] = matchData[matchCount].
+										getMatchNumber();
+								
+								String[] valueArray = matchData[matchCount].
+										getMetricValues()[metricCount].getValue();
+								
+								if(valueArray.length > 0) {
+									
+									valueIsNull = false;
+									
+									int value = Integer.parseInt(valueArray[0]);
+									double matchPlayed = matchCount + 1;
+									double weight = matchPlayed * GlobalSettings.weightingRatio;
+								
+									numerator += value * weight;
+									denominator *= weight;
+								}
+							}
+							
+							if(valueIsNull) {
+								//compiledValue = new String[] {"-1"};
+							} else {
+								double weightedAverage = numerator / denominator;
+								compiledValue = new String[] {Double.toString(weightedAverage)};
+							}
+							
+							break;
+						
+						case DBContract.MATH:
+						
+							break;
+					}
+				}
+				
+				try {
+					metricVals[metricCount] = new MetricValue
+							(metrics[metricCount], compiledValue);
+				} catch(MetricTypeMismatchException e) {
+					e.printStackTrace();
+				}
+				
+				isCommentsFilled = true;
+				isMatchesPlayedFilled = true;
+			}
+			
+			compiledData[robotCount] = new CompiledData(
+					eventID,
+					matchesPlayed,
+					robots[robotCount],
+					comments,
+					metricVals,
+					new MetricValue[0]
+					);
+			
+		}
+		
+		if(querys == null || querys.length == 0) 
+			return compiledData;
+		
+		//Create an ArrayList for teams that fit the query
+		ArrayList<CompiledData> selectedRobots = new ArrayList<CompiledData>();
+		
+		for(CompiledData robot : compiledData) {
+			
+			boolean passed = true;
+			
+			for(Query query : querys) {
+				
+				//Get the MetricValue to compare against our cuttoff
+				MetricValue metricValue = null;
+				
+				switch(query.getType()) {
+					case Query.TYPE_ROBOT:
+						
+						for(int i = 0; i < robot.getRobot().getMetricValues().
+								length; i++) {
+							if(robot.getRobot().getMetricValues()[i].getMetric().
+									getID() == query.getMetricID()) {
+								metricValue = robot.getRobot().getMetricValues()[i];
+								break;
+							}
+						}
+						
+						break;
+						
+					case Query.TYPE_MATCH_DATA:
+						
+						for(int i = 0; i < robot.getCompiledMatchData().
+								length; i++) {
+							if(robot.getCompiledMatchData()[i].getMetric().
+									getID() == query.getMetricID()) {
+								metricValue = robot.getCompiledMatchData()[i];
+								break;
+							}
+						}
+						
+						break;
+						
+					case Query.TYPE_DRIVER_DATA:
+						
+						for(int i = 0; i < robot.getCompiledDriverData().
+								length; i++) {
+							if(robot.getCompiledMatchData()[i].getMetric().
+									getID() == query.getMetricID()) {
+								metricValue = robot.getCompiledDriverData()[i];
+								break;
+							}
+						}
 						
 						break;
 				}
 				
-				//metricVals[metricCount] = new MetricValue(metrics[metricCount], );
+				//Compare with the correct comparison
+				switch(query.getComparison()) {
+					case Query.COMPARISON_EQUAL_TO:
+						
+						if(metricValue.getMetric().getType() == DBContract.COUNTER 
+								|| metricValue.getMetric().getType() == 
+								DBContract.SLIDER) {
+							
+							double checkValue = Double.parseDouble
+									(query.getMetricValue());
+							double robotValue = Double.parseDouble
+									(metricValue.getValueAsHumanReadableString());
+							
+							if(checkValue != robotValue)
+								passed = false;
+								
+						} else {
+							
+							if(!metricValue.getValueAsHumanReadableString().
+									equals(query.getMetricValue()))
+								passed = false;
+						}
+							
+						break;
+						
+					case Query.COMPARISON_LESS_THAN:
+						
+						if(metricValue.getMetric().getType() == DBContract.COUNTER 
+								|| metricValue.getMetric().getType() == 
+								DBContract.SLIDER) {
+					
+								double checkValue = Double.parseDouble
+										(query.getMetricValue());
+								double robotValue = Double.parseDouble
+										(metricValue.getValueAsHumanReadableString());
+					
+								if(checkValue <= robotValue)
+									passed = false;
+						}
+						
+						break;
+						
+					case Query.COMPARISON_GREATER_THAN:
+						
+						if(metricValue.getMetric().getType() == DBContract.COUNTER 
+								|| metricValue.getMetric().getType() == 
+								DBContract.SLIDER) {
+					
+								double checkValue = Double.parseDouble
+										(query.getMetricValue());
+								double robotValue = Double.parseDouble
+										(metricValue.getValueAsHumanReadableString());
+					
+								if(checkValue >= robotValue)
+									passed = false;
+						}
+						
+						break;
+				}
 			}
-			
+		
+			if(passed)
+				selectedRobots.add(robot);
 		}
-	}*/
+		
+		return selectedRobots.toArray(new CompiledData[0]);
+	}
 	
 	
 	/*****
@@ -2520,6 +2881,7 @@ public class DBManager {
 		
 		return c.moveToFirst();
 	}
+	
 	
 	
 	/************************************************************************

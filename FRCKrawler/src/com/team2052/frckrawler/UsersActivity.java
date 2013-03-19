@@ -51,7 +51,7 @@ public class UsersActivity extends TabActivity implements OnClickListener{
 			int color = Color.TRANSPARENT;
 			
 			if(i % 2 != 0)
-				color = Color.BLUE;
+				color = GlobalSettings.ROW_COLOR;
 			
 			table.addView(new MyTableRow(this, new View[] {
 					new MyButton(this, "Edit User", this, Integer.valueOf(users[i].getID())),
