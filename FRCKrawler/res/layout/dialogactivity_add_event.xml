@@ -58,7 +58,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_toRightOf="@+id/textView4"
-                    android:ems="10" />
+                    android:ems="10"
+                    android:hint="Name" />
 
                 <EditText
                     android:id="@+id/location"
@@ -67,7 +68,8 @@
                     android:layout_alignLeft="@+id/date"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/date"
-                    android:ems="10" />
+                    android:ems="10"
+                    android:hint="Location" />
 
                 <EditText
                     android:id="@+id/fmsID"
@@ -76,7 +78,8 @@
                     android:layout_alignLeft="@+id/location"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/location"
-                    android:ems="10" />
+                    android:ems="10"
+                    android:hint="FMS ID" />
 
                 <TextView
                     android:id="@+id/textView5"

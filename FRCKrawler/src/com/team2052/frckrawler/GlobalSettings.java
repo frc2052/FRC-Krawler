@@ -24,4 +24,15 @@ public class GlobalSettings {
 	 * The default color for the rows of tables.
 	 */
 	public static int ROW_COLOR = Color.rgb(36, 37, 85);
+	
+	/**
+	 * The username of a a logged in user. Initialliezed to null until
+	 * somebody logs in.
+	 */
+	public static String username = null;
+	
+	/**
+	 * The MAC address of database device that was chosen to sync to
+	 */
+	public static String masterMACAddress = null;
 }

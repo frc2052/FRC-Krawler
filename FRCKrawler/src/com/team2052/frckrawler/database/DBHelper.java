@@ -34,7 +34,6 @@ public class DBHelper extends SQLiteOpenHelper {
 	 *****/
 	
 	public void onCreate(SQLiteDatabase database) {
-		
 		DBContract.createSchema(database);
 	}
 	
@@ -45,13 +44,11 @@ public class DBHelper extends SQLiteOpenHelper {
 	 *****/
 	
 	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-		
 		DBContract.dropSchema(database);
 		onCreate(database);
 	}
 	
 	public void onDowngrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-		
 		onUpgrade(database, oldVersion, newVersion);
 	}
 }

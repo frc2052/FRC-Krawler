@@ -70,7 +70,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/email"
                         android:layout_alignParentRight="true"
-                        android:ems="10" >
+                        android:ems="10"
+                        android:hint="Name" >
 
                         <requestFocus />
                     </EditText>
@@ -83,6 +84,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_below="@+id/nameVal"
                         android:ems="10"
+                        android:hint="Email"
                         android:inputType="textPersonName" />
 
                     <TextView
@@ -113,6 +115,7 @@
                         android:layout_below="@+id/address"
                         android:layout_toRightOf="@+id/textView4"
                         android:ems="10"
+                        android:hint="Phone"
                         android:inputType="number" />
 
                     <EditText
@@ -122,7 +125,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_below="@+id/email"
                         android:layout_toRightOf="@+id/textView4"
-                        android:ems="10" />
+                        android:ems="10"
+                        android:hint="Address" />
 
                     <TextView
                         android:id="@+id/textView2"

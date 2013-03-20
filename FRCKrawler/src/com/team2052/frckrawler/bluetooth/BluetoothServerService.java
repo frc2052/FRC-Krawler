@@ -2,14 +2,15 @@ package com.team2052.frckrawler.bluetooth;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
@@ -26,8 +27,6 @@ import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.database.structures.User;
-import com.team2052.frckrawler.io.ObjectArrayInputStream;
-import com.team2052.frckrawler.io.ObjectArrayOutputStream;
 
 public class BluetoothServerService extends Service {
 	
@@ -142,18 +141,40 @@ public class BluetoothServerService extends Service {
 				Log.d("FRCKrawler", "Starting new server cycle.");
 				
 				//Compile the data to send
-				User[] users = dbManager.getAllUsers();
-				Robot[] robots = dbManager.getRobotsAtEvent(hostedEvent.getEventID());
-				Metric[] rMetrics = dbManager.getRobotMetricsByColumns
+				User[] usersArr = dbManager.getAllUsers();
+				ArrayList<User> users = new ArrayList<User>();
+				for(User u : usersArr)
+					users.add(u);
+				
+				Robot[] robotsArr = dbManager.getRobotsAtEvent
+						(hostedEvent.getEventID());
+				ArrayList<Robot> robots = new ArrayList<Robot>();
+				for(Robot r : robotsArr)
+					robots.add(r);
+				
+				Metric[] rMetricsArr = dbManager.getRobotMetricsByColumns
 						(new String[] {DBContract.COL_GAME_NAME}, 
 							new String[] {hostedEvent.getGameName()});
-				Metric[] mMetrics = dbManager.getMatchPerformanceMetricsByColumns
+				ArrayList<Metric> rMetrics = new ArrayList<Metric>();
+				for(Metric m : rMetricsArr)
+					rMetrics.add(m);
+				
+				Metric[] mMetricsArr = dbManager.getMatchPerformanceMetricsByColumns
 						(new String[] {DBContract.COL_GAME_NAME}, 
 								new String[] {hostedEvent.getGameName()});
+				ArrayList<Metric> mMetrics = new ArrayList<Metric>();
+				for(Metric m : mMetricsArr)
+					mMetrics.add(m);
+				
 				/*Metric[] dMetrics = dbManager.getDriverMetricsByColumns
 						(new String[] {DBContract.COL_GAME_NAME}, 
 								new String[] {hostedEvent.getGameName()});*/
+				Metric[] dMetricsArr = new Metric[0];
+				ArrayList<Metric> dMetrics = new ArrayList<Metric>();
+				for(Metric m : dMetricsArr)
+					dMetrics.add(m);
 				
+				ServerDataReader reader = null;
 				
 				try {
 					
@@ -169,21 +190,17 @@ public class BluetoothServerService extends Service {
 					OutputStream outputStream = clientSocket.getOutputStream();
 					ObjectOutputStream oStream = new ObjectOutputStream(outputStream);
 					InputStream inputStream = clientSocket.getInputStream();
-					ServerDataReader reader = 
+					reader = 
 							new ServerDataReader(context, inputStream);
 					reader.start();
 					
 					//Send data
 					oStream.writeObject(hostedEvent);
-					
-					/*ObjectArrayOutputStream arrStream = 
-							new ObjectArrayOutputStream(oStream);
-					
-					arrStream.write(users);
-					arrStream.write(robots);
-					arrStream.write(rMetrics);
-					arrStream.write(mMetrics);
-					//arrStream.write(dMetrics);*/
+					oStream.writeObject(users);
+					oStream.writeObject(robots);
+					oStream.writeObject(rMetrics);
+					oStream.writeObject(mMetrics);
+					//arrStream.write(dMetrics);
 					
 					while(!reader.isFinished()) {
 						try {
@@ -191,23 +208,18 @@ public class BluetoothServerService extends Service {
 						} catch(InterruptedException e) {}
 					}
 					
+					inputStream.close();
 					clientSocket.close();
-					
-					/*//Send the received data to the database
-					dbManager.updateRobots(inRobots);
-					
-					for(int i = 0; i < inDriverData.length; i++) {
-						//dbManager.insertDriverData(inDriverData[i]);
-					}
-					
-					for(int i = 0; i < inMatchData.length; i++) {
-						dbManager.insertMatchData(inMatchData[i]);
-					}*/
 					
 					Log.d("FRCKrawler", "Successful sync. Finished server cycle.");
 					
 				} catch (IOException e) {
+					if(reader != null)
+						reader.close();
 					Log.d("FRCKrawler", e.getMessage());
+				} finally {
+					if(reader != null)
+						reader.close();
 				}
 			}
 			
@@ -215,8 +227,6 @@ public class BluetoothServerService extends Service {
 		}
 		
 		public void closeServer() {
-			
-			
 			try {
 				serverSocket.close();
 			} catch (Exception e) {
@@ -258,24 +268,30 @@ public class BluetoothServerService extends Service {
 		
 		public void run() {
 			
-			Robot[] inRobots = new Robot[0];
-			DriverData[] inDriverData = new DriverData[0];
-			MatchData[] inMatchData = new MatchData[0];
+			ArrayList<Robot> inRobots = new ArrayList<Robot>();
+			ArrayList<DriverData> inDriverData = new ArrayList<DriverData>();
+			ArrayList<MatchData> inMatchData = new ArrayList<MatchData>();
 			
 			try {
 				
-				ObjectArrayInputStream inStream = 
-						new ObjectArrayInputStream(iStream);
+				ObjectInputStream inStream = new ObjectInputStream(iStream);
 				
-				inRobots = inStream.readObjectArray(Robot.class);
-				inDriverData = inStream.readObjectArray(DriverData.class);
-				inMatchData = inStream.readObjectArray(MatchData.class);
+				inRobots = (ArrayList<Robot>)inStream.readObject();
+				inDriverData = (ArrayList<DriverData>)inStream.readObject();
+				inMatchData = (ArrayList<MatchData>)inStream.readObject();
 				
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				//Send the received data to the database
+				dbManager.updateRobots(inRobots.toArray(new Robot[0]));
+				Log.d("FRCKrawler", Integer.toString(inRobots.size()));
+				
+				for(MatchData m : inMatchData)
+					dbManager.insertMatchData(m);
+				
 			} catch (StreamCorruptedException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 			
@@ -284,6 +300,14 @@ public class BluetoothServerService extends Service {
 		
 		public boolean isFinished() {
 			return isFinished;
+		}
+		
+		public void close() {
+			try {
+				iStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

@@ -30,7 +30,6 @@ public class BluetoothServerManagerActivity extends TabActivity
 		
 		findViewById(R.id.chooseEvent).setOnClickListener(this);
 		findViewById(R.id.hostToggle).setOnClickListener(this);
-		findViewById(R.id.clientTest).setOnClickListener(this);
 		
 		dbManager = DBManager.getInstance(this);
 	}
@@ -122,13 +121,6 @@ public class BluetoothServerManagerActivity extends TabActivity
 					
 					toggle.setChecked(false);
 				}
-				
-				break;
-				
-			case R.id.clientTest:
-				
-				Intent i = new Intent(this, ClientTestActivity.class);
-				startActivity(i);
 				
 				break;
 		}

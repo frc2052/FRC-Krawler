@@ -133,6 +133,7 @@
                     android:layout_below="@+id/numberVal"
                     android:layout_toRightOf="@+id/textView5"
                     android:ems="10"
+                    android:hint="Name"
                     android:inputType="textNoSuggestions" />
 
                 <EditText
@@ -143,6 +144,7 @@
                     android:layout_below="@+id/nameVal"
                     android:layout_toRightOf="@+id/textView5"
                     android:ems="10"
+                    android:hint="School"
                     android:inputType="textNoSuggestions|textPersonName" />
 
                 <EditText
@@ -153,6 +155,7 @@
                     android:layout_below="@+id/stateVal"
                     android:layout_toRightOf="@+id/textView5"
                     android:ems="10"
+                    android:hint="Colors"
                     android:inputType="textNoSuggestions" />
 
                 <EditText
@@ -163,6 +166,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/cityVal"
                     android:ems="10"
+                    android:hint="Rookie Year"
                     android:inputType="number" />
 
                 <EditText
@@ -173,6 +177,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/rookieYearVal"
                     android:ems="10"
+                    android:hint="Website"
                     android:inputType="textWebEditText" />
 
                 <Spinner
@@ -192,6 +197,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
                     android:ems="10"
+                    android:hint="Number"
                     android:inputType="number" >
 
                     <requestFocus />
@@ -205,7 +211,9 @@
                     android:layout_below="@+id/schoolVal"
                     android:layout_toRightOf="@+id/textView5"
                     android:ems="10"
+                    android:hint="City"
                     android:inputType="textNoSuggestions" />
+
             </RelativeLayout>
 
         </ScrollView>

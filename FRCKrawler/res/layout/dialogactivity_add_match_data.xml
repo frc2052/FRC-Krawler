@@ -75,6 +75,7 @@
                     android:layout_alignLeft="@+id/robot"
                     android:layout_below="@+id/robot"
                     android:ems="10"
+                    android:hint="Match Number"
                     android:inputType="number|numberPassword" />
 
                 <TextView
@@ -123,6 +124,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/gameType"
                     android:ems="10"
+                    android:hint="Comments"
                     android:inputType="textMultiLine|textNoSuggestions" >
 
                     <requestFocus />

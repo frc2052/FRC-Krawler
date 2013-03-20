@@ -19,6 +19,7 @@
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/textView3"
             android:ems="10"
+            android:hint="Name"
             android:inputType="textPersonName" >
 
             <requestFocus />
