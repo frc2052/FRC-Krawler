@@ -12,4 +12,101 @@
         android:text=" "
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/scoutingType" >
+
+        <LinearLayout
+            android:layout_width="94dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.32"
+            android:orientation="vertical" >
+
+            <Spinner
+                android:id="@+id/teamNumber"
+                android:layout_width="match_parent"
+                android:layout_height="101dp"
+                android:prompt="@string/team_number" />
+
+            <Spinner
+                android:id="@+id/gameType"
+                android:layout_width="match_parent"
+                android:layout_height="101dp"
+                android:entries="@array/match_types" />
+
+            <EditText
+                android:id="@+id/matchNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Match Number"
+                android:inputType="number" >
+
+                <requestFocus />
+            </EditText>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/teamName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="Team Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="28sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/robotImage"
+                android:layout_width="match_parent"
+                android:layout_height="61dp"
+                android:layout_weight="0.33"
+                android:src="@drawable/team_icon" />
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.32"
+                android:text="Save"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/ScrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/linearLayout1" >
+
+        <LinearLayout
+            android:id="@+id/metricWidgetList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+
+    <EditText
+        android:id="@+id/comments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:ems="10"
+        android:hint="Comments"
+        android:inputType="textMultiLine" />
+
 </RelativeLayout>

@@ -455,8 +455,13 @@ public class DBManager {
 	 * column vals[i]. Any team that does not have all the values in the proper columns is not
 	 * returned.
 	 */
-	
 	public synchronized Team[] getTeamsByColumns(String[] cols, String[] vals) {
+		
+		return getTeamsByColumns(cols, vals, false);
+	}
+	
+	
+	public synchronized Team[] getTeamsByColumns(String[] cols, String[] vals, boolean isOr) {
 		
 		if(cols.length != vals.length)
 			return null;
@@ -464,10 +469,17 @@ public class DBManager {
 		if(cols.length < 1)
 			return new Team[0];
 		
+		String logic;
+		
+		if(isOr)
+			logic = " OR ";
+		else
+			logic = " AND ";
+		
 		String queryString = "SELECT * FROM " + DBContract.TABLE_TEAMS + " WHERE " + cols[0] + " LIKE ?";
 		
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
-			queryString += " AND " + cols[i] + " LIKE ?";
+			queryString += logic + cols[i] + " LIKE ?";
 		
 		queryString += " ORDER BY " + DBContract.COL_TEAM_NUMBER + " ASC";
 			
@@ -1274,8 +1286,13 @@ public class DBManager {
 	 * Summary: returns a list of robots created by the cols
 	 * and vals specified.
 	 */
-	
 	public synchronized Robot[] getRobotsByColumns(String[] cols, String[] vals) {
+		
+		return getRobotsByColumns(cols, vals, false);
+	}
+	
+	public synchronized Robot[] getRobotsByColumns(String[] cols, String[] vals, 
+			boolean isOr) {
 		
 		if(cols.length != vals.length)
 			return null;
@@ -1283,11 +1300,18 @@ public class DBManager {
 		if(cols.length < 1)
 			return new Robot[0];
 		
+		String logic;
+		
+		if(isOr)
+			logic = " OR ";
+		else
+			logic = " AND ";
+		
 		String queryString = "SELECT * FROM " + DBContract.TABLE_ROBOTS + 
 				" WHERE " + cols[0] + " LIKE ?";
 		
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with cols
-			queryString += " AND " + cols[i] + " LIKE ?";
+			queryString += logic + cols[i] + " LIKE ?";
 		
 		queryString += " ORDER BY " + DBContract.COL_TEAM_NUMBER + " ASC";
 			
@@ -1735,7 +1759,7 @@ public class DBManager {
 							DBContract.COL_METRIC_KEY + " ASC");
 		
 		for(int key = 0; key < DBContract.COL_KEYS.length; key++) {	//Cycle through
-																			//all possible keys.
+																	//all possible keys.
 			if(!c.moveToNext() ||
 					!DBContract.COL_KEYS[key].equals(c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)))) {
 				
@@ -2827,7 +2851,7 @@ public class DBManager {
 		
 			do {	//Check the ID at least once
 			
-				newID = (int)(Math.random() * 10000);
+				newID = (int)(Math.random() * 10000000);
 				isTaken = false;
 				c.moveToPosition(-1);
 			
@@ -2943,7 +2967,7 @@ public class DBManager {
 		if(e.getDateStamp() != null)	//If a date has been set...
 			values.put(DBContract.COL_DATE_STAMP, e.getDateStamp().getTime());
 		
-		db.insert(DBContract.TABLE_EVENTS, null, values);
+		db.insert(DBContract.SCOUT_TABLE_EVENT, null, values);
 		
 		helper.close();
 		
@@ -3005,6 +3029,24 @@ public class DBManager {
 		}
 		
 		helper.close();
+	}
+	
+	
+	public synchronized String[] scoutGetAllTeamNames() {
+		
+		Cursor c = helper.getReadableDatabase().rawQuery("SELECT " + 
+				DBContract.COL_TEAM_NAME + " FROM " + 
+				DBContract.SCOUT_TABLE_ROBOTS + 
+				" ORDER BY " + DBContract.COL_TEAM_NUMBER + " ASC",
+				null);
+		String[] names = new String[c.getCount()];
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			c.moveToNext();
+			names[i] = c.getString(c.getColumnIndex(DBContract.COL_TEAM_NAME));
+		}
+		
+		return names;
 	}
 	
 	
@@ -3162,7 +3204,7 @@ public class DBManager {
 	 * them with the specified list of robots
 	 */
 	
-	public synchronized boolean scoutReplaceRobots(Robot[] robots) {
+	public synchronized boolean scoutReplaceRobots(Robot[] robots, String[] teamNames) {
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
@@ -3175,7 +3217,8 @@ public class DBManager {
 			values.put(DBContract.COL_GAME_NAME, robots[i].getGame());
 			values.put(DBContract.COL_ROBOT_ID, robots[i].getID());
 			values.put(DBContract.COL_COMMENTS, robots[i].getComments());
-			values.put(DBContract.COL_WAS_UPDATED, "1");
+			values.put(DBContract.COL_WAS_UPDATED, "0");
+			values.put(DBContract.COL_TEAM_NAME, teamNames[i]);
 			
 			for(MetricValue v : robots[i].getMetricValues()) {
 				
@@ -3190,6 +3233,8 @@ public class DBManager {
 			db.insert(DBContract.SCOUT_TABLE_ROBOTS, null, values);
 		}
 		
+		helper.close();
+		
 		return true;
 	}
 	
@@ -3203,7 +3248,7 @@ public class DBManager {
 	 * @param updateVals
 	 * @return
 	 * 
-	 * Summary: updates robots on 
+	 * Summary: updates robots on the scout's database
 	 */
 	
 	public synchronized boolean scoutUpdateRobots(String queryCols[], String queryVals[], 
@@ -3238,6 +3283,45 @@ public class DBManager {
 		helper.close();
 		
 		return true;
+	}
+	
+	
+	/*****
+	 * Method: scoutReplaceRobotMetrics
+	 * 
+	 * Summary: replaces all robot metrics in the scout's database
+	 */
+	
+	public synchronized void scoutReplaceRobotMetrics(Metric[] metrics) {
+		
+		helper.getWritableDatabase().rawQuery("DELETE FROM " + 
+				DBContract.SCOUT_TABLE_ROBOT_METRICS, null);
+		
+		for(int i = 0; i < metrics.length; i++) {
+			
+			String rangeInput = new String();
+			
+			if(metrics[i].getRange() != null) {
+			
+				for(Object r :  metrics[i].getRange())	//Create the string for the range.
+					rangeInput += r.toString() + ":";	//The range is stored in one cell.
+			}
+			
+			ContentValues values = new ContentValues();	//New values for the MATCH_PERF_METRICS
+			values.put(DBContract.COL_METRIC_ID, metrics[i].getID());
+			values.put(DBContract.COL_METRIC_NAME, metrics[i].getMetricName());
+			values.put(DBContract.COL_GAME_NAME, metrics[i].getGameName());
+			values.put(DBContract.COL_TYPE, metrics[i].getType());
+			values.put(DBContract.COL_RANGE, rangeInput);
+			values.put(DBContract.COL_DESCRIPTION, metrics[i].getDescription());
+			values.put(DBContract.COL_DISPLAY, metrics[i].isDisplayed());
+			values.put(DBContract.COL_METRIC_KEY, metrics[i].getKey());
+			
+			helper.getWritableDatabase().insert
+					(DBContract.SCOUT_TABLE_ROBOT_METRICS, null, values);
+		}
+		
+		helper.close();
 	}
 	
 	
@@ -3288,5 +3372,228 @@ public class DBManager {
 		helper.close();
 		
 		return m;
+	}
+	
+	
+	/*****
+	 * Method: scoutReplaceMatchMetrics
+	 * 
+	 * @param metrics
+	 * 
+	 * Summary: replaces all the match metrics in the scouting database
+	 */
+	
+	public synchronized void scoutReplaceMatchMetrics(Metric[] metrics) {
+		
+		helper.getWritableDatabase().execSQL("DELETE FROM " + 
+				DBContract.SCOUT_TABLE_MATCH_PERF_METRICS);
+		
+		for(int i = 0; i < metrics.length; i++) {
+			
+			String rangeInput = new String();
+			
+			if(metrics[i].getRange() != null) {
+			
+				for(Object r :  metrics[i].getRange())	//Create the string for the range.
+					rangeInput += r.toString() + ":";	//The range is stored in one cell.
+			}
+			
+			ContentValues values = new ContentValues();	//New values for the MATCH_PERF_METRICS
+			values.put(DBContract.COL_METRIC_ID, metrics[i].getID());
+			values.put(DBContract.COL_METRIC_NAME, metrics[i].getMetricName());
+			values.put(DBContract.COL_GAME_NAME, metrics[i].getGameName());
+			values.put(DBContract.COL_TYPE, metrics[i].getType());
+			values.put(DBContract.COL_RANGE, rangeInput);
+			values.put(DBContract.COL_DESCRIPTION, metrics[i].getDescription());
+			values.put(DBContract.COL_DISPLAY, metrics[i].isDisplayed());
+			values.put(DBContract.COL_METRIC_KEY, metrics[i].getKey());
+			
+			helper.getWritableDatabase().insert
+					(DBContract.SCOUT_TABLE_MATCH_PERF_METRICS, null, values);
+		}
+		
+		helper.close();
+		
+		printQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_MATCH_PERF_METRICS, null);
+	}
+	
+	
+	/*****
+	 * Method: scoutGetAllMatchMetrics
+	 * 
+	 * Summary: gets all match metrics from the scouting database
+	 */
+	public synchronized Metric[] scoutGetAllMatchMetrics() {
+		
+		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + 
+				DBContract.SCOUT_TABLE_MATCH_PERF_METRICS, null);
+		Metric[] metrics = new Metric[c.getCount()];
+		
+		for(int i = 0; i < metrics.length; i++) {
+			
+			c.moveToNext();
+			
+			String rangeString = c.getString(c.getColumnIndex(DBContract.COL_RANGE));
+			ArrayList<Object> rangeArrList = new ArrayList<Object>();
+			
+			String currentRangeValString = new String();
+			
+			for(int character = 0; character < rangeString.length(); character++) {
+				
+				if(rangeString.charAt(character) != ':')
+					currentRangeValString += rangeString.charAt(character);
+				
+				else {
+					rangeArrList.add(currentRangeValString);
+					currentRangeValString = new String();
+				}
+			}
+			
+			metrics[i] = new Metric(
+					c.getInt(c.getColumnIndex(DBContract.COL_METRIC_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_METRIC_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_DESCRIPTION)),
+					c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)),
+					c.getInt(c.getColumnIndex(DBContract.COL_TYPE)),
+					rangeArrList.toArray(),
+					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0)
+					);
+		}
+		
+		helper.close();
+		return metrics;
+	}
+	
+	
+	public synchronized MatchData[] scoutGetAllMatchData() {
+		
+		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + 
+				DBContract.SCOUT_TABLE_MATCH_PERF, null);
+		MatchData[] d = new MatchData[c.getCount()];
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			
+			c.moveToNext();
+			Metric [] metricArr = scoutGetAllMatchMetrics();
+			MetricValue[] dataArr = new MetricValue[metricArr.length];
+			
+			for(int k = 0; k < metricArr.length; k++) {
+				
+				ArrayList<String> valuesList = new ArrayList<String>();
+				String valueString = c.getString(c.getColumnIndex(metricArr[k].getKey()));
+				
+				String currentValsString = new String();
+				
+				if(valueString != null) {
+					for(int character = 0; character < valueString.length(); character++) {
+					
+						if(valueString.charAt(character) != ':')
+							currentValsString += valueString.charAt(character);
+						else {
+							valuesList.add(currentValsString);
+							currentValsString = new String();
+						}
+					}
+				}
+				
+				try {
+					dataArr[k] = new MetricValue(metricArr[k], valuesList.toArray(new String[0]));
+				} catch (MetricTypeMismatchException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			d[i] = new MatchData(
+					c.getInt(c.getColumnIndex(DBContract.COL_DATA_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_MATCH_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_USER_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_MATCH_TYPE)),
+					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
+					dataArr
+					);
+		}
+		
+		return d;
+	}
+	
+	
+	/*****
+	 * Method: scoutInsertMatchData
+	 * 
+	 * @param data
+	 * @return
+	 * 
+	 * Summary: puts the given match data into the scout's database
+	 */
+	
+	public synchronized boolean scoutInsertMatchData(MatchData data) {
+		
+		return scoutInsertMatchData(data.getEventID(), data.getMatchNumber(), data.getRobotID(),
+				data.getUserID(), data.getMatchType(), data.getMetricValues(), 
+				data.getComments());
+	}
+	
+	public synchronized boolean scoutInsertMatchData(int eventID, int matchNumber, int robotID, 
+			int userID, String matchType, MetricValue[] vals, String comments) {
+		
+		ContentValues values = new ContentValues();
+		
+		values.put(DBContract.COL_DATA_ID, createID(DBContract.SCOUT_TABLE_MATCH_PERF, 
+				DBContract.COL_DATA_ID));
+		values.put(DBContract.COL_EVENT_ID, Integer.toString(eventID));
+		values.put(DBContract.COL_MATCH_NUMBER, Integer.toString(matchNumber));
+		values.put(DBContract.COL_ROBOT_ID, Integer.toString(robotID));
+		values.put(DBContract.COL_USER_ID, Integer.toString(userID));
+		values.put(DBContract.COL_MATCH_TYPE, matchType);
+		values.put(DBContract.COL_COMMENTS, comments);
+		
+		for(MetricValue val : vals) {
+			
+			String[] arr = val.getValue();
+			String valString = new String();
+			
+			for(int i = 0; i < arr.length; i++)
+				valString += arr[i] + ":";
+			
+			values.put(val.getMetric().getKey(), valString);
+		}
+		
+		helper.getWritableDatabase().insert(DBContract.SCOUT_TABLE_MATCH_PERF, null, values);
+		helper.close();
+		
+		return true;
+	}
+	
+	
+	/*****
+	 * Method: scoutClearMatchData
+	 * 
+	 * Summary: removes all match data from the scout's match data
+	 * table. Call with care!
+	 */
+	
+	public synchronized void scoutClearMatchData() {
+		
+		helper.getWritableDatabase().execSQL("DELETE FROM " + 
+				DBContract.SCOUT_TABLE_MATCH_PERF);
+		helper.close();
+	}
+	
+	
+	/*****
+	 * Method: scoutClearDriverData
+	 * 
+	 * Summary: removes all driver data from the scout's database
+	 * Call with caution!
+	 */
+	
+	public synchronized void scoutClearDriverData() {
+		
+		helper.getWritableDatabase().execSQL("DELETE FROM " + 
+				DBContract.SCOUT_TABLE_DRIVER_DATA);
+		helper.close();
 	}
 }

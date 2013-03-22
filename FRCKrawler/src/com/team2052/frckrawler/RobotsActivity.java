@@ -194,7 +194,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 
 		protected Robot[] doInBackground(Void... params) {
 			
-			return dbManager.getRobotsByColumns(databaseKeys, databaseValues);
+			return dbManager.getRobotsByColumns(databaseKeys, databaseValues, true);
 		}
 		
 		protected void onPostExecute(Robot[] robots) {

@@ -41,7 +41,7 @@ public class SliderMetricWidget extends MetricWidget implements
 		if(value < min || value > max)
 			value = min;
 		
-		s.setProgress(value);
+		s.setProgress(0);
 		s.setOnSeekBarChangeListener(this);
 		
 		((TextView)findViewById(R.id.min)).setText(Integer.toString(min));

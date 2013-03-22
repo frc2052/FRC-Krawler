@@ -17,26 +17,29 @@
             android:id="@+id/matchScout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Match Scouting" />
+            android:text="Match Scouting"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/pitScout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pit Scouting" />
+            android:text="Pit Scouting"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/driverScout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Driver Scouting" />
+            android:text="Driver Scouting"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/sync"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sync" />
-
+            android:text="Sync"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -51,15 +54,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Welcome, "
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/scoutName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" "
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="24sp" />
     </LinearLayout>
 
     <LinearLayout

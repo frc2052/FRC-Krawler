@@ -168,24 +168,38 @@ public class BluetoothClientService extends Service
 				
 				threadListener.onUpdate("Exchanging data");
 				
+				//Get the data to send
+				Event event = dbManager.scoutGetEvent();
+				
+				Robot[] robotsArr = dbManager.scoutGetUpdatedRobots();
+				ArrayList<Robot> robots = new ArrayList<Robot>();
+				for(Robot r : robotsArr)
+					robots.add(r);
+				
+				MatchData[] matchDataArr = dbManager.scoutGetAllMatchData();
+				ArrayList<MatchData> matchData = new ArrayList<MatchData>();
+				for(MatchData m : matchDataArr)
+					matchData.add(m);
+				
+				//Write the scout data
+				ooStream.writeObject(event);
+				ooStream.writeObject(robots);
+				ooStream.writeObject(new ArrayList<DriverData>());
+				ooStream.writeObject(matchData);
+				
+				//Clear out the old data after it is sent
+				dbManager.scoutClearMatchData();
+				dbManager.scoutClearDriverData();
+				
 				//Start the reading thread
 				ScoutDataReader reader = new ScoutDataReader(context, inStream);
 				reader.start();
-				
-				//Write the scout data
-				ooStream.writeObject(new ArrayList<Robot>());
-				ooStream.writeObject(new ArrayList<DriverData>());
-				ooStream.writeObject(new ArrayList<MatchData>());
-				
-				Log.d("FRCKrawler", "Client wrote data.");
 				
 				while(!reader.isFinished()) {
 					try {
 						Thread.sleep(10);
 					} catch(InterruptedException e) {}
 				}
-				
-				Log.d("FRCKrawler", "Closing streams.");
 				
 				inStream.close();
 				serverSocket.close();
@@ -234,6 +248,7 @@ public class BluetoothClientService extends Service
 			
 			Event inEvent = null;
 			ArrayList<User> inUsers = new ArrayList<User>();
+			ArrayList<String> inTeamNames = new ArrayList<String>();
 			ArrayList<Robot> inRobots = new ArrayList<Robot>();
 			ArrayList<Metric> inRobotMetrics = new ArrayList<Metric>();
 			ArrayList<Metric> inMatchMetrics = new ArrayList<Metric>();
@@ -245,6 +260,7 @@ public class BluetoothClientService extends Service
 				
 				inEvent = (Event)ioStream.readObject();
 				inUsers = (ArrayList<User>)ioStream.readObject();
+				inTeamNames = (ArrayList<String>)ioStream.readObject();
 				inRobots = (ArrayList<Robot>)ioStream.readObject();
 				inRobotMetrics = (ArrayList<Metric>)ioStream.readObject();
 				inMatchMetrics = (ArrayList<Metric>)ioStream.readObject();
@@ -253,8 +269,10 @@ public class BluetoothClientService extends Service
 				//Write the received arrays to the database
 				dbManager.scoutReplaceEvent(inEvent);
 				dbManager.scoutReplaceUsers(inUsers.toArray(new User[0]));
-				dbManager.scoutReplaceRobots(inRobots.toArray(new Robot[0]));
-				dbManager.printQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_EVENT, null);
+				dbManager.scoutReplaceRobots(inRobots.toArray(new Robot[0]), 
+						inTeamNames.toArray(new String[0]));
+				dbManager.scoutReplaceRobotMetrics(inRobotMetrics.toArray(new Metric[0]));
+				dbManager.scoutReplaceMatchMetrics(inMatchMetrics.toArray(new Metric[0]));
 				
 			} catch (ClassCastException e) {
 				e.printStackTrace();

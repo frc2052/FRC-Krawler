@@ -27,6 +27,7 @@ public class ClientServiceConnection implements ServiceConnection {
 	}
 	
 	public void closeBTConnection() {
-		binder.closeConnection();
+		if(binder != null)
+			binder.closeConnection();
 	}
 }

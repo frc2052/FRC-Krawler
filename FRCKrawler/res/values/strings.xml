@@ -72,5 +72,6 @@
         <item >Finals</item>
         <item >Practice</item>
     </string-array>
+    <string name="team_number">Team Number</string>
 
 </resources>

@@ -390,11 +390,12 @@ public class DBContract {
 	//COL_KEYS = new String[50];
 	//COL_KEYS_LIST;
 	public static final String COL_WAS_UPDATED = "wasupdated";
+	//COL_TEAM_NAME
 	
 	public static final String CREATE_SCOUT_TABLE_ROBOTS = 
 			"CREATE TABLE " + SCOUT_TABLE_ROBOTS + " (" + COL_TEAM_NUMBER + INT + ", " + COL_ROBOT_ID + 
 					INT + ", " + COL_GAME_NAME + STRING + ", " + COL_COMMENTS + STRING + ", " + 
-					COL_KEYS_LIST + ", " + COL_WAS_UPDATED + ")";
+					COL_KEYS_LIST + ", " + COL_WAS_UPDATED + ", " + COL_TEAM_NAME + STRING + ")";
 	
 	
 	

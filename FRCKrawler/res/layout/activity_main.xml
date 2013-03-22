@@ -11,7 +11,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text="FRCKrawler"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -20,7 +21,8 @@
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
         android:text="Scouting Application"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:id="@+id/bottomLayout"
@@ -36,8 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
             android:onClick="onCreditsClicked"
-            android:text="Credits" />
-
+            android:text="Credits"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -54,7 +56,8 @@
             android:layout_height="90dp"
             android:layout_weight="0.50"
             android:onClick="joinCompetition"
-            android:text="Join" />
+            android:text="Join"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/super_button"
@@ -62,7 +65,8 @@
             android:layout_height="91dp"
             android:layout_weight="0.50"
             android:onClick="hostCompetition"
-            android:text="Host" />
+            android:text="Host"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <TextView

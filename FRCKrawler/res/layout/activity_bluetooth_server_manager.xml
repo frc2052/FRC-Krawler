@@ -58,7 +58,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:text="Currently Hosting..."
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/chooseEvent"
@@ -67,7 +68,8 @@
         android:layout_below="@+id/eventName"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="17dp"
-        android:text="Choose Event" />
+        android:text="Choose Event"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView1"
@@ -76,7 +78,20 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text="Bluetooth Server Settings"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="24sp" />
+
+    <ToggleButton
+        android:id="@+id/hostToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/chooseEvent"
+        android:layout_alignRight="@+id/chooseEvent"
+        android:layout_below="@+id/textView3"
+        android:text="ToggleButton"
+        android:textOff="Closed"
+        android:textOn="Running"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView3"
@@ -84,18 +99,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/chooseEvent"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
-        android:text="Bluetooth Adapter: "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <ToggleButton
-        android:id="@+id/hostToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
-        android:layout_centerHorizontal="true"
-        android:text="ToggleButton"
-        android:textOff="Off"
-        android:textOn="On" />
+        android:layout_marginTop="73dp"
+        android:text="Bluetooth Server"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="24sp" />
 
 </RelativeLayout>

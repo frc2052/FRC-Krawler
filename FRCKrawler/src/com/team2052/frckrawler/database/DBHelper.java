@@ -20,7 +20,7 @@ import android.database.sqlite.*;
 public class DBHelper extends SQLiteOpenHelper {
 	
 	
-	public static final int DATABASE_VERSION = 12;	//You must add one when changing the structure of the database.
+	public static final int DATABASE_VERSION = 13;	//You must add one when changing the structure of the database.
 	
 	public DBHelper(Context context) {
 		super(context, DBContract.DATABASE_NAME, null, DATABASE_VERSION);
