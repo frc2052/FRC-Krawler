@@ -18,7 +18,7 @@ public class GlobalSettings {
 	 * A VALUE OF ONE means that there is no weight at all,
 	 * all matches are treated equally.
 	 **/
-	public static double weightingRatio = 1.0;
+	public static double weightingRatio = 1;
 	
 	/**
 	 * The default color for the rows of tables.

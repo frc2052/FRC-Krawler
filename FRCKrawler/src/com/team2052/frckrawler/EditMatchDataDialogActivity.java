@@ -185,8 +185,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 	public void onClick(DialogInterface dialog, int which) {
 		
 		if(which == DialogInterface.BUTTON_POSITIVE) {
-			
-			db.removeMatchData(getIntent().getIntExtra(EVENT_ID_EXTRA, -1));
+			db.removeMatchData(getIntent().getIntExtra(MATCH_ID_EXTRA, -1));
 			finish();
 			
 		} else {

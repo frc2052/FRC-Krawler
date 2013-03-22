@@ -46,7 +46,6 @@ public class AddMetricDialogActivity extends Activity
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.add) {
-			
 			Metric m = null;
 			
 			switch(selectedMetricType) {
@@ -146,46 +145,27 @@ public class AddMetricDialogActivity extends Activity
 							);
 					
 					break;
-					
-				default:
-					
-					m = Metric.MetricFactory.createBooleanMetric(
-							getIntent().getStringExtra(GAME_NAME_EXTRA),
-							((EditText)findViewById(R.id.name)).getText().toString(),
-							((EditText)findViewById(R.id.description)).getText().toString(),
-							((CheckBox)findViewById(R.id.displayed)).isChecked()
-							);
 			}
-			
-			boolean added = false;
 			
 			DBManager db = DBManager.getInstance(this);
 			
 			switch(metricCategory) {
 				case MetricsActivity.MATCH_PERF_METRICS:
-					added = db.addMatchPerformanceMetric(m);
+					db.addMatchPerformanceMetric(m);
 					break;
 					
 				case MetricsActivity.ROBOT_METRICS:
-					added = db.addRobotMetric(m);
+					db.addRobotMetric(m);
 					break;
 					
 				case MetricsActivity.DRIVER_METRICS:
-					added = db.addDriverMetric(m);
+					db.addDriverMetric(m);
 					break;
 			}
 			
-			if(added) {
-				
-				finish();
-				
-			} else {
-				
-				
-			}
+			finish();
 			
 		} else if(v.getId() == R.id.cancel) {
-			
 			finish();
 		}
 	}
@@ -194,14 +174,12 @@ public class AddMetricDialogActivity extends Activity
 			long id) {
 		
 		selectedMetricType = pos;
-		
 		refreshTypeBasedUI();
 	}
 
 	public void onNothingSelected(AdapterView<?> v) {
 		
 		((Spinner)findViewById(R.id.game)).setSelection(0);
-		
 		refreshTypeBasedUI();
 	}
 	
@@ -212,14 +190,12 @@ public class AddMetricDialogActivity extends Activity
 			findViewById(R.id.min).setEnabled(true);
 			findViewById(R.id.max).setEnabled(true);
 			findViewById(R.id.inc).setEnabled(true);
-			list.setEnabled(false);
 			
 		} else if(selectedMetricType == DBContract.SLIDER) {
 			
 			findViewById(R.id.min).setEnabled(true);
 			findViewById(R.id.max).setEnabled(true);
 			findViewById(R.id.inc).setEnabled(false);
-			list.setEnabled(false);
 			
 		} else if(selectedMetricType == DBContract.MATH) {
 			
@@ -254,7 +230,6 @@ public class AddMetricDialogActivity extends Activity
 			findViewById(R.id.max).setEnabled(false);
 			findViewById(R.id.inc).setEnabled(false);
 			list = new MathMetricListEditor(this, new String[0], choices);
-			list.setEnabled(true);
 			
 		} else if(selectedMetricType == DBContract.CHOOSER) {
 			
@@ -262,14 +237,12 @@ public class AddMetricDialogActivity extends Activity
 			findViewById(R.id.max).setEnabled(false);
 			findViewById(R.id.inc).setEnabled(false);
 			list = new TextListEditor(this);
-			list.setEnabled(true);
 			
 		} else {
 			
 			findViewById(R.id.min).setEnabled(false);
 			findViewById(R.id.max).setEnabled(false);
 			findViewById(R.id.inc).setEnabled(false);
-			list.setEnabled(false);
 		}
 	}
 }

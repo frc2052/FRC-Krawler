@@ -1,5 +1,6 @@
 package com.team2052.frckrawler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Intent;
@@ -25,13 +26,14 @@ import com.team2052.frckrawler.gui.ProgressSpinner;
 public class QueryActivity extends StackableTabActivity implements OnClickListener {
 	
 	private static final int COMMENT_BUTTON_ID = 1;
-	private static HashMap<Integer, Query[]> querys = new HashMap<Integer, Query[]>();
+	private static HashMap<Integer, Query[]> matchQuerys = new HashMap<Integer, Query[]>();
+	private static HashMap<Integer, Query[]> pitQuerys = new HashMap<Integer, Query[]>();
+	private static HashMap<Integer, Query[]> driverQuerys = new HashMap<Integer, Query[]>();
 	
 	private CompiledData[] data;
 	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_query);
 		
@@ -41,7 +43,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	}
 	
 	public void onResume() {
-		
 		super.onResume();
 		
 		((FrameLayout)findViewById(R.id.progressFrame)).
@@ -51,7 +52,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	}
 	
 	public void postResults(MyTableRow[] rows) {
-		
 		TableLayout table = (TableLayout)findViewById(R.id.queryDataTable);
 		table.removeAllViews();
 		
@@ -63,7 +63,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	
 	public void onClick(View v) {
 		
-		if(v.getId() == R.id.query) {
+		if(v.getId() == R.id.query) { 
 			
 			Intent i = new Intent(this, QuerySortingDialogActivity.class);
 			i.putExtra(QuerySortingDialogActivity.EVENT_ID_EXTRA, 
@@ -81,14 +81,23 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		}
 	}
 	
-	public static void setQuery(int eventID, Query[] query) {
-		
-		querys.put(eventID, query);
+	public static void setQuery(int eventID, Query[] match, Query[] pit, 
+			Query[] driver) {
+		matchQuerys.put(eventID, match);
+		pitQuerys.put(eventID, pit);
+		driverQuerys.put(eventID, driver);
 	}
 	
-	public static Query[] getQuery(int eventID) {
-		
-		return querys.get(eventID);
+	public static Query[] getMatchQuerys(int eventID) {
+		return matchQuerys.get(eventID);
+	}
+	
+	public static Query[] getPitQuerys(int eventID) {
+		return pitQuerys.get(eventID);
+	}
+	
+	public static Query[] getDriverQuerys(int eventID) {
+		return driverQuerys.get(eventID);
 	}
 	
 	private class GetCompiledDataTask extends AsyncTask
@@ -98,10 +107,30 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			
 			QueryActivity activity = params[0];
 			
-			Query[] querys = getQuery(Integer.parseInt(databaseValues[
-					getAddressOfDatabaseKey(DBContract.COL_EVENT_ID)]));
+			ArrayList<Query> allQuerys = new ArrayList<Query>();
+			Query[] matchQuerys = getMatchQuerys(Integer.parseInt
+					(databaseValues[getAddressOfDatabaseKey
+					                (DBContract.COL_EVENT_ID)]));
+			Query[] pitQuerys = getPitQuerys(Integer.parseInt
+					(databaseValues[getAddressOfDatabaseKey
+					                (DBContract.COL_EVENT_ID)]));
+			Query[] driverQuerys = getDriverQuerys(Integer.parseInt
+					(databaseValues[getAddressOfDatabaseKey
+					                (DBContract.COL_EVENT_ID)]));
 			
-			if(querys == null) {
+			if(matchQuerys != null)
+				for(Query q : matchQuerys)
+					allQuerys.add(q);
+			if(pitQuerys != null)
+				for(Query q : pitQuerys)
+					allQuerys.add(q);
+			if(driverQuerys != null)
+				for(Query q : driverQuerys)
+					allQuerys.add(q);
+					
+			Query[] querys = allQuerys.toArray(new Query[0]);
+			
+			if(querys.length == 0) {
 				data = dbManager.getCompiledEventData
 					(Integer.parseInt(databaseValues[
 					getAddressOfDatabaseKey(DBContract.COL_EVENT_ID)]), 

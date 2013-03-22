@@ -32,7 +32,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_match_data);
 		
@@ -42,7 +41,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 	}
 	
 	public void onResume() {
-		
 		super.onResume();
 		
 		((FrameLayout)findViewById(R.id.progressFrame)).
@@ -52,7 +50,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 	}
 	
 	public void postResults(TableLayout table) {
-		
 		RelativeLayout tableParent = 
 				(RelativeLayout)findViewById(R.id.dataTableParent);
 		tableParent.removeAllViews();
@@ -62,7 +59,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 	}
 	
 	public void onClick(View v) {
-		
 		Intent i;
 		
 		Event e = dbManager.getEventsByColumns(new String[] {DBContract.COL_EVENT_ID}, 

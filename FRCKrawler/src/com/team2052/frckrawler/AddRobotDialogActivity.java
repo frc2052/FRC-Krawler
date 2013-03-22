@@ -48,7 +48,7 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 		Spinner gameSpinner = (Spinner)findViewById(R.id.gameSpinner);
 		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
-				android.R.layout.simple_spinner_item,spinnerVals);
+				android.R.layout.simple_spinner_item, spinnerVals);
 		
 		gameSpinner.setAdapter(adapter);
 	}

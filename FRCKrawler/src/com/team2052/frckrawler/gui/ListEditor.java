@@ -18,12 +18,10 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
 	private Button addButton;
 
 	public ListEditor(Context context) {
-		
 		this(context, new String[0]);
 	}
 	
 	public ListEditor(Context context, String[] list) {
-		
 		super(context);
 		setOrientation(VERTICAL);
 		
@@ -44,26 +42,21 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
 	protected abstract void onAddButtonClicked();
 	
 	public void onClick(View v) {
-		
 		if(isEnabled()) {
 			if(v.getId() == ADD_BUTTON_ID) {
-			
 				onAddButtonClicked();
 			
 			} else if(v.getId() == REMOVE_BUTTON_ID) {
-			
 				removeValue(((Integer)v.getTag()).intValue());
 			}
 		}
 	}
 	
 	public String[] getShownValues() {
-		
 		return shownValues.toArray(new String[0]);
 	}
 	
 	public String[] getValues() {
-		
 		for(int i = 0; i < values.size(); i++)
 			System.out.println(values.get(i));
 		
@@ -71,33 +64,32 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
 	}
 	
 	public int getValueCount() {
-		
 		return values.size();
 	}
 	
 	public void addValue(String val, String shownVal) {
-		
 		shownValues.add(shownVal);
 		values.add(val);
 		onValuesUpdated();
+		
+		for(String s : values) {
+			System.out.println(s);
+		}
 	}
 	
 	public void removeValue(String val) {
-		
 		shownValues.remove(values.indexOf(val));
 		values.remove(val);
 		onValuesUpdated();
 	}
 	
 	public void removeValue(int position) {
-		
 		shownValues.remove(position);
 		values.remove(position);
 		onValuesUpdated();
 	}
 	
 	public void onValuesUpdated() {
-		
 		removeAllViews();
 		
 		for(int i = 0; i < shownValues.size(); i ++) {
@@ -124,13 +116,6 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
 	}
 	
 	public ArrayList<String> getValuesList() {
-		
 		return values;
-	}
-	
-	public void setEnabled(boolean enabled) {
-		
-		super.setEnabled(true);
-		addButton.setEnabled(true);
 	}
 }

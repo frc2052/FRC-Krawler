@@ -2,6 +2,7 @@ package com.team2052.frckrawler.database;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -2504,7 +2505,7 @@ public class DBManager {
 							if(isNumeric) { //Find the weighted average
 								
 								double numerator = 0;
-								double denominator = 1;
+								double denominator = 0;
 								boolean valueIsNull = true;
 							
 								for(int matchCount = 0; matchCount < matchData.length; 
@@ -2529,16 +2530,19 @@ public class DBManager {
 										
 										int value = Integer.parseInt(valueArray[0]);
 										double matchPlayed = matchCount + 1;
-										double weight = matchPlayed * GlobalSettings.weightingRatio;
+										double weight = Math.pow(GlobalSettings.weightingRatio, matchPlayed);
 									
 										numerator += value * weight;
-										denominator *= weight;
+										denominator += weight;
 									}
 								}
 								
 								if(valueIsNull) {
 									//compiledValue = new String[] {"-1"};
 								} else {
+									if(denominator == 0)
+										denominator = 1;
+										
 									double weightedAverage = numerator / denominator;
 									compiledValue = new String[] {Double.toString(weightedAverage)};
 								}
@@ -2593,7 +2597,7 @@ public class DBManager {
 						case DBContract.COUNTER:
 						
 							double numerator = 0;
-							double denominator = 1;
+							double denominator = 0;
 							boolean valueIsNull = true;
 						
 							for(int matchCount = 0; matchCount < matchData.length; 
@@ -2618,16 +2622,19 @@ public class DBManager {
 									
 									int value = Integer.parseInt(valueArray[0]);
 									double matchPlayed = matchCount + 1;
-									double weight = matchPlayed * GlobalSettings.weightingRatio;
+									double weight = Math.pow(GlobalSettings.weightingRatio, matchPlayed);
 								
 									numerator += value * weight;
-									denominator *= weight;
+									denominator += weight;
 								}
 							}
 							
 							if(valueIsNull) {
 								//compiledValue = new String[] {"-1"};
 							} else {
+								if(denominator == 0)
+									denominator = 1;
+								
 								double weightedAverage = numerator / denominator;
 								compiledValue = new String[] {Double.toString(weightedAverage)};
 							}
@@ -2724,15 +2731,24 @@ public class DBManager {
 						
 						if(metricValue.getMetric().getType() == DBContract.COUNTER 
 								|| metricValue.getMetric().getType() == 
-								DBContract.SLIDER) {
+								DBContract.SLIDER || (metricValue.getMetric().getType() 
+										== DBContract.BOOLEAN && query.getType() == 
+										Query.TYPE_MATCH_DATA)) {
 							
-							double checkValue = Double.parseDouble
+							try {
+								System.out.println(query.getMetricValue());
+								double checkValue = Double.parseDouble
 									(query.getMetricValue());
-							double robotValue = Double.parseDouble
+								double robotValue = Double.parseDouble
 									(metricValue.getValueAsHumanReadableString());
 							
-							if(checkValue != robotValue)
-								passed = false;
+								if(checkValue != robotValue)
+									passed = false;
+							
+								} catch(NumberFormatException e) {
+									passed = false;
+									System.out.println("format exception");
+								}
 								
 						} else {
 							
@@ -2746,9 +2762,12 @@ public class DBManager {
 					case Query.COMPARISON_LESS_THAN:
 						
 						if(metricValue.getMetric().getType() == DBContract.COUNTER 
-								|| metricValue.getMetric().getType() == 
-								DBContract.SLIDER) {
-					
+						|| metricValue.getMetric().getType() == 
+						DBContract.SLIDER || (metricValue.getMetric().getType() 
+								== DBContract.BOOLEAN && query.getType() == 
+								Query.TYPE_MATCH_DATA)) {
+							
+							try {
 								double checkValue = Double.parseDouble
 										(query.getMetricValue());
 								double robotValue = Double.parseDouble
@@ -2756,6 +2775,10 @@ public class DBManager {
 					
 								if(checkValue <= robotValue)
 									passed = false;
+								
+							} catch(NumberFormatException e) {
+								passed = false;
+							}
 						}
 						
 						break;
@@ -2763,9 +2786,12 @@ public class DBManager {
 					case Query.COMPARISON_GREATER_THAN:
 						
 						if(metricValue.getMetric().getType() == DBContract.COUNTER 
-								|| metricValue.getMetric().getType() == 
-								DBContract.SLIDER) {
-					
+						|| metricValue.getMetric().getType() == 
+						DBContract.SLIDER || (metricValue.getMetric().getType() 
+								== DBContract.BOOLEAN && query.getType() == 
+								Query.TYPE_MATCH_DATA)) {
+							
+							try{
 								double checkValue = Double.parseDouble
 										(query.getMetricValue());
 								double robotValue = Double.parseDouble
@@ -2773,6 +2799,10 @@ public class DBManager {
 					
 								if(checkValue >= robotValue)
 									passed = false;
+								
+							} catch(NumberFormatException e) {
+								passed = false;
+							}
 						}
 						
 						break;
@@ -2782,6 +2812,9 @@ public class DBManager {
 			if(passed)
 				selectedRobots.add(robot);
 		}
+		
+		//Sort selectedRobots according to the specified key
+		
 		
 		return selectedRobots.toArray(new CompiledData[0]);
 	}
@@ -2819,12 +2852,10 @@ public class DBManager {
 			}
 			
 		} catch(CursorIndexOutOfBoundsException exception) {
-			
-			System.out.println("No results returned from query.");
+			Log.e("FRCKrawler", "No results returned from query.");
 			
 		} catch(Exception e) {
-			
-			System.out.println("Error in qeury.");
+			Log.e("FRCKrawler", "Error in qeury.");
 			
 		} finally {
 			
@@ -2914,6 +2945,80 @@ public class DBManager {
 		
 		return c.moveToFirst();
 	}
+	
+	
+	/*****
+	 * Class: Quicksorter
+	 * 
+	 * @author Charles Hofer
+	 *
+	 * Description: this class is used to sort a list of objects, based on 
+	 * their keys.
+	 *****/
+	
+	private class Quicksorter  {
+		  double[] keys;
+		  private Object[] items;
+		  private int number;
+
+		  public void sort(double[] _keys, Object[] _items) {
+		    // Check for empty or null array
+		    if (keys == null || keys.length == 0 || 
+		    		_keys.length != _items.length){
+		      return;
+		    }
+		    
+		    keys = _keys;
+		    items = _items;
+		    number = keys.length;
+		    quicksort(0, number - 1);
+		  }
+
+		  private void quicksort(int low, int high) {
+		    int i = low, j = high;
+		    // Get the pivot element from the middle of the list
+		    double pivot = keys[low + (high-low)/2];
+
+		    // Divide into two lists
+		    while (i <= j) {
+		      // If the current value from the left list is smaller then the pivot
+		      // element then get the next element from the left list
+		      while (keys[i] < pivot) {
+		        i++;
+		      }
+		      // If the current value from the right list is larger then the pivot
+		      // element then get the next element from the right list
+		      while (keys[j] > pivot) {
+		        j--;
+		      }
+
+		      // If we have found a values in the left list which is larger then
+		      // the pivot element and if we have found a value in the right list
+		      // which is smaller then the pivot element then we exchange the
+		      // values.
+		      // As we are done we can increase i and j
+		      if (i <= j) {
+		        exchange(i, j);
+		        i++;
+		        j--;
+		      }
+		    }
+		    // Recursion
+		    if (low < j)
+		      quicksort(low, j);
+		    if (i < high)
+		      quicksort(i, high);
+		  }
+
+		  private void exchange(int i, int j) {
+		    double tempKey = keys[i];
+		    Object tempOb = items[i];
+		    keys[i] = keys[j];
+		    items[i] = items[j];
+		    keys[j] = tempKey;
+		    items[j] = tempOb;
+		  }
+		} 
 	
 	
 	
