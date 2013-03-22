@@ -153,6 +153,22 @@ public class BluetoothServerService extends Service {
 					serverSocket.close();
 					
 					
+					//Create our streams
+					OutputStream outputStream = clientSocket.getOutputStream();
+					ObjectOutputStream oStream = new ObjectOutputStream(outputStream);
+					InputStream inputStream = clientSocket.getInputStream();
+					
+					//Start the reader
+					reader = new ServerDataReader(context, inputStream);
+					reader.start();
+					
+					while(!reader.isFinished()) {
+						try {
+							Thread.sleep(10);
+						} catch(InterruptedException e) {}
+					}
+					
+					
 					//Compile the data to send
 					User[] usersArr = dbManager.getAllUsers();
 					ArrayList<User> users = new ArrayList<User>();
@@ -199,11 +215,6 @@ public class BluetoothServerService extends Service {
 						dMetrics.add(m);
 					
 					
-					//Create our streams
-					OutputStream outputStream = clientSocket.getOutputStream();
-					ObjectOutputStream oStream = new ObjectOutputStream(outputStream);
-					InputStream inputStream = clientSocket.getInputStream();
-					
 					//Send data
 					oStream.writeObject(hostedEvent);
 					oStream.writeObject(users);
@@ -212,15 +223,6 @@ public class BluetoothServerService extends Service {
 					oStream.writeObject(rMetrics);
 					oStream.writeObject(mMetrics);
 					//arrStream.write(dMetrics);
-					
-					reader = new ServerDataReader(context, inputStream);
-					reader.start();
-					
-					while(!reader.isFinished()) {
-						try {
-							Thread.sleep(10);
-						} catch(InterruptedException e) {}
-					}
 					
 					inputStream.close();
 					clientSocket.close();

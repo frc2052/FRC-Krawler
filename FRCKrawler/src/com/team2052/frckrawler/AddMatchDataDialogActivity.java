@@ -66,7 +66,7 @@ public class AddMatchDataDialogActivity extends Activity implements OnClickListe
 		metricWidgetList.removeAllViews();
 		
 		for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
-			metricWidgetList.addView(MetricWidget.creatWidget(this, metrics[metricCount]));
+			metricWidgetList.addView(MetricWidget.createWidget(this, metrics[metricCount]));
 		}
 	}
 

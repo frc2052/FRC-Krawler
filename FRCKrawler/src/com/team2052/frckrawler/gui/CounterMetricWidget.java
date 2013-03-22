@@ -40,6 +40,8 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
 		
 		if(m.getValue() != null && m.getValue().length > 0)
 			currentValue = Integer.parseInt(m.getValue()[0]);
+		else
+			currentValue = min;
 		
 		((TextView)findViewById(R.id.value)).setText(Integer.toString(currentValue));
 	}

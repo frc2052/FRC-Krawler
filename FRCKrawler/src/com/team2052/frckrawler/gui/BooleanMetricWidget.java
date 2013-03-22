@@ -22,6 +22,14 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
 		
 		if(m.getValue() != null && m.getValue().length > 0)
 			value = Boolean.parseBoolean(m.getValue()[0]);
+		
+		if(value) {
+			((RadioButton)findViewById(R.id.yes)).setChecked(true);
+			((RadioButton)findViewById(R.id.no)).setChecked(false);
+		} else {
+			((RadioButton)findViewById(R.id.yes)).setChecked(false);
+			((RadioButton)findViewById(R.id.no)).setChecked(true);
+		}
 	}
 
 	public String[] getValues() {
@@ -35,13 +43,13 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
 	    
 	    switch(view.getId()) {
 	        case R.id.yes:
-	            if (checked)
+	            if(checked)
 	                value = true;
 	            	
 	            break;
 	            
 	        case R.id.no:
-	            if (checked)
+	            if(checked)
 	               value = false;
 	            	
 	            break;

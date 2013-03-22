@@ -104,7 +104,7 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 		
 		for(int i = 0; i < metrics.length; i++) {
 			
-			MetricWidget m = MetricWidget.creatWidget(this, metrics[i]);
+			MetricWidget m = MetricWidget.createWidget(this, metrics[i]);
 			m.setTag(metrics[i].getKey());
 			metricList.addView(m);
 		}

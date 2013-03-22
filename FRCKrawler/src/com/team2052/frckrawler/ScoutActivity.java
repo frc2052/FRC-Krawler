@@ -1,8 +1,11 @@
 package com.team2052.frckrawler;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -19,12 +22,13 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.MetricValue;
+import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatchException;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.gui.MetricWidget;
-import com.team2052.frckrawler.gui.MyTextView;
 
 public class ScoutActivity extends Activity implements OnClickListener, 
-														OnItemSelectedListener {
+														OnItemSelectedListener,
+													DialogInterface.OnClickListener{
 	
 	public static final int SCOUT_TYPE_MATCH = 1;
 	public static final int SCOUT_TYPE_PIT = 2;
@@ -55,25 +59,51 @@ public class ScoutActivity extends Activity implements OnClickListener,
 			case SCOUT_TYPE_PIT:
 				title.setText("Pit Scouting");
 				findViewById(R.id.matchNumber).setEnabled(false);
+				findViewById(R.id.gameType).setEnabled(false);
 				break;
 				
 			case SCOUT_TYPE_DRIVER:
 				title.setText("Driver Scouting");
 				findViewById(R.id.matchNumber).setEnabled(false);
+				findViewById(R.id.gameType).setEnabled(false);
 				break;
 		}
 		
 		dbManager = DBManager.getInstance(this);
 		
 		new GetRobotListTask().execute();
-		new GetMetricsTask().execute(getIntent().getIntExtra(SCOUT_TYPE_EXTRA, -1));
 	}
 	
+	public void resetUI() {
+		new GetMetricsTask().execute(getIntent().
+				getIntExtra(SCOUT_TYPE_EXTRA, -1));
+		
+		((EditText)findViewById(R.id.comments)).setText("");
+		((EditText)findViewById(R.id.matchNumber)).setText("");
+		
+		try {
+			((Spinner)findViewById(R.id.teamNumber)).setSelection(0);
+		} catch(IndexOutOfBoundsException e) {}
+	}
 
 	@Override
 	public void onItemSelected(AdapterView<?> adapter, View spinner, int index,
 			long id) {
 		((TextView)findViewById(R.id.teamName)).setText(teamNames[index]);
+		
+		if(getIntent().getIntExtra(SCOUT_TYPE_EXTRA, -1) == SCOUT_TYPE_PIT) {
+			if(robots[index].getComments().replace(" ", "").equals("")) {
+				((EditText)findViewById(R.id.comments)).
+					setText("");
+				
+			} else {
+				((EditText)findViewById(R.id.comments)).
+						setText(robots[index].getComments());
+			}
+		
+			new GetMetricsTask().execute(((Spinner)findViewById(R.id.teamNumber)).
+					getSelectedItemPosition());
+		}
 	}
 
 	@Override
@@ -82,6 +112,21 @@ public class ScoutActivity extends Activity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		if(v.getId() == R.id.save) {
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Save");
+			builder.setMessage("Are you sure you want to save the entered data? " +
+					"It will be commited to the database and you will not be able " +
+					"to edit it anymore.");
+			builder.setPositiveButton("Yes", this);
+			builder.setNegativeButton("No", this);
+			builder.show();
+		}
+	}
+	
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		if(which == DialogInterface.BUTTON_POSITIVE) {
 			
 			int matchNumber = 0;
 			int teamNumber = 0;
@@ -102,21 +147,22 @@ public class ScoutActivity extends Activity implements OnClickListener,
 				return;
 			}
 			
+			//Compile the entered data
+			LinearLayout metricList = 
+					(LinearLayout)findViewById(R.id.metricWidgetList);
+			MetricValue[] metricVals = 
+					new MetricValue[metricList.getChildCount()];
+			for(int i = 0; i < metricList.getChildCount(); i++) {
+				MetricWidget widget = (MetricWidget)metricList.getChildAt(i);
+				metricVals[i] = widget.getMetricValue();
+			}
+			
 			switch(getIntent().getIntExtra(SCOUT_TYPE_EXTRA, -1)) {
 				case SCOUT_TYPE_MATCH:
 					
-					LinearLayout metricList = 
-						(LinearLayout)findViewById(R.id.metricWidgetList);
-					MetricValue[] metricVals = 
-							new MetricValue[metricList.getChildCount()];
-					for(int i = 0; i < metricList.getChildCount(); i++) {
-						MetricWidget widget = (MetricWidget)metricList.getChildAt(i);
-						metricVals[i] = widget.getMetricValue();
-					}
-					
 					MatchData data = new MatchData(
 							dbManager.scoutGetEvent().getEventID(),
-							Integer.parseInt(((EditText)findViewById(R.id.matchNumber)).getText().toString()),
+							matchNumber,
 							robots[((Spinner)findViewById(R.id.teamNumber)).getSelectedItemPosition()].getID(),
 							-1,
 							((Spinner)findViewById(R.id.gameType)).getSelectedItem().toString(),
@@ -130,9 +176,24 @@ public class ScoutActivity extends Activity implements OnClickListener,
 					
 				case SCOUT_TYPE_PIT:
 					
+					int selectedRobot = ((Spinner)findViewById(R.id.teamNumber)).
+							getSelectedItemPosition();
+					
+					Robot robot = new Robot(
+							teamNumber,
+							robots[selectedRobot].getID(),
+							robots[selectedRobot].getGame(),
+							((TextView)findViewById(R.id.comments)).getText().toString(),
+							metricVals
+							);
+					
+					new SaveRobotDataTask().execute(robot);
+					
 					break;
 			}
 		}
+		
+		dialog.dismiss();
 	}
 	
 	
@@ -167,6 +228,8 @@ public class ScoutActivity extends Activity implements OnClickListener,
 			
 			if(teamNames.length > 0)
 				((TextView)findViewById(R.id.teamName)).setText(teamNames[0]);
+			
+			resetUI();
 		}
 	}
 	
@@ -181,19 +244,30 @@ public class ScoutActivity extends Activity implements OnClickListener,
 	 * is put in for the Integer param.
 	 */
 	
-	private class GetMetricsTask extends AsyncTask<Integer, Void, Metric[]> {
+	private class GetMetricsTask extends AsyncTask<Integer, Void, MetricValue[]> {
 
-		protected Metric[] doInBackground(Integer... params) {
-			int scoutType = params[0];
-			Metric[] metrics = new Metric[0];
+		protected MetricValue[] doInBackground(Integer... params) {
+			int selectedRobot = params[0];
+			MetricValue[] metrics = new MetricValue[0];
 			
-			switch(scoutType) {
+			switch(getIntent().getIntExtra(SCOUT_TYPE_EXTRA, -1)) {
 				case SCOUT_TYPE_MATCH:
-					metrics = dbManager.scoutGetAllMatchMetrics();
+					Metric[] rawMetrics = dbManager.scoutGetAllMatchMetrics();
+					metrics = new MetricValue[rawMetrics.length];
+					
+					for(int i = 0; i < rawMetrics.length; i++) {
+						try {
+							metrics[i] = new MetricValue
+									(rawMetrics[i], new String[0]);
+						} catch(MetricTypeMismatchException e) {
+							Log.e("FRCKrawler", "Metric mismatch exception.");
+						}
+					}
+					
 					break;
 					
 				case SCOUT_TYPE_PIT:
-					metrics = dbManager.scoutGetAllRobotMetrics();
+					metrics = robots[selectedRobot].getMetricValues();
 					break;
 					
 				case SCOUT_TYPE_DRIVER:
@@ -204,22 +278,22 @@ public class ScoutActivity extends Activity implements OnClickListener,
 			return metrics;
 		}
 		
-		protected void onPostExecute(Metric[] metrics) {
+		protected void onPostExecute(MetricValue[] metrics) {
 			LinearLayout metricList = 
 					(LinearLayout)findViewById(R.id.metricWidgetList);
 			metricList.removeAllViews();
 			
-			for(Metric m : metrics)
-				metricList.addView(MetricWidget.creatWidget
+			for(MetricValue m : metrics)
+				metricList.addView(MetricWidget.createWidget
 						(getApplicationContext(), m));
 		}
 	}
 	
 	
 	/*****
-	 * Class: SaveDataTask
+	 * Class: SaveMatchDataTask
 	 * 
-	 * Summary: saves the data depending on the scout type, and then
+	 * Summary: saves the match data and then
 	 * clears the UI
 	 */
 	
@@ -234,13 +308,39 @@ public class ScoutActivity extends Activity implements OnClickListener,
 			return null;
 		}
 		
+		@Override
 		protected void onPostExecute(Void v) {
-			
+			resetUI();
 			Toast.makeText(getApplicationContext(), "Save successful.", 
 					Toast.LENGTH_SHORT).show();
 		}
 	}
 	
 	
-	//private class SaveRobotDataTask extends AsyncTask<>
+	/*****
+	 * Class: SaveRobotDataTask
+	 * 
+	 * @author Charles Hofer
+	 *
+	 * Summary: Updates the specified robot in the database.
+	 */
+	
+	private class SaveRobotDataTask extends AsyncTask<Robot, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Robot... params) {
+			dbManager.scoutUpdateRobot(params[0]);
+			
+			if(getIntent().getIntExtra(SCOUT_TYPE_EXTRA, -1) == SCOUT_TYPE_PIT) {
+				robots = dbManager.scoutGetAllRobots();
+			}
+			return null;
+		}
+		
+		protected void onPostExecute(Void v) {
+			resetUI();
+			Toast.makeText(getApplicationContext(), "Save successful.", 
+					Toast.LENGTH_SHORT).show();
+		}
+	}
 }

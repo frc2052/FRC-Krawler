@@ -27,7 +27,6 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	private DBManager db;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scout_type);
 		
@@ -42,7 +41,6 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	}
 	
 	public void onResume() {
-		
 		super.onResume();
 		
 		((TextView)findViewById(R.id.scoutName)).
@@ -52,11 +50,10 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		
 		if(selectedEvent != null)
 			((TextView)findViewById(R.id.eventInfo)).setText
-				(selectedEvent.getEventName() + ", " + selectedEvent.getLocation());
+				(selectedEvent.getEventName() + ", " + selectedEvent.getGameName());
 	}
 	
 	public void onDestroy() {
-		
 		super.onDestroy();
 		
 		try {
@@ -65,7 +62,6 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	}
 
 	public void onClick(View v) {
-		
 		Intent i;
 		
 		switch(v.getId()) {
@@ -127,7 +123,6 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	}
 
 	public void onUnsuccessfulSync(String _errorMessage) {
-		
 		final String errorMessage = _errorMessage;
 		
 		runOnUiThread(new Runnable() {
@@ -143,7 +138,6 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	}
 	
 	public void onUpdate(String _message) {
-		
 		final String message = _message;
 		
 		runOnUiThread(new Runnable() {
@@ -156,7 +150,6 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	}
 
 	public void onClick(DialogInterface dialog, int which) {
-		
 		if(which == DialogInterface.BUTTON_NEUTRAL) {
 			unbindService(connection);
 		}

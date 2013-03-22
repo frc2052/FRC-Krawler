@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 import com.team2052.frckrawler.GlobalSettings;
 import com.team2052.frckrawler.database.structures.Comment;
@@ -1948,7 +1949,6 @@ public class DBManager {
 			updateVals.add(robots[i].getComments());
 			
 			for(int k = 0; k < robots[i].getMetricValues().length; k++) {
-				
 				updateCols.add(robots[i].getMetricValues()[k].getMetric().getKey());
 				updateVals.add(robots[i].getMetricValues()[k].getValueAsDBReadableString());
 			}
@@ -2111,11 +2111,22 @@ public class DBManager {
 			c.moveToNext();
 			
 			robotArray[i] = getRobotsByColumns(new String[] {DBContract.COL_ROBOT_ID}, 
-					new String[] {c.getString(c.getColumnIndex(DBContract.COL_ROBOT_ID))})[0];
+					new String[] {c.getString(c.getColumnIndex
+							(DBContract.COL_ROBOT_ID))})[0];
 		}
 		
 		return robotArray;
 	}
+	
+	
+	/*****
+	 * Method: getEventsByRobot
+	 * 
+	 * @param robotID
+	 * @return
+	 * 
+	 * Summary: gets all events out of the database that this robot is in
+	 */
 	
 	public Event[] getEventsByRobot(int robotID) {
 		
@@ -2916,7 +2927,6 @@ public class DBManager {
 	public synchronized Event scoutGetEvent() {
 		
 		Event event;
-		System.out.println("Get ran");
 		
 		Cursor c = helper.getReadableDatabase().
 				rawQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_EVENT, null);
@@ -2935,7 +2945,6 @@ public class DBManager {
 		}
 		
 		helper.close();
-		
 		return null;
 	}
 	
@@ -2970,8 +2979,6 @@ public class DBManager {
 		db.insert(DBContract.SCOUT_TABLE_EVENT, null, values);
 		
 		helper.close();
-		
-		System.out.println("update ran");
 	}
 	
 	
@@ -3066,17 +3073,15 @@ public class DBManager {
 		for(int i = 0; i < c.getCount(); i++) {
 			
 			c.moveToNext();
-			
-			String thisRobotGame = c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME));
+			String thisRobotGame = c.getString
+					(c.getColumnIndex(DBContract.COL_GAME_NAME));
 			ArrayList<MetricValue> metricVals = new ArrayList<MetricValue>();
 			Metric[] metrics = new Metric[0];
 			
-			metrics = this.getRobotMetricsByColumns
-				(new String[] {DBContract.COL_GAME_NAME}, new String[] {thisRobotGame});
+			metrics = scoutGetAllRobotMetrics();
 				
 			//Un-indent this stuff
 			for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
-					
 				String valString = c.getString
 						(c.getColumnIndex(metrics[metricCount].getKey()));
 				ArrayList<String> valsArr = new ArrayList<String>();
@@ -3134,7 +3139,8 @@ public class DBManager {
 		
 		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + 
 				DBContract.SCOUT_TABLE_ROBOTS + " WHERE " + 
-				DBContract.COL_WAS_UPDATED + " > 0", null);
+				DBContract.COL_WAS_UPDATED + " LIKE ?", 
+				new String[] {"1"});
 		Robot[] robots = new Robot[c.getCount()];
 		
 		for(int i = 0; i < c.getCount(); i++) {
@@ -3145,8 +3151,7 @@ public class DBManager {
 			ArrayList<MetricValue> metricVals = new ArrayList<MetricValue>();
 			Metric[] metrics = new Metric[0];
 			
-			metrics = this.getRobotMetricsByColumns
-				(new String[] {DBContract.COL_GAME_NAME}, new String[] {thisRobotGame});
+			metrics = scoutGetAllRobotMetrics();
 				
 			//Un-indent this stuff
 			for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
@@ -3160,12 +3165,10 @@ public class DBManager {
 					valString = new String();
 				
 				for(int charCount = 0; charCount < valString.length(); charCount++) {
-					
 					if(valString.charAt(charCount) != ':'){
 						workingString += valString.substring(charCount, charCount + 1);
 							
 					} else {
-						
 						valsArr.add(workingString);
 						workingString = new String();
 					}
@@ -3192,7 +3195,6 @@ public class DBManager {
 		}
 		
 		helper.close();
-		
 		return robots;
 	}
 	
@@ -3251,6 +3253,33 @@ public class DBManager {
 	 * Summary: updates robots on the scout's database
 	 */
 	
+	//! This method does not update the game, id, or team number of the robot
+	public synchronized boolean scoutUpdateRobot(Robot robot) {
+		
+		if(robot == null)
+			return false;
+		
+		ArrayList<String> updateCols = new ArrayList<String>();
+		ArrayList<String> updateVals = new ArrayList<String>();
+		
+		updateVals.add(robot.getComments());
+		updateCols.add(DBContract.COL_COMMENTS);
+		
+		MetricValue[] metricVals = robot.getMetricValues();
+		
+		for(int i = 0; i < metricVals.length; i++) {
+			updateVals.add(metricVals[i].getValueAsDBReadableString());
+			updateCols.add(metricVals[i].getMetric().getKey());
+		}
+		
+		return scoutUpdateRobots(
+				new String[] {DBContract.COL_ROBOT_ID},
+				new String[] {Integer.toString(robot.getID())},
+				updateCols.toArray(new String[0]),
+				updateVals.toArray(new String[0])
+				);
+	}
+	
 	public synchronized boolean scoutUpdateRobots(String queryCols[], String queryVals[], 
 			String updateCols[], String updateVals[]) {
 		
@@ -3279,7 +3308,6 @@ public class DBManager {
 		
 		helper.getWritableDatabase().update(DBContract.SCOUT_TABLE_ROBOTS, vals, 
 				queryString, queryVals);
-		
 		helper.close();
 		
 		return true;
@@ -3294,8 +3322,8 @@ public class DBManager {
 	
 	public synchronized void scoutReplaceRobotMetrics(Metric[] metrics) {
 		
-		helper.getWritableDatabase().rawQuery("DELETE FROM " + 
-				DBContract.SCOUT_TABLE_ROBOT_METRICS, null);
+		helper.getWritableDatabase().execSQL("DELETE FROM " + 
+				DBContract.SCOUT_TABLE_ROBOT_METRICS);
 		
 		for(int i = 0; i < metrics.length; i++) {
 			
@@ -3413,8 +3441,6 @@ public class DBManager {
 		}
 		
 		helper.close();
-		
-		printQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_MATCH_PERF_METRICS, null);
 	}
 	
 	
@@ -3465,6 +3491,14 @@ public class DBManager {
 		return metrics;
 	}
 	
+	
+	/*****
+	 * Method: scoutGetAllMatchData
+	 * 
+	 * @return
+	 * 
+	 * Summary: gets all of the scout's match data from the database
+	 */
 	
 	public synchronized MatchData[] scoutGetAllMatchData() {
 		
