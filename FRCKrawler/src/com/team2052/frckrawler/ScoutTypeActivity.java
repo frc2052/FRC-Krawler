@@ -16,6 +16,7 @@ import com.team2052.frckrawler.bluetooth.ClientServiceConnection;
 import com.team2052.frckrawler.bluetooth.ClientThreadListener;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
+import com.team2052.frckrawler.database.structures.User;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 
 public class ScoutTypeActivity extends Activity implements OnClickListener, 
@@ -25,6 +26,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	private ClientServiceConnection connection;
 	private Event selectedEvent;
 	private DBManager db;
+	private User user;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,11 +34,15 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		
 		findViewById(R.id.matchScout).setOnClickListener(this);
 		findViewById(R.id.pitScout).setOnClickListener(this);
-		findViewById(R.id.driverScout).setOnClickListener(this);
 		findViewById(R.id.sync).setOnClickListener(this);
 		
 		connection = new ClientServiceConnection(this);
 		db = DBManager.getInstance(this);
+		
+		User[] allUsers = db.scoutGetAllUsers();
+		for(User u : allUsers)
+			if(GlobalSettings.userID == u.getID())
+				user = u;
 		
 	}
 	
@@ -44,7 +50,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		super.onResume();
 		
 		((TextView)findViewById(R.id.scoutName)).
-				setText(GlobalSettings.username);
+				setText(user.getName());
 		
 		selectedEvent = db.scoutGetEvent();
 		
@@ -79,15 +85,6 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 				i = new Intent(this, ScoutActivity.class);
 				i.putExtra(ScoutActivity.SCOUT_TYPE_EXTRA, 
 						ScoutActivity.SCOUT_TYPE_PIT);
-				startActivity(i);
-				
-				break;
-				
-			case R.id.driverScout:
-				
-				i = new Intent(this, ScoutActivity.class);
-				i.putExtra(ScoutActivity.SCOUT_TYPE_EXTRA, 
-						ScoutActivity.SCOUT_TYPE_DRIVER);
 				startActivity(i);
 				
 				break;

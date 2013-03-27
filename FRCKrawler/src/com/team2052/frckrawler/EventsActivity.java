@@ -77,10 +77,6 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 					Integer.valueOf(events[i].getEventID()));
 			data.setId(COMP_DATA_ID);
 			
-			MyButton driverData = new MyButton(this, "Driver Data", this, 
-					Integer.valueOf(events[i].getEventID()));
-			driverData.setId(DRIVER_DATA_ID);
-			
 			MyButton compiledData = new MyButton(this, "Compiled Data", this, 
 					Integer.valueOf(events[i].getEventID()));
 			compiledData.setId(COMPILED_DATA_ID);
@@ -95,7 +91,6 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 					attendingTeams,
 					robots,
 					data,
-					driverData,
 					compiledData
 			}, color));
 		}

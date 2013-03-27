@@ -1207,10 +1207,10 @@ public class DBManager {
 	public synchronized boolean addRobot(Robot robot) {
 		
 		return addRobot(robot.getTeamNumber(), robot.getGame(), 
-				robot.getComments(), robot.getMetricValues());
+				robot.getComments(), robot.getImagePath(), robot.getMetricValues());
 	}
 	
-	public synchronized boolean addRobot(int teamNumber, String gameName, String comments,
+	public synchronized boolean addRobot(int teamNumber, String gameName, String comments, String imagePath, 
 			MetricValue[] vals) {
 		
 		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, gameName))
@@ -1224,6 +1224,7 @@ public class DBManager {
 		values.put(DBContract.COL_ROBOT_ID, createID(DBContract.TABLE_ROBOTS, 
 				DBContract.COL_ROBOT_ID));
 		values.put(DBContract.COL_COMMENTS, comments);
+		values.put(DBContract.COL_IMAGE_PATH, imagePath);
 		
 		for(MetricValue v : vals) {
 			
@@ -1374,6 +1375,7 @@ public class DBManager {
 					c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)),
 					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
 					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
+					c.getString(c.getColumnIndex(DBContract.COL_IMAGE_PATH)),
 					metricVals.toArray(new MetricValue[0])
 					);
 		}
@@ -1960,6 +1962,8 @@ public class DBManager {
 				allUpdated = false;
 		}
 		
+		printQuery("SELECT * FROM " + DBContract.TABLE_ROBOTS, null);
+		
 		return allUpdated;
 	}
 	
@@ -2105,18 +2109,17 @@ public class DBManager {
 				" WHERE " + DBContract.COL_EVENT_ID + " LIKE ?", 
 				new String[] {Integer.toString(eventID)});
 		
-		Robot[] robotArray = new Robot[c.getCount()];
+		String[] colsArr = new String[c.getCount()];
+		String[] valArr = new String[c.getCount()];
 		
 		for(int i = 0; i < c.getCount(); i++) {
-			
 			c.moveToNext();
 			
-			robotArray[i] = getRobotsByColumns(new String[] {DBContract.COL_ROBOT_ID}, 
-					new String[] {c.getString(c.getColumnIndex
-							(DBContract.COL_ROBOT_ID))})[0];
+			valArr[i] = c.getString(c.getColumnIndex(DBContract.COL_ROBOT_ID));
+			colsArr[i] = DBContract.COL_ROBOT_ID;
 		}
 		
-		return robotArray;
+		return getRobotsByColumns(colsArr, valArr, true);
 	}
 	
 	
@@ -2464,8 +2467,12 @@ public class DBManager {
 									matchesPlayed[matchCount] = matchData[matchCount].
 										getMatchNumber();
 								
-								String stringValue = matchData[matchCount].
+								String stringValue = null;
+								
+								try {
+									stringValue = matchData[matchCount].
 										getMetricValues()[metricCount].getValue()[0];
+								} catch(ArrayIndexOutOfBoundsException e) {}
 								
 								if(stringValue != null && 
 										!stringValue.equals("") && 
@@ -2529,8 +2536,10 @@ public class DBManager {
 										valueIsNull = false;
 										
 										int value = Integer.parseInt(valueArray[0]);
-										double matchPlayed = matchCount + 1;
-										double weight = Math.pow(GlobalSettings.weightingRatio, matchPlayed);
+										double matchPlayed = matchCount;
+										double weight = Math.pow
+												(GlobalSettings.weightingRatio, 
+														matchPlayed);
 									
 										numerator += value * weight;
 										denominator += weight;
@@ -2621,8 +2630,10 @@ public class DBManager {
 									valueIsNull = false;
 									
 									int value = Integer.parseInt(valueArray[0]);
-									double matchPlayed = matchCount + 1;
-									double weight = Math.pow(GlobalSettings.weightingRatio, matchPlayed);
+									double matchPlayed = matchCount;
+									double weight = Math.pow
+											(GlobalSettings.weightingRatio, 
+													matchPlayed);
 								
 									numerator += value * weight;
 									denominator += weight;
@@ -2636,14 +2647,99 @@ public class DBManager {
 									denominator = 1;
 								
 								double weightedAverage = numerator / denominator;
-								compiledValue = new String[] {Double.toString(weightedAverage)};
+								compiledValue = new String[] {Double.toString
+										(weightedAverage)};
 							}
 							
 							break;
 						
 						case DBContract.MATH:
+							
+							double mathNumerator = 0;
+							double mathDenominator = 0;
+							boolean mathValueIsNull = true;
+							Metric mathMetric = metrics[metricCount];
+							
+							for(int matchCount = 0; matchCount < matchData.length; 
+									matchCount++) {
+								
+								double matchVal = 0;
+								
+								for(int mathMetricCount = 0; mathMetricCount < 
+										mathMetric.getRange().length; mathMetricCount++) {
+									MetricValue val = null;
+									MetricValue[] mArr = matchData[matchCount].
+											getMetricValues();
+									for(MetricValue m : mArr)
+										if(m.getMetric().getID() == Integer.parseInt
+											((String)mathMetric.getRange()
+													[mathMetricCount])) {
+											val = m;
+											break;
+										}
+									
+									double thisVal = 0;
+									
+									try {
+										if(val != null) {
+											thisVal = Double.parseDouble
+											(val.getValue()[0]);
+											mathValueIsNull = false;
+										}
+									} catch(NumberFormatException e) {}
+									catch(ArrayIndexOutOfBoundsException e) {
+										e.printStackTrace();
+									}
+									
+									matchVal += thisVal;
+								}
+								
+								double matchPlayed = matchCount;
+								double weight = Math.pow
+										(GlobalSettings.weightingRatio, 
+												matchPlayed);
+							
+								mathNumerator += matchVal * weight;
+								mathDenominator += weight;
+							}
+							
+							if(mathValueIsNull) {
+								//compiledValue = new String[] {"-1"};
+							} else {
+								if(mathDenominator == 0)
+									mathDenominator = 1;
+								
+								double weightedAverage = mathNumerator / mathDenominator;
+								compiledValue = new String[] {Double.toString
+										(weightedAverage)};
+							}
 						
 							break;
+							
+						case DBContract.TEXT:
+							
+							compiledValue = new String[matchData.length];
+							
+							for(int matchCount = 0; matchCount < matchData.length; 
+									matchCount++) {
+								
+								//Comments
+								if(!isCommentsFilled)
+									comments[matchCount] = matchData[matchCount].
+										getComments();
+								
+								//Matches played
+								if(!isMatchesPlayedFilled)
+									matchesPlayed[matchCount] = matchData[matchCount].
+										getMatchNumber();
+								
+								String stringValue = matchData[matchCount].
+										getMetricValues()[metricCount].
+										getValueAsHumanReadableString();
+								
+								if(stringValue != null)
+									compiledValue[matchCount] = stringValue;
+							}
 					}
 				}
 				
@@ -2692,6 +2788,7 @@ public class DBManager {
 							if(robot.getRobot().getMetricValues()[i].getMetric().
 									getID() == query.getMetricID()) {
 								metricValue = robot.getRobot().getMetricValues()[i];
+								
 								break;
 							}
 						}
@@ -2747,13 +2844,13 @@ public class DBManager {
 							
 								} catch(NumberFormatException e) {
 									passed = false;
-									System.out.println("format exception");
+									System.out.println("Format Exception");
 								}
 								
 						} else {
 							
 							if(!metricValue.getValueAsHumanReadableString().
-									equals(query.getMetricValue()))
+									equalsIgnoreCase(query.getMetricValue()))
 								passed = false;
 						}
 							
@@ -3107,7 +3204,7 @@ public class DBManager {
 			
 			u[i] = new User(
 					c.getString(c.getColumnIndex(DBContract.COL_USER_NAME)),
-					c.getInt(c.getColumnIndex(DBContract.COL_SUPERUSER)),
+					false,
 					c.getInt(c.getColumnIndex(DBContract.COL_USER_ID))
 					);
 		}
@@ -3133,11 +3230,10 @@ public class DBManager {
 		for(int i = 0; i < users.length; i++) {
 			
 			ContentValues values = new ContentValues();
-			values.put(DBContract.COL_USER_ID, createID(DBContract.TABLE_USERS, 
-					DBContract.COL_USER_ID));
+			values.put(DBContract.COL_USER_ID, users[i].getID());
 			values.put(DBContract.COL_USER_NAME, users[i].getName());
-		
-			db.insert(DBContract.TABLE_USERS, null, values);
+			
+			db.insert(DBContract.SCOUT_TABLE_USERS, null, values);
 		}
 		
 		helper.close();
@@ -3225,6 +3321,7 @@ public class DBManager {
 					c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)),
 					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
 					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
+					c.getString(c.getColumnIndex(DBContract.COL_IMAGE_PATH)),
 					metricVals.toArray(new MetricValue[0])
 					);
 		}
@@ -3295,6 +3392,7 @@ public class DBManager {
 					c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)),
 					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
 					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
+					c.getString(c.getColumnIndex(DBContract.COL_IMAGE_PATH)),
 					metricVals.toArray(new MetricValue[0])
 					);
 		}
@@ -3324,6 +3422,7 @@ public class DBManager {
 			values.put(DBContract.COL_GAME_NAME, robots[i].getGame());
 			values.put(DBContract.COL_ROBOT_ID, robots[i].getID());
 			values.put(DBContract.COL_COMMENTS, robots[i].getComments());
+			values.put(DBContract.COL_IMAGE_PATH, robots[i].getImagePath());
 			values.put(DBContract.COL_WAS_UPDATED, "0");
 			values.put(DBContract.COL_TEAM_NAME, teamNames[i]);
 			

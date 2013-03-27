@@ -76,7 +76,7 @@
                     android:layout_below="@+id/robot"
                     android:ems="10"
                     android:hint="Match Number"
-                    android:inputType="number|numberPassword" />
+                    android:inputType="number" />
 
                 <TextView
                     android:id="@+id/textView3"

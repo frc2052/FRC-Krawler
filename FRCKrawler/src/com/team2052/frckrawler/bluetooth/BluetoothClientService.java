@@ -94,7 +94,7 @@ public class BluetoothClientService extends Service
 	
 	public void onUpdate(String message) {
 		
-		if(binder.getListener() != null)
+		if(binder != null && binder.getListener() != null)
 			binder.getListener().onUpdate(message);
 	}
 	
@@ -156,17 +156,19 @@ public class BluetoothClientService extends Service
 				//Open the socket
 				BluetoothSocket serverSocket = serverDevice.
 						createRfcommSocketToServiceRecord
-							(UUID.fromString(BluetoothInfo.UUID));
+							(UUID.fromString(BluetoothInfo.ClientServerUUID));
 				serverSocket.connect();
 				
-				threadListener.onUpdate("Connected");
+				if(threadListener != null)
+					threadListener.onUpdate("Connected");
 				
 				//Open the streams
 				InputStream inStream = serverSocket.getInputStream();
 				OutputStream outStream = serverSocket.getOutputStream();
 				ObjectOutputStream ooStream = new ObjectOutputStream(outStream);
 				
-				threadListener.onUpdate("Exchanging data");
+				if(threadListener != null)
+					threadListener.onUpdate("Exchanging data");
 				
 				//Get the data to send
 				Event event = dbManager.scoutGetEvent();

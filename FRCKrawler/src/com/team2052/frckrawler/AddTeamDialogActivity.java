@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -20,6 +21,8 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		getWindow().setSoftInputMode
+			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.dialogactivity_add_team);
 		
 		((Button)findViewById(R.id.addTeamAccept)).setOnClickListener(this);
@@ -72,7 +75,7 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 			boolean added = true;
 			
 			try{
-				dbManager.addTeams(team);
+				added = dbManager.addTeams(team);
 			} catch(NumberFormatException e) {}
 			
 			return added;

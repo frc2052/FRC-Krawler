@@ -2,15 +2,16 @@ package com.team2052.frckrawler;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.MatchData;
@@ -30,10 +31,14 @@ public class AddMatchDataDialogActivity extends Activity implements OnClickListe
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		getWindow().setSoftInputMode
+			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.dialogactivity_add_match_data);
 		
 		findViewById(R.id.addData).setOnClickListener(this);
 		findViewById(R.id.cancel).setOnClickListener(this);
+		((EditText)findViewById(R.id.matchNumber)).
+				setInputType(InputType.TYPE_CLASS_NUMBER);
 		
 		db = DBManager.getInstance(this);
 	}

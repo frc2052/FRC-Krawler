@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
@@ -29,6 +30,8 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		getWindow().setSoftInputMode
+			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.dialogactivity_edit_team);
 		
 		((Button)findViewById(R.id.saveButton)).setOnClickListener(this);

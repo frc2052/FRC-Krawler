@@ -1,18 +1,17 @@
 package com.team2052.frckrawler.gui;
 
 import android.content.Context;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.widget.FrameLayout;
 
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBContract;
-import com.team2052.frckrawler.database.structures.*;
+import com.team2052.frckrawler.database.structures.Metric;
+import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatchException;
 
 public abstract class MetricWidget extends FrameLayout {
 	
 	protected LayoutInflater inflater;
-	
 	private Metric metric;
 	
 	protected MetricWidget(Context context, Metric m, String[] val) {
@@ -59,6 +58,8 @@ public abstract class MetricWidget extends FrameLayout {
 				return new SliderMetricWidget(c, m);
 				
 			case DBContract.MATH:
+				
+				return new MathMetricWidget(c, m);
 				
 			default:
 				

@@ -18,7 +18,7 @@ public class GlobalSettings {
 	 * A VALUE OF ONE means that there is no weight at all,
 	 * all matches are treated equally.
 	 **/
-	public static double weightingRatio = 1;
+	public static double weightingRatio = 1.2;
 	
 	/**
 	 * The default color for the rows of tables.
@@ -26,10 +26,10 @@ public class GlobalSettings {
 	public static int ROW_COLOR = Color.rgb(36, 37, 85);
 	
 	/**
-	 * The username of a a logged in user. Initialliezed to null until
+	 * The user id of a a logged in user. Initialized to 0 until
 	 * somebody logs in.
 	 */
-	public static String username = null;
+	public static int userID = 0;
 	
 	/**
 	 * The MAC address of database device that was chosen to sync to

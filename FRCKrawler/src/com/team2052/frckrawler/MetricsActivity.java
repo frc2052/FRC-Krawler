@@ -117,14 +117,25 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 				descriptionString = metrics[i].getDescription();
 			}
 			
-			String rangeString;
+			String rangeString = new String();
+			String typeString = new String();
 			Object[] rangeArr = metrics[i].getRange();
 			
 			switch(metrics[i].getType()) {
+				case DBContract.BOOLEAN:
+					typeString = "Boolean";
+					break;
+				
+				case DBContract.TEXT:
+					typeString = "Text";
+					break;
+				
 				case DBContract.COUNTER:
-					
 					rangeString = "Min:" + rangeArr[0] + " Max:" + rangeArr[1] + 
 						" Inc:" + rangeArr[2];
+					
+					typeString = "Counter";
+					
 					break;
 					
 				case DBContract.CHOOSER:
@@ -135,11 +146,14 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 						rangeString += o + ", ";
 					}
 					
+					typeString = "Chooser";
+					
 					break;
 					
 				case DBContract.SLIDER:
 					
 					rangeString = "Min:" + rangeArr[0] + " Max:" + rangeArr[1];
+					typeString = "Slider";
 					
 					break;
 					
@@ -150,6 +164,8 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 					for(Object o : rangeArr) {
 						rangeString += o + ", ";
 					}
+					
+					typeString = "Math";
 					
 					break;
 					
@@ -162,6 +178,7 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 					editButton,
 					new MyTextView(this, metrics[i].getMetricName(), 18),
 					new MyTextView(this, descriptionString, 18),
+					new MyTextView(this, typeString, 18),
 					new MyTextView(this, rangeString, 18),
 					new MyTextView(this, Boolean.toString(metrics[i].isDisplayed()), 18),
 			}, color));
@@ -180,6 +197,8 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 				i.putExtra(AddMetricDialogActivity.GAME_NAME_EXTRA, 
 						databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
 				startActivity(i);
+				//i = new Intent(this, ListTester.class);
+				//startActivity(i);
 				
 				break;
 				

@@ -6,6 +6,9 @@
     
     <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
+     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -84,6 +87,7 @@
         </activity>
         <activity android:name="ScoutTypeActivity"></activity>
         <activity android:name="ScoutActivity"></activity>
+        <activity android:name="ListTester"></activity>
     </application>
 
 </manifest>

@@ -22,11 +22,13 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
 		
 		ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getContext(), 
 				android.R.layout.simple_spinner_item);
+		
 		for(Object s : m.getMetric().getRange()) 
 			adapter.add(s);
-		((Spinner)findViewById(R.id.choooserList)).setAdapter(adapter);
 		
+		((Spinner)findViewById(R.id.choooserList)).setAdapter(adapter);
 		((Spinner)findViewById(R.id.choooserList)).setOnItemSelectedListener(this);
+		((TextView)findViewById(R.id.name)).setText(m.getMetric().getMetricName());
 	}
 
 	public String[] getValues() {

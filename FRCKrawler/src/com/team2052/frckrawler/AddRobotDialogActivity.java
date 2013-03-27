@@ -3,6 +3,7 @@ package com.team2052.frckrawler;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -24,6 +25,8 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		getWindow().setSoftInputMode
+			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.dialogactivity_add_robot);
 		
 		findViewById(R.id.cancel).setOnClickListener(this);

@@ -41,9 +41,9 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 		dbManager = DBManager.getInstance(this);
 	}
 	
-	public void onResume() {
+	public void onStart() {
 		
-		super.onResume();
+		super.onStart();
 		new GetRobotsTask().execute();
 	}
 	
@@ -106,10 +106,13 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			//Stops a index out of bounds exception from being thrown if there's a short comment
 			String comment;
 			
-			if(robots[i].getComments().length() >= COMMENT_CHAR_LIMIT)
+			if(robots[i].getComments() != null && 
+					robots[i].getComments().length() >= COMMENT_CHAR_LIMIT)
 				comment = robots[i].getComments().substring(0, COMMENT_CHAR_LIMIT - 1);
-			else
+			else if(robots[i].getComments() != null)
 				comment = robots[i].getComments();
+			else
+				comment = new String();
 				
 			rowArrayList.add(new MyTextView(this, comment, 18));
 			
@@ -136,7 +139,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 				i.putExtra(AddRobotDialogActivity.TEAM_NUMBER_EXTRA, 
 						databaseValues[this.getAddressOfDatabaseKey
 						               (DBContract.COL_TEAM_NUMBER)]);
-				startActivity(i);
+				startActivityForResult(i, 1);
 			
 				break;
 				
@@ -144,7 +147,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 				
 				i = new Intent(this, EditRobotDialogActivity.class);
 				i.putExtra(EditRobotDialogActivity.ROBOT_ID_EXTRA, v.getTag().toString());
-				startActivity(i);
+				startActivityForResult(i, 1);
 				
 				break;
 				
@@ -188,6 +191,10 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 				
 				break;
 		}
+	}
+	
+	public void onActivityResult(int r, int c, Intent i) {
+		new GetRobotsTask().execute();
 	}
 	
 	private class GetRobotsTask extends AsyncTask<Void, Void, Robot[]> {

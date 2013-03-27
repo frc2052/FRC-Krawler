@@ -44,13 +44,8 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		dbManager = DBManager.getInstance(this);
 	}
 	
-	public void onResume() {
-		
-		super.onResume();
-		
-		((FrameLayout)findViewById(R.id.progressFrame)).
-		addView(new ProgressSpinner(getApplicationContext()));
-		
+	public void onStart() {
+		super.onStart();
 		new GetTeamsTask().execute(this);
 	}
 	
@@ -71,7 +66,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			case R.id.addTeam:
 			
 				i = new Intent(this, AddTeamDialogActivity.class);
-				startActivity(i);
+				startActivityForResult(i, 1);
 			
 				break;
 			
@@ -80,7 +75,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				i =  new Intent(this, EditTeamDialogActivity.class);
 				i.putExtra(EditTeamDialogActivity.TEAM_NUMBER_EXTRA_KEY, 
 						((Integer)v.getTag()).intValue());
-				startActivity(i);
+				startActivityForResult(i, 1);
 			
 				break;
 				
@@ -125,7 +120,16 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		}
 	}
 	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		new GetTeamsTask().execute(this);
+	}
+	
 	private class GetTeamsTask extends AsyncTask<TeamsActivity, Void, TableLayout> {
+		
+		protected void onPreExecute() {
+			((FrameLayout)findViewById(R.id.progressFrame)).
+			addView(new ProgressSpinner(getApplicationContext()));
+		}
 		
 		protected TableLayout doInBackground(TeamsActivity... activities) {
 			

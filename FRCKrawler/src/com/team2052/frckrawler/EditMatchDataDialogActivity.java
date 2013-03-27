@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -34,11 +36,15 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		getWindow().setSoftInputMode
+			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.dialogactivity_edit_match_data);
 		
 		findViewById(R.id.save).setOnClickListener(this);
 		findViewById(R.id.cancel).setOnClickListener(this);
 		findViewById(R.id.remove).setOnClickListener(this);
+		((EditText)findViewById(R.id.matchNumber)).
+				setInputType(InputType.TYPE_CLASS_NUMBER);
 		
 		db = DBManager.getInstance(this);
 	}
@@ -88,7 +94,8 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 		metricWidgetList.removeAllViews();
 				
 		for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
-			metricWidgetList.addView(MetricWidget.createWidget(this, metrics[metricCount]));
+			metricWidgetList.addView(MetricWidget.createWidget(this, 
+					metrics[metricCount]));
 		}
 		
 		//Set the comments

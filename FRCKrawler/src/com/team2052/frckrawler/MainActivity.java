@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,6 +16,8 @@ import android.widget.Toast;
 import com.team2052.frckrawler.bluetooth.BluetoothClientService;
 import com.team2052.frckrawler.bluetooth.ClientServiceConnection;
 import com.team2052.frckrawler.bluetooth.ClientThreadListener;
+import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.structures.User;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 
 public class MainActivity extends Activity implements DialogInterface.OnClickListener, 
@@ -26,13 +26,13 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 	Context context = this;
 	
 	private static final String SUPERUSER_NAME = "admin";
-	private static final String SUPERUSER_PASS = "2052krawler";
 	private static final int REQUEST_BT_ENABLE = 1;
 	
 	private BluetoothDevice[] devices;
 	private int selectedDeviceAddress;
 	private AlertDialog progressDialog;
 	private ClientServiceConnection connection;
+	private EditText scoutLoginName;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,13 +100,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
     	username.setWidth(200);
     	username.setHint("Username");
     	layout.addView(username);
-    	
-    	final EditText password = new EditText(context);
-    	password.setWidth(200);
-    	password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-    	password.setHint("Password");
-    	layout.addView(password);
-    	
     	login.setView(layout);
     	
     	login.setPositiveButton("Login", new DialogInterface.OnClickListener() {
@@ -115,10 +108,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			public void onClick(DialogInterface dialog, int which) {
 				
 				String user2 = username.getText().toString();
-				String pass2 = password.getText().toString();
 				
-				if (user2.equalsIgnoreCase(SUPERUSER_NAME) && 
-						pass2.equalsIgnoreCase(SUPERUSER_PASS)) {
+				if (user2.equalsIgnoreCase(SUPERUSER_NAME)) {
 					Intent i = new Intent(getApplicationContext(), 
 							BluetoothServerManagerActivity.class);
 					startActivity(i);
@@ -177,12 +168,9 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 	public void onClick(DialogInterface dialog, int which) {
 		
 		if(which == DialogInterface.BUTTON_NEUTRAL) {
-			Log.d("FRCKrawler", "Sync canceled");
 			unbindService(connection);
 			
 		} else {
-			
-			Log.d("FRCKrawler", "Sync attempted.");
 			
 			selectedDeviceAddress = which;
 			BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -250,9 +238,17 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				progressDialog.dismiss();
 				Toast.makeText(getApplicationContext(), 
 						"Sync successful.", Toast.LENGTH_SHORT).show();
-				Intent i = new Intent(getApplicationContext(), 
-						ScoutTypeActivity.class);
-				startActivity(i);
+				
+				scoutLoginName = new EditText(MainActivity.this);
+		        scoutLoginName.setHint("Name");
+				
+				AlertDialog.Builder builder = new AlertDialog.Builder
+						(MainActivity.this);
+				builder.setTitle("Login");
+				builder.setView(scoutLoginName);
+				builder.setPositiveButton("Login", new UserDialogListener());
+				builder.setNegativeButton("Cancel", new UserDialogListener());
+				builder.show();
 			}
 		});
 	}
@@ -284,5 +280,51 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 						Toast.LENGTH_SHORT).show();
 			}
 		});
+	}
+	
+	private class UserDialogListener implements DialogInterface.OnClickListener {
+
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			if(which == DialogInterface.BUTTON_POSITIVE) {
+				User[] users = DBManager.getInstance(getApplicationContext()).
+						scoutGetAllUsers();
+				
+				boolean isValid = false;
+				
+				for(User u : users) {
+					if(u.getName().equals(scoutLoginName.getText().toString())) {
+						GlobalSettings.userID = u.getID();
+						isValid = true;
+					}
+				}
+				
+				if(isValid) {
+					Intent i = new Intent(getApplicationContext(), 
+							ScoutTypeActivity.class);
+					startActivity(i);
+					
+				} else {
+					Toast.makeText(getApplicationContext(), "Not a valid username. " +
+							"The username must already be in the database.", 
+							Toast.LENGTH_SHORT).show();
+					dialog.dismiss();
+					
+					 scoutLoginName = new EditText(MainActivity.this);
+				     scoutLoginName.setHint("Name");
+					
+					AlertDialog.Builder builder = new AlertDialog.Builder
+							(MainActivity.this);
+					builder.setTitle("Login");
+					builder.setView(scoutLoginName);
+					builder.setPositiveButton("Login", new UserDialogListener());
+					builder.setNegativeButton("Cancel", new UserDialogListener());
+					builder.show();
+				}
+				
+			} else {
+				dialog.dismiss();
+			}
+		}
 	}
 }

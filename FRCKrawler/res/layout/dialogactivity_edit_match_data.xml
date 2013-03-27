@@ -88,7 +88,7 @@
                         android:layout_alignLeft="@+id/robot"
                         android:layout_below="@+id/robot"
                         android:ems="10"
-                        android:inputType="number|numberPassword" >
+                        android:inputType="number" >
 
                         <requestFocus />
                     </EditText>

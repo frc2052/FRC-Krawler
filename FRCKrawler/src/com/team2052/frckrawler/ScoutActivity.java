@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -22,6 +23,7 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.MetricValue;
+import com.team2052.frckrawler.database.structures.User;
 import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatchException;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.gui.MetricWidget;
@@ -40,11 +42,14 @@ public class ScoutActivity extends Activity implements OnClickListener,
 	private DBManager dbManager;
 	private volatile String[] teamNames;
 	private volatile Robot[] robots;
+	private volatile User user;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		getWindow().setSoftInputMode
+			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.activity_scouting);
 		
 		findViewById(R.id.save).setOnClickListener(this);
@@ -70,6 +75,10 @@ public class ScoutActivity extends Activity implements OnClickListener,
 		}
 		
 		dbManager = DBManager.getInstance(this);
+		User[] allUsers = dbManager.scoutGetAllUsers();
+		for(User u : allUsers)
+			if(GlobalSettings.userID == u.getID())
+				user = u;
 		
 		new GetRobotListTask().execute();
 	}
@@ -92,7 +101,8 @@ public class ScoutActivity extends Activity implements OnClickListener,
 		((TextView)findViewById(R.id.teamName)).setText(teamNames[index]);
 		
 		if(getIntent().getIntExtra(SCOUT_TYPE_EXTRA, -1) == SCOUT_TYPE_PIT) {
-			if(robots[index].getComments().replace(" ", "").equals("")) {
+			if(robots[index].getComments() == null || 
+					robots[index].getComments().replace(" ", "").equals("")) {
 				((EditText)findViewById(R.id.comments)).
 					setText("");
 				
@@ -164,7 +174,7 @@ public class ScoutActivity extends Activity implements OnClickListener,
 							dbManager.scoutGetEvent().getEventID(),
 							matchNumber,
 							robots[((Spinner)findViewById(R.id.teamNumber)).getSelectedItemPosition()].getID(),
-							-1,
+							user.getID(),
 							((Spinner)findViewById(R.id.gameType)).getSelectedItem().toString(),
 							((EditText)findViewById(R.id.comments)).getText().toString(),
 							metricVals
@@ -183,9 +193,14 @@ public class ScoutActivity extends Activity implements OnClickListener,
 							teamNumber,
 							robots[selectedRobot].getID(),
 							robots[selectedRobot].getGame(),
-							((TextView)findViewById(R.id.comments)).getText().toString(),
+							robots[selectedRobot].getImagePath(),
+							((EditText)findViewById(R.id.comments)).
+									getText().toString(),
 							metricVals
 							);
+					
+					System.out.println(((EditText)findViewById(R.id.comments)).
+									getText().toString());
 					
 					new SaveRobotDataTask().execute(robot);
 					

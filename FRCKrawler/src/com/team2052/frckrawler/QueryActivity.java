@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.TableLayout;
 
@@ -42,12 +43,8 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		dbManager = DBManager.getInstance(this);
 	}
 	
-	public void onResume() {
-		super.onResume();
-		
-		((FrameLayout)findViewById(R.id.progressFrame)).
-				addView(new ProgressSpinner(this));
-		
+	public void onStart() {
+		super.onStart();
 		new GetCompiledDataTask().execute(this);
 	}
 	
@@ -62,13 +59,12 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	}
 	
 	public void onClick(View v) {
-		
 		if(v.getId() == R.id.query) { 
 			
 			Intent i = new Intent(this, QuerySortingDialogActivity.class);
 			i.putExtra(QuerySortingDialogActivity.EVENT_ID_EXTRA, 
 					databaseValues[getAddressOfDatabaseKey(DBContract.COL_EVENT_ID)]);
-			startActivity(i);
+			startActivityForResult(i, 1);
 			
 		} else if(v.getId() == COMMENT_BUTTON_ID) {
 			
@@ -77,8 +73,13 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 					data[(Integer)v.getTag()].getMatchComments());
 			i.putExtra(CommentDialogActivity.MATCHES_ARRAY_EXTRA, 
 					data[(Integer)v.getTag()].getMatchesPlayed());
-			startActivity(i);
+			startActivityForResult(i, 1);
 		}
+	}
+	
+	@Override
+	protected void onActivityResult(int r, int c, Intent i) {
+		new GetCompiledDataTask().execute(this);
 	}
 	
 	public static void setQuery(int eventID, Query[] match, Query[] pit, 
@@ -102,6 +103,11 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	
 	private class GetCompiledDataTask extends AsyncTask
 										<QueryActivity, Void, MyTableRow[]> {
+											
+		protected void onPreExecute() {
+			((FrameLayout)findViewById(R.id.progressFrame)).
+			addView(new ProgressSpinner(getApplicationContext()));
+		}
 
 		protected MyTableRow[] doInBackground(QueryActivity... params) {
 			
@@ -147,7 +153,8 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			MyTableRow[] rows = new MyTableRow[data.length + 1];
 			MyTableRow descriptorsRow = new MyTableRow(activity);
 			
-			descriptorsRow.addView(new MyTextView(activity, "Team #", 18));
+			descriptorsRow.addView(new MyTextView(activity, " ", 18));
+			descriptorsRow.addView(new MyTextView(activity, "Team", 18));
 			descriptorsRow.addView(new MyTextView(activity, "M. Played", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Comments", 18));
 			
@@ -195,6 +202,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 					color = Color.TRANSPARENT;
 				
 				MyTableRow dataRow = new MyTableRow(activity, color);
+				dataRow.addView(new CheckBox(activity));
 				
 				MyButton commentsButton = new MyButton
 						(activity, "Comments", activity);
@@ -214,16 +222,19 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				MetricValue[] driverData = data[dataCount].getCompiledDriverData();
 				
 				for(int i = 0; i < matchData.length; i++)
-					dataRow.addView(new MyTextView(activity, 
-							matchData[i].getValueAsHumanReadableString(), 18));
+					if(matchData[i].getMetric().isDisplayed())
+						dataRow.addView(new MyTextView(activity, 
+								matchData[i].getValueAsHumanReadableString(), 18));
 				
 				for(int i = 0; i < robotData.length; i++)
-					dataRow.addView(new MyTextView(activity, 
-							robotData[i].getValueAsHumanReadableString(), 18));
+					if(robotData[i].getMetric().isDisplayed())
+						dataRow.addView(new MyTextView(activity, 
+								robotData[i].getValueAsHumanReadableString(), 18));
 				
 				for(int i = 0; i < driverData.length; i++)
-					dataRow.addView(new MyTextView(activity, 
-							driverData[i].getValueAsHumanReadableString(), 18));
+					if(driverData[i].getMetric().isDisplayed())
+						dataRow.addView(new MyTextView(activity, 
+								driverData[i].getValueAsHumanReadableString(), 18));
 				
 				rows[dataCount + 1] = dataRow;
 			}

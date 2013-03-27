@@ -77,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Bluetooth Server Settings"
+        android:text="Bluetooth"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="24sp" />
 
@@ -99,9 +99,43 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/chooseEvent"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="73dp"
+        android:layout_marginTop="63dp"
         android:text="Bluetooth Server"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hostToggle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="63dp"
+        android:text="Database Exchanging"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="24sp" />
+
+    <LinearLayout
+        android:id="@+id/lin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView4"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/importDB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Import Database"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/exportDB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Export Database"
+            android:textSize="18sp" />
+    </LinearLayout>
 
 </RelativeLayout>

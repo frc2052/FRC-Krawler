@@ -148,7 +148,7 @@ public class BluetoothServerService extends Service {
 					BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 					
 					serverSocket = adapter.listenUsingRfcommWithServiceRecord
-							(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
+							(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.ClientServerUUID));
 					clientSocket = serverSocket.accept();
 					serverSocket.close();
 					

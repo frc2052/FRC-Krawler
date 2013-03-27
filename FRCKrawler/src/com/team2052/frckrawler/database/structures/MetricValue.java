@@ -64,10 +64,10 @@ public class MetricValue implements Structure {
 				DecimalFormat format = new DecimalFormat("0.000");
 				
 				if(i != value.length - 1)
-					returnString += format.format
-							(Double.parseDouble(value[i])) + ", ";
+					returnString += format.format(Double.parseDouble(value[i])) + ", ";
 				else
 					returnString += format.format(Double.parseDouble(value[i]));
+				
 			} else {
 				
 				if(i != value.length - 1)

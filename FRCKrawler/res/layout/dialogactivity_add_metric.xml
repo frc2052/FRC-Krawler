@@ -189,14 +189,14 @@
                     android:layout_toRightOf="@+id/textView9"
                     android:ems="10" />
 
-                <RelativeLayout
+                <FrameLayout
                     android:id="@+id/listEditorSlot"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/inc"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/inc" >
-                </RelativeLayout>
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/textView4"

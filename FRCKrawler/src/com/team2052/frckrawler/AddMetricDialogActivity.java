@@ -1,16 +1,25 @@
 package com.team2052.frckrawler;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
-import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.*;
+import com.team2052.frckrawler.database.DBContract;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Metric;
-import com.team2052.frckrawler.gui.*;
+import com.team2052.frckrawler.gui.ListEditor;
+import com.team2052.frckrawler.gui.MathMetricListEditor;
+import com.team2052.frckrawler.gui.TextListEditor;
 
 public class AddMetricDialogActivity extends Activity 
 					implements OnClickListener, OnItemSelectedListener {
@@ -29,7 +38,7 @@ public class AddMetricDialogActivity extends Activity
 		setContentView(R.layout.dialogactivity_add_metric);
 		
 		list = new TextListEditor(this);
-		((RelativeLayout)findViewById(R.id.listEditorSlot)).addView(list);
+		((FrameLayout)findViewById(R.id.listEditorSlot)).addView(list);
 		
 		findViewById(R.id.add).setOnClickListener(this);
 		findViewById(R.id.cancel).setOnClickListener(this);
@@ -190,12 +199,14 @@ public class AddMetricDialogActivity extends Activity
 			findViewById(R.id.min).setEnabled(true);
 			findViewById(R.id.max).setEnabled(true);
 			findViewById(R.id.inc).setEnabled(true);
+			((FrameLayout)findViewById(R.id.listEditorSlot)).removeAllViews();
 			
 		} else if(selectedMetricType == DBContract.SLIDER) {
 			
 			findViewById(R.id.min).setEnabled(true);
 			findViewById(R.id.max).setEnabled(true);
 			findViewById(R.id.inc).setEnabled(false);
+			((FrameLayout)findViewById(R.id.listEditorSlot)).removeAllViews();
 			
 		} else if(selectedMetricType == DBContract.MATH) {
 			
@@ -204,16 +215,27 @@ public class AddMetricDialogActivity extends Activity
 			
 			switch(metricCategory) {
 				case MetricsActivity.MATCH_PERF_METRICS:
-					choices = db.getMatchPerformanceMetricsByColumns
+					Metric[] matchMetrics = db.getMatchPerformanceMetricsByColumns
 						(new String[] {DBContract.COL_GAME_NAME}, 
-								new String[] {getIntent().getStringExtra(GAME_NAME_EXTRA)});
+								new String[] {getIntent().getStringExtra
+								(GAME_NAME_EXTRA)});
+					ArrayList<Metric> acceptedMetrics = new ArrayList<Metric>();
+					
+					for(Metric met : matchMetrics) {
+						if(met.getType() == DBContract.COUNTER || 
+								met.getType() == DBContract.SLIDER)
+							acceptedMetrics.add(met);
+					}
+					
+					choices = acceptedMetrics.toArray(new Metric[0]);
+					
 					break;
 				
 				case MetricsActivity.ROBOT_METRICS:
-					choices = db.getRobotMetricsByColumns
+					/*choices = db.getRobotMetricsByColumns
 					(new String[] {DBContract.COL_GAME_NAME}, 
 							new String[] {getIntent().getStringExtra(GAME_NAME_EXTRA)});
-					break;
+					break;*/
 				
 				case MetricsActivity.DRIVER_METRICS:
 					/*choices = db.getDriverMetricsByColumns
@@ -222,7 +244,6 @@ public class AddMetricDialogActivity extends Activity
 					break;*/
 					
 				default:
-					
 					choices = new Metric[0];
 			}
 			
@@ -230,6 +251,8 @@ public class AddMetricDialogActivity extends Activity
 			findViewById(R.id.max).setEnabled(false);
 			findViewById(R.id.inc).setEnabled(false);
 			list = new MathMetricListEditor(this, new String[0], choices);
+			((FrameLayout)findViewById(R.id.listEditorSlot)).removeAllViews();
+			((FrameLayout)findViewById(R.id.listEditorSlot)).addView(list);
 			
 		} else if(selectedMetricType == DBContract.CHOOSER) {
 			
@@ -237,12 +260,15 @@ public class AddMetricDialogActivity extends Activity
 			findViewById(R.id.max).setEnabled(false);
 			findViewById(R.id.inc).setEnabled(false);
 			list = new TextListEditor(this);
+			((FrameLayout)findViewById(R.id.listEditorSlot)).removeAllViews();
+			((FrameLayout)findViewById(R.id.listEditorSlot)).addView(list);
 			
 		} else {
 			
 			findViewById(R.id.min).setEnabled(false);
 			findViewById(R.id.max).setEnabled(false);
 			findViewById(R.id.inc).setEnabled(false);
+			((FrameLayout)findViewById(R.id.listEditorSlot)).removeAllViews();
 		}
 	}
 }

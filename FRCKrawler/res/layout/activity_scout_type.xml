@@ -28,13 +28,6 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/driverScout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Driver Scouting"
-            android:textSize="20sp" />
-
-        <Button
             android:id="@+id/sync"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,27 +57,6 @@
             android:text=" "
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="24sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" >
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Last sync was on "
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/lastSync"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" "
-            android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
     <TextView

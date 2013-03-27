@@ -52,7 +52,7 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 			QueryActivity.setQuery(Integer.parseInt(getIntent().getStringExtra
 					(EVENT_ID_EXTRA)), matchQueryWidget.getQuerys(), 
 					pitQueryWidget.getQuerys(), driverQueryWidget.getQuerys());
-			
+			setResult(1);
 			finish();
 		}
 	}

@@ -40,12 +40,8 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		dbManager = DBManager.getInstance(this);
 	}
 	
-	public void onResume() {
-		super.onResume();
-		
-		((FrameLayout)findViewById(R.id.progressFrame)).
-		addView(new ProgressSpinner(getApplicationContext()));
-		
+	public void onStart() {
+		super.onStart();
 		new GetMatchDataTask().execute(this);
 	}
 	
@@ -71,7 +67,7 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 				i = new Intent(this, AddMatchDataDialogActivity.class);
 				i.putExtra(AddMatchDataDialogActivity.EVENT_ID_EXTRA, e.getEventID());
 				i.putExtra(AddMatchDataDialogActivity.GAME_NAME_EXTRA, e.getGameName());
-				startActivity(i);
+				startActivityForResult(i, 1);
 				
 				break;
 				
@@ -81,7 +77,7 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 				i.putExtra(EditMatchDataDialogActivity.EVENT_ID_EXTRA, e.getEventID());
 				i.putExtra(EditMatchDataDialogActivity.GAME_NAME_EXTRA, e.getGameName());
 				i.putExtra(EditMatchDataDialogActivity.MATCH_ID_EXTRA, (Integer)v.getTag());
-				startActivity(i);
+				startActivityForResult(i, 1);
 				
 				System.out.println(v.getTag());
 				
@@ -89,8 +85,17 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		}
 	}
 	
+	public void onActivityResult(int r, int c, Intent i) {
+		new GetMatchDataTask().execute(this);
+	}
+	
 	private class GetMatchDataTask extends AsyncTask<RawMatchDataActivity, Void, TableLayout> {
-
+		
+		protected void onPreExecute() {
+			((FrameLayout)findViewById(R.id.progressFrame)).
+			addView(new ProgressSpinner(getApplicationContext()));
+		}
+		
 		protected TableLayout doInBackground(RawMatchDataActivity... params) {
 			
 			RawMatchDataActivity activity = params[0];
@@ -112,7 +117,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 			
 			if(matchData.length > 0) {
 				for(MetricValue v : matchData[0].getMetricValues()) {
-					
 					descriptorsRow.addView
 						(new MyTextView(activity, v.getMetric().getMetricName(), 18));
 				}
@@ -161,6 +165,7 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 					viewArr.add(new MyTextView(activity, userArr[0].getName(), 18));
 				else 
 					viewArr.add(new MyTextView(activity, " ", 18));
+				
 				viewArr.add(new MyTextView(activity, matchData[i].getMatchType(), 18));
 				
 				//Put a character limit on the comments string
