@@ -27,6 +27,7 @@ import com.team2052.frckrawler.gui.ProgressSpinner;
 public class QueryActivity extends StackableTabActivity implements OnClickListener {
 	
 	private static final int COMMENT_BUTTON_ID = 1;
+	private static final int PICTURE_BUTTON_ID = 2;
 	private static HashMap<Integer, Query[]> matchQuerys = new HashMap<Integer, Query[]>();
 	private static HashMap<Integer, Query[]> pitQuerys = new HashMap<Integer, Query[]>();
 	private static HashMap<Integer, Query[]> driverQuerys = new HashMap<Integer, Query[]>();
@@ -74,6 +75,16 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			i.putExtra(CommentDialogActivity.MATCHES_ARRAY_EXTRA, 
 					data[(Integer)v.getTag()].getMatchesPlayed());
 			startActivityForResult(i, 1);
+			
+		} else if(v.getId() == PICTURE_BUTTON_ID) {
+			
+			Intent i = new Intent(this, PicturesActivity.class);
+			i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, 
+					new String[] {DBContract.COL_ROBOT_ID});
+			i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, 
+					new String[] {Integer.toString(data[(Integer)v.getTag()].
+							getRobot().getID())});
+			startActivity(i);
 		}
 	}
 	
@@ -157,6 +168,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			descriptorsRow.addView(new MyTextView(activity, "Team", 18));
 			descriptorsRow.addView(new MyTextView(activity, "M. Played", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Comments", 18));
+			descriptorsRow.addView(new MyTextView(activity, "Pictures", 18));
 			
 			MetricValue[] matchMetrics;
 			Metric[] robotMetrics;
@@ -209,11 +221,17 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				commentsButton.setId(COMMENT_BUTTON_ID);
 				commentsButton.setTag(Integer.valueOf(dataCount));
 				
+				MyButton picturesButton = new MyButton
+						(activity, "Pictures", activity);
+				picturesButton.setId(PICTURE_BUTTON_ID);
+				picturesButton.setTag(Integer.valueOf(dataCount));
+				
 				dataRow.addView(new MyTextView(activity, Integer.toString(
 						data[dataCount].getRobot().getTeamNumber()), 18));
 				dataRow.addView(new MyTextView(activity, Integer.toString(
 						data[dataCount].getMatchesPlayed().length), 18));
 				dataRow.addView(commentsButton);
+				dataRow.addView(picturesButton);
 				
 				//Get the data arrays for the robot, matches, and driver data
 				MetricValue[] matchData = data[dataCount].getCompiledMatchData();

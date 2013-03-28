@@ -3466,8 +3466,8 @@ public class DBManager {
 		ArrayList<String> updateCols = new ArrayList<String>();
 		ArrayList<String> updateVals = new ArrayList<String>();
 		
-		updateVals.add(robot.getComments());
 		updateCols.add(DBContract.COL_COMMENTS);
+		updateVals.add(robot.getComments());
 		
 		MetricValue[] metricVals = robot.getMetricValues();
 		
@@ -3513,6 +3513,8 @@ public class DBManager {
 		helper.getWritableDatabase().update(DBContract.SCOUT_TABLE_ROBOTS, vals, 
 				queryString, queryVals);
 		helper.close();
+		
+		printQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_ROBOTS, null);
 		
 		return true;
 	}

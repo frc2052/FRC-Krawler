@@ -84,8 +84,8 @@ public class ScoutActivity extends Activity implements OnClickListener,
 	}
 	
 	public void resetUI() {
-		new GetMetricsTask().execute(getIntent().
-				getIntExtra(SCOUT_TYPE_EXTRA, -1));
+		new GetMetricsTask().execute(((Spinner)findViewById(R.id.teamNumber)).
+				getSelectedItemPosition());
 		
 		((EditText)findViewById(R.id.comments)).setText("");
 		((EditText)findViewById(R.id.matchNumber)).setText("");
