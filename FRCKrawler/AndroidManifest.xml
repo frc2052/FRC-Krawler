@@ -19,7 +19,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Black.NoTitleBar" android:allowClearUserData="false" android:testOnly="false" android:largeHeap="true">
-        <activity android:name="com.team2052.frckrawler.TeamsActivity"></activity>
+        <activity android:name="com.team2052.frckrawler.TeamsActivity"
+            	android:configChanges="keyboard|keyboardHidden"></activity>
         <activity android:name="com.team2052.frckrawler.UsersActivity"></activity>
         <activity android:name="com.team2052.frckrawler.GamesActivity"></activity>
         <activity android:name="com.team2052.frckrawler.EventsActivity"></activity>
@@ -35,7 +36,8 @@
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name="com.team2052.frckrawler.EditGameDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
-        <activity android:name="com.team2052.frckrawler.RobotsActivity"></activity>
+        <activity android:name="com.team2052.frckrawler.RobotsActivity"
+            	android:configChanges="keyboard|keyboardHidden"></activity>
         <activity android:name="com.team2052.frckrawler.MetricsActivity"></activity>
         <activity android:name="com.team2052.frckrawler.CommentsActivity"></activity>
         <activity android:name="com.team2052.frckrawler.ContactsActivity"></activity>
@@ -63,7 +65,8 @@
         <activity android:name="com.team2052.frckrawler.PicturesActivity"></activity>
         <activity android:name="com.team2052.frckrawler.EditMetricDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
-        <activity android:name="com.team2052.frckrawler.RawMatchDataActivity"></activity>
+        <activity android:name="com.team2052.frckrawler.RawMatchDataActivity"
+            	android:configChanges="keyboard|keyboardHidden"></activity>
         <activity android:name="com.team2052.frckrawler.BluetoothServerManagerActivity">
         </activity>
         <service android:name="com.team2052.frckrawler.bluetooth.BluetoothServerService"></service>
@@ -73,7 +76,8 @@
         <activity android:name="com.team2052.frckrawler.EditMatchDataDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <service android:name=".bluetooth.BluetoothClientService"></service>
-        <activity android:name="com.team2052.frckrawler.QueryActivity"></activity>
+        <activity android:name="com.team2052.frckrawler.QueryActivity"
+            	android:configChanges="keyboard|keyboardHidden"></activity>
         <activity android:name="DriverDataActivity"></activity>
         <activity android:name="QuerySortingDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
@@ -86,7 +90,8 @@
         	</intent-filter>
         </activity>
         <activity android:name="ScoutTypeActivity"></activity>
-        <activity android:name="ScoutActivity"></activity>
+        <activity android:name="ScoutActivity"
+            	android:configChanges="orientation|screenSize"></activity>
         <activity android:name="ListTester"></activity>
     </application>
 

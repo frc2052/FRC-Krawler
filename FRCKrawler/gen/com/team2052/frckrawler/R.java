@@ -56,7 +56,7 @@ public final class R {
         public static final int colors=0x7f08005c;
         public static final int colorsVal=0x7f08007e;
         public static final int commentList=0x7f080084;
-        public static final int comments=0x7f080053;
+        public static final int comments=0x7f080054;
         public static final int commentsButtonPlaceHolder=0x7f080041;
         public static final int commentsDataTable=0x7f080016;
         public static final int contactsDataTable=0x7f08001a;
@@ -96,7 +96,7 @@ public final class R {
         public static final int max=0x7f080074;
         public static final int menu_settings=0x7f080095;
         public static final int metricList=0x7f080079;
-        public static final int metricWidgetList=0x7f080054;
+        public static final int metricWidgetList=0x7f080053;
         public static final int metricsDataTable=0x7f08003b;
         public static final int min=0x7f080073;
         public static final int minus=0x7f080092;

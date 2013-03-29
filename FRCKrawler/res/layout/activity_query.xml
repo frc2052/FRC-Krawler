@@ -93,18 +93,16 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" >
 
-                    <HorizontalScrollView
-                        android:id="@+id/horizontalScroller"
+                    <ScrollView
+                        android:id="@+id/verticalScroller"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true" >
+                        android:layout_height="match_parent"
+                        android:scrollbars="horizontal|vertical" >
 
-                        <ScrollView
-                            android:id="@+id/verticalScroller"
+                        <HorizontalScrollView
+                            android:id="@+id/horizontalScroller"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:scrollbars="horizontal|vertical" >
+                            android:layout_height="wrap_content" >
 
                             <RelativeLayout
                                 android:id="@+id/teamDataTableParent"
@@ -144,12 +142,12 @@
                                             android:layout_height="wrap_content"
                                             android:text=" "
                                             android:textAppearance="?android:attr/textAppearanceMedium" />
-
                                     </TableRow>
                                 </TableLayout>
                             </RelativeLayout>
-                        </ScrollView>
-                    </HorizontalScrollView>
+                        </HorizontalScrollView>
+                    </ScrollView>
+
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
@@ -162,6 +160,7 @@
             android:layout_centerHorizontal="true"
             android:text="Query Compiled Data"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
     </RelativeLayout>
 
 </RelativeLayout>

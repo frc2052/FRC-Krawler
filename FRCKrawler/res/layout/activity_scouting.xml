@@ -78,7 +78,6 @@
                 android:layout_weight="0.32"
                 android:text="Save"
                 android:textSize="20sp" />
-
         </LinearLayout>
     </LinearLayout>
 
@@ -86,29 +85,31 @@
         android:id="@+id/ScrollView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/comments"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/linearLayout1" >
 
         <LinearLayout
-            android:id="@+id/metricWidgetList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-        </LinearLayout>
-    </ScrollView>
+            <LinearLayout
+                android:id="@+id/metricWidgetList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+            </LinearLayout>
 
-    <EditText
-        android:id="@+id/comments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:ems="10"
-        android:hint="Comments"
-        android:inputType="textMultiLine" />
+            <EditText
+                android:id="@+id/comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Comments"
+                android:inputType="textMultiLine" />
+        </LinearLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

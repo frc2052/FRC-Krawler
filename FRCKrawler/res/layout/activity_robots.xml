@@ -61,6 +61,7 @@
             android:layout_alignParentTop="true" >
 
             <LinearLayout
+                android:id="@+id/bottomLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -86,17 +87,18 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_above="@+id/bottomLayout"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/textView1" >
 
-                <HorizontalScrollView
-                    android:id="@+id/horizontalScrollView1"
+                <ScrollView
+                    android:id="@+id/scrollView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView2"
+                    <HorizontalScrollView
+                        android:id="@+id/horizontalScrollView1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" >
 
@@ -143,12 +145,12 @@
                                         android:layout_height="wrap_content"
                                         android:text="Comments"
                                         android:textAppearance="?android:attr/textAppearanceMedium" />
-
                                 </TableRow>
                             </TableLayout>
                         </RelativeLayout>
-                    </ScrollView>
-                </HorizontalScrollView>
+                    </HorizontalScrollView>
+                </ScrollView>
+
             </RelativeLayout>
         </RelativeLayout>
 
