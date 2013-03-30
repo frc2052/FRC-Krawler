@@ -21,7 +21,6 @@
                 android:id="@+id/progressFrame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
-
             </FrameLayout>
 
             <Button
@@ -47,7 +46,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Bluetooth" />
-
         </LinearLayout>
     </ScrollView>
 
@@ -105,7 +103,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent" >
 
-                            <TableLayout
+                            <com.team2052.frckrawler.gui.DrawingRequestTableLayout
                                 android:id="@+id/teamsDataTable"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -186,14 +184,12 @@
                                         android:textAppearance="?android:attr/textAppearanceSmall"
                                         android:textSize="18sp" />
                                 </TableRow>
-                            </TableLayout>
+                            </com.team2052.frckrawler.gui.DrawingRequestTableLayout>
                         </RelativeLayout>
                     </HorizontalScrollView>
                 </ScrollView>
-
             </RelativeLayout>
         </RelativeLayout>
-
     </RelativeLayout>
 
     <TextView

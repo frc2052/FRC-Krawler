@@ -15,6 +15,7 @@ import android.widget.TableRow;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Team;
+import com.team2052.frckrawler.gui.DrawingRequestTableLayout;
 import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
@@ -42,11 +43,19 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		addTeams.setOnClickListener(this);
 		
 		dbManager = DBManager.getInstance(this);
+		
+		System.out.println("Create ran");
 	}
 	
 	public void onStart() {
 		super.onStart();
 		new GetTeamsTask().execute(this);
+		System.out.println("Start ran");
+	}
+	
+	public void onResume() {
+		super.onResume();
+		System.out.println("Resume ran");
 	}
 	
 	public void postResults(TableLayout table) {
@@ -135,7 +144,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			
 			TeamsActivity activity = activities[0];
 			
-			TableLayout dataTable = new TableLayout(activity);
+			TableLayout dataTable = new DrawingRequestTableLayout(activity);
 			TableRow descriptorsRow = new TableRow(activity);
 			Team[] teams = dbManager.getAllTeams();
 			
