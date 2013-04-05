@@ -2,7 +2,6 @@ package com.team2052.frckrawler.database;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,6 +23,8 @@ import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatchException;
 import com.team2052.frckrawler.database.structures.Query;
 import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.database.structures.StringSet;
+import com.team2052.frckrawler.database.structures.SummaryData;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.database.structures.User;
 
@@ -1228,11 +1229,7 @@ public class DBManager {
 		
 		for(MetricValue v : vals) {
 			
-			String valString = new String();
-			
-			for(String val : v.getValue())
-				valString += val + ":";
-			
+			String valString = v.getValueAsDBReadableString();
 			values.put(v.getMetric().getKey(), valString);
 		}
 		
@@ -1546,7 +1543,6 @@ public class DBManager {
 			String currentRangeValString = new String();
 			
 			for(int character = 0; character < rangeString.length(); character++) {
-				
 				if(rangeString.charAt(character) != ':')
 					currentRangeValString += rangeString.charAt(character);
 				
@@ -1762,11 +1758,25 @@ public class DBManager {
 							null, null, 
 							DBContract.COL_METRIC_KEY + " ASC");
 		
+		boolean wasAssigned = false;
+		
 		for(int key = 0; key < DBContract.COL_KEYS.length; key++) {	//Cycle through
 																	//all possible keys.
-			if(!c.moveToNext() ||
-					!DBContract.COL_KEYS[key].equals(c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)))) {
+			
+			Log.d("FRCKrawler", DBContract.COL_KEYS[key]);
+			boolean isTaken = false;
+			c.moveToFirst();
+			
+			for(int metricCount = 0; metricCount < c.getCount(); metricCount++) {
+				if(metricCount != 0)
+					c.moveToNext();
 				
+				if(DBContract.COL_KEYS[key].equals(c.getString
+						(c.getColumnIndex(DBContract.COL_METRIC_KEY))))
+					isTaken = true;
+			}
+			
+			if(!isTaken) {
 				values.put(DBContract.COL_METRIC_KEY, //Assign this key to the new
 						DBContract.COL_KEYS[key]);	//metric
 				
@@ -1790,14 +1800,14 @@ public class DBManager {
 									eventCursor.getColumnIndex(DBContract.COL_EVENT_ID))});
 				}
 				
+				wasAssigned = true;
 				break;	//No need to continue
 			}
-			
-			if(key == DBContract.COL_KEYS.length)	//Return false because no more metrics can
-				return false;	//be added. Limit reached.
 		}
 		
-		db.insert(DBContract.TABLE_MATCH_PERF_METRICS, null, values);
+		if(wasAssigned)
+			db.insert(DBContract.TABLE_MATCH_PERF_METRICS, null, values);
+		
 		db.close();
 		
 		return true;
@@ -1932,8 +1942,6 @@ public class DBManager {
 	 * @param updateVals
 	 * @return
 	 * 
-	 * CHARLIE! THIS MAY HAVE TO BE CHANGED FOR 
-	 * THE FLEXIBLE COLUMNS! FIX IT!
 	 */
 	public synchronized boolean updateRobots(Robot[] robots) {
 		
@@ -1942,7 +1950,6 @@ public class DBManager {
 		String[] queryCols = new String[] {DBContract.COL_ROBOT_ID};
 		
 		for(int i = 0; i < robots.length; i++) {
-			
 			String[] queryVals = new String[] {Integer.toString(robots[i].getID())};
 			
 			ArrayList<String> updateCols = new ArrayList<String>();
@@ -1961,8 +1968,6 @@ public class DBManager {
 					updateVals.toArray(new String[0])))
 				allUpdated = false;
 		}
-		
-		printQuery("SELECT * FROM " + DBContract.TABLE_ROBOTS, null);
 		
 		return allUpdated;
 	}
@@ -2203,16 +2208,21 @@ public class DBManager {
 		values.put(DBContract.COL_USER_ID, Integer.toString(userID));
 		values.put(DBContract.COL_MATCH_TYPE, matchType);
 		values.put(DBContract.COL_COMMENTS, comments);
-		
+		Log.d("FRCKrawler", "Inserted match data.");
 		for(MetricValue val : vals) {
+			if(val != null) {
+				String[] arr = val.getValue();
+				String valString = new String();
 			
-			String[] arr = val.getValue();
-			String valString = new String();
+				for(int i = 0; i < arr.length; i++)
+					valString += arr[i] + ":";
+				
+				Log.d("FRCKrawler", valString);
 			
-			for(int i = 0; i < arr.length; i++)
-				valString += arr[i] + ":";
-			
-			values.put(val.getMetric().getKey(), valString);
+				values.put(val.getMetric().getKey(), valString);
+			} else {
+				Log.e("FRCKrawler", "A MetricValue was null on insert match data.");
+			}
 		}
 		
 		helper.getWritableDatabase().insert(DBContract.TABLE_MATCH_PERF, null, values);
@@ -2272,7 +2282,8 @@ public class DBManager {
 		if(cols.length < 1)
 			return new MatchData[0];
 		
-		String queryString = "SELECT * FROM " + DBContract.TABLE_MATCH_PERF + " WHERE " + cols[0] + " LIKE ?";
+		String queryString = "SELECT * FROM " + DBContract.TABLE_MATCH_PERF + " WHERE " + 
+				cols[0] + " LIKE ?";
 		
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
 			queryString += " AND " + cols[i] + " LIKE ?";
@@ -2310,11 +2321,11 @@ public class DBManager {
 					for(int character = 0; character < valueString.length(); character++) {
 					
 						if(valueString.charAt(character) != ':')
-						currentValsString += valueString.charAt(character);
+							currentValsString += valueString.charAt(character);
 					
 						else {
-						valuesList.add(currentValsString);
-						currentValsString = new String();
+							valuesList.add(currentValsString);
+							currentValsString = new String();
 						}
 					}
 				}
@@ -2322,7 +2333,9 @@ public class DBManager {
 				try {
 					dataArr[k] = new MetricValue(metricArr[k], valuesList.toArray(new String[0]));
 				} catch (MetricTypeMismatchException e) {
-					e.printStackTrace();
+					try {
+						dataArr[k] = new MetricValue(metricArr[k], new String[] {"0"});
+					} catch(MetricTypeMismatchException ex) {}
 				}
 			}
 			
@@ -2918,6 +2931,44 @@ public class DBManager {
 	
 	
 	/*****
+	 * Method: getSummaryData
+	 * 
+	 * Summary: returns an events compiled data, but condensed into only strings. This
+	 * makes sorting and searching more difficult, but transmission over Bluetooth 
+	 * much easier
+	 */
+	
+	public SummaryData[] getSummaryData(int eventID) {
+		
+		if(!hasValue(DBContract.TABLE_EVENTS, 
+				DBContract.COL_EVENT_ID, Integer.toString(eventID)))
+			return null;
+		
+		CompiledData[] compiledData = getCompiledEventData(eventID, new Query[0]);
+		SummaryData[] summaryData = new SummaryData[compiledData.length];
+		
+		for(int i = 0; i < summaryData.length; i++) {
+			
+			ArrayList<MatchData> last3MatchData = new ArrayList<MatchData>();
+			MatchData[] matchData = getMatchDataByColumns(
+					new String[] {DBContract.COL_GAME_NAME, DBContract.COL_ROBOT_ID}, 
+					new String[] {compiledData[i].getRobot().getGame(), 
+							Integer.toString(compiledData[i].getRobot().getID())});
+			
+			for(int matchCount = matchData.length - 1; matchCount >= 0; matchCount++) {
+				if(matchCount > matchData.length - 4)
+					last3MatchData.add(matchData[matchCount]);
+			}
+			
+			summaryData[i] = new SummaryData(compiledData[i], 
+					last3MatchData.toArray(new MatchData[0]));
+		}
+		
+		return summaryData;
+	}
+	
+	
+	/*****
 	 * Method: printQuery
 	 * 
 	 * Summary: This method is used for the purpose of debugging. It allows the developer to make queries to the SQLite
@@ -3115,7 +3166,7 @@ public class DBManager {
 		    keys[j] = tempKey;
 		    items[j] = tempOb;
 		  }
-		} 
+		}
 	
 	
 	
@@ -3294,11 +3345,9 @@ public class DBManager {
 				for(int charCount = 0; charCount < valString.length(); charCount++) {
 						
 					if(valString.charAt(charCount) != ':'){
-							
 						workingString += valString.substring(charCount, charCount + 1);
 							
 					} else {
-							
 						valsArr.add(workingString);
 						workingString = new String();
 					}
@@ -3835,5 +3884,37 @@ public class DBManager {
 		helper.getWritableDatabase().execSQL("DELETE FROM " + 
 				DBContract.SCOUT_TABLE_DRIVER_DATA);
 		helper.close();
+	}
+	
+	/**********
+	 * SUMMARY METHODS
+	 * 
+	 * These methods handle the database tables where summary data synced
+	 * from a server is stored.
+	 **********/
+	
+	/*****
+	 * Method: summarySetSummaryData
+	 * 
+	 * Summary: sets the compiled data from the server and gets rid of the old data
+	 *****/
+	public synchronized void summarySetCompiledData(SummaryData[] summaryData) {
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_COMPILED_MATCH_DATA);
+		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_MATCH_DATA);
+		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_ROBOTS);
+		
+		
+	}
+	
+	/*****
+	 * Method: summaryGetSummaryData
+	 * 
+	 * Summary: gets the data synced from a server.
+	 *****/
+	public synchronized SummaryData[] summaryGetSummaryData() {
+		
+		return new SummaryData[0];
 	}
 }

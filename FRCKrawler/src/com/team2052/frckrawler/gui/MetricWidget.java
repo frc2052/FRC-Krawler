@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.gui;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
@@ -68,7 +69,6 @@ public abstract class MetricWidget extends FrameLayout {
 	}
 	
 	public Metric getMetric() {
-		
 		return metric;
 	}
 	

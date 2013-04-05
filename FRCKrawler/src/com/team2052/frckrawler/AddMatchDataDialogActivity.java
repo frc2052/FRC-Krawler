@@ -109,7 +109,7 @@ public class AddMatchDataDialogActivity extends Activity implements OnClickListe
 					metricVals
 					));
 				
-			
+				setResult(RESULT_OK);
 				finish();
 				
 			} catch(NumberFormatException e) {

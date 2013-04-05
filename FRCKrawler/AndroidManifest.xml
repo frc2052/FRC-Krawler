@@ -15,15 +15,17 @@
         android:targetSdkVersion="17" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Black.NoTitleBar" android:allowClearUserData="false" android:testOnly="false" android:largeHeap="true">
         <activity android:name="com.team2052.frckrawler.TeamsActivity"
-            	android:configChanges="keyboard|keyboardHidden"></activity>
-        <activity android:name="com.team2052.frckrawler.UsersActivity"></activity>
+            	android:windowSoftInputMode="adjustNothing"></activity>
+        <activity android:name="com.team2052.frckrawler.UsersActivity"
+            android:windowSoftInputMode="adjustNothing"></activity>
         <activity android:name="com.team2052.frckrawler.GamesActivity"></activity>
-        <activity android:name="com.team2052.frckrawler.EventsActivity"></activity>
+        <activity android:name="com.team2052.frckrawler.EventsActivity"
+            android:windowSoftInputMode="adjustNothing"></activity>
         <activity android:name="com.team2052.frckrawler.AddTeamDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name="com.team2052.frckrawler.EditTeamDialogActivity"
@@ -37,10 +39,13 @@
         <activity android:name="com.team2052.frckrawler.EditGameDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name="com.team2052.frckrawler.RobotsActivity"
-            	android:configChanges="keyboard|keyboardHidden"></activity>
-        <activity android:name="com.team2052.frckrawler.MetricsActivity"></activity>
-        <activity android:name="com.team2052.frckrawler.CommentsActivity"></activity>
-        <activity android:name="com.team2052.frckrawler.ContactsActivity"></activity>
+            	android:windowSoftInputMode="adjustNothing"></activity>
+        <activity android:name="com.team2052.frckrawler.MetricsActivity"
+            android:windowSoftInputMode="adjustNothing"></activity>
+        <activity android:name="com.team2052.frckrawler.CommentsActivity"
+            android:windowSoftInputMode="adjustNothing"></activity>
+        <activity android:name="com.team2052.frckrawler.ContactsActivity"
+            android:windowSoftInputMode="adjustNothing"></activity>
         <activity android:name="com.team2052.frckrawler.AddCommentDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name="com.team2052.frckrawler.EditCommentDialogActivity"
@@ -66,7 +71,7 @@
         <activity android:name="com.team2052.frckrawler.EditMetricDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name="com.team2052.frckrawler.RawMatchDataActivity"
-            	android:configChanges="keyboard|keyboardHidden"></activity>
+            	android:windowSoftInputMode="adjustNothing"></activity>
         <activity android:name="com.team2052.frckrawler.BluetoothServerManagerActivity">
         </activity>
         <service android:name="com.team2052.frckrawler.bluetooth.BluetoothServerService"></service>
@@ -75,10 +80,11 @@
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name="com.team2052.frckrawler.EditMatchDataDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
-        <service android:name=".bluetooth.BluetoothClientService"></service>
+        <service android:name=".bluetooth.BluetoothScoutClientService"></service>
         <activity android:name="com.team2052.frckrawler.QueryActivity"
-            	android:configChanges="keyboard|keyboardHidden"></activity>
-        <activity android:name="DriverDataActivity"></activity>
+            	android:windowSoftInputMode="adjustNothing"></activity>
+        <activity android:name="DriverDataActivity"
+            android:windowSoftInputMode="adjustNothing"></activity>
         <activity android:name="QuerySortingDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name="CommentDialogActivity"
@@ -91,8 +97,12 @@
         </activity>
         <activity android:name="ScoutTypeActivity"></activity>
         <activity android:name="ScoutActivity"
-            	android:configChanges="orientation|screenSize"></activity>
+            	  android:screenOrientation="portrait"></activity>
         <activity android:name="ListTester"></activity>
+        <activity android:name="SummaryActivity"></activity>
+        <activity android:name="AboutDialogActivity"
+            	  android:theme="@android:style/Theme.Dialog"></activity>
+        <service android:name=".bluetooth.BluetoothSummaryClientService"></service>
     </application>
 
 </manifest>

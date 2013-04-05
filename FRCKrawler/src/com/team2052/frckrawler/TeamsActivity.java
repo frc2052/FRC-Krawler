@@ -8,14 +8,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Team;
-import com.team2052.frckrawler.gui.DrawingRequestTableLayout;
 import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
@@ -30,7 +28,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 	
 	private final Object ADD_TEAMS_TAG = new Object();
 	
-	private Team[] teams;
+	private int teamCount;
 	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,15 +54,6 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 	public void onResume() {
 		super.onResume();
 		System.out.println("Resume ran");
-	}
-	
-	public void postResults(TableLayout table) {
-
-		RelativeLayout v = (RelativeLayout)findViewById(R.id.teamDataTableParent);
-		v.removeAllViews();
-		v.addView(table);
-		
-		((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 	}
 
 	public void onClick(View v) {
@@ -130,22 +119,26 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 	}
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		new GetTeamsTask().execute(this);
+		if(resultCode == RESULT_OK)
+			new GetTeamsTask().execute(this);
 	}
 	
-	private class GetTeamsTask extends AsyncTask<TeamsActivity, Void, TableLayout> {
+	private class GetTeamsTask extends AsyncTask<TeamsActivity, MyTableRow, Void> {
 		
 		protected void onPreExecute() {
 			((FrameLayout)findViewById(R.id.progressFrame)).
 			addView(new ProgressSpinner(getApplicationContext()));
+			
+			TableLayout v = (TableLayout)findViewById(R.id.teamsDataTable);
+			v.removeAllViews();
+			
+			teamCount = -1;
 		}
 		
-		protected TableLayout doInBackground(TeamsActivity... activities) {
+		protected Void doInBackground(TeamsActivity... activities) {
 			
 			TeamsActivity activity = activities[0];
-			
-			TableLayout dataTable = new DrawingRequestTableLayout(activity);
-			TableRow descriptorsRow = new TableRow(activity);
+			MyTableRow descriptorsRow = new MyTableRow(activity);
 			Team[] teams = dbManager.getAllTeams();
 			
 			descriptorsRow.addView(new MyTextView(activity, "", 18));
@@ -157,7 +150,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			descriptorsRow.addView(new MyTextView(activity, "Website", 18));
 			descriptorsRow.addView(new MyTextView(activity, "State", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Colors", 18));
-			dataTable.addView(descriptorsRow);
+			publishProgress(descriptorsRow);
 			
 			for(int i = 0; i < teams.length; i++) {
 				
@@ -202,16 +195,25 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				}, color);
 				
 				row.setTag(Integer.valueOf(teams[i].getNumber()));
+				publishProgress(row);
 				
-				dataTable.addView(row);
+				try {	//Wait for the UI to update
+					Thread.sleep(50);
+				} catch(InterruptedException e) {}
 			}
 			
-			return dataTable;
+			return null;
 		}
 		
-		protected void onPostExecute(TableLayout table) {
-			
-			postResults(table);
+		protected void onProgressUpdate(MyTableRow... row) {
+			TableLayout v = (TableLayout)findViewById(R.id.teamsDataTable);
+			v.addView(row[0]);
+			teamCount++;
+		}
+		
+		protected void onPostExecute(Void v) {
+			((TextView)findViewById(R.id.teamCount)).setText(teamCount + " Teams");
+			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 	}
 }

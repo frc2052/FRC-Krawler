@@ -45,15 +45,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		new GetMatchDataTask().execute(this);
 	}
 	
-	public void postResults(TableLayout table) {
-		RelativeLayout tableParent = 
-				(RelativeLayout)findViewById(R.id.dataTableParent);
-		tableParent.removeAllViews();
-		tableParent.addView(table);
-		
-		((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
-	}
-	
 	public void onClick(View v) {
 		Intent i;
 		
@@ -85,22 +76,24 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		}
 	}
 	
-	public void onActivityResult(int r, int c, Intent i) {
-		new GetMatchDataTask().execute(this);
+	public void onActivityResult(int requestCode, int resultCode, Intent i) {
+		if(resultCode == RESULT_OK)
+			new GetMatchDataTask().execute(this);
 	}
 	
-	private class GetMatchDataTask extends AsyncTask<RawMatchDataActivity, Void, TableLayout> {
-		
+	private class GetMatchDataTask extends AsyncTask<RawMatchDataActivity, MyTableRow, Void> {
 		protected void onPreExecute() {
 			((FrameLayout)findViewById(R.id.progressFrame)).
 			addView(new ProgressSpinner(getApplicationContext()));
+			
+			((TableLayout)findViewById(R.id.dataTable)).removeAllViews();
 		}
 		
-		protected TableLayout doInBackground(RawMatchDataActivity... params) {
+		protected Void doInBackground(RawMatchDataActivity... params) {
+			
+			dbManager.printQuery("SELECT * FROM " + DBContract.TABLE_MATCH_PERF, null);
 			
 			RawMatchDataActivity activity = params[0];
-			
-			TableLayout table = new TableLayout(activity);
 			MatchData[] matchData = dbManager.
 					getMatchDataByColumns(databaseKeys, databaseValues);
 			
@@ -122,7 +115,7 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 				}
 			}
 			
-			table.addView(descriptorsRow);
+			publishProgress(descriptorsRow);
 			
 			//Add a row for every data entry
 			for(int i = 0; i < matchData.length; i++) {
@@ -187,16 +180,23 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 							getValueAsHumanReadableString(), 18));
 				}
 				
-				table.addView(new MyTableRow(activity, viewArr.toArray
+				publishProgress(new MyTableRow(activity, viewArr.toArray
 						(new View[0]), color));
+				
+				try {	//Wait for the UI to update
+					Thread.sleep(500);
+				} catch(InterruptedException e) {}
 			}
 			
-			return table;
+			return null;
 		}
 		
-		protected void onPostExecute(TableLayout table) {
-			
-			postResults(table);
+		protected void onProgressUpdate(MyTableRow... row) {
+			((TableLayout)findViewById(R.id.dataTable)).addView(row[0]);
+		}
+		
+		protected void onPostExecute(Void v) {
+			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 	}
 }

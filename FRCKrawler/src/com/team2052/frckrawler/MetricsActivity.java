@@ -54,8 +54,9 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 	}
 	
 	public void onResume() {
-		
 		super.onResume();
+		
+		dbManager.printQuery("SELECT * FROM " + DBContract.TABLE_MATCH_PERF_METRICS, null);
 		
 		TableLayout table = (TableLayout)findViewById(R.id.metricsDataTable);
 		TableRow descriptorsRow = (TableRow)findViewById(R.id.descriptorsRow);
@@ -85,10 +86,6 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 				break;
 				
 			case DRIVER_METRICS:
-				
-				
-				
-				//break;
 				
 			default:
 				

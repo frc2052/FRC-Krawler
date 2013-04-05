@@ -47,7 +47,6 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
 	}
 
 	public String[] getValues() {
-		
 		return new String[] {Integer.toString(currentValue)};
 	}
 

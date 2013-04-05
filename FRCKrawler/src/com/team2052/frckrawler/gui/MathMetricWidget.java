@@ -11,7 +11,6 @@ public class MathMetricWidget extends MetricWidget {
 	}
 	
 	public String[] getValues() {
-		// TODO Auto-generated method stub
 		return new String[0];
 	}
 

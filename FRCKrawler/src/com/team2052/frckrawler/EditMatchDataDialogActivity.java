@@ -5,16 +5,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.MatchData;
@@ -50,10 +50,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 	}
 	
 	public void onResume() {
-		
 		super.onResume();
-		
-		System.out.println(getIntent().getIntExtra(MATCH_ID_EXTRA, -1));
 		
 		//Get the match data to edit from the database
 		MatchData[] arr = db.getMatchDataByColumns(new String[] {DBContract.COL_DATA_ID}, 
@@ -151,7 +148,6 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 				updateVals[3] = ((EditText)findViewById(R.id.comments)).getText().toString();
 				
 				for(int i = 0; i < metricVals.length; i++) {
-					
 					updateCols[i + 4] = metricVals[i].getMetric().getKey();
 					updateVals[i + 4] = metricVals[i].getValueAsDBReadableString();
 				}
@@ -161,11 +157,10 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 								getIntExtra(MATCH_ID_EXTRA, -1))}, 
 						updateCols, updateVals);
 				
-			
+				setResult(RESULT_OK);
 				finish();
 				
 			} catch(NumberFormatException e) {
-				
 				Toast.makeText(this, "Data not added to the database. You must specify " +
 						"a match number.", Toast.LENGTH_SHORT).show();
 			}
@@ -173,14 +168,12 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 		} else if(v.getId() == R.id.remove) {
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			
 			builder.setTitle("Remove This Entry?");
 			builder.setMessage("Are you sure you want to remove this set of match data from " +
 					"the database? It will be cast into the cold void of cyberspace for" +
 					" eternity.");
 			builder.setNegativeButton("No", this);
 			builder.setPositiveButton("Yes", this);
-			
 			builder.show();
 			
 		} else if(v.getId() == R.id.cancel) {
@@ -193,6 +186,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 		
 		if(which == DialogInterface.BUTTON_POSITIVE) {
 			db.removeMatchData(getIntent().getIntExtra(MATCH_ID_EXTRA, -1));
+			setResult(RESULT_OK);
 			finish();
 			
 		} else {

@@ -122,7 +122,7 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 			query = q;
 			
 			isComplete = false;
-			removeButton = new MyButton(getContext(), "Remove", this);
+			removeButton = new MyButton(getContext(), "Remove Query", this);
 			removeButton.setId(1);
 			frontText = new MyTextView(getContext(), "Get team when", 18);
 			equalTextView = new MyTextView(getContext(), " = ", 18);

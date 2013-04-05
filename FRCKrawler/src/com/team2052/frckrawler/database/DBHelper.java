@@ -20,7 +20,8 @@ import android.database.sqlite.*;
 public class DBHelper extends SQLiteOpenHelper {
 	
 	
-	public static final int DATABASE_VERSION = 15;	//You must add one when changing the structure of the database.
+	public static final int DATABASE_VERSION = 15;	//You must add one when changing the 
+		//structure of the database.
 	
 	public DBHelper(Context context) {
 		super(context, DBContract.DATABASE_NAME, null, DATABASE_VERSION);
@@ -34,7 +35,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	 *****/
 	
 	public void onCreate(SQLiteDatabase database) {
-		DBContract.createSchema(database);
+		//DBContract.createSchema(database);
 	}
 	
 	/*****
@@ -44,7 +45,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	 *****/
 	
 	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-		DBContract.dropSchema(database);
+		//DBContract.dropSchema(database);
 		onCreate(database);
 	}
 	

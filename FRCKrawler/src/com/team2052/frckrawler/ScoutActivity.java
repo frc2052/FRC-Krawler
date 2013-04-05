@@ -1,5 +1,7 @@
 package com.team2052.frckrawler;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -54,6 +56,14 @@ public class ScoutActivity extends Activity implements OnClickListener,
 		
 		findViewById(R.id.save).setOnClickListener(this);
 		((Spinner)findViewById(R.id.teamNumber)).setOnItemSelectedListener(this);
+		
+		ArrayList<String> matchTypes = new ArrayList<String>();
+		matchTypes.add("Qualifications");
+		matchTypes.add("Finals");
+		matchTypes.add("Practice");
+		ArrayAdapter<String> matchAdapter = new ArrayAdapter<String>
+				(this, R.layout.scout_spinner_item, matchTypes);
+		((Spinner)findViewById(R.id.gameType)).setAdapter(matchAdapter);
 		
 		TextView title = (TextView)findViewById(R.id.scoutingType);
 		switch(getIntent().getIntExtra(SCOUT_TYPE_EXTRA, 1)) {
@@ -173,9 +183,11 @@ public class ScoutActivity extends Activity implements OnClickListener,
 					MatchData data = new MatchData(
 							dbManager.scoutGetEvent().getEventID(),
 							matchNumber,
-							robots[((Spinner)findViewById(R.id.teamNumber)).getSelectedItemPosition()].getID(),
+							robots[((Spinner)findViewById(R.id.teamNumber)).
+							       getSelectedItemPosition()].getID(),
 							user.getID(),
-							((Spinner)findViewById(R.id.gameType)).getSelectedItem().toString(),
+							((Spinner)findViewById(R.id.gameType)).
+									getSelectedItem().toString(),
 							((EditText)findViewById(R.id.comments)).getText().toString(),
 							metricVals
 							);
@@ -193,14 +205,11 @@ public class ScoutActivity extends Activity implements OnClickListener,
 							teamNumber,
 							robots[selectedRobot].getID(),
 							robots[selectedRobot].getGame(),
-							robots[selectedRobot].getImagePath(),
 							((EditText)findViewById(R.id.comments)).
 									getText().toString(),
+							robots[selectedRobot].getImagePath(),
 							metricVals
 							);
-					
-					System.out.println(((EditText)findViewById(R.id.comments)).
-									getText().toString());
 					
 					new SaveRobotDataTask().execute(robot);
 					
@@ -236,9 +245,8 @@ public class ScoutActivity extends Activity implements OnClickListener,
 				teamNumbers[i] = Integer.toString(robots[i].getTeamNumber());
 			
 			ArrayAdapter<String> teamChoices = new ArrayAdapter<String>(
-					getApplicationContext(), android.R.layout.simple_spinner_item,
+					getApplicationContext(), R.layout.scout_spinner_item,
 					teamNumbers);
-			
 			((Spinner)findViewById(R.id.teamNumber)).setAdapter(teamChoices);
 			
 			if(teamNames.length > 0)

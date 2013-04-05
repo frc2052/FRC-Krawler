@@ -1,7 +1,5 @@
 package com.team2052.frckrawler;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,11 +22,9 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 	private DBManager dbManager;
 	private QueryWidget matchQueryWidget;
 	private QueryWidget pitQueryWidget;
-	private QueryWidget driverQueryWidget;
 	private volatile Event event;
 	private volatile Metric[] matchMetrics;
 	private volatile Metric[] pitMetrics;
-	private volatile Metric[] driverMetrics;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,10 +44,9 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 			finish();
 			
 		} else {
-			
 			QueryActivity.setQuery(Integer.parseInt(getIntent().getStringExtra
 					(EVENT_ID_EXTRA)), matchQueryWidget.getQuerys(), 
-					pitQueryWidget.getQuerys(), driverQueryWidget.getQuerys());
+					pitQueryWidget.getQuerys(), new Query[0]);
 			setResult(1);
 			finish();
 		}
@@ -75,10 +70,6 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 			pitMetrics = dbManager.getRobotMetricsByColumns
 					(new String[] {DBContract.COL_GAME_NAME},
 							new String[] {event.getGameName()});
-			driverMetrics = new Metric[0];
-			
-			System.out.println(matchMetrics.length);
-			System.out.println(pitMetrics.length);
 			
 			return null;
 		}
@@ -103,14 +94,6 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 					(Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA))),
 					Query.TYPE_ROBOT);
 			list.addView(pitQueryWidget);
-			
-			list.addView(new MyTextView(getApplicationContext(), 
-					"Driver Data", 18));
-			driverQueryWidget = new QueryWidget(getApplicationContext(), 
-					driverMetrics,QueryActivity.getDriverQuerys
-					(Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA))), 
-					Query.TYPE_DRIVER_DATA);
-			list.addView(driverQueryWidget);
 			
 		}
 	}

@@ -3,6 +3,8 @@ package com.team2052.frckrawler.database.structures;
 
 import java.text.DecimalFormat;
 
+import android.util.Log;
+
 import com.team2052.frckrawler.database.DBContract;
 
 public class MetricValue implements Structure {
@@ -13,16 +15,18 @@ public class MetricValue implements Structure {
 	public MetricValue(Metric _metric, String[] _value) throws MetricTypeMismatchException {
 		
 		if(_metric.getType() == DBContract.COUNTER || _metric.getType() == DBContract.SLIDER) {
-			
 			for(String v : _value) {
 				try {
 					Double.parseDouble(v);
 				} catch (Exception e) {
+					Log.e("FRCKrawler", _metric.getMetricName());
+					Log.e("FRCKrawler", v);
+					Log.e("FRCKrawler", "MetricTypeMismatchException thrown.");
 					throw new MetricTypeMismatchException();
 				}
 			}
 		}
-			
+		
 		metric = _metric;
 		value = _value;
 	}
@@ -35,8 +39,7 @@ public class MetricValue implements Structure {
 		String returnString = new String();
 		
 		for(int i = 0; i < value.length; i++) {
-			
-			returnString += value[i] + ":";
+				returnString += value[i] + ":";
 		}
 		
 		return returnString;

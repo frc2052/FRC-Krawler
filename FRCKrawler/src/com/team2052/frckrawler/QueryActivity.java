@@ -32,6 +32,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	private static HashMap<Integer, Query[]> pitQuerys = new HashMap<Integer, Query[]>();
 	private static HashMap<Integer, Query[]> driverQuerys = new HashMap<Integer, Query[]>();
 	
+	private ArrayList<Integer> checkedTeamNumbers;
 	private CompiledData[] data;
 	private DBManager dbManager;
 	
@@ -41,22 +42,13 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		
 		findViewById(R.id.query).setOnClickListener(this);
 		
+		checkedTeamNumbers = new ArrayList<Integer>();
 		dbManager = DBManager.getInstance(this);
 	}
 	
 	public void onStart() {
 		super.onStart();
 		new GetCompiledDataTask().execute(this);
-	}
-	
-	public void postResults(MyTableRow[] rows) {
-		TableLayout table = (TableLayout)findViewById(R.id.queryDataTable);
-		table.removeAllViews();
-		
-		for(int i = 0; i < rows.length; i++)
-			table.addView(rows[i]);
-		
-		((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 	}
 	
 	public void onClick(View v) {
@@ -113,14 +105,16 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	}
 	
 	private class GetCompiledDataTask extends AsyncTask
-										<QueryActivity, Void, MyTableRow[]> {
+										<QueryActivity, MyTableRow, Void> {
 											
 		protected void onPreExecute() {
 			((FrameLayout)findViewById(R.id.progressFrame)).
 			addView(new ProgressSpinner(getApplicationContext()));
+			
+			((TableLayout)findViewById(R.id.queryDataTable)).removeAllViews();
 		}
 
-		protected MyTableRow[] doInBackground(QueryActivity... params) {
+		protected Void doInBackground(QueryActivity... params) {
 			
 			QueryActivity activity = params[0];
 			
@@ -161,9 +155,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 						querys);
 			}
 			
-			MyTableRow[] rows = new MyTableRow[data.length + 1];
 			MyTableRow descriptorsRow = new MyTableRow(activity);
-			
 			descriptorsRow.addView(new MyTextView(activity, " ", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Team", 18));
 			descriptorsRow.addView(new MyTextView(activity, "M. Played", 18));
@@ -201,7 +193,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 					descriptorsRow.addView(new MyTextView(activity, 
 						m.getMetric().getMetricName(), 18));
 			
-			rows[0] = descriptorsRow;
+			publishProgress(descriptorsRow);
 			
 			//Create a new row for each piece of data
 			for(int dataCount = 0; dataCount < data.length; dataCount++) {
@@ -254,15 +246,22 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 						dataRow.addView(new MyTextView(activity, 
 								driverData[i].getValueAsHumanReadableString(), 18));
 				
-				rows[dataCount + 1] = dataRow;
+				publishProgress(dataRow);
+				
+				try {	//Wait for the UI to update
+					Thread.sleep(150);
+				} catch(InterruptedException e) {}
 			}
 			
-			return rows;
+			return null;
 		}
 		
-		protected void onPostExecute(MyTableRow[] rows) {
-			
-			postResults(rows);
+		protected void onProgressUpdate(MyTableRow... row) {
+			((TableLayout)findViewById(R.id.queryDataTable)).addView(row[0]);
+		}
+		
+		protected void onPostExecute(Void v) {
+			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 	}
 }

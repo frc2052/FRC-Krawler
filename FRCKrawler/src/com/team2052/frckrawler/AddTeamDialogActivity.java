@@ -84,6 +84,7 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 		protected void onPostExecute(Boolean added) {
 			
 			if(added) {
+				setResult(RESULT_OK);
 				finish();
 			} else {
 				Toast.makeText(getApplicationContext(), "Could not add team to database. " +

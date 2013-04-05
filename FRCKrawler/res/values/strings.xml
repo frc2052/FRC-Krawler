@@ -67,11 +67,11 @@
         <item >Text</item>
         <item >Math</item>
     </string-array>
+    <string name="team_number">Team Number</string>
     <string-array name="match_types">
         <item >Qualifications</item>
         <item >Finals</item>
         <item >Practice</item>
     </string-array>
-    <string name="team_number">Team Number</string>
 
 </resources>

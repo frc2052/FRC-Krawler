@@ -5,13 +5,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.bluetooth.BluetoothClientService;
+import com.team2052.frckrawler.bluetooth.BluetoothScoutClientService;
 import com.team2052.frckrawler.bluetooth.ClientServiceConnection;
 import com.team2052.frckrawler.bluetooth.ClientThreadListener;
 import com.team2052.frckrawler.database.DBManager;
@@ -91,9 +93,18 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 				
 			case R.id.sync: 
 				
-				i = new Intent(this, BluetoothClientService.class);
-				i.putExtra(BluetoothClientService.SERVER_MAC_ADDRESS, 
-						GlobalSettings.masterMACAddress);
+				SharedPreferences prefs = getSharedPreferences
+					(GlobalSettings.PREFS_FILE_NAME, 0);
+				String macAdress = prefs.getString(GlobalSettings.MAC_ADRESS_PREF, "null");
+				
+				if(macAdress.equals("null")) {
+					Toast.makeText(this, "Sync failed. No server " +
+							"adress remembered.", Toast.LENGTH_SHORT);
+					break;
+				}
+				
+				i = new Intent(this, BluetoothScoutClientService.class);
+				i.putExtra(BluetoothScoutClientService.SERVER_MAC_ADDRESS, macAdress);
 				bindService(i, connection, Context.BIND_AUTO_CREATE);
 				
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);

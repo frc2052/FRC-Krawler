@@ -32,7 +32,13 @@ public class GlobalSettings {
 	public static int userID = 0;
 	
 	/**
-	 * The MAC address of database device that was chosen to sync to
+	 * SharedPreferences file name
 	 */
-	public static String masterMACAddress = null;
+	public static final String PREFS_FILE_NAME = "FRCKrawlerPrefs";
+	
+	/**
+	 * The SharedPreferences key for the MAC address of the 
+	 * most recently connected server
+	 */
+	public static final String MAC_ADRESS_PREF = "MACAdress";
 }

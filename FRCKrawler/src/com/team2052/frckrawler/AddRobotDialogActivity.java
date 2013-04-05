@@ -83,6 +83,7 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 						vals
 						));
 				
+				setResult(RESULT_OK);
 				finish();
 				
 				break;

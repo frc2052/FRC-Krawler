@@ -16,7 +16,6 @@ public class MetricSelectionActivity extends StackableTabActivity implements OnC
 		
 		findViewById(R.id.matchPerfMetrics).setOnClickListener(this);
 		findViewById(R.id.robotMetrics).setOnClickListener(this);
-		findViewById(R.id.driverMetrics).setOnClickListener(this);
 	}
 
 	public void onClick(View v) {
@@ -38,12 +37,12 @@ public class MetricSelectionActivity extends StackableTabActivity implements OnC
 				
 				break;
 				
-			case R.id.driverMetrics:
+			/*case R.id.driverMetrics:
 				
 				i.putExtra(MetricsActivity.METRIC_CATEGORY_EXTRA, 
 						MetricsActivity.DRIVER_METRICS);
 				
-				break;
+				break;*/
 				
 			default:
 				

@@ -54,7 +54,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/teamCount"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:text="Currently Hosting..."
@@ -72,7 +72,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/teamCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -111,7 +111,7 @@
         android:layout_below="@id/hostToggle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="63dp"
-        android:text="Database Exchanging"
+        android:text="Database Backup via SD"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="24sp" />
 

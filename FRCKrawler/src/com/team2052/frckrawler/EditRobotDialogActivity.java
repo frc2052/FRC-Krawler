@@ -83,6 +83,7 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 						updateCols, 
 						updateVals);
 				
+				setResult(RESULT_OK);
 				finish();
 				
 				break;
@@ -92,6 +93,7 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 				dbManager.removeRobot(Integer.parseInt(
 						getIntent().getStringExtra(ROBOT_ID_EXTRA)));
 				
+				setResult(RESULT_OK);
 				finish();
 				
 				break;

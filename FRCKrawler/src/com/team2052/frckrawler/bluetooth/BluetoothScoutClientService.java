@@ -19,16 +19,16 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.DriverData;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.database.structures.StringSet;
 import com.team2052.frckrawler.database.structures.User;
 
-public class BluetoothClientService extends Service 
+public class BluetoothScoutClientService extends Service 
 										implements ClientThreadListener {
 	
 	public static final String SERVER_MAC_ADDRESS = 
@@ -184,14 +184,15 @@ public class BluetoothClientService extends Service
 					matchData.add(m);
 				
 				//Write the scout data
+				ooStream.writeInt(BluetoothInfo.SCOUT);
 				ooStream.writeObject(event);
 				ooStream.writeObject(robots);
-				ooStream.writeObject(new ArrayList<DriverData>());
+				//ooStream.writeObject(new ArrayList<DriverData>());
 				ooStream.writeObject(matchData);
 				
 				//Clear out the old data after it is sent
 				dbManager.scoutClearMatchData();
-				dbManager.scoutClearDriverData();
+				//dbManager.scoutClearDriverData();
 				
 				//Start the reading thread
 				ScoutDataReader reader = new ScoutDataReader(context, inStream);
@@ -203,6 +204,8 @@ public class BluetoothClientService extends Service
 					} catch(InterruptedException e) {}
 				}
 				
+				ooStream.close();
+				outStream.close();
 				inStream.close();
 				serverSocket.close();
 				
@@ -212,6 +215,8 @@ public class BluetoothClientService extends Service
 			} catch (IOException e) {
 				if(threadListener != null)
 					threadListener.onUnsuccessfulSync(e.getMessage());
+				
+				e.printStackTrace();
 			}
 		}
 		
@@ -266,6 +271,7 @@ public class BluetoothClientService extends Service
 				inRobots = (ArrayList<Robot>)ioStream.readObject();
 				inRobotMetrics = (ArrayList<Metric>)ioStream.readObject();
 				inMatchMetrics = (ArrayList<Metric>)ioStream.readObject();
+				
 				//inDriverMetrics = (ArrayList<Metric>)ioStream.readObject();
 				
 				//Write the received arrays to the database
@@ -281,7 +287,7 @@ public class BluetoothClientService extends Service
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
-				Log.e("FRCKrawler", e.getMessage());
+				e.printStackTrace();
 			}
 			
 			isFinished = true;

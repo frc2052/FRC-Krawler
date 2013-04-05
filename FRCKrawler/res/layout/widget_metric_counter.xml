@@ -11,14 +11,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
         android:text=" "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/plus"
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
         android:text="+" />
@@ -35,8 +36,8 @@
     <Button
         android:id="@+id/minus"
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignLeft="@+id/plus"
         android:layout_below="@+id/value"
         android:text="-" />

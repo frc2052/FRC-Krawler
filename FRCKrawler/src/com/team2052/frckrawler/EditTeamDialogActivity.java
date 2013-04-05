@@ -115,6 +115,7 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 			dbManager.updateTeams(new String[] {DBContract.COL_TEAM_NUMBER}, 
 					queryVals, updateCols, updateVals);
 			
+			setResult(RESULT_OK);
 			finish();
 			
 		} else if(v.getId() == R.id.cancel) {
@@ -155,10 +156,10 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 			
 			dbManager.removeTeam(getIntent().getIntExtra(TEAM_NUMBER_EXTRA_KEY, -1));
 			dialog.dismiss();
+			setResult(RESULT_OK);
 			finish();
 			
 		} else {
-			
 			dialog.dismiss();
 		}
 		

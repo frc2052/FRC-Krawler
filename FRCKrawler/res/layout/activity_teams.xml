@@ -3,7 +3,8 @@
     android:id="@+id/tabRoot"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:windowSoftInputMode="adjustNothing" >
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -103,7 +104,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent" >
 
-                            <com.team2052.frckrawler.gui.DrawingRequestTableLayout
+                            <TableLayout
                                 android:id="@+id/teamsDataTable"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -184,11 +185,21 @@
                                         android:textAppearance="?android:attr/textAppearanceSmall"
                                         android:textSize="18sp" />
                                 </TableRow>
-                            </com.team2052.frckrawler.gui.DrawingRequestTableLayout>
+                            </TableLayout>
                         </RelativeLayout>
                     </HorizontalScrollView>
                 </ScrollView>
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/teamCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:text=" "
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
         </RelativeLayout>
     </RelativeLayout>
 

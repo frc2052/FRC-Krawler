@@ -80,18 +80,16 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" >
 
-                    <HorizontalScrollView
-                        android:id="@+id/horizontalScroller"
+                    <ScrollView
+                        android:id="@+id/verticalScroller"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true" >
+                        android:layout_height="match_parent"
+                        android:scrollbars="horizontal|vertical" >
 
-                        <ScrollView
-                            android:id="@+id/verticalScroller"
+                        <HorizontalScrollView
+                            android:id="@+id/horizontalScroller"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:scrollbars="horizontal|vertical" >
+                            android:layout_height="wrap_content" >
 
                             <RelativeLayout
                                 android:id="@+id/dataTableParent"
@@ -124,7 +122,7 @@
                                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                                         <TextView
-                                            android:id="@+id/textView1"
+                                            android:id="@+id/teamCount"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Robot"
@@ -160,9 +158,11 @@
                                     </TableRow>
                                 </TableLayout>
                             </RelativeLayout>
-                        </ScrollView>
-                    </HorizontalScrollView>
+                        </HorizontalScrollView>
+                    </ScrollView>
+
                 </RelativeLayout>
+
             </RelativeLayout>
         </RelativeLayout>
 

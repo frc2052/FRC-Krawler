@@ -7,13 +7,16 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.bluetooth.BluetoothClientService;
+import com.team2052.frckrawler.bluetooth.BluetoothScoutClientService;
 import com.team2052.frckrawler.bluetooth.ClientServiceConnection;
 import com.team2052.frckrawler.bluetooth.ClientThreadListener;
 import com.team2052.frckrawler.database.DBManager;
@@ -21,7 +24,8 @@ import com.team2052.frckrawler.database.structures.User;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 
 public class MainActivity extends Activity implements DialogInterface.OnClickListener, 
-																ClientThreadListener{
+																ClientThreadListener, 
+																OnClickListener {
 	
 	Context context = this;
 	
@@ -37,6 +41,10 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        findViewById(R.id.continueScouting).setOnClickListener(this);
+        findViewById(R.id.sync_summary).setOnClickListener(this);
+        findViewById(R.id.view_summary).setOnClickListener(this);
         
         connection = new ClientServiceConnection(this);
     }
@@ -87,20 +95,16 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
      * @param view
      */
     public void hostCompetition(final View view) {
-    	
-    	LinearLayout layout = new LinearLayout(this);
+ 
     	
     	final AlertDialog.Builder login = new AlertDialog.Builder(this);
     	login
-    		.setTitle("Login")
-    		.setMessage("Please Enter Superuser Credentials")
+    		.setTitle("Superuser Login")
     		.setCancelable(false);
     	
     	final EditText username = new EditText(context);
-    	username.setWidth(200);
-    	username.setHint("Username");
-    	layout.addView(username);
-    	login.setView(layout);
+    	username.setHint("Superuser Password");
+    	login.setView(username);
     	
     	login.setPositiveButton("Login", new DialogInterface.OnClickListener() {
 			
@@ -149,8 +153,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
     		
     	nameStamp
     		.setTitle("Scout's Login")
-    		.setMessage("Please enter your username.")
-    		.setView(name);
+    		.setView(name)
+    		.setCancelable(false);
     		
     	nameStamp.setNeutralButton("Login", new DialogInterface.OnClickListener() {
 				
@@ -188,12 +192,16 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		    
 			} else {
 				
-				Intent i = new Intent(this, BluetoothClientService.class);
-				i.putExtra(BluetoothClientService.SERVER_MAC_ADDRESS, 
+				SharedPreferences prefs = getSharedPreferences
+						(GlobalSettings.PREFS_FILE_NAME, 0);
+				Editor prefsEditor = prefs.edit();
+				
+				Intent i = new Intent(this, BluetoothScoutClientService.class);
+				i.putExtra(BluetoothScoutClientService.SERVER_MAC_ADDRESS, 
 						devices[which].getAddress());
 				bindService(i, connection, Context.BIND_AUTO_CREATE);
-				GlobalSettings.masterMACAddress = 
-						devices[selectedDeviceAddress].getAddress();
+				prefsEditor.putString(GlobalSettings.MAC_ADRESS_PREF, 
+						devices[selectedDeviceAddress].getAddress());
 			
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setTitle("Syncing...");
@@ -201,6 +209,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				builder.setNeutralButton("Cancel", this);
 				progressDialog = builder.create();
 				progressDialog.show();
+				
+				prefsEditor.commit();
 			}
 		}
 	}
@@ -209,12 +219,16 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		
 		if(requestCode == REQUEST_BT_ENABLE && resultCode == RESULT_OK) {
 			
-			Intent i = new Intent(this, BluetoothClientService.class);
-			i.putExtra(BluetoothClientService.SERVER_MAC_ADDRESS, 
+			SharedPreferences prefs = getSharedPreferences
+					(GlobalSettings.PREFS_FILE_NAME, 0);
+			Editor prefsEditor = prefs.edit();
+			
+			Intent i = new Intent(this, BluetoothScoutClientService.class);
+			i.putExtra(BluetoothScoutClientService.SERVER_MAC_ADDRESS, 
 					devices[selectedDeviceAddress].getAddress());
 			bindService(i, connection, Context.BIND_AUTO_CREATE);
-			GlobalSettings.masterMACAddress = 
-					devices[selectedDeviceAddress].getAddress();
+			prefsEditor.putString(GlobalSettings.MAC_ADRESS_PREF, 
+					devices[selectedDeviceAddress].getAddress());
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle("Syncing...");
@@ -222,12 +236,14 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			builder.setNeutralButton("Cancel", this);
 			progressDialog = builder.create();
 			progressDialog.show();
+			
+			prefsEditor.commit();
 		}
 	}
     
     public void onCreditsClicked(View v) {
-    	
-    	
+    	Intent i = new Intent(this, AboutDialogActivity.class);
+    	startActivity(i);
     }
 
 	public void onSuccessfulSync() {
@@ -325,6 +341,37 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			} else {
 				dialog.dismiss();
 			}
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		if(v.getId() == R.id.continueScouting) {
+			if(DBManager.getInstance(this).scoutGetAllUsers().length == 0) {
+				Toast.makeText(this, "This device has not been synced with a database. " +
+						"Hit the 'Join' button to sync.", Toast.LENGTH_LONG).show();
+				return;
+			}
+			
+			scoutLoginName = new EditText(MainActivity.this);
+		    scoutLoginName.setHint("Name");
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder
+					(MainActivity.this);
+			builder.setTitle("Scout's Login");
+			builder.setView(scoutLoginName);
+			builder.setPositiveButton("Login", new UserDialogListener());
+			builder.setNegativeButton("Cancel", new UserDialogListener());
+			builder.show();
+			
+		} else if(v.getId() == R.id.sync_summary) {
+			
+			
+			
+		} else if(v.getId() == R.id.view_summary) {
+			
+			Intent i = new Intent(this, SummaryActivity.class);
+			startActivity(i);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 package com.team2052.frckrawler.bluetooth;
 
-import com.team2052.frckrawler.bluetooth.BluetoothClientService.ClientBinder;
+import com.team2052.frckrawler.bluetooth.BluetoothScoutClientService.ClientBinder;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;

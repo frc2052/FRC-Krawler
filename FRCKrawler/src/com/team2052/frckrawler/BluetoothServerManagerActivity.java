@@ -1,18 +1,34 @@
 package com.team2052.frckrawler;
 
-import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.content.*;
-import android.os.*;
-import android.view.View;
-import android.widget.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 
-import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.bluetooth.BluetoothClientService;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.IBinder;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+
 import com.team2052.frckrawler.bluetooth.BluetoothServerService;
 import com.team2052.frckrawler.bluetooth.BluetoothServerService.CloseBinder;
-import com.team2052.frckrawler.database.*;
-import com.team2052.frckrawler.database.structures.*;
+import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.structures.Event;
 
 public class BluetoothServerManagerActivity extends TabActivity 
 							implements View.OnClickListener, DialogInterface.OnClickListener {
@@ -30,6 +46,8 @@ public class BluetoothServerManagerActivity extends TabActivity
 		
 		findViewById(R.id.chooseEvent).setOnClickListener(this);
 		findViewById(R.id.hostToggle).setOnClickListener(this);
+		findViewById(R.id.importDB).setOnClickListener(this);
+		findViewById(R.id.exportDB).setOnClickListener(this);
 		
 		dbManager = DBManager.getInstance(this);
 	}
@@ -121,6 +139,117 @@ public class BluetoothServerManagerActivity extends TabActivity
 					
 					toggle.setChecked(false);
 				}
+				
+				break;
+				
+			case R.id.importDB:
+				
+				if(!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+					AlertDialog.Builder bu = new AlertDialog.Builder(this);
+					bu.setTitle("Sorry...");
+					bu.setMessage("FRCKrawler could not import your database. Your device " +
+							"does not have an SD card mounted.");
+					bu.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+					bu.show();
+				}
+				
+				try {
+			        File sd = Environment.getExternalStorageDirectory();
+			        File data = Environment.getDataDirectory();
+
+			        if (sd.canWrite()) {
+			            String currentDBPath = "//data//com.team2052.frckrawler//databases//scoutingdb";
+			            String backupDBPath = "FRCKrawlerBackup.sqlite";
+			            File currentDB = new File(data, currentDBPath);
+			            File backupDB = new File(sd, backupDBPath);
+
+			            if (backupDB.exists()) {
+			                FileChannel src = new FileInputStream(currentDB).getChannel();
+			                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+			                src.transferFrom(dst, 0, dst.size());
+			                src.close();
+			                dst.close();
+			            } else 
+			            	Toast.makeText(this, "Could not find the file " +
+			            			"FRCKrawlerBackup.sqlite in your SD card's " +
+			            			"root folder.", Toast.LENGTH_LONG).show();
+			        }
+			    } catch (FileNotFoundException e) {
+			    	e.printStackTrace();
+			    	Log.e("FCKrawler", e.getMessage());
+			    } catch (IOException e) {
+			    	Log.e("FCKrawler", e.getMessage());
+				}
+				
+				AlertDialog.Builder bu = new AlertDialog.Builder(this);
+				bu.setTitle("Success!");
+				bu.setMessage("Imported the database.");
+				bu.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				bu.show();
+				
+				break;
+				
+			case R.id.exportDB:
+				
+				if(!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+					AlertDialog.Builder b = new AlertDialog.Builder(this);
+					b.setTitle("Sorry...");
+					b.setMessage("FRCKrawler could not export your database to the " +
+							"SD card. Your device does not have an SD card, or it is not " +
+							"available for writing.");
+					b.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+					b.show();
+				}
+				
+				try {
+			        File sd = Environment.getExternalStorageDirectory();
+			        File data = Environment.getDataDirectory();
+
+			        if (sd.canWrite()) {
+			            String currentDBPath = "//data//com.team2052.frckrawler//databases//scoutingdb";
+			            String backupDBPath = "FRCKrawlerBackup.sqlite";
+			            File currentDB = new File(data, currentDBPath);
+			            File backupDB = new File(sd, backupDBPath);
+
+			            if (currentDB.exists()) {
+			                FileChannel src = new FileInputStream(currentDB).getChannel();
+			                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+			                dst.transferFrom(src, 0, src.size());
+			                src.close();
+			                dst.close();
+			            } else 
+			            	Toast.makeText(this, "Error in finding local " +
+			            			"database file.", Toast.LENGTH_LONG).show();
+			        }
+			    } catch (FileNotFoundException e) {
+			    	e.printStackTrace();
+			    	Log.e("FCKrawler", e.getMessage());
+			    } catch (IOException e) {
+			    	Log.e("FCKrawler", e.getMessage());
+				}
+				
+				AlertDialog.Builder b = new AlertDialog.Builder(this);
+				b.setTitle("Success!");
+				b.setMessage("Exported file to the SD card. File saved as " +
+						"FRCKrawlerBackup.db in the SD card's root directory.");
+				b.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				b.show();
 				
 				break;
 		}

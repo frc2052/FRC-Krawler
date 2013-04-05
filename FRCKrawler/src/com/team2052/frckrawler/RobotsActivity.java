@@ -3,14 +3,16 @@ package com.team2052.frckrawler;
 import java.util.ArrayList;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.FrameLayout;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
@@ -21,6 +23,7 @@ import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
+import com.team2052.frckrawler.gui.ProgressSpinner;
 
 public class RobotsActivity extends StackableTabActivity implements OnClickListener {
 	
@@ -32,100 +35,24 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_robots);
 		
-		findViewById(R.id.addRobotButton).setOnClickListener(this);
+		try {
+			String value = 
+					databaseValues[getAddressOfDatabaseKey(DBContract.COL_TEAM_NUMBER)];
+			findViewById(R.id.addRobotButton).setOnClickListener(this);
+			
+		} catch(ArrayIndexOutOfBoundsException e) {
+			findViewById(R.id.addRobotButton).setEnabled(false);
+		}
 		
 		dbManager = DBManager.getInstance(this);
 	}
 	
 	public void onStart() {
-		
 		super.onStart();
 		new GetRobotsTask().execute();
-	}
-	
-	public void postResults(Robot[] robots) {
-		
-		Metric[] metrics;
-		
-		if(robots.length > 0)
-			metrics = robots[0].getMetrics();
-		else
-			metrics = new Metric[0];
-		
-		TableLayout table = (TableLayout)findViewById(R.id.robotsDataTable);
-		TableRow descriptorsRow = new TableRow(this);
-		
-		descriptorsRow.addView(new TextView(this));
-		descriptorsRow.addView(new MyTextView(this, "Team #", 18));
-		descriptorsRow.addView(new MyTextView(this, "Game", 18));
-		descriptorsRow.addView(new MyTextView(this, "Comments", 18));
-		
-		for(Metric m : metrics) {
-			
-			if(m != null)
-				descriptorsRow.addView(new MyTextView(this, m.getMetricName(), 18));
-		}
-		
-		table.removeAllViews();
-		table.addView(descriptorsRow);
-		
-		for(int i = 0; i < robots.length; i++) {
-			
-			int color;
-			
-			if(i % 2 == 0)
-				color = GlobalSettings.ROW_COLOR;
-			else
-				color = Color.TRANSPARENT;
-			
-			//Create the buttons for each row
-			MyButton editRobot = new MyButton(this, "Edit Robot", this, 
-					Integer.toString(robots[i].getID()));
-			editRobot.setId(EDIT_ROBOT_ID);
-			
-			MyButton events = new MyButton(this, "Events", this,
-					(Integer)robots[i].getID());
-			events.setId(EVENTS_ID);
-			
-			MyButton pictures = new MyButton(this, "Pictures", this, 
-					Integer.toString(robots[i].getID()));
-			pictures.setId(PICTURES_ID);
-			
-			//Holds the row's data
-			ArrayList<View> rowArrayList = new ArrayList<View>();
-			
-			rowArrayList.add(editRobot);
-			rowArrayList.add(new MyTextView(this, Integer.toString(robots[i].
-					getTeamNumber()), 18));
-			rowArrayList.add(new MyTextView(this, robots[i].getGame(), 18));
-			
-			//Stops a index out of bounds exception from being thrown if there's a short comment
-			String comment;
-			
-			if(robots[i].getComments() != null && 
-					robots[i].getComments().length() >= COMMENT_CHAR_LIMIT)
-				comment = robots[i].getComments().substring(0, COMMENT_CHAR_LIMIT - 1);
-			else if(robots[i].getComments() != null)
-				comment = robots[i].getComments();
-			else
-				comment = new String();
-				
-			rowArrayList.add(new MyTextView(this, comment, 18));
-			
-			for(MetricValue m : robots[i].getMetricValues()) {
-				rowArrayList.add(new MyTextView(this, m.getValueAsHumanReadableString(), 18));
-			}
-			
-			rowArrayList.add(events);
-			rowArrayList.add(pictures);
-			
-			//Add the row to the table
-			table.addView(new MyTableRow(this, rowArrayList.toArray(new View[0]), color));
-		}
 	}
 
 	public void onClick(View v) {
@@ -135,11 +62,16 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 		switch(v.getId()) {
 			case R.id.addRobotButton:
 				
-				i = new Intent(this, AddRobotDialogActivity.class);
-				i.putExtra(AddRobotDialogActivity.TEAM_NUMBER_EXTRA, 
+				try {
+					i = new Intent(this, AddRobotDialogActivity.class);
+					i.putExtra(AddRobotDialogActivity.TEAM_NUMBER_EXTRA, 
 						databaseValues[this.getAddressOfDatabaseKey
 						               (DBContract.COL_TEAM_NUMBER)]);
-				startActivityForResult(i, 1);
+					startActivityForResult(i, 1);
+				} catch (ArrayIndexOutOfBoundsException e) {
+					Toast.makeText(this, "You can only add robots by going through the " +
+							"teams list first.", Toast.LENGTH_SHORT).show();
+				}
 			
 				break;
 				
@@ -193,20 +125,127 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 		}
 	}
 	
-	public void onActivityResult(int r, int c, Intent i) {
-		new GetRobotsTask().execute();
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent i) {
+		if(resultCode == RESULT_OK)
+			new GetRobotsTask().execute();
 	}
 	
-	private class GetRobotsTask extends AsyncTask<Void, Void, Robot[]> {
-
-		protected Robot[] doInBackground(Void... params) {
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {}
+	
+	
+	/*****
+	 * Class: GetRobotTask
+	 * 
+	 * @author Charles Hofer
+	 *
+	 * Description: gets the robots out of the database and adds them to 
+	 * the table, row by row.
+	 */
+	
+	private class GetRobotsTask extends AsyncTask<Void, MyTableRow, Void> {
+		
+		protected void onPreExecute() {
+			((FrameLayout)findViewById(R.id.progressFrame)).addView
+					(new ProgressSpinner(RobotsActivity.this));
 			
-			return dbManager.getRobotsByColumns(databaseKeys, databaseValues, true);
+			((TableLayout)findViewById(R.id.robotsDataTable)).removeAllViews();
+		}
+
+		protected Void doInBackground(Void... params) {
+			Robot[] robots = dbManager.getRobotsByColumns
+					(databaseKeys, databaseValues, true);
+			
+			Metric[] metrics;
+			
+			if(robots.length > 0)
+				metrics = robots[0].getMetrics();
+			else
+				metrics = new Metric[0];
+			
+			MyTableRow descriptorsRow = new MyTableRow(RobotsActivity.this);
+			descriptorsRow.addView(new TextView(RobotsActivity.this));
+			descriptorsRow.addView(new MyTextView(RobotsActivity.this, "Team #", 18));
+			descriptorsRow.addView(new MyTextView(RobotsActivity.this, "Game", 18));
+			descriptorsRow.addView(new MyTextView(RobotsActivity.this, "Comments", 18));
+			
+			for(Metric m : metrics) {
+				
+				if(m != null)
+					descriptorsRow.addView(new MyTextView(RobotsActivity.this, m.getMetricName(), 18));
+			}
+			
+			publishProgress(descriptorsRow);
+			
+			for(int i = 0; i < robots.length; i++) {
+				
+				int color;
+				
+				if(i % 2 == 0)
+					color = GlobalSettings.ROW_COLOR;
+				else
+					color = Color.TRANSPARENT;
+				
+				//Create the buttons for each row
+				MyButton editRobot = new MyButton(RobotsActivity.this, "Edit Robot", RobotsActivity.this, 
+						Integer.toString(robots[i].getID()));
+				editRobot.setId(EDIT_ROBOT_ID);
+				
+				MyButton events = new MyButton(RobotsActivity.this, "Events", RobotsActivity.this,
+						(Integer)robots[i].getID());
+				events.setId(EVENTS_ID);
+				
+				MyButton pictures = new MyButton(RobotsActivity.this, "Pictures", RobotsActivity.this, 
+						Integer.toString(robots[i].getID()));
+				pictures.setId(PICTURES_ID);
+				
+				//Holds the row's data
+				ArrayList<View> rowArrayList = new ArrayList<View>();
+				
+				rowArrayList.add(editRobot);
+				rowArrayList.add(new MyTextView(RobotsActivity.this, Integer.toString(robots[i].
+						getTeamNumber()), 18));
+				rowArrayList.add(new MyTextView(RobotsActivity.this, robots[i].getGame(), 18));
+				
+				//Stops a index out of bounds exception from being thrown if there's a short comment
+				String comment;
+				
+				if(robots[i].getComments() != null && 
+						robots[i].getComments().length() >= COMMENT_CHAR_LIMIT)
+					comment = robots[i].getComments().substring(0, COMMENT_CHAR_LIMIT - 1);
+				else if(robots[i].getComments() != null)
+					comment = robots[i].getComments();
+				else
+					comment = new String();
+					
+				rowArrayList.add(new MyTextView(RobotsActivity.this, comment, 18));
+				
+				for(MetricValue m : robots[i].getMetricValues()) {
+					rowArrayList.add(new MyTextView(RobotsActivity.this, m.getValueAsHumanReadableString(), 18));
+				}
+				
+				rowArrayList.add(events);
+				rowArrayList.add(pictures);
+				
+				//Add the row to the table
+				publishProgress(new MyTableRow(RobotsActivity.this, 
+						rowArrayList.toArray(new View[0]), color));
+				
+				try {	//Wait for the UI to update
+					Thread.sleep(75);
+				} catch(InterruptedException e) {}
+			}
+			
+			return null;
 		}
 		
-		protected void onPostExecute(Robot[] robots) {
-			
-			postResults(robots);
+		protected void onProgressUpdate(MyTableRow... row) {
+			((TableLayout)findViewById(R.id.robotsDataTable)).addView(row[0]);
+		}
+
+		protected void onPostExecute(Void v) {
+			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 	}
 }
