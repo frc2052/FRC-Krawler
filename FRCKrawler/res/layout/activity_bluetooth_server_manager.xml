@@ -77,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Bluetooth"
+        android:text="Bluetooth and Sharing"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="24sp" />
 
@@ -110,7 +110,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/hostToggle"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="100dp"
         android:text="Database Backup via SD"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="24sp" />
@@ -137,5 +137,24 @@
             android:text="Export Database"
             android:textSize="18sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hostToggle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Export CSV Summary via SD"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/exportCSV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:text="Export"
+        android:textSize="18sp" />
 
 </RelativeLayout>

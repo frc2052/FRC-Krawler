@@ -66,7 +66,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 					data[(Integer)v.getTag()].getMatchComments());
 			i.putExtra(CommentDialogActivity.MATCHES_ARRAY_EXTRA, 
 					data[(Integer)v.getTag()].getMatchesPlayed());
-			startActivityForResult(i, 1);
+			startActivity(i);
 			
 		} else if(v.getId() == PICTURE_BUTTON_ID) {
 			

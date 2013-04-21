@@ -18,7 +18,7 @@ public class SummaryActivity extends Activity {
 		setContentView(R.layout.activity_scout_summary);
 		dbManager = DBManager.getInstance(this);
 		
-		Event e = dbManager.scoutGetEvent();
+		Event e = dbManager.summaryGetEvent();
 		((TextView)findViewById(R.id.summaryEventName)).
 				setText(e.getEventName() + ", " + e.getGameName());
 		

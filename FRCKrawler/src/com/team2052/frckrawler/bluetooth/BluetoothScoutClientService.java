@@ -124,7 +124,7 @@ public class BluetoothScoutClientService extends Service
 	
 	
 	/*****
-	 * Class: BluetoothServerThread
+	 * Class: BluetoothClientThread
 	 * 
 	 * Summary: The worker thread for the bluetooth server. This thread
 	 * does handles almost everything related to the server.
@@ -148,15 +148,13 @@ public class BluetoothScoutClientService extends Service
 		}
 		
 		public void run() {
-			
-			Log.d("FRCKrawler", "Client thread started.");
 				
 			try {
 				
 				//Open the socket
 				BluetoothSocket serverSocket = serverDevice.
 						createRfcommSocketToServiceRecord
-							(UUID.fromString(BluetoothInfo.ClientServerUUID));
+							(UUID.fromString(BluetoothInfo.UUID));
 				serverSocket.connect();
 				
 				if(threadListener != null)
@@ -168,31 +166,25 @@ public class BluetoothScoutClientService extends Service
 				ObjectOutputStream ooStream = new ObjectOutputStream(outStream);
 				
 				if(threadListener != null)
-					threadListener.onUpdate("Exchanging data");
+					threadListener.onUpdate("Writing data");
 				
 				//Get the data to send
 				Event event = dbManager.scoutGetEvent();
-				
 				Robot[] robotsArr = dbManager.scoutGetUpdatedRobots();
-				ArrayList<Robot> robots = new ArrayList<Robot>();
-				for(Robot r : robotsArr)
-					robots.add(r);
 				
 				MatchData[] matchDataArr = dbManager.scoutGetAllMatchData();
-				ArrayList<MatchData> matchData = new ArrayList<MatchData>();
-				for(MatchData m : matchDataArr)
-					matchData.add(m);
 				
 				//Write the scout data
 				ooStream.writeInt(BluetoothInfo.SCOUT);
 				ooStream.writeObject(event);
-				ooStream.writeObject(robots);
-				//ooStream.writeObject(new ArrayList<DriverData>());
-				ooStream.writeObject(matchData);
+				ooStream.writeObject(robotsArr);
+				ooStream.writeObject(matchDataArr);
+				
+				if(threadListener != null)
+					threadListener.onUpdate("Reading data");
 				
 				//Clear out the old data after it is sent
 				dbManager.scoutClearMatchData();
-				//dbManager.scoutClearDriverData();
 				
 				//Start the reading thread
 				ScoutDataReader reader = new ScoutDataReader(context, inStream);
@@ -254,11 +246,11 @@ public class BluetoothScoutClientService extends Service
 		public void run() {
 			
 			Event inEvent = null;
-			ArrayList<User> inUsers = new ArrayList<User>();
-			ArrayList<String> inTeamNames = new ArrayList<String>();
-			ArrayList<Robot> inRobots = new ArrayList<Robot>();
-			ArrayList<Metric> inRobotMetrics = new ArrayList<Metric>();
-			ArrayList<Metric> inMatchMetrics = new ArrayList<Metric>();
+			User[] inUsers = new User[0];
+			String[] inTeamNames = new String[0];
+			Robot[] inRobots = new Robot[0];
+			Metric[] inRobotMetrics = new Metric[0];
+			Metric[] inMatchMetrics = new Metric[0];
 			//ArrayList<Metric> inDriverMetrics = new ArrayList<Metric>();
 			
 			try{
@@ -266,21 +258,20 @@ public class BluetoothScoutClientService extends Service
 				ObjectInputStream ioStream = new ObjectInputStream(iStream);
 				
 				inEvent = (Event)ioStream.readObject();
-				inUsers = (ArrayList<User>)ioStream.readObject();
-				inTeamNames = (ArrayList<String>)ioStream.readObject();
-				inRobots = (ArrayList<Robot>)ioStream.readObject();
-				inRobotMetrics = (ArrayList<Metric>)ioStream.readObject();
-				inMatchMetrics = (ArrayList<Metric>)ioStream.readObject();
+				inUsers = (User[])ioStream.readObject();
+				inTeamNames = (String[])ioStream.readObject();
+				inRobots = (Robot[])ioStream.readObject();
+				inRobotMetrics = (Metric[])ioStream.readObject();
+				inMatchMetrics = (Metric[])ioStream.readObject();
 				
 				//inDriverMetrics = (ArrayList<Metric>)ioStream.readObject();
 				
 				//Write the received arrays to the database
 				dbManager.scoutReplaceEvent(inEvent);
-				dbManager.scoutReplaceUsers(inUsers.toArray(new User[0]));
-				dbManager.scoutReplaceRobots(inRobots.toArray(new Robot[0]), 
-						inTeamNames.toArray(new String[0]));
-				dbManager.scoutReplaceRobotMetrics(inRobotMetrics.toArray(new Metric[0]));
-				dbManager.scoutReplaceMatchMetrics(inMatchMetrics.toArray(new Metric[0]));
+				dbManager.scoutReplaceUsers(inUsers);
+				dbManager.scoutReplaceRobots(inRobots, inTeamNames);
+				dbManager.scoutReplaceRobotMetrics(inRobotMetrics);
+				dbManager.scoutReplaceMatchMetrics(inMatchMetrics);
 				
 			} catch (ClassCastException e) {
 				e.printStackTrace();

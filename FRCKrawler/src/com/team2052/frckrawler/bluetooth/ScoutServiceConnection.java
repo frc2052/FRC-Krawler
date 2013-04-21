@@ -6,14 +6,14 @@ import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-public class ClientServiceConnection implements ServiceConnection {
+public class ScoutServiceConnection implements ClientConnection {
 	
 	private ClientThreadListener listener;
 	private ClientBinder binder;
 	
-	private ClientServiceConnection() {}
+	private ScoutServiceConnection() {}
 	
-	public ClientServiceConnection(ClientThreadListener _listener) {
+	public ScoutServiceConnection(ClientThreadListener _listener) {
 		listener = _listener;
 	}
 

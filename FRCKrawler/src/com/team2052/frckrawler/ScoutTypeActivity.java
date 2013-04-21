@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.bluetooth.BluetoothScoutClientService;
-import com.team2052.frckrawler.bluetooth.ClientServiceConnection;
+import com.team2052.frckrawler.bluetooth.ScoutServiceConnection;
 import com.team2052.frckrawler.bluetooth.ClientThreadListener;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
@@ -25,7 +25,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 															ClientThreadListener, android.content.DialogInterface.OnClickListener {
 	
 	private AlertDialog progressDialog;
-	private ClientServiceConnection connection;
+	private ScoutServiceConnection connection;
 	private Event selectedEvent;
 	private DBManager db;
 	private User user;
@@ -38,7 +38,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		findViewById(R.id.pitScout).setOnClickListener(this);
 		findViewById(R.id.sync).setOnClickListener(this);
 		
-		connection = new ClientServiceConnection(this);
+		connection = new ScoutServiceConnection(this);
 		db = DBManager.getInstance(this);
 		
 		User[] allUsers = db.scoutGetAllUsers();

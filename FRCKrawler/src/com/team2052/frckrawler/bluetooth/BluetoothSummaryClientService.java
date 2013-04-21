@@ -3,20 +3,23 @@ package com.team2052.frckrawler.bluetooth;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.UUID;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
-import com.team2052.frckrawler.database.structures.SummaryData;
+import com.team2052.frckrawler.database.structures.Metric;
 
 public class BluetoothSummaryClientService extends Service implements ClientThreadListener {
 	
@@ -45,7 +48,7 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 	}
 	
 	private void close() {
-		clientThread.cancel();
+		
 	}
 	
 	@Override
@@ -107,7 +110,6 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 		
 		private BluetoothDevice serverDevice;
 		private ClientThreadListener threadListener;
-		private BluetoothSocket serverSocket;
 		
 		public BluetoothSummaryClientThread(BluetoothDevice _serverDevice, 
 				ClientThreadListener _listener) {
@@ -121,9 +123,9 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 			try {
 				
 				//Open the socket
-				serverSocket = serverDevice.
+				BluetoothSocket serverSocket = serverDevice.
 						createRfcommSocketToServiceRecord
-							(UUID.fromString(BluetoothInfo.ClientServerUUID));
+							(UUID.fromString(BluetoothInfo.UUID));
 				serverSocket.connect();
 				
 				if(threadListener != null)
@@ -131,39 +133,99 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 				
 				//Open the streams
 				InputStream inStream = serverSocket.getInputStream();
-				ObjectInputStream ioStream = new ObjectInputStream(inStream);
+				OutputStream outStream = serverSocket.getOutputStream();
+				ObjectOutputStream ooStream = new ObjectOutputStream(outStream);
 				
-				//Get the data from the server
-				Event inEvent = null;
-				ArrayList<SummaryData> summaryData = new ArrayList<SummaryData>();
+				//Send what kind of connection this is, scout or summary
+				ooStream.writeInt(2);
 				
-				inEvent = (Event)ioStream.readObject();
-				summaryData = (ArrayList<SummaryData>)ioStream.readObject();
+				if(threadListener != null)
+					threadListener.onUpdate("Reading Data");
+				
+				/*SummaryDataReader reader = new SummaryDataReader(getApplicationContext(), 
+						inStream, threadListener);
+				reader.start();
+				
+				while(!reader.isFinished()) {
+					try {
+						Thread.sleep(10);
+					} catch(InterruptedException e) {}
+				}*/
 				
 				//Close the streams
-				ioStream.close();
 				inStream.close();
+				ooStream.close();
+				outStream.close();
 				serverSocket.close();
 				
-				//Write the data to the database
+				Log.d("FRCKrawler", "Closed streams.");
 				
+				//Notify of a successful sync
+				if(threadListener != null)
+					threadListener.onSuccessfulSync();
 				
 			} catch(IOException e) {
-				if(threadListener != null)
-					threadListener.onUnsuccessfulSync(e.getMessage());
-			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 				if(threadListener != null)
 					threadListener.onUnsuccessfulSync(e.getMessage());
 			}
 		}
+	}
+	
+	
+	/*****
+	 * Class: SummaryDataReader
+	 * 
+	 * @author Charles Hofer
+	 *
+	 * Description: Reads the required data from the passed InputStream.
+	 */
+	
+	private class SummaryDataReader extends Thread {
 		
-		public void cancel() {
+		private boolean isFinished;
+		private Context context;
+		private InputStream iStream;
+		private ClientThreadListener listener;
+		
+		public SummaryDataReader(Context _context, InputStream _iStream, 
+				ClientThreadListener _listener) {
+			isFinished = false;
+			context = _context;
+			iStream = _iStream;
+			listener = _listener;
+		}
+		
+		@Override
+		public void run() {
+			
 			try {
-				serverSocket.close();
-			} catch(IOException e) {
-				Log.e("FRCKrawler", "IOException in closing client socket. " 
-						+ e.getMessage());
-			} catch(NullPointerException e) {}
+				ObjectInputStream oiStream = new ObjectInputStream(iStream);
+				
+				Event inEvent = null;
+				Metric[] matchMetrics = new Metric[0];
+				Metric[] robotMetrics = new Metric[0];
+				
+				inEvent = (Event)oiStream.readObject();
+				matchMetrics = (Metric[])oiStream.readObject();
+				
+				if(inEvent != null) {
+					DBManager db = DBManager.getInstance(context);
+					db.summarySetEvent(inEvent);
+				}
+			}  catch(IOException e) {
+				if(listener != null)
+					listener.onUnsuccessfulSync(e.getMessage());
+			} catch (ClassNotFoundException e) {
+				if(listener != null)
+					listener.onUnsuccessfulSync(e.getMessage());
+			}
+			
+			isFinished = true;
+		}
+		
+		public boolean isFinished() {
+			return isFinished;
 		}
 	}
 }

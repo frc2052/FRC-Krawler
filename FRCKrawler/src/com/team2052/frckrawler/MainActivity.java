@@ -13,12 +13,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.bluetooth.BluetoothScoutClientService;
-import com.team2052.frckrawler.bluetooth.ClientServiceConnection;
+import com.team2052.frckrawler.bluetooth.BluetoothSummaryClientService;
+import com.team2052.frckrawler.bluetooth.ClientConnection;
 import com.team2052.frckrawler.bluetooth.ClientThreadListener;
+import com.team2052.frckrawler.bluetooth.ScoutServiceConnection;
+import com.team2052.frckrawler.bluetooth.SummaryServiceConnection;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.User;
 import com.team2052.frckrawler.gui.ProgressSpinner;
@@ -35,7 +37,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 	private BluetoothDevice[] devices;
 	private int selectedDeviceAddress;
 	private AlertDialog progressDialog;
-	private ClientServiceConnection connection;
+	private ClientConnection connection;
+	private ClientConnection summaryConnection;
 	private EditText scoutLoginName;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +48,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         findViewById(R.id.continueScouting).setOnClickListener(this);
         findViewById(R.id.sync_summary).setOnClickListener(this);
         findViewById(R.id.view_summary).setOnClickListener(this);
-        
-        connection = new ClientServiceConnection(this);
     }
     
     public void onDestroy() {
@@ -55,7 +56,12 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		try {
 			connection.closeBTConnection();
 			unbindService(connection);
-		} catch(IllegalArgumentException e) {}
+		} catch(Exception e) {}
+		
+		try {
+			summaryConnection.closeBTConnection();
+			unbindService(summaryConnection);
+		} catch(Exception e) {}
 		
 		if(progressDialog != null)
     		progressDialog.dismiss();
@@ -172,6 +178,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 	public void onClick(DialogInterface dialog, int which) {
 		
 		if(which == DialogInterface.BUTTON_NEUTRAL) {
+			connection.closeBTConnection();
 			unbindService(connection);
 			
 		} else {
@@ -199,6 +206,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				Intent i = new Intent(this, BluetoothScoutClientService.class);
 				i.putExtra(BluetoothScoutClientService.SERVER_MAC_ADDRESS, 
 						devices[which].getAddress());
+				connection = new ScoutServiceConnection(this);
 				bindService(i, connection, Context.BIND_AUTO_CREATE);
 				prefsEditor.putString(GlobalSettings.MAC_ADRESS_PREF, 
 						devices[selectedDeviceAddress].getAddress());
@@ -226,6 +234,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			Intent i = new Intent(this, BluetoothScoutClientService.class);
 			i.putExtra(BluetoothScoutClientService.SERVER_MAC_ADDRESS, 
 					devices[selectedDeviceAddress].getAddress());
+			connection = new ScoutServiceConnection(this);
 			bindService(i, connection, Context.BIND_AUTO_CREATE);
 			prefsEditor.putString(GlobalSettings.MAC_ADRESS_PREF, 
 					devices[selectedDeviceAddress].getAddress());
@@ -250,6 +259,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		
 		runOnUiThread(new Runnable() {
 			public void run() {
+				connection.closeBTConnection();
 				unbindService(connection);
 				progressDialog.dismiss();
 				Toast.makeText(getApplicationContext(), 
@@ -276,6 +286,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		runOnUiThread(new Runnable() {
 			
 			public void run() {
+				connection.closeBTConnection();
 				unbindService(connection);
 				progressDialog.dismiss();
 				Toast.makeText(getApplicationContext(), "Sync unsuccessful. " + 
@@ -366,12 +377,127 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			
 		} else if(v.getId() == R.id.sync_summary) {
 			
+			if(BluetoothAdapter.getDefaultAdapter() == null) {
+				Toast.makeText(this, "Sorry, your device does not support Bluetooth. " +
+						"You are unable to sync with a server.", Toast.LENGTH_LONG);
+				return;
+			}
 			
+			devices = BluetoothAdapter.getDefaultAdapter().
+					getBondedDevices().toArray(new BluetoothDevice[0]);
+			CharSequence[] deviceNames = new String[devices.length];
+			
+			for(int k = 0; k < deviceNames.length; k++)
+				deviceNames[k] = devices[k].getName();
+				
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Select Server Device");
+			builder.setItems(deviceNames, new SummaryDialogListener());
+			builder.show();
 			
 		} else if(v.getId() == R.id.view_summary) {
-			
 			Intent i = new Intent(this, SummaryActivity.class);
 			startActivity(i);
+		}
+	}
+	
+	private class SummaryDialogListener implements DialogInterface.OnClickListener {
+
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			
+			if(which == DialogInterface.BUTTON_NEUTRAL) {
+				summaryConnection.closeBTConnection();
+				unbindService(summaryConnection);
+				dialog.dismiss();
+				
+			} else {
+				
+				selectedDeviceAddress = which;
+				BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+			
+				if(adapter == null) {
+					Toast.makeText(MainActivity.this, "Sorry, your device does not support " +
+							"Bluetooth. You may not sync with another database.", 
+							Toast.LENGTH_LONG);
+				}
+			
+				if (!adapter.isEnabled()) {
+					Intent enableBtIntent = 
+							new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+					startActivityForResult(enableBtIntent, REQUEST_BT_ENABLE);
+			    
+				} else {
+					Intent i = new Intent(MainActivity.this, BluetoothSummaryClientService.class);
+					i.putExtra(BluetoothSummaryClientService.SERVER_MAC_ADDRESS, 
+							devices[which].getAddress());
+					summaryConnection = new SummaryServiceConnection(new SummaryClientListener());
+					bindService(i, summaryConnection, Context.BIND_AUTO_CREATE);
+				
+					AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+					builder.setTitle("Syncing...");
+					builder.setView(new ProgressSpinner(MainActivity.this));
+					builder.setNeutralButton("Cancel", new SummaryDialogListener());
+					progressDialog = builder.create();
+					progressDialog.show();
+				}
+			}
+		}
+	}
+	
+	private class SummaryClientListener implements ClientThreadListener {
+
+		@Override
+		public void onSuccessfulSync() {
+			
+			runOnUiThread(new Runnable() {
+				
+				public void run() {
+					
+					progressDialog.dismiss();
+					summaryConnection.closeBTConnection();
+					unbindService(summaryConnection);
+					
+					Toast.makeText(getApplicationContext(), 
+							"Sync successful.", Toast.LENGTH_SHORT).show();
+					
+					Intent i = new Intent(MainActivity.this, SummaryActivity.class);
+					startActivity(i);
+				}
+			});
+		}
+
+		@Override
+		public void onUnsuccessfulSync(String _errorMessage) {
+			final String errorMessage = _errorMessage;
+			
+			runOnUiThread(new Runnable() {
+				
+				public void run() {
+					summaryConnection.closeBTConnection();
+					
+					try {
+						unbindService(summaryConnection);
+					} catch(IllegalArgumentException e) {}
+					
+					progressDialog.dismiss();
+					Toast.makeText(getApplicationContext(), "Sync unsuccessful. " + 
+							errorMessage + ".", Toast.LENGTH_SHORT).show();
+				}
+			});
+		}
+
+		@Override
+		public void onUpdate(String _message) {
+			final String message = _message;
+			
+			runOnUiThread(new Runnable() {
+				
+				public void run() {
+					Toast.makeText(getApplicationContext(), message, 
+							Toast.LENGTH_SHORT).show();
+				}
+			});
 		}
 	}
 }

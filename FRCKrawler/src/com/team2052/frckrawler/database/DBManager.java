@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.database;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -64,7 +65,8 @@ public class DBManager {
 		
 		//calling getApplicationContext() assures that no resources are held on to that should have been released.
 		context = _context.getApplicationContext();
-		helper = new DBHelper(context);
+		helper = new DBHelper(context, new File
+				(context.getFilesDir().getPath(), DBContract.DATABASE_NAME).getPath());
 	}
 	
 	
@@ -80,7 +82,6 @@ public class DBManager {
 	public static DBManager getInstance(Context _context) {
 		
 		if(instance == null){	//If a manager has not been created yet
-			
 			instance = new DBManager(_context.getApplicationContext());
 		}
 		
@@ -3898,23 +3899,385 @@ public class DBManager {
 	 * 
 	 * Summary: sets the compiled data from the server and gets rid of the old data
 	 *****/
-	public synchronized void summarySetCompiledData(SummaryData[] summaryData) {
+	/*public synchronized void summarySetCompiledData(SummaryData[] summaryData) {
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_COMPILED_MATCH_DATA);
 		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_MATCH_DATA);
 		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_ROBOTS);
 		
+		for(int i = 0; i < summaryData.length; i++) {
+			
+			ContentValues compiledMatchValues = new ContentValues();
+			compiledMatchValues.put(DBContract.COL_ROBOT_ID, summaryData[i].getRobot().getID());
+			
+			for(MetricValue m : summaryData[i].getCompiledMatchData())
+				compiledMatchValues.put(m.getMetric().getKey(), m.getValueAsDBReadableString());
+			
+			for(MatchData m : summaryData[i].getMatchData()) {
+				ContentValues matchDataValues = new ContentValues();
+				
+				matchDataValues.put(DBContract.COL_DATA_ID, m.getMatchID());
+				matchDataValues.put(DBContract.COL_ROBOT_ID, m.getRobotID());
+				matchDataValues.put(DBContract.COL_EVENT_ID, m.getEventID());
+				matchDataValues.put(DBContract.COL_USER_ID, m.getUserID());
+				matchDataValues.put(DBContract.COL_MATCH_NUMBER, m.getMatchNumber());
+				matchDataValues.put(DBContract.COL_MATCH_TYPE, m.getMatchType());
+				matchDataValues.put(DBContract.COL_COMMENTS, m.getComments());
+				
+				for(MetricValue mv : m.getMetricValues())
+					matchDataValues.put(mv.getMetric().getKey(), 
+							mv.getValueAsDBReadableString());
+				
+				db.insert(DBContract.SUMMARY_TABLE_MATCH_DATA, null, matchDataValues);
+			}
+			
+			ContentValues robotValues = new ContentValues();
+			
+			 robotValues.put(DBContract.COL_TEAM_NUMBER, 
+					 summaryData[i].getRobot().getTeamNumber());
+			 robotValues.put(DBContract.COL_ROBOT_ID, summaryData[i].getRobot().getID());
+			 robotValues.put(DBContract.COL_GAME_NAME, summaryData[i].getRobot().getGame());
+			 robotValues.put(DBContract.COL_COMMENTS, summaryData[i].getRobot().getComments());
+			 robotValues.put(DBContract.COL_IMAGE_PATH, 
+					 summaryData[i].getRobot().getImagePath());
+			 
+			 for(MetricValue m : summaryData[i].getRobot().getMetricValues())
+				 robotValues.put(m.getMetric().getKey(), m.getValueAsDBReadableString());
+			 
+			 db.insert(DBContract.SUMMARY_TABLE_COMPILED_MATCH_DATA, null, 
+					 compiledMatchValues);
+			 db.insert(DBContract.SUMMARY_TABLE_ROBOTS, null, robotValues);
+		}
 		
-	}
+		helper.close();
+	}*/
 	
 	/*****
 	 * Method: summaryGetSummaryData
 	 * 
 	 * Summary: gets the data synced from a server.
 	 *****/
-	public synchronized SummaryData[] summaryGetSummaryData() {
+	/*public synchronized SummaryData[] summaryGetSummaryData() {
+		
+		SQLiteDatabase db = helper.getReadableDatabase();
+		Event e = summaryGetEvent();
+		
+		Cursor robotsCursor = db.rawQuery("SELECT * FROM " + 
+					DBContract.SUMMARY_TABLE_ROBOTS, null);
+		Cursor compMatchCursor = db.rawQuery("SELECT * FROM " + 
+					DBContract.SUMMARY_TABLE_COMPILED_MATCH_DATA, null);
+		
+		SummaryData[] data = new SummaryData[robotsCursor.getCount()];
+		
+		for(int i = 0; i < robotsCursor.getCount(); i++) {
+			robotsCursor.moveToNext();
+			
+			int eventID;
+			ArrayList<Integer> matchesPlayed = new ArrayList<Integer>();
+			Robot robot;
+			ArrayList<String> matchComments = new ArrayList<String>();
+			ArrayList<MetricValue> compiledMatchData = new ArrayList<MetricValue>();
+			ArrayList<MatchData> matchData = new ArrayList<MatchData>();
+			
+			eventID = e.getEventID();
+			ArrayList<MetricValue> robotValues = new ArrayList<MetricValue>();
+			
+			for(int k = 0; k < DBContract.COL_KEYS.length; k++) {
+				String valString = robotsCursor.getString(robotsCursor.getColumnIndex
+						(DBContract.COL_KEYS[k]));
+						
+				if(valString != null && !valString.equals("null") && !valString.equals("")) {
+					ArrayList<String> valsArr = new ArrayList<String>();
+					String workingString = new String();
+					
+					if(valString == null)
+						valString = new String();
+					
+					for(int charCount = 0; charCount < valString.length(); charCount++) {
+						if(valString.charAt(charCount) != ':'){
+							workingString += valString.substring(charCount, charCount + 1);
+							
+						} else {
+							valsArr.add(workingString);
+							workingString = new String();
+						}
+					}
+					
+					//robotValues.add(new MetricValue())
+				}
+			}
+			
+			robot = new Robot(
+					robotsCursor.getInt(robotsCursor.getColumnIndex
+							(DBContract.COL_TEAM_NUMBER)),
+					robotsCursor.getInt(robotsCursor.getColumnIndex
+							(DBContract.COL_ROBOT_ID)),
+					robotsCursor.getString
+							(robotsCursor.getColumnIndex(DBContract.COL_GAME_NAME)),
+					robotsCursor.getString(robotsCursor.getColumnIndex
+							(DBContract.COL_COMMENTS)),
+					robotsCursor.getString(robotsCursor.getColumnIndex
+							(DBContract.COL_IMAGE_PATH)),
+					
+					);
+		}
+		
+		
 		
 		return new SummaryData[0];
+	}*/
+	
+	
+	/*****
+	 * Method: summaryGetEvent
+	 * 
+	 * Summary: gets the sumary's event out of the database
+	 *****/
+	
+	public synchronized Event summaryGetEvent() {
+		
+		Event event;
+		
+		Cursor c = helper.getReadableDatabase().
+				rawQuery("SELECT * FROM " + DBContract.SUMMARY_TABLE_EVENT, null);
+		if(c.moveToFirst()) {
+		
+			event = new Event(
+				c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
+				c.getString(c.getColumnIndex(DBContract.COL_EVENT_NAME)),
+				c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
+				new Date(c.getLong(c.getColumnIndex(DBContract.COL_DATE_STAMP))),
+				c.getString(c.getColumnIndex(DBContract.COL_LOCATION)),
+				c.getString(c.getColumnIndex(DBContract.COL_FMS_EVENT_ID))
+				);
+			
+			helper.close();
+			return event;
+		}
+		
+		helper.close();
+		return null;
+	}
+	
+	
+	/*****
+	 * Method: scoutSetEvent
+	 * 
+	 * @param e
+	 * 
+	 * Summary: Sets the event in the scout's event table
+	 * to the specified event.
+	 */
+	
+	public synchronized void summarySetEvent(Event e) {
+		
+		if(e == null)
+			return;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_EVENT);
+		
+		ContentValues values = new ContentValues();
+		values.put(DBContract.COL_EVENT_ID, e.getEventID());
+		values.put(DBContract.COL_EVENT_NAME, e.getEventName());
+		values.put(DBContract.COL_GAME_NAME, e.getGameName());
+		values.put(DBContract.COL_LOCATION, e.getLocation());
+		
+		if(e.getDateStamp() != null)	//If a date has been set...
+			values.put(DBContract.COL_DATE_STAMP, e.getDateStamp().getTime());
+		
+		db.insert(DBContract.SUMMARY_TABLE_EVENT, null, values);
+		
+		helper.close();
+	}
+	
+	
+	/*****
+	 * Method: summarySetMatchMetrics
+	 * 
+	 * @param metrics
+	 * 
+	 * Summary: erases all metrics from the summary match metrics table
+	 * and adds the passed metrics to the table.
+	 */
+	
+	public synchronized void summarySetMatchMetrics(Metric[] metrics) {
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_MATCH_PERF_METRICS);
+		
+		for(int i = 0; i < metrics.length; i++) {
+			
+			String rangeInput = new String();
+			
+			if(metrics[i].getRange() != null) {
+			
+				for(Object r : metrics[i].getRange())	//Create the string for the range.
+					rangeInput += r.toString() + ":";	//The range is stored in one cell.
+			}
+			
+			ContentValues values = new ContentValues();
+			values.put(DBContract.COL_METRIC_ID, metrics[i].getID());
+			values.put(DBContract.COL_METRIC_NAME, metrics[i].getMetricName());
+			values.put(DBContract.COL_GAME_NAME, metrics[i].getGameName());
+			values.put(DBContract.COL_TYPE, metrics[i].getType());
+			values.put(DBContract.COL_RANGE, rangeInput);
+			values.put(DBContract.COL_DESCRIPTION, metrics[i].getDescription());
+			values.put(DBContract.COL_DISPLAY, metrics[i].isDisplayed());
+			values.put(DBContract.COL_METRIC_KEY, metrics[i].getKey());
+			
+			db.insert(DBContract.SUMMARY_TABLE_MATCH_PERF_METRICS, null, values);
+		}
+		
+		helper.close();
+	}
+	
+	
+	/*****
+	 * Method: summaryGetMatchMetrics
+	 * 
+	 * @return Metric[]
+	 * 
+	 * Summary: returns all match metrics that were put into tha database by the
+	 * summarySetMatchMetrics function.
+	 */
+	
+	public synchronized Metric[] summaryGetMatchMetrics() {
+		
+		Cursor c = helper.getWritableDatabase().rawQuery("SELECT * FROM " + 
+				DBContract.SUMMARY_TABLE_MATCH_PERF_METRICS, null);
+		Metric[] metrics = new Metric[c.getCount()];
+		
+		for(int i = 0; i < metrics.length; i++) {
+			
+			c.moveToNext();
+			
+			String rangeString = c.getString(c.getColumnIndex(DBContract.COL_RANGE));
+			ArrayList<Object> rangeArrList = new ArrayList<Object>();
+			
+			String currentRangeValString = new String();
+			
+			for(int character = 0; character < rangeString.length(); character++) {
+				
+				if(rangeString.charAt(character) != ':')
+					currentRangeValString += rangeString.charAt(character);
+				
+				else {
+					rangeArrList.add(currentRangeValString);
+					currentRangeValString = new String();
+				}
+			}
+			
+			metrics[i] = new Metric(
+					c.getInt(c.getColumnIndex(DBContract.COL_METRIC_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_METRIC_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_DESCRIPTION)),
+					c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)),
+					c.getInt(c.getColumnIndex(DBContract.COL_TYPE)),
+					rangeArrList.toArray(),
+					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0)
+					);
+		}
+		
+		helper.close();
+		
+		return metrics;
+	}
+	
+	
+	/*****
+	 * Method: summarySetRobotMetrics
+	 * 
+	 * @param metrics
+	 * 
+	 * Summary: erases all metrics from the summary match metrics table
+	 * and adds the passed metrics to the table.
+	 */
+	
+	public synchronized void summarySetRobotMetrics(Metric[] metrics) {
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_ROBOT_METRICS);
+		
+		for(int i = 0; i < metrics.length; i++) {
+			
+			String rangeInput = new String();
+			
+			if(metrics[i].getRange() != null) {
+			
+				for(Object r : metrics[i].getRange())	//Create the string for the range.
+					rangeInput += r.toString() + ":";	//The range is stored in one cell.
+			}
+			
+			ContentValues values = new ContentValues();
+			values.put(DBContract.COL_METRIC_ID, metrics[i].getID());
+			values.put(DBContract.COL_METRIC_NAME, metrics[i].getMetricName());
+			values.put(DBContract.COL_GAME_NAME, metrics[i].getGameName());
+			values.put(DBContract.COL_TYPE, metrics[i].getType());
+			values.put(DBContract.COL_RANGE, rangeInput);
+			values.put(DBContract.COL_DESCRIPTION, metrics[i].getDescription());
+			values.put(DBContract.COL_DISPLAY, metrics[i].isDisplayed());
+			values.put(DBContract.COL_METRIC_KEY, metrics[i].getKey());
+			
+			db.insert(DBContract.SUMMARY_TABLE_ROBOT_METRICS, null, values);
+		}
+		
+		helper.close();
+	}
+	
+	
+	/*****
+	 * Method: summaryGetRobotMetrics
+	 * 
+	 * @return Metric[]
+	 * 
+	 * Summary: returns all match metrics that were put into tha database by the
+	 * summarySetMatchMetrics function.
+	 */
+	
+	public synchronized Metric[] summaryGetRobotMetrics() {
+		
+		Cursor c = helper.getWritableDatabase().rawQuery("SELECT * FROM " + 
+				DBContract.SUMMARY_TABLE_ROBOT_METRICS, null);
+		Metric[] metrics = new Metric[c.getCount()];
+		
+		for(int i = 0; i < metrics.length; i++) {
+			
+			c.moveToNext();
+			
+			String rangeString = c.getString(c.getColumnIndex(DBContract.COL_RANGE));
+			ArrayList<Object> rangeArrList = new ArrayList<Object>();
+			
+			String currentRangeValString = new String();
+			
+			for(int character = 0; character < rangeString.length(); character++) {
+				
+				if(rangeString.charAt(character) != ':')
+					currentRangeValString += rangeString.charAt(character);
+				
+				else {
+					rangeArrList.add(currentRangeValString);
+					currentRangeValString = new String();
+				}
+			}
+			
+			metrics[i] = new Metric(
+					c.getInt(c.getColumnIndex(DBContract.COL_METRIC_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_METRIC_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_DESCRIPTION)),
+					c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)),
+					c.getInt(c.getColumnIndex(DBContract.COL_TYPE)),
+							rangeArrList.toArray(),
+					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0)
+					);
+		}
+		
+		helper.close();
+		
+		return metrics;
 	}
 }

@@ -33,7 +33,14 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_events);
 		
-		findViewById(R.id.addEventButton).setOnClickListener(this);
+		try {
+			String value = 
+					databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)];
+			findViewById(R.id.addEventButton).setOnClickListener(this);
+			
+		} catch(ArrayIndexOutOfBoundsException e) {
+			findViewById(R.id.addEventButton).setEnabled(false);
+		}
 		
 		dbManager = DBManager.getInstance(this);
 	}
@@ -187,12 +194,10 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 	private class GetEventsTask extends AsyncTask<Void, Void, Event[]> {
 		
 		protected Event[] doInBackground(Void... params) {
-			
 			return dbManager.getEventsByColumns(databaseKeys, databaseValues);
 		}
 		
 		protected void onPostExecute(Event[] events) {
-			
 			postResults(events);
 		}
 	}

@@ -149,10 +149,11 @@ public class BluetoothServerService extends Service {
 					BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 					
 					serverSocket = adapter.listenUsingRfcommWithServiceRecord
-							(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.ClientServerUUID));
+							(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
 					clientSocket = serverSocket.accept();
 					serverSocket.close();
 					
+					Log.d("FRCKrawler", "Client connected.");
 					
 					//Create our streams
 					OutputStream outputStream = clientSocket.getOutputStream();
@@ -171,20 +172,13 @@ public class BluetoothServerService extends Service {
 					
 					int connectionType = reader.getConnectionType();
 					
-					
 					if(connectionType == BluetoothInfo.SCOUT) {
 						
 						//Compile the data to send
 						User[] usersArr = dbManager.getAllUsers();
-						ArrayList<User> users = new ArrayList<User>();
-						for(User u : usersArr)
-							users.add(u);
 					
 						Robot[] robotsArr = dbManager.getRobotsAtEvent
 								(hostedEvent.getEventID());
-						ArrayList<Robot> robots = new ArrayList<Robot>();
-						for(Robot r : robotsArr)
-						robots.add(r);
 						
 						String[] teamNumbers = new String[robotsArr.length];
 						String[] colStrings = new String[robotsArr.length];
@@ -194,51 +188,38 @@ public class BluetoothServerService extends Service {
 						}
 					
 						Team[] teams = dbManager.getTeamsByColumns(colStrings, teamNumbers, true);
-						ArrayList<String> teamNames = new ArrayList<String>();
-						for(Team t : teams) {
-							teamNames.add(t.getName());
+						String[] teamNames = new String[teams.length];
+						for(int i = 0; i < teams.length; i++) {
+							teamNames[i] = teams[i].getName();
 						}
 					
 						Metric[] rMetricsArr = dbManager.getRobotMetricsByColumns
 								(new String[] {DBContract.COL_GAME_NAME}, 
 									new String[] {hostedEvent.getGameName()});
-						ArrayList<Metric> rMetrics = new ArrayList<Metric>();
-						for(Metric m : rMetricsArr)
-							rMetrics.add(m);
 						
 						Metric[] mMetricsArr = dbManager.getMatchPerformanceMetricsByColumns
 								(new String[] {DBContract.COL_GAME_NAME}, 
 										new String[] {hostedEvent.getGameName()});
-						ArrayList<Metric> mMetrics = new ArrayList<Metric>();
-						for(Metric m : mMetricsArr)
-							mMetrics.add(m);
-						
-						Metric[] dMetricsArr = new Metric[0];
-						ArrayList<Metric> dMetrics = new ArrayList<Metric>();
-						for(Metric m : dMetricsArr)
-							dMetrics.add(m);
 					
 						
 						//Send data
 						oStream.writeObject(hostedEvent);
-						oStream.writeObject(users);
+						oStream.writeObject(usersArr);
 						oStream.writeObject(teamNames);
-						oStream.writeObject(robots);
-						oStream.writeObject(rMetrics);
-						oStream.writeObject(mMetrics);
-						//arrStream.write(dMetrics);
+						oStream.writeObject(robotsArr);
+						oStream.writeObject(rMetricsArr);
+						oStream.writeObject(mMetricsArr);
 						
-					} else if(connectionType == BluetoothInfo.SUMMARY){
+					} else if(connectionType == BluetoothInfo.SUMMARY) {
+						Log.d("FRCKrawler", "Summary connected");
 						
 						//Compile the SummaryData
-						SummaryData[] sDataArr = dbManager.getSummaryData
-								(hostedEvent.getEventID());
-						ArrayList<SummaryData> summaryData = new ArrayList<SummaryData>();
-						for(SummaryData s : sDataArr)
-							summaryData.add(s);
+						/*Metric[] matchMetrics = dbManager.getMatchPerformanceMetricsByColumns
+								(new String[] {DBContract.COL_GAME_NAME}, 
+										new String[] {hostedEvent.getGameName()});
 						
 						oStream.writeObject(hostedEvent);
-						oStream.writeObject(summaryData);
+						oStream.writeObject(matchMetrics);*/
 					}
 					
 					oStream.close();
@@ -306,34 +287,35 @@ public class BluetoothServerService extends Service {
 		public void run() {
 			
 			Event inEvent = null;
-			ArrayList<Robot> inRobots = new ArrayList<Robot>();
-			ArrayList<DriverData> inDriverData = new ArrayList<DriverData>();
-			ArrayList<MatchData> inMatchData = new ArrayList<MatchData>();
+			Robot[] inRobots = new Robot[0];
+			MatchData[] inMatchData = new MatchData[0];
 			
 			try {
 				
 				ObjectInputStream inStream = new ObjectInputStream(iStream);
 				
+				Log.d("FRCKrawler", "Reading connection type");
 				connectionType = inStream.readInt();
+				Log.d("FRCKrawler", "Read connection type.");
 				
 				if(connectionType == BluetoothInfo.SCOUT) {
 					Log.d("FRCKrawler", "Scout connected");
 					
 					inEvent = (Event)inStream.readObject();
-					inRobots = (ArrayList<Robot>)inStream.readObject();
-					//inDriverData = (ArrayList<DriverData>)inStream.readObject();
-					inMatchData = (ArrayList<MatchData>)inStream.readObject();
+					inRobots = (Robot[])inStream.readObject();
+					inMatchData = (MatchData[])inStream.readObject();
 					
 					//Send the received data to the database
 					if(inEvent != null && inEvent.getEventID() == 
 							hostedEvent.getEventID()) {
-						dbManager.updateRobots(inRobots.toArray(new Robot[0]));
+						
+						dbManager.updateRobots(inRobots);
 				
 						for(MatchData m : inMatchData)
 							dbManager.insertMatchData(m);
 					}
 				} else if(connectionType == BluetoothInfo.SUMMARY){
-					Log.d("FRCKrawler", "Summary seeker connected.");
+					Log.d("FRCKrawler", "Summary connected.");
 				}
 				
 			} catch (StreamCorruptedException e) {
@@ -343,6 +325,8 @@ public class BluetoothServerService extends Service {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+			
+			Log.d("FRCKrawler", "Got here");
 			
 			isFinished = true;
 		}
