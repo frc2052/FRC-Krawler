@@ -25,7 +25,6 @@ import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatc
 import com.team2052.frckrawler.database.structures.Query;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.database.structures.StringSet;
-import com.team2052.frckrawler.database.structures.SummaryData;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.database.structures.User;
 
@@ -2931,43 +2930,6 @@ public class DBManager {
 	}
 	
 	
-	/*****
-	 * Method: getSummaryData
-	 * 
-	 * Summary: returns an events compiled data, but condensed into only strings. This
-	 * makes sorting and searching more difficult, but transmission over Bluetooth 
-	 * much easier
-	 */
-	
-	public SummaryData[] getSummaryData(int eventID) {
-		
-		if(!hasValue(DBContract.TABLE_EVENTS, 
-				DBContract.COL_EVENT_ID, Integer.toString(eventID)))
-			return null;
-		
-		CompiledData[] compiledData = getCompiledEventData(eventID, new Query[0]);
-		SummaryData[] summaryData = new SummaryData[compiledData.length];
-		
-		for(int i = 0; i < summaryData.length; i++) {
-			
-			ArrayList<MatchData> last3MatchData = new ArrayList<MatchData>();
-			MatchData[] matchData = getMatchDataByColumns(
-					new String[] {DBContract.COL_GAME_NAME, DBContract.COL_ROBOT_ID}, 
-					new String[] {compiledData[i].getRobot().getGame(), 
-							Integer.toString(compiledData[i].getRobot().getID())});
-			
-			for(int matchCount = matchData.length - 1; matchCount >= 0; matchCount++) {
-				if(matchCount > matchData.length - 4)
-					last3MatchData.add(matchData[matchCount]);
-			}
-			
-			summaryData[i] = new SummaryData(compiledData[i], 
-					last3MatchData.toArray(new MatchData[0]));
-		}
-		
-		return summaryData;
-	}
-	
 	
 	/*****
 	 * Method: printQuery
@@ -3326,8 +3288,6 @@ public class DBManager {
 		for(int i = 0; i < c.getCount(); i++) {
 			
 			c.moveToNext();
-			String thisRobotGame = c.getString
-					(c.getColumnIndex(DBContract.COL_GAME_NAME));
 			ArrayList<MetricValue> metricVals = new ArrayList<MetricValue>();
 			Metric[] metrics = new Metric[0];
 			
@@ -3399,7 +3359,6 @@ public class DBManager {
 			
 			c.moveToNext();
 			
-			String thisRobotGame = c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME));
 			ArrayList<MetricValue> metricVals = new ArrayList<MetricValue>();
 			Metric[] metrics = new Metric[0];
 			
@@ -4236,7 +4195,7 @@ public class DBManager {
 	 * 
 	 * Summary: returns all match metrics that were put into tha database by the
 	 * summarySetMatchMetrics function.
-	 */
+	 *****/
 	
 	public synchronized Metric[] summaryGetRobotMetrics() {
 		

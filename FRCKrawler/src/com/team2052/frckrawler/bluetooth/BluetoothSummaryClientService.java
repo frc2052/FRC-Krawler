@@ -137,12 +137,13 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 				ObjectOutputStream ooStream = new ObjectOutputStream(outStream);
 				
 				//Send what kind of connection this is, scout or summary
-				ooStream.writeInt(2);
+				ooStream.writeInt(BluetoothInfo.SUMMARY);
+				ooStream.flush();
 				
 				if(threadListener != null)
 					threadListener.onUpdate("Reading Data");
 				
-				/*SummaryDataReader reader = new SummaryDataReader(getApplicationContext(), 
+				SummaryDataReader reader = new SummaryDataReader(getApplicationContext(), 
 						inStream, threadListener);
 				reader.start();
 				
@@ -150,15 +151,13 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 					try {
 						Thread.sleep(10);
 					} catch(InterruptedException e) {}
-				}*/
+				}
 				
 				//Close the streams
-				inStream.close();
 				ooStream.close();
 				outStream.close();
+				inStream.close();
 				serverSocket.close();
-				
-				Log.d("FRCKrawler", "Closed streams.");
 				
 				//Notify of a successful sync
 				if(threadListener != null)
@@ -208,10 +207,13 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 				
 				inEvent = (Event)oiStream.readObject();
 				matchMetrics = (Metric[])oiStream.readObject();
+				robotMetrics = (Metric[])oiStream.readObject();
 				
 				if(inEvent != null) {
 					DBManager db = DBManager.getInstance(context);
 					db.summarySetEvent(inEvent);
+					db.summarySetMatchMetrics(matchMetrics);
+					db.summarySetRobotMetrics(robotMetrics);
 				}
 			}  catch(IOException e) {
 				if(listener != null)

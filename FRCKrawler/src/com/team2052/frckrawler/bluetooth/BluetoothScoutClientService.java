@@ -179,6 +179,7 @@ public class BluetoothScoutClientService extends Service
 				ooStream.writeObject(event);
 				ooStream.writeObject(robotsArr);
 				ooStream.writeObject(matchDataArr);
+				ooStream.flush();
 				
 				if(threadListener != null)
 					threadListener.onUpdate("Reading data");

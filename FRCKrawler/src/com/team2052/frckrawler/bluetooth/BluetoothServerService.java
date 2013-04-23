@@ -21,12 +21,10 @@ import android.util.Log;
 
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.structures.DriverData;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.Robot;
-import com.team2052.frckrawler.database.structures.SummaryData;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.database.structures.User;
 
@@ -65,7 +63,6 @@ public class BluetoothServerService extends Service {
 	
 	public void onDestroy() {
 		serverThread.closeServer();
-		Log.d("FRCKrawler", "Server service destroyed.");
 	}
 	
 	public IBinder onBind(Intent i) {
@@ -136,12 +133,7 @@ public class BluetoothServerService extends Service {
 			if(hostedEvent == null)
 				return;
 			
-			Log.d("FRCKrawler", "Bluetooth server thread started.");
-			
 			while(isActive) {
-				
-				Log.d("FRCKrawler", "Starting new server cycle.");
-				
 				ServerDataReader reader = null;
 				
 				try {
@@ -152,8 +144,6 @@ public class BluetoothServerService extends Service {
 							(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
 					clientSocket = serverSocket.accept();
 					serverSocket.close();
-					
-					Log.d("FRCKrawler", "Client connected.");
 					
 					//Create our streams
 					OutputStream outputStream = clientSocket.getOutputStream();
@@ -209,17 +199,22 @@ public class BluetoothServerService extends Service {
 						oStream.writeObject(robotsArr);
 						oStream.writeObject(rMetricsArr);
 						oStream.writeObject(mMetricsArr);
+						oStream.flush();
 						
 					} else if(connectionType == BluetoothInfo.SUMMARY) {
-						Log.d("FRCKrawler", "Summary connected");
 						
 						//Compile the SummaryData
-						/*Metric[] matchMetrics = dbManager.getMatchPerformanceMetricsByColumns
+						Metric[] matchMetrics = dbManager.getMatchPerformanceMetricsByColumns
+								(new String[] {DBContract.COL_GAME_NAME}, 
+										new String[] {hostedEvent.getGameName()});
+						Metric[] robotMetrics = dbManager.getRobotMetricsByColumns
 								(new String[] {DBContract.COL_GAME_NAME}, 
 										new String[] {hostedEvent.getGameName()});
 						
 						oStream.writeObject(hostedEvent);
-						oStream.writeObject(matchMetrics);*/
+						oStream.writeObject(matchMetrics);
+						oStream.writeObject(robotMetrics);
+						oStream.flush();
 					}
 					
 					oStream.close();
@@ -227,19 +222,14 @@ public class BluetoothServerService extends Service {
 					inputStream.close();
 					clientSocket.close();
 					
-					Log.d("FRCKrawler", "Successful sync. Finished server cycle.");
-					
 				} catch (IOException e) {
 					if(reader != null)
 						reader.close();
-					Log.d("FRCKrawler", e.getMessage());
 				} finally {
 					if(reader != null)
 						reader.close();
 				}
 			}
-			
-			Log.d("FRCKrawler", "Server thread killed.");
 		}
 		
 		public void closeServer() {
@@ -294,9 +284,7 @@ public class BluetoothServerService extends Service {
 				
 				ObjectInputStream inStream = new ObjectInputStream(iStream);
 				
-				Log.d("FRCKrawler", "Reading connection type");
 				connectionType = inStream.readInt();
-				Log.d("FRCKrawler", "Read connection type.");
 				
 				if(connectionType == BluetoothInfo.SCOUT) {
 					Log.d("FRCKrawler", "Scout connected");
@@ -314,8 +302,6 @@ public class BluetoothServerService extends Service {
 						for(MatchData m : inMatchData)
 							dbManager.insertMatchData(m);
 					}
-				} else if(connectionType == BluetoothInfo.SUMMARY){
-					Log.d("FRCKrawler", "Summary connected.");
 				}
 				
 			} catch (StreamCorruptedException e) {
@@ -325,8 +311,6 @@ public class BluetoothServerService extends Service {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			
-			Log.d("FRCKrawler", "Got here");
 			
 			isFinished = true;
 		}
