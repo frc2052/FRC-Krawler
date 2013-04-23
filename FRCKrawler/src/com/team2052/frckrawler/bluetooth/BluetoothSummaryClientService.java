@@ -20,9 +20,7 @@ import android.util.Log;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.CompiledData;
 import com.team2052.frckrawler.database.structures.Event;
-import com.team2052.frckrawler.database.structures.Metric;
-import com.team2052.frckrawler.database.structures.MetricValue;
-import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.database.structures.MatchData;
 
 public class BluetoothSummaryClientService extends Service implements ClientThreadListener {
 	
@@ -206,14 +204,17 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 				
 				Event inEvent = null;
 				CompiledData[] compiledData = new CompiledData[0];
+				MatchData[] matchData = new MatchData[0];
 				
 				inEvent = (Event)oiStream.readObject();
 				compiledData = (CompiledData[])oiStream.readObject();
+				matchData = (MatchData[])oiStream.readObject();
 				
 				if(inEvent != null) {
 					DBManager db = DBManager.getInstance(context);
 					db.summarySetEvent(inEvent);
 					db.summarySetCompiledData(compiledData);
+					db.summarySetRawMatchData(matchData);
 				}
 			}  catch(IOException e) {
 				if(listener != null)

@@ -205,17 +205,15 @@ public class BluetoothServerService extends Service {
 					} else if(connectionType == BluetoothInfo.SUMMARY) {
 						
 						//Compile the SummaryData
-						Metric[] matchMetrics = dbManager.getMatchPerformanceMetricsByColumns
-								(new String[] {DBContract.COL_GAME_NAME}, 
-										new String[] {hostedEvent.getGameName()});
-						Metric[] robotMetrics = dbManager.getRobotMetricsByColumns
-								(new String[] {DBContract.COL_GAME_NAME}, 
-										new String[] {hostedEvent.getGameName()});
 						CompiledData[] compiledData = dbManager.getCompiledEventData
 								(hostedEvent, new Query[0]);
+						MatchData[] matchData = dbManager.getMatchDataByColumns
+								(new String[] {DBContract.COL_EVENT_ID}, 
+										new String[] {Integer.toString(hostedEvent.getEventID())});
 						
 						oStream.writeObject(hostedEvent);
 						oStream.writeObject(compiledData);
+						oStream.writeObject(matchData);
 						oStream.flush();
 					}
 					

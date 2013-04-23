@@ -4,27 +4,34 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.CompiledData;
 import com.team2052.frckrawler.database.structures.Event;
+import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.Query;
+import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.database.structures.User;
+import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 
 public class SummaryActivity extends Activity implements OnClickListener {
 	
-	private static final int MATCH_COMMENTS_BUTTON_ID = 1;
+	private static final int COMMENT_CHAR_LIMIT = 20;
 	private static final int MATCH_DATA_BUTTON_ID = 2;
 	
 	private static Query[] queries = new Query[0];
@@ -50,16 +57,9 @@ public class SummaryActivity extends Activity implements OnClickListener {
 	
 	public void onClick(View v) {
 		switch(v.getId()) {
-			case MATCH_COMMENTS_BUTTON_ID:
-				
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setTitle("Match Comments");
-				builder.setView(new MyTextView(this, "", 18));
-				builder.show();
-				
-				break;
-				
 			case MATCH_DATA_BUTTON_ID:
+				
+				new ShowMatchDataTask().execute((Integer)v.getTag());
 				
 				break;
 		}
@@ -88,23 +88,25 @@ public class SummaryActivity extends Activity implements OnClickListener {
 			CompiledData[] compiledData = dbManager.summaryGetCompiledData(queries);
 			
 			ArrayList<View> descriptorsViews = new ArrayList<View>();
+			descriptorsViews.add(new MyTextView(SummaryActivity.this, " ", 18));
 			descriptorsViews.add(new MyTextView(SummaryActivity.this, "Team", 18));
 			descriptorsViews.add(new MyTextView(SummaryActivity.this, "M. Played", 18));
-			descriptorsViews.add(new MyTextView(SummaryActivity.this, "Robot Comments", 18));
-			descriptorsViews.add(new MyTextView(SummaryActivity.this, "Match Comments", 18));
-			descriptorsViews.add(new MyTextView(SummaryActivity.this, "Raw Match Data", 18));
+			descriptorsViews.add(new MyTextView(SummaryActivity.this, "R. Comments", 18));
+			descriptorsViews.add(new MyTextView(SummaryActivity.this, "M. Data", 18));
 			
 			if(compiledData.length > 0) {
 				//Add the match metric names to the table
 				for(int i = 0; i < compiledData[0].getCompiledMatchData().length; i++)
-					descriptorsViews.add(new MyTextView(SummaryActivity.this, 
-							compiledData[0].getCompiledMatchData()[i].getMetric().
-							getMetricName(), 18));
+					if(compiledData[0].getCompiledMatchData()[i].getMetric().isDisplayed())
+						descriptorsViews.add(new MyTextView(SummaryActivity.this, 
+								compiledData[0].getCompiledMatchData()[i].getMetric().
+								getMetricName(), 18));
 				
 				//Add the robot metric names to the table
 				for(int i = 0; i < compiledData[0].getRobot().getMetrics().length; i++)
-					descriptorsViews.add(new MyTextView(SummaryActivity.this, compiledData[0].
-							getRobot().getMetrics()[i].getMetricName(), 18));
+					if(compiledData[0].getRobot().getMetrics()[i].isDisplayed())
+						descriptorsViews.add(new MyTextView(SummaryActivity.this, compiledData[0].
+								getRobot().getMetrics()[i].getMetricName(), 18));
 			}
 			
 			MyTableRow descriptorsRow = new MyTableRow(SummaryActivity.this,
@@ -121,12 +123,6 @@ public class SummaryActivity extends Activity implements OnClickListener {
 				else
 					color = Color.TRANSPARENT;
 				
-				Button matchCommentsButton = new Button(SummaryActivity.this);
-				matchCommentsButton.setOnClickListener(SummaryActivity.this);
-				matchCommentsButton.setId(MATCH_COMMENTS_BUTTON_ID);
-				matchCommentsButton.setTag(compiledData[i].getRobot().getID());
-				matchCommentsButton.setText("Match Comments");
-				
 				Button rawDataButton = new Button(SummaryActivity.this);
 				rawDataButton.setOnClickListener(SummaryActivity.this);
 				rawDataButton.setId(MATCH_DATA_BUTTON_ID);
@@ -134,6 +130,7 @@ public class SummaryActivity extends Activity implements OnClickListener {
 				rawDataButton.setText("Match Data");
 				
 				ArrayList<View> dataRow = new ArrayList<View>();
+				dataRow.add(new CheckBox(SummaryActivity.this));
 				dataRow.add(new MyTextView(SummaryActivity.this, 
 						Integer.toString(compiledData[i].getRobot().
 								getTeamNumber()), 18));
@@ -141,16 +138,17 @@ public class SummaryActivity extends Activity implements OnClickListener {
 						compiledData[i].getMatchesPlayed().length), 18));
 				dataRow.add(new MyTextView(SummaryActivity.this, compiledData[i].
 						getRobot().getComments(), 18));
-				dataRow.add(matchCommentsButton);
 				dataRow.add(rawDataButton);
 				
 				for(MetricValue v : compiledData[i].getRobot().getMetricValues())
-					dataRow.add(new MyTextView(SummaryActivity.this, 
-							v.getValueAsHumanReadableString(), 18));
+					if(v.getMetric().isDisplayed())
+						dataRow.add(new MyTextView(SummaryActivity.this, 
+								v.getValueAsHumanReadableString(), 18));
 				
 				for(MetricValue v : compiledData[i].getCompiledMatchData())
-					dataRow.add(new MyTextView(SummaryActivity.this, 
-							v.getValueAsHumanReadableString(), 18));
+					if(v.getMetric().isDisplayed())
+						dataRow.add(new MyTextView(SummaryActivity.this, 
+								v.getValueAsHumanReadableString(), 18));
 				
 				MyTableRow row = new MyTableRow(
 						SummaryActivity.this, dataRow.toArray(new View[0]), color);
@@ -171,6 +169,78 @@ public class SummaryActivity extends Activity implements OnClickListener {
 		
 		protected void onPostExecute(Void v) {
 			progressDialog.dismiss();
+		}
+	}
+	
+	private class ShowMatchDataTask extends AsyncTask<Integer, Void, MatchData[]> {
+
+		@Override
+		protected MatchData[] doInBackground(Integer... params) {
+			int robotID = params[0];
+			return dbManager.summaryGetMatchDataByColumns(new String[] 
+					{DBContract.COL_ROBOT_ID}, new String[] {Integer.toString(robotID)});
+		}
+		
+		@Override
+		protected void onPostExecute(MatchData[] matchData) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
+			builder.setTitle("Raw Match Data");
+			
+			TableLayout dataTable = new TableLayout(SummaryActivity.this);
+			
+			MyTableRow descriptorsRow = new MyTableRow(SummaryActivity.this);
+			descriptorsRow.addView(new MyTextView(SummaryActivity.this, "Match #", 18));
+			descriptorsRow.addView(new MyTextView(SummaryActivity.this, "Match Type", 18));
+			descriptorsRow.addView(new MyTextView(SummaryActivity.this, "Comments", 18));
+			
+			if(matchData.length > 0) {
+				for(MetricValue v : matchData[0].getMetricValues()) {
+					descriptorsRow.addView
+						(new MyTextView(SummaryActivity.this, v.getMetric().getMetricName(), 18));
+				}
+			}
+			
+			dataTable.addView(descriptorsRow);
+			
+			for(int i = 0; i < matchData.length; i++) {
+				
+				int color;
+				
+				if(i % 2 == 0)
+					color = GlobalSettings.ROW_COLOR;
+				else
+					color = Color.TRANSPARENT;
+				
+				ArrayList<View> viewArr = new ArrayList<View>();
+				viewArr.add(new MyTextView(SummaryActivity.this, Integer.toString(matchData[i].getMatchNumber()), 
+						18));
+				viewArr.add(new MyTextView(SummaryActivity.this, matchData[i].getMatchType(), 18));
+				
+				//Put a character limit on the comments string
+				String displayedString = new String();
+				
+				if(matchData[i].getComments().length() < COMMENT_CHAR_LIMIT)
+					displayedString = matchData[i].getComments();
+				else
+					displayedString = matchData[i].getComments().
+						substring(0, COMMENT_CHAR_LIMIT - 1);
+					
+				viewArr.add(new MyTextView(SummaryActivity.this, displayedString, 18));
+				
+				//Add the metric data
+				MetricValue[] metricValues = matchData[i].getMetricValues();
+				
+				for(int k = 0; k < metricValues.length; k++) {
+					viewArr.add(new MyTextView(SummaryActivity.this, metricValues[k].
+							getValueAsHumanReadableString(), 18));
+				}
+				
+				dataTable.addView(new MyTableRow(SummaryActivity.this, 
+						viewArr.toArray(new View[0]), color));
+			}
+			
+			builder.setView(dataTable);
+			builder.show();
 		}
 	}
 }

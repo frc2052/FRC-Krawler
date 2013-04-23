@@ -506,6 +506,16 @@ public class DBContract {
 					INT + ", " + COL_GAME_NAME + STRING + ", " + COL_COMMENTS + STRING + ", " + 
 					COL_IMAGE_PATH + STRING + ", " + COL_KEYS_LIST + ", " + 
 					COL_TEAM_NAME + STRING + ")";
+	
+	
+	
+	public static final String SUMMARY_TABLE_MATCHES_PLAYED = "summarytablematchesplayed";
+	//COL_ROBOT_ID
+	//COL_MATCH_NUMBER
+	
+	public static final String CREATE_SUMMARY_TABLE_MATCHES_PLAYED = 
+			"CREATE TABLE " + SUMMARY_TABLE_MATCHES_PLAYED + " (" + 
+					COL_MATCH_NUMBER + INT + ", " + COL_ROBOT_ID + INT + ")";
 		
 	
 	
@@ -609,6 +619,7 @@ public class DBContract {
 		database.execSQL(CREATE_SUMMARY_TABLE_MATCH_DATA);
 		database.execSQL(CREATE_SUMMARY_TABLE_ROBOT_METRICS);
 		database.execSQL(CREATE_SUMMARY_TABLE_MATCH_PERF_METRICS);
+		database.execSQL(CREATE_SUMMARY_TABLE_MATCHES_PLAYED);
 	}
 	
 	/*****
@@ -652,6 +663,7 @@ public class DBContract {
 		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_MATCH_DATA);
 		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_ROBOT_METRICS);
 		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_MATCH_PERF_METRICS);
+		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_MATCHES_PLAYED);
 	}
 	
 	private DBContract() {}

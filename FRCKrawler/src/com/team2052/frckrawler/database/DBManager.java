@@ -3947,7 +3947,9 @@ public class DBManager {
 			
 			//Create the compiled match data array
 			MetricValue[][] compiledMatchData = new MetricValue[compiledData.length][];
+			int[][] matchesPlayed = new int[compiledData.length][];
 			for(int i = 0; i < compiledData.length; i++) {
+				matchesPlayed[i] = compiledData[i].getMatchesPlayed();
 				ArrayList<MetricValue> vals = new ArrayList<MetricValue>();
 				
 				for(MetricValue v : compiledData[i].getCompiledMatchData())
@@ -3955,12 +3957,12 @@ public class DBManager {
 				
 				compiledMatchData[i] = vals.toArray(new MetricValue[0]);
 			}
-				
 			
 			summarySetRobotMetrics(robotMetrics);
 			summarySetMatchMetrics(matchMetrics);
 			summarySetRobots(robots);
 			summarySetCompiledMatchData(robots, compiledMatchData);
+			summarySetMatchesPlayed(robots, matchesPlayed);
 		}
 	}
 	
@@ -3980,16 +3982,16 @@ public class DBManager {
 		CompiledData[] compiledData = new CompiledData[robots.length];
 		
 		for(int i = 0; i < compiledData.length; i++) {
+			int[] matchesPlayed = summaryGetMatchesPlayed(robots[i].getID());
+			
 			compiledData[i] = new CompiledData(
 					event.getEventID(),
-					new int[0],
+					matchesPlayed,
 					robots[i],
 					new String[0],
 					matchData[i],
 					new MetricValue[0]
 					);
-			
-			Log.d("FRCKrawler", Integer.toString(robots[i].getTeamNumber()));
 		}
 		
 		return compiledData;
@@ -4061,7 +4063,6 @@ public class DBManager {
 			String currentRangeValString = new String();
 			
 			for(int character = 0; character < rangeString.length(); character++) {
-				
 				if(rangeString.charAt(character) != ':')
 					currentRangeValString += rangeString.charAt(character);
 				
@@ -4374,5 +4375,200 @@ public class DBManager {
 		}
 		
 		return values;
+	}
+	
+	
+	/*****
+	 * Method: summarySetRawMatchData
+	 * 
+	 * @param matchData
+	 * 
+	 * Summary: replaces the old summary match data with the new match data
+	 */
+	
+	public synchronized void summarySetRawMatchData(MatchData[] matchData) {
+		
+		if(matchData.length == 0)
+			return;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_MATCH_DATA);
+		
+		for(int i = 0; i < matchData.length; i++) {
+			ContentValues values = new ContentValues();
+			
+			values.put(DBContract.COL_DATA_ID, Integer.toString(matchData[i].getMatchID()));
+			values.put(DBContract.COL_EVENT_ID, Integer.toString(matchData[i].getEventID()));
+			values.put(DBContract.COL_MATCH_NUMBER, Integer.toString(matchData[i].getMatchNumber()));
+			values.put(DBContract.COL_ROBOT_ID, Integer.toString(matchData[i].getRobotID()));
+			values.put(DBContract.COL_USER_ID, Integer.toString(matchData[i].getUserID()));
+			values.put(DBContract.COL_MATCH_TYPE, matchData[i].getMatchType());
+			values.put(DBContract.COL_COMMENTS, matchData[i].getComments());
+			for(MetricValue val : matchData[i].getMetricValues()) {
+				if(val != null) {
+					String[] arr = val.getValue();
+					String valString = new String();
+				
+					for(int k = 0; k < arr.length; k++)
+						valString += arr[k] + ":";
+				
+					values.put(val.getMetric().getKey(), valString);
+				}
+			}
+			
+			db.insert(DBContract.SUMMARY_TABLE_MATCH_DATA, null, values);
+		}
+		
+		db.close();
+	}
+	
+	
+	/*****
+	 * Method: getMatchDataByColumns
+	 * 
+	 * @param cols
+	 * @param vals
+	 * @return
+	 * 
+	 * Summary: gets the match data by the columns and values passed in the arrays
+	 *****/
+	
+	public synchronized MatchData[] summaryGetMatchDataByColumns(String[] cols, String[] vals) {
+		
+		if(cols.length != vals.length)
+			return null;
+		
+		if(cols.length < 1)
+			return new MatchData[0];
+		
+		String queryString = "SELECT * FROM " + DBContract.SUMMARY_TABLE_MATCH_DATA + " WHERE " + 
+				cols[0] + " LIKE ?";
+		
+		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
+			queryString += " AND " + cols[i] + " LIKE ?";
+		
+		queryString += " ORDER BY " + DBContract.COL_MATCH_TYPE + " DESC, " +
+				DBContract.COL_MATCH_NUMBER + " ASC";
+			
+		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
+		MatchData[] d = new MatchData[c.getCount()];
+		
+		helper.close();
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			
+			c.moveToNext();
+			
+			Metric [] metricArr = summaryGetMatchMetrics();
+			MetricValue[] dataArr = new MetricValue[metricArr.length];
+			
+			for(int k = 0; k < metricArr.length; k++) {
+				
+				ArrayList<String> valuesList = new ArrayList<String>();
+				String valueString = c.getString(c.getColumnIndex(metricArr[k].getKey()));
+				
+				String currentValsString = new String();
+				
+				if(valueString != null) {
+					for(int character = 0; character < valueString.length(); character++) {
+					
+						if(valueString.charAt(character) != ':')
+							currentValsString += valueString.charAt(character);
+					
+						else {
+							valuesList.add(currentValsString);
+							currentValsString = new String();
+						}
+					}
+				}
+				
+				try {
+					dataArr[k] = new MetricValue(metricArr[k], valuesList.toArray(new String[0]));
+				} catch (MetricTypeMismatchException e) {
+					try {
+						dataArr[k] = new MetricValue(metricArr[k], new String[] {"0"});
+					} catch(MetricTypeMismatchException ex) {}
+				}
+			}
+			
+			d[i] = new MatchData(
+					c.getInt(c.getColumnIndex(DBContract.COL_DATA_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_MATCH_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_USER_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_MATCH_TYPE)),
+					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
+					dataArr
+					);
+		}
+		
+		helper.close();
+		
+		return d;
+	}
+	
+	
+	/*****
+	 * Method: summarySetMatchesPlayed
+	 * 
+	 * @param robotID
+	 * @return
+	 * 
+	 * Summary: gets the list of match numbers that this robot has played
+	 */
+	
+	private synchronized int[] summaryGetMatchesPlayed(int robotID) {
+		
+		Cursor c = helper.getReadableDatabase().rawQuery(
+				"SELECT * FROM " + DBContract.SUMMARY_TABLE_MATCHES_PLAYED + 
+				" WHERE " + DBContract.COL_ROBOT_ID + " LIKE ?", 
+				new String[] {Integer.toString(robotID)});
+		int[] matchesPlayed = new int[c.getCount()];
+		
+		for(int i = 0; i < matchesPlayed.length; i++) {
+			c.moveToNext();
+			matchesPlayed[i] = c.getInt(c.getColumnIndex(DBContract.COL_MATCH_NUMBER));
+		}
+		
+		return matchesPlayed;
+	}
+	
+	
+	/*****
+	 * Method: summarySetMatchesPlayed
+	 * 
+	 * @param robots
+	 * @param matchesPlayed
+	 * @return
+	 * 
+	 * Summary: erases the old matches played table and replaces it with the data passed
+	 * in by the parameters
+	 */
+	
+	private synchronized boolean summarySetMatchesPlayed(Robot[] robots, int[][] matchesPlayed) {
+		
+		if(robots.length != matchesPlayed.length)
+			return false;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_MATCHES_PLAYED);
+		
+		if(robots.length == 0)
+			return true;
+		
+		for(int i = 0; i < robots.length; i++) {
+			for(int matchNum : matchesPlayed[i]) {
+				ContentValues row = new ContentValues();
+				row.put(DBContract.COL_ROBOT_ID, robots[i].getID());
+				row.put(DBContract.COL_MATCH_NUMBER, matchNum);
+				
+				db.insert(DBContract.SUMMARY_TABLE_MATCHES_PLAYED, null, row);
+			}
+		}
+		
+		helper.close();
+		
+		return true;
 	}
 }

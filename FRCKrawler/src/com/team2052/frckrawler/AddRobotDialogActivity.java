@@ -61,13 +61,17 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 		switch(v.getId()) {
 			case R.id.addRobot:
 				
+				if(((Spinner)findViewById(R.id.gameSpinner)).getChildCount() == 0) {
+					Toast.makeText(this, "Could not add robot. " +
+							"There are no games in the database. " +
+							"Please create a game first.", Toast.LENGTH_LONG);
+				}
+				
 				LinearLayout metricList = (LinearLayout)findViewById(R.id.metricList);
 				MetricValue[] vals = new MetricValue[metricList.getChildCount()];
 				
 				for(int i = 0; i < metricList.getChildCount(); i++) {
-					
 					try {
-						
 						MetricWidget widget = (MetricWidget)metricList.getChildAt(i);
 						vals[i] = new MetricValue(widget.getMetric(), widget.getValues());
 						
