@@ -6,7 +6,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
-import java.util.ArrayList;
 import java.util.UUID;
 
 import android.app.Service;
@@ -21,9 +20,11 @@ import android.util.Log;
 
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.structures.CompiledData;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
+import com.team2052.frckrawler.database.structures.Query;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.database.structures.User;
@@ -210,10 +211,11 @@ public class BluetoothServerService extends Service {
 						Metric[] robotMetrics = dbManager.getRobotMetricsByColumns
 								(new String[] {DBContract.COL_GAME_NAME}, 
 										new String[] {hostedEvent.getGameName()});
+						CompiledData[] compiledData = dbManager.getCompiledEventData
+								(hostedEvent, new Query[0]);
 						
 						oStream.writeObject(hostedEvent);
-						oStream.writeObject(matchMetrics);
-						oStream.writeObject(robotMetrics);
+						oStream.writeObject(compiledData);
 						oStream.flush();
 					}
 					

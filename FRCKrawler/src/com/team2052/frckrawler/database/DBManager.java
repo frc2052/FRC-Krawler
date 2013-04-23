@@ -3853,140 +3853,6 @@ public class DBManager {
 	 * from a server is stored.
 	 **********/
 	
-	/*****
-	 * Method: summarySetSummaryData
-	 * 
-	 * Summary: sets the compiled data from the server and gets rid of the old data
-	 *****/
-	/*public synchronized void summarySetCompiledData(SummaryData[] summaryData) {
-		
-		SQLiteDatabase db = helper.getWritableDatabase();
-		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_COMPILED_MATCH_DATA);
-		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_MATCH_DATA);
-		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_ROBOTS);
-		
-		for(int i = 0; i < summaryData.length; i++) {
-			
-			ContentValues compiledMatchValues = new ContentValues();
-			compiledMatchValues.put(DBContract.COL_ROBOT_ID, summaryData[i].getRobot().getID());
-			
-			for(MetricValue m : summaryData[i].getCompiledMatchData())
-				compiledMatchValues.put(m.getMetric().getKey(), m.getValueAsDBReadableString());
-			
-			for(MatchData m : summaryData[i].getMatchData()) {
-				ContentValues matchDataValues = new ContentValues();
-				
-				matchDataValues.put(DBContract.COL_DATA_ID, m.getMatchID());
-				matchDataValues.put(DBContract.COL_ROBOT_ID, m.getRobotID());
-				matchDataValues.put(DBContract.COL_EVENT_ID, m.getEventID());
-				matchDataValues.put(DBContract.COL_USER_ID, m.getUserID());
-				matchDataValues.put(DBContract.COL_MATCH_NUMBER, m.getMatchNumber());
-				matchDataValues.put(DBContract.COL_MATCH_TYPE, m.getMatchType());
-				matchDataValues.put(DBContract.COL_COMMENTS, m.getComments());
-				
-				for(MetricValue mv : m.getMetricValues())
-					matchDataValues.put(mv.getMetric().getKey(), 
-							mv.getValueAsDBReadableString());
-				
-				db.insert(DBContract.SUMMARY_TABLE_MATCH_DATA, null, matchDataValues);
-			}
-			
-			ContentValues robotValues = new ContentValues();
-			
-			 robotValues.put(DBContract.COL_TEAM_NUMBER, 
-					 summaryData[i].getRobot().getTeamNumber());
-			 robotValues.put(DBContract.COL_ROBOT_ID, summaryData[i].getRobot().getID());
-			 robotValues.put(DBContract.COL_GAME_NAME, summaryData[i].getRobot().getGame());
-			 robotValues.put(DBContract.COL_COMMENTS, summaryData[i].getRobot().getComments());
-			 robotValues.put(DBContract.COL_IMAGE_PATH, 
-					 summaryData[i].getRobot().getImagePath());
-			 
-			 for(MetricValue m : summaryData[i].getRobot().getMetricValues())
-				 robotValues.put(m.getMetric().getKey(), m.getValueAsDBReadableString());
-			 
-			 db.insert(DBContract.SUMMARY_TABLE_COMPILED_MATCH_DATA, null, 
-					 compiledMatchValues);
-			 db.insert(DBContract.SUMMARY_TABLE_ROBOTS, null, robotValues);
-		}
-		
-		helper.close();
-	}*/
-	
-	/*****
-	 * Method: summaryGetSummaryData
-	 * 
-	 * Summary: gets the data synced from a server.
-	 *****/
-	/*public synchronized SummaryData[] summaryGetSummaryData() {
-		
-		SQLiteDatabase db = helper.getReadableDatabase();
-		Event e = summaryGetEvent();
-		
-		Cursor robotsCursor = db.rawQuery("SELECT * FROM " + 
-					DBContract.SUMMARY_TABLE_ROBOTS, null);
-		Cursor compMatchCursor = db.rawQuery("SELECT * FROM " + 
-					DBContract.SUMMARY_TABLE_COMPILED_MATCH_DATA, null);
-		
-		SummaryData[] data = new SummaryData[robotsCursor.getCount()];
-		
-		for(int i = 0; i < robotsCursor.getCount(); i++) {
-			robotsCursor.moveToNext();
-			
-			int eventID;
-			ArrayList<Integer> matchesPlayed = new ArrayList<Integer>();
-			Robot robot;
-			ArrayList<String> matchComments = new ArrayList<String>();
-			ArrayList<MetricValue> compiledMatchData = new ArrayList<MetricValue>();
-			ArrayList<MatchData> matchData = new ArrayList<MatchData>();
-			
-			eventID = e.getEventID();
-			ArrayList<MetricValue> robotValues = new ArrayList<MetricValue>();
-			
-			for(int k = 0; k < DBContract.COL_KEYS.length; k++) {
-				String valString = robotsCursor.getString(robotsCursor.getColumnIndex
-						(DBContract.COL_KEYS[k]));
-						
-				if(valString != null && !valString.equals("null") && !valString.equals("")) {
-					ArrayList<String> valsArr = new ArrayList<String>();
-					String workingString = new String();
-					
-					if(valString == null)
-						valString = new String();
-					
-					for(int charCount = 0; charCount < valString.length(); charCount++) {
-						if(valString.charAt(charCount) != ':'){
-							workingString += valString.substring(charCount, charCount + 1);
-							
-						} else {
-							valsArr.add(workingString);
-							workingString = new String();
-						}
-					}
-					
-					//robotValues.add(new MetricValue())
-				}
-			}
-			
-			robot = new Robot(
-					robotsCursor.getInt(robotsCursor.getColumnIndex
-							(DBContract.COL_TEAM_NUMBER)),
-					robotsCursor.getInt(robotsCursor.getColumnIndex
-							(DBContract.COL_ROBOT_ID)),
-					robotsCursor.getString
-							(robotsCursor.getColumnIndex(DBContract.COL_GAME_NAME)),
-					robotsCursor.getString(robotsCursor.getColumnIndex
-							(DBContract.COL_COMMENTS)),
-					robotsCursor.getString(robotsCursor.getColumnIndex
-							(DBContract.COL_IMAGE_PATH)),
-					
-					);
-		}
-		
-		
-		
-		return new SummaryData[0];
-	}*/
-	
 	
 	/*****
 	 * Method: summaryGetEvent
@@ -4021,7 +3887,7 @@ public class DBManager {
 	
 	
 	/*****
-	 * Method: scoutSetEvent
+	 * Method: summarySetEvent
 	 * 
 	 * @param e
 	 * 
@@ -4054,6 +3920,82 @@ public class DBManager {
 	
 	
 	/*****
+	 * Method: summarySetCompiledData
+	 * 
+	 * Summary: erases all other compiled data from the summary part of the
+	 * database and replaces it with the passed information
+	 *****/
+	
+	public synchronized void summarySetCompiledData(CompiledData[] compiledData) {
+		
+		Robot[] robots = new Robot[compiledData.length];
+		
+		if(robots.length > 0) {
+			//Create the match metrics array
+			Metric[] matchMetrics = new Metric[compiledData[0].
+			                                   getCompiledMatchData().length];
+			for(int i = 0; i < matchMetrics.length; i++)
+				matchMetrics[i] = compiledData[0].
+					getCompiledMatchData()[i].getMetric();
+				
+			//Create the robot metrics array
+			Metric[] robotMetrics = compiledData[0].getRobot().getMetrics();
+			
+			//Fill the robots array
+			for(int i = 0; i < robots.length; i++)
+				robots[i] = compiledData[i].getRobot();
+			
+			//Create the compiled match data array
+			MetricValue[][] compiledMatchData = new MetricValue[compiledData.length][];
+			for(int i = 0; i < compiledData.length; i++) {
+				ArrayList<MetricValue> vals = new ArrayList<MetricValue>();
+				
+				for(MetricValue v : compiledData[i].getCompiledMatchData())
+					vals.add(v);
+				
+				compiledMatchData[i] = vals.toArray(new MetricValue[0]);
+			}
+				
+			
+			summarySetRobotMetrics(robotMetrics);
+			summarySetMatchMetrics(matchMetrics);
+			summarySetRobots(robots);
+			summarySetCompiledMatchData(robots, compiledMatchData);
+		}
+	}
+	
+	
+	/*****
+	 * Method: summaryGetCompiledData
+	 * 
+	 * Summary: gets all compiled data from the summary database
+	 */
+	
+	public synchronized CompiledData[] summaryGetCompiledData(Query[] queries) {
+		
+		Event event = summaryGetEvent();
+		Robot[] robots = summaryGetRobots();
+		MetricValue[][] matchData = summaryGetCompiledMatchData();
+		
+		CompiledData[] compiledData = new CompiledData[robots.length];
+		
+		for(int i = 0; i < compiledData.length; i++) {
+			compiledData[i] = new CompiledData(
+					event.getEventID(),
+					new int[0],
+					robots[i],
+					new String[0],
+					matchData[i],
+					new MetricValue[0]
+					);
+			
+			Log.d("FRCKrawler", Integer.toString(robots[i].getTeamNumber()));
+		}
+		
+		return compiledData;
+	}
+	
+	/*****
 	 * Method: summarySetMatchMetrics
 	 * 
 	 * @param metrics
@@ -4062,7 +4004,7 @@ public class DBManager {
 	 * and adds the passed metrics to the table.
 	 */
 	
-	public synchronized void summarySetMatchMetrics(Metric[] metrics) {
+	private synchronized void summarySetMatchMetrics(Metric[] metrics) {
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_MATCH_PERF_METRICS);
@@ -4103,7 +4045,7 @@ public class DBManager {
 	 * summarySetMatchMetrics function.
 	 */
 	
-	public synchronized Metric[] summaryGetMatchMetrics() {
+	private synchronized Metric[] summaryGetMatchMetrics() {
 		
 		Cursor c = helper.getWritableDatabase().rawQuery("SELECT * FROM " + 
 				DBContract.SUMMARY_TABLE_MATCH_PERF_METRICS, null);
@@ -4156,7 +4098,7 @@ public class DBManager {
 	 * and adds the passed metrics to the table.
 	 */
 	
-	public synchronized void summarySetRobotMetrics(Metric[] metrics) {
+	private synchronized void summarySetRobotMetrics(Metric[] metrics) {
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_ROBOT_METRICS);
@@ -4197,7 +4139,7 @@ public class DBManager {
 	 * summarySetMatchMetrics function.
 	 *****/
 	
-	public synchronized Metric[] summaryGetRobotMetrics() {
+	private synchronized Metric[] summaryGetRobotMetrics() {
 		
 		Cursor c = helper.getWritableDatabase().rawQuery("SELECT * FROM " + 
 				DBContract.SUMMARY_TABLE_ROBOT_METRICS, null);
@@ -4238,5 +4180,199 @@ public class DBManager {
 		helper.close();
 		
 		return metrics;
+	}
+	
+	
+	/*****
+	 * Method: summarySetRobots
+	 * 
+	 * @param robots
+	 * 
+	 * Summary: erases all data from the summary robots table and replaces it with 
+	 * the passed robot array
+	 */
+	
+	private synchronized void summarySetRobots(Robot[] robots) {
+		
+		if(robots.length == 0)
+			return;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_ROBOTS);
+		
+		for(int i = 0; i < robots.length; i++) {
+			
+			ContentValues values = new ContentValues();
+			values.put(DBContract.COL_TEAM_NUMBER, robots[i].getTeamNumber());
+			values.put(DBContract.COL_GAME_NAME, robots[i].getGame());
+			values.put(DBContract.COL_ROBOT_ID, robots[i].getID());
+			values.put(DBContract.COL_COMMENTS, robots[i].getComments());
+			values.put(DBContract.COL_IMAGE_PATH, robots[i].getImagePath());
+			
+			for(MetricValue v : robots[i].getMetricValues()) {
+				
+				String valString = v.getValueAsDBReadableString();
+				values.put(v.getMetric().getKey(), valString);
+			}
+			
+			db.insert(DBContract.SUMMARY_TABLE_ROBOTS, null, values);
+		}
+		
+		helper.close();
+	}
+	
+	
+	/*****
+	 * Method: summaryGetRobots
+	 * 
+	 * @param cols
+	 * @param vals
+	 * @return
+	 * 
+	 * Summary: gets all robots from the summary part of the database
+	 */
+	
+	private synchronized Robot[] summaryGetRobots() {
+			
+		Cursor c = helper.getWritableDatabase().rawQuery("SELECT * FROM " + 
+					DBContract.SUMMARY_TABLE_ROBOTS, null);
+		Robot[] r = new Robot[c.getCount()];
+		
+		helper.close();
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			
+			c.moveToNext();
+			
+			ArrayList<MetricValue> metricVals = new ArrayList<MetricValue>();
+			Metric[] metrics = new Metric[0];
+			
+			metrics = summaryGetRobotMetrics();
+				
+			//Un-indent this stuff later
+				for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
+					String valString = c.getString
+							(c.getColumnIndex(metrics[metricCount].getKey()));
+					ArrayList<String> valsArr = new ArrayList<String>();
+					String workingString = new String();
+					
+					if(valString == null)
+						valString = new String();
+					
+					for(int charCount = 0; charCount < valString.length(); charCount++) {
+						if(valString.charAt(charCount) != ':'){
+							workingString += valString.substring(charCount, charCount + 1);
+							
+						} else {
+							valsArr.add(workingString);
+							workingString = new String();
+						}
+					}
+					
+					try {
+						metricVals.add(
+							new MetricValue(
+								metrics[metricCount],
+								valsArr.toArray(new String[0])
+							));
+					} catch(MetricTypeMismatchException e) {
+						System.out.println(e.getMessage());
+					}
+				}
+			
+			
+			r[i] = new Robot(
+					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
+					c.getString(c.getColumnIndex(DBContract.COL_IMAGE_PATH)),
+					metricVals.toArray(new MetricValue[0])
+					);
+		}
+		
+		return r;
+	}
+	
+	
+	/*****
+	 * Method: summarySetCompiledMatchData
+	 * 
+	 * @param matchData
+	 */
+	
+	private synchronized boolean summarySetCompiledMatchData(Robot[] robots, 
+			MetricValue[][] matchData) {
+		
+		if(robots.length != matchData.length)
+			return false;
+		
+		if(matchData.length == 0)
+			return true;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.execSQL("DELETE FROM " + DBContract.SUMMARY_TABLE_COMPILED_MATCH_DATA);
+		
+		for(int i = 0; i <robots.length; i++) {
+			ContentValues values = new ContentValues();
+			values.put(DBContract.COL_ROBOT_ID, robots[i].getID());
+			
+			for(MetricValue v : matchData[i])
+				values.put(v.getMetric().getKey(), v.getValueAsDBReadableString());
+			
+			db.insert(DBContract.SUMMARY_TABLE_COMPILED_MATCH_DATA, null, values);
+		}
+		
+		helper.close();
+		
+		return true;
+	}
+	
+	public synchronized MetricValue[][] summaryGetCompiledMatchData() {
+		
+		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + 
+				DBContract.SUMMARY_TABLE_COMPILED_MATCH_DATA, null);
+		MetricValue[][] values = new MetricValue[c.getCount()][];
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			
+			c.moveToNext();
+			
+			Metric [] metricArr = summaryGetMatchMetrics();
+			MetricValue[] dataArr = new MetricValue[metricArr.length];
+			
+			for(int k = 0; k < metricArr.length; k++) {
+				
+				ArrayList<String> valuesList = new ArrayList<String>();
+				String valueString = c.getString(c.getColumnIndex(metricArr[k].getKey()));
+				
+				String currentValsString = new String();
+				
+				if(valueString != null) {
+					for(int character = 0; character < valueString.length(); character++) {
+					
+						if(valueString.charAt(character) != ':')
+							currentValsString += valueString.charAt(character);
+					
+						else {
+							valuesList.add(currentValsString);
+							currentValsString = new String();
+						}
+					}
+				}
+				
+				try {
+					dataArr[k] = new MetricValue(metricArr[k], valuesList.toArray(new String[0]));
+				} catch (MetricTypeMismatchException e) {
+					try {
+						dataArr[k] = new MetricValue(metricArr[k], new String[] {"0"});
+					} catch(MetricTypeMismatchException ex) {}
+				}
+			}
+			
+			values[i] = dataArr;
+		}
+		
+		return values;
 	}
 }
