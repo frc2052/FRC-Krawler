@@ -73,5 +73,6 @@
         <item >Finals</item>
         <item >Practice</item>
     </string-array>
+        <string name="name">FRCKrawler Scouting System</string>
 
 </resources>

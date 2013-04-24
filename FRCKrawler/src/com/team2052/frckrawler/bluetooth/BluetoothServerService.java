@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import android.app.Service;
@@ -16,7 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
+import android.util.SparseIntArray;
 
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
@@ -211,9 +212,28 @@ public class BluetoothServerService extends Service {
 								(new String[] {DBContract.COL_EVENT_ID}, 
 										new String[] {Integer.toString(hostedEvent.getEventID())});
 						
+						//Map for the number of matches a team has loaded into the array 
+						//		to be sent to the client
+						SparseIntArray loadedMatchCount = new SparseIntArray();
+						ArrayList<MatchData> minMatchData = new ArrayList<MatchData>();
+						Robot[] robots = new Robot[compiledData.length];
+						for(int i = 0; i < robots.length; i++)
+							robots[i] = compiledData[i].getRobot();
+						
+						for(Robot r : robots)
+							loadedMatchCount.put(r.getID(), 0);
+						
+						for(int i = matchData.length - 1; i >= 0; i--) {
+							if(loadedMatchCount.get(matchData[i].getRobotID()) < 3) {
+								minMatchData.add(matchData[i]);
+								loadedMatchCount.put(matchData[i].getRobotID(), 
+										loadedMatchCount.get(matchData[i].getRobotID()) + 1);
+							}
+						}
+						
 						oStream.writeObject(hostedEvent);
 						oStream.writeObject(compiledData);
-						oStream.writeObject(matchData);
+						oStream.writeObject(minMatchData.toArray(new MatchData[0]));
 						oStream.flush();
 					}
 					
@@ -287,8 +307,6 @@ public class BluetoothServerService extends Service {
 				connectionType = inStream.readInt();
 				
 				if(connectionType == BluetoothInfo.SCOUT) {
-					Log.d("FRCKrawler", "Scout connected");
-					
 					inEvent = (Event)inStream.readObject();
 					inRobots = (Robot[])inStream.readObject();
 					inMatchData = (MatchData[])inStream.readObject();

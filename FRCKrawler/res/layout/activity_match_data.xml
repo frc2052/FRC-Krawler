@@ -59,7 +59,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/linearLayout1"
+            android:layout_above="@+id/linearLayout"
             android:layout_below="@+id/title"
             android:layout_toRightOf="@+id/scrollView1" >
 
@@ -74,7 +74,7 @@
                     android:id="@+id/RelativeLayout2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/linearLayout1"
+                    android:layout_above="@+id/linearLayout"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
@@ -176,7 +176,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <LinearLayout
-            android:id="@+id/linearLayout1"
+            android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

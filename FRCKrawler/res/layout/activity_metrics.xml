@@ -80,7 +80,7 @@
                     android:id="@+id/RelativeLayout2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/linearLayout1"
+                    android:layout_above="@+id/linearLayout"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
