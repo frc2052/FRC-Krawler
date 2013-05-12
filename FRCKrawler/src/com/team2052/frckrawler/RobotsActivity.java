@@ -33,6 +33,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 	private static final int PICTURES_ID = 3;
 	
 	private DBManager dbManager;
+	private GetRobotsTask getRobotsTask;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,11 +49,14 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 		}
 		
 		dbManager = DBManager.getInstance(this);
+		
+		getRobotsTask = new GetRobotsTask();
+		getRobotsTask.execute();
 	}
 	
-	public void onStart() {
-		super.onStart();
-		new GetRobotsTask().execute();
+	public void onStop() {
+		super.onStop();
+		getRobotsTask.cancel(true);
 	}
 
 	public void onClick(View v) {
@@ -180,6 +184,9 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			
 			for(int i = 0; i < robots.length; i++) {
 				
+				if(isCancelled())
+					break;
+				
 				int color;
 				
 				if(i % 2 == 0)
@@ -245,6 +252,10 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 		}
 
 		protected void onPostExecute(Void v) {
+			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
+		}
+		
+		protected void onCancelled(Void v) {
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 	}

@@ -3,14 +3,17 @@ package com.team2052.frckrawler;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 
 import com.team2052.frckrawler.database.DBContract;
@@ -19,6 +22,7 @@ import com.team2052.frckrawler.database.structures.CompiledData;
 import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.Query;
+import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
@@ -28,6 +32,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	
 	private static final int COMMENT_BUTTON_ID = 1;
 	private static final int PICTURE_BUTTON_ID = 2;
+	private static final int MATCH_DATA_BUTTON_ID = 3;
 	private static HashMap<Integer, Query[]> matchQuerys = new HashMap<Integer, Query[]>();
 	private static HashMap<Integer, Query[]> pitQuerys = new HashMap<Integer, Query[]>();
 	private static HashMap<Integer, Query[]> driverQuerys = new HashMap<Integer, Query[]>();
@@ -35,6 +40,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	private ArrayList<Integer> checkedTeamNumbers;
 	private CompiledData[] data;
 	private DBManager dbManager;
+	private GetCompiledDataTask getDataTask;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,23 +50,24 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		
 		checkedTeamNumbers = new ArrayList<Integer>();
 		dbManager = DBManager.getInstance(this);
+		
+		getDataTask = new GetCompiledDataTask();
+		getDataTask.execute(this);
 	}
 	
-	public void onStart() {
-		super.onStart();
-		new GetCompiledDataTask().execute(this);
+	public void onStop() {
+		super.onStop();
+		getDataTask.cancel(true);
 	}
 	
 	public void onClick(View v) {
 		if(v.getId() == R.id.query) { 
-			
 			Intent i = new Intent(this, QuerySortingDialogActivity.class);
 			i.putExtra(QuerySortingDialogActivity.EVENT_ID_EXTRA, 
 					databaseValues[getAddressOfDatabaseKey(DBContract.COL_EVENT_ID)]);
 			startActivityForResult(i, 1);
 			
 		} else if(v.getId() == COMMENT_BUTTON_ID) {
-			
 			Intent i = new Intent(this, CommentDialogActivity.class);
 			i.putExtra(CommentDialogActivity.COMMENT_ARRAY_EXTRA, 
 					data[(Integer)v.getTag()].getMatchComments());
@@ -69,14 +76,25 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			startActivity(i);
 			
 		} else if(v.getId() == PICTURE_BUTTON_ID) {
+			Robot r = data[(Integer)v.getTag()].getRobot();
+			String imagePath = r.getImagePath();
 			
-			Intent i = new Intent(this, PicturesActivity.class);
-			i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, 
-					new String[] {DBContract.COL_ROBOT_ID});
-			i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, 
-					new String[] {Integer.toString(data[(Integer)v.getTag()].
-							getRobot().getID())});
-			startActivity(i);
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Team " + r.getTeamNumber() + "'s Robot");
+			
+			if(imagePath != null && !imagePath.equals("")) {
+				ImageView image = new ImageView(this);
+				image.setImageURI(Uri.parse(imagePath));
+				builder.setView(image);
+				
+			} else {
+				builder.setView(new MyTextView(this, "No image for this team.", 18));
+			}
+			
+			builder.show();
+			
+		} else if(v.getId() == MATCH_DATA_BUTTON_ID) {
+			
 		}
 	}
 	
@@ -161,6 +179,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			descriptorsRow.addView(new MyTextView(activity, "M. Played", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Comments", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Pictures", 18));
+			descriptorsRow.addView(new MyTextView(activity, "Match Data", 18));
 			
 			MetricValue[] matchMetrics;
 			Metric[] robotMetrics;
@@ -198,6 +217,10 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			//Create a new row for each piece of data
 			for(int dataCount = 0; dataCount < data.length; dataCount++) {
 				
+				if(isCancelled()) {
+					break;
+				}
+				
 				int color;
 				
 				if(dataCount % 2 == 0)
@@ -218,12 +241,18 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				picturesButton.setId(PICTURE_BUTTON_ID);
 				picturesButton.setTag(Integer.valueOf(dataCount));
 				
+				MyButton matchDataButton = new MyButton
+						(activity, "Match Data", activity);
+				matchDataButton.setId(MATCH_DATA_BUTTON_ID);
+				matchDataButton.setTag(Integer.valueOf(dataCount));
+				
 				dataRow.addView(new MyTextView(activity, Integer.toString(
 						data[dataCount].getRobot().getTeamNumber()), 18));
 				dataRow.addView(new MyTextView(activity, Integer.toString(
 						data[dataCount].getMatchesPlayed().length), 18));
 				dataRow.addView(commentsButton);
 				dataRow.addView(picturesButton);
+				dataRow.addView(matchDataButton);
 				
 				//Get the data arrays for the robot, matches, and driver data
 				MetricValue[] matchData = data[dataCount].getCompiledMatchData();
@@ -261,6 +290,10 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		}
 		
 		protected void onPostExecute(Void v) {
+			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
+		}
+		
+		protected void onCancelled(Void v) {
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 	}

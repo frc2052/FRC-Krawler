@@ -30,6 +30,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 	
 	private int teamCount;
 	private DBManager dbManager;
+	private GetTeamsTask getTeamsTask;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -42,18 +43,13 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		
 		dbManager = DBManager.getInstance(this);
 		
-		System.out.println("Create ran");
+		getTeamsTask = new GetTeamsTask();
+		getTeamsTask.execute(this);
 	}
 	
-	public void onStart() {
-		super.onStart();
-		new GetTeamsTask().execute(this);
-		System.out.println("Start ran");
-	}
-	
-	public void onResume() {
-		super.onResume();
-		System.out.println("Resume ran");
+	public void onStop() {
+		super.onStop();
+		getTeamsTask.cancel(true);
 	}
 
 	public void onClick(View v) {
@@ -119,8 +115,11 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 	}
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(resultCode == RESULT_OK)
-			new GetTeamsTask().execute(this);
+		if(resultCode == RESULT_OK) {
+			getTeamsTask = new GetTeamsTask();
+			getTeamsTask.execute(this);
+		}
+		
 	}
 	
 	private class GetTeamsTask extends AsyncTask<TeamsActivity, MyTableRow, Void> {
@@ -153,6 +152,9 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			publishProgress(descriptorsRow);
 			
 			for(int i = 0; i < teams.length; i++) {
+				
+				if(isCancelled())
+					break;
 				
 				int color;
 				
@@ -212,6 +214,11 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		}
 		
 		protected void onPostExecute(Void v) {
+			((TextView)findViewById(R.id.teamCount)).setText(teamCount + " Teams");
+			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
+		}
+		
+		protected void onCancelled(Void v) {
 			((TextView)findViewById(R.id.teamCount)).setText(teamCount + " Teams");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}

@@ -41,10 +41,7 @@ public class UsersActivity extends TabActivity implements OnClickListener{
 	public void postResults(User[] users) {
 		
 		TableLayout table = (TableLayout)findViewById(R.id.usersDataTable);
-		TableRow descriptorsRow = (TableRow)findViewById(R.id.descriptorsRow);
-		
 		table.removeAllViews();
-		table.addView(descriptorsRow);
 		
 		for(int i = 0; i < users.length; i++) {
 			
@@ -55,8 +52,7 @@ public class UsersActivity extends TabActivity implements OnClickListener{
 			
 			table.addView(new MyTableRow(this, new View[] {
 					new MyButton(this, "Edit User", this, Integer.valueOf(users[i].getID())),
-					new MyTextView(this, users[i].getName(), 18),
-					new MyTextView(this, Boolean.toString(users[i].isSuperuser()), 18)
+					new MyTextView(this, users[i].getName(), 18)
 			}, color));
 		}
 	}

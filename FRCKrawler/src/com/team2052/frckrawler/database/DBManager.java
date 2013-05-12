@@ -2297,7 +2297,91 @@ public class DBManager {
 		helper.close();
 		
 		for(int i = 0; i < c.getCount(); i++) {
+			c.moveToNext();
 			
+			Event[] eventsArr = getEventsByColumns(new String[] 
+					{DBContract.COL_EVENT_ID}, 
+					new String[] {c.getString(c.getColumnIndex(DBContract.COL_EVENT_ID))});
+			
+			Metric [] metricArr = getMatchPerformanceMetricsByColumns
+					(new String[] {DBContract.COL_GAME_NAME}, 
+					new String[] {eventsArr[0].getGameName()});
+			
+			MetricValue[] dataArr = new MetricValue[metricArr.length];
+			
+			for(int k = 0; k < metricArr.length; k++) {
+				
+				ArrayList<String> valuesList = new ArrayList<String>();
+				String valueString = c.getString(c.getColumnIndex(metricArr[k].getKey()));
+				
+				String currentValsString = new String();
+				
+				if(valueString != null) {
+					for(int character = 0; character < valueString.length(); character++) {
+					
+						if(valueString.charAt(character) != ':')
+							currentValsString += valueString.charAt(character);
+					
+						else {
+							valuesList.add(currentValsString);
+							currentValsString = new String();
+						}
+					}
+				}
+				
+				try {
+					dataArr[k] = new MetricValue(metricArr[k], valuesList.toArray(new String[0]));
+				} catch (MetricTypeMismatchException e) {
+					try {
+						dataArr[k] = new MetricValue(metricArr[k], new String[] {"0"});
+					} catch(MetricTypeMismatchException ex) {}
+				}
+			}
+			
+			d[i] = new MatchData(
+					c.getInt(c.getColumnIndex(DBContract.COL_DATA_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_MATCH_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_USER_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_MATCH_TYPE)),
+					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
+					dataArr
+					);
+		}
+		
+		helper.close();
+		
+		return d;
+	}
+	
+	public synchronized MatchData[] getMatchDataByColumns(String[] cols, String[] vals, 
+															int minMatchNum, int maxMatchNum) {
+		
+		if(cols.length != vals.length)
+			return null;
+		
+		if(cols.length < 1)
+			return new MatchData[0];
+		
+		String queryString = "SELECT * FROM " + DBContract.TABLE_MATCH_PERF + " WHERE " + 
+				cols[0] + " LIKE ?";
+		
+		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
+			queryString += " AND " + cols[i] + " LIKE ?";
+		
+		queryString += " AND " + DBContract.COL_MATCH_NUMBER + ">=" + minMatchNum;
+		queryString += " AND " + DBContract.COL_MATCH_NUMBER + "<=" + maxMatchNum;
+		
+		queryString += " ORDER BY " + DBContract.COL_MATCH_TYPE + " DESC, " +
+				DBContract.COL_MATCH_NUMBER + " ASC";
+			
+		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
+		MatchData[] d = new MatchData[c.getCount()];
+		
+		helper.close();
+		
+		for(int i = 0; i < c.getCount(); i++) {
 			c.moveToNext();
 			
 			Event[] eventsArr = getEventsByColumns(new String[] 

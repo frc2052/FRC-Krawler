@@ -183,6 +183,12 @@
             android:layout_centerHorizontal="true" >
 
             <Button
+                android:id="@+id/changeSelection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Matches" />
+
+            <Button
                 android:id="@+id/addData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

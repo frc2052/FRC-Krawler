@@ -2,14 +2,18 @@ package com.team2052.frckrawler;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 
 import com.team2052.frckrawler.database.DBContract;
@@ -24,27 +28,45 @@ import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 
-public class RawMatchDataActivity extends StackableTabActivity implements OnClickListener {
+public class RawMatchDataActivity extends StackableTabActivity implements OnClickListener, 
+																			android.content.DialogInterface.OnClickListener{
 	
 	private static final int COMMENT_CHAR_LIMIT = 20;
 	private static final int EDIT_BUTTON_ID = 1;
 	
-	private DBManager dbManager;
+	private int minMatch;
+	private int maxMatch;
 	
+	private DBManager dbManager;
+	private MatchData[] matchData;
+	private GetMatchDataTask getDataTask;
+	private EditText minNumberEntry;
+	private EditText maxNumberEntry;
+	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_match_data);
 		
 		findViewById(R.id.addData).setOnClickListener(this);
+		findViewById(R.id.changeSelection).setOnClickListener(this);
 		
+		minMatch = 1;
+		maxMatch = 10;
 		dbManager = DBManager.getInstance(this);
+		
+		showSelectionDialog();
 	}
 	
-	public void onStart() {
-		super.onStart();
-		new GetMatchDataTask().execute(this);
+	@Override
+	public void onStop() {
+		super.onStop();
+		
+		if(getDataTask != null)
+			getDataTask.cancel(true);
 	}
 	
+	@Override
 	public void onClick(View v) {
 		Intent i;
 		
@@ -70,32 +92,93 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 				i.putExtra(EditMatchDataDialogActivity.MATCH_ID_EXTRA, (Integer)v.getTag());
 				startActivityForResult(i, 1);
 				
-				System.out.println(v.getTag());
+				break;
+				
+			case R.id.changeSelection:
+				
+				showSelectionDialog();
 				
 				break;
 		}
 	}
 	
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		if(which == DialogInterface.BUTTON_POSITIVE) {
+			minMatch = (int)Double.parseDouble(minNumberEntry.getText().toString());
+			maxMatch = (int)Double.parseDouble(maxNumberEntry.getText().toString());
+			
+			getDataTask = new GetMatchDataTask(minMatch, maxMatch);
+			getDataTask.execute(this);
+		}
+		
+		dialog.dismiss();
+	}
+	
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent i) {
-		if(resultCode == RESULT_OK)
-			new GetMatchDataTask().execute(this);
+		if(resultCode == RESULT_OK) {
+			getDataTask = new GetMatchDataTask(minMatch, maxMatch);
+			getDataTask.execute(this);
+		}
+	}
+	
+	private void showSelectionDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Load Matches...");
+		
+		LinearLayout dialogView = new LinearLayout(this);
+		dialogView.setOrientation(LinearLayout.HORIZONTAL);
+		dialogView.addView(new MyTextView(this, "Load matches from ", 18));
+		
+		minNumberEntry = new EditText(this);
+		minNumberEntry.setInputType(InputType.TYPE_CLASS_NUMBER);
+		minNumberEntry.setWidth(50);
+		dialogView.addView(minNumberEntry);
+		dialogView.addView(new MyTextView(this, " to ", 18));
+		maxNumberEntry = new EditText(this);
+		maxNumberEntry.setInputType(InputType.TYPE_CLASS_NUMBER);
+		maxNumberEntry.setWidth(50);
+		dialogView.addView(maxNumberEntry);
+		
+		builder.setView(dialogView);
+		builder.setPositiveButton("Load", this);
+		builder.setNegativeButton("Cancel", this);
+		builder.show();
 	}
 	
 	private class GetMatchDataTask extends AsyncTask<RawMatchDataActivity, MyTableRow, Void> {
+		
+		private int min;
+		private int max;
+		private TableLayout dataTable;
+		
+		public GetMatchDataTask(int minMatch, int matchMax) {
+			min = minMatch;
+			max = matchMax;
+			
+			if(min + 10 <= max) {
+				max = min + 10;
+			}
+		}
+		
+		@Override
 		protected void onPreExecute() {
 			((FrameLayout)findViewById(R.id.progressFrame)).
 			addView(new ProgressSpinner(getApplicationContext()));
 			
-			((TableLayout)findViewById(R.id.dataTable)).removeAllViews();
+			dataTable = (TableLayout)findViewById(R.id.dataTable);
+			dataTable.removeAllViews();
 		}
 		
+		@Override
 		protected Void doInBackground(RawMatchDataActivity... params) {
 			
 			dbManager.printQuery("SELECT * FROM " + DBContract.TABLE_MATCH_PERF, null);
 			
 			RawMatchDataActivity activity = params[0];
-			MatchData[] matchData = dbManager.
-					getMatchDataByColumns(databaseKeys, databaseValues);
+			
+			matchData = dbManager.getMatchDataByColumns(databaseKeys, databaseValues, min, max);
 			
 			//Create the descriptors row and add it to the array
 			MyTableRow descriptorsRow = new MyTableRow(activity);
@@ -184,17 +267,19 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 						(new View[0]), color));
 				
 				try {	//Wait for the UI to update
-					Thread.sleep(500);
+					Thread.sleep(100);
 				} catch(InterruptedException e) {}
 			}
 			
 			return null;
 		}
 		
+		@Override
 		protected void onProgressUpdate(MyTableRow... row) {
-			((TableLayout)findViewById(R.id.dataTable)).addView(row[0]);
+			dataTable.addView(row[0]);
 		}
 		
+		@Override
 		protected void onPostExecute(Void v) {
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
