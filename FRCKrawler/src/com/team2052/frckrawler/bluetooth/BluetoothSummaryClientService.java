@@ -161,7 +161,7 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 				serverSocket.close();
 				
 				//Notify of a successful sync
-				if(threadListener != null)
+				if(threadListener != null && reader.successful())
 					threadListener.onSuccessfulSync();
 				
 			} catch(IOException e) {
@@ -183,6 +183,7 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 	
 	private class SummaryDataReader extends Thread {
 		
+		private boolean wasSuccessful;
 		private boolean isFinished;
 		private Context context;
 		private InputStream iStream;
@@ -190,6 +191,7 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 		
 		public SummaryDataReader(Context _context, InputStream _iStream, 
 				ClientThreadListener _listener) {
+			wasSuccessful = false;
 			isFinished = false;
 			context = _context;
 			iStream = _iStream;
@@ -216,6 +218,9 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 					db.summarySetCompiledData(compiledData);
 					db.summarySetRawMatchData(matchData);
 				}
+				
+				wasSuccessful = true;
+				
 			}  catch(IOException e) {
 				if(listener != null)
 					listener.onUnsuccessfulSync(e.getMessage());
@@ -229,6 +234,10 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 		
 		public boolean isFinished() {
 			return isFinished;
+		}
+		
+		public boolean successful() {
+			return wasSuccessful;
 		}
 	}
 }

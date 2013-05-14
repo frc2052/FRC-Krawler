@@ -91,7 +91,6 @@ public class SummaryActivity extends Activity implements OnClickListener {
 			descriptorsViews.add(new MyTextView(SummaryActivity.this, " ", 18));
 			descriptorsViews.add(new MyTextView(SummaryActivity.this, "Team", 18));
 			descriptorsViews.add(new MyTextView(SummaryActivity.this, "M. Played", 18));
-			descriptorsViews.add(new MyTextView(SummaryActivity.this, "R. Comments", 18));
 			descriptorsViews.add(new MyTextView(SummaryActivity.this, "M. Data", 18));
 			
 			if(compiledData.length > 0) {
@@ -108,6 +107,8 @@ public class SummaryActivity extends Activity implements OnClickListener {
 						descriptorsViews.add(new MyTextView(SummaryActivity.this, compiledData[0].
 								getRobot().getMetrics()[i].getMetricName(), 18));
 			}
+			
+			descriptorsViews.add(new MyTextView(SummaryActivity.this, "Robot Comments", 18));
 			
 			MyTableRow descriptorsRow = new MyTableRow(SummaryActivity.this,
 					descriptorsViews.toArray(new View[0]) , Color.TRANSPARENT);
@@ -136,8 +137,6 @@ public class SummaryActivity extends Activity implements OnClickListener {
 								getTeamNumber()), 18));
 				dataRow.add(new MyTextView(SummaryActivity.this, Integer.toString(
 						compiledData[i].getMatchesPlayed().length), 18));
-				dataRow.add(new MyTextView(SummaryActivity.this, compiledData[i].
-						getRobot().getComments(), 18));
 				dataRow.add(rawDataButton);
 				
 				for(MetricValue v : compiledData[i].getRobot().getMetricValues())
@@ -149,6 +148,9 @@ public class SummaryActivity extends Activity implements OnClickListener {
 					if(v.getMetric().isDisplayed())
 						dataRow.add(new MyTextView(SummaryActivity.this, 
 								v.getValueAsHumanReadableString(), 18));
+				
+				dataRow.add(new MyTextView(SummaryActivity.this, compiledData[i].
+						getRobot().getComments(), 18));
 				
 				MyTableRow row = new MyTableRow(
 						SummaryActivity.this, dataRow.toArray(new View[0]), color);

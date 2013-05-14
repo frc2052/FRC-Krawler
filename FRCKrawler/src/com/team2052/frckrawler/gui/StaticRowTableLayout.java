@@ -33,6 +33,10 @@ public class StaticRowTableLayout extends LinearLayout {
 		staticTable.addView(staticRow);
 	}
 	
+	public void finalize() {
+		
+	}
+	
 	public void setStaticRow(TableRow row) {
 		staticTable.removeAllViews();
 		staticTable.addView(row);
@@ -42,11 +46,18 @@ public class StaticRowTableLayout extends LinearLayout {
 		staticTable.removeAllViews();
 	}
 	
+	@Override
 	public void addView(View v) {
 		mainTable.addView(v);
 	}
 	
+	@Override
 	public void removeAllViews() {
 		mainTable.removeAllViews();
+	}
+	
+	@Override
+	public void addView(View v, int index) {
+		mainTable.addView(v, index);
 	}
 }

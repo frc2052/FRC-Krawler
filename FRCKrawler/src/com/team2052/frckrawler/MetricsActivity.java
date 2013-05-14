@@ -104,6 +104,7 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 			MyButton editButton = new MyButton(this, "Edit Metric", this, 
 					Integer.valueOf(metrics[i].getID()));
 			editButton.setId(EDIT_BUTTON_ID);
+			editButton.setTag((Integer)metrics[i].getID());
 			
 			String descriptionString;
 			

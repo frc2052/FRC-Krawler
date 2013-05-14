@@ -46,7 +46,6 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 	}
 	
 	public void onResume() {
-		
 		super.onResume();
 		new GetEventsTask().execute();
 	}
@@ -165,6 +164,7 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 				i.putExtra(PARENTS_EXTRA, new String[] {});
 				i.putExtra(DB_VALUES_EXTRA, new String[] {v.getTag().toString()});
 				i.putExtra(DB_KEYS_EXTRA, new String[] {DBContract.COL_EVENT_ID});
+				i.putExtra(RawMatchDataActivity.LIMIT_LOADING_EXTRA, true);
 				startActivity(i);
 				
 				break;

@@ -438,6 +438,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 					builder.setTitle("Syncing...");
 					builder.setView(new ProgressSpinner(MainActivity.this));
 					builder.setNeutralButton("Cancel", new SummaryDialogListener());
+					builder.setCancelable(false);
 					progressDialog = builder.create();
 					progressDialog.show();
 				}
@@ -456,7 +457,10 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 					
 					progressDialog.dismiss();
 					summaryConnection.closeBTConnection();
-					unbindService(summaryConnection);
+					
+					try{
+						unbindService(summaryConnection);
+					} catch(IllegalArgumentException e) {}
 					
 					Toast.makeText(getApplicationContext(), 
 							"Sync successful.", Toast.LENGTH_SHORT).show();

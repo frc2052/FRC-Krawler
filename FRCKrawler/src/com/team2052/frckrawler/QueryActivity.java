@@ -45,7 +45,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_query);
-		
+		 
 		findViewById(R.id.query).setOnClickListener(this);
 		
 		checkedTeamNumbers = new ArrayList<Integer>();
@@ -94,7 +94,13 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			builder.show();
 			
 		} else if(v.getId() == MATCH_DATA_BUTTON_ID) {
-			
+			Intent i = new Intent(this, RawMatchDataActivity.class);
+			i.putExtra(PARENTS_EXTRA, new String[] {});
+			i.putExtra(DB_VALUES_EXTRA, new String[] {Integer.toString(data[(Integer)v.
+			                                                 getTag()].getRobot().getID())});
+			i.putExtra(DB_KEYS_EXTRA, new String[] {DBContract.COL_ROBOT_ID});
+			i.putExtra(RawMatchDataActivity.DISABLE_BUTTONS_EXTRA, true);
+			startActivity(i);
 		}
 	}
 	

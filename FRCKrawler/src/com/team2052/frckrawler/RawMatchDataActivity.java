@@ -31,9 +31,13 @@ import com.team2052.frckrawler.gui.ProgressSpinner;
 public class RawMatchDataActivity extends StackableTabActivity implements OnClickListener, 
 																			android.content.DialogInterface.OnClickListener{
 	
+	public static final String LIMIT_LOADING_EXTRA = "com.team2052.frckrawler.limitLoading";
+	public static final String DISABLE_BUTTONS_EXTRA = "com.team2052.frckrawler.disableAdd";
+	
 	private static final int COMMENT_CHAR_LIMIT = 20;
 	private static final int EDIT_BUTTON_ID = 1;
 	
+	private boolean limitLoading;
 	private int minMatch;
 	private int maxMatch;
 	
@@ -48,14 +52,26 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_match_data);
 		
-		findViewById(R.id.addData).setOnClickListener(this);
-		findViewById(R.id.changeSelection).setOnClickListener(this);
+		if(getIntent().getBooleanExtra(DISABLE_BUTTONS_EXTRA, false)) {
+			findViewById(R.id.addData).setEnabled(false);
+			findViewById(R.id.changeSelection).setEnabled(false);
+			
+		} else {
+			findViewById(R.id.addData).setOnClickListener(this);
+			findViewById(R.id.changeSelection).setOnClickListener(this);
+		}
 		
+		limitLoading = getIntent().getBooleanExtra(LIMIT_LOADING_EXTRA, false);
 		minMatch = 1;
 		maxMatch = 10;
 		dbManager = DBManager.getInstance(this);
 		
-		showSelectionDialog();
+		if(limitLoading) {
+			showSelectionDialog();
+		} else {
+			getDataTask = new GetMatchDataTask(minMatch, maxMatch);
+			getDataTask.execute(this);
+		}
 	}
 	
 	@Override
@@ -127,6 +143,8 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Load Matches...");
 		
+		LinearLayout fullView = new LinearLayout(this);
+		fullView.setOrientation(LinearLayout.VERTICAL);
 		LinearLayout dialogView = new LinearLayout(this);
 		dialogView.setOrientation(LinearLayout.HORIZONTAL);
 		dialogView.addView(new MyTextView(this, "Load matches from ", 18));
@@ -141,7 +159,11 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		maxNumberEntry.setWidth(50);
 		dialogView.addView(maxNumberEntry);
 		
-		builder.setView(dialogView);
+		fullView.addView(dialogView);
+		fullView.addView(new MyTextView(this, "Note: Loading more than 20 matches at once", 12));
+		fullView.addView(new MyTextView(this, "may take a considerable amount of time.", 12));
+		
+		builder.setView(fullView);
 		builder.setPositiveButton("Load", this);
 		builder.setNegativeButton("Cancel", this);
 		builder.show();
@@ -156,10 +178,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		public GetMatchDataTask(int minMatch, int matchMax) {
 			min = minMatch;
 			max = matchMax;
-			
-			if(min + 10 <= max) {
-				max = min + 10;
-			}
 		}
 		
 		@Override
@@ -174,11 +192,13 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		@Override
 		protected Void doInBackground(RawMatchDataActivity... params) {
 			
-			dbManager.printQuery("SELECT * FROM " + DBContract.TABLE_MATCH_PERF, null);
-			
 			RawMatchDataActivity activity = params[0];
 			
-			matchData = dbManager.getMatchDataByColumns(databaseKeys, databaseValues, min, max);
+			if(limitLoading)
+				matchData = dbManager.getMatchDataByColumns(databaseKeys, 
+						databaseValues, min, max);
+			else 
+				matchData = dbManager.getMatchDataByColumns(databaseKeys, databaseValues);
 			
 			//Create the descriptors row and add it to the array
 			MyTableRow descriptorsRow = new MyTableRow(activity);
@@ -267,7 +287,7 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 						(new View[0]), color));
 				
 				try {	//Wait for the UI to update
-					Thread.sleep(100);
+					Thread.sleep((max - min) * 30);
 				} catch(InterruptedException e) {}
 			}
 			

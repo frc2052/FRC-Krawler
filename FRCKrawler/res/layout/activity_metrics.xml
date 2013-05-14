@@ -64,6 +64,7 @@
                 android:layout_centerHorizontal="true" >
 
                 <LinearLayout
+                    android:id="@+id/bottomLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
@@ -80,7 +81,7 @@
                     android:id="@+id/RelativeLayout2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/linearLayout"
+                    android:layout_above="@+id/bottomLayout"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"

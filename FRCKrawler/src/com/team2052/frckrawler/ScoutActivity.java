@@ -132,15 +132,19 @@ public class ScoutActivity extends Activity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		if(v.getId() == R.id.save) {
-			
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("Save");
-			builder.setMessage("Are you sure you want to save the entered data? " +
-					"It will be commited to the database and you will not be able " +
-					"to edit it anymore.");
-			builder.setPositiveButton("Yes", this);
-			builder.setNegativeButton("No", this);
-			builder.show();
+			if(robots.length > 0) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle("Save");
+				builder.setMessage("Are you sure you want to save the entered data? " +
+						"It will be commited to the database and you will not be able " +
+						"to edit it anymore.");
+				builder.setPositiveButton("Yes", this);
+				builder.setNegativeButton("No", this);
+				builder.show();
+			} else {
+				Toast.makeText(this, "Could not save. No robots at " +
+						"this competition.", Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 	
@@ -290,7 +294,8 @@ public class ScoutActivity extends Activity implements OnClickListener,
 					break;
 					
 				case SCOUT_TYPE_PIT:
-					metrics = robots[selectedRobot].getMetricValues();
+					if(robots.length > 0 && selectedRobot > -1)
+						metrics = robots[selectedRobot].getMetricValues();
 					break;
 					
 				case SCOUT_TYPE_DRIVER:
@@ -357,6 +362,7 @@ public class ScoutActivity extends Activity implements OnClickListener,
 			if(getIntent().getIntExtra(SCOUT_TYPE_EXTRA, -1) == SCOUT_TYPE_PIT) {
 				robots = dbManager.scoutGetAllRobots();
 			}
+			
 			return null;
 		}
 		
