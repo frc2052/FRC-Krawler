@@ -1594,8 +1594,12 @@ public class DBManager {
 	 * Summary: Gets all robot metrics based on the columns and values passed as 
 	 * parameters.
 	 */
-	
 	public synchronized Metric[] getRobotMetricsByColumns(String[] cols, String[] vals) {
+		return getRobotMetricsByColumns(cols, vals, false);
+	}
+	
+	public synchronized Metric[] getRobotMetricsByColumns(String[] cols, String[] vals, 
+			boolean isOr) {
 		
 		if(cols.length != vals.length)
 			return null;
@@ -1605,11 +1609,17 @@ public class DBManager {
 		
 		String queryString = "SELECT * FROM " + DBContract.TABLE_ROBOT_METRICS + 
 				" WHERE " + cols[0] + " LIKE ?";
+		String orAnd;
 		
-		queryString += " ORDER BY " + DBContract.COL_POSITION + " ASC";
+		if(isOr)
+			orAnd = " OR ";
+		else
+			orAnd = " AND ";
 		
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with coos
-			queryString += " AND " + cols[i] + " LIKE ?";
+			queryString += orAnd + cols[i] + " LIKE ?";
+		
+		queryString += " ORDER BY " + DBContract.COL_POSITION + " ASC";
 			
 		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
 		Metric[] m = new Metric[c.getCount()];
@@ -1641,13 +1651,94 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)),
 					c.getInt(c.getColumnIndex(DBContract.COL_TYPE)),
 					rangeArrList.toArray(),
-					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0)
+					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0),
+					c.getInt(c.getColumnIndex(DBContract.COL_POSITION))
 					);
 		}
 		
 		helper.close();
 		
 		return m;
+	}
+	
+	
+	/*****
+	 * Method: updateRobotMetrics
+	 * 
+	 * Summary: Updates the specified columns in the rows taken from the query
+	 *****/
+	public synchronized boolean updateRobotMetrics(Metric[] metrics) {
+		boolean allUpdated = true;
+		
+		String[] queryCols = new String[] {DBContract.COL_METRIC_ID};
+		
+		String[] updateCols = new String[5];
+		updateCols[0] = DBContract.COL_METRIC_NAME;
+		updateCols[1] = DBContract.COL_DESCRIPTION;
+		updateCols[2] = DBContract.COL_DISPLAY;
+		updateCols[3] = DBContract.COL_RANGE;
+		updateCols[4] = DBContract.COL_TYPE;
+		
+		for(int i = 0; i < metrics.length; i++) {
+			String[] queryVals = new String[] {Integer.toString(metrics[i].getID())};
+			
+			String[] updateVals = new String[5];
+			updateVals[0] = metrics[i].getMetricName();
+			updateVals[1] = metrics[i].getDescription();
+			if(metrics[i].isDisplayed())
+				updateVals[2] = "1";
+			else
+				updateVals[2] = "0";
+			updateVals[4] = Integer.toString(metrics[i].getType());
+			
+			updateVals[3] = new String();
+			
+			if(metrics[i].getRange() != null) {
+				for(Object r :  metrics[i].getRange())	//Create the string for the range.
+					updateVals[3] += r.toString() + ":";	//The range is stored in one cell.
+			}
+			
+			if(!updateRobotMetrics(queryCols, queryVals, updateCols, updateVals))
+				allUpdated = false;
+		}
+		
+		return allUpdated;
+	}
+	
+	public synchronized boolean updateRobotMetrics(String queryCols[], 
+			String queryVals[], String updateCols[], String updateVals[]) {
+		
+		if(updateCols.length != updateVals.length) //They must be the same so that every value
+			return false; //has something to map to and that there are no blank ones.
+		
+		if(queryCols.length != queryVals.length)
+			return false;
+		
+		for(String s : updateCols) { //Does not allow the caller to update the team number.
+			if(DBContract.COL_METRIC_ID.equals(s))
+				return false;
+		}
+		
+		ContentValues vals = new ContentValues();
+		
+		for(int i = 0; i < updateVals.length; i++) {
+			vals.put(updateCols[i], updateVals[i]);
+		}
+		
+		String queryString = new String();
+		
+		if(queryCols.length > 0)
+			queryString += queryCols[0] + " LIKE ?";
+		
+		for(int i = 1; i < queryCols.length; i++) 
+			queryString += " AND " + queryCols[i] + " LIKE ?";
+		
+		helper.getWritableDatabase().update(DBContract.TABLE_ROBOT_METRICS, vals, 
+				queryString, queryVals);
+		
+		helper.close();
+		
+		return true;
 	}
 	
 	
@@ -1866,7 +1957,6 @@ public class DBManager {
 		String rangeInput = new String();
 		
 		if(range != null) {
-		
 			for(Object r :  range)	//Create the string for the range.
 				rangeInput += r.toString() + ":";	//The range is stored in one cell.
 		}
@@ -2022,9 +2112,13 @@ public class DBManager {
 	 * 
 	 * Summary: 
 	 */
+	public synchronized Metric[] getMatchPerformanceMetricsByColumns(String[] cols, 
+			String[] vals) {
+		return getMatchPerformanceMetricsByColumns(cols, vals, false);
+	}
 	
 	public synchronized Metric[] getMatchPerformanceMetricsByColumns
-			(String[] cols, String[] vals) {
+			(String[] cols, String[] vals, boolean isOr) {
 		
 		if(cols.length != vals.length)
 			return null;
@@ -2032,10 +2126,18 @@ public class DBManager {
 		if(cols.length < 1)
 			return new Metric[0];
 		
-		String queryString = "SELECT * FROM " + DBContract.TABLE_MATCH_PERF_METRICS + " WHERE " + cols[0] + " LIKE ?";
+		String queryString = "SELECT * FROM " + DBContract.TABLE_MATCH_PERF_METRICS + 
+				" WHERE " + cols[0] + " LIKE ?";
+		String orAnd;
+		
+		if(isOr) {
+			orAnd = " OR ";
+		} else {
+			orAnd = " AND ";
+		}
 		
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
-			queryString += " AND " + cols[i] + " LIKE ?";
+			queryString += orAnd + cols[i] + " LIKE ?";
 		
 		queryString += " ORDER BY " + DBContract.COL_POSITION + " ASC";
 			
@@ -2069,13 +2171,94 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)),
 					c.getInt(c.getColumnIndex(DBContract.COL_TYPE)),
 					rangeArrList.toArray(),
-					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0)
+					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0),
+					c.getInt(c.getColumnIndex(DBContract.COL_POSITION))
 					);
 		}
 		
 		helper.close();
 		
 		return metrics;
+	}
+	
+	
+	/*****
+	 * Method: updateMatchPerformanceMetric
+	 * 
+	 * Summary: Updates the specified columns in the rows taken from the query
+	 *****/
+	public synchronized boolean updateMatchPerformanceMetrics(Metric[] metrics) {
+		boolean allUpdated = true;
+		
+		String[] queryCols = new String[] {DBContract.COL_METRIC_ID};
+		
+		String[] updateCols = new String[5];
+		updateCols[0] = DBContract.COL_METRIC_NAME;
+		updateCols[1] = DBContract.COL_DESCRIPTION;
+		updateCols[2] = DBContract.COL_DISPLAY;
+		updateCols[3] = DBContract.COL_RANGE;
+		updateCols[4] = DBContract.COL_TYPE;
+		
+		for(int i = 0; i < metrics.length; i++) {
+			String[] queryVals = new String[] {Integer.toString(metrics[i].getID())};
+			
+			String[] updateVals = new String[5];
+			updateVals[0] = metrics[i].getMetricName();
+			updateVals[1] = metrics[i].getDescription();
+			if(metrics[i].isDisplayed())
+				updateVals[2] = "1";
+			else
+				updateVals[2] = "0";
+			updateVals[4] = Integer.toString(metrics[i].getType());
+			
+			updateVals[3] = new String();
+			
+			if(metrics[i].getRange() != null) {
+				for(Object r :  metrics[i].getRange())	//Create the string for the range.
+					updateVals[3] += r.toString() + ":";	//The range is stored in one cell.
+			}
+			
+			if(!updateMatchPerformanceMetrics(queryCols, queryVals, updateCols, updateVals))
+				allUpdated = false;
+		}
+		
+		return allUpdated;
+	}
+	
+	public synchronized boolean updateMatchPerformanceMetrics(String queryCols[], 
+			String queryVals[], String updateCols[], String updateVals[]) {
+		
+		if(updateCols.length != updateVals.length) //They must be the same so that every value
+			return false; //has something to map to and that there are no blank ones.
+		
+		if(queryCols.length != queryVals.length)
+			return false;
+		
+		for(String s : updateCols) { //Does not allow the caller to update the team number.
+			if(DBContract.COL_METRIC_ID.equals(s))
+				return false;
+		}
+		
+		ContentValues vals = new ContentValues();
+		
+		for(int i = 0; i < updateVals.length; i++) {
+			vals.put(updateCols[i], updateVals[i]);
+		}
+		
+		String queryString = new String();
+		
+		if(queryCols.length > 0)
+			queryString += queryCols[0] + " LIKE ?";
+		
+		for(int i = 1; i < queryCols.length; i++) 
+			queryString += " AND " + queryCols[i] + " LIKE ?";
+		
+		helper.getWritableDatabase().update(DBContract.TABLE_MATCH_PERF_METRICS, vals, 
+				queryString, queryVals);
+		
+		helper.close();
+		
+		return true;
 	}
 	
 	
@@ -2090,7 +2273,6 @@ public class DBManager {
 	 * 
 	 */
 	public synchronized boolean updateRobots(Robot[] robots) {
-		
 		boolean allUpdated = true;
 		
 		String[] queryCols = new String[] {DBContract.COL_ROBOT_ID};
@@ -3373,7 +3555,7 @@ public class DBManager {
 	 * Summary: Checks to see if the entered table has the value in the column.
 	 * 
 	 * @return True if the value is in the column, false if it is not.
-	 */
+	 *****/
 	
 	protected boolean hasValue(String table, String column, String value) {
 		
@@ -3394,7 +3576,8 @@ public class DBManager {
 	 * SCOUT METHODS
 	 * 
 	 * Summary: These methods interact with the scout tables rather than
-	 * the main database tables.
+	 * the main database tables. The data in these tables is the data 
+	 * displayed when using the individual scout's interface.
 	 ************************************************************************/
 	
 	public synchronized Event scoutGetEvent() {
@@ -3816,6 +3999,7 @@ public class DBManager {
 			values.put(DBContract.COL_DESCRIPTION, metrics[i].getDescription());
 			values.put(DBContract.COL_DISPLAY, metrics[i].isDisplayed());
 			values.put(DBContract.COL_METRIC_KEY, metrics[i].getKey());
+			values.put(DBContract.COL_POSITION, metrics[i].getPosition());
 			
 			helper.getWritableDatabase().insert
 					(DBContract.SCOUT_TABLE_ROBOT_METRICS, null, values);
@@ -3865,7 +4049,8 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)),
 					c.getInt(c.getColumnIndex(DBContract.COL_TYPE)),
 					rangeArrList.toArray(),
-					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0)
+					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0),
+					c.getInt(c.getColumnIndex(DBContract.COL_POSITION))
 					);
 		}
 		
@@ -3907,6 +4092,7 @@ public class DBManager {
 			values.put(DBContract.COL_DESCRIPTION, metrics[i].getDescription());
 			values.put(DBContract.COL_DISPLAY, metrics[i].isDisplayed());
 			values.put(DBContract.COL_METRIC_KEY, metrics[i].getKey());
+			values.put(DBContract.COL_POSITION, metrics[i].getPosition());
 			
 			helper.getWritableDatabase().insert
 					(DBContract.SCOUT_TABLE_MATCH_PERF_METRICS, null, values);
@@ -3955,7 +4141,8 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)),
 					c.getInt(c.getColumnIndex(DBContract.COL_TYPE)),
 					rangeArrList.toArray(),
-					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0)
+					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0),
+					c.getInt(c.getColumnIndex(DBContract.COL_POSITION))
 					);
 		}
 		
@@ -4287,6 +4474,7 @@ public class DBManager {
 			values.put(DBContract.COL_DESCRIPTION, metrics[i].getDescription());
 			values.put(DBContract.COL_DISPLAY, metrics[i].isDisplayed());
 			values.put(DBContract.COL_METRIC_KEY, metrics[i].getKey());
+			values.put(DBContract.COL_POSITION, metrics[i].getPosition());
 			
 			db.insert(DBContract.SUMMARY_TABLE_MATCH_PERF_METRICS, null, values);
 		}
@@ -4307,7 +4495,8 @@ public class DBManager {
 	private synchronized Metric[] summaryGetMatchMetrics() {
 		
 		Cursor c = helper.getWritableDatabase().rawQuery("SELECT * FROM " + 
-				DBContract.SUMMARY_TABLE_MATCH_PERF_METRICS, null);
+				DBContract.SUMMARY_TABLE_MATCH_PERF_METRICS + 
+				" ORDER BY " + DBContract.COL_POSITION + " ASC", null);
 		Metric[] metrics = new Metric[c.getCount()];
 		
 		for(int i = 0; i < metrics.length; i++) {
@@ -4337,7 +4526,8 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)),
 					c.getInt(c.getColumnIndex(DBContract.COL_TYPE)),
 					rangeArrList.toArray(),
-					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0)
+					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0),
+					c.getInt(c.getColumnIndex(DBContract.COL_POSITION))
 					);
 		}
 		
@@ -4380,6 +4570,7 @@ public class DBManager {
 			values.put(DBContract.COL_DESCRIPTION, metrics[i].getDescription());
 			values.put(DBContract.COL_DISPLAY, metrics[i].isDisplayed());
 			values.put(DBContract.COL_METRIC_KEY, metrics[i].getKey());
+			values.put(DBContract.COL_POSITION, metrics[i].getPosition());
 			
 			db.insert(DBContract.SUMMARY_TABLE_ROBOT_METRICS, null, values);
 		}
@@ -4400,7 +4591,8 @@ public class DBManager {
 	private synchronized Metric[] summaryGetRobotMetrics() {
 		
 		Cursor c = helper.getWritableDatabase().rawQuery("SELECT * FROM " + 
-				DBContract.SUMMARY_TABLE_ROBOT_METRICS, null);
+				DBContract.SUMMARY_TABLE_ROBOT_METRICS + 
+				" ORDER BY " + DBContract.COL_POSITION + " ASC", null);
 		Metric[] metrics = new Metric[c.getCount()];
 		
 		for(int i = 0; i < metrics.length; i++) {
@@ -4431,7 +4623,8 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_METRIC_KEY)),
 					c.getInt(c.getColumnIndex(DBContract.COL_TYPE)),
 							rangeArrList.toArray(),
-					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0)
+					(c.getInt(c.getColumnIndex(DBContract.COL_DISPLAY)) > 0),
+					c.getInt(c.getColumnIndex(DBContract.COL_POSITION))
 					);
 		}
 		

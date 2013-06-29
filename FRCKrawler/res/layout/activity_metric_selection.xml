@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Metric Type"
+        android:text="Metric Categories"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <RelativeLayout
@@ -74,8 +74,7 @@
             android:id="@+id/robotMetrics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="Robot Metrics" />
 
@@ -84,8 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/robotMetrics"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
             android:text="Match Performance Metrics" />
 
     </RelativeLayout>

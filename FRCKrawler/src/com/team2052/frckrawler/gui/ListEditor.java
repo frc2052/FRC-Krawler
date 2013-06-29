@@ -52,14 +52,26 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
 		}
 	}
 	
+	/*****
+	 * Method: getShownValues
+	 * 
+	 * @return
+	 * 
+	 * Summary: Gets the "fake" values for this ListEditor. These are the 
+	 * values that the user doesn't see.
+	 *****/
 	public String[] getShownValues() {
 		return shownValues.toArray(new String[0]);
 	}
 	
+	/*****
+	 * Method: getValues
+	 * 
+	 * @return
+	 * 
+	 * Summary: Gets the "real" values of this ListEditor, not the shown values
+	 *****/
 	public String[] getValues() {
-		for(int i = 0; i < values.size(); i++)
-			System.out.println(values.get(i));
-		
 		return values.toArray(new String[0]);
 	}
 	

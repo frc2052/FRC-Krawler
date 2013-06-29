@@ -10,6 +10,7 @@ public class Metric implements Structure {
 	private int type;
 	private Object[] range;
 	private boolean display;
+	private int position;
 	
 	/*
 	 * Types
@@ -26,12 +27,12 @@ public class Metric implements Structure {
 	 * 
 	 * BOOLEAN - not used, set to null
 	 * COUNTER - first value is the lower limit, second is the upper, third is the 
-	 * incrementation. They are expected to be integers.
+	 * incrementation. They are expected to be Integer objects.
 	 * 
 	 * SLIDER - first value is the lower limit, second is the upper. They are expected 
-	 * to be parseable as integers.
+	 * to be Integer objects.
 	 * 
-	 * CHOOSER - all the choosable values that the user can select
+	 * CHOOSER - all the values that the user can select
 	 * TEXT - not used, set to null
 	 * MATH - the list of metric IDs to do the operation on
 	 */
@@ -40,9 +41,14 @@ public class Metric implements Structure {
 	 * WARNING! - it is not advised to use these constructors. Use the static
 	 * methods in MetricFactory instead.
 	 */
-	
 	public Metric(int _id, String _gameName, String _metricName, 
 			String _description, String _key, int _type, Object[] _range, boolean _displayed) {
+		this(_id, _gameName, _metricName, _description, _key, _type, _range, _displayed, 0);
+	}
+	
+	public Metric(int _id, String _gameName, String _metricName, 
+			String _description, String _key, int _type, Object[] _range, boolean _displayed, 
+			int _position) {
 		
 		id = _id;
 		gameName = _gameName;
@@ -52,6 +58,7 @@ public class Metric implements Structure {
 		type = _type;
 		range = _range;
 		display = _displayed;
+		position = _position;
 		
 		if(type == 0 || type == 4)
 			range = null;
@@ -87,6 +94,10 @@ public class Metric implements Structure {
 	
 	public boolean isDisplayed() {
 		return display;
+	}
+	
+	public int getPosition() {
+		return position;
 	}
 	
 	public static class MetricFactory {
