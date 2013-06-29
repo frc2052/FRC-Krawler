@@ -208,7 +208,7 @@ public class DBContract {
 					COL_COMMENTS + STRING + ", " + COL_KEYS_LIST + ")";
 	
 	
-	
+	/*THIS TABLE IS CURRENTLY UNUSED*/
 	public static final String TABLE_DRIVER_DATA = "driverdata";
 	
 	//Robot ID, use COL_ROBOT_ID
@@ -250,13 +250,14 @@ public class DBContract {
 	public static final String COL_TYPE = "type";
 	public static final String COL_RANGE = "range";
 	public static final String COL_DISPLAY = "display";
+	public static final String COL_POSITION = "metricPosition";
 	
 	public static final String CREATE_TABLE_ROBOT_METRICS =
 			"CREATE TABLE " + TABLE_ROBOT_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
 					COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
 					COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + INT + ", " + 
 					COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
-					")";
+					", " + COL_POSITION + INT + ")";
 	
 	
 	
@@ -269,13 +270,14 @@ public class DBContract {
 	//Type, use COL_TYPE
 	//Range, use COL_RANGE
 	//Display, use COL_DISPLAY
+	//Position, use COL_POSITION
 	
 	public static final String CREATE_TABLE_MATCH_PERF_METRICS = 
 				"CREATE TABLE " + TABLE_MATCH_PERF_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
 						COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
 						COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
 						COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
-						")";
+						", " + COL_POSITION + INT + ")";
 	
 	
 	
@@ -302,10 +304,11 @@ public class DBContract {
 	
 	//Event ID, use COL_EVENT_ID
 	//Robot ID, use COL_ROBOT_ID
+	public static final String COL_IS_CHECKED = "isChecked";
 	
 	public static final String CREATE_TABLE_EVENT_ROBOTS = 
 			"CREATE TABLE " + TABLE_EVENT_ROBOTS + " (" + COL_EVENT_ID + INT + ", " +
-					COL_ROBOT_ID + INT + ")";
+					COL_ROBOT_ID + INT + ", " + COL_IS_CHECKED + INT + ")";
 	
 	
 	
@@ -408,13 +411,14 @@ public class DBContract {
 	//COL_TYPE = "type";
 	//COL_RANGE = "range";
 	//COL_DISPLAY = "display";
+	//Position, use COL_POSITION
 	
 	public static final String CREATE_SCOUT_TABLE_ROBOT_METRICS =
 			"CREATE TABLE " + SCOUT_TABLE_ROBOT_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
 					COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
 					COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + INT + ", " + 
-					COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
-					")";
+					COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + ", " +
+					COL_POSITION + INT + ")";
 	
 	
 	
@@ -426,13 +430,14 @@ public class DBContract {
 	//Type, use COL_TYPE
 	//Range, use COL_RANGE
 	//Display, use COL_DISPLAY
+	//Position, use COL_POSITION
 	
 	public static final String CREATE_SCOUT_TABLE_MATCH_PERF_METRICS = 
 				"CREATE TABLE " + SCOUT_TABLE_MATCH_PERF_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
 						COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
 						COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
 						COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
-						")";
+						", " + COL_POSITION + INT + ")";
 	
 	public static final String SCOUT_TABLE_DRIVER_METRICS = "scoutdrivermetrics";
 	
@@ -449,7 +454,7 @@ public class DBContract {
 				COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
 				COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
 				COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
-				")";
+				", " + COL_POSITION + INT + ")";
 	
 	
 	/**********

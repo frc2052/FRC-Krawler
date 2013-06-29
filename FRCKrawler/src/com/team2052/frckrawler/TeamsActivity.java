@@ -214,12 +214,12 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		}
 		
 		protected void onPostExecute(Void v) {
-			((TextView)findViewById(R.id.teamCount)).setText(teamCount + " Teams");
+			((TextView)findViewById(R.id.titke)).setText(teamCount + " Teams");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 		
 		protected void onCancelled(Void v) {
-			((TextView)findViewById(R.id.teamCount)).setText(teamCount + " Teams");
+			((TextView)findViewById(R.id.titke)).setText(teamCount + " Teams");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 	}

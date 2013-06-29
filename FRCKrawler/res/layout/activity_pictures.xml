@@ -72,7 +72,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/teamCount"
+                android:id="@+id/titke"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -87,7 +87,7 @@
                 android:layout_above="@+id/linearLayout"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/teamCount" >
+                android:layout_below="@+id/titke" >
 
                 <ImageView
                     android:id="@+id/image"

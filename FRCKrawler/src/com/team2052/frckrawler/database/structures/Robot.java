@@ -2,6 +2,7 @@ package com.team2052.frckrawler.database.structures;
 
 public class Robot implements Structure {
 	
+	private boolean isChecked;	//Only used when getting robots by thier event
 	private int team;
 	private int id;
 	private String game;
@@ -19,13 +20,33 @@ public class Robot implements Structure {
 	
 	public Robot(int _team, int _id, String _game, String _comments, 
 			String _imagePath, MetricValue[] _vals) {
+		this(false, _team, _id, _game, _comments, null, _vals);
+	}
+	
+	public Robot(boolean _isChecked, int _team, int _id, String _game, String _comments, 
+			String _imagePath, MetricValue[] _vals) {
 		
+		isChecked = _isChecked;
 		team = _team;
 		id = _id;
 		game = _game;
 		comments = _comments;
 		imagePath = _imagePath;
 		vals = _vals;
+	}
+	
+	/*****
+	 * !WARNING!  This will not change the checked state of this
+	 * robot in the entire database, only this object. It is
+	 * not recommended that this method be used unless the 
+	 * programmer is CERTAIN what he or she is doing  !WARNING!
+	 */
+	public void setChecked(boolean checked) {
+		isChecked = checked;
+	}
+	
+	public boolean isChecked() {
+		return isChecked;
 	}
 	
 	public int getTeamNumber() {

@@ -126,6 +126,8 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 				progressDialog.dismiss();
 				Toast.makeText(getApplicationContext(), 
 						"Sync successful.", Toast.LENGTH_SHORT).show();
+				
+				
 			}
 		});
 	}

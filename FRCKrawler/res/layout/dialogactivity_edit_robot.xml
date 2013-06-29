@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/teamCount"
+        android:id="@+id/titke"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -24,7 +24,7 @@
         android:layout_alignParentRight="true" >
 
         <Button
-            android:id="@+id/save"
+            android:id="@+id/saveList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/teamCount" >
+        android:layout_below="@+id/titke" >
 
         <TextView
             android:id="@+id/game"

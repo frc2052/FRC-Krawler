@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.database;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -24,6 +25,7 @@ import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatchException;
 import com.team2052.frckrawler.database.structures.Query;
 import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.database.structures.SortKey;
 import com.team2052.frckrawler.database.structures.StringSet;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.database.structures.User;
@@ -44,7 +46,6 @@ import com.team2052.frckrawler.database.structures.User;
  *****/
 
 public class DBManager {
-	
 	
 	private static DBManager instance = null;
 	
@@ -1362,7 +1363,7 @@ public class DBManager {
 								valsArr.toArray(new String[0])
 							));
 					} catch(MetricTypeMismatchException e) {
-						System.out.println(e.getMessage());
+						Log.e("FRCKrawler", e.getMessage());
 					}
 				}
 			
@@ -1434,7 +1435,8 @@ public class DBManager {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
 		Cursor c = db.query(DBContract.TABLE_ROBOT_METRICS,	//Check to see who has
-							new String[] {DBContract.COL_METRIC_KEY}, //what keys already
+							new String[] {DBContract.COL_METRIC_KEY, 
+									DBContract.COL_POSITION}, //what keys and positions already
 							DBContract.COL_GAME_NAME + " LIKE ?", 
 							new String[] {game}, 
 							null, null, 
@@ -1462,6 +1464,20 @@ public class DBManager {
 			if(key == DBContract.COL_KEYS.length)	//Return false because no more metrics can
 				return false;	//be added. Limit reached.
 		}
+		
+		c.moveToFirst();
+		int biggestPosition = 0;
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			int currentPos = c.getInt(c.getColumnIndex(DBContract.COL_POSITION));
+			
+			if(biggestPosition < currentPos)
+				biggestPosition = currentPos;
+			
+			c.moveToNext();
+		}
+		
+		values.put(DBContract.COL_POSITION, biggestPosition + 1);
 		
 		db.insert(DBContract.TABLE_ROBOT_METRICS, null, values);
 		db.close();
@@ -1516,6 +1532,69 @@ public class DBManager {
 		return true;
 	}
 	
+	
+	/*****
+	 * Method: flipMatchMetricPostion
+	 * 
+	 * Summary: Flips the two position values for the specified metrics
+	 *****/
+	
+	public synchronized boolean flipMatchMetricPosition(int metricID1, 
+			int metricID2) {
+		
+		if(!hasValue(DBContract.TABLE_MATCH_PERF_METRICS, DBContract.COL_METRIC_ID, 
+				Integer.toString(metricID1)) || !hasValue(DBContract.TABLE_MATCH_PERF_METRICS, 
+						DBContract.COL_METRIC_ID, Integer.toString(metricID2)))
+			return false;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		Cursor c = db.query(DBContract.TABLE_MATCH_PERF_METRICS, 
+				new String[] {DBContract.COL_METRIC_ID, DBContract.COL_POSITION}, 
+				DBContract.COL_METRIC_ID + " LIKE ? OR " + DBContract.COL_METRIC_ID + 
+						" LIKE ?",
+				new String[] {Integer.toString(metricID1), Integer.toString(metricID2)},
+				null,
+				null,
+				null);
+		
+		if(c.getCount() < 2)
+			return false;
+		
+		c.moveToFirst();
+		int firstID = c.getInt(c.getColumnIndex(DBContract.COL_METRIC_ID));
+		int firstPos = c.getInt(c.getColumnIndex(DBContract.COL_POSITION));
+		c.moveToNext();
+		int secondID = c.getInt(c.getColumnIndex(DBContract.COL_METRIC_ID));
+		int secondPos = c.getInt(c.getColumnIndex(DBContract.COL_POSITION));
+		
+		ContentValues firstVals = new ContentValues();
+		firstVals.put(DBContract.COL_POSITION, secondPos);
+		db.update(DBContract.TABLE_MATCH_PERF_METRICS, firstVals, 
+				DBContract.COL_METRIC_ID + " LIKE " + firstID, null);
+		
+		ContentValues secondVals = new ContentValues();
+		secondVals.put(DBContract.COL_POSITION, firstPos);
+		db.update(DBContract.TABLE_MATCH_PERF_METRICS, secondVals, 
+				DBContract.COL_METRIC_ID + " LIKE " + secondID, null);
+		
+		helper.close();
+		
+		return true;
+	}
+	
+	
+	/*****
+	 * Method: getRobotMetricsByColumns
+	 * 
+	 * @param cols
+	 * @param vals
+	 * @return
+	 * 
+	 * Summary: Gets all robot metrics based on the columns and values passed as 
+	 * parameters.
+	 */
+	
 	public synchronized Metric[] getRobotMetricsByColumns(String[] cols, String[] vals) {
 		
 		if(cols.length != vals.length)
@@ -1526,6 +1605,8 @@ public class DBManager {
 		
 		String queryString = "SELECT * FROM " + DBContract.TABLE_ROBOT_METRICS + 
 				" WHERE " + cols[0] + " LIKE ?";
+		
+		queryString += " ORDER BY " + DBContract.COL_POSITION + " ASC";
 		
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with coos
 			queryString += " AND " + cols[i] + " LIKE ?";
@@ -1567,6 +1648,57 @@ public class DBManager {
 		helper.close();
 		
 		return m;
+	}
+	
+	
+	/*****
+	 * Method: flipRobotMetricPostion
+	 * 
+	 * Summary: Flips the two position values for the specified metrics
+	 *****/
+	
+	public synchronized boolean flipRobotMetricPosition(int metricID1, 
+			int metricID2) {
+		
+		if(!hasValue(DBContract.TABLE_ROBOT_METRICS, DBContract.COL_METRIC_ID, 
+				Integer.toString(metricID1)) || !hasValue(DBContract.TABLE_ROBOT_METRICS, 
+						DBContract.COL_METRIC_ID, Integer.toString(metricID2)))
+			return false;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		Cursor c = db.query(DBContract.TABLE_ROBOT_METRICS, 
+				new String[] {DBContract.COL_METRIC_ID, DBContract.COL_POSITION}, 
+				DBContract.COL_METRIC_ID + " LIKE ? OR " + DBContract.COL_METRIC_ID + 
+				" LIKE ?",
+				new String[] {Integer.toString(metricID1), Integer.toString(metricID2)},
+				null,
+				null,
+				null);
+		
+		if(c.getCount() < 2)
+			return false;
+		
+		c.moveToFirst();
+		int firstID = c.getInt(c.getColumnIndex(DBContract.COL_METRIC_ID));
+		int firstPos = c.getInt(c.getColumnIndex(DBContract.COL_POSITION));
+		c.moveToNext();
+		int secondID = c.getInt(c.getColumnIndex(DBContract.COL_METRIC_ID));
+		int secondPos = c.getInt(c.getColumnIndex(DBContract.COL_POSITION));
+		
+		ContentValues firstVals = new ContentValues();
+		firstVals.put(DBContract.COL_POSITION, secondPos);
+		db.update(DBContract.TABLE_ROBOT_METRICS, firstVals, 
+				DBContract.COL_METRIC_ID + " LIKE " + firstID, null);
+		
+		ContentValues secondVals = new ContentValues();
+		secondVals.put(DBContract.COL_POSITION, firstPos);
+		db.update(DBContract.TABLE_ROBOT_METRICS, secondVals, 
+				DBContract.COL_METRIC_ID + " LIKE " + secondID, null);
+		
+		helper.close();
+		
+		return true;
 	}
 	
 	
@@ -1752,7 +1884,8 @@ public class DBManager {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
 		Cursor c = db.query(DBContract.TABLE_MATCH_PERF_METRICS,	//Check to see who has
-							new String[] {DBContract.COL_METRIC_KEY}, //what keys already
+							new String[] {DBContract.COL_METRIC_KEY, 
+									DBContract.COL_POSITION}, //what keys and positions already
 							DBContract.COL_GAME_NAME + " LIKE ?", 
 							new String[] {game}, 
 							null, null, 
@@ -1762,8 +1895,6 @@ public class DBManager {
 		
 		for(int key = 0; key < DBContract.COL_KEYS.length; key++) {	//Cycle through
 																	//all possible keys.
-			
-			Log.d("FRCKrawler", DBContract.COL_KEYS[key]);
 			boolean isTaken = false;
 			c.moveToFirst();
 			
@@ -1804,6 +1935,20 @@ public class DBManager {
 				break;	//No need to continue
 			}
 		}
+		
+		c.moveToFirst();
+		int biggestPosition = 0;
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			int currentPos = c.getInt(c.getColumnIndex(DBContract.COL_POSITION));
+			
+			if(biggestPosition < currentPos)
+				biggestPosition = currentPos;
+			
+			c.moveToNext();
+		}
+		
+		values.put(DBContract.COL_POSITION, biggestPosition + 1);
 		
 		if(wasAssigned)
 			db.insert(DBContract.TABLE_MATCH_PERF_METRICS, null, values);
@@ -1891,12 +2036,13 @@ public class DBManager {
 		
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with the cols values
 			queryString += " AND " + cols[i] + " LIKE ?";
+		
+		queryString += " ORDER BY " + DBContract.COL_POSITION + " ASC";
 			
 		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
 		Metric[] metrics = new Metric[c.getCount()];
 		
 		for(int i = 0; i < metrics.length; i++) {
-			
 			c.moveToNext();
 			
 			String rangeString = c.getString(c.getColumnIndex(DBContract.COL_RANGE));
@@ -2033,7 +2179,6 @@ public class DBManager {
 				new String[] {Integer.toString(eventID), Integer.toString(robotID)});
 		
 		if(enteredCheck.getCount() > 0) {
-			
 			helper.close();
 			return false;
 		}
@@ -2056,16 +2201,16 @@ public class DBManager {
 		robotGameName = robotCursor.getString(robotCursor.getColumnIndex(DBContract.COL_GAME_NAME));
 		
 		if(!eventGameName.equals(robotGameName)) {
-			
 			helper.close();
 			return false;
 		}
 		
-		db.execSQL("INSERT INTO " + DBContract.TABLE_EVENT_ROBOTS + 
-				" (" + DBContract.COL_EVENT_ID + ", " + DBContract.COL_ROBOT_ID + ")" +
-				" VALUES (" + Integer.toString(eventID) + ", " 
-				+ Integer.toString(robotID) + ")");
+		ContentValues vals = new ContentValues();
+		vals.put(DBContract.COL_EVENT_ID, eventID);
+		vals.put(DBContract.COL_ROBOT_ID, robotID);
+		vals.put(DBContract.COL_IS_CHECKED, false);
 		
+		Log.d("FRCKrawler", "" + db.insert(DBContract.TABLE_EVENT_ROBOTS, null, vals));
 		helper.close();
 		
 		return true;
@@ -2102,16 +2247,15 @@ public class DBManager {
 	 */
 	
 	public synchronized Robot[] getRobotsAtEvent(int eventID) {
-		
 		if(!hasValue(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID, 
 				Integer.toString(eventID)))
 			return null;
 		
 		SQLiteDatabase db = helper.getReadableDatabase();
 		
-		Cursor c = db.rawQuery("SELECT " + DBContract.COL_ROBOT_ID + 
+		Cursor c = db.rawQuery("SELECT * " +
 				" FROM " + DBContract.TABLE_EVENT_ROBOTS + 
-				" WHERE " + DBContract.COL_EVENT_ID + " LIKE ?", 
+				" WHERE " + DBContract.COL_EVENT_ID + " LIKE ? ", 
 				new String[] {Integer.toString(eventID)});
 		
 		String[] colsArr = new String[c.getCount()];
@@ -2124,7 +2268,24 @@ public class DBManager {
 			colsArr[i] = DBContract.COL_ROBOT_ID;
 		}
 		
-		return getRobotsByColumns(colsArr, valArr, true);
+		Robot[] robots = getRobotsByColumns(colsArr, valArr, true);
+		c.moveToFirst();
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			for(int k = 0; k < robots.length; k++)
+				if(c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)) == robots[k].getID()) {
+					if(c.getInt(c.getColumnIndex(DBContract.COL_IS_CHECKED)) == 0)
+						robots[k].setChecked(false);
+					else
+						robots[k].setChecked(true);
+					
+					break;
+			}
+				
+			c.moveToNext();
+		}
+		
+		return robots;
 	}
 	
 	
@@ -2170,6 +2331,32 @@ public class DBManager {
 			
 	}
 	
+	
+	/*****
+	 * Method: setRobotCheckedState
+	 * 
+	 * Summary: Sets a robot's checked state in the specified event.
+	 * This state only applies to the specified event
+	 */
+	
+	public synchronized boolean setRobotChecked(int eventID, int robotID, boolean checked) {
+		if(!hasValue(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID, 
+				Integer.toString(eventID)) || !hasValue(DBContract.TABLE_ROBOTS, 
+						DBContract.COL_ROBOT_ID, Integer.toString(robotID)))
+			return false;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		ContentValues vals = new ContentValues();
+		vals.put(DBContract.COL_IS_CHECKED, checked);
+		db.update(DBContract.TABLE_EVENT_ROBOTS, vals, DBContract.COL_EVENT_ID + 
+				" LIKE ? AND " + DBContract.COL_ROBOT_ID + " LIKE ?", 
+				new String[] {Integer.toString(eventID), Integer.toString(robotID)});
+		
+		helper.close();
+		
+		return true;
+	}
 	
 	/*****
 	 * Method: insertMatchData
@@ -2496,12 +2683,12 @@ public class DBManager {
 	 * AsyncTask or other worker thread is highly recomended.
 	 */
 	
-	public CompiledData[] getCompiledEventData(Event e, Query[] querys) {
+	public CompiledData[] getCompiledEventData(Event e, Query[] querys, SortKey sortKey) {
 		
-		return getCompiledEventData(e.getEventID(), querys);
+		return getCompiledEventData(e.getEventID(), querys, sortKey);
 	}
 	
-	public CompiledData[] getCompiledEventData(int eventID, Query[] querys) {
+	public CompiledData[] getCompiledEventData(int eventID, Query[] querys, SortKey sortKey) {
 		
 		if(!hasValue(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID, 
 				Integer.toString(eventID)))
@@ -2691,8 +2878,15 @@ public class DBManager {
 								for(int choiceCount = 0; choiceCount < compiledValue.length;
 										choiceCount++) {
 									
-									compiledValue[choiceCount] = Double.toString
-											(counts[choiceCount] / (double)matchData.length);
+									if(counts[choiceCount] != 0) {
+										DecimalFormat format = new DecimalFormat("0.00");
+										
+										compiledValue[choiceCount] = range[choiceCount] + ": " +
+												format.format(counts[choiceCount] / 
+														(double)matchData.length);
+									} else {
+ 										compiledValue[choiceCount] = "";
+									}
 								}
 							}
 							
@@ -2862,38 +3056,36 @@ public class DBManager {
 			
 		}
 		
-		if(querys == null || querys.length == 0) 
-			return compiledData;
-		
-		//Create an ArrayList for teams that fit the query
-		ArrayList<CompiledData> selectedRobots = new ArrayList<CompiledData>();
-		
-		for(CompiledData robot : compiledData) {
-			
-			boolean passed = true;
-			
-			for(Query query : querys) {
-				
-				//Get the MetricValue to compare against our cuttoff
-				MetricValue metricValue = null;
-				
-				switch(query.getType()) {
+		if(querys != null && querys.length != 0) {
+			//Create an ArrayList for teams that fit the query
+			ArrayList<CompiledData> selectedRobots = new ArrayList<CompiledData>();
+
+			for(CompiledData robot : compiledData) {
+
+				boolean passed = true;
+
+				for(Query query : querys) {
+
+					//Get the MetricValue to compare against our cuttoff
+					MetricValue metricValue = null;
+
+					switch(query.getType()) {
 					case Query.TYPE_ROBOT:
-						
+
 						for(int i = 0; i < robot.getRobot().getMetricValues().
 								length; i++) {
 							if(robot.getRobot().getMetricValues()[i].getMetric().
 									getID() == query.getMetricID()) {
 								metricValue = robot.getRobot().getMetricValues()[i];
-								
+
 								break;
 							}
 						}
-						
+
 						break;
-						
+
 					case Query.TYPE_MATCH_DATA:
-						
+
 						for(int i = 0; i < robot.getCompiledMatchData().
 								length; i++) {
 							if(robot.getCompiledMatchData()[i].getMetric().
@@ -2902,11 +3094,11 @@ public class DBManager {
 								break;
 							}
 						}
-						
+
 						break;
-						
+
 					case Query.TYPE_DRIVER_DATA:
-						
+
 						for(int i = 0; i < robot.getCompiledDriverData().
 								length; i++) {
 							if(robot.getCompiledMatchData()[i].getMetric().
@@ -2915,102 +3107,157 @@ public class DBManager {
 								break;
 							}
 						}
-						
+
 						break;
-				}
-				
-				//Compare with the correct comparison
-				switch(query.getComparison()) {
+					}
+
+					//Compare with the correct comparison
+					switch(query.getComparison()) {
 					case Query.COMPARISON_EQUAL_TO:
-						
-						if(metricValue.getMetric().getType() == DBContract.COUNTER 
-								|| metricValue.getMetric().getType() == 
-								DBContract.SLIDER || (metricValue.getMetric().getType() 
-										== DBContract.BOOLEAN && query.getType() == 
-										Query.TYPE_MATCH_DATA)) {
-							
-							try {
-								System.out.println(query.getMetricValue());
-								double checkValue = Double.parseDouble
-									(query.getMetricValue());
-								double robotValue = Double.parseDouble
-									(metricValue.getValueAsHumanReadableString());
-							
-								if(checkValue != robotValue)
-									passed = false;
-							
-								} catch(NumberFormatException e) {
-									passed = false;
-									System.out.println("Format Exception");
-								}
-								
-						} else {
-							
-							if(!metricValue.getValueAsHumanReadableString().
-									equalsIgnoreCase(query.getMetricValue()))
-								passed = false;
-						}
-							
-						break;
-						
-					case Query.COMPARISON_LESS_THAN:
-						
+
 						if(metricValue.getMetric().getType() == DBContract.COUNTER 
 						|| metricValue.getMetric().getType() == 
 						DBContract.SLIDER || (metricValue.getMetric().getType() 
 								== DBContract.BOOLEAN && query.getType() == 
 								Query.TYPE_MATCH_DATA)) {
-							
+
+							try {
+								System.out.println(query.getMetricValue());
+								double checkValue = Double.parseDouble
+										(query.getMetricValue());
+								double robotValue = Double.parseDouble
+										(metricValue.getValueAsHumanReadableString());
+
+								if(checkValue != robotValue)
+									passed = false;
+
+							} catch(NumberFormatException e) {
+								passed = false;
+								System.out.println("Format Exception");
+							}
+
+						} else {
+
+							if(!metricValue.getValueAsHumanReadableString().
+									equalsIgnoreCase(query.getMetricValue()))
+								passed = false;
+						}
+
+						break;
+
+					case Query.COMPARISON_LESS_THAN:
+
+						if(metricValue.getMetric().getType() == DBContract.COUNTER 
+						|| metricValue.getMetric().getType() == 
+						DBContract.SLIDER || (metricValue.getMetric().getType() 
+								== DBContract.BOOLEAN && query.getType() == 
+								Query.TYPE_MATCH_DATA)) {
+
 							try {
 								double checkValue = Double.parseDouble
 										(query.getMetricValue());
 								double robotValue = Double.parseDouble
 										(metricValue.getValueAsHumanReadableString());
-					
+
 								if(checkValue <= robotValue)
 									passed = false;
-								
+
 							} catch(NumberFormatException e) {
 								passed = false;
 							}
 						}
-						
+
 						break;
-						
+
 					case Query.COMPARISON_GREATER_THAN:
-						
+
 						if(metricValue.getMetric().getType() == DBContract.COUNTER 
 						|| metricValue.getMetric().getType() == 
 						DBContract.SLIDER || (metricValue.getMetric().getType() 
 								== DBContract.BOOLEAN && query.getType() == 
 								Query.TYPE_MATCH_DATA)) {
-							
+
 							try{
 								double checkValue = Double.parseDouble
 										(query.getMetricValue());
 								double robotValue = Double.parseDouble
 										(metricValue.getValueAsHumanReadableString());
-					
+
 								if(checkValue >= robotValue)
 									passed = false;
-								
+
 							} catch(NumberFormatException e) {
 								passed = false;
 							}
 						}
-						
+
 						break;
+					}
 				}
+
+				if(passed)
+					selectedRobots.add(robot);
 			}
-		
-			if(passed)
-				selectedRobots.add(robot);
+			
+			compiledData = selectedRobots.toArray(new CompiledData[0]);
 		}
 		
 		//Sort selectedRobots according to the specified key
+		if(sortKey != null && compiledData.length > 0) {
+			double[] sortValues = new double[compiledData.length];
+			
+			switch(sortKey.getMetricType()) {
+				case SortKey.MATCH_METRIC_TYPE:
+					
+					int metricAdress = -1;
+					
+					for(int i = 0; i < compiledData[0].getCompiledMatchData().length; i++) {
+						if(compiledData[0].getCompiledMatchData()[i].
+								getMetric().getKey().equals(sortKey.getColumn())) {
+							metricAdress = i;
+							break;
+						}
+					}
+					
+					if(metricAdress == -1)
+						break;	//Break if this metric is not in the comp data
+					
+					int metricType = compiledData[0].getCompiledMatchData()
+							[metricAdress].getMetric().getType();
+					
+					if(metricType != DBContract.BOOLEAN && metricType != DBContract.COUNTER &&
+							metricType != DBContract.MATH && metricType != DBContract.SLIDER)
+						break;
+						
+					for(int i = 0; i < compiledData.length; i++) {
+						try {
+							sortValues[i] = Double.parseDouble(compiledData[i].
+									getCompiledMatchData()[metricAdress].getValue()[0]);
+						} catch(ArrayIndexOutOfBoundsException e) {
+							sortValues[i] = -1.0;
+						}
+					}
+					
+					break;
+					
+				case SortKey.PIT_METRIC_TYPE:
+					
+					break;
+					
+				case SortKey.DRIVER_METRIC_TYPE:
+					//Not used!
+					break;
+			}
+			
+			CompiledDataSorter sorter = new CompiledDataSorter();
+			sorter.sort(sortValues, compiledData);
+			
+			for(double d : sortValues)
+				System.out.println(d);
+		}
 		
 		
-		return selectedRobots.toArray(new CompiledData[0]);
+		return compiledData;
 	}
 	
 	
@@ -3140,80 +3387,6 @@ public class DBManager {
 		
 		return c.moveToFirst();
 	}
-	
-	
-	/*****
-	 * Class: Quicksorter
-	 * 
-	 * @author Charles Hofer
-	 *
-	 * Description: this class is used to sort a list of objects, based on 
-	 * their keys.
-	 *****/
-	
-	private class Quicksorter  {
-		  double[] keys;
-		  private Object[] items;
-		  private int number;
-
-		  public void sort(double[] _keys, Object[] _items) {
-		    // Check for empty or null array
-		    if (keys == null || keys.length == 0 || 
-		    		_keys.length != _items.length){
-		      return;
-		    }
-		    
-		    keys = _keys;
-		    items = _items;
-		    number = keys.length;
-		    quicksort(0, number - 1);
-		  }
-
-		  private void quicksort(int low, int high) {
-		    int i = low, j = high;
-		    // Get the pivot element from the middle of the list
-		    double pivot = keys[low + (high-low)/2];
-
-		    // Divide into two lists
-		    while (i <= j) {
-		      // If the current value from the left list is smaller then the pivot
-		      // element then get the next element from the left list
-		      while (keys[i] < pivot) {
-		        i++;
-		      }
-		      // If the current value from the right list is larger then the pivot
-		      // element then get the next element from the right list
-		      while (keys[j] > pivot) {
-		        j--;
-		      }
-
-		      // If we have found a values in the left list which is larger then
-		      // the pivot element and if we have found a value in the right list
-		      // which is smaller then the pivot element then we exchange the
-		      // values.
-		      // As we are done we can increase i and j
-		      if (i <= j) {
-		        exchange(i, j);
-		        i++;
-		        j--;
-		      }
-		    }
-		    // Recursion
-		    if (low < j)
-		      quicksort(low, j);
-		    if (i < high)
-		      quicksort(i, high);
-		  }
-
-		  private void exchange(int i, int j) {
-		    double tempKey = keys[i];
-		    Object tempOb = items[i];
-		    keys[i] = keys[j];
-		    items[i] = items[j];
-		    keys[j] = tempKey;
-		    items[j] = tempOb;
-		  }
-		}
 	
 	
 	
@@ -3661,11 +3834,11 @@ public class DBManager {
 	public synchronized Metric[] scoutGetAllRobotMetrics() {
 		
 		Cursor c = helper.getReadableDatabase().rawQuery
-				("SELECT * FROM " + DBContract.SCOUT_TABLE_ROBOT_METRICS, null);
+				("SELECT * FROM " + DBContract.SCOUT_TABLE_ROBOT_METRICS
+				 + " ORDER BY " + DBContract.COL_POSITION + " ASC", null);
 		Metric[] m = new Metric[c.getCount()];
 		
 		for(int i = 0; i < c.getCount(); i++) {
-			
 			c.moveToNext();
 			
 			String rangeString = c.getString(c.getColumnIndex(DBContract.COL_RANGE));
@@ -3751,11 +3924,11 @@ public class DBManager {
 	public synchronized Metric[] scoutGetAllMatchMetrics() {
 		
 		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + 
-				DBContract.SCOUT_TABLE_MATCH_PERF_METRICS, null);
+				DBContract.SCOUT_TABLE_MATCH_PERF_METRICS + 
+				" ORDER BY " + DBContract.COL_POSITION + " ASC", null);
 		Metric[] metrics = new Metric[c.getCount()];
 		
 		for(int i = 0; i < metrics.length; i++) {
-			
 			c.moveToNext();
 			
 			String rangeString = c.getString(c.getColumnIndex(DBContract.COL_RANGE));
@@ -4427,7 +4600,6 @@ public class DBManager {
 			MetricValue[] dataArr = new MetricValue[metricArr.length];
 			
 			for(int k = 0; k < metricArr.length; k++) {
-				
 				ArrayList<String> valuesList = new ArrayList<String>();
 				String valueString = c.getString(c.getColumnIndex(metricArr[k].getKey()));
 				

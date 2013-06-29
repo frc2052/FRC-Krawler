@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/teamCount"
+        android:id="@+id/titke"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -21,7 +21,7 @@
         android:layout_alignParentRight="true" >
 
         <Button
-            android:id="@+id/save"
+            android:id="@+id/saveList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
@@ -41,7 +41,7 @@
         android:layout_above="@+id/bottomLinearLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/teamCount" >
+        android:layout_below="@+id/sortKey" >
 
         <ScrollView
             android:id="@+id/scrollView1"
@@ -65,5 +65,21 @@
         </ScrollView>
 
     </RelativeLayout>
+
+    <Spinner
+        android:id="@+id/sortKey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titke"
+        android:layout_toRightOf="@+id/radioPlaceHolder" />
+
+    <TextView
+        android:id="@+id/radioPlaceHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/sortKey"
+        android:text="Sort by: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

@@ -207,7 +207,7 @@ public class BluetoothServerService extends Service {
 						
 						//Compile the SummaryData
 						CompiledData[] compiledData = dbManager.getCompiledEventData
-								(hostedEvent, new Query[0]);
+								(hostedEvent, new Query[0], null);
 						MatchData[] matchData = dbManager.getMatchDataByColumns
 								(new String[] {DBContract.COL_EVENT_ID}, 
 										new String[] {Integer.toString(hostedEvent.getEventID())});

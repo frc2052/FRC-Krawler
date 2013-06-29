@@ -122,7 +122,7 @@
                                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                                         <TextView
-                                            android:id="@+id/teamCount"
+                                            android:id="@+id/titke"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Robot"

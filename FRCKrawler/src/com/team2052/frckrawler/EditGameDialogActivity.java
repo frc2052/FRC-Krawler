@@ -24,7 +24,7 @@ public class EditGameDialogActivity extends Activity implements OnClickListener,
 		
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 		((Button)findViewById(R.id.remove)).setOnClickListener(this);
-		((Button)findViewById(R.id.save)).setOnClickListener(this);
+		((Button)findViewById(R.id.saveList)).setOnClickListener(this);
 		
 		dbManager = DBManager.getInstance(this);
 	}
@@ -48,7 +48,7 @@ public class EditGameDialogActivity extends Activity implements OnClickListener,
 	public void onClick(View v) {
 		
 		switch(v.getId()) {
-			case R.id.save:
+			case R.id.saveList:
 				
 				finish();
 			

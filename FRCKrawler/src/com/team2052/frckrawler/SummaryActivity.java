@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +11,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.HorizontalScrollView;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -22,9 +23,6 @@ import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.Query;
-import com.team2052.frckrawler.database.structures.Robot;
-import com.team2052.frckrawler.database.structures.User;
-import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
 import com.team2052.frckrawler.gui.ProgressSpinner;
@@ -36,6 +34,7 @@ public class SummaryActivity extends Activity implements OnClickListener {
 	
 	private static Query[] queries = new Query[0];
 	
+	private int dataCount = 0;
 	private DBManager dbManager;
 	private TableLayout table;
 	
@@ -80,6 +79,7 @@ public class SummaryActivity extends Activity implements OnClickListener {
 			builder.setCancelable(false);
 			progressDialog = builder.create();
 			progressDialog.show();
+			dataCount = 0;
 		}
 		
 		@Override
@@ -88,10 +88,10 @@ public class SummaryActivity extends Activity implements OnClickListener {
 			CompiledData[] compiledData = dbManager.summaryGetCompiledData(queries);
 			
 			ArrayList<View> descriptorsViews = new ArrayList<View>();
-			descriptorsViews.add(new MyTextView(SummaryActivity.this, " ", 18));
-			descriptorsViews.add(new MyTextView(SummaryActivity.this, "Team", 18));
-			descriptorsViews.add(new MyTextView(SummaryActivity.this, "M. Played", 18));
-			descriptorsViews.add(new MyTextView(SummaryActivity.this, "M. Data", 18));
+			descriptorsViews.add(new MyTextView(SummaryActivity.this, " ", 16));
+			descriptorsViews.add(new MyTextView(SummaryActivity.this, "Team", 16));
+			descriptorsViews.add(new MyTextView(SummaryActivity.this, "M. Played", 16));
+			descriptorsViews.add(new MyTextView(SummaryActivity.this, "Raw M. Data", 16));
 			
 			if(compiledData.length > 0) {
 				//Add the match metric names to the table
@@ -139,12 +139,12 @@ public class SummaryActivity extends Activity implements OnClickListener {
 						compiledData[i].getMatchesPlayed().length), 18));
 				dataRow.add(rawDataButton);
 				
-				for(MetricValue v : compiledData[i].getRobot().getMetricValues())
+				for(MetricValue v : compiledData[i].getCompiledMatchData())
 					if(v.getMetric().isDisplayed())
 						dataRow.add(new MyTextView(SummaryActivity.this, 
 								v.getValueAsHumanReadableString(), 18));
 				
-				for(MetricValue v : compiledData[i].getCompiledMatchData())
+				for(MetricValue v : compiledData[i].getRobot().getMetricValues())
 					if(v.getMetric().isDisplayed())
 						dataRow.add(new MyTextView(SummaryActivity.this, 
 								v.getValueAsHumanReadableString(), 18));
@@ -158,7 +158,7 @@ public class SummaryActivity extends Activity implements OnClickListener {
 				publishProgress(row);
 				
 				try{
-					Thread.sleep(100);
+					Thread.sleep(50);
 				} catch(InterruptedException e) {}
 			}
 			
@@ -167,6 +167,8 @@ public class SummaryActivity extends Activity implements OnClickListener {
 		
 		protected void onProgressUpdate(MyTableRow... row) {
 			table.addView(row[0]);
+			dataCount++;
+			((TextView)findViewById(R.id.dataCount)).setText(dataCount + " Robots");
 		}
 		
 		protected void onPostExecute(Void v) {
@@ -188,6 +190,8 @@ public class SummaryActivity extends Activity implements OnClickListener {
 			AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
 			builder.setTitle("Raw Match Data");
 			
+			ScrollView scroller = new ScrollView(SummaryActivity.this);
+			HorizontalScrollView hScroller = new HorizontalScrollView(SummaryActivity.this);
 			TableLayout dataTable = new TableLayout(SummaryActivity.this);
 			
 			MyTableRow descriptorsRow = new MyTableRow(SummaryActivity.this);
@@ -241,7 +245,9 @@ public class SummaryActivity extends Activity implements OnClickListener {
 						viewArr.toArray(new View[0]), color));
 			}
 			
-			builder.setView(dataTable);
+			hScroller.addView(dataTable);
+			scroller.addView(hScroller);
+			builder.setView(scroller);
 			builder.show();
 		}
 	}

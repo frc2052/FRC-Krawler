@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -23,6 +25,7 @@ import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.Query;
 import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.database.structures.SortKey;
 import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
@@ -36,8 +39,8 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	private static HashMap<Integer, Query[]> matchQuerys = new HashMap<Integer, Query[]>();
 	private static HashMap<Integer, Query[]> pitQuerys = new HashMap<Integer, Query[]>();
 	private static HashMap<Integer, Query[]> driverQuerys = new HashMap<Integer, Query[]>();
+	private static SortKey sortKey;
 	
-	private ArrayList<Integer> checkedTeamNumbers;
 	private CompiledData[] data;
 	private DBManager dbManager;
 	private GetCompiledDataTask getDataTask;
@@ -48,7 +51,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		 
 		findViewById(R.id.query).setOnClickListener(this);
 		
-		checkedTeamNumbers = new ArrayList<Integer>();
 		dbManager = DBManager.getInstance(this);
 		
 		getDataTask = new GetCompiledDataTask();
@@ -128,6 +130,14 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		return driverQuerys.get(eventID);
 	}
 	
+	public static void setSortKey(SortKey key) {
+		sortKey = key;
+	}
+	
+	public static SortKey getSortKey() {
+		return sortKey;
+	}
+	
 	private class GetCompiledDataTask extends AsyncTask
 										<QueryActivity, MyTableRow, Void> {
 											
@@ -139,7 +149,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		}
 
 		protected Void doInBackground(QueryActivity... params) {
-			
 			QueryActivity activity = params[0];
 			
 			ArrayList<Query> allQuerys = new ArrayList<Query>();
@@ -169,14 +178,13 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				data = dbManager.getCompiledEventData
 					(Integer.parseInt(databaseValues[
 					getAddressOfDatabaseKey(DBContract.COL_EVENT_ID)]), 
-					new Query[0]);
+					new Query[0], sortKey);
 				
 			} else {
-				
 				data = dbManager.getCompiledEventData
 						(Integer.parseInt(databaseValues[
 						getAddressOfDatabaseKey(DBContract.COL_EVENT_ID)]), 
-						querys);
+						querys, sortKey);
 			}
 			
 			MyTableRow descriptorsRow = new MyTableRow(activity);
@@ -235,7 +243,13 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 					color = Color.TRANSPARENT;
 				
 				MyTableRow dataRow = new MyTableRow(activity, color);
-				dataRow.addView(new CheckBox(activity));
+				
+				CheckBox checkBox = new CheckBox(activity);
+				checkBox.setOnCheckedChangeListener(new CheckListener(
+						data[dataCount].getEventID(), 
+						data[dataCount].getRobot().getID()));
+				checkBox.setChecked(data[dataCount].getRobot().isChecked());
+				dataRow.addView(checkBox);
 				
 				MyButton commentsButton = new MyButton
 						(activity, "Comments", activity);
@@ -301,6 +315,23 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		
 		protected void onCancelled(Void v) {
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
+		}
+	}
+	
+	private class CheckListener implements CompoundButton.OnCheckedChangeListener {
+		
+		private int eventID;
+		private int robotID;
+		
+		public CheckListener(int _eventID, int _robotID) {
+			eventID = _eventID;
+			robotID = _robotID;
+		}
+		
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			dbManager.setRobotChecked(eventID, robotID, isChecked);
 		}
 	}
 }

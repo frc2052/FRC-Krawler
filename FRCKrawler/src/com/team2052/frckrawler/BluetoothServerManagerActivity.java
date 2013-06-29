@@ -316,7 +316,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 				return false;
 			
 			CompiledData[] compiledData = dbManager.getCompiledEventData
-					(params[0], new Query[0]);
+					(params[0], new Query[0], null);
 			String[][] dataArray = new String[compiledData.length + 1][];
 			
 			if(compiledData.length > 0)

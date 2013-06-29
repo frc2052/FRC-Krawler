@@ -1,5 +1,6 @@
 package com.team2052.frckrawler;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -9,6 +10,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,9 +66,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			summaryConnection.closeBTConnection();
 			unbindService(summaryConnection);
 		} catch(Exception e) {}
-		
-		if(progressDialog != null)
-    		progressDialog.dismiss();
 	}
     
     /*
@@ -165,10 +166,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
     	nameStamp.setNeutralButton("Login", new DialogInterface.OnClickListener() {
 				
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				
-				
-			}
+			public void onClick(DialogInterface dialog, int which) {}
 		});
     	
     	AlertDialog alertName = nameStamp.create();
@@ -199,6 +197,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		    
 			} else {
 				
+				
+				
 				SharedPreferences prefs = getSharedPreferences
 						(GlobalSettings.PREFS_FILE_NAME, 0);
 				Editor prefsEditor = prefs.edit();
@@ -215,10 +215,13 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				builder.setTitle("Syncing...");
 				builder.setView(new ProgressSpinner(this));
 				builder.setNeutralButton("Cancel", this);
+				builder.setCancelable(false);
 				progressDialog = builder.create();
 				progressDialog.show();
 				
 				prefsEditor.commit();
+				
+				lockScreenOrientation();
 			}
 		}
 	}
@@ -247,6 +250,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			progressDialog.show();
 			
 			prefsEditor.commit();
+			
+			lockScreenOrientation();
 		}
 	}
     
@@ -275,6 +280,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				builder.setPositiveButton("Login", new UserDialogListener());
 				builder.setNegativeButton("Cancel", new UserDialogListener());
 				builder.show();
+				
+				releaseScreenOrientation();
 			}
 		});
 	}
@@ -291,6 +298,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				progressDialog.dismiss();
 				Toast.makeText(getApplicationContext(), "Sync unsuccessful. " + 
 						errorMessage + ".", Toast.LENGTH_SHORT).show();
+				
+				releaseScreenOrientation();
 			}
 		});
 		
@@ -441,6 +450,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 					builder.setCancelable(false);
 					progressDialog = builder.create();
 					progressDialog.show();
+					
+					lockScreenOrientation();
 				}
 			}
 		}
@@ -467,6 +478,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 					
 					Intent i = new Intent(MainActivity.this, SummaryActivity.class);
 					startActivity(i);
+					
+					releaseScreenOrientation();
 				}
 			});
 		}
@@ -487,6 +500,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 					progressDialog.dismiss();
 					Toast.makeText(getApplicationContext(), "Sync unsuccessful. " + 
 							errorMessage + ".", Toast.LENGTH_SHORT).show();
+					
+					releaseScreenOrientation();
 				}
 			});
 		}
@@ -503,5 +518,26 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				}
 			});
 		}
+	}
+	
+	@SuppressLint("InlinedApi")
+	private void lockScreenOrientation() {
+		int currentOrientation = getResources().getConfiguration().orientation;
+		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+			else
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}
+		else {
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+			else
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
+	}
+	
+	private void releaseScreenOrientation() {
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 	}
 }

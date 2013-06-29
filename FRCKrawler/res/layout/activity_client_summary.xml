@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/dataCount"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/topLayout" >
@@ -15,7 +15,6 @@
             android:id="@+id/scrollView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/queryAndSorting"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true" >
@@ -33,22 +32,6 @@
             </HorizontalScrollView>
         </ScrollView>
 
-        <Button
-            android:id="@+id/queryAndSorting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:text="Query and Sorting" />
-
-        <TextView
-            android:id="@+id/dataCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:text=" "
-            android:textAppearance="?android:attr/textAppearanceLarge" />
     </RelativeLayout>
 
     <LinearLayout
@@ -59,7 +42,7 @@
         android:layout_centerHorizontal="true" >
 
         <TextView
-            android:id="@+id/teamCount"
+            android:id="@+id/titke"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Summary of "
@@ -72,5 +55,14 @@
             android:text=" "
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/dataCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text=" "
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

@@ -2,11 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/logo"
     tools:context=".MainActivity" >
 
     <TextView
-        android:id="@+id/teamCount"
+        android:id="@+id/titke"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -19,7 +18,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/teamCount"
+        android:layout_below="@+id/titke"
         android:layout_centerHorizontal="true"
         android:text="Scouting Application"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -49,11 +48,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
-        android:text="Version 1.1"
+        android:text="Version 1.4"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="16sp" />
 
     <LinearLayout
+        android:id="@+id/mainButtonLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomLayout"
@@ -61,13 +61,14 @@
         android:layout_alignParentRight="true" >
 
         <LinearLayout
+            android:id="@+id/leftLayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/radioPlaceHolder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -91,6 +92,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/centerLayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -122,6 +124,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/rightLayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -145,5 +148,26 @@
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/mainButtonLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textView3" >
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/logo_drawn_colored" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

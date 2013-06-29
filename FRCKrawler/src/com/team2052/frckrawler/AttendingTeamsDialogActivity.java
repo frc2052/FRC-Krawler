@@ -3,6 +3,7 @@ package com.team2052.frckrawler;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -20,29 +21,25 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 	private DBManager dbManager;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialogactivity_attending_teams);
 		
-		findViewById(R.id.save).setOnClickListener(this);
+		findViewById(R.id.saveList).setOnClickListener(this);
 		findViewById(R.id.cancel).setOnClickListener(this);
 		
 		dbManager = DBManager.getInstance(this);
 	}
 	
 	public void onResume() {
-		
 		super.onResume();
 		new GetRobotsTask().execute();
 	}
 	
 	public void postResults(Robot[] allRobots, Robot[] selectedRobots) {
-		
 		LinearLayout robotList = (LinearLayout)findViewById(R.id.teamList);
 		robotList.removeAllViews();
 		
 		for(Robot r : allRobots) {
-			
 			CheckBox checkBox = new CheckBox(this);
 			checkBox.setId(r.getID());
 			checkBox.setText(Integer.toString(r.getTeamNumber()));
@@ -56,13 +53,10 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 	}
 
 	public void onClick(View v) {
-		
-		if(v.getId() == R.id.save) {
-			
+		if(v.getId() == R.id.saveList) {
 			LinearLayout robotList = (LinearLayout)findViewById(R.id.teamList);
 			
 			for(int currentChild = 0; currentChild < robotList.getChildCount(); currentChild++) {
-				
 				CheckBox box = (CheckBox)robotList.getChildAt(currentChild);
 				
 				if(box.isChecked())
@@ -73,14 +67,11 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 					dbManager.removeRobotFromEvent(
 							Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA)), 
 							box.getId());
-				
-				System.out.println(box.isChecked());
 			}
 			
 			finish();
 			
 		} else if(v.getId() == R.id.cancel) {
-			
 			finish();
 		}
 	}
@@ -90,17 +81,14 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 		Robot[] allRobots;
 		
 		protected Robot[] doInBackground(Void... params) {
-			
 			return dbManager.getRobotsByColumns(new String[] {DBContract.COL_GAME_NAME}, 
 					new String[] {getIntent().getStringExtra(GAME_NAME_EXTRA)});
 		}
 		
 		protected void onPostExecute(Robot[] _allRobots) {
-			
 			allRobots = _allRobots;
 			new GetSelectedRobotsTask().execute();
 		}
-		
 		
 		private class GetSelectedRobotsTask extends AsyncTask<Void, Void, Robot[]> {
 
@@ -111,7 +99,6 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 			}
 			
 			protected void onPostExecute(Robot[] selectedRobots) {
-				
 				postResults(allRobots, selectedRobots);
 			}
 		}

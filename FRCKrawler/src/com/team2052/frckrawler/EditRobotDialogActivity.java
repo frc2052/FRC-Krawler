@@ -27,7 +27,7 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.dialogactivity_edit_robot);
 		
-		findViewById(R.id.save).setOnClickListener(this);
+		findViewById(R.id.saveList).setOnClickListener(this);
 		findViewById(R.id.cancel).setOnClickListener(this);
 		findViewById(R.id.remove).setOnClickListener(this);
 		
@@ -60,7 +60,7 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 	public void onClick(View v) {
 		
 		switch(v.getId()) {
-			case R.id.save:
+			case R.id.saveList:
 				
 				LinearLayout metricList = (LinearLayout)findViewById(R.id.metricList);
 				String[] updateVals = new String[metricList.getChildCount() + 1];

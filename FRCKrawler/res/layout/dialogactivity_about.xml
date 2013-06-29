@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/teamCount"
+        android:id="@+id/titke"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -17,7 +17,7 @@
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/teamCount"
+        android:layout_below="@+id/titke"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="14dp"
         android:text="FRCKrawler Scouting Application created"
@@ -102,7 +102,7 @@
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Paige Biebus"
+            android:text="I don&apos;t know yet"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -123,7 +123,7 @@
             android:id="@+id/textView11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="for his continual support and expertise"
+            android:text="for his support and expertise"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
@@ -134,7 +134,7 @@
         android:layout_below="@+id/creditsList"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:text="Questions, Comments, or Emotional Oubursts"
+        android:text="Questions, Comments, or Emotional Outbursts"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView

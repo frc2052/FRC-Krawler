@@ -54,7 +54,7 @@ public class ScoutActivity extends Activity implements OnClickListener,
 			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.activity_scouting);
 		
-		findViewById(R.id.save).setOnClickListener(this);
+		findViewById(R.id.saveList).setOnClickListener(this);
 		((Spinner)findViewById(R.id.teamNumber)).setOnItemSelectedListener(this);
 		
 		ArrayList<String> matchTypes = new ArrayList<String>();
@@ -131,7 +131,7 @@ public class ScoutActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onClick(View v) {
-		if(v.getId() == R.id.save) {
+		if(v.getId() == R.id.saveList) {
 			if(robots.length > 0) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setTitle("Save");

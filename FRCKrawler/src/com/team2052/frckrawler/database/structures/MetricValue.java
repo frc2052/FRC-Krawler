@@ -64,7 +64,7 @@ public class MetricValue implements Structure {
 			
 			if(isDecimal) {
 				
-				DecimalFormat format = new DecimalFormat("0.000");
+				DecimalFormat format = new DecimalFormat("0.00");
 				
 				if(i != value.length - 1)
 					returnString += format.format(Double.parseDouble(value[i])) + ", ";
@@ -73,7 +73,7 @@ public class MetricValue implements Structure {
 				
 			} else {
 				
-				if(i != value.length - 1)
+				if(i != value.length - 1 && !value[i].trim().equals(""))
 					returnString += value[i] + ", ";
 				else
 					returnString += value[i];
