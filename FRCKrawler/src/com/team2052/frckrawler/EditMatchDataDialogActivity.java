@@ -118,7 +118,6 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.save) {
-			
 			try {
 				LinearLayout metricList = (LinearLayout)findViewById(R.id.metricWidgetList);
 				MetricValue[] metricVals = new MetricValue[metricList.getChildCount()];

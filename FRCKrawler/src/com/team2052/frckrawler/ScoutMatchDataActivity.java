@@ -38,7 +38,15 @@ public class ScoutMatchDataActivity extends Activity implements OnClickListener 
 	public void onClick(View v) {
 		Intent i = new Intent(this, ScoutEditMatchDataActivity.class);
 		i.putExtra(ScoutEditMatchDataActivity.MATCH_ID_EXTRA, ((Integer)v.getTag()).intValue());
-		startActivity(i);
+		startActivityForResult(i, ScoutEditMatchDataActivity.REQUEST_CODE);
+	}
+	
+	@Override
+	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+		if(requestCode == ScoutEditMatchDataActivity.REQUEST_CODE) {
+			if(resultCode == ScoutEditMatchDataActivity.RESULT_REFRESH)
+				new GetMatchDataTask().execute();
+		}
 	}
 	
 	private class GetMatchDataTask extends AsyncTask<Void, MyTableRow, Void> {

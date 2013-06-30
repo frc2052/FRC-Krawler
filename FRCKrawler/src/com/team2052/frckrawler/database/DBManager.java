@@ -4318,6 +4318,60 @@ public class DBManager {
 	}
 	
 	
+	/*****
+	 * Method: scoutRemoveMatchData
+	 * 
+	 * Summary: Removes one match data entry based on the match id specified
+	 *****/
+	
+	public synchronized void scoutRemoveMatchData(int matchID) {
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.delete(DBContract.SCOUT_TABLE_MATCH_PERF, 
+				DBContract.COL_DATA_ID + " LIKE ?",
+				new String[] {Integer.toString(matchID)});
+		helper.close();
+	}
+	
+	
+	/*****
+	 * Method: scoutUpdateMatchData
+	 * 
+	 * Summary: Updates the passed MatchData object in the database
+	 *****/
+	
+	public synchronized boolean scoutUpdateMatchData(String queryCols[], String queryVals[], 
+			String updateCols[], String updateVals[]) {
+		if(updateCols.length != updateVals.length) //They must be the same so that every value
+			return false; //has something to map to and that there are no blank ones.
+		
+		if(queryCols.length != queryVals.length)
+			return false;
+		
+		for(String s : updateCols) { //Does not allow the caller to update the team number.
+			if(s.equals(DBContract.COL_DATA_ID))
+				return false;
+		}
+		
+		ContentValues vals = new ContentValues();
+		
+		for(int i = 0; i < updateCols.length; i++)
+			vals.put(updateCols[i], updateVals[i]);
+		
+		String queryString = new String();
+		
+		if(queryCols.length > 0)
+			queryString += queryCols[0] + " LIKE ?";
+		
+		for(int i = 1; i < queryCols.length; i++) {
+			queryString += " AND " + queryCols[i] + " LIKE ?";
+		}
+		
+		helper.getWritableDatabase().update(DBContract.SCOUT_TABLE_MATCH_PERF, vals, 
+				queryString, queryVals);
+		helper.close();
+		return true;
+	}
+	
 	
 	/*****
 	 * Method: scoutClearMatchData
