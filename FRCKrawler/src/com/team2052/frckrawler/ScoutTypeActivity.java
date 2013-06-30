@@ -36,6 +36,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		
 		findViewById(R.id.matchScout).setOnClickListener(this);
 		findViewById(R.id.pitScout).setOnClickListener(this);
+		findViewById(R.id.matchData).setOnClickListener(this);
 		findViewById(R.id.sync).setOnClickListener(this);
 		
 		connection = new ScoutServiceConnection(this);
@@ -87,6 +88,13 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 				i = new Intent(this, ScoutActivity.class);
 				i.putExtra(ScoutActivity.SCOUT_TYPE_EXTRA, 
 						ScoutActivity.SCOUT_TYPE_PIT);
+				startActivity(i);
+				
+				break;
+				
+			case R.id.matchData:
+				
+				i = new Intent(this, ScoutMatchDataActivity.class);
 				startActivity(i);
 				
 				break;

@@ -213,8 +213,9 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 			
 			if(matchData.length > 0) {
 				for(MetricValue v : matchData[0].getMetricValues()) {
-					descriptorsRow.addView
-						(new MyTextView(activity, v.getMetric().getMetricName(), 18));
+					if(v.getMetric().getType() != DBContract.MATH)
+						descriptorsRow.addView
+							(new MyTextView(activity, v.getMetric().getMetricName(), 18));
 				}
 			}
 			
@@ -279,8 +280,9 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 				MetricValue[] metricValues = matchData[i].getMetricValues();
 				
 				for(int k = 0; k < metricValues.length; k++) {
-					viewArr.add(new MyTextView(activity, metricValues[k].
-							getValueAsHumanReadableString(), 18));
+					if(metricValues[k].getMetric().getType() != DBContract.MATH)
+						viewArr.add(new MyTextView(activity, metricValues[k].
+								getValueAsHumanReadableString(), 18));
 				}
 				
 				publishProgress(new MyTableRow(activity, viewArr.toArray

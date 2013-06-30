@@ -40,7 +40,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.dialogactivity_edit_match_data);
 		
-		findViewById(R.id.saveList).setOnClickListener(this);
+		findViewById(R.id.save).setOnClickListener(this);
 		findViewById(R.id.cancel).setOnClickListener(this);
 		findViewById(R.id.remove).setOnClickListener(this);
 		((EditText)findViewById(R.id.matchNumber)).
@@ -117,7 +117,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 
 	public void onClick(View v) {
 		
-		if(v.getId() == R.id.saveList) {
+		if(v.getId() == R.id.save) {
 			
 			try {
 				LinearLayout metricList = (LinearLayout)findViewById(R.id.metricWidgetList);

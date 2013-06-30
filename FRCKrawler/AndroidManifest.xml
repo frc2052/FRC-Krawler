@@ -108,7 +108,8 @@
         <activity android:name="AboutDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
         <service android:name=".bluetooth.BluetoothSummaryClientService"></service>
-        <activity android:name="SummaryMatchDataDialogActivity"
+        <activity android:name="ScoutMatchDataActivity"></activity>
+        <activity android:name="ScoutEditMatchDataActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 

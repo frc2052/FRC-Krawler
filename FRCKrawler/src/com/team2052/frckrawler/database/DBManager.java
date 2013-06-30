@@ -4172,7 +4172,6 @@ public class DBManager {
 			MetricValue[] dataArr = new MetricValue[metricArr.length];
 			
 			for(int k = 0; k < metricArr.length; k++) {
-				
 				ArrayList<String> valuesList = new ArrayList<String>();
 				String valueString = c.getString(c.getColumnIndex(metricArr[k].getKey()));
 				
@@ -4259,6 +4258,65 @@ public class DBManager {
 		
 		return true;
 	}
+	
+	
+	/*****
+	 * Method: scoutGetMatchData
+	 * 
+	 * Summary: Gets the piece of match data by the specified MatchData ID
+	 *****/
+	
+	public synchronized MatchData scoutGetMatchData(int matchID) {
+		if(!this.hasValue(DBContract.SCOUT_TABLE_MATCH_PERF, 
+				DBContract.COL_DATA_ID, Integer.toString(matchID)))
+			return null;
+		
+		SQLiteDatabase db = helper.getReadableDatabase();
+		Cursor c = db.rawQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_MATCH_PERF + 
+				" WHERE " + DBContract.COL_DATA_ID + " LIKE ?",
+				new String[] {Integer.toString(matchID)});
+		c.moveToFirst();
+		
+		Metric[] metricArr = scoutGetAllMatchMetrics();
+		MetricValue[] dataArr = new MetricValue[metricArr.length];
+		
+		for(int k = 0; k < metricArr.length; k++) {
+			ArrayList<String> valuesList = new ArrayList<String>();
+			String valueString = c.getString(c.getColumnIndex(metricArr[k].getKey()));
+			String currentValsString = new String();
+			
+			if(valueString != null) {
+				for(int character = 0; character < valueString.length(); character++) {
+					if(valueString.charAt(character) != ':')
+						currentValsString += valueString.charAt(character);
+					else {
+						valuesList.add(currentValsString);
+						currentValsString = new String();
+					}
+				}
+			}
+			
+			try {
+				dataArr[k] = new MetricValue(metricArr[k], valuesList.toArray(new String[0]));
+			} catch (MetricTypeMismatchException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		MatchData data = new MatchData(matchID, 
+				c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
+				c.getInt(c.getColumnIndex(DBContract.COL_MATCH_NUMBER)),
+				c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)),
+				c.getInt(c.getColumnIndex(DBContract.COL_USER_ID)),
+				c.getString(c.getColumnIndex(DBContract.COL_MATCH_TYPE)),
+				c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
+				dataArr
+				);
+		
+		helper.close();
+		return data;
+	}
+	
 	
 	
 	/*****

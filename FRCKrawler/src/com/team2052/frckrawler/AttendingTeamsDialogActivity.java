@@ -24,7 +24,7 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialogactivity_attending_teams);
 		
-		findViewById(R.id.saveList).setOnClickListener(this);
+		findViewById(R.id.save).setOnClickListener(this);
 		findViewById(R.id.cancel).setOnClickListener(this);
 		
 		dbManager = DBManager.getInstance(this);
@@ -53,7 +53,7 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 	}
 
 	public void onClick(View v) {
-		if(v.getId() == R.id.saveList) {
+		if(v.getId() == R.id.save) {
 			LinearLayout robotList = (LinearLayout)findViewById(R.id.teamList);
 			
 			for(int currentChild = 0; currentChild < robotList.getChildCount(); currentChild++) {

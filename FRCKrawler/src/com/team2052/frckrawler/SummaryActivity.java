@@ -59,7 +59,6 @@ public class SummaryActivity extends Activity implements OnClickListener {
 			case MATCH_DATA_BUTTON_ID:
 				
 				new ShowMatchDataTask().execute((Integer)v.getTag());
-				
 				break;
 		}
 	}

@@ -369,7 +369,7 @@ public class DBContract {
 	
 	public static final String SCOUT_TABLE_MATCH_PERF = "scoutmatchperf";
 	
-	//"matchid";
+	//Data ID, use COL_DATA_ID
 	//Robot ID, use COL_ROBOT_ID
 	//Event ID, use EVENT_ID
 	//User ID, use COL_USER_ID

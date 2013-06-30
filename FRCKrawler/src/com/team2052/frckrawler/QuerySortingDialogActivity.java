@@ -36,7 +36,7 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialogactivity_query_and_sorting);
 		
-		findViewById(R.id.saveList).setOnClickListener(this);
+		findViewById(R.id.save).setOnClickListener(this);
 		findViewById(R.id.cancel).setOnClickListener(this);
 		
 		dbManager = DBManager.getInstance(this);

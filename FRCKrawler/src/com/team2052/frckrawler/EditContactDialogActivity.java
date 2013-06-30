@@ -25,7 +25,7 @@ public class EditContactDialogActivity extends Activity implements OnClickListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialogactivity_edit_contact);
 		
-		((Button)findViewById(R.id.saveList)).setOnClickListener(this);
+		((Button)findViewById(R.id.save)).setOnClickListener(this);
 		((Button)findViewById(R.id.remove)).setOnClickListener(this);
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 		
@@ -54,7 +54,7 @@ public class EditContactDialogActivity extends Activity implements OnClickListen
 
 	public void onClick(View v) {
 		
-		if(v.getId() == R.id.saveList) {
+		if(v.getId() == R.id.save) {
 			
 			db.updateContacts(
 					new String[] {DBContract.COL_CONTACT_ID}, 

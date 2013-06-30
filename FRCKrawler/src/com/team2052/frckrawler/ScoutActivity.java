@@ -25,9 +25,9 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.MetricValue;
-import com.team2052.frckrawler.database.structures.User;
 import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatchException;
 import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.database.structures.User;
 import com.team2052.frckrawler.gui.MetricWidget;
 
 public class ScoutActivity extends Activity implements OnClickListener, 
@@ -54,7 +54,7 @@ public class ScoutActivity extends Activity implements OnClickListener,
 			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.activity_scouting);
 		
-		findViewById(R.id.saveList).setOnClickListener(this);
+		findViewById(R.id.save).setOnClickListener(this);
 		((Spinner)findViewById(R.id.teamNumber)).setOnItemSelectedListener(this);
 		
 		ArrayList<String> matchTypes = new ArrayList<String>();
@@ -131,22 +131,28 @@ public class ScoutActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onClick(View v) {
-		if(v.getId() == R.id.saveList) {
-			if(robots.length > 0) {
+		if(v.getId() == R.id.save) {
+			if(robots.length < 1) {
+				Toast.makeText(this, "Could not save. No robots at " +
+						"this competition.", Toast.LENGTH_LONG).show();
+
+			/*} else if(((EditText)findViewById(R.id.matchNumber)).getText().equals("") || 
+					((EditText)findViewById(R.id.matchNumber)).getText() == null) {
+				Toast.makeText(this, "Could not save. No match number " +
+						"specified.", Toast.LENGTH_LONG).show();*/
+
+			} else {
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setTitle("Save");
 				builder.setMessage("Are you sure you want to save the entered data? " +
-						"It will be commited to the database and you will not be able " +
-						"to edit it anymore.");
+						"You can review or edit it later with in match data.");
 				builder.setPositiveButton("Yes", this);
 				builder.setNegativeButton("No", this);
 				builder.show();
-			} else {
-				Toast.makeText(this, "Could not save. No robots at " +
-						"this competition.", Toast.LENGTH_LONG).show();
 			}
 		}
 	}
+	
 	
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
