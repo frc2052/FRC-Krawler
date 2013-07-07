@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TableLayout;
+import android.widget.TextView;
 
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
@@ -129,12 +130,11 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 	private class GetGamesTask extends AsyncTask<Void, Void, Game[]> {
 		
 		protected Game[] doInBackground(Void... params) {
-			
 			return dbManager.getAllGames();
 		}
 		
 		protected void onPostExecute(Game[] games) {
-			
+			((TextView)findViewById(R.id.gamesNum)).setText(games.length + " Games");
 			postResults(games);
 		}
 	}

@@ -8,10 +8,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.TextView;
 
-import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.User;
 import com.team2052.frckrawler.gui.MyButton;
@@ -81,14 +79,13 @@ public class UsersActivity extends TabActivity implements OnClickListener{
 	}
 	
 	private class GetUsersTask extends AsyncTask<Void, Void, User[]> {
-
+		
 		protected User[] doInBackground(Void... params) {
-			
 			return dbManager.getAllUsers();
 		}
 		
 		protected void onPostExecute(User[] users) {
-			
+			((TextView)findViewById(R.id.usersNum)).setText(users.length + " Users");
 			postResults(users);
 		}
 	}

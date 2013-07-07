@@ -63,6 +63,15 @@
                 android:text="Add User" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/usersNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text=" "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
     </RelativeLayout>
 
     <ScrollView

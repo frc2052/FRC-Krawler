@@ -19,6 +19,7 @@ import com.team2052.frckrawler.database.structures.CompiledData;
 import com.team2052.frckrawler.database.structures.Contact;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.Game;
+import com.team2052.frckrawler.database.structures.List;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.MetricValue;
@@ -26,7 +27,6 @@ import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatc
 import com.team2052.frckrawler.database.structures.Query;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.database.structures.SortKey;
-import com.team2052.frckrawler.database.structures.StringSet;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.database.structures.User;
 
@@ -1600,7 +1600,6 @@ public class DBManager {
 	
 	public synchronized Metric[] getRobotMetricsByColumns(String[] cols, String[] vals, 
 			boolean isOr) {
-		
 		if(cols.length != vals.length)
 			return null;
 		
@@ -3568,6 +3567,236 @@ public class DBManager {
 				null, null, null);
 		
 		return c.moveToFirst();
+	}
+	
+	
+	/*****
+	 * Method: addList
+	 * 
+	 * Summary: Enters the List object into the database.
+	 *****/
+	
+	public synchronized boolean addList(List list) {
+		if(!hasValue(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID, 
+				Integer.toString(list.getEventID())))
+			return false;
+		
+		for(Robot r : list.getRobots()) {
+			if(!hasValue(DBContract.TABLE_ROBOTS, DBContract.COL_ROBOT_ID, 
+					Integer.toString(r.getID())))
+				return false;
+		}
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(DBContract.COL_EVENT_ID, list.getEventID());
+		values.put(DBContract.COL_LIST_ID, this.createID(DBContract.TABLE_LISTS, 
+				DBContract.COL_LIST_ID));
+		values.put(DBContract.COL_LIST_NAME, list.getName());
+		values.put(DBContract.COL_DESCRIPTION, list.getDescription());
+		db.insert(DBContract.TABLE_LISTS, null, values);
+		
+		for(Robot r : list.getRobots()) {
+			addRobotToList(r.getID(), list.getListID());
+		}
+		
+		helper.close();
+		
+		return true;
+	}
+	
+	
+	/*****
+	 * Method: removeList
+	 * 
+	 * Summary: removes the specified list from the database
+	 ****/
+	
+	public synchronized boolean removeList(int listID) {
+		if(!hasValue(DBContract.TABLE_LISTS, DBContract.COL_LIST_ID, 
+				Integer.toString(listID)))
+			return false;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.delete(DBContract.TABLE_LISTS, DBContract.COL_LIST_ID + " LIKE " + listID, null);
+		db.delete(DBContract.TABLE_LIST_ENTRIES, DBContract.COL_LIST_ID + " LIKE " + listID, 
+				null);
+		helper.close();
+		
+		return true;
+	}
+	
+	
+	/*****
+	 * Method: addRobotToList
+	 * 
+	 * Summary: Adds the specified robot to the specified list. The robot must
+	 * be at the same event as the list and the list must exist. Returns false
+	 * if the robot could not be added.
+	 *****/
+	
+	public synchronized boolean addRobotToList(int robotID, int listID) {
+		if(!hasValue(DBContract.TABLE_ROBOTS, DBContract.COL_ROBOT_ID, 
+				Integer.toString(robotID)) || !hasValue(DBContract.TABLE_LISTS,
+						DBContract.COL_LIST_ID, Integer.toString(listID)))
+			return false;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		if(db.rawQuery("SELECT * FROM " + DBContract.TABLE_LIST_ENTRIES + 
+				" WHERE " + DBContract.COL_LIST_ID + " LIKE " + listID + 
+				" AND " + DBContract.COL_ROBOT_ID + " LIKE " + robotID, null).getCount() > 0)
+			return false;
+	
+		Cursor c = db.rawQuery("SELECT * FROM " + DBContract.TABLE_LIST_ENTRIES + 
+				" WHERE " + DBContract.COL_LIST_ID + " LIKE " + listID, null);
+		
+		int highestListPos = 0;
+		for(int i = 0; i < c.getCount(); i++) {
+			c.moveToNext();
+			
+			if(c.getInt(c.getColumnIndex(DBContract.COL_POSITION)) > highestListPos)
+				highestListPos = c.getInt(c.getColumnIndex(DBContract.COL_POSITION));
+		}
+		
+		ContentValues values = new ContentValues();
+		values.put(DBContract.COL_LIST_ID, listID);
+		values.put(DBContract.COL_ROBOT_ID, robotID);
+		values.put(DBContract.COL_POSITION, highestListPos + 1);
+		
+		db.insert(DBContract.TABLE_LIST_ENTRIES, null, values);
+		helper.close();
+		
+		return true;
+	}
+	
+	
+	/*****
+	 * Method: removeRobotFromList
+	 * 
+	 * Summary: Removes the specified robot from the specified list
+	 *****/
+	
+	public synchronized void removeRobotFromList(int robotID, int listID) {
+		helper.getWritableDatabase().delete(DBContract.TABLE_LIST_ENTRIES, 
+				DBContract.COL_ROBOT_ID + " LIKE ? AND " + DBContract.COL_LIST_ID + " LIKE ?", 
+				new String[] {Integer.toString(robotID), Integer.toString(listID)});
+		helper.close();
+	}
+	
+	
+	/*****
+	 * Method: getListsByColumns
+	 * 
+	 * Summary: Gets the lists from the database based on the cols and vals array
+	 ******/
+	
+	public synchronized List[] getListsByColumns(String[] cols, String[] vals) {
+		return getListsByColumns(cols, vals, false);
+	}
+	
+	public synchronized List[] getListsByColumns(String[] cols, String[] vals, boolean isOr) {
+		if(cols.length != vals.length)
+			return null;
+		
+		if(cols.length < 1)
+			return new List[0];
+		
+		String queryString = "SELECT * FROM " + DBContract.TABLE_LISTS + 
+				" WHERE " + cols[0] + " LIKE ?";
+		String orAnd;
+		
+		if(isOr)
+			orAnd = " OR ";
+		else
+			orAnd = " AND ";
+		
+		for(int i = 1; i < cols.length; i++) //Builds a string for the query with coos
+			queryString += orAnd + cols[i] + " LIKE ?";
+			
+		SQLiteDatabase db = helper.getWritableDatabase();
+		Cursor c = db.rawQuery(queryString, vals);
+		List[] lists = new List[c.getCount()];
+		
+		for(int i = 0; i < c.getCount(); i++) {
+			db = helper.getWritableDatabase();
+			c.moveToNext();
+			
+			Cursor robotC = db.rawQuery("SELECT * FROM " + DBContract.TABLE_LIST_ENTRIES + 
+					" WHERE " + DBContract.COL_LIST_ID + " LIKE " + 
+					c.getInt(c.getColumnIndex(DBContract.COL_LIST_ID)) +
+					" ORDER BY " + DBContract.COL_POSITION, null);
+			Robot[] robots = new Robot[robotC.getCount()];
+			
+			for(int k = 0; k < robots.length; k++) {
+				robotC.moveToNext();
+				
+				Robot[] r = getRobotsByColumns(new String[] {DBContract.COL_ROBOT_ID},
+						new String[] {robotC.getString(
+								robotC.getColumnIndex(DBContract.COL_ROBOT_ID))});
+				
+				if(r.length > 0)
+					robots[k] = r[0];
+			}
+			
+			lists[i] = new List(c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
+					c.getInt(c.getColumnIndex(DBContract.COL_LIST_ID)),
+					c.getString(c.getColumnIndex(DBContract.COL_LIST_NAME)),
+					c.getString(c.getColumnIndex(DBContract.COL_DESCRIPTION)),
+					robots);
+		}
+		
+		helper.close();
+		return lists;
+	}
+	
+	
+	/*****
+	 * Method: flipRobotPositionInList
+	 * 
+	 * Summary: Flips the position value of the two robots in the specified list.
+	 *****/
+	
+	public synchronized boolean flipRobotPositionInList(int listID, 
+			int robotID1, int robotID2) {
+		if(!hasValue(DBContract.TABLE_LISTS, DBContract.COL_LIST_ID, Integer.toString(listID)))
+			return false;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		Cursor c = db.rawQuery("SELECT * FROM " + DBContract.TABLE_LIST_ENTRIES + 
+				" WHERE (" + DBContract.COL_ROBOT_ID + " LIKE " + robotID1 + 
+				" OR " + DBContract.COL_ROBOT_ID + " LIKE " + robotID2 + ") AND " + 
+				DBContract.COL_LIST_ID + " LIKE " + listID, null);
+		
+		if(c.getCount() != 2)
+			return false;
+		
+		int robot1ID;
+		int robot1Pos;
+		int robot2ID;
+		int robot2Pos;
+		
+		c.moveToNext();
+		robot1ID = c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID));
+		robot1Pos = c.getInt(c.getColumnIndex(DBContract.COL_POSITION));
+		
+		c.moveToNext();
+		robot2ID = c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID));
+		robot2Pos = c.getInt(c.getColumnIndex(DBContract.COL_POSITION));
+		
+		ContentValues robot1Vals = new ContentValues();
+		robot1Vals.put(DBContract.COL_POSITION, robot2Pos);
+		db.update(DBContract.TABLE_LIST_ENTRIES, robot1Vals, 
+				DBContract.COL_ROBOT_ID + " LIKE " + robot1ID + 
+				" AND " + DBContract.COL_LIST_ID + " LIKE " + listID, null);
+		
+		ContentValues robot2Vals = new ContentValues();
+		robot2Vals.put(DBContract.COL_POSITION, robot1Pos);
+		db.update(DBContract.TABLE_LIST_ENTRIES, robot2Vals, 
+				DBContract.COL_ROBOT_ID + " LIKE " + robot2ID + 
+				" AND " + DBContract.COL_LIST_ID + " LIKE " + listID, null);
+		
+		return true;
 	}
 	
 	

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
@@ -25,6 +26,7 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 	private static final int COMP_DATA_ID = 4;
 	private static final int DRIVER_DATA_ID = 5;
 	private static final int COMPILED_DATA_ID = 6;
+	private static final int LISTS_ID = 7;
 	
 	private DBManager dbManager;
 	
@@ -67,37 +69,42 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 			else
 				color = Color.TRANSPARENT;
 			
-			MyButton editEvent = new MyButton(this, "Edit Event", this, 
+			MyButton editEventButton = new MyButton(this, "Edit Event", this, 
 					Integer.valueOf(events[i].getEventID()));
-			editEvent.setId(EDIT_EVENT_ID);
+			editEventButton.setId(EDIT_EVENT_ID);
 			
-			MyButton attendingTeams = new MyButton(this, "Attending Teams", this,
+			MyButton attendingTeamsButton = new MyButton(this, "Attending Teams", this,
 					Integer.valueOf(events[i].getEventID()));
-			attendingTeams.setId(ATTENDING_TEAMS_ID);
+			attendingTeamsButton.setId(ATTENDING_TEAMS_ID);
 			
-			MyButton robots = new MyButton(this, "Robots", this, 
+			MyButton robotsButton = new MyButton(this, "Robots", this, 
 					Integer.valueOf(events[i].getEventID()));
-			robots.setId(ROBOTS_ID);
+			robotsButton.setId(ROBOTS_ID);
 			
-			MyButton data = new MyButton(this, "Match Data", this, 
+			MyButton matchDataButton = new MyButton(this, "Match Data", this, 
 					Integer.valueOf(events[i].getEventID()));
-			data.setId(COMP_DATA_ID);
+			matchDataButton.setId(COMP_DATA_ID);
 			
-			MyButton compiledData = new MyButton(this, "Compiled Data", this, 
+			MyButton compiledDataButton = new MyButton(this, "Compiled Data", this, 
 					Integer.valueOf(events[i].getEventID()));
-			compiledData.setId(COMPILED_DATA_ID);
+			compiledDataButton.setId(COMPILED_DATA_ID);
+			
+			MyButton listsButton = new MyButton(this, "Lists", this, 
+					Integer.valueOf(events[i].getEventID()));
+			listsButton.setId(LISTS_ID);
 			
 			table.addView(new MyTableRow(this, new View[] {
-					editEvent,
+					editEventButton,
 					new MyTextView(this, events[i].getEventName(), 18),
 					new MyTextView(this, events[i].getLocation(), 18),
 					new MyTextView(this, events[i].getGameName(), 18),
 					new MyTextView(this, events[i].getDateStamp().toString(), 18),
 					new MyTextView(this, events[i].getFMSID(), 18),
-					attendingTeams,
-					robots,
-					data,
-					compiledData
+					attendingTeamsButton,
+					robotsButton,
+					matchDataButton,
+					compiledDataButton,
+					listsButton
 			}, color));
 		}
 	}
@@ -188,16 +195,29 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 				startActivity(i);
 				
 				break;
+				
+			case LISTS_ID:
+				
+				i = new Intent(this, ListsActivity.class);
+				i.putExtra(ListsActivity.EVENT_ID_EXTRA, Integer.parseInt(v.getTag().toString()));
+				startActivity(i);
+				
+				break;
 		}
 	}
 	
 	private class GetEventsTask extends AsyncTask<Void, Void, Event[]> {
 		
+		private int eventNum = 0;
+		
 		protected Event[] doInBackground(Void... params) {
-			return dbManager.getEventsByColumns(databaseKeys, databaseValues);
+			Event[] e = dbManager.getEventsByColumns(databaseKeys, databaseValues);
+			eventNum = e.length;
+			return e;
 		}
 		
 		protected void onPostExecute(Event[] events) {
+			((TextView)findViewById(R.id.eventNum)).setText(eventNum + " Events");
 			postResults(events);
 		}
 	}

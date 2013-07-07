@@ -169,8 +169,11 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 	
 	private class GetMetricsTask extends AsyncTask<Void, MyTableRow, Void> {
 		
+		private int metricNum;
+		
 		@Override
 		protected void onPreExecute() {
+			metricNum = 0;
 			isGettingMetrics = true;
 			radioGroup = new AbstractRadioGroup();
 			table = (TableLayout)findViewById(R.id.metricsDataTable);
@@ -320,6 +323,7 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 		
 		@Override
 		protected void onPostExecute(Void v) {
+			((TextView)findViewById(R.id.metricNum)).setText(metricNum + " Metrics");
 			isGettingMetrics = false;
 		}
 	}

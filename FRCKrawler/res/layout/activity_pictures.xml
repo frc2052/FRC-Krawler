@@ -68,7 +68,14 @@
                     android:id="@+id/changePicture"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Take New Picture" />
+                    android:text="Take Picture" />
+
+                <Button
+                    android:id="@+id/importPicture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Import Picture" />
+
             </LinearLayout>
 
             <TextView

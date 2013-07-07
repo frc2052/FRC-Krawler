@@ -81,6 +81,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Query and Sorting" />
+
+                    <Button
+                        android:id="@+id/lists"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lists" />
+
                 </LinearLayout>
 
                 <RelativeLayout
@@ -105,7 +112,7 @@
                             android:layout_height="wrap_content" >
 
                             <RelativeLayout
-                                android:id="@+id/teamDataTableParent"
+                                android:id="@+id/listsDataTableParent"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent" >
 
@@ -149,6 +156,16 @@
                     </ScrollView>
 
                 </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/compiledNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text=" "
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
             </RelativeLayout>
         </RelativeLayout>
 

@@ -154,6 +154,16 @@
                 </RelativeLayout>
             </HorizontalScrollView>
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/eventNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text=" "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
     </RelativeLayout>
 
     <LinearLayout

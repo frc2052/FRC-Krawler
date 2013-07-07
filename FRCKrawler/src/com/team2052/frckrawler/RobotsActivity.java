@@ -150,7 +150,10 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 	
 	private class GetRobotsTask extends AsyncTask<Void, MyTableRow, Void> {
 		
+		private int numRobots;
+		
 		protected void onPreExecute() {
+			numRobots = 0;
 			((FrameLayout)findViewById(R.id.progressFrame)).addView
 					(new ProgressSpinner(RobotsActivity.this));
 			
@@ -244,6 +247,8 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 				} catch(InterruptedException e) {}
 			}
 			
+			numRobots = robots.length;
+			
 			return null;
 		}
 		
@@ -252,6 +257,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 		}
 
 		protected void onPostExecute(Void v) {
+			((TextView)findViewById(R.id.numRobots)).setText(numRobots + " Robots");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 		

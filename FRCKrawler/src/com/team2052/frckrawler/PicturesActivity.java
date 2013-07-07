@@ -32,7 +32,6 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 	private Uri imageFile;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pictures);
 		findViewById(R.id.changePicture).setOnClickListener(this);
@@ -63,6 +62,9 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 		        });
 		        builder.show();
 		    }
+		} else if(v.getId() == R.id.importPicture) {
+			
+			
 		} else {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	        builder.setMessage("This device is not equiped with a camera. Your device" +
@@ -90,14 +92,16 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 	
 	private Uri getOutputMediaFile() {
 		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-			
 			File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
 	              Environment.DIRECTORY_PICTURES), "FRCKrawler");
+			
 	    	if(!mediaStorageDir.mkdirs() && !mediaStorageDir.exists())
 	    		return null;
 	    	
 	    	File mediaFile = new File(mediaStorageDir.getPath() + File.separator +
 	    		"IMG_"+ robot.getTeamNumber() + "_" + robot.getID() + ".jpg");
+	    	
+	    	System.out.println(mediaFile.getAbsolutePath());
 	    	
 	    	if(!mediaFile.exists())
 	    		try {
@@ -132,6 +136,8 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 		if (resultCode == RESULT_OK && requestCode == IMAGE_REQUEST_CODE) {
 	        Toast.makeText(this, "Image saved to:\n" +
 	               tempUri.getPath(), Toast.LENGTH_LONG).show();
+	        
+	        System.out.println(tempUri.getPath());
 				
 	        Robot[] robotsArr = DBManager.getInstance(this).getRobotsByColumns
 					(databaseKeys, databaseValues);
@@ -161,7 +167,6 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 	 */
 	
 	private void refreshImage() {
-		
 		Robot[] robotsArr = DBManager.getInstance(this).getRobotsByColumns
 				(databaseKeys, databaseValues);
 		
@@ -202,6 +207,17 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
     	return inSampleSize;
 	}
 	
+	/*****
+	 * Method: decodeSampledBitmapFromFile
+	 * 
+	 * @param path
+	 * @param reqWidth
+	 * @param reqHeight
+	 * @return
+	 * 
+	 * Summary: Gets a Bitmap object from an image file. Uses the specified width
+	 * and height.
+	 *****/
 	public static Bitmap decodeSampledBitmapFromFile(String path, int reqWidth, 
 			int reqHeight) {
 

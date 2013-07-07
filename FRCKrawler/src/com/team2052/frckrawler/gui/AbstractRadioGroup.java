@@ -11,10 +11,12 @@ public class AbstractRadioGroup {
 	private ArrayList<RadioButton> buttons;
 	
 	public AbstractRadioGroup() {
+		selectedButtonPos = -1;
 		buttons = new ArrayList<RadioButton>();
 	}
 	
 	public AbstractRadioGroup(ArrayList<RadioButton> _buttons) {
+		selectedButtonPos = -1;
 		buttons = _buttons;
 	}
 	
@@ -27,7 +29,10 @@ public class AbstractRadioGroup {
 	}
 	
 	public RadioButton getSelectedButton() {
-		return buttons.get(selectedButtonPos);
+		if(selectedButtonPos != -1)
+			return buttons.get(selectedButtonPos);
+		else
+			return null;
 	}
 	
 	/*****

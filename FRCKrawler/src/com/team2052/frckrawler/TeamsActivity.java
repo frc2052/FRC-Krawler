@@ -128,7 +128,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			((FrameLayout)findViewById(R.id.progressFrame)).
 			addView(new ProgressSpinner(getApplicationContext()));
 			
-			TableLayout v = (TableLayout)findViewById(R.id.teamsDataTable);
+			TableLayout v = (TableLayout)findViewById(R.id.listsDataTable);
 			v.removeAllViews();
 			
 			teamCount = -1;
@@ -208,7 +208,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		}
 		
 		protected void onProgressUpdate(MyTableRow... row) {
-			TableLayout v = (TableLayout)findViewById(R.id.teamsDataTable);
+			TableLayout v = (TableLayout)findViewById(R.id.listsDataTable);
 			v.addView(row[0]);
 			teamCount++;
 		}

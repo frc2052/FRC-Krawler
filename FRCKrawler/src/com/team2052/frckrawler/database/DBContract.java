@@ -312,6 +312,32 @@ public class DBContract {
 	
 	
 	
+	public static final String TABLE_LISTS = "lists";
+	
+	//Event ID, use COL_EVENT_ID
+	public static final String COL_LIST_ID = "listid";
+	public static final String COL_LIST_NAME = "listname";
+	//Description, us COL_DESCRIPTION
+	
+	public static final String CREATE_TABLE_LISTS = 
+			"CREATE TABLE " + TABLE_LISTS + " (" + COL_EVENT_ID + INT + ", " +
+			COL_LIST_ID + INT + ", " + COL_LIST_NAME + STRING + ", " + 
+			COL_DESCRIPTION + STRING + ")";
+	
+	
+	
+	public static final String TABLE_LIST_ENTRIES = "listentries";
+	
+	//List ID, use COL_LIST_ID
+	//Robot ID, use COL_ROBOT_ID
+	//Position, use COL_POSITION
+	
+	public static final String CREATE_TABLE_LIST_ENTRIES = 
+			"CREATE TABLE " + TABLE_LIST_ENTRIES + " (" + COL_LIST_ID + INT + ", " +
+					COL_ROBOT_ID + INT + ", " + COL_POSITION + INT + ")";
+	
+	
+	
 	/***************************************
 	 * SCOUT TABLES
 	 * 
@@ -591,7 +617,6 @@ public class DBContract {
 	 *****/
 	
 	public static void createSchema(SQLiteDatabase database) {
-		
 		database.execSQL(CREATE_TABLE_USERS);
 		database.execSQL(CREATE_TABLE_TEAMS);
 		database.execSQL(CREATE_TABLE_COMMENTS);
@@ -606,6 +631,8 @@ public class DBContract {
 		database.execSQL(CREATE_TABLE_EVENT_ROBOTS);
 		database.execSQL(CREATE_TABLE_DRIVER_DATA);
 		database.execSQL(CREATE_TABLE_DRIVER_METRICS);
+		database.execSQL(CREATE_TABLE_LISTS);
+		database.execSQL(CREATE_TABLE_LIST_ENTRIES);
 		
 		//SCOUT TABLES//
 		database.execSQL(CREATE_SCOUT_TABLE_USERS);
@@ -635,7 +662,6 @@ public class DBContract {
 	 *****/
 	
 	public static void dropSchema(SQLiteDatabase database) {
-		
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAMS);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMENTS);
@@ -650,6 +676,8 @@ public class DBContract {
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENT_ROBOTS);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_DRIVER_DATA);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_DRIVER_METRICS);
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_LISTS);
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_LIST_ENTRIES);
 		
 		//SCOUT TABLES//
 		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_USERS);

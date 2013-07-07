@@ -100,12 +100,12 @@
                         android:layout_height="wrap_content" >
 
                         <RelativeLayout
-                            android:id="@+id/teamDataTableParent"
+                            android:id="@+id/listsDataTableParent"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent" >
 
                             <TableLayout
-                                android:id="@+id/teamsDataTable"
+                                android:id="@+id/listsDataTable"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:dividerPadding="2dp" >
@@ -178,7 +178,7 @@
                                         android:textSize="18sp" />
 
                                     <TextView
-                                        android:id="@+id/colors"
+                                        android:id="@+id/des"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Colors"

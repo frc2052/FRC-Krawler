@@ -26,7 +26,7 @@ public class GlobalSettings {
 	public static int ROW_COLOR = Color.rgb(36, 37, 85);
 	
 	/**
-	 * The user id of a a logged in user. Initialized to 0 until
+	 * The user id of a logged in user. Initialized to 0 until
 	 * somebody logs in.
 	 */
 	public static int userID = 0;

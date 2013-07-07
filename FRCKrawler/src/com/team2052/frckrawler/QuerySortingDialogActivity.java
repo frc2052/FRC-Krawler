@@ -48,6 +48,7 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.cancel) {
+			setResult(QueryActivity.REQUEST_NO_REFRESH);
 			finish();
 			
 		} else {
@@ -67,11 +68,11 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 					metricType,
 					sortMetrics.get(itemPos - 1).getKey())
 				);
-			}
-			else
+				
+			} else
 				QueryActivity.setSortKey(null);
 			
-			setResult(1);
+			setResult(QueryActivity.REQUEST_REFRESH);
 			finish();
 		}
 	}

@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
+import android.widget.TextView;
 
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
@@ -171,11 +172,13 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 	
 	private class GetMatchDataTask extends AsyncTask<RawMatchDataActivity, MyTableRow, Void> {
 		
+		private int dataNum;
 		private int min;
 		private int max;
 		private TableLayout dataTable;
 		
 		public GetMatchDataTask(int minMatch, int matchMax) {
+			dataNum = 0;
 			min = minMatch;
 			max = matchMax;
 		}
@@ -199,6 +202,8 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 						databaseValues, min, max);
 			else 
 				matchData = dbManager.getMatchDataByColumns(databaseKeys, databaseValues);
+			
+			dataNum = matchData.length;
 			
 			//Create the descriptors row and add it to the array
 			MyTableRow descriptorsRow = new MyTableRow(activity);
@@ -303,6 +308,7 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		
 		@Override
 		protected void onPostExecute(Void v) {
+			((TextView)findViewById(R.id.matchNum)).setText(dataNum + " Data Displayed");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 	}

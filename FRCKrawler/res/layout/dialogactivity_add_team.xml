@@ -27,7 +27,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout1"
+        android:id="@+id/root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout"
@@ -42,7 +42,7 @@
             android:layout_centerVertical="true" >
 
             <RelativeLayout
-                android:id="@+id/RelativeLayout1"
+                android:id="@+id/root"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
