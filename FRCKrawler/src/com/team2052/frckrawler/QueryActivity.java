@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -34,6 +33,7 @@ import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
 import com.team2052.frckrawler.gui.ProgressSpinner;
+import com.team2052.frckrawler.gui.StaticTableLayout;
 
 public class QueryActivity extends StackableTabActivity implements OnClickListener {
 	
@@ -203,13 +203,14 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 										<QueryActivity, MyTableRow, Void> {
 		
 		private int dataNum;
+		private StaticTableLayout table;
 											
 		protected void onPreExecute() {
 			dataNum = 0;
 			((FrameLayout)findViewById(R.id.progressFrame)).
-			addView(new ProgressSpinner(getApplicationContext()));
+					addView(new ProgressSpinner(getApplicationContext()));
 			
-			((TableLayout)findViewById(R.id.queryDataTable)).removeAllViews();
+			table = (StaticTableLayout)findViewById(R.id.queryTable);
 		}
 
 		protected Void doInBackground(QueryActivity... params) {
@@ -259,9 +260,10 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				}
 			}
 			
+			MyTableRow staticDescriptorsRow = new MyTableRow(activity);
 			MyTableRow descriptorsRow = new MyTableRow(activity);
-			descriptorsRow.addView(new MyTextView(activity, " ", 18));
-			descriptorsRow.addView(new MyTextView(activity, "Team", 18));
+			staticDescriptorsRow.addView(new MyTextView(activity, " ", 18));
+			staticDescriptorsRow.addView(new MyTextView(activity, "Team", 18));
 			descriptorsRow.addView(new MyTextView(activity, "M. Played", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Comments", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Pictures", 18));
@@ -299,11 +301,10 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 					descriptorsRow.addView(new MyTextView(activity, 
 						m.getMetric().getMetricName(), 18));
 			
-			publishProgress(descriptorsRow);
+			publishProgress(staticDescriptorsRow, descriptorsRow);
 			
 			//Create a new row for each piece of data
 			for(int dataCount = 0; dataCount < data.length; dataCount++) {
-				
 				if(isCancelled()) {
 					break;
 				}
@@ -315,6 +316,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				else
 					color = Color.TRANSPARENT;
 				
+				MyTableRow staticRow = new MyTableRow(activity, color);
 				MyTableRow dataRow = new MyTableRow(activity, color);
 				
 				CheckBox checkBox = new CheckBox(activity);
@@ -322,7 +324,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 						data[dataCount].getEventID(), 
 						data[dataCount].getRobot().getID()));
 				checkBox.setChecked(data[dataCount].getRobot().isChecked());
-				dataRow.addView(checkBox);
+				staticRow.addView(checkBox);
 				
 				MyButton commentsButton = new MyButton
 						(activity, "Comments", activity);
@@ -344,7 +346,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				addToListButton.setId(ADD_TO_LIST_BUTTON_ID);
 				addToListButton.setTag((Integer)data[dataCount].getRobot().getID());
 				
-				dataRow.addView(new MyTextView(activity, Integer.toString(
+				staticRow.addView(new MyTextView(activity, Integer.toString(
 						data[dataCount].getRobot().getTeamNumber()), 18));
 				dataRow.addView(new MyTextView(activity, Integer.toString(
 						data[dataCount].getMatchesPlayed().length), 18));
@@ -374,7 +376,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 						dataRow.addView(new MyTextView(activity, 
 								driverData[i].getValueAsHumanReadableString(), 18));
 				
-				publishProgress(dataRow);
+				publishProgress(staticRow, dataRow);
 				
 				try {	//Wait for the UI to update
 					Thread.sleep(150);
@@ -386,8 +388,14 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			return null;
 		}
 		
-		protected void onProgressUpdate(MyTableRow... row) {
-			((TableLayout)findViewById(R.id.queryDataTable)).addView(row[0]);
+		protected void onProgressUpdate(MyTableRow... rows) {
+			if(rows.length > 1) {
+				table.addViewToStaticTable(rows[0]);
+				table.addViewToMainTable(rows[1]);
+				
+			} else {
+				table.addViewToMainTable(rows[0]);
+			}
 		}
 		
 		protected void onPostExecute(Void v) {

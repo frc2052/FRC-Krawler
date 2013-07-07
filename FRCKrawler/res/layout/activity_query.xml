@@ -100,60 +100,11 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" >
 
-                    <ScrollView
-                        android:id="@+id/verticalScroller"
+                    <com.team2052.frckrawler.gui.StaticTableLayout
+                        android:id="@+id/queryTable"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:scrollbars="horizontal|vertical" >
-
-                        <HorizontalScrollView
-                            android:id="@+id/horizontalScroller"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" >
-
-                            <RelativeLayout
-                                android:id="@+id/listsDataTableParent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent" >
-
-                                <TableLayout
-                                    android:id="@+id/queryDataTable"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:dividerPadding="2dp" >
-
-                                    <TableRow
-                                        android:id="@+id/descriptorsRow"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content" >
-
-                                        <TextView
-                                            android:id="@+id/number"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="#"
-                                            android:textAppearance="?android:attr/textAppearanceMedium"
-                                            android:textSize="18sp" />
-
-                                        <TextView
-                                            android:id="@+id/name"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="Matches Played"
-                                            android:textAppearance="?android:attr/textAppearanceMedium"
-                                            android:textSize="18sp" />
-
-                                        <TextView
-                                            android:id="@+id/commentsButtonPlaceHolder"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text=" "
-                                            android:textAppearance="?android:attr/textAppearanceMedium" />
-                                    </TableRow>
-                                </TableLayout>
-                            </RelativeLayout>
-                        </HorizontalScrollView>
-                    </ScrollView>
+                        android:layout_height="wrap_content" >
+                    </com.team2052.frckrawler.gui.StaticTableLayout>
 
                 </RelativeLayout>
 

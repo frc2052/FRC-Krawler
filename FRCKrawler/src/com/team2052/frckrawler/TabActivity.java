@@ -29,7 +29,6 @@ public class TabActivity extends Activity {
 			new WeakHashMap<Integer, TabActivity>();
 	
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		instances.put(hashCode(), this);
 	}
@@ -42,7 +41,6 @@ public class TabActivity extends Activity {
 	 *****/
 	
 	public void setContentView(int layoutResID) {
-		
 		super.setContentView(layoutResID);
 		
 		listener = new TabListener(this);
