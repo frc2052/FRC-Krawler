@@ -111,7 +111,7 @@
         android:layout_below="@id/hostToggle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
-        android:text="Database Backup via SD"
+        android:text="DB Backup"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="24sp" />
 
@@ -145,7 +145,7 @@
         android:layout_below="@+id/hostToggle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="Export CSV Summary via SD"
+        android:text="Export to CSV"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button

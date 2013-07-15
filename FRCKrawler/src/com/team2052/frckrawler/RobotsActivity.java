@@ -157,7 +157,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			((FrameLayout)findViewById(R.id.progressFrame)).addView
 					(new ProgressSpinner(RobotsActivity.this));
 			
-			((TableLayout)findViewById(R.id.robotsDataTable)).removeAllViews();
+			((TableLayout)findViewById(R.id.dataTable)).removeAllViews();
 		}
 
 		protected Void doInBackground(Void... params) {
@@ -253,7 +253,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 		}
 		
 		protected void onProgressUpdate(MyTableRow... row) {
-			((TableLayout)findViewById(R.id.robotsDataTable)).addView(row[0]);
+			((TableLayout)findViewById(R.id.dataTable)).addView(row[0]);
 		}
 
 		protected void onPostExecute(Void v) {

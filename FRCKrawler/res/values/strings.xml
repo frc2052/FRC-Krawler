@@ -74,5 +74,6 @@
         <item >Practice</item>
     </string-array>
         <string name="name">FRCKrawler Scouting System</string>
+        <string name="chooser_label">Charlie Put This Here</string>
 
 </resources>

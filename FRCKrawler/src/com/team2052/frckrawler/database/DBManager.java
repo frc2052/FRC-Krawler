@@ -1253,7 +1253,6 @@ public class DBManager {
 	 * the robot was not removed from the table because a valid ID
 	 * was not passed in the parameter.
 	 *****/
-	
 	public synchronized boolean removeRobot(int robotID) {
 		
 		if(!hasValue(DBContract.TABLE_ROBOTS, DBContract.COL_ROBOT_ID, 
@@ -1398,7 +1397,6 @@ public class DBManager {
 	 * a metric with this name for this game, this game is not in the database, the type passed
 	 * is not a valid type, or the limit of 16 metrics has been reached.
 	 */
-	
 	public synchronized boolean addRobotMetric(Metric m) {
 		
 		return addRobotMetric(m.getMetricName(), m.getGameName(), m.getType(), m.getRange(),
@@ -1497,7 +1495,6 @@ public class DBManager {
 	 * @return True if the metric was removed. False if this was not a valid game or
 	 * not a valid metric, i.e. it isn't in the database.
 	 *****/
-	
 	public synchronized boolean removeRobotMetric(int metricID) {
 		
 		if(!hasValue(DBContract.TABLE_ROBOT_METRICS, DBContract.COL_METRIC_ID, 
@@ -1538,7 +1535,6 @@ public class DBManager {
 	 * 
 	 * Summary: Flips the two position values for the specified metrics
 	 *****/
-	
 	public synchronized boolean flipMatchMetricPosition(int metricID1, 
 			int metricID2) {
 		

@@ -99,64 +99,33 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/titke" >
 
-                <ScrollView
-                    android:id="@+id/scrollView2"
+                <HorizontalScrollView
+                    android:id="@+id/horizontalScroller"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true" >
 
-                    <HorizontalScrollView
-                        android:id="@+id/horizontalScrollView1"
+                    <ScrollView
+                        android:id="@+id/verticalScroller"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="match_parent"
+                        android:scrollbars="horizontal|vertical" >
 
                         <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" >
+                            android:id="@+id/dataTableParent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent" >
 
                             <TableLayout
-                                android:id="@+id/robotsDataTable"
+                                android:id="@+id/dataTable"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:layout_centerHorizontal="true" >
-
-                                <TableRow
-                                    android:id="@+id/descriptorsRow"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" >
-
-                                    <TextView
-                                        android:id="@+id/placeHolder"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text=" "
-                                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                                    <TextView
-                                        android:id="@+id/textView2"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Team #"
-                                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                                    <TextView
-                                        android:id="@+id/textView3"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Game"
-                                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                                    <TextView
-                                        android:id="@+id/textView4"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Comments"
-                                        android:textAppearance="?android:attr/textAppearanceMedium" />
-                                </TableRow>
+                                android:dividerPadding="2dp" >
                             </TableLayout>
                         </RelativeLayout>
-                    </HorizontalScrollView>
-                </ScrollView>
+                    </ScrollView>
+                </HorizontalScrollView>
 
             </RelativeLayout>
 

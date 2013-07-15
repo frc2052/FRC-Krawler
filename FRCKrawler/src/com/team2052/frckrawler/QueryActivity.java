@@ -384,7 +384,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			}
 			
 			dataNum = data.length;
-			
 			return null;
 		}
 		

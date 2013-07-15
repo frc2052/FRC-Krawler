@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import com.team2052.frckrawler.database.structures.Robot;
 public class PicturesActivity extends StackableTabActivity implements OnClickListener {
 	
 	private static final int IMAGE_REQUEST_CODE = 100;
+	private static final int IMPORT_REQUEST_CODE = 3;
 	
 	private static Uri tempUri;
 	
@@ -35,6 +37,7 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pictures);
 		findViewById(R.id.changePicture).setOnClickListener(this);
+		findViewById(R.id.importPicture).setOnClickListener(this);
 		refreshImage();
 	}
 	
@@ -63,7 +66,10 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 		        builder.show();
 		    }
 		} else if(v.getId() == R.id.importPicture) {
-			
+			Intent i = new Intent(this, ImportImageDialogActivity.class);
+			i.putExtra(ImportImageDialogActivity.IMAGE_PATH_EXTRA, getOutputMediaFile().getPath());
+			i.putExtra(ImportImageDialogActivity.ROBOT_ID_EXTRA, robot.getID());
+			startActivityForResult(i, IMPORT_REQUEST_CODE);
 			
 		} else {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -133,29 +139,31 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		
-		if (resultCode == RESULT_OK && requestCode == IMAGE_REQUEST_CODE) {
-	        Toast.makeText(this, "Image saved to:\n" +
-	               tempUri.getPath(), Toast.LENGTH_LONG).show();
-	        
-	        System.out.println(tempUri.getPath());
-				
-	        Robot[] robotsArr = DBManager.getInstance(this).getRobotsByColumns
-					(databaseKeys, databaseValues);
-			if(robotsArr.length > 0) {
-				robot = robotsArr[0];
+		if (requestCode == IMAGE_REQUEST_CODE) {
+			if(resultCode == RESULT_OK) {
+				Toast.makeText(this, "Image saved to:\n" +
+						tempUri.getPath(), Toast.LENGTH_LONG).show();
+
+				Robot[] robotsArr = DBManager.getInstance(this).getRobotsByColumns
+						(databaseKeys, databaseValues);
+				if(robotsArr.length > 0) {
+					robot = robotsArr[0];
+				}
+
+				DBManager.getInstance(this).updateRobots(
+						new String[] {DBContract.COL_ROBOT_ID},
+						new String[] {Integer.toString(robot.getID())}, 
+						new String[] {DBContract.COL_IMAGE_PATH}, 
+						new String[] {tempUri.getPath()});
+
+				refreshImage();
+			} else {
+				Toast.makeText(this, "No image saved", Toast.LENGTH_LONG).show();
 			}
-	        
-	        DBManager.getInstance(this).updateRobots(
-	        		new String[] {DBContract.COL_ROBOT_ID},
-		    		new String[] {Integer.toString(robot.getID())}, 
-		    		new String[] {DBContract.COL_IMAGE_PATH}, 
-		    		new String[] {tempUri.getPath()});
-	        
-	        refreshImage();
-	        
-	    } else {
-	    	Toast.makeText(this, "No image saved", Toast.LENGTH_LONG).show();
-	    }
+		} else if(requestCode == IMPORT_REQUEST_CODE) {
+			if(resultCode == RESULT_OK)
+				refreshImage();
+		}
 	}
 	
 	
@@ -176,6 +184,7 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 			try {
 				imageFile = Uri.parse(robot.getImagePath());
 			} catch(NullPointerException e) {
+				Log.e("FRCKrawler", "Image file was empty.");
 				imageFile = Uri.EMPTY;
 			}
 		}
@@ -224,13 +233,13 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 	    // First decode with inJustDecodeBounds=true to check dimensions
 	    final BitmapFactory.Options options = new BitmapFactory.Options();
 	    options.inJustDecodeBounds = true;
-	    BitmapFactory.decodeFile(path, options);
+	    BitmapFactory.decodeFile(new File(path).getAbsolutePath(), options);
 
 	    // Calculate inSampleSize
 	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
 	    // Decode bitmap with inSampleSize set
 	    options.inJustDecodeBounds = false;
-	    return BitmapFactory.decodeFile(path, options);
+	    return BitmapFactory.decodeFile(new File(path).getAbsolutePath(), options);
 	}
 }

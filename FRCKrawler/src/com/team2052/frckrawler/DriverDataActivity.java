@@ -22,7 +22,7 @@ public class DriverDataActivity extends StackableTabActivity implements OnClickL
 		
 		super.onResume();
 		
-		TableLayout table = (TableLayout)findViewById(R.id.robotsDataTable);
+		TableLayout table = (TableLayout)findViewById(R.id.dataTable);
 		TableRow descriptorsRow = new TableRow(this);
 		
 		table.removeAllViews();

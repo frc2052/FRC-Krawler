@@ -20,7 +20,7 @@ public class Robot implements Structure {
 	
 	public Robot(int _team, int _id, String _game, String _comments, 
 			String _imagePath, MetricValue[] _vals) {
-		this(false, _team, _id, _game, _comments, null, _vals);
+		this(false, _team, _id, _game, _comments, _imagePath, _vals);
 	}
 	
 	public Robot(boolean _isChecked, int _team, int _id, String _game, String _comments, 
