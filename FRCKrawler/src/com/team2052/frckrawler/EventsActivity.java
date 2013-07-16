@@ -1,5 +1,8 @@
 package com.team2052.frckrawler;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -93,13 +96,16 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 					Integer.valueOf(events[i].getEventID()));
 			listsButton.setId(LISTS_ID);
 			
+			Date dateStamp = events[i].getDateStamp();
+			String dateString = " " + dateStamp.getMonth() + "/" + dateStamp.getDay() + 
+					"/" +(dateStamp.getYear() + 1900);
+			
 			table.addView(new MyTableRow(this, new View[] {
 					editEventButton,
 					new MyTextView(this, events[i].getEventName(), 18),
 					new MyTextView(this, events[i].getLocation(), 18),
 					new MyTextView(this, events[i].getGameName(), 18),
-					new MyTextView(this, events[i].getDateStamp().toString(), 18),
-					new MyTextView(this, events[i].getFMSID(), 18),
+					new MyTextView(this, dateString, 18),
 					attendingTeamsButton,
 					robotsButton,
 					matchDataButton,

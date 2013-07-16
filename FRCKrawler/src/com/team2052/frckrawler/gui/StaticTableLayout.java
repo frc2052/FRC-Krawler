@@ -53,4 +53,9 @@ public class StaticTableLayout extends FrameLayout {
 	public void addViewToMainTable(View child) {
 		addView(child);
 	}
+	
+	public void removeAllViews() {
+		staticSideTable.removeAllViews();
+		mainTable.removeAllViews();
+	}
 }

@@ -12,11 +12,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TableLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -211,6 +212,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 					addView(new ProgressSpinner(getApplicationContext()));
 			
 			table = (StaticTableLayout)findViewById(R.id.queryTable);
+			table.removeAllViews();
 		}
 
 		protected Void doInBackground(QueryActivity... params) {
@@ -310,11 +312,16 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				}
 				
 				int color;
+				int buttonColor;
 				
-				if(dataCount % 2 == 0)
+				if(dataCount % 2 == 0) {
 					color = GlobalSettings.ROW_COLOR;
-				else
+					buttonColor = GlobalSettings.BUTTON_COLOR;
+				} else {
 					color = Color.TRANSPARENT;
+					buttonColor = Color.rgb(30, 30, 30);
+					
+				}
 				
 				MyTableRow staticRow = new MyTableRow(activity, color);
 				MyTableRow dataRow = new MyTableRow(activity, color);
@@ -361,10 +368,72 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 						getMetricValues();
 				MetricValue[] driverData = data[dataCount].getCompiledDriverData();
 				
-				for(int i = 0; i < matchData.length; i++)
-					if(matchData[i].getMetric().isDisplayed())
-						dataRow.addView(new MyTextView(activity, 
-								matchData[i].getValueAsHumanReadableString(), 18));
+				for(int i = 0; i < matchData.length; i++) {
+					if(matchData[i].getMetric().isDisplayed()) {
+						if(matchData[i].getMetric().getType() != DBContract.CHOOSER) {
+							dataRow.addView(new MyTextView(activity, 
+									matchData[i].getValueAsHumanReadableString(), 18));
+							
+						} else {
+							int mostPickedAddress = 0;
+							int mostPickedCounts = 0;
+							
+							for(int k = 0; k < matchData[i].getChooserCounts().length; k++) {
+								if(matchData[i].getChooserCounts()[k] > mostPickedCounts) {
+									mostPickedAddress = k;
+									mostPickedCounts = matchData[i].getChooserCounts()[k];
+								}
+							}
+							
+							Button chooserButton = new Button(QueryActivity.this);
+							
+							if(matchData[i].getValue().length > 0)
+								chooserButton.setText(matchData[i].getValue()[mostPickedAddress]);
+							else
+								chooserButton.setText("");
+							
+							chooserButton.setBackgroundColor(buttonColor);
+							chooserButton.setTextColor(Color.LTGRAY);
+							chooserButton.setTextSize(18);
+							
+							final MetricValue finalVal = matchData[i];
+							final int teamNumber = data[dataCount].getRobot().getTeamNumber();
+							chooserButton.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View arg0) {
+									AlertDialog.Builder builder = 
+											new AlertDialog.Builder(QueryActivity.this);
+									builder.setTitle("Team " + 
+											teamNumber + "'s " + 
+											finalVal.getMetric().getMetricName() + " Data");
+									
+									LinearLayout builderView = new LinearLayout
+											(QueryActivity.this);
+									builderView.setOrientation(LinearLayout.VERTICAL);
+									for(int i = 0; i < finalVal.getValue().length; i++) {
+										builderView.addView(new MyTextView(
+												QueryActivity.this,
+												finalVal.getValue()[i],
+												18));
+									}
+									
+									builder.setView(builderView);
+									builder.setNeutralButton("Close", 
+											new DialogInterface.OnClickListener() {
+										
+										@Override
+										public void onClick(DialogInterface dialog, int which) {
+											dialog.dismiss();
+										}
+									});
+									builder.show();
+								}
+							});
+							dataRow.addView(chooserButton);
+						}
+					}
+				}
 				
 				for(int i = 0; i < robotData.length; i++)
 					if(robotData[i].getMetric().isDisplayed())

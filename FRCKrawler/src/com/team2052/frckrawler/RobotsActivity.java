@@ -24,6 +24,7 @@ import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
 import com.team2052.frckrawler.gui.ProgressSpinner;
+import com.team2052.frckrawler.gui.StaticTableLayout;
 
 public class RobotsActivity extends StackableTabActivity implements OnClickListener {
 	
@@ -151,13 +152,15 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 	private class GetRobotsTask extends AsyncTask<Void, MyTableRow, Void> {
 		
 		private int numRobots;
+		private StaticTableLayout table;
 		
 		protected void onPreExecute() {
 			numRobots = 0;
 			((FrameLayout)findViewById(R.id.progressFrame)).addView
 					(new ProgressSpinner(RobotsActivity.this));
 			
-			((TableLayout)findViewById(R.id.dataTable)).removeAllViews();
+			table = (StaticTableLayout)findViewById(R.id.robotsData);
+			table.removeAllViews();
 		}
 
 		protected Void doInBackground(Void... params) {
@@ -171,10 +174,11 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			else
 				metrics = new Metric[0];
 			
+			MyTableRow staticDesRow = new MyTableRow(RobotsActivity.this);
 			MyTableRow descriptorsRow = new MyTableRow(RobotsActivity.this);
-			descriptorsRow.addView(new TextView(RobotsActivity.this));
-			descriptorsRow.addView(new MyTextView(RobotsActivity.this, "Team #", 18));
-			descriptorsRow.addView(new MyTextView(RobotsActivity.this, "Game", 18));
+			staticDesRow.addView(new TextView(RobotsActivity.this));
+			staticDesRow.addView(new MyTextView(RobotsActivity.this, "Team #", 18));
+			staticDesRow.addView(new MyTextView(RobotsActivity.this, "Game", 18));
 			descriptorsRow.addView(new MyTextView(RobotsActivity.this, "Comments", 18));
 			
 			for(Metric m : metrics) {
@@ -183,7 +187,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 					descriptorsRow.addView(new MyTextView(RobotsActivity.this, m.getMetricName(), 18));
 			}
 			
-			publishProgress(descriptorsRow);
+			publishProgress(staticDesRow, descriptorsRow);
 			
 			for(int i = 0; i < robots.length; i++) {
 				
@@ -210,14 +214,15 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 						Integer.toString(robots[i].getID()));
 				pictures.setId(PICTURES_ID);
 				
+				MyTableRow staticRow = new MyTableRow(RobotsActivity.this);
+				staticRow.addView(editRobot);
+				staticRow.addView(new MyTextView(RobotsActivity.this, Integer.toString(robots[i].
+						getTeamNumber()), 18));
+				staticRow.addView(new MyTextView(RobotsActivity.this, robots[i].getGame(), 18));
+				staticRow.setBackgroundColor(color);
+				
 				//Holds the row's data
 				ArrayList<View> rowArrayList = new ArrayList<View>();
-				
-				rowArrayList.add(editRobot);
-				rowArrayList.add(new MyTextView(RobotsActivity.this, Integer.toString(robots[i].
-						getTeamNumber()), 18));
-				rowArrayList.add(new MyTextView(RobotsActivity.this, robots[i].getGame(), 18));
-				
 				//Stops a index out of bounds exception from being thrown if there's a short comment
 				String comment;
 				
@@ -239,7 +244,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 				rowArrayList.add(pictures);
 				
 				//Add the row to the table
-				publishProgress(new MyTableRow(RobotsActivity.this, 
+				publishProgress(staticRow, new MyTableRow(RobotsActivity.this, 
 						rowArrayList.toArray(new View[0]), color));
 				
 				try {	//Wait for the UI to update
@@ -252,8 +257,9 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			return null;
 		}
 		
-		protected void onProgressUpdate(MyTableRow... row) {
-			((TableLayout)findViewById(R.id.dataTable)).addView(row[0]);
+		protected void onProgressUpdate(MyTableRow... rows) {
+			table.addViewToStaticTable(rows[0]);
+			table.addViewToMainTable(rows[1]);
 		}
 
 		protected void onPostExecute(Void v) {

@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Scouting"
+                android:text="Scout"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Button
@@ -103,7 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Summary"
+                android:text="Summarize"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Button

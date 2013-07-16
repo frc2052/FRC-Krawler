@@ -108,13 +108,11 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 				i.putExtra(EditMatchDataDialogActivity.GAME_NAME_EXTRA, e.getGameName());
 				i.putExtra(EditMatchDataDialogActivity.MATCH_ID_EXTRA, (Integer)v.getTag());
 				startActivityForResult(i, 1);
-				
 				break;
 				
 			case R.id.changeSelection:
 				
 				showSelectionDialog();
-				
 				break;
 		}
 	}
@@ -152,12 +150,12 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		
 		minNumberEntry = new EditText(this);
 		minNumberEntry.setInputType(InputType.TYPE_CLASS_NUMBER);
-		minNumberEntry.setWidth(50);
+		minNumberEntry.setWidth((int)(50 * getResources().getDisplayMetrics().density + 0.5));
 		dialogView.addView(minNumberEntry);
 		dialogView.addView(new MyTextView(this, " to ", 18));
 		maxNumberEntry = new EditText(this);
 		maxNumberEntry.setInputType(InputType.TYPE_CLASS_NUMBER);
-		maxNumberEntry.setWidth(50);
+		maxNumberEntry.setWidth((int)(50 * getResources().getDisplayMetrics().density + 0.5));
 		dialogView.addView(maxNumberEntry);
 		
 		fullView.addView(dialogView);

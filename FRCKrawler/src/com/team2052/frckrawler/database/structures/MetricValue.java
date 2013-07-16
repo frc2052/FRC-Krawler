@@ -11,9 +11,14 @@ public class MetricValue implements Structure {
 	
 	private Metric metric;
 	private String[] value; //Array only used for 
+	private int[] chooserCounts;	//Only used if this metric value is a COMPILED chooser
 	
 	public MetricValue(Metric _metric, String[] _value) throws MetricTypeMismatchException {
-		
+		this(_metric, _value, null);
+	}
+	
+	public MetricValue(Metric _metric, String[] _value, int[] _chooserCounts) 
+			throws MetricTypeMismatchException {
 		if(_metric.getType() == DBContract.COUNTER || _metric.getType() == DBContract.SLIDER) {
 			for(String v : _value) {
 				try {
@@ -29,15 +34,14 @@ public class MetricValue implements Structure {
 		
 		metric = _metric;
 		value = _value;
+		chooserCounts = _chooserCounts;
 	}
 	
 	public String getValueAsDBReadableString() {
-		
 		if(value == null)
 			return new String();
 		
 		String returnString = new String();
-		
 		for(int i = 0; i < value.length; i++) {
 				returnString += value[i] + ":";
 		}
@@ -51,7 +55,6 @@ public class MetricValue implements Structure {
 			return new String();
 		
 		String returnString = new String();
-		
 		for(int i = 0; i < value.length; i++) {
 			
 			boolean isDecimal = true;
@@ -63,9 +66,7 @@ public class MetricValue implements Structure {
 			}
 			
 			if(isDecimal) {
-				
 				DecimalFormat format = new DecimalFormat("0.00");
-				
 				if(i != value.length - 1)
 					returnString += format.format(Double.parseDouble(value[i])) + ", ";
 				else
@@ -89,6 +90,10 @@ public class MetricValue implements Structure {
 	
 	public String[] getValue() {
 		return value;
+	}
+	
+	public int[] getChooserCounts() {
+		return chooserCounts;
 	}
 	
 	public class MetricTypeMismatchException extends Exception {}

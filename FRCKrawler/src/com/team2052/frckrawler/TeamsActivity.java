@@ -18,6 +18,7 @@ import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
 import com.team2052.frckrawler.gui.ProgressSpinner;
+import com.team2052.frckrawler.gui.StaticTableLayout;
 
 public class TeamsActivity extends TabActivity implements OnClickListener {
 	
@@ -119,29 +120,29 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			getTeamsTask = new GetTeamsTask();
 			getTeamsTask.execute(this);
 		}
-		
 	}
 	
 	private class GetTeamsTask extends AsyncTask<TeamsActivity, MyTableRow, Void> {
 		
+		private StaticTableLayout table;
+		
 		protected void onPreExecute() {
 			((FrameLayout)findViewById(R.id.progressFrame)).
-			addView(new ProgressSpinner(getApplicationContext()));
+				addView(new ProgressSpinner(getApplicationContext()));
 			
-			TableLayout v = (TableLayout)findViewById(R.id.listsDataTable);
-			v.removeAllViews();
+			table = (StaticTableLayout)findViewById(R.id.teamsData);
+			table.removeAllViews();
 			
 			teamCount = -1;
 		}
 		
 		protected Void doInBackground(TeamsActivity... activities) {
-			
 			TeamsActivity activity = activities[0];
+			MyTableRow staticDescriptorsRow = new MyTableRow(activity);
 			MyTableRow descriptorsRow = new MyTableRow(activity);
-			Team[] teams = dbManager.getAllTeams();
 			
-			descriptorsRow.addView(new MyTextView(activity, "", 18));
-			descriptorsRow.addView(new MyTextView(activity, "#", 18));
+			staticDescriptorsRow.addView(new MyTextView(activity, "", 18));
+			staticDescriptorsRow.addView(new MyTextView(activity, "#", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Name", 18));
 			descriptorsRow.addView(new MyTextView(activity, "School", 18));
 			descriptorsRow.addView(new MyTextView(activity, "City", 18));
@@ -149,15 +150,15 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			descriptorsRow.addView(new MyTextView(activity, "Website", 18));
 			descriptorsRow.addView(new MyTextView(activity, "State", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Colors", 18));
-			publishProgress(descriptorsRow);
+			publishProgress(staticDescriptorsRow, descriptorsRow);
+			
+			Team[] teams = dbManager.getAllTeams();
 			
 			for(int i = 0; i < teams.length; i++) {
-				
 				if(isCancelled())
 					break;
 				
 				int color;
-				
 				if(i % 2 == 0)
 					color = GlobalSettings.ROW_COLOR;
 				else
@@ -181,9 +182,12 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				if(teams[i].getRookieYear() > 0)
 					rookieYearText = Integer.toString(teams[i].getRookieYear());
 				
-				MyTableRow row = new MyTableRow(activity, new View[] {
+				MyTableRow staticRow = new MyTableRow(activity, new View[] {
 						editTeam,
-						new MyTextView(activity, Integer.toString(teams[i].getNumber()), 18),
+						new MyTextView(activity, Integer.toString(teams[i].getNumber()), 18)
+				}, color);
+				
+				MyTableRow row = new MyTableRow(activity, new View[] {
 						new MyTextView(activity, teams[i].getName(), 18),
 						new MyTextView(activity, teams[i].getSchool(), 18),
 						new MyTextView(activity, teams[i].getCity(), 18),
@@ -197,7 +201,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				}, color);
 				
 				row.setTag(Integer.valueOf(teams[i].getNumber()));
-				publishProgress(row);
+				publishProgress(staticRow, row);
 				
 				try {	//Wait for the UI to update
 					Thread.sleep(50);
@@ -207,9 +211,10 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			return null;
 		}
 		
-		protected void onProgressUpdate(MyTableRow... row) {
-			TableLayout v = (TableLayout)findViewById(R.id.listsDataTable);
-			v.addView(row[0]);
+		@Override
+		protected void onProgressUpdate(MyTableRow... rows) {
+			table.addViewToStaticTable(rows[0]);
+			table.addViewToMainTable(rows[1]);
 			teamCount++;
 		}
 		

@@ -99,33 +99,12 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/titke" >
 
-                <HorizontalScrollView
-                    android:id="@+id/horizontalScroller"
+                <com.team2052.frckrawler.gui.StaticTableLayout
+                    android:id="@+id/robotsData"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true" >
+                    android:layout_height="wrap_content" >
 
-                    <ScrollView
-                        android:id="@+id/verticalScroller"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:scrollbars="horizontal|vertical" >
-
-                        <RelativeLayout
-                            android:id="@+id/dataTableParent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent" >
-
-                            <TableLayout
-                                android:id="@+id/dataTable"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:dividerPadding="2dp" >
-                            </TableLayout>
-                        </RelativeLayout>
-                    </ScrollView>
-                </HorizontalScrollView>
+                </com.team2052.frckrawler.gui.StaticTableLayout>
 
             </RelativeLayout>
 

@@ -141,13 +141,6 @@
                                     android:layout_height="wrap_content"
                                     android:text="Date"
                                     android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                                <TextView
-                                    android:id="@+id/fmsID"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="FMS ID"
-                                    android:textAppearance="?android:attr/textAppearanceMedium" />
                             </TableRow>
                         </TableLayout>
                     </ScrollView>

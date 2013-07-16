@@ -2907,6 +2907,7 @@ public class DBManager {
 			for(int metricCount = 0; metricCount < metricVals.length; metricCount++) {
 				
 				String[] compiledValue = new String[0];
+				int[] chooserCounts = new int[0];
 				
 				if(matchData.length != 0) {
 					switch(metrics[metricCount].getType()) {
@@ -2949,10 +2950,8 @@ public class DBManager {
 								}
 							}
 							
-							double compiledRatio = yes / (yes + no);
-							
-							compiledValue = new String[] {Double.toString(compiledRatio)};
-						
+							double compiledRatio = (yes / (yes + no)) * 100;
+							compiledValue = new String[] {compiledRatio + "%"};
 							break;
 						
 						case DBContract.CHOOSER:
@@ -3020,7 +3019,6 @@ public class DBManager {
 							} else { //Find the ratios for each choice
 								
 								double[] counts = new double[range.length];
-								
 								for(int matchCount = 0; matchCount < matchData.length; 
 										matchCount++) {
 									
@@ -3034,36 +3032,35 @@ public class DBManager {
 										matchesPlayed[matchCount] = matchData[matchCount].
 											getMatchNumber();
 									
-									String value = matchData[matchCount].
-											getMetricValues()[metricCount].getValue()[0];
-									
-									int rangeAddress = -1;
-									
-									//Find out which range number this choice is
-									for(int choiceCount = 0; choiceCount < range.length;
-											choiceCount++) {
-										if(value.equals(range[choiceCount]))
-											rangeAddress = choiceCount;
+									if(matchData[matchCount].
+											getMetricValues()[metricCount].getValue().length > 0) {
+										String value = matchData[matchCount].
+												getMetricValues()[metricCount].getValue()[0];
+
+										int rangeAddress = -1;
+										//Find out which range number this choice is
+										for(int choiceCount = 0; choiceCount < range.length;
+												choiceCount++) {
+											if(value.equals(range[choiceCount]))
+												rangeAddress = choiceCount;
+										}
+
+										if(rangeAddress != -1)
+											counts[rangeAddress]++;
 									}
-									
-									if(rangeAddress != -1)
-										counts[rangeAddress]++;
 								}
 								
 								compiledValue = new String[range.length];
+								chooserCounts = new int[range.length];
 								
 								for(int choiceCount = 0; choiceCount < compiledValue.length;
 										choiceCount++) {
-									
-									if(counts[choiceCount] != 0) {
-										DecimalFormat format = new DecimalFormat("0.00");
-										
-										compiledValue[choiceCount] = range[choiceCount] + ": " +
-												format.format(counts[choiceCount] / 
-														(double)matchData.length);
-									} else {
- 										compiledValue[choiceCount] = "";
-									}
+									DecimalFormat format = new DecimalFormat("0.0");
+									compiledValue[choiceCount] = range[choiceCount] + " " +
+											format.format((counts[choiceCount] / 
+													(double)matchData.length) * 100) + "%";
+
+									chooserCounts[choiceCount] = (int)counts[choiceCount];
 								}
 							}
 							
@@ -3213,7 +3210,7 @@ public class DBManager {
 				
 				try {
 					metricVals[metricCount] = new MetricValue
-							(metrics[metricCount], compiledValue);
+							(metrics[metricCount], compiledValue, chooserCounts);
 				} catch(MetricTypeMismatchException e) {
 					e.printStackTrace();
 				}
