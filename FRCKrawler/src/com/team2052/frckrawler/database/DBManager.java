@@ -3007,7 +3007,7 @@ public class DBManager {
 								}
 								
 								if(valueIsNull) {
-									//compiledValue = new String[] {"-1"};
+									compiledValue = new String[] {""};
 								} else {
 									if(denominator == 0)
 										denominator = 1;

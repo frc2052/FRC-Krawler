@@ -320,7 +320,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				} else {
 					color = Color.TRANSPARENT;
 					buttonColor = Color.rgb(30, 30, 30);
-					
 				}
 				
 				MyTableRow staticRow = new MyTableRow(activity, color);
@@ -375,62 +374,81 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 									matchData[i].getValueAsHumanReadableString(), 18));
 							
 						} else {
-							int mostPickedAddress = 0;
-							int mostPickedCounts = 0;
+							boolean isNumeric = true;
 							
-							for(int k = 0; k < matchData[i].getChooserCounts().length; k++) {
-								if(matchData[i].getChooserCounts()[k] > mostPickedCounts) {
-									mostPickedAddress = k;
-									mostPickedCounts = matchData[i].getChooserCounts()[k];
+							try {
+								for(int choiceCount = 0; choiceCount < matchData[i].
+										getMetric().getRange().length; 
+										choiceCount++) {
+									Double.parseDouble((String)matchData[i].getMetric().
+											getRange()[choiceCount]);
 								}
+							} catch(NumberFormatException e) {
+								isNumeric = false;
 							}
-							
-							Button chooserButton = new Button(QueryActivity.this);
-							
-							if(matchData[i].getValue().length > 0)
-								chooserButton.setText(matchData[i].getValue()[mostPickedAddress]);
-							else
-								chooserButton.setText("");
-							
-							chooserButton.setBackgroundColor(buttonColor);
-							chooserButton.setTextColor(Color.LTGRAY);
-							chooserButton.setTextSize(18);
-							
-							final MetricValue finalVal = matchData[i];
-							final int teamNumber = data[dataCount].getRobot().getTeamNumber();
-							chooserButton.setOnClickListener(new OnClickListener() {
 
-								@Override
-								public void onClick(View arg0) {
-									AlertDialog.Builder builder = 
-											new AlertDialog.Builder(QueryActivity.this);
-									builder.setTitle("Team " + 
-											teamNumber + "'s " + 
-											finalVal.getMetric().getMetricName() + " Data");
-									
-									LinearLayout builderView = new LinearLayout
-											(QueryActivity.this);
-									builderView.setOrientation(LinearLayout.VERTICAL);
-									for(int i = 0; i < finalVal.getValue().length; i++) {
-										builderView.addView(new MyTextView(
-												QueryActivity.this,
-												finalVal.getValue()[i],
-												18));
+							if(isNumeric) {
+								dataRow.addView(new MyTextView(QueryActivity.this, 
+										matchData[i].getValueAsHumanReadableString(), 18));
+
+							} else {
+								int mostPickedAddress = 0;
+								int mostPickedCounts = 0;
+
+								for(int k = 0; k < matchData[i].getChooserCounts().length; k++) {
+									if(matchData[i].getChooserCounts()[k] > mostPickedCounts) {
+										mostPickedAddress = k;
+										mostPickedCounts = matchData[i].getChooserCounts()[k];
 									}
-									
-									builder.setView(builderView);
-									builder.setNeutralButton("Close", 
-											new DialogInterface.OnClickListener() {
-										
-										@Override
-										public void onClick(DialogInterface dialog, int which) {
-											dialog.dismiss();
-										}
-									});
-									builder.show();
 								}
-							});
-							dataRow.addView(chooserButton);
+
+								Button chooserButton = new Button(QueryActivity.this);
+
+								if(matchData[i].getValue().length > 0)
+									chooserButton.setText(matchData[i].getValue()[mostPickedAddress]);
+								else
+									chooserButton.setText("");
+
+								chooserButton.setBackgroundColor(buttonColor);
+								chooserButton.setTextColor(Color.LTGRAY);
+								chooserButton.setTextSize(18);
+
+								final MetricValue finalVal = matchData[i];
+								final int teamNumber = data[dataCount].getRobot().getTeamNumber();
+								chooserButton.setOnClickListener(new OnClickListener() {
+
+									@Override
+									public void onClick(View arg0) {
+										AlertDialog.Builder builder = 
+												new AlertDialog.Builder(QueryActivity.this);
+										builder.setTitle("Team " + 
+												teamNumber + "'s " + 
+												finalVal.getMetric().getMetricName() + " Data");
+
+										LinearLayout builderView = new LinearLayout
+												(QueryActivity.this);
+										builderView.setOrientation(LinearLayout.VERTICAL);
+										for(int i = 0; i < finalVal.getValue().length; i++) {
+											builderView.addView(new MyTextView(
+													QueryActivity.this,
+													finalVal.getValue()[i],
+													18));
+										}
+
+										builder.setView(builderView);
+										builder.setNeutralButton("Close", 
+												new DialogInterface.OnClickListener() {
+
+											@Override
+											public void onClick(DialogInterface dialog, int which) {
+												dialog.dismiss();
+											}
+										});
+										builder.show();
+									}
+								});
+								dataRow.addView(chooserButton);
+							}
 						}
 					}
 				}
