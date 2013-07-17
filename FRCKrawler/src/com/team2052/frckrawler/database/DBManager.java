@@ -7,6 +7,7 @@ import java.util.Date;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,6 +15,7 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.OptionsActivity;
 import com.team2052.frckrawler.database.structures.Comment;
 import com.team2052.frckrawler.database.structures.CompiledData;
 import com.team2052.frckrawler.database.structures.Contact;
@@ -2870,6 +2872,10 @@ public class DBManager {
 		if(!hasValue(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID, 
 				Integer.toString(eventID)))
 			return null;
+		//Get the weighting value from the settings
+		SharedPreferences prefs = context.getSharedPreferences
+				(OptionsActivity.PREFS_NAME, Context.MODE_PRIVATE);
+		float weightingRatio = prefs.getFloat(OptionsActivity.PREFS_COMPILE_WEIGHT, 1);
 		
 		//Get the event arr
 		Event[] eventArr = this.getEventsByColumns(new String[] {DBContract.COL_EVENT_ID}, 
@@ -2998,7 +3004,7 @@ public class DBManager {
 										int value = Integer.parseInt(valueArray[0]);
 										double matchPlayed = matchCount;
 										double weight = Math.pow
-												(GlobalValues.weightingRatio, 
+												(weightingRatio, 
 														matchPlayed);
 									
 										numerator += value * weight;
@@ -3097,7 +3103,7 @@ public class DBManager {
 									int value = Integer.parseInt(valueArray[0]);
 									double matchPlayed = matchCount;
 									double weight = Math.pow
-											(GlobalValues.weightingRatio, 
+											(weightingRatio, 
 													matchPlayed);
 								
 									numerator += value * weight;
@@ -3161,7 +3167,7 @@ public class DBManager {
 								
 								double matchPlayed = matchCount;
 								double weight = Math.pow
-										(GlobalValues.weightingRatio, 
+										(weightingRatio, 
 												matchPlayed);
 							
 								mathNumerator += matchVal * weight;

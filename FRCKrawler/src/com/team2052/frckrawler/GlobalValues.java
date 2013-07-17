@@ -5,22 +5,6 @@ import android.graphics.Color;
 public class GlobalValues {
 	
 	/**
-	 * The weightingRatio is how much more the next match
-	 * counts more than the last one when compiling the
-	 * COUNTER, SLIDER, and numeric CHOOSER metrics.
-	 * 
-	 * LESS than one means the last match is LESS important
-	 * than the first.
-	 * 
-	 * MORE than one means the last match is MORE important
-	 * than the first
-	 * 
-	 * A VALUE OF ONE means that there is no weight at all,
-	 * all matches are treated equally.
-	 **/
-	public static double weightingRatio = 1.2;
-	
-	/**
 	 * The user has the option to add a robot every time a team
 	 * is added. This streamlines the initial data entry process.
 	 * The game is what game that robot will be playing.

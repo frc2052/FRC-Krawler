@@ -121,17 +121,24 @@
             android:layout_alignParentRight="true" >
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/saveOptions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.50"
+                android:layout_weight="0.33"
                 android:text="Save" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/restoreDefaults"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.50"
+                android:layout_weight="0.33"
+                android:text="Restore Defaults" />
+
+            <Button
+                android:id="@+id/cancelOptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.34"
                 android:text="Cancel" />
         </LinearLayout>
 

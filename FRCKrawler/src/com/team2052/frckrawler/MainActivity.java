@@ -54,6 +54,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         findViewById(R.id.continueScouting).setOnClickListener(this);
         findViewById(R.id.sync_summary).setOnClickListener(this);
         findViewById(R.id.view_summary).setOnClickListener(this);
+        
+        OptionsActivity.restoreDefaultOptions(this, false);
     }
     
     @Override

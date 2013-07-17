@@ -98,7 +98,6 @@ public class TabActivity extends Activity {
 		public static final int USERS = 1;
 		public static final int GAMES = 2;
 		public static final int BLUETOOTH = 3;
-		public static final int OPTIONS = 4;
 	
 		private TabActivity user;
 	
@@ -156,12 +155,8 @@ public class TabActivity extends Activity {
 					break;
 					
 				case R.id.optionsTabButton :
-					if(selectedActivity != OPTIONS) {
-						i = new Intent(user, OptionsActivity.class);
-						user.startActivity(i);
-						selectedActivity = OPTIONS;
-					}
-					
+					i = new Intent(user, OptionsActivity.class);
+					user.startActivity(i);
 					break;
 			}
 		}
