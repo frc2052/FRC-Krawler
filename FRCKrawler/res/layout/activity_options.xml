@@ -106,7 +106,9 @@
                     android:layout_alignLeft="@+id/weightValue"
                     android:layout_alignTop="@+id/textView2"
                     android:layout_toLeftOf="@+id/generateHelp"
-                    android:text=" " />
+                    android:text=" "
+                    android:textOff="No"
+                    android:textOn=" " />
 
             </RelativeLayout>
 

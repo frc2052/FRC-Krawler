@@ -5,14 +5,6 @@ import android.graphics.Color;
 public class GlobalValues {
 	
 	/**
-	 * The user has the option to add a robot every time a team
-	 * is added. This streamlines the initial data entry process.
-	 * The game is what game that robot will be playing.
-	 **/
-	public static boolean addRobotWithTeam = false;
-	public static String robotsGame = "";
-	
-	/**
 	 * The default color for the rows of tables and certain buttons.
 	 */
 	public static int ROW_COLOR = Color.rgb(36, 37, 85);

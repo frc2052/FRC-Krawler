@@ -3,12 +3,15 @@ package com.team2052.frckrawler;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -30,7 +33,6 @@ public class AddMatchDataDialogActivity extends Activity implements OnClickListe
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		getWindow().setSoftInputMode
 			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -40,6 +42,19 @@ public class AddMatchDataDialogActivity extends Activity implements OnClickListe
 		findViewById(R.id.cancel).setOnClickListener(this);
 		((EditText)findViewById(R.id.matchNumber)).
 				setInputType(InputType.TYPE_CLASS_NUMBER);
+		
+		//Set the ScrollView to not auto scroll to EditText
+		ScrollView sv = (ScrollView)findViewById(R.id.scrollView1);
+		sv.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+		sv.setFocusable(true);
+		sv.setFocusableInTouchMode(true);
+		sv.setOnTouchListener(new View.OnTouchListener(){
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				v.requestFocusFromTouch();
+				return false;
+			}
+		});
 		
 		db = DBManager.getInstance(this);
 	}

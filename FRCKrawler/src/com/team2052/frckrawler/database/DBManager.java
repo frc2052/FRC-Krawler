@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
+import com.team2052.frckrawler.AddTeamDialogActivity;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.OptionsActivity;
 import com.team2052.frckrawler.database.structures.Comment;
@@ -355,6 +356,16 @@ public class DBManager {
 		
 			db.insert(DBContract.TABLE_TEAMS, null, values);	//Add it to the database
 			helper.close();
+			
+			SharedPreferences prefs = context.getSharedPreferences
+					(OptionsActivity.PREFS_NAME, Context.MODE_PRIVATE);
+			boolean generateRobot = prefs.getBoolean
+					(OptionsActivity.PREFS_GENERATE_ROBOTS, false);
+			String game = prefs.getString(OptionsActivity.PREFS_ROBOT_GAME, "");
+			
+			if(generateRobot) {
+				addRobot(number, game, "", "", new MetricValue[0]);
+			}
 			
 			return true;
 		}
@@ -1118,7 +1129,6 @@ public class DBManager {
 	 *****/
 	
 	public boolean removeGame(Game g) {
-		
 		return removeGame(g.getName());
 	}
 	
@@ -1161,6 +1171,16 @@ public class DBManager {
 				" LIKE ?", new String[] {name});
 		
 		helper.close();
+		
+		SharedPreferences prefs = context.getSharedPreferences
+				(OptionsActivity.PREFS_NAME, Context.MODE_PRIVATE);
+		
+		if(name.equals(prefs.getString(OptionsActivity.PREFS_ROBOT_GAME, "none"))) {
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putBoolean(OptionsActivity.PREFS_GENERATE_ROBOTS, false);
+			editor.putString(OptionsActivity.PREFS_ROBOT_GAME, "none");
+			editor.commit();
+		}
 		
 		return true;
 	}
@@ -1209,14 +1229,12 @@ public class DBManager {
 	 *****/
 	
 	public synchronized boolean addRobot(Robot robot) {
-		
 		return addRobot(robot.getTeamNumber(), robot.getGame(), 
 				robot.getComments(), robot.getImagePath(), robot.getMetricValues());
 	}
 	
-	public synchronized boolean addRobot(int teamNumber, String gameName, String comments, String imagePath, 
-			MetricValue[] vals) {
-		
+	public synchronized boolean addRobot(int teamNumber, String gameName, String comments, 
+			String imagePath, MetricValue[] vals) {
 		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, gameName))
 			return false;
 		
@@ -1231,7 +1249,6 @@ public class DBManager {
 		values.put(DBContract.COL_IMAGE_PATH, imagePath);
 		
 		for(MetricValue v : vals) {
-			
 			String valString = v.getValueAsDBReadableString();
 			values.put(v.getMetric().getKey(), valString);
 		}

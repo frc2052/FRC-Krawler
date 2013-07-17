@@ -35,9 +35,13 @@ public class OptionsActivity extends TabActivity implements OnClickListener {
 		
 		((EditText)findViewById(R.id.weightValue)).setText
 				(Float.toString(preferences.getFloat(PREFS_COMPILE_WEIGHT, 1.0f)));
-		((ToggleButton)findViewById(R.id.generateRobots)).setChecked
-				(preferences.getBoolean(PREFS_GENERATE_ROBOTS, false));
+		
+		boolean generate = preferences.getBoolean(PREFS_GENERATE_ROBOTS, false);
+		((ToggleButton)findViewById(R.id.generateRobots)).setChecked(generate);
 		gameName = preferences.getString(PREFS_ROBOT_GAME, "none");
+		
+		if(generate)
+			((ToggleButton)findViewById(R.id.generateRobots)).setText(gameName);
 		
 		findViewById(R.id.saveOptions).setOnClickListener(this);
 		findViewById(R.id.restoreDefaults).setOnClickListener(this);
@@ -142,6 +146,7 @@ public class OptionsActivity extends TabActivity implements OnClickListener {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							gameName = choices[which].toString();
+							b.setText(choices[which]);
 							dialog.dismiss();
 						}
 					});

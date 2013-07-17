@@ -48,7 +48,7 @@ public class AddListDialogActivity extends Activity implements OnClickListener {
 				setResult(ListsActivity.REQUEST_REFRESH);
 				finish();
 			}
-		} else if(v.getId() == R.id.cancel) {
+		} else if(v.getId() == R.id.cancelButton) {
 			setResult(ListsActivity.REQUEST_NO_REFRESH);
 			finish();
 		}
