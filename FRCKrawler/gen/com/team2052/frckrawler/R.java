@@ -30,7 +30,11 @@ public final class R {
         public static final int logo=0x7f020004;
         public static final int logo_drawn_colored=0x7f020005;
         public static final int spider_logo=0x7f020006;
-        public static final int team_icon=0x7f020007;
+        public static final int tab_button=0x7f020007;
+        public static final int tab_button_pressed=0x7f020008;
+        public static final int tab_button_selected=0x7f020009;
+        public static final int tab_button_unpressed=0x7f02000a;
+        public static final int team_icon=0x7f02000b;
     }
     public static final class id {
         public static final int RelativeLayout01=0x7f0b0084;
@@ -313,6 +317,9 @@ public final class R {
         public static final int hello_world=0x7f060005;
         public static final int menu_settings=0x7f060006;
         public static final int name=0x7f060008;
+        public static final int preference_key_autogenerate_robot=0x7f06000c;
+        public static final int preference_key_avg_weight=0x7f06000a;
+        public static final int preferences_key_robot_game=0x7f06000b;
         public static final int storage_removed=0x7f060001;
         public static final int team_number=0x7f060007;
     }
@@ -348,5 +355,6 @@ public final class R {
     }
     public static final class xml {
         public static final int mimetypes=0x7f040000;
+        public static final int preferences=0x7f040001;
     }
 }

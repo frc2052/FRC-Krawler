@@ -29,34 +29,37 @@
                     android:id="@+id/progressFrame"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" >
-
                 </FrameLayout>
 
                 <Button
                     android:id="@+id/teamsSelectionButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:background="@drawable/tab_button"
                     android:text="Teams" />
 
                 <Button
                     android:id="@+id/usersSelectionButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:background="@drawable/tab_button"
                     android:text="Users" />
 
                 <Button
                     android:id="@+id/gamesSelectionButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:background="@drawable/tab_button"
                     android:text="Games" />
 
                 <Button
                     android:id="@+id/bluetoothTabButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:background="@drawable/tab_button"
                     android:text="Bluetooth" />
-
             </LinearLayout>
+
         </ScrollView>
 
         <RelativeLayout

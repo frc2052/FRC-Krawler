@@ -30,7 +30,7 @@
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:logo="@drawable/logo"
-        android:theme="@android:style/Theme.Black.NoTitleBar" >
+        android:theme="@android:style/Theme.Black" >
         <activity
             android:name="com.team2052.frckrawler.TeamsActivity"
             android:windowSoftInputMode="adjustNothing" >

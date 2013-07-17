@@ -11,7 +11,11 @@ int drawable ic_launcher 0x7f020003
 int drawable logo 0x7f020004
 int drawable logo_drawn_colored 0x7f020005
 int drawable spider_logo 0x7f020006
-int drawable team_icon 0x7f020007
+int drawable tab_button 0x7f020007
+int drawable tab_button_pressed 0x7f020008
+int drawable tab_button_selected 0x7f020009
+int drawable tab_button_unpressed 0x7f02000a
+int drawable team_icon 0x7f02000b
 int id RelativeLayout01 0x7f0b0084
 int id RelativeLayout02 0x7f0b00a8
 int id ScrollView01 0x7f0b0073
@@ -286,6 +290,9 @@ int string error_selecting_file 0x7f060003
 int string hello_world 0x7f060005
 int string menu_settings 0x7f060006
 int string name 0x7f060008
+int string preference_key_autogenerate_robot 0x7f06000c
+int string preference_key_avg_weight 0x7f06000a
+int string preferences_key_robot_game 0x7f06000b
 int string storage_removed 0x7f060001
 int string team_number 0x7f060007
 int style AppBaseTheme 0x7f070002
@@ -293,3 +300,4 @@ int style AppTheme 0x7f070003
 int style fileChooserIcon 0x7f070001
 int style fileChooserName 0x7f070000
 int xml mimetypes 0x7f040000
+int xml preferences 0x7f040001

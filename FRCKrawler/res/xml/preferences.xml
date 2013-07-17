@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <CheckBoxPreference android:title="Generate robots with new teams" android:defaultValue="false" android:key="@string/preference_key_autogenerate_robot"/><ListPreference android:key="@string/preferences_key_robot_game" android:defaultValue="None" android:title="Game" android:enabled="true" android:summary="What game the newly added robot will be playing" android:dialogTitle="Game"/>
+    
+
+</PreferenceScreen>

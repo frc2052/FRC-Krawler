@@ -14,6 +14,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -52,6 +53,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         findViewById(R.id.continueScouting).setOnClickListener(this);
         findViewById(R.id.sync_summary).setOnClickListener(this);
         findViewById(R.id.view_summary).setOnClickListener(this);
+        
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
     
     public void onDestroy() {
