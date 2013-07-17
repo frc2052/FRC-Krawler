@@ -10,6 +10,7 @@ public class MathMetricWidget extends MetricWidget {
 		super(c, m.getMetric(), new String[0]);
 	}
 	
+	@Override
 	public String[] getValues() {
 		return new String[0];
 	}

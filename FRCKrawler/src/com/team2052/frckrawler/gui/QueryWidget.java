@@ -66,6 +66,7 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 		return q;
 	}
 
+	@Override
 	public void onClick(View v) {
 		if(v.getId() == addButton.getId()) {
 			querys.add(new QueryItem(getContext()));
@@ -255,6 +256,7 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 				return null;
 			}
 			
+			@Override
 			protected void onPostExecute(Void v) {
 				addView(removeButton);
 				addView(frontText);

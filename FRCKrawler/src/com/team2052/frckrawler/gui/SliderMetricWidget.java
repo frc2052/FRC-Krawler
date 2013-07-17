@@ -49,11 +49,13 @@ public class SliderMetricWidget extends MetricWidget implements
 		((TextView)findViewById(R.id.value)).setText(Integer.toString(value));
 	}
 
+	@Override
 	public String[] getValues() {
 		
 		return new String[] {Integer.toString(value)};
 	}
 
+	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
 			boolean fromUser) {
 		
@@ -61,12 +63,14 @@ public class SliderMetricWidget extends MetricWidget implements
 		((TextView)findViewById(R.id.value)).setText(Integer.toString(value));
 	}
 	
+	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
 		
 		value = seekBar.getProgress() + min;
 		((TextView)findViewById(R.id.value)).setText(Integer.toString(value));
 	}
 	
+	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		
 		value = seekBar.getProgress() + min;

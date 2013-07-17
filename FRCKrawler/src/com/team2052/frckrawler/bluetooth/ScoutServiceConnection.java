@@ -3,7 +3,6 @@ package com.team2052.frckrawler.bluetooth;
 import com.team2052.frckrawler.bluetooth.BluetoothScoutClientService.ClientBinder;
 
 import android.content.ComponentName;
-import android.content.ServiceConnection;
 import android.os.IBinder;
 
 public class ScoutServiceConnection implements ClientConnection {
@@ -17,15 +16,18 @@ public class ScoutServiceConnection implements ClientConnection {
 		listener = _listener;
 	}
 
+	@Override
 	public void onServiceConnected(ComponentName c, IBinder i) {
 		binder = (ClientBinder)i;
 		binder.setListener(listener);
 	}
 
+	@Override
 	public void onServiceDisconnected(ComponentName i) {
 		closeBTConnection();
 	}
 	
+	@Override
 	public void closeBTConnection() {
 		if(binder != null)
 			binder.closeConnection();

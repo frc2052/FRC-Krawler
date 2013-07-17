@@ -11,7 +11,6 @@ package com.team2052.frckrawler.gui;
 import android.R.color;
 import android.content.Context;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
 

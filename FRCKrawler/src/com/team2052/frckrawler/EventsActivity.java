@@ -1,6 +1,5 @@
 package com.team2052.frckrawler;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import android.content.Intent;
@@ -33,6 +32,7 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 	
 	private DBManager dbManager;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -50,6 +50,7 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 		dbManager = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onResume() {
 		super.onResume();
 		new GetEventsTask().execute();
@@ -68,7 +69,7 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 			int color;
 			
 			if(i % 2 == 0)
-				color = GlobalSettings.ROW_COLOR;
+				color = GlobalValues.ROW_COLOR;
 			else
 				color = Color.TRANSPARENT;
 			
@@ -115,6 +116,7 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 		}
 	}
 	
+	@Override
 	public void onClick(View v) {
 		
 		Intent i;
@@ -216,12 +218,14 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 		
 		private int eventNum = 0;
 		
+		@Override
 		protected Event[] doInBackground(Void... params) {
 			Event[] e = dbManager.getEventsByColumns(databaseKeys, databaseValues);
 			eventNum = e.length;
 			return e;
 		}
 		
+		@Override
 		protected void onPostExecute(Event[] events) {
 			((TextView)findViewById(R.id.eventNum)).setText(eventNum + " Events");
 			postResults(events);

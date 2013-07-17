@@ -21,6 +21,7 @@ public class EditEventDialogActivity extends Activity implements OnClickListener
 	
 	private DBManager db;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -33,6 +34,7 @@ public class EditEventDialogActivity extends Activity implements OnClickListener
 		db = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onStart() {
 		
 		super.onStart();
@@ -56,6 +58,7 @@ public class EditEventDialogActivity extends Activity implements OnClickListener
 		((EditText)findViewById(R.id.fmsID)).setText(e.getFMSID());
 	}
 	
+	@Override
 	public void onClick(View v) {
 		
 		switch(v.getId()) {
@@ -109,6 +112,7 @@ public class EditEventDialogActivity extends Activity implements OnClickListener
 		}
 	}
 
+	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		
 		if(which == DialogInterface.BUTTON_POSITIVE) {

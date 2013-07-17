@@ -230,7 +230,7 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 				int color;
 				
 				if(i % 2 == 0)
-					color = GlobalSettings.ROW_COLOR;
+					color = GlobalValues.ROW_COLOR;
 				else
 					color = Color.TRANSPARENT;
 				

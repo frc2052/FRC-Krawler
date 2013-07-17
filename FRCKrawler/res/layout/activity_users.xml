@@ -113,6 +113,14 @@
                 android:layout_height="60dp"
                 android:background="@drawable/tab_button"
                 android:text="Bluetooth" />
+
+            <Button
+                android:id="@+id/optionsTabButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/tab_button"
+                android:text="Options" />
+
         </LinearLayout>
 
     </ScrollView>

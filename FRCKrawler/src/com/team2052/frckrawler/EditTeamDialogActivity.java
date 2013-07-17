@@ -19,7 +19,6 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Team;
-import com.team2052.frckrawler.gui.MyTextView;
 
 public class EditTeamDialogActivity extends Activity implements OnClickListener, DialogInterface.OnClickListener {
 	
@@ -27,6 +26,7 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 	
 	private DBManager dbManager;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -41,6 +41,7 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 		dbManager = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onResume() {
 		
 		super.onResume();
@@ -81,6 +82,7 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 	 * is the button that the user pressed.
 	 *****/
 	
+	@Override
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.saveButton) {
@@ -150,6 +152,7 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 	 * the user wants.
 	 *****/
 	
+	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		
 		if(which == DialogInterface.BUTTON_POSITIVE) {

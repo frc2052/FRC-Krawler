@@ -13,6 +13,7 @@ public class TextListEditor extends ListEditor implements DialogInterface.OnClic
 		super(context);
 	}
 
+	@Override
 	protected void onAddButtonClicked() {
 		t = new EditText(getContext());
 		
@@ -24,6 +25,7 @@ public class TextListEditor extends ListEditor implements DialogInterface.OnClic
 		builder.show();
 	}
 
+	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		if(which == DialogInterface.BUTTON_POSITIVE) {
 			addValue(t.getText().toString(), t.getText().toString());

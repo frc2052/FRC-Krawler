@@ -3,7 +3,6 @@ package com.team2052.frckrawler;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -20,6 +19,7 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 	
 	private DBManager dbManager;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialogactivity_attending_teams);
@@ -30,6 +30,7 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 		dbManager = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onResume() {
 		super.onResume();
 		new GetRobotsTask().execute();
@@ -52,6 +53,7 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 		}
 	}
 
+	@Override
 	public void onClick(View v) {
 		if(v.getId() == R.id.save) {
 			LinearLayout robotList = (LinearLayout)findViewById(R.id.teamList);
@@ -80,11 +82,13 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 		
 		Robot[] allRobots;
 		
+		@Override
 		protected Robot[] doInBackground(Void... params) {
 			return dbManager.getRobotsByColumns(new String[] {DBContract.COL_GAME_NAME}, 
 					new String[] {getIntent().getStringExtra(GAME_NAME_EXTRA)});
 		}
 		
+		@Override
 		protected void onPostExecute(Robot[] _allRobots) {
 			allRobots = _allRobots;
 			new GetSelectedRobotsTask().execute();
@@ -92,12 +96,14 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 		
 		private class GetSelectedRobotsTask extends AsyncTask<Void, Void, Robot[]> {
 
+			@Override
 			protected Robot[] doInBackground(Void... params) {
 				
 				return dbManager.getRobotsAtEvent(
 						Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA)));
 			}
 			
+			@Override
 			protected void onPostExecute(Robot[] selectedRobots) {
 				postResults(allRobots, selectedRobots);
 			}

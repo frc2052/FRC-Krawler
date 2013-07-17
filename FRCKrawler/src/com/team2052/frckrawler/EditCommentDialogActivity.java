@@ -9,6 +9,7 @@ public class EditCommentDialogActivity extends Activity {
 	
 	public static final String COMMENT_ID_EXTRA = "com.team2052.frckrawler.commentIDExtra";
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);

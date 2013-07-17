@@ -17,6 +17,7 @@ public class EditGameDialogActivity extends Activity implements OnClickListener,
 	
 	private DBManager dbManager;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -29,6 +30,7 @@ public class EditGameDialogActivity extends Activity implements OnClickListener,
 		dbManager = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onResume() {
 		
 		super.onResume();
@@ -45,6 +47,7 @@ public class EditGameDialogActivity extends Activity implements OnClickListener,
 	 * Summary: This is the callback method for the Views in this activity.
 	 *****/
 	
+	@Override
 	public void onClick(View v) {
 		
 		switch(v.getId()) {
@@ -87,6 +90,7 @@ public class EditGameDialogActivity extends Activity implements OnClickListener,
 	 * activity.
 	 *****/
 	
+	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		
 		if(which == DialogInterface.BUTTON_POSITIVE) {

@@ -18,6 +18,7 @@ public class DrawingRequestTableLayout extends TableLayout {
 		super(context, set);
 	}
 	
+	@Override
 	protected void onDraw(Canvas c) {
 		if(refreshRequested)
 			super.onDraw(c);

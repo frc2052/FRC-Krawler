@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +35,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 	private DBManager dbManager;
 	private GetRobotsTask getRobotsTask;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_robots);
@@ -55,11 +55,13 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 		getRobotsTask.execute();
 	}
 	
+	@Override
 	public void onStop() {
 		super.onStop();
 		getRobotsTask.cancel(true);
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		Intent i;
@@ -154,6 +156,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 		private int numRobots;
 		private StaticTableLayout table;
 		
+		@Override
 		protected void onPreExecute() {
 			numRobots = 0;
 			((FrameLayout)findViewById(R.id.progressFrame)).addView
@@ -163,6 +166,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			table.removeAllViews();
 		}
 
+		@Override
 		protected Void doInBackground(Void... params) {
 			Robot[] robots = dbManager.getRobotsByColumns
 					(databaseKeys, databaseValues, true);
@@ -197,7 +201,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 				int color;
 				
 				if(i % 2 == 0)
-					color = GlobalSettings.ROW_COLOR;
+					color = GlobalValues.ROW_COLOR;
 				else
 					color = Color.TRANSPARENT;
 				
@@ -207,7 +211,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 				editRobot.setId(EDIT_ROBOT_ID);
 				
 				MyButton events = new MyButton(RobotsActivity.this, "Events", RobotsActivity.this,
-						(Integer)robots[i].getID());
+						robots[i].getID());
 				events.setId(EVENTS_ID);
 				
 				MyButton pictures = new MyButton(RobotsActivity.this, "Pictures", RobotsActivity.this, 
@@ -257,16 +261,19 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			return null;
 		}
 		
+		@Override
 		protected void onProgressUpdate(MyTableRow... rows) {
 			table.addViewToStaticTable(rows[0]);
 			table.addViewToMainTable(rows[1]);
 		}
 
+		@Override
 		protected void onPostExecute(Void v) {
 			((TextView)findViewById(R.id.numRobots)).setText(numRobots + " Robots");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 		
+		@Override
 		protected void onCancelled(Void v) {
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}

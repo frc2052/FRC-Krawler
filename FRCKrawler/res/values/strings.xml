@@ -78,5 +78,6 @@
         <string name="preference_key_avg_weight">avgWeight</string>
         <string name="preferences_key_robot_game">game</string>
         <string name="preference_key_autogenerate_robot">autoRobot</string>
+        <string-array name="empty_array"></string-array>
 
 </resources>

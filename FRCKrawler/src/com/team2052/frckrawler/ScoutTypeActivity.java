@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +29,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	private DBManager db;
 	private User user;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scout_type);
@@ -44,11 +44,12 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		
 		User[] allUsers = db.scoutGetAllUsers();
 		for(User u : allUsers)
-			if(GlobalSettings.userID == u.getID())
+			if(GlobalValues.userID == u.getID())
 				user = u;
 		
 	}
 	
+	@Override
 	public void onResume() {
 		super.onResume();
 		
@@ -62,6 +63,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 				(selectedEvent.getEventName() + ", " + selectedEvent.getGameName());
 	}
 	
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		
@@ -70,6 +72,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		} catch(IllegalArgumentException e) {}
 	}
 
+	@Override
 	public void onClick(View v) {
 		Intent i;
 		
@@ -102,8 +105,8 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 			case R.id.sync: 
 				
 				SharedPreferences prefs = getSharedPreferences
-					(GlobalSettings.PREFS_FILE_NAME, 0);
-				String macAdress = prefs.getString(GlobalSettings.MAC_ADRESS_PREF, "null");
+					(GlobalValues.PREFS_FILE_NAME, 0);
+				String macAdress = prefs.getString(GlobalValues.MAC_ADRESS_PREF, "null");
 				
 				if(macAdress.equals("null")) {
 					Toast.makeText(this, "Sync failed. No server " +
@@ -126,9 +129,11 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	@Override
 	public void onSuccessfulSync() {
 		
 		runOnUiThread(new Runnable() {
+			@Override
 			public void run() {
 				unbindService(connection);
 				progressDialog.dismiss();
@@ -140,11 +145,13 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		});
 	}
 
+	@Override
 	public void onUnsuccessfulSync(String _errorMessage) {
 		final String errorMessage = _errorMessage;
 		
 		runOnUiThread(new Runnable() {
 			
+			@Override
 			public void run() {
 				unbindService(connection);
 				progressDialog.dismiss();
@@ -155,11 +162,13 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		
 	}
 	
+	@Override
 	public void onUpdate(String _message) {
 		final String message = _message;
 		
 		runOnUiThread(new Runnable() {
 			
+			@Override
 			public void run() {
 				Toast.makeText(getApplicationContext(), message, 
 						Toast.LENGTH_SHORT).show();
@@ -167,6 +176,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		});
 	}
 
+	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		if(which == DialogInterface.BUTTON_NEUTRAL) {
 			unbindService(connection);

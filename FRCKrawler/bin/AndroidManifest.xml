@@ -227,6 +227,8 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
+        <activity android:name="OptionsActivity"
+            	  android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>

@@ -38,6 +38,7 @@ public class SummaryActivity extends Activity implements OnClickListener {
 	private DBManager dbManager;
 	private TableLayout table;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_client_summary);
@@ -54,6 +55,7 @@ public class SummaryActivity extends Activity implements OnClickListener {
 		new GetSummaryTask().execute();
 	}
 	
+	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {
 			case MATCH_DATA_BUTTON_ID:
@@ -71,6 +73,7 @@ public class SummaryActivity extends Activity implements OnClickListener {
 		
 		AlertDialog progressDialog;
 		
+		@Override
 		protected void onPreExecute() {
 			AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
 			builder.setTitle("Loading...");
@@ -119,7 +122,7 @@ public class SummaryActivity extends Activity implements OnClickListener {
 				int color;
 				
 				if(i % 2 == 0)
-					color = GlobalSettings.ROW_COLOR;
+					color = GlobalValues.ROW_COLOR;
 				else
 					color = Color.TRANSPARENT;
 				
@@ -164,12 +167,14 @@ public class SummaryActivity extends Activity implements OnClickListener {
 			return null;
 		}
 		
+		@Override
 		protected void onProgressUpdate(MyTableRow... row) {
 			table.addView(row[0]);
 			dataCount++;
 			((TextView)findViewById(R.id.dataCount)).setText(dataCount + " Robots");
 		}
 		
+		@Override
 		protected void onPostExecute(Void v) {
 			progressDialog.dismiss();
 		}
@@ -212,7 +217,7 @@ public class SummaryActivity extends Activity implements OnClickListener {
 				int color;
 				
 				if(i % 2 == 0)
-					color = GlobalSettings.ROW_COLOR;
+					color = GlobalValues.ROW_COLOR;
 				else
 					color = Color.TRANSPARENT;
 				

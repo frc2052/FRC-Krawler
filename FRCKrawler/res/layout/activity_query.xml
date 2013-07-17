@@ -56,6 +56,14 @@
                     android:layout_height="60dp"
                     android:background="@drawable/tab_button"
                     android:text="Bluetooth" />
+
+                <Button
+                    android:id="@+id/optionsTabButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/tab_button"
+                    android:text="Options" />
+
             </LinearLayout>
 
         </ScrollView>
@@ -131,7 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:text="Query Compiled Data"
+            android:text="Compiled Data"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </RelativeLayout>

@@ -18,6 +18,7 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 	
 	private DBManager dbManager;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -33,6 +34,7 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 		dbManager = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.cancel) {
@@ -70,6 +72,7 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 	
 	private class AddTeamTask extends AsyncTask<Team, Void, Boolean> {
 		
+		@Override
 		protected Boolean doInBackground(Team... team) {
 			
 			boolean added = true;
@@ -81,6 +84,7 @@ public class AddTeamDialogActivity extends Activity implements OnClickListener {
 			return added;
 		}
 
+		@Override
 		protected void onPostExecute(Boolean added) {
 			
 			if(added) {

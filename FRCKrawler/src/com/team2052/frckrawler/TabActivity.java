@@ -14,11 +14,9 @@ import java.util.WeakHashMap;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-
-import com.team2052.frckrawler.R;
 
 public class TabActivity extends Activity {
 	
@@ -28,6 +26,7 @@ public class TabActivity extends Activity {
 	private static final WeakHashMap<Integer, TabActivity> instances = 
 			new WeakHashMap<Integer, TabActivity>();
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		instances.put(hashCode(), this);
@@ -40,26 +39,27 @@ public class TabActivity extends Activity {
 	 * listeners on the tab buttons. 
 	 *****/
 	
+	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
 		
 		listener = new TabListener(this);
 		
 		try{
-			((Button)findViewById(R.id.teamsSelectionButton)).setOnClickListener(listener);
-			((Button)findViewById(R.id.usersSelectionButton)).setOnClickListener(listener);
-			((Button)findViewById(R.id.gamesSelectionButton)).setOnClickListener(listener);
-			((Button)findViewById(R.id.bluetoothTabButton)).setOnClickListener(listener);
+			findViewById(R.id.teamsSelectionButton).setOnClickListener(listener);
+			findViewById(R.id.usersSelectionButton).setOnClickListener(listener);
+			findViewById(R.id.gamesSelectionButton).setOnClickListener(listener);
+			findViewById(R.id.bluetoothTabButton).setOnClickListener(listener);
+			findViewById(R.id.optionsTabButton).setOnClickListener(listener);
 			
 		} catch(NullPointerException e) {
 			
-			System.out.println("Error: The tab listeners were not created. " +
+			Log.e("FRCKrawler", "Error: The tab listeners were not created. " +
 					"The given layout did not have the proper IDs.");
 		}
 	}
 	
 	protected void setNoRootActivitySelected() {
-		
 		selectedActivity = TabListener.NONE;
 	}
 	
@@ -72,11 +72,7 @@ public class TabActivity extends Activity {
 	 *****/
 	
 	private static void destroyAllInstances() {
-		
-		TabActivity[] arr = instances.values().toArray(new TabActivity[0]);
-		
-		for(TabActivity a : arr) {
-			
+		for(TabActivity a : instances.values()) {
 			try {
 				a.finish();
 			} catch(NullPointerException e) {}
@@ -102,23 +98,22 @@ public class TabActivity extends Activity {
 		public static final int USERS = 1;
 		public static final int GAMES = 2;
 		public static final int BLUETOOTH = 3;
+		public static final int OPTIONS = 4;
 	
 		private TabActivity user;
 	
 		public TabListener(TabActivity _user) {
-		
 			user = _user;
 		}
 	
+		@Override
 		public void onClick(View v) {
-		
 			Intent i;
 		
 			switch (v.getId()) {
 				case R.id.teamsSelectionButton :
 				
 					if(selectedActivity != TEAMS) {
-					
 						i = new Intent(user, TeamsActivity.class);
 						user.startActivity(i);
 						selectedActivity = TEAMS;
@@ -130,7 +125,6 @@ public class TabActivity extends Activity {
 				case R.id.usersSelectionButton :
 				
 					if(selectedActivity != USERS) {
-					
 						i = new Intent(user, UsersActivity.class);
 						user.startActivity(i);
 						selectedActivity = USERS;
@@ -142,7 +136,6 @@ public class TabActivity extends Activity {
 				case R.id.gamesSelectionButton :
 				
 					if(selectedActivity != GAMES) {
-					
 						i = new Intent(user, GamesActivity.class);
 						user.startActivity(i);
 						selectedActivity = GAMES;
@@ -154,13 +147,21 @@ public class TabActivity extends Activity {
 				case R.id.bluetoothTabButton :
 					
 					if(selectedActivity != BLUETOOTH) {
-					
 						i = new Intent(user, BluetoothServerManagerActivity.class);
 						user.startActivity(i);
 						selectedActivity = BLUETOOTH;
 						destroyAllInstances();
 					}
 				
+					break;
+					
+				case R.id.optionsTabButton :
+					if(selectedActivity != OPTIONS) {
+						i = new Intent(user, OptionsActivity.class);
+						user.startActivity(i);
+						selectedActivity = OPTIONS;
+					}
+					
 					break;
 			}
 		}

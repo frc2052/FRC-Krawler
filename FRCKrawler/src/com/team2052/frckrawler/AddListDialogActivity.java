@@ -16,6 +16,7 @@ public class AddListDialogActivity extends Activity implements OnClickListener {
 	public static final int REQUEST_REFRESH_CODE = 1;
 	public static final String EVENT_ID_EXTRA = "com.team2052.frckralwer.eventIDExtra";
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialogactivity_add_list);

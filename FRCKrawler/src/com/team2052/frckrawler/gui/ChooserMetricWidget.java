@@ -31,17 +31,20 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
 		((TextView)findViewById(R.id.name)).setText(m.getMetric().getMetricName());
 	}
 
+	@Override
 	public String[] getValues() {
 		
 		return new String[] {value};
 	}
 
+	@Override
 	public void onItemSelected(AdapterView<?> a, View arg1, int arg2,
 			long arg3) {
 		
 		value = (String)a.getSelectedItem();
 	}
 
+	@Override
 	public void onNothingSelected(AdapterView<?> a) {
 		
 		a.setSelection(0);

@@ -2,7 +2,6 @@ package com.team2052.frckrawler.gui;
 
 import java.util.ArrayList;
 
-import android.util.Log;
 import android.widget.RadioButton;
 
 public class AbstractRadioGroup {

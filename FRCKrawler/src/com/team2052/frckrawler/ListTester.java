@@ -1,7 +1,5 @@
 package com.team2052.frckrawler;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +13,7 @@ public class ListTester extends Activity implements OnClickListener {
 	
 	ListEditor list;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_tester);
@@ -23,6 +22,7 @@ public class ListTester extends Activity implements OnClickListener {
 		findViewById(R.id.print).setOnClickListener(this);
 	}
 	
+	@Override
 	public void onResume() {
 		super.onResume();
 		list = new TextListEditor(this);

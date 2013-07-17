@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -33,6 +32,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 	private DBManager db;
 	private Robot[] robotChoices;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -49,6 +49,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 		db = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onResume() {
 		super.onResume();
 		
@@ -115,6 +116,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 		((Spinner)findViewById(R.id.gameType)).setSelection(selectedMatchTypePos);
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.save) {
@@ -181,6 +183,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 		}
 	}
 
+	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		
 		if(which == DialogInterface.BUTTON_POSITIVE) {

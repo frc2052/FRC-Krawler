@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.database.structures;
 
-import java.io.Serializable;
 import java.util.Date;
 
 public class Event implements Structure {

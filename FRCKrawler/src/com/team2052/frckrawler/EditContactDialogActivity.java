@@ -20,6 +20,7 @@ public class EditContactDialogActivity extends Activity implements OnClickListen
 	
 	private DBManager db;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -32,6 +33,7 @@ public class EditContactDialogActivity extends Activity implements OnClickListen
 		db = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onStart() {
 		
 		super.onStart();
@@ -52,6 +54,7 @@ public class EditContactDialogActivity extends Activity implements OnClickListen
 		((EditText)findViewById(R.id.phone)).setText(c.getPhoneNumber());
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.save) {
@@ -91,6 +94,7 @@ public class EditContactDialogActivity extends Activity implements OnClickListen
 		}
 	}
 
+	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		
 		if(which == DialogInterface.BUTTON_POSITIVE) {

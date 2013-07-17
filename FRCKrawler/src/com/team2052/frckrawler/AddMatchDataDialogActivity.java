@@ -28,6 +28,7 @@ public class AddMatchDataDialogActivity extends Activity implements OnClickListe
 	private DBManager db;
 	private Robot[] robotChoices;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -43,6 +44,7 @@ public class AddMatchDataDialogActivity extends Activity implements OnClickListe
 		db = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onResume() {
 		
 		super.onResume();
@@ -75,6 +77,7 @@ public class AddMatchDataDialogActivity extends Activity implements OnClickListe
 		}
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.addData) {

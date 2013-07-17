@@ -12,6 +12,7 @@ import com.team2052.frckrawler.database.structures.User;
 
 public class AddUserDialogActivity extends Activity implements OnClickListener {
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -21,6 +22,7 @@ public class AddUserDialogActivity extends Activity implements OnClickListener {
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 	}
 	
+	@Override
 	public void onClick(View v) {
 		
 		switch(v.getId()) {

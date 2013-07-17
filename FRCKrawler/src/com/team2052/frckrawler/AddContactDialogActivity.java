@@ -15,6 +15,7 @@ public class AddContactDialogActivity extends Activity implements OnClickListene
 	
 	public static final String TEAM_NUMBER_EXTRA = "com.team2052.frckrawler.teamNumberExtra";
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -24,6 +25,7 @@ public class AddContactDialogActivity extends Activity implements OnClickListene
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 	}
 	
+	@Override
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.addContact) {

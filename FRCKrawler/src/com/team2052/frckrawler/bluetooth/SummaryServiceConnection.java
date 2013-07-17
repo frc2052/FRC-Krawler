@@ -16,15 +16,18 @@ public class SummaryServiceConnection implements ClientConnection {
 		listener = _listener;
 	}
 
+	@Override
 	public void onServiceConnected(ComponentName c, IBinder i) {
 		binder = (SummaryBinder)i;
 		binder.setListener(listener);
 	}
 
+	@Override
 	public void onServiceDisconnected(ComponentName i) {
 		closeBTConnection();
 	}
 	
+	@Override
 	public void closeBTConnection() {
 		if(binder != null)
 			binder.closeConnection();

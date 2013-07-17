@@ -15,6 +15,7 @@ public class AddGameDialogActivity extends Activity implements OnClickListener {
 	
 	private DBManager dbManager;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -34,6 +35,7 @@ public class AddGameDialogActivity extends Activity implements OnClickListener {
 	 * saves the new game in the database, or exits this activity.
 	 *****/
 	
+	@Override
 	public void onClick(View v) {
 		
 		switch(v.getId()) {

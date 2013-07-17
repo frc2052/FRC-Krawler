@@ -18,6 +18,7 @@ public class CommentsActivity extends StackableTabActivity implements OnClickLis
 	
 	private static final int EDIT_COMMENT_BUTTON_ID = 0;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -26,6 +27,7 @@ public class CommentsActivity extends StackableTabActivity implements OnClickLis
 		((Button)findViewById(R.id.addComment)).setOnClickListener(this);
 	}
 	
+	@Override
 	public void onResume() {
 		
 		super.onResume();
@@ -55,6 +57,7 @@ public class CommentsActivity extends StackableTabActivity implements OnClickLis
 		}
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		Intent i;

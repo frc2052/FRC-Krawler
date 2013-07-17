@@ -1,10 +1,6 @@
 package com.team2052.frckrawler;
 
-import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.gui.SidewaysTextView;
-
 import android.os.Bundle;
-import android.widget.LinearLayout;
 
 public class StackableTabActivity extends TabActivity {
 	
@@ -16,6 +12,7 @@ public class StackableTabActivity extends TabActivity {
 	protected String[] databaseValues;
 	protected String[] databaseKeys;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -36,6 +33,7 @@ public class StackableTabActivity extends TabActivity {
 		setNoRootActivitySelected();
 	}
 	
+	@Override
 	public void onStart() {
 		
 		super.onStart();

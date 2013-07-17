@@ -87,7 +87,7 @@ public class ScoutMatchDataActivity extends Activity implements OnClickListener 
 				int color;
 				
 				if(i % 2 == 0)
-					color = GlobalSettings.ROW_COLOR;
+					color = GlobalValues.ROW_COLOR;
 				else
 					color = Color.TRANSPARENT;
 				
@@ -97,7 +97,7 @@ public class ScoutMatchDataActivity extends Activity implements OnClickListener 
 				MyButton editButton = new MyButton(ScoutMatchDataActivity.this, "Edit Data", 
 						ScoutMatchDataActivity.this);
 				editButton.setId(EDIT_BUTTON_ID);
-				editButton.setTag((Integer)matchData[i].getMatchID());
+				editButton.setTag(matchData[i].getMatchID());
 				row.addView(editButton);
 				
 				for(int k = 0; k < robots.length; k++) {

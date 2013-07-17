@@ -30,6 +30,7 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 	private BluetoothSummaryClientThread clientThread;
 	private SummaryBinder binder;
 	
+	@Override
 	public void onCreate() {
 		
 		super.onCreate();
@@ -119,6 +120,7 @@ public class BluetoothSummaryClientService extends Service implements ClientThre
 			threadListener = _listener;
 		}
 		
+		@Override
 		public void run() {
 			
 			try {

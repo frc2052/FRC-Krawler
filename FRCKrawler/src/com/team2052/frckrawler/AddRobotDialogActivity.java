@@ -22,6 +22,7 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 	
 	private DBManager dbManager;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -36,6 +37,7 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 		dbManager = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onResume() {
 		
 		super.onResume();
@@ -56,6 +58,7 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 		gameSpinner.setAdapter(adapter);
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		switch(v.getId()) {
@@ -100,6 +103,7 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 		}
 	}
 	
+	@Override
 	public void onItemSelected(AdapterView<?> adapter, View v, int selectedItem,
 			long id) {
 		
@@ -118,6 +122,7 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 		}
 	}
 	
+	@Override
 	public void onNothingSelected(AdapterView<?> adapter) {
 		
 		((ListView)findViewById(R.id.metricList)).removeAllViews();

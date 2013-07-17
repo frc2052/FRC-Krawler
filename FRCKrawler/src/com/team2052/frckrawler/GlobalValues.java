@@ -2,7 +2,7 @@ package com.team2052.frckrawler;
 
 import android.graphics.Color;
 
-public class GlobalSettings {
+public class GlobalValues {
 	
 	/**
 	 * The weightingRatio is how much more the next match

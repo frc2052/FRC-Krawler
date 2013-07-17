@@ -40,11 +40,13 @@ public class BluetoothServerService extends Service {
 	
 	private BluetoothServerThread serverThread;
 	
+	@Override
 	public void onCreate() {
 		super.onCreate();
 		serverThread = new BluetoothServerThread(getApplicationContext());
 	}
 	
+	@Override
 	public int onStartCommand(Intent i, int flags, int startId) {
 		Event[] eventArr = DBManager.getInstance(this).getEventsByColumns
 			(new String[] {DBContract.COL_EVENT_ID}, 
@@ -63,10 +65,12 @@ public class BluetoothServerService extends Service {
 		return START_REDELIVER_INTENT;
 	}
 	
+	@Override
 	public void onDestroy() {
 		serverThread.closeServer();
 	}
 	
+	@Override
 	public IBinder onBind(Intent i) {
 		return new CloseBinder(this);
 	}
@@ -129,6 +133,7 @@ public class BluetoothServerService extends Service {
 			dbManager = DBManager.getInstance(context);
 		}
 		
+		@Override
 		public void run() {
 			isActive = true;
 			
@@ -294,6 +299,7 @@ public class BluetoothServerService extends Service {
 			dbManager = DBManager.getInstance(_context);
 		}
 		
+		@Override
 		public void run() {
 			
 			Event inEvent = null;

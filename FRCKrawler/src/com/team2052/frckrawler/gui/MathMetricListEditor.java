@@ -17,6 +17,7 @@ public class MathMetricListEditor extends ListEditor implements
 		choices = _choices;
 	}
 
+	@Override
 	protected void onAddButtonClicked() {
 		
 		CharSequence[] c = new CharSequence[choices.length];
@@ -30,6 +31,7 @@ public class MathMetricListEditor extends ListEditor implements
 		builder.show();
 	}
 
+	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		
 		addValue(Integer.toString(choices[which].getID()), choices[which].getMetricName());

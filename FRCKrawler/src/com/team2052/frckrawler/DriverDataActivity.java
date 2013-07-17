@@ -10,6 +10,7 @@ import android.widget.TableRow;
 
 public class DriverDataActivity extends StackableTabActivity implements OnClickListener {
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -18,6 +19,7 @@ public class DriverDataActivity extends StackableTabActivity implements OnClickL
 		findViewById(R.id.addData).setOnClickListener(this);
 	}
 	
+	@Override
 	public void onResume() {
 		
 		super.onResume();
@@ -29,6 +31,7 @@ public class DriverDataActivity extends StackableTabActivity implements OnClickL
 		table.addView(descriptorsRow);
 	}
 	
+	@Override
 	public void onClick(View v) {
 		
 		

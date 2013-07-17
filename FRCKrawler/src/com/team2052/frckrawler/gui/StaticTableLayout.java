@@ -38,10 +38,12 @@ public class StaticTableLayout extends FrameLayout {
 		staticSideTable = (TableLayout)findViewById(R.id.staticSideTable);
 	}
 	
+	@Override
 	public void addView(View child) {
 		mainTable.addView(child);
 	}
 	
+	@Override
 	public void addView(View child, int pos) {
 		mainTable.addView(child, pos);
 	}
@@ -54,6 +56,7 @@ public class StaticTableLayout extends FrameLayout {
 		addView(child);
 	}
 	
+	@Override
 	public void removeAllViews() {
 		staticSideTable.removeAllViews();
 		mainTable.removeAllViews();

@@ -46,10 +46,12 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
 		((TextView)findViewById(R.id.value)).setText(Integer.toString(currentValue));
 	}
 
+	@Override
 	public String[] getValues() {
 		return new String[] {Integer.toString(currentValue)};
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.plus) {

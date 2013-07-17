@@ -20,6 +20,7 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 	
 	private DBManager dbManager;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -34,6 +35,7 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 		dbManager = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onResume() {
 		
 		super.onResume();
@@ -57,6 +59,7 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 		}
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		switch(v.getId()) {

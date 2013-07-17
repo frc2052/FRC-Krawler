@@ -32,6 +32,7 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 	private volatile Metric[] pitMetrics;
 	private ArrayList<Metric> sortMetrics;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialogactivity_query_and_sorting);
@@ -45,6 +46,7 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 		new GetDataTask().execute();
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.cancel) {

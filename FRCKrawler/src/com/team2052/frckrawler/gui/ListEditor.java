@@ -41,6 +41,7 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
 	
 	protected abstract void onAddButtonClicked();
 	
+	@Override
 	public void onClick(View v) {
 		if(isEnabled()) {
 			if(v.getId() == ADD_BUTTON_ID) {

@@ -26,6 +26,7 @@ public class EditMetricDialogActivity extends Activity implements OnClickListene
 	private DBManager db;
 	private ListEditor list;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -156,6 +157,7 @@ public class EditMetricDialogActivity extends Activity implements OnClickListene
 		}
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		DBManager db = DBManager.getInstance(this);

@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
@@ -36,6 +34,7 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 	private TableLayout table;
 	private Metric[] metrics;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -64,6 +63,7 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 		dbManager = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onResume() {
 		super.onResume();
 		new GetMetricsTask().execute();
@@ -216,7 +216,7 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 				int color;
 				
 				if(i % 2 == 0)
-					color = GlobalSettings.ROW_COLOR;
+					color = GlobalValues.ROW_COLOR;
 				else
 					color = Color.TRANSPARENT;
 				
@@ -231,7 +231,7 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 				MyButton editButton = new MyButton(MetricsActivity.this, "Edit Metric", MetricsActivity.this, 
 						Integer.valueOf(metrics[i].getID()));
 				editButton.setId(EDIT_BUTTON_ID);
-				editButton.setTag((Integer)metrics[i].getID());
+				editButton.setTag(metrics[i].getID());
 				
 				String descriptionString;
 				

@@ -32,11 +32,13 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
 		}
 	}
 
+	@Override
 	public String[] getValues() {
 		
 		return new String[] {Boolean.toString(value)};
 	}
 
+	@Override
 	public void onClick(View view) {
 	    
 	    boolean checked = ((RadioButton)view).isChecked();

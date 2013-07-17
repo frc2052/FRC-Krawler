@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.database.DBContract;
@@ -33,6 +32,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 	private DBManager dbManager;
 	private GetTeamsTask getTeamsTask;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -48,11 +48,19 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		getTeamsTask.execute(this);
 	}
 	
+	@Override
 	public void onStop() {
 		super.onStop();
 		getTeamsTask.cancel(true);
 	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		setNoRootActivitySelected();
+	}
 
+	@Override
 	public void onClick(View v) {
 		
 		Intent i;
@@ -115,6 +123,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		}
 	}
 	
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == RESULT_OK) {
 			getTeamsTask = new GetTeamsTask();
@@ -126,6 +135,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		
 		private StaticTableLayout table;
 		
+		@Override
 		protected void onPreExecute() {
 			((FrameLayout)findViewById(R.id.progressFrame)).
 				addView(new ProgressSpinner(getApplicationContext()));
@@ -136,6 +146,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			teamCount = -1;
 		}
 		
+		@Override
 		protected Void doInBackground(TeamsActivity... activities) {
 			TeamsActivity activity = activities[0];
 			MyTableRow staticDescriptorsRow = new MyTableRow(activity);
@@ -160,7 +171,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				
 				int color;
 				if(i % 2 == 0)
-					color = GlobalSettings.ROW_COLOR;
+					color = GlobalValues.ROW_COLOR;
 				else
 					color = Color.TRANSPARENT;
 				
@@ -218,11 +229,13 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			teamCount++;
 		}
 		
+		@Override
 		protected void onPostExecute(Void v) {
 			((TextView)findViewById(R.id.titke)).setText(teamCount + " Teams");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 		
+		@Override
 		protected void onCancelled(Void v) {
 			((TextView)findViewById(R.id.titke)).setText(teamCount + " Teams");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();

@@ -33,6 +33,7 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 	private Robot robot;
 	private Uri imageFile;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pictures);
@@ -41,6 +42,7 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 		refreshImage();
 	}
 	
+	@Override
 	public void onClick(View v) {
 		if(v.getId() == R.id.changePicture && getPackageManager().
 				hasSystemFeature(PackageManager.FEATURE_CAMERA)) {

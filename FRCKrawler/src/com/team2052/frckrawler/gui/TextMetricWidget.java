@@ -27,16 +27,20 @@ public class TextMetricWidget extends MetricWidget implements TextWatcher {
 		((TextView)findViewById(R.id.name)).setText(m.getMetric().getMetricName());
 	}
 
+	@Override
 	public String[] getValues() {
 		
 		return new String[] {textVal};
 	}
 
+	@Override
 	public void afterTextChanged(Editable e) {
 		
 		textVal = e.toString();
 	}
 	
+	@Override
 	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
+	@Override
 	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
 }

@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
-import com.team2052.frckrawler.GlobalSettings;
+import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.database.structures.Comment;
 import com.team2052.frckrawler.database.structures.CompiledData;
 import com.team2052.frckrawler.database.structures.Contact;
@@ -2998,7 +2998,7 @@ public class DBManager {
 										int value = Integer.parseInt(valueArray[0]);
 										double matchPlayed = matchCount;
 										double weight = Math.pow
-												(GlobalSettings.weightingRatio, 
+												(GlobalValues.weightingRatio, 
 														matchPlayed);
 									
 										numerator += value * weight;
@@ -3058,7 +3058,7 @@ public class DBManager {
 									DecimalFormat format = new DecimalFormat("0.0");
 									compiledValue[choiceCount] = range[choiceCount] + " " +
 											format.format((counts[choiceCount] / 
-													(double)matchData.length) * 100) + "%";
+													matchData.length) * 100) + "%";
 
 									chooserCounts[choiceCount] = (int)counts[choiceCount];
 								}
@@ -3097,7 +3097,7 @@ public class DBManager {
 									int value = Integer.parseInt(valueArray[0]);
 									double matchPlayed = matchCount;
 									double weight = Math.pow
-											(GlobalSettings.weightingRatio, 
+											(GlobalValues.weightingRatio, 
 													matchPlayed);
 								
 									numerator += value * weight;
@@ -3161,7 +3161,7 @@ public class DBManager {
 								
 								double matchPlayed = matchCount;
 								double weight = Math.pow
-										(GlobalSettings.weightingRatio, 
+										(GlobalValues.weightingRatio, 
 												matchPlayed);
 							
 								mathNumerator += matchVal * weight;

@@ -7,6 +7,7 @@ public class EditCompetitionDataDialogActvity extends Activity {
 	
 	public static final String DATA_ID_EXTRA = "com.team2052.frckrawler.dataIDExtra";
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);

@@ -16,6 +16,7 @@ public class ContactsActivity extends StackableTabActivity implements OnClickLis
 	
 	private static final int EDIT_BUTTON_ID = 1;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -24,6 +25,7 @@ public class ContactsActivity extends StackableTabActivity implements OnClickLis
 		findViewById(R.id.addContact).setOnClickListener(this);
 	}
 	
+	@Override
 	public void onResume() {
 		
 		super.onResume();
@@ -42,7 +44,7 @@ public class ContactsActivity extends StackableTabActivity implements OnClickLis
 			int color;
 			
 			if(i % 2 == 0)
-				color = GlobalSettings.ROW_COLOR;
+				color = GlobalValues.ROW_COLOR;
 			else
 				color = Color.TRANSPARENT;
 			
@@ -60,6 +62,7 @@ public class ContactsActivity extends StackableTabActivity implements OnClickLis
 		}
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		Intent i;

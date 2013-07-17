@@ -17,6 +17,7 @@ public class EditListDialogActivity extends Activity implements OnClickListener 
 	private List list;
 	private DBManager dbManager;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialogactivity_edit_list);

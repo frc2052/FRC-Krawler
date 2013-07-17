@@ -143,7 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="91dp"
                 android:layout_weight="0.49"
-                android:onClick="hostCompetition"
+                android:onClick="openAdminInterface"
                 android:text="Administer"
                 android:textSize="18sp" />
         </LinearLayout>

@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.gui;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 

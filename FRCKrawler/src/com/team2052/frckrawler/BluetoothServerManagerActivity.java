@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
@@ -44,6 +43,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 	
 	private Event[] events;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -58,6 +58,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 		dbManager = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onResume() {
 		super.onResume();
 		
@@ -74,6 +75,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 		}
 	}
 	
+	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {
 			case R.id.chooseEvent:
@@ -157,6 +159,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 					bu.setMessage("FRCKrawler could not import your database. Your device " +
 							"does not have an SD card mounted.");
 					bu.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
 						}
@@ -187,6 +190,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 							bu.setTitle("Import Success!");
 							bu.setMessage("Imported the database.");
 							bu.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.dismiss();
 								}
@@ -200,6 +204,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 			            			"FRCKrawlerBackup.db in your SD card's " +
 			            			"root folder.");
 							bu.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.dismiss();
 								}
@@ -227,6 +232,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 							"SD card. Your device does not have an SD card, or it is not " +
 							"available for writing at the moment.");
 					b.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
 						}
@@ -270,6 +276,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 				b.setMessage("Exported file to the SD card. File saved as " +
 						"FRCKrawlerBackup.db in the SD card's root directory.");
 				b.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 					}
@@ -280,6 +287,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 		}
 	}
 
+	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		
 		selectedEvent = events[which];
@@ -288,6 +296,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 		dialog.dismiss();
 	}
 	
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
 		if(requestCode == REQUEST_BT_ENABLED && resultCode == RESULT_OK) {
@@ -301,12 +310,14 @@ public class BluetoothServerManagerActivity extends TabActivity
 	
 	private class ServerCloseConnection implements ServiceConnection {
 
+		@Override
 		public void onServiceConnected(ComponentName comp, IBinder binder) {
 			
 			CloseBinder closeBinder = (CloseBinder)binder;
 			closeBinder.closeServer();
 		}
 
+		@Override
 		public void onServiceDisconnected(ComponentName comp) {
 			
 			
@@ -364,6 +375,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 			return true;
 		}
 		
+		@Override
 		protected void onPostExecute(Boolean b) {
 			AlertDialog.Builder builder = new AlertDialog.Builder
 					(BluetoothServerManagerActivity.this);

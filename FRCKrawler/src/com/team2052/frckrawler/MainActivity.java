@@ -46,18 +46,18 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 	private ClientConnection summaryConnection;
 	private EditText scoutLoginName;
 
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override
+	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
         findViewById(R.id.continueScouting).setOnClickListener(this);
         findViewById(R.id.sync_summary).setOnClickListener(this);
         findViewById(R.id.view_summary).setOnClickListener(this);
-        
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
     
-    public void onDestroy() {
+    @Override
+	public void onDestroy() {
 		super.onDestroy();
 		
 		try {
@@ -79,7 +79,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
      * @param view
      */
     public void joinCompetition(View view) {
-    	
     	if(BluetoothAdapter.getDefaultAdapter() == null) {
 			Toast.makeText(this, "Sorry, your device does not support Bluetooth. " +
 					"You are unable to sync with a server.", Toast.LENGTH_LONG);
@@ -99,21 +98,38 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		builder.show();
     }
     
-    /*
-     * Hosts a competition with superuser access
+    
+    /*****
+     * Method: startAdminInterface
+     * 
+     * @param view
+     * 
+     * Summary: Opens the BluetoothServerManagerActivity when the 'Administer' button
+     * is pressed. This is used instead of the older login.
+     */
+    public void openAdminInterface(View view) {
+    	Intent i = new Intent(getApplicationContext(), 
+				BluetoothServerManagerActivity.class);
+		startActivity(i);
+    }
+    
+    /* !THIS FEATURE IS NOT CURRENTLY USED!
+     * It was decided that the login will only frustrate and slow user's
+     * navigation through the app.
+     * 
+     * Brings up the login screen for administrators and signs them 
+     * in with the correct password.
      * 
      * @param view
      */
     public void hostCompetition(final View view) {
- 
-    	
     	final AlertDialog.Builder login = new AlertDialog.Builder(this);
     	login
-    		.setTitle("Superuser Login")
+    		.setTitle("Admin Login")
     		.setCancelable(false);
     	
     	final EditText username = new EditText(context);
-    	username.setHint("Superuser Password");
+    	username.setHint("Admin Password");
     	login.setView(username);
     	
     	login.setPositiveButton("Login", new DialogInterface.OnClickListener() {
@@ -129,10 +145,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 					startActivity(i);
 					
 				} else {
-					
 					Toast.makeText(getApplicationContext(), "Login failed.", 
 							Toast.LENGTH_SHORT).show();
-					
 					dialog.dismiss();
 				}
 			}
@@ -176,6 +190,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
     	alertName.show();
     }
     
+	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		
 		if(which == DialogInterface.BUTTON_NEUTRAL) {
@@ -203,7 +218,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				
 				
 				SharedPreferences prefs = getSharedPreferences
-						(GlobalSettings.PREFS_FILE_NAME, 0);
+						(GlobalValues.PREFS_FILE_NAME, 0);
 				Editor prefsEditor = prefs.edit();
 				
 				Intent i = new Intent(this, BluetoothScoutClientService.class);
@@ -211,7 +226,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 						devices[which].getAddress());
 				connection = new ScoutServiceConnection(this);
 				bindService(i, connection, Context.BIND_AUTO_CREATE);
-				prefsEditor.putString(GlobalSettings.MAC_ADRESS_PREF, 
+				prefsEditor.putString(GlobalValues.MAC_ADRESS_PREF, 
 						devices[selectedDeviceAddress].getAddress());
 			
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -229,12 +244,13 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		}
 	}
 	
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
 		if(requestCode == REQUEST_BT_ENABLE && resultCode == RESULT_OK) {
 			
 			SharedPreferences prefs = getSharedPreferences
-					(GlobalSettings.PREFS_FILE_NAME, 0);
+					(GlobalValues.PREFS_FILE_NAME, 0);
 			Editor prefsEditor = prefs.edit();
 			
 			Intent i = new Intent(this, BluetoothScoutClientService.class);
@@ -242,7 +258,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 					devices[selectedDeviceAddress].getAddress());
 			connection = new ScoutServiceConnection(this);
 			bindService(i, connection, Context.BIND_AUTO_CREATE);
-			prefsEditor.putString(GlobalSettings.MAC_ADRESS_PREF, 
+			prefsEditor.putString(GlobalValues.MAC_ADRESS_PREF, 
 					devices[selectedDeviceAddress].getAddress());
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -263,9 +279,11 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
     	startActivity(i);
     }
 
+	@Override
 	public void onSuccessfulSync() {
 		
 		runOnUiThread(new Runnable() {
+			@Override
 			public void run() {
 				connection.closeBTConnection();
 				unbindService(connection);
@@ -289,12 +307,14 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		});
 	}
 
+	@Override
 	public void onUnsuccessfulSync(String _errorMessage) {
 		
 		final String errorMessage = _errorMessage;
 		
 		runOnUiThread(new Runnable() {
 			
+			@Override
 			public void run() {
 				connection.closeBTConnection();
 				unbindService(connection);
@@ -308,12 +328,14 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		
 	}
 	
+	@Override
 	public void onUpdate(String _message) {
 		
 		final String message = _message;
 		
 		runOnUiThread(new Runnable() {
 			
+			@Override
 			public void run() {
 				Toast.makeText(getApplicationContext(), message, 
 						Toast.LENGTH_SHORT).show();
@@ -333,7 +355,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				
 				for(User u : users) {
 					if(u.getName().equals(scoutLoginName.getText().toString())) {
-						GlobalSettings.userID = u.getID();
+						GlobalValues.userID = u.getID();
 						isValid = true;
 					}
 				}
@@ -467,6 +489,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			
 			runOnUiThread(new Runnable() {
 				
+				@Override
 				public void run() {
 					
 					progressDialog.dismiss();
@@ -493,6 +516,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			
 			runOnUiThread(new Runnable() {
 				
+				@Override
 				public void run() {
 					summaryConnection.closeBTConnection();
 					
@@ -515,6 +539,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			
 			runOnUiThread(new Runnable() {
 				
+				@Override
 				public void run() {
 					Toast.makeText(getApplicationContext(), message, 
 							Toast.LENGTH_SHORT).show();

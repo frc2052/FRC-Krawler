@@ -54,6 +54,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	private DBManager dbManager;
 	private GetCompiledDataTask getDataTask;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_query);
@@ -67,11 +68,13 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		getDataTask.execute(this);
 	}
 	
+	@Override
 	public void onStop() {
 		super.onStop();
 		getDataTask.cancel(true);
 	}
 	
+	@Override
 	public void onClick(View v) {
 		Intent i;
 		AlertDialog.Builder builder;
@@ -206,6 +209,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		private int dataNum;
 		private StaticTableLayout table;
 											
+		@Override
 		protected void onPreExecute() {
 			dataNum = 0;
 			((FrameLayout)findViewById(R.id.progressFrame)).
@@ -215,6 +219,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			table.removeAllViews();
 		}
 
+		@Override
 		protected Void doInBackground(QueryActivity... params) {
 			QueryActivity activity = params[0];
 			
@@ -315,8 +320,8 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				int buttonColor;
 				
 				if(dataCount % 2 == 0) {
-					color = GlobalSettings.ROW_COLOR;
-					buttonColor = GlobalSettings.BUTTON_COLOR;
+					color = GlobalValues.ROW_COLOR;
+					buttonColor = GlobalValues.BUTTON_COLOR;
 				} else {
 					color = Color.TRANSPARENT;
 					buttonColor = Color.rgb(30, 30, 30);
@@ -350,7 +355,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				MyButton addToListButton = new MyButton(
 						activity, "Add To List", activity);
 				addToListButton.setId(ADD_TO_LIST_BUTTON_ID);
-				addToListButton.setTag((Integer)data[dataCount].getRobot().getID());
+				addToListButton.setTag(data[dataCount].getRobot().getID());
 				
 				staticRow.addView(new MyTextView(activity, Integer.toString(
 						data[dataCount].getRobot().getTeamNumber()), 18));
@@ -474,6 +479,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			return null;
 		}
 		
+		@Override
 		protected void onProgressUpdate(MyTableRow... rows) {
 			if(rows.length > 1) {
 				table.addViewToStaticTable(rows[0]);
@@ -484,11 +490,13 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			}
 		}
 		
+		@Override
 		protected void onPostExecute(Void v) {
 			((TextView)findViewById(R.id.compiledNumber)).setText(dataNum + " Robots");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 		
+		@Override
 		protected void onCancelled(Void v) {
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}

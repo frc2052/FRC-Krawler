@@ -25,8 +25,8 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 	
 	private DBManager dbManager;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_games);
 		
@@ -36,10 +36,16 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 		dbManager = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onResume() {
-		
 		super.onResume();
 		new GetGamesTask().execute();
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		setNoRootActivitySelected();
 	}
 	
 	public void postResults(Game[] games) {
@@ -52,7 +58,7 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 			int color;
 			
 			if(i % 2 == 0)
-				color = GlobalSettings.ROW_COLOR;
+				color = GlobalValues.ROW_COLOR;
 			else
 				color = Color.TRANSPARENT;
 			
@@ -79,6 +85,7 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 	 * Summary: This is the listener for the Views on this activity.
 	 *****/
 	
+	@Override
 	public void onClick(View v) {
 		
 		Intent i;
@@ -129,10 +136,12 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 	
 	private class GetGamesTask extends AsyncTask<Void, Void, Game[]> {
 		
+		@Override
 		protected Game[] doInBackground(Void... params) {
 			return dbManager.getAllGames();
 		}
 		
+		@Override
 		protected void onPostExecute(Game[] games) {
 			((TextView)findViewById(R.id.gamesNum)).setText(games.length + " Games");
 			postResults(games);

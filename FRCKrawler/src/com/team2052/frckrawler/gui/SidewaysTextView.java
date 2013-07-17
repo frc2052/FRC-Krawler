@@ -32,11 +32,13 @@ public class SidewaysTextView extends TextView {
 		direction = _direction;
 	}
 	
-	 protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
+	 @Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
 		    super.onMeasure(heightMeasureSpec, widthMeasureSpec);
 		    setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());
 	}
 	
+	@Override
 	public void onDraw(Canvas canvas) {
 		
 	    TextPaint textPaint = getPaint(); 

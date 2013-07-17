@@ -20,6 +20,7 @@ public class UsersActivity extends TabActivity implements OnClickListener{
 	
 	private DBManager dbManager;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -30,10 +31,17 @@ public class UsersActivity extends TabActivity implements OnClickListener{
 		dbManager = DBManager.getInstance(this);
 	}
 	
+	@Override
 	public void onResume() {
 		
 		super.onResume();
 		new GetUsersTask().execute();
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		setNoRootActivitySelected();
 	}
 	
 	public void postResults(User[] users) {
@@ -46,7 +54,7 @@ public class UsersActivity extends TabActivity implements OnClickListener{
 			int color = Color.TRANSPARENT;
 			
 			if(i % 2 != 0)
-				color = GlobalSettings.ROW_COLOR;
+				color = GlobalValues.ROW_COLOR;
 			
 			table.addView(new MyTableRow(this, new View[] {
 					new MyButton(this, "Edit User", this, Integer.valueOf(users[i].getID())),
@@ -63,6 +71,7 @@ public class UsersActivity extends TabActivity implements OnClickListener{
 	 * is making a new implementation of Button.
 	 *****/
 	
+	@Override
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.addUser) {
@@ -80,10 +89,12 @@ public class UsersActivity extends TabActivity implements OnClickListener{
 	
 	private class GetUsersTask extends AsyncTask<Void, Void, User[]> {
 		
+		@Override
 		protected User[] doInBackground(Void... params) {
 			return dbManager.getAllUsers();
 		}
 		
+		@Override
 		protected void onPostExecute(User[] users) {
 			((TextView)findViewById(R.id.usersNum)).setText(users.length + " Users");
 			postResults(users);

@@ -6,21 +6,18 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
-
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
-import com.team2052.frckrawler.database.structures.Game;
 
 public class AddEventDialogActivity extends Activity implements OnClickListener {
 	
 	public static final String GAME_NAME_EXTRA = "com.team2052.frckrawler.gameNameExtra";
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -30,6 +27,7 @@ public class AddEventDialogActivity extends Activity implements OnClickListener 
 		((Button)findViewById(R.id.cancel)).setOnClickListener(this);
 	}
 	
+	@Override
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.addEvent) {

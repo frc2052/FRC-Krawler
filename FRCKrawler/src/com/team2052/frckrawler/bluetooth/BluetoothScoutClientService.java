@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.UUID;
 
 import android.app.Service;
@@ -20,12 +19,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.structures.DriverData;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.Robot;
-import com.team2052.frckrawler.database.structures.StringSet;
 import com.team2052.frckrawler.database.structures.User;
 
 public class BluetoothScoutClientService extends Service 
@@ -37,6 +34,7 @@ public class BluetoothScoutClientService extends Service
 	private BluetoothClientThread clientThread;
 	private ClientBinder binder;
 	
+	@Override
 	public void onCreate() {
 		
 		super.onCreate();
@@ -44,12 +42,14 @@ public class BluetoothScoutClientService extends Service
 		Log.d("FRCKrawler", "Service created.");
 	}
 	
+	@Override
 	public void onDestroy() {
 		
 		clientThread.closeClient();
 		Log.d("FRCKrawler", "Client service destroyed.");
 	}
 	
+	@Override
 	public IBinder onBind(Intent i) {
 		
 		Log.d("FRCKrawler", "Service bound");
@@ -66,6 +66,7 @@ public class BluetoothScoutClientService extends Service
 		return binder;
 	}
 	
+	@Override
 	public boolean onUnbind(Intent i) {
 		
 		binder = null;
@@ -80,18 +81,21 @@ public class BluetoothScoutClientService extends Service
 	/*
 	 * Methods for the ClientThreadListener
 	 */
+	@Override
 	public void onSuccessfulSync() {
 		
 		if(binder != null && binder.getListener() != null) 
 			binder.getListener().onSuccessfulSync();
 	}
 	
+	@Override
 	public void onUnsuccessfulSync(String errorMessage) {
 		
 		if(binder != null && binder.getListener() != null) 
 			binder.getListener().onUnsuccessfulSync(errorMessage);
 	}
 	
+	@Override
 	public void onUpdate(String message) {
 		
 		if(binder != null && binder.getListener() != null)
@@ -147,6 +151,7 @@ public class BluetoothScoutClientService extends Service
 			threadListener = _listener;
 		}
 		
+		@Override
 		public void run() {
 				
 			try {
@@ -244,6 +249,7 @@ public class BluetoothScoutClientService extends Service
 			dbManager = DBManager.getInstance(_context);
 		}
 		
+		@Override
 		public void run() {
 			
 			Event inEvent = null;

@@ -1,7 +1,6 @@
 package com.team2052.frckrawler;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;

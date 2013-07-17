@@ -9,6 +9,7 @@ import com.team2052.frckrawler.R;
 
 public class MetricSelectionActivity extends StackableTabActivity implements OnClickListener {
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -18,6 +19,7 @@ public class MetricSelectionActivity extends StackableTabActivity implements OnC
 		findViewById(R.id.robotMetrics).setOnClickListener(this);
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		Intent i = new Intent(this, MetricsActivity.class);

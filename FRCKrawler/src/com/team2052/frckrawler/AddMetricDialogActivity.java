@@ -32,6 +32,7 @@ public class AddMetricDialogActivity extends Activity
 	
 	private ListEditor list;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -52,6 +53,7 @@ public class AddMetricDialogActivity extends Activity
 		refreshTypeBasedUI();
 	}
 
+	@Override
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.add) {
@@ -179,6 +181,7 @@ public class AddMetricDialogActivity extends Activity
 		}
 	}
 
+	@Override
 	public void onItemSelected(AdapterView<?> parent, View v, int pos,
 			long id) {
 		
@@ -186,6 +189,7 @@ public class AddMetricDialogActivity extends Activity
 		refreshTypeBasedUI();
 	}
 
+	@Override
 	public void onNothingSelected(AdapterView<?> v) {
 		
 		((Spinner)findViewById(R.id.game)).setSelection(0);

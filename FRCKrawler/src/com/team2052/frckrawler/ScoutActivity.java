@@ -87,7 +87,7 @@ public class ScoutActivity extends Activity implements OnClickListener,
 		dbManager = DBManager.getInstance(this);
 		User[] allUsers = dbManager.scoutGetAllUsers();
 		for(User u : allUsers)
-			if(GlobalSettings.userID == u.getID())
+			if(GlobalValues.userID == u.getID())
 				user = u;
 		
 		new GetRobotListTask().execute();
@@ -242,12 +242,14 @@ public class ScoutActivity extends Activity implements OnClickListener,
 	
 	private class GetRobotListTask extends AsyncTask<Void, Void, Robot[]> {
 
+		@Override
 		protected Robot[] doInBackground(Void... arg0) {
 			teamNames = dbManager.scoutGetAllTeamNames();
 			robots = dbManager.scoutGetAllRobots();
 			return robots;
 		}
 		
+		@Override
 		protected void onPostExecute(Robot[] robots) {
 			
 			String[] teamNumbers = new String[robots.length];
@@ -279,6 +281,7 @@ public class ScoutActivity extends Activity implements OnClickListener,
 	
 	private class GetMetricsTask extends AsyncTask<Integer, Void, MetricValue[]> {
 
+		@Override
 		protected MetricValue[] doInBackground(Integer... params) {
 			int selectedRobot = params[0];
 			MetricValue[] metrics = new MetricValue[0];
@@ -312,6 +315,7 @@ public class ScoutActivity extends Activity implements OnClickListener,
 			return metrics;
 		}
 		
+		@Override
 		protected void onPostExecute(MetricValue[] metrics) {
 			LinearLayout metricList = 
 					(LinearLayout)findViewById(R.id.metricWidgetList);
@@ -372,6 +376,7 @@ public class ScoutActivity extends Activity implements OnClickListener,
 			return null;
 		}
 		
+		@Override
 		protected void onPostExecute(Void v) {
 			resetUI();
 			Toast.makeText(getApplicationContext(), "Save successful.", 

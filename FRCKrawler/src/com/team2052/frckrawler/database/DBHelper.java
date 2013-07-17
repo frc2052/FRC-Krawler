@@ -34,6 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	 * This is where you should create tables and set up the database.
 	 *****/
 	
+	@Override
 	public void onCreate(SQLiteDatabase database) {
 		DBContract.createSchema(database);
 	}
@@ -44,11 +45,13 @@ public class DBHelper extends SQLiteOpenHelper {
 	 * Summary: Called when the app itself is updated to a newer version.
 	 *****/
 	
+	@Override
 	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 		DBContract.dropSchema(database);
 		onCreate(database);
 	}
 	
+	@Override
 	public void onDowngrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 		onUpgrade(database, oldVersion, newVersion);
 	}

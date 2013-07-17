@@ -15,6 +15,7 @@ public class CommentDialogActivity extends Activity {
 	public static final String MATCHES_ARRAY_EXTRA = 
 			"com.team2052.frckrawler.matchArrayExtra";
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
