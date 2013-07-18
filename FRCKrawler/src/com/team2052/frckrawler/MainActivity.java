@@ -124,7 +124,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
      * 
      * @param view
      */
-    public void hostCompetition(final View view) {
+    /*public void hostCompetition(final View view) {
     	final AlertDialog.Builder login = new AlertDialog.Builder(this);
     	login
     		.setTitle("Admin Login")
@@ -164,7 +164,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
     	
     	AlertDialog loginAlert = login.create();
     	loginAlert.show();
-    }
+    }*/
     
     /*
      * Displays a Dialog that takes the name and adds it to a table in the database

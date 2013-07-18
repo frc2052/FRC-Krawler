@@ -59,13 +59,17 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 	public void postResults(Event[] events) {
 		
 		TableLayout table = (TableLayout)findViewById(R.id.eventsDataTable);
-		TableRow descriptorsRow = (TableRow)findViewById(R.id.descriptorsRow);
-		
 		table.removeAllViews();
+		
+		MyTableRow descriptorsRow = new MyTableRow(this);
+		descriptorsRow.addView(new MyTextView(this, " ", 18));
+		descriptorsRow.addView(new MyTextView(this, "Name", 18));
+		descriptorsRow.addView(new MyTextView(this, "Location", 18));
+		descriptorsRow.addView(new MyTextView(this, "Game", 18));
+		descriptorsRow.addView(new MyTextView(this, "Date", 18));
 		table.addView(descriptorsRow);
 		
 		for(int i = 0; i < events.length; i++) {
-			
 			int color;
 			
 			if(i % 2 == 0)

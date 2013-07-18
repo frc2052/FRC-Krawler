@@ -8,30 +8,34 @@ package com.team2052.frckrawler.gui;
  * especially in arrays.
  *****/
 
+import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.util.Conversion;
+
 import android.R.color;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 public class MyTableRow extends TableRow {
 	
 	public MyTableRow(Context _context) {
-		
 		this(_context, new String[0]);
 	}
 
 	public MyTableRow(Context _context, String[] _vals) {
-		
 		this(_context, _vals, 18);
 	}
 	
 	public MyTableRow(Context _context, String[] _vals, int _fontSize) {
-		
 		super(_context);
 		
 		for(String s : _vals) {
-			
 			TextView v = new TextView(_context);
 			v.setText(s);
 			v.setTextSize(TypedValue.COMPLEX_UNIT_SP, _fontSize);
@@ -40,25 +44,26 @@ public class MyTableRow extends TableRow {
 	}
 	
 	public MyTableRow(Context _context, int _color) {
-		
 		super(_context);
-		this.setBackgroundColor(_color);
+		setBackgroundColor(_color);
 	}
 	
 	public MyTableRow(Context _context, View[] _vals) {
-		
 		this(_context, _vals, color.transparent);
 	}
 	
 	public MyTableRow(Context _context, View[] _vals, int _backgroundColor) {
-		
 		super(_context);
 		
-		for(View v : _vals) {
-			
+		for(View v : _vals)
 			addView(v);
-		}
 		
 		setBackgroundColor(_backgroundColor);
+	}
+	
+	@Override
+	public void addView(View v) {
+		super.addView(v);
+		inflate(getContext(), R.layout.view_divider, this);
 	}
 }

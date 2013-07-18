@@ -2424,12 +2424,22 @@ public class DBManager {
 	 */
 	
 	public synchronized boolean removeRobotFromEvent(int eventID, int robotID) {
+		List[] lists = getListsByColumns(
+				new String[] {DBContract.COL_EVENT_ID}, 
+				new String[] {Integer.toString(eventID)});
 		
-		int affectedRows = helper.getWritableDatabase().delete(
+		SQLiteDatabase db = helper.getWritableDatabase();
+		int affectedRows = db.delete(
 				DBContract.TABLE_EVENT_ROBOTS, 
 				DBContract.COL_EVENT_ID + " LIKE ? AND " +
 				DBContract.COL_ROBOT_ID + " LIKE ?", 
 				new String[] {Integer.toString(eventID), Integer.toString(robotID)});
+		
+		for(List l : lists) {
+			db.delete(DBContract.TABLE_LIST_ENTRIES, 
+					DBContract.COL_ROBOT_ID + " LIKE ? AND " + DBContract.COL_LIST_ID + " LIKE ?",
+					new String[] {Integer.toString(robotID), Integer.toString(l.getListID())});
+		}
 		
 		return affectedRows > 0;
 	}

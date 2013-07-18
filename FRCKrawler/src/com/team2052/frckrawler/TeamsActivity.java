@@ -133,10 +133,12 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 	
 	private class GetTeamsTask extends AsyncTask<TeamsActivity, MyTableRow, Void> {
 		
+		private boolean readyForUIUpdate;
 		private StaticTableLayout table;
 		
 		@Override
 		protected void onPreExecute() {
+			readyForUIUpdate = true;
 			((FrameLayout)findViewById(R.id.progressFrame)).
 				addView(new ProgressSpinner(getApplicationContext()));
 			
@@ -212,11 +214,14 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				}, color);
 				
 				row.setTag(Integer.valueOf(teams[i].getNumber()));
-				publishProgress(staticRow, row);
 				
-				try {	//Wait for the UI to update
-					Thread.sleep(50);
-				} catch(InterruptedException e) {}
+				while(!readyForUIUpdate) {
+					try {	//Wait for the UI to update
+						Thread.sleep(100);
+					} catch(InterruptedException e) {}
+				}
+				
+				publishProgress(staticRow, row);
 			}
 			
 			return null;
@@ -224,9 +229,11 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		
 		@Override
 		protected void onProgressUpdate(MyTableRow... rows) {
+			readyForUIUpdate = false;
 			table.addViewToStaticTable(rows[0]);
 			table.addViewToMainTable(rows[1]);
 			teamCount++;
+			readyForUIUpdate = true;
 		}
 		
 		@Override

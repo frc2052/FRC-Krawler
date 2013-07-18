@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -90,6 +92,20 @@ public class ListsActivity extends StackableTabActivity implements OnClickListen
 		@Override
 		protected void onProgressUpdate(RobotListView... r) {
 			listContainor.addView(r[0]);
+			
+			final int listID = r[0].getList().getListID();
+			Button removeButton = new Button(ListsActivity.this);
+			removeButton.setText("Remove List");
+			removeButton.setLayoutParams(new LinearLayout.LayoutParams
+					(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+			removeButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dbManager.removeList(listID);
+					new GetListsTask().execute();
+				}
+			});
+			listContainor.addView(removeButton);
 		}
 		
 		@Override

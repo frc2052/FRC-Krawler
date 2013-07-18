@@ -1,6 +1,7 @@
 package com.team2052.frckrawler;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.gui.ProgressSpinner;
 
 public class AttendingTeamsDialogActivity extends Activity implements OnClickListener {
 	
@@ -58,22 +60,63 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 		if(v.getId() == R.id.save) {
 			LinearLayout robotList = (LinearLayout)findViewById(R.id.teamList);
 			
+			boolean[] checkBoxVals = new boolean[robotList.getChildCount()];
+			int[] robotIDs = new int[robotList.getChildCount()];
+			
 			for(int currentChild = 0; currentChild < robotList.getChildCount(); currentChild++) {
 				CheckBox box = (CheckBox)robotList.getChildAt(currentChild);
-				
-				if(box.isChecked())
+				checkBoxVals[currentChild] = box.isChecked();
+				robotIDs[currentChild] = box.getId();
+			}
+			
+			new SaveAttendingRobotsTask(checkBoxVals, robotIDs).execute();
+			
+		} else if(v.getId() == R.id.cancel) {
+			finish();
+		}
+	}
+	
+	private class SaveAttendingRobotsTask extends AsyncTask<Void, Void, Void> {
+		
+		private boolean[] checkBoxVals;
+		private int[] robotIDs;
+		private AlertDialog progressDialog;
+		
+		public SaveAttendingRobotsTask(boolean[] _checkBoxVals, int[] _robotIDs) {
+			checkBoxVals = _checkBoxVals;
+			robotIDs = _robotIDs;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			AlertDialog.Builder builder = new AlertDialog.Builder
+					(AttendingTeamsDialogActivity.this);
+			builder.setTitle("Saving...");
+			builder.setView(new ProgressSpinner(AttendingTeamsDialogActivity.this));
+			builder.setCancelable(false);
+			progressDialog = builder.create();
+			progressDialog.show();
+		}
+		
+		@Override
+		protected Void doInBackground(Void... voids) {
+			for(int i = 0; i < robotIDs.length; i++) {
+				if(checkBoxVals[i])
 					dbManager.addRobotToEvent(
 							Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA)), 
-							box.getId());
+							robotIDs[i]);
 				else
 					dbManager.removeRobotFromEvent(
 							Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA)), 
-							box.getId());
+							robotIDs[i]);
 			}
 			
-			finish();
-			
-		} else if(v.getId() == R.id.cancel) {
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void v) {
+			progressDialog.dismiss();
 			finish();
 		}
 	}
@@ -98,7 +141,6 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 
 			@Override
 			protected Robot[] doInBackground(Void... params) {
-				
 				return dbManager.getRobotsAtEvent(
 						Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA)));
 			}

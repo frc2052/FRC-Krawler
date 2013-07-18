@@ -46,6 +46,10 @@ public class RobotListView extends FrameLayout implements OnClickListener {
 		
 		refresh(false);
 	}
+	
+	public List getList() {
+		return list;
+	}
 
 	@Override
 	public void onClick(View v) {

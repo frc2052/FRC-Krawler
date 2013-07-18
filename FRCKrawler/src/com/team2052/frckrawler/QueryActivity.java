@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -205,12 +206,14 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 	
 	private class GetCompiledDataTask extends AsyncTask
 										<QueryActivity, MyTableRow, Void> {
-		
+		private volatile boolean readyForUIUpdate;
 		private int dataNum;
 		private StaticTableLayout table;
+		private Time start;
 											
 		@Override
 		protected void onPreExecute() {
+			readyForUIUpdate = true;
 			dataNum = 0;
 			((FrameLayout)findViewById(R.id.progressFrame)).
 					addView(new ProgressSpinner(getApplicationContext()));
@@ -221,6 +224,8 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 
 		@Override
 		protected Void doInBackground(QueryActivity... params) {
+			start = new Time();
+			start.setToNow();
 			QueryActivity activity = params[0];
 			
 			ArrayList<Query> allQuerys = new ArrayList<Query>();
@@ -317,14 +322,14 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				}
 				
 				int color;
-				int buttonColor;
+				//int buttonColor;
 				
 				if(dataCount % 2 == 0) {
 					color = GlobalValues.ROW_COLOR;
-					buttonColor = GlobalValues.BUTTON_COLOR;
+					//buttonColor = GlobalValues.BUTTON_COLOR;
 				} else {
 					color = Color.TRANSPARENT;
-					buttonColor = Color.rgb(30, 30, 30);
+					//buttonColor = Color.rgb(30, 30, 30);
 				}
 				
 				MyTableRow staticRow = new MyTableRow(activity, color);
@@ -408,13 +413,15 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 								}
 
 								Button chooserButton = new Button(QueryActivity.this);
+								chooserButton.setCompoundDrawablesWithIntrinsicBounds
+										(0, 0, R.drawable.btn_zoom_page_normal, 0);
 
 								if(matchData[i].getValue().length > 0)
 									chooserButton.setText(matchData[i].getValue()[mostPickedAddress]);
 								else
 									chooserButton.setText("");
 
-								chooserButton.setBackgroundColor(buttonColor);
+								chooserButton.setBackgroundColor(color);
 								chooserButton.setTextColor(Color.LTGRAY);
 								chooserButton.setTextSize(18);
 
@@ -468,11 +475,13 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 						dataRow.addView(new MyTextView(activity, 
 								driverData[i].getValueAsHumanReadableString(), 18));
 				
-				publishProgress(staticRow, dataRow);
+				while(!readyForUIUpdate) {
+					try {	//Wait for the UI to update
+						Thread.sleep(200);
+					} catch(InterruptedException e) {}
+				}
 				
-				try {	//Wait for the UI to update
-					Thread.sleep(150);
-				} catch(InterruptedException e) {}
+				publishProgress(staticRow, dataRow);
 			}
 			
 			dataNum = data.length;
@@ -481,6 +490,8 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		
 		@Override
 		protected void onProgressUpdate(MyTableRow... rows) {
+			readyForUIUpdate = false;
+			
 			if(rows.length > 1) {
 				table.addViewToStaticTable(rows[0]);
 				table.addViewToMainTable(rows[1]);
@@ -488,10 +499,16 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			} else {
 				table.addViewToMainTable(rows[0]);
 			}
+			
+			readyForUIUpdate = true;
 		}
 		
 		@Override
 		protected void onPostExecute(Void v) {
+			Time end = new Time();
+			end.setToNow();
+			System.out.println("Load Time: " + Long.toString(end.toMillis(true) - start.toMillis(false)));
+			
 			((TextView)findViewById(R.id.compiledNumber)).setText(dataNum + " Robots");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}

@@ -292,7 +292,7 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 						(new View[0]), color));
 				
 				try {	//Wait for the UI to update
-					Thread.sleep((max - min) * 30);
+					Thread.sleep(50);
 				} catch(InterruptedException e) {}
 			}
 			
@@ -306,7 +306,7 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		
 		@Override
 		protected void onPostExecute(Void v) {
-			((TextView)findViewById(R.id.matchNum)).setText(dataNum + " Data Displayed");
+			((TextView)findViewById(R.id.matchNumTextBox)).setText(dataNum + " Data Displayed");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 	}

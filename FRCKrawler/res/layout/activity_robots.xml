@@ -5,14 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/tabRoot"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical" >
-
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="wrap_content"
@@ -73,10 +65,10 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/treeView"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" >
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/scrollView1" >
 
             <LinearLayout
                 android:id="@+id/bottomLayout"
@@ -102,22 +94,14 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="18sp" />
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/bottomLayout"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/titke" >
-
                 <com.team2052.frckrawler.gui.StaticTableLayout
                     android:id="@+id/robotsData"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/bottomLayout"
+                    android:layout_below="@+id/titke" >
 
                 </com.team2052.frckrawler.gui.StaticTableLayout>
-
-            </RelativeLayout>
 
             <TextView
                 android:id="@+id/numRobots"
@@ -129,15 +113,5 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/treeView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/scrollView1" >
-        </LinearLayout>
-
-    </RelativeLayout>
 
 </RelativeLayout>

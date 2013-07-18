@@ -63,7 +63,6 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 
 	@Override
 	public void onClick(View v) {
-		
 		Intent i;
 		
 		switch(v.getId()) {
@@ -252,7 +251,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 						rowArrayList.toArray(new View[0]), color));
 				
 				try {	//Wait for the UI to update
-					Thread.sleep(75);
+					Thread.sleep(50);
 				} catch(InterruptedException e) {}
 			}
 			

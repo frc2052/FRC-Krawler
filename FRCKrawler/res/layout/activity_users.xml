@@ -21,36 +21,8 @@
             android:text="Users"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <RelativeLayout
-            android:id="@+id/relativeLayout1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/titke" >
-
-            <ScrollView
-                android:id="@+id/ScrollView01"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" >
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <TableLayout
-                        android:id="@+id/usersDataTable"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" >
-                    </TableLayout>
-                </FrameLayout>
-            </ScrollView>
-
-        </RelativeLayout>
-
         <LinearLayout
+            android:id="@+id/linearLayout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -72,6 +44,20 @@
             android:text=" "
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
+        <ScrollView
+            android:id="@+id/ScrollView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linearLayout1"
+            android:layout_below="@+id/titke"
+            android:layout_centerHorizontal="true" >
+
+            <TableLayout
+                android:id="@+id/usersDataTable"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+            </TableLayout>
+        </ScrollView>
     </RelativeLayout>
 
     <ScrollView
@@ -120,9 +106,7 @@
                 android:layout_height="60dp"
                 android:background="@drawable/tab_button"
                 android:text="Options" />
-
         </LinearLayout>
-
     </ScrollView>
 
 </RelativeLayout>
