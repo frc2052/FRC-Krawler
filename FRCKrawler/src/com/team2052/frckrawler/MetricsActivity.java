@@ -177,10 +177,7 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 			isGettingMetrics = true;
 			radioGroup = new AbstractRadioGroup();
 			table = (TableLayout)findViewById(R.id.metricsDataTable);
-			TableRow descriptorsRow = (TableRow)findViewById(R.id.descriptorsRow);
-			
 			table.removeAllViews();
-			table.addView(descriptorsRow);
 		}
 
 		@Override
@@ -211,8 +208,17 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 					metrics = new Metric[0];
 			}
 			
+			MyTableRow descriptorsRow = new MyTableRow(MetricsActivity.this);
+			descriptorsRow.addView(new MyTextView(MetricsActivity.this, " ", 18));
+			descriptorsRow.addView(new MyTextView(MetricsActivity.this, " ", 18));
+			descriptorsRow.addView(new MyTextView(MetricsActivity.this, "Name", 18));
+			descriptorsRow.addView(new MyTextView(MetricsActivity.this, "Description", 18));
+			descriptorsRow.addView(new MyTextView(MetricsActivity.this, "Type", 18));
+			descriptorsRow.addView(new MyTextView(MetricsActivity.this, "Range", 18));
+			descriptorsRow.addView(new MyTextView(MetricsActivity.this, "Displayed", 18));
+			publishProgress(descriptorsRow);
+			
 			for(int i = 0; i < metrics.length; i++) {
-				
 				int color;
 				
 				if(i % 2 == 0)
