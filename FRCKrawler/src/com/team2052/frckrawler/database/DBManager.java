@@ -1248,9 +1248,11 @@ public class DBManager {
 		values.put(DBContract.COL_COMMENTS, comments);
 		values.put(DBContract.COL_IMAGE_PATH, imagePath);
 		
-		for(MetricValue v : vals) {
-			String valString = v.getValueAsDBReadableString();
-			values.put(v.getMetric().getKey(), valString);
+		if(vals != null) {
+			for(MetricValue v : vals) {
+				String valString = v.getValueAsDBReadableString();
+				values.put(v.getMetric().getKey(), valString);
+			}
 		}
 		
 		db.insert(DBContract.TABLE_ROBOTS, null, values);

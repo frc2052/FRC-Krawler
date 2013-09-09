@@ -38,9 +38,8 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_teams);
 		
-		Button addTeams = (Button)findViewById(R.id.addTeam);
-		addTeams.setTag(ADD_TEAMS_TAG);
-		addTeams.setOnClickListener(this);
+		findViewById(R.id.addTeam).setOnClickListener(this);
+		findViewById(R.id.addRobotToAll).setOnClickListener(this);
 		
 		dbManager = DBManager.getInstance(this);
 		
@@ -67,23 +66,23 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		
 		switch(v.getId()) {
 			case R.id.addTeam:
-			
 				i = new Intent(this, AddTeamDialogActivity.class);
 				startActivityForResult(i, 1);
-			
+				break;
+				
+			case R.id.addRobotToAll:
+				i = new Intent(this, AddRobotAllActivity.class);
+				startActivity(i);
 				break;
 			
 			case EDIT_BUTTON_ID:
-			
 				i =  new Intent(this, EditTeamDialogActivity.class);
 				i.putExtra(EditTeamDialogActivity.TEAM_NUMBER_EXTRA_KEY, 
 						((Integer)v.getTag()).intValue());
 				startActivityForResult(i, 1);
-			
 				break;
 				
 			case ROBOTS_BUTTON_ID:
-				
 				i = new Intent(this, RobotsActivity.class);
 				i.putExtra(StackableTabActivity.PARENTS_EXTRA, 
 						new String[] {v.getTag().toString()});
@@ -92,11 +91,9 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, 
 						new String[] {DBContract.COL_TEAM_NUMBER});
 				startActivity(i);
-				
 				break;
 				
 			case CONTACTS_BUTTON_ID:
-				
 				i = new Intent(this, ContactsActivity.class);
 				i.putExtra(StackableTabActivity.PARENTS_EXTRA, 
 						new String[] {v.getTag().toString()});
@@ -105,7 +102,6 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, 
 						new String[] {DBContract.COL_TEAM_NUMBER});
 				startActivity(i);
-				
 				break;
 				
 			case COMMENTS_BUTTON_ID:

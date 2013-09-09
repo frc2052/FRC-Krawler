@@ -82,6 +82,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Add Team" />
+
+                <Button
+                    android:id="@+id/addRobotToAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Robot To All" />
+
             </LinearLayout>
 
                 <com.team2052.frckrawler.gui.StaticTableLayout
