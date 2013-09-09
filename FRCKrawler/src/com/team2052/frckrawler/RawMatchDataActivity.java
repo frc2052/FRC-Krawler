@@ -307,6 +307,7 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		@Override
 		protected void onPostExecute(Void v) {
 			((TextView)findViewById(R.id.matchNumTextBox)).setText(dataNum + " Data Displayed");
+			((TextView)findViewById(R.id.matches)).setText(min + " - " + max);
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 	}

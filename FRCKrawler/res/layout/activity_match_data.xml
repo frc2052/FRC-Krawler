@@ -123,4 +123,23 @@
             android:layout_alignParentRight="true"
             android:text=" "
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/matches"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/scrollView1"
+            android:text=" "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/matches"
+            android:layout_alignLeft="@+id/matches"
+            android:text="Matches:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
 </RelativeLayout>

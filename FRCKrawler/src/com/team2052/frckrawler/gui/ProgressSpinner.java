@@ -7,7 +7,7 @@ public class ProgressSpinner extends ProgressBar {
 
 	public ProgressSpinner(Context context) {
 		
-		super(context);
+		super(context, null, android.R.attr.progressBarStyleInverse);
 		setIndeterminate(true);
 	}
 }

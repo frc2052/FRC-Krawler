@@ -39,20 +39,7 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 	}
 	
 	public void postResults(Robot[] allRobots, Robot[] selectedRobots) {
-		LinearLayout robotList = (LinearLayout)findViewById(R.id.teamList);
-		robotList.removeAllViews();
 		
-		for(Robot r : allRobots) {
-			CheckBox checkBox = new CheckBox(this);
-			checkBox.setId(r.getID());
-			checkBox.setText(Integer.toString(r.getTeamNumber()));
-			
-			for(Robot sr : selectedRobots)
-				if(r.getID() == sr.getID())
-					checkBox.setChecked(true);
-			
-			robotList.addView(checkBox);
-		}
 	}
 
 	@Override
@@ -123,7 +110,15 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 	
 	private class GetRobotsTask extends AsyncTask<Void, Void, Robot[]> {
 		
-		Robot[] allRobots;
+		private Robot[] allRobots;
+		private LinearLayout robotList;
+		
+		@Override
+		protected void onPreExecute() {
+			robotList = (LinearLayout)findViewById(R.id.teamList);
+			robotList.removeAllViews();
+			robotList.addView(new ProgressSpinner(AttendingTeamsDialogActivity.this));
+		}
 		
 		@Override
 		protected Robot[] doInBackground(Void... params) {
@@ -147,7 +142,19 @@ public class AttendingTeamsDialogActivity extends Activity implements OnClickLis
 			
 			@Override
 			protected void onPostExecute(Robot[] selectedRobots) {
-				postResults(allRobots, selectedRobots);
+				robotList.removeAllViews();
+				
+				for(Robot r : allRobots) {
+					CheckBox checkBox = new CheckBox(AttendingTeamsDialogActivity.this);
+					checkBox.setId(r.getID());
+					checkBox.setText(Integer.toString(r.getTeamNumber()));
+					
+					for(Robot sr : selectedRobots)
+						if(r.getID() == sr.getID())
+							checkBox.setChecked(true);
+					
+					robotList.addView(checkBox);
+				}
 			}
 		}
 	}
