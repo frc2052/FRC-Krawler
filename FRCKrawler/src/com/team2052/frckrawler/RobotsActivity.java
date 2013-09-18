@@ -170,12 +170,12 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			Robot[] robots = dbManager.getRobotsByColumns
 					(databaseKeys, databaseValues, true);
 			
-			Metric[] metrics;
+			Metric[] initMetrics;
 			
 			if(robots.length > 0)
-				metrics = robots[0].getMetrics();
+				initMetrics = robots[0].getMetrics();
 			else
-				metrics = new Metric[0];
+				initMetrics = new Metric[0];
 			
 			MyTableRow staticDesRow = new MyTableRow(RobotsActivity.this);
 			MyTableRow descriptorsRow = new MyTableRow(RobotsActivity.this);
@@ -184,8 +184,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			staticDesRow.addView(new MyTextView(RobotsActivity.this, "Game", 18));
 			descriptorsRow.addView(new MyTextView(RobotsActivity.this, "Comments", 18));
 			
-			for(Metric m : metrics) {
-				
+			for(Metric m : initMetrics) {
 				if(m != null)
 					descriptorsRow.addView(new MyTextView(RobotsActivity.this, m.getMetricName(), 18));
 			}
@@ -193,12 +192,28 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			publishProgress(staticDesRow, descriptorsRow);
 			
 			for(int i = 0; i < robots.length; i++) {
+				if(i != 0 && !robots[i].getGame().equals(robots[i - 1].getGame())) {
+					Metric[] metrics = robots[i].getMetrics();
+					
+					MyTableRow sDesRow = new MyTableRow(RobotsActivity.this);
+					MyTableRow dRow = new MyTableRow(RobotsActivity.this);
+					sDesRow.addView(new TextView(RobotsActivity.this));
+					sDesRow.addView(new MyTextView(RobotsActivity.this, "Team #", 18));
+					sDesRow.addView(new MyTextView(RobotsActivity.this, "Game", 18));
+					dRow.addView(new MyTextView(RobotsActivity.this, "Comments", 18));
+					
+					for(Metric m : metrics) {
+						if(m != null)
+							dRow.addView(new MyTextView(RobotsActivity.this, m.getMetricName(), 18));
+					}
+					
+					publishProgress(sDesRow, dRow);
+				}
 				
 				if(isCancelled())
 					break;
 				
 				int color;
-				
 				if(i % 2 == 0)
 					color = GlobalValues.ROW_COLOR;
 				else

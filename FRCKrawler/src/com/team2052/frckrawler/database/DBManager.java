@@ -1308,13 +1308,11 @@ public class DBManager {
 	 * and vals specified.
 	 */
 	public synchronized Robot[] getRobotsByColumns(String[] cols, String[] vals) {
-		
 		return getRobotsByColumns(cols, vals, false);
 	}
 	
 	public synchronized Robot[] getRobotsByColumns(String[] cols, String[] vals, 
 			boolean isOr) {
-		
 		if(cols.length != vals.length)
 			return null;
 		
@@ -1334,7 +1332,8 @@ public class DBManager {
 		for(int i = 1; i < cols.length; i++) //Builds a string for the query with cols
 			queryString += logic + cols[i] + " LIKE ?";
 		
-		queryString += " ORDER BY " + DBContract.COL_TEAM_NUMBER + " ASC";
+		queryString += " ORDER BY " + DBContract.COL_TEAM_NUMBER + " ASC " + ", " + 
+				DBContract.COL_GAME_NAME + " ASC";
 			
 		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
 		Robot[] r = new Robot[c.getCount()];

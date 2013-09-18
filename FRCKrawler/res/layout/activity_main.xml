@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
-        android:text="Version 1.4"
+        android:text="Version 1.5"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="16sp" />
 
@@ -166,7 +166,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:scaleType="fitXY"
-            android:src="@drawable/logo_drawn_colored" />
+            android:src="@drawable/plain_back_logo" />
 
     </RelativeLayout>
 
