@@ -31,7 +31,6 @@ public class SummaryActivity extends Activity implements OnClickListener {
 	
 	private static final int COMMENT_CHAR_LIMIT = 20;
 	private static final int MATCH_DATA_BUTTON_ID = 2;
-	
 	private static Query[] queries = new Query[0];
 	
 	private int dataCount = 0;
@@ -59,7 +58,6 @@ public class SummaryActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch(v.getId()) {
 			case MATCH_DATA_BUTTON_ID:
-				
 				new ShowMatchDataTask().execute((Integer)v.getTag());
 				break;
 		}
@@ -118,9 +116,7 @@ public class SummaryActivity extends Activity implements OnClickListener {
 			publishProgress(descriptorsRow);
 			
 			for(int i = 0; i < compiledData.length; i++) {
-				
 				int color;
-				
 				if(i % 2 == 0)
 					color = GlobalValues.ROW_COLOR;
 				else

@@ -1341,9 +1341,7 @@ public class DBManager {
 		helper.close();
 		
 		for(int i = 0; i < c.getCount(); i++) {
-			
 			c.moveToNext();
-			
 			String thisRobotGame = c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME));
 			ArrayList<MetricValue> metricVals = new ArrayList<MetricValue>();
 			Metric[] metrics = new Metric[0];
@@ -1351,41 +1349,34 @@ public class DBManager {
 			metrics = this.getRobotMetricsByColumns
 				(new String[] {DBContract.COL_GAME_NAME}, new String[] {thisRobotGame});
 				
-			//Un-indent this stuff
-				for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
-					
-					String valString = c.getString
-							(c.getColumnIndex(metrics[metricCount].getKey()));
-					ArrayList<String> valsArr = new ArrayList<String>();
-					String workingString = new String();
-					
-					if(valString == null)
-						valString = new String();
-					
-					for(int charCount = 0; charCount < valString.length(); charCount++) {
-						
-						if(valString.charAt(charCount) != ':'){
-							
-							workingString += valString.substring(charCount, charCount + 1);
-							
-						} else {
-							
-							valsArr.add(workingString);
-							workingString = new String();
-						}
-					}
-					
-					try {
-						metricVals.add(
-							new MetricValue(
-								metrics[metricCount],
-								valsArr.toArray(new String[0])
-							));
-					} catch(MetricTypeMismatchException e) {
-						Log.e("FRCKrawler", e.getMessage());
+			for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
+				String valString = c.getString
+						(c.getColumnIndex(metrics[metricCount].getKey()));
+				ArrayList<String> valsArr = new ArrayList<String>();
+				String workingString = new String();
+
+				if(valString == null)
+					valString = new String();
+
+				for(int charCount = 0; charCount < valString.length(); charCount++) {
+					if(valString.charAt(charCount) != ':'){
+						workingString += valString.substring(charCount, charCount + 1);
+					} else {
+						valsArr.add(workingString);
+						workingString = new String();
 					}
 				}
-			
+
+				try {
+					metricVals.add(
+							new MetricValue(
+									metrics[metricCount],
+									valsArr.toArray(new String[0])
+									));
+				} catch(MetricTypeMismatchException e) {
+					Log.e("FRCKrawler", e.getMessage());
+				}
+			}
 			
 			r[i] = new Robot(
 					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
@@ -2891,7 +2882,6 @@ public class DBManager {
 	 */
 	
 	public CompiledData[] getCompiledEventData(Event e, Query[] querys, SortKey sortKey) {
-		
 		return getCompiledEventData(e.getEventID(), querys, sortKey);
 	}
 	
@@ -2922,14 +2912,13 @@ public class DBManager {
 		CompiledData[] compiledData = new CompiledData[robots.length];
 		
 		for(int robotCount = 0; robotCount < robots.length; robotCount++) {
-			
 			//Create our array for compiled data, and get our match data for this robot
 			MetricValue[] metricVals = new MetricValue[metrics.length];
 			MatchData[] matchData = this.getMatchDataByColumns
 					(new String[] {DBContract.COL_ROBOT_ID}, 
 							new String[] {Integer.toString(robots[robotCount].getID())});
 			
-			//Array to compile comments
+			//Array for compiling comments
 			boolean isCommentsFilled = false;
 			String[] comments = new String[matchData.length];
 			
@@ -2939,20 +2928,17 @@ public class DBManager {
 			
 			//Compile the match data for every metric
 			for(int metricCount = 0; metricCount < metricVals.length; metricCount++) {
-				
 				String[] compiledValue = new String[0];
 				int[] chooserCounts = new int[0];
 				
 				if(matchData.length != 0) {
 					switch(metrics[metricCount].getType()) {
 						case DBContract.BOOLEAN:
-							
 							double yes = 0;
 							double no = 0;
 						
 							for(int matchCount = 0; matchCount < matchData.length; 
 									matchCount++) {
-								
 								//Comments
 								if(!isCommentsFilled)
 									comments[matchCount] = matchData[matchCount].
@@ -2973,23 +2959,20 @@ public class DBManager {
 								if(stringValue != null && 
 										!stringValue.equals("") && 
 										!stringValue.equals("null")) {
-									
-									boolean value = Boolean.
-											parseBoolean(stringValue);
-								
+									boolean value = Boolean.parseBoolean(stringValue);
+									double weight = Math.pow(weightingRatio, matchCount);
 									if(value)
-										yes++;
+										yes += weight;
 									else
-										no++;
+										no += weight;
 								}
 							}
 							
 							double compiledRatio = (yes / (yes + no)) * 100;
-							compiledValue = new String[] {compiledRatio + "%"};
+							compiledValue = new String[] {"" + compiledRatio};
 							break;
 						
 						case DBContract.CHOOSER:
-							
 							boolean isNumeric = true;
 							Object[] range = metrics[metricCount].getRange();
 							
@@ -3030,10 +3013,9 @@ public class DBManager {
 										valueIsNull = false;
 										
 										int value = Integer.parseInt(valueArray[0]);
-										double matchPlayed = matchCount;
 										double weight = Math.pow
 												(weightingRatio, 
-														matchPlayed);
+														matchCount);
 									
 										numerator += value * weight;
 										denominator += weight;
@@ -3051,7 +3033,6 @@ public class DBManager {
 								}
 								
 							} else { //Find the ratios for each choice
-								
 								double[] counts = new double[range.length];
 								for(int matchCount = 0; matchCount < matchData.length; 
 										matchCount++) {
@@ -3125,14 +3106,12 @@ public class DBManager {
 										getMetricValues()[metricCount].getValue();
 								
 								if(valueArray.length > 0) {
-									
 									valueIsNull = false;
 									
 									int value = Integer.parseInt(valueArray[0]);
-									double matchPlayed = matchCount;
 									double weight = Math.pow
 											(weightingRatio, 
-													matchPlayed);
+													matchCount);
 								
 									numerator += value * weight;
 									denominator += weight;
@@ -3153,16 +3132,17 @@ public class DBManager {
 							break;
 						
 						case DBContract.MATH:
-							
+							int nonNullMatchCount = 0;
 							double mathNumerator = 0;
 							double mathDenominator = 0;
-							boolean mathValueIsNull = true;
+							boolean allValuesAreNull = true;
+							boolean matchValuesAreNull = true;
 							Metric mathMetric = metrics[metricCount];
 							
 							for(int matchCount = 0; matchCount < matchData.length; 
 									matchCount++) {
-								
 								double matchVal = 0;
+								matchValuesAreNull = true;
 								
 								for(int mathMetricCount = 0; mathMetricCount < 
 										mathMetric.getRange().length; mathMetricCount++) {
@@ -3181,9 +3161,10 @@ public class DBManager {
 									
 									try {
 										if(val != null) {
-											thisVal = Double.parseDouble
-											(val.getValue()[0]);
-											mathValueIsNull = false;
+											thisVal = Double.parseDouble(val.getValue()[0]);
+											allValuesAreNull = false;
+											matchValuesAreNull = false;
+											nonNullMatchCount++;
 										}
 									} catch(NumberFormatException e) {}
 									catch(ArrayIndexOutOfBoundsException e) {
@@ -3193,26 +3174,25 @@ public class DBManager {
 									matchVal += thisVal;
 								}
 								
-								double matchPlayed = matchCount;
-								double weight = Math.pow
-										(weightingRatio, 
-												matchPlayed);
-							
-								mathNumerator += matchVal * weight;
-								mathDenominator += weight;
+								if(!matchValuesAreNull) {
+									double weight = Math.pow
+											(weightingRatio, nonNullMatchCount);
+									mathNumerator += matchVal * weight;
+									mathDenominator += weight;
+								}
 							}
 							
-							if(mathValueIsNull) {
-								//compiledValue = new String[] {"-1"};
+							if(allValuesAreNull) {
+								
 							} else {
 								if(mathDenominator == 0)
 									mathDenominator = 1;
-								
+
 								double weightedAverage = mathNumerator / mathDenominator;
 								compiledValue = new String[] {Double.toString
 										(weightedAverage)};
 							}
-						
+
 							break;
 							
 						case DBContract.TEXT:

@@ -34,7 +34,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 	
 	public static final String LIMIT_LOADING_EXTRA = "com.team2052.frckrawler.limitLoading";
 	public static final String DISABLE_BUTTONS_EXTRA = "com.team2052.frckrawler.disableAdd";
-	
 	private static final int COMMENT_CHAR_LIMIT = 20;
 	private static final int EDIT_BUTTON_ID = 1;
 	
@@ -93,7 +92,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		
 		switch(v.getId()) {
 			case R.id.addData:
-				
 				i = new Intent(this, AddMatchDataDialogActivity.class);
 				i.putExtra(AddMatchDataDialogActivity.EVENT_ID_EXTRA, e.getEventID());
 				i.putExtra(AddMatchDataDialogActivity.GAME_NAME_EXTRA, e.getGameName());
@@ -102,7 +100,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 				break;
 				
 			case EDIT_BUTTON_ID:
-				
 				i = new Intent(this, EditMatchDataDialogActivity.class);
 				i.putExtra(EditMatchDataDialogActivity.EVENT_ID_EXTRA, e.getEventID());
 				i.putExtra(EditMatchDataDialogActivity.GAME_NAME_EXTRA, e.getGameName());
@@ -111,7 +108,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 				break;
 				
 			case R.id.changeSelection:
-				
 				showSelectionDialog();
 				break;
 		}
@@ -307,7 +303,10 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 		@Override
 		protected void onPostExecute(Void v) {
 			((TextView)findViewById(R.id.matchNumTextBox)).setText(dataNum + " Data Displayed");
-			((TextView)findViewById(R.id.matches)).setText(min + " - " + max);
+			if(limitLoading)
+				((TextView)findViewById(R.id.matches)).setText(min + " - " + max);
+			else
+				((TextView)findViewById(R.id.matches)).setText("All");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 	}

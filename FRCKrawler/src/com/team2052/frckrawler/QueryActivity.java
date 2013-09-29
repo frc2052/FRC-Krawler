@@ -82,7 +82,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 		
 		switch(v.getId()) {
 			case R.id.query:
-				
 				i = new Intent(this, QuerySortingDialogActivity.class);
 				i.putExtra(QuerySortingDialogActivity.EVENT_ID_EXTRA, 
 						databaseValues[getAddressOfDatabaseKey(DBContract.COL_EVENT_ID)]);
@@ -90,7 +89,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				break;
 				
 			case R.id.lists:
-				
 				i = new Intent(this, ListsActivity.class);
 				i.putExtra(ListsActivity.EVENT_ID_EXTRA, 
 						Integer.parseInt(databaseValues
@@ -99,7 +97,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				break;
 				
 			case COMMENT_BUTTON_ID:
-				
 				i = new Intent(this, CommentDialogActivity.class);
 				i.putExtra(CommentDialogActivity.COMMENT_ARRAY_EXTRA, 
 						data[(Integer)v.getTag()].getMatchComments());
@@ -109,7 +106,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				break;
 				
 			case PICTURE_BUTTON_ID:
-				
 				Robot r = data[(Integer)v.getTag()].getRobot();
 				String imagePath = r.getImagePath();
 				
@@ -129,7 +125,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				break;
 				
 			case MATCH_DATA_BUTTON_ID:
-				
 				i = new Intent(this, RawMatchDataActivity.class);
 				i.putExtra(PARENTS_EXTRA, new String[] {});
 				i.putExtra(DB_VALUES_EXTRA, new String[] {Integer.toString(data[(Integer)v.
@@ -140,7 +135,6 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				break;
 				
 			case ADD_TO_LIST_BUTTON_ID:
-				
 				final int robotID = (Integer)v.getTag();
 				final List[] lists = dbManager.getListsByColumns(
 						new String[] {DBContract.COL_EVENT_ID}, 

@@ -50,13 +50,11 @@ public class MetricValue implements Structure {
 	}
 	
 	public String getValueAsHumanReadableString() {
-		
 		if(value == null)
 			return new String();
 		
 		String returnString = new String();
 		for(int i = 0; i < value.length; i++) {
-			
 			boolean isDecimal = true;
 			
 			try {
@@ -67,13 +65,18 @@ public class MetricValue implements Structure {
 			
 			if(isDecimal) {
 				DecimalFormat format = new DecimalFormat("0.00");
-				if(i != value.length - 1)
-					returnString += format.format(Double.parseDouble(value[i])) + ", ";
-				else
+				if(i != value.length - 1) {
 					returnString += format.format(Double.parseDouble(value[i]));
+					if(metric.getType() == DBContract.BOOLEAN)
+						returnString += "%";
+					returnString += ", ";
+				} else {
+					returnString += format.format(Double.parseDouble(value[i]));
+					if(metric.getType() == DBContract.BOOLEAN)
+						returnString += "%";
+				}
 				
 			} else {
-				
 				if(i != value.length - 1 && !value[i].trim().equals(""))
 					returnString += value[i] + ", ";
 				else
