@@ -3,6 +3,7 @@ package com.team2052.frckrawler.gui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
@@ -11,6 +12,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
@@ -78,7 +80,6 @@ public class RobotListView extends FrameLayout implements OnClickListener {
 				break;
 				
 			case R.id.moveDown:
-				
 				if(radioGroup.getSelectedButton() == null)
 					break;
 				
@@ -101,7 +102,6 @@ public class RobotListView extends FrameLayout implements OnClickListener {
 				break;
 				
 			case R.id.addRobotToList:
-				
 				final Robot[] robots = dbManager.getRobotsAtEvent(list.getEventID());
 				final CharSequence[] teamNumbers = new CharSequence[robots.length];
 				
@@ -128,21 +128,17 @@ public class RobotListView extends FrameLayout implements OnClickListener {
 				break;
 				
 			case R.id.removeRobot:
-				
 				if(radioGroup.getSelectedButton() != null) {
 					dbManager.removeRobotFromList((Integer)radioGroup.
 							getSelectedButton().getTag(), list.getListID());
 					refresh(true);
-					
 				} else {
 					Toast.makeText(getContext(), "Could not remove robot. No " +
 							"robot selected.", Toast.LENGTH_SHORT).show();
 				}
-					
 				break;
 				
 			case RADIO_BUTTON_ID:
-				
 				radioGroup.selectButton((RadioButton)v);
 				selectedRobotID = (Integer)v.getTag();
 				break;
@@ -168,6 +164,8 @@ public class RobotListView extends FrameLayout implements OnClickListener {
 		
 		for(int i = 0; i < robots.length; i++) {
 			MyTableRow row = new MyTableRow(getContext());
+			if(i % 2 != 0)
+				row.setBackgroundColor(GlobalValues.ROW_COLOR);
 			
 			RadioButton radButton = new RadioButton(getContext());
 			radButton.setOnClickListener(this);
@@ -180,7 +178,6 @@ public class RobotListView extends FrameLayout implements OnClickListener {
 			
 			row.addView(new MyTextView(getContext(), Integer.toString(robots[i].getTeamNumber()), 
 					18));
-			//row.addView(new MyTextView(_context, robots[i].getComments(), 18));
 			
 			table.addView(row);
 		}

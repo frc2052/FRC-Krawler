@@ -574,7 +574,7 @@ public class DBContract {
 						COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
 						COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
 						COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
-						")";
+						", " + COL_POSITION + INT + ")";
 	
 	
 	
@@ -593,7 +593,7 @@ public class DBContract {
 					COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
 					COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + INT + ", " + 
 					COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
-					")";
+					", " + COL_POSITION + INT + ")";
 	
 	
 	

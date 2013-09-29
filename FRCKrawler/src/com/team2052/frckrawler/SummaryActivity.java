@@ -43,14 +43,12 @@ public class SummaryActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_client_summary);
 		
 		table = (TableLayout)findViewById(R.id.summaryTable);
-		
 		dbManager = DBManager.getInstance(this);
 		
 		Event e = dbManager.summaryGetEvent();
 		if(e != null)
 			((TextView)findViewById(R.id.summaryEventName)).
 					setText(e.getEventName() + ", " + e.getGameName());
-		
 		new GetSummaryTask().execute();
 	}
 	

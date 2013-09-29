@@ -38,6 +38,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		findViewById(R.id.pitScout).setOnClickListener(this);
 		findViewById(R.id.matchData).setOnClickListener(this);
 		findViewById(R.id.sync).setOnClickListener(this);
+		findViewById(R.id.logout).setOnClickListener(this);
 		
 		connection = new ScoutServiceConnection(this);
 		db = DBManager.getInstance(this);
@@ -78,32 +79,25 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 		
 		switch(v.getId()) {
 			case R.id.matchScout:
-				
 				i = new Intent(this, ScoutActivity.class);
 				i.putExtra(ScoutActivity.SCOUT_TYPE_EXTRA, 
 						ScoutActivity.SCOUT_TYPE_MATCH);
 				startActivity(i);
-				
 				break;
 				
 			case R.id.pitScout:
-				
 				i = new Intent(this, ScoutActivity.class);
 				i.putExtra(ScoutActivity.SCOUT_TYPE_EXTRA, 
 						ScoutActivity.SCOUT_TYPE_PIT);
 				startActivity(i);
-				
 				break;
 				
 			case R.id.matchData:
-				
 				i = new Intent(this, ScoutMatchDataActivity.class);
 				startActivity(i);
-				
 				break;
 				
 			case R.id.sync: 
-				
 				SharedPreferences prefs = getSharedPreferences
 					(GlobalValues.PREFS_FILE_NAME, 0);
 				String macAdress = prefs.getString(GlobalValues.MAC_ADRESS_PREF, "null");
@@ -124,7 +118,10 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 				builder.setNeutralButton("Cancel", this);
 				progressDialog = builder.create();
 				progressDialog.show();
+				break;
 				
+			case R.id.logout:
+				finish();
 				break;
 		}
 	}

@@ -73,13 +73,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		} catch(Exception e) {}
 	}
     
-    /*
-     * Joins a competition in progress
-     * Device needs to have BlueTooth paired with other devices
-     * Displays list of devices then calls the namestamp method
-     * 
-     * @param view
-     */
     public void joinCompetition(View view) {
     	if(BluetoothAdapter.getDefaultAdapter() == null) {
 			Toast.makeText(this, "Sorry, your device does not support Bluetooth. " +
@@ -100,80 +93,13 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		builder.show();
     }
     
-    
-    /*****
-     * Method: startAdminInterface
-     * 
-     * @param view
-     * 
-     * Summary: Opens the BluetoothServerManagerActivity when the 'Administer' button
-     * is pressed. This is used instead of the older login.
-     */
     public void openAdminInterface(View view) {
     	Intent i = new Intent(getApplicationContext(), 
 				BluetoothServerManagerActivity.class);
 		startActivity(i);
     }
     
-    /* !THIS FEATURE IS NOT CURRENTLY USED!
-     * It was decided that the login will only frustrate and slow user's
-     * navigation through the app.
-     * 
-     * Brings up the login screen for administrators and signs them 
-     * in with the correct password.
-     * 
-     * @param view
-     */
-    /*public void hostCompetition(final View view) {
-    	final AlertDialog.Builder login = new AlertDialog.Builder(this);
-    	login
-    		.setTitle("Admin Login")
-    		.setCancelable(false);
-    	
-    	final EditText username = new EditText(context);
-    	username.setHint("Admin Password");
-    	login.setView(username);
-    	
-    	login.setPositiveButton("Login", new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				
-				String user2 = username.getText().toString();
-				
-				if (user2.equalsIgnoreCase(SUPERUSER_NAME)) {
-					Intent i = new Intent(getApplicationContext(), 
-							BluetoothServerManagerActivity.class);
-					startActivity(i);
-					
-				} else {
-					Toast.makeText(getApplicationContext(), "Login failed.", 
-							Toast.LENGTH_SHORT).show();
-					dialog.dismiss();
-				}
-			}
-		});
-    	
-    	login.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-			}
-		});
-    	
-    	AlertDialog loginAlert = login.create();
-    	loginAlert.show();
-    }*/
-    
-    /*
-     * Displays a Dialog that takes the name and adds it to a table in the database
-     * 
-     * @param blueToothDevice -
-     * Meant to pass in the name of the selected BlueTooth device.
-     */
-    public void getScoutLogin() {
-		
+    public void displayScoutLogin() {
     	AlertDialog.Builder nameStamp = new AlertDialog.Builder(MainActivity.this);
     	final EditText name = new EditText(this);
     		
@@ -181,9 +107,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
     		.setTitle("Scout's Login")
     		.setView(name)
     		.setCancelable(false);
-    		
     	nameStamp.setNeutralButton("Login", new DialogInterface.OnClickListener() {
-				
 			@Override
 			public void onClick(DialogInterface dialog, int which) {}
 		});
@@ -194,13 +118,10 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
     
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		
 		if(which == DialogInterface.BUTTON_NEUTRAL) {
 			connection.closeBTConnection();
 			unbindService(connection);
-			
 		} else {
-			
 			selectedDeviceAddress = which;
 			BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 		
@@ -214,11 +135,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				Intent enableBtIntent = 
 						new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 				startActivityForResult(enableBtIntent, REQUEST_BT_ENABLE);
-		    
 			} else {
-				
-				
-				
 				SharedPreferences prefs = getSharedPreferences
 						(GlobalValues.PREFS_FILE_NAME, 0);
 				Editor prefsEditor = prefs.edit();
@@ -238,9 +155,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				builder.setCancelable(false);
 				progressDialog = builder.create();
 				progressDialog.show();
-				
 				prefsEditor.commit();
-				
 				lockScreenOrientation();
 			}
 		}
@@ -248,13 +163,10 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
 		if(requestCode == REQUEST_BT_ENABLE && resultCode == RESULT_OK) {
-			
 			SharedPreferences prefs = getSharedPreferences
 					(GlobalValues.PREFS_FILE_NAME, 0);
 			Editor prefsEditor = prefs.edit();
-			
 			Intent i = new Intent(this, BluetoothScoutClientService.class);
 			i.putExtra(BluetoothScoutClientService.SERVER_MAC_ADDRESS, 
 					devices[selectedDeviceAddress].getAddress());
@@ -269,9 +181,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			builder.setNeutralButton("Cancel", this);
 			progressDialog = builder.create();
 			progressDialog.show();
-			
 			prefsEditor.commit();
-			
 			lockScreenOrientation();
 		}
 	}
@@ -283,7 +193,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 
 	@Override
 	public void onSuccessfulSync() {
-		
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -303,7 +212,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				builder.setPositiveButton("Login", new UserDialogListener());
 				builder.setNegativeButton("Cancel", new UserDialogListener());
 				builder.show();
-				
 				releaseScreenOrientation();
 			}
 		});
@@ -311,11 +219,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 
 	@Override
 	public void onUnsuccessfulSync(String _errorMessage) {
-		
 		final String errorMessage = _errorMessage;
-		
 		runOnUiThread(new Runnable() {
-			
 			@Override
 			public void run() {
 				connection.closeBTConnection();
@@ -323,20 +228,15 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				progressDialog.dismiss();
 				Toast.makeText(getApplicationContext(), "Sync unsuccessful. " + 
 						errorMessage + ".", Toast.LENGTH_SHORT).show();
-				
 				releaseScreenOrientation();
 			}
 		});
-		
 	}
 	
 	@Override
 	public void onUpdate(String _message) {
-		
 		final String message = _message;
-		
 		runOnUiThread(new Runnable() {
-			
 			@Override
 			public void run() {
 				Toast.makeText(getApplicationContext(), message, 
@@ -346,7 +246,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 	}
 	
 	private class UserDialogListener implements DialogInterface.OnClickListener {
-
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
 			if(which == DialogInterface.BUTTON_POSITIVE) {
@@ -366,7 +265,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 					Intent i = new Intent(getApplicationContext(), 
 							ScoutTypeActivity.class);
 					startActivity(i);
-					
 				} else {
 					Toast.makeText(getApplicationContext(), "Not a valid username. " +
 							"The username must already be in the database.", 
@@ -412,7 +310,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			builder.show();
 			
 		} else if(v.getId() == R.id.sync_summary) {
-			
 			if(BluetoothAdapter.getDefaultAdapter() == null) {
 				Toast.makeText(this, "Sorry, your device does not support Bluetooth. " +
 						"You are unable to sync with a server.", Toast.LENGTH_LONG);
@@ -430,7 +327,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			builder.setTitle("Select Server Device");
 			builder.setItems(deviceNames, new SummaryDialogListener());
 			builder.show();
-			
 		} else if(v.getId() == R.id.view_summary) {
 			Intent i = new Intent(this, SummaryActivity.class);
 			startActivity(i);
@@ -446,9 +342,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				summaryConnection.closeBTConnection();
 				unbindService(summaryConnection);
 				dialog.dismiss();
-				
 			} else {
-				
 				selectedDeviceAddress = which;
 				BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 			
@@ -462,7 +356,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 					Intent enableBtIntent = 
 							new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 					startActivityForResult(enableBtIntent, REQUEST_BT_ENABLE);
-			    
 				} else {
 					Intent i = new Intent(MainActivity.this, BluetoothSummaryClientService.class);
 					i.putExtra(BluetoothSummaryClientService.SERVER_MAC_ADDRESS, 
@@ -493,7 +386,6 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 				
 				@Override
 				public void run() {
-					
 					progressDialog.dismiss();
 					summaryConnection.closeBTConnection();
 					
