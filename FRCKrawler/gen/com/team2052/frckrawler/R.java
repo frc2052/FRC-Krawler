@@ -24,7 +24,7 @@ public final class R {
         public static final int list_padding=0x7f050000;
     }
     public static final class drawable {
-        public static final int app_logo=0x7f020000;
+        public static final int app_icon=0x7f020000;
         public static final int black_view=0x7f020001;
         public static final int btn_zoom_page_normal=0x7f020002;
         public static final int ic_chooser=0x7f020003;
