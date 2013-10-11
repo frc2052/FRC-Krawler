@@ -23,7 +23,6 @@ public class OptionsActivity extends TabActivity implements OnClickListener {
 	public static final String PREFS_ROBOT_GAME = "robotGame";
 	
 	private String gameName;
-	
 	private SharedPreferences preferences;
 	
 	@Override
@@ -37,11 +36,13 @@ public class OptionsActivity extends TabActivity implements OnClickListener {
 				(Float.toString(preferences.getFloat(PREFS_COMPILE_WEIGHT, 1.0f)));
 		
 		boolean generate = preferences.getBoolean(PREFS_GENERATE_ROBOTS, false);
-		((ToggleButton)findViewById(R.id.generateRobots)).setChecked(generate);
 		gameName = preferences.getString(PREFS_ROBOT_GAME, "none");
 		
-		if(generate)
-			((ToggleButton)findViewById(R.id.generateRobots)).setText(gameName);
+		if(generate) {
+			ToggleButton generateButton = (ToggleButton)findViewById(R.id.generateRobots);
+			generateButton.setTextOn(gameName);
+			generateButton.setChecked(true);
+		}
 		
 		findViewById(R.id.saveOptions).setOnClickListener(this);
 		findViewById(R.id.restoreDefaults).setOnClickListener(this);
@@ -89,18 +90,15 @@ public class OptionsActivity extends TabActivity implements OnClickListener {
 				break;
 				
 			case R.id.restoreDefaults:
-				
 				restoreDefaultOptions(this, true);
 				finish();
 				break;
 				
 			case R.id.cancelOptions:
-				
 				finish();
 				break;
 				
 			case R.id.weightHelp:
-				
 				AlertDialog.Builder weightBuilder = new AlertDialog.Builder(this);
 				weightBuilder.setTitle("About Compiled Data Weight");
 				weightBuilder.setMessage("The weight for compiled data is how many times " +
@@ -119,7 +117,6 @@ public class OptionsActivity extends TabActivity implements OnClickListener {
 						"in the averaging process. Be careful, values larger than 2 or 3 will" +
 						" seriously skew data towards later matches. The default setting is 1.");
 				weightBuilder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
-					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
@@ -129,9 +126,7 @@ public class OptionsActivity extends TabActivity implements OnClickListener {
 				break;
 				
 			case R.id.generateRobots:
-				
 				final ToggleButton b = (ToggleButton)v;
-				
 				if(b.isChecked()) {
 					Game[] games = DBManager.getInstance(this).getAllGames();
 					final CharSequence[] choices = new CharSequence[games.length];
@@ -142,7 +137,6 @@ public class OptionsActivity extends TabActivity implements OnClickListener {
 					AlertDialog.Builder generateBuilder = new AlertDialog.Builder(this);
 					generateBuilder.setTitle("Choose a game for new robots");
 					generateBuilder.setItems(choices, new DialogInterface.OnClickListener() {
-
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							gameName = choices[which].toString();
@@ -168,7 +162,19 @@ public class OptionsActivity extends TabActivity implements OnClickListener {
 				break;
 				
 			case R.id.generateHelp:
-				
+				AlertDialog.Builder generateBuilder = new AlertDialog.Builder(this);
+				generateBuilder.setTitle("About Generating Robots");
+				generateBuilder.setMessage("Setting this option to 'On' generates a robot with " +
+						"the specified Game every time a new Team is added to the database. " +
+						"This is extremely useful for adding new Teams to the database for " +
+						"this first time, or for the next competition season.");
+				generateBuilder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				generateBuilder.show();
 				break;
 		}
 	}

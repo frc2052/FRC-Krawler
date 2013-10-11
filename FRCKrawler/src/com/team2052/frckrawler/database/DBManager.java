@@ -14,8 +14,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
-import com.team2052.frckrawler.AddTeamDialogActivity;
-import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.OptionsActivity;
 import com.team2052.frckrawler.database.structures.Comment;
 import com.team2052.frckrawler.database.structures.CompiledData;
@@ -51,7 +49,6 @@ import com.team2052.frckrawler.database.structures.User;
 public class DBManager {
 	
 	private static DBManager instance = null;
-	
 	private DBHelper helper;
 	private Context context;
 	
@@ -83,11 +80,9 @@ public class DBManager {
 	 *****/
 	
 	public static DBManager getInstance(Context _context) {
-		
 		if(instance == null){	//If a manager has not been created yet
 			instance = new DBManager(_context.getApplicationContext());
 		}
-		
 		return instance;
 	}
 	
@@ -103,12 +98,10 @@ public class DBManager {
 	 *****/
 	
 	public void addUser(User user) {
-		
 		addUser(user.getName(), user.isSuperuser());
 	}
 	
 	public synchronized void addUser(String name, boolean superuser) {
-		
 		ContentValues values = new ContentValues();
 		values.put(DBContract.COL_USER_ID, createID(DBContract.TABLE_USERS, 
 				DBContract.COL_USER_ID));
@@ -132,12 +125,10 @@ public class DBManager {
 	 *****/
 	
 	public void removeUser(User user) {
-		
 		removeUser(user.getID());
 	}
 	
 	public synchronized void removeUser(int id) {
-		
 		helper.getWritableDatabase().delete(DBContract.TABLE_USERS, 
 				DBContract.COL_USER_ID + " LIKE ?", new String[] {Integer.toString(id)});
 		
@@ -152,15 +143,12 @@ public class DBManager {
 	 */
 	
 	public synchronized User[] getAllUsers() {
-		
 		Cursor c = helper.getReadableDatabase().rawQuery(
 				"SELECT * FROM " + DBContract.TABLE_USERS, null);
 		User[] u = new User[c.getCount()];
 		
 		for(int i = 0; i < c.getCount(); i++) {
-			
 			c.moveToNext();
-			
 			u[i] = new User(
 					c.getString(c.getColumnIndex(DBContract.COL_USER_NAME)),
 					c.getInt(c.getColumnIndex(DBContract.COL_SUPERUSER)),
@@ -168,8 +156,8 @@ public class DBManager {
 					);
 		}
 		
+		c.close();
 		helper.close();
-		
 		return u;
 	}
 	
@@ -188,7 +176,6 @@ public class DBManager {
 	 */
 	
 	public synchronized User[] getUsersByColumns(String[] cols, String[] vals) {
-		
 		if(cols.length != vals.length)
 			return null;
 		
@@ -236,7 +223,6 @@ public class DBManager {
 	
 	public synchronized boolean updateUsers(String queryCols[], String queryVals[], 
 			String updateCols[], String updateVals[]) {
-		
 		if(updateCols.length != updateVals.length) //They must be the same so that every value
 			return false; //has something to map to and that there are no blank ones.
 		
@@ -264,9 +250,7 @@ public class DBManager {
 		
 		helper.getWritableDatabase().update(DBContract.TABLE_USERS, vals, 
 				queryString, queryVals);
-		
 		helper.close();
-		
 		return true;
 	}
 	
@@ -281,7 +265,6 @@ public class DBManager {
 	 *****/
 	
 	public synchronized void setSuperuer(String username, boolean superuser) {
-		
 		ContentValues vals = new ContentValues();
 		vals.put(DBContract.COL_SUPERUSER, superuser);
 		
@@ -314,7 +297,6 @@ public class DBManager {
 	 * number was less than zero, or if the team number is already taken.
 	 */
 	public boolean addTeams(Team[] t) {
-		
 		boolean allAdded = true;
 		
 		for(int i = 0; i < t.length; i++) {
@@ -327,14 +309,12 @@ public class DBManager {
 	}
 	
 	public boolean addTeam(Team t) {
-		
 		return addTeam(t.getNumber(), t.getName(), t.getSchool(), t.getCity(), 
 					t.getRookieYear(), t.getWebsite(), t.getStatePostalCode(), t.getColors());
 	}
 	
 	public synchronized boolean addTeam(int number, String name, String school, String city,
 			int rookieYear, String website, String statePostalCode, String colors) {
-		
 		if(number < 0)
 			return false;
 		
@@ -371,7 +351,6 @@ public class DBManager {
 		}
 		
 		helper.close();
-		
 		return false;
 	}
 	
@@ -387,12 +366,10 @@ public class DBManager {
 	 *****/
 	
 	public void removeTeam(Team t) {
-		
 		removeTeam(t.getNumber());
 	}
 	
 	public synchronized void removeTeam(int number) {
-		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
 		Cursor c = db.query(DBContract.TABLE_ROBOTS, 		//Find the team's robots
@@ -402,9 +379,7 @@ public class DBManager {
 				null, null, null);
 		
 		while(c.moveToNext()) {	//While this team still has robots...
-			
 			String[] value = {c.getString(c.getColumnIndex(DBContract.COL_ROBOT_ID))};
-			
 			db.delete(DBContract.TABLE_MATCH_PERF, DBContract.COL_ROBOT_ID + " LIKE ?", 
 					value);
 			
@@ -412,14 +387,11 @@ public class DBManager {
 		}
 		
 		String[] value = {Integer.toString(number)};
-		
 		db.delete(DBContract.TABLE_CONTACTS, DBContract.COL_TEAM_NUMBER + " LIKE ?", value);
 		db.delete(DBContract.TABLE_ROBOTS, DBContract.COL_TEAM_NUMBER + " LIKE ?", value);
 		db.delete(DBContract.TABLE_COMMENTS, DBContract.COL_TEAM_NUMBER + " LIKE ?", value);
 		db.delete(DBContract.TABLE_TEAMS, DBContract.COL_TEAM_NUMBER + " LIKE ?", value);
-		
 		helper.close();
-		
 	}
 	
 	
@@ -431,15 +403,12 @@ public class DBManager {
 	 *****/
 	
 	public synchronized Team[] getAllTeams() {
-		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		Cursor c = db.rawQuery(DBContract.SELECT_ALL_TEAM_DATA, null);
 		Team[] t = new Team[c.getCount()];
 		
 		for(int i = 0; i < c.getCount(); i++) {
-			
 			c.moveToNext();
-			
 			t[i] = new Team(c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)), 
 					c.getString(c.getColumnIndex(DBContract.COL_TEAM_NAME)), 
 					c.getString(c.getColumnIndex(DBContract.COL_SCHOOL)),
@@ -450,8 +419,8 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_COLORS)));
 		}
 		
+		c.close();
 		helper.close();
-		
 		return t;
 	}
 	
@@ -473,13 +442,11 @@ public class DBManager {
 	 * returned.
 	 */
 	public synchronized Team[] getTeamsByColumns(String[] cols, String[] vals) {
-		
 		return getTeamsByColumns(cols, vals, false);
 	}
 	
 	
 	public synchronized Team[] getTeamsByColumns(String[] cols, String[] vals, boolean isOr) {
-		
 		if(cols.length != vals.length)
 			return null;
 		
@@ -504,9 +471,7 @@ public class DBManager {
 		Team[] t = new Team[c.getCount()];
 		
 		for(int i = 0; i < c.getCount(); i++) {
-			
 			c.moveToNext();
-			
 			t[i] = new Team(c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)), 
 					c.getString(c.getColumnIndex(DBContract.COL_TEAM_NAME)), 
 					c.getString(c.getColumnIndex(DBContract.COL_SCHOOL)),
@@ -517,8 +482,8 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_COLORS)));
 		}
 		
+		c.close();
 		helper.close();
-		
 		return t;
 	}
 	
@@ -533,7 +498,6 @@ public class DBManager {
 	
 	public synchronized boolean updateTeams(String queryCols[], String queryVals[], 
 			String updateCols[], String updateVals[]) {
-		
 		if(updateCols.length != updateVals.length) //They must be the same so that every value
 			return false; //has something to map to and that there are no blank ones.
 		
@@ -563,7 +527,6 @@ public class DBManager {
 				queryString, queryVals);
 		
 		helper.close();
-		
 		return true;
 	}
 	
@@ -579,13 +542,11 @@ public class DBManager {
 	 *****/
 	
 	public boolean addEvent(Event e) {
-		
 		return addEvent(e.getEventName(), e.getGameName(), e.getLocation(), e.getDateStamp());
 	}
 	
 	public synchronized boolean addEvent(String name, String gameName, 
 			String location, Date date) {
-		
 		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, gameName))
 			return false;
 		
@@ -605,7 +566,6 @@ public class DBManager {
 		db.insert(DBContract.TABLE_EVENTS, null, values);
 		
 		helper.close();
-		
 		return true;
 	}
 	
@@ -620,21 +580,17 @@ public class DBManager {
 	 *****/
 	
 	public synchronized void removeEvent(Event e) {
-		
 		removeEvent(e.getEventID());
 	}
 	
 	public synchronized void removeEvent(int eventID) {
-		
 		SQLiteDatabase db = helper.getWritableDatabase();
-		
 		db.delete(DBContract.TABLE_MATCH_PERF, DBContract.COL_EVENT_ID + " LIKE ?", 
 				new String[] {Integer.toString(eventID)});
 		db.delete(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID + " LIKE ?", 
 				new String[] {Integer.toString(eventID)});
 		db.delete(DBContract.TABLE_EVENT_ROBOTS, DBContract.COL_EVENT_ID + " LIKE ?", 
 				new String[] {Integer.toString(eventID)});
-		
 		helper.close();
 	}
 	
@@ -647,16 +603,12 @@ public class DBManager {
 	 *****/
 	
 	public synchronized Event[] getAllEvents() {
-		
 		Cursor c = helper.getReadableDatabase().rawQuery(
 				"SELECT * FROM " + DBContract.TABLE_EVENTS, null);
-		
 		Event[] e = new Event[c.getCount()];
 		
 		for(int i = 0; i < c.getCount(); i++) {
-			
 			c.moveToNext();
-			
 			e[i] = new Event(
 					c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
 					c.getString(c.getColumnIndex(DBContract.COL_EVENT_NAME)),
@@ -667,8 +619,8 @@ public class DBManager {
 					);
 		}
 		
+		c.close();
 		helper.close();
-		
 		return e;
 	}
 	
@@ -683,7 +635,6 @@ public class DBManager {
 	
 	
 	public synchronized Event[] getEventsByColumns(String[] cols, String[] vals) {
-		
 		if(cols.length != vals.length)
 			return null;
 		
@@ -702,9 +653,7 @@ public class DBManager {
 		Event[] e = new Event[c.getCount()];
 		
 		for(int i = 0; i < c.getCount(); i++) {
-			
 			c.moveToNext();
-			
 			e[i] = new Event(
 					c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
 					c.getString(c.getColumnIndex(DBContract.COL_EVENT_NAME)),
@@ -715,8 +664,8 @@ public class DBManager {
 					);
 		}
 		
+		c.close();
 		helper.close();
-		
 		return e;
 	}
 	
@@ -739,7 +688,6 @@ public class DBManager {
 	
 	public synchronized boolean updateEvents(String queryCols[], String queryVals[], 
 			String updateCols[], String updateVals[]) {
-		
 		if(updateCols.length != updateVals.length) //They must be the same so that every value
 			return false; //has something to map to and that there are no blank ones.
 		
@@ -767,9 +715,7 @@ public class DBManager {
 		
 		helper.getWritableDatabase().update(DBContract.TABLE_EVENTS, vals, 
 				queryString, queryVals);
-		
 		helper.close();
-		
 		return true;
 	}
 	
@@ -787,13 +733,11 @@ public class DBManager {
 	 *****/
 	
 	public void addComment(Comment c) {
-		
 		addComment(c.getTeamNumber(), c.getEventID(), c.getUserID(), c.getText(), c.getTimeStamp());
 	}
 	
 	public synchronized void addComment(int teamNumber, int eventID, int userID, String comment, 
 			Date dateStamp) {
-		
 		ContentValues values = new ContentValues();
 		values.put(DBContract.COL_TEAM_NUMBER, teamNumber);
 		values.put(DBContract.COL_EVENT_ID, eventID);
@@ -805,7 +749,6 @@ public class DBManager {
 		}
 		
 		helper.getWritableDatabase().insert(DBContract.TABLE_COMMENTS, null, values);
-		
 		helper.close();
 	}
 	
@@ -823,14 +766,11 @@ public class DBManager {
 	 *****/
 	
 	public void removeComment(Comment c) {
-		
 		removeComment(c.getTeamNumber(), c.getTimeStamp());
 	}
 	
 	public synchronized void removeComment(int teamNumber, Date dateStamp) {
-		
 		if(dateStamp != null) {
-			
 			helper.getWritableDatabase().execSQL("DELETE FROM " + 
 					DBContract.TABLE_COMMENTS + " WHERE " + 
 					DBContract.COL_TEAM_NUMBER + "='" + teamNumber + 
@@ -847,16 +787,12 @@ public class DBManager {
 	 *****/
 	
 	public synchronized Comment[] getAllComments() {
-		
 		Cursor c = helper.getReadableDatabase().rawQuery(
 				"SELECT * FROM " + DBContract.TABLE_COMMENTS, null);
-		
 		Comment[] comments = new Comment[c.getCount()];
 		
 		for(int i = 0; i < c.getColumnCount(); i++) {
-			
 			c.moveToNext();
-			
 			comments[i] = new Comment(
 					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
 					c.getInt(c.getColumnIndex(DBContract.COL_USER_ID)),
@@ -867,12 +803,10 @@ public class DBManager {
 		}
 		
 		helper.close();
-		
 		return comments;
 	}
 	
 	public synchronized Comment[] getCommentsByColumns(String[] cols, String[] vals) {
-		
 		if(cols.length != vals.length)
 			return null;
 		
@@ -888,9 +822,7 @@ public class DBManager {
 		Comment[] comments = new Comment[c.getCount()];
 		
 		for(int i = 0; i < comments.length; i++) {
-			
 			c.moveToNext();
-			
 			comments[i] = new Comment(
 					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
 					c.getInt(c.getColumnIndex(DBContract.COL_USER_ID)),
@@ -901,7 +833,6 @@ public class DBManager {
 		}
 		
 		helper.close();
-		
 		return comments;
 	}
 	
@@ -918,13 +849,11 @@ public class DBManager {
 	 */
 	
 	public void addContact(Contact c) {
-		
 		addContact(c.getTeamNumber(), c.getName(), c.getEmail(), c.getAddress(), c.getPhoneNumber());
 	}
 	
 	public synchronized void addContact(int teamNumber, String name, String email, 
 			String address, String phoneNumber) {
-		
 		ContentValues values = new ContentValues();
 		values.put(DBContract.COL_TEAM_NUMBER, teamNumber);
 		values.put(DBContract.COL_CONTACT_ID, createID(DBContract.TABLE_CONTACTS, 
@@ -933,7 +862,6 @@ public class DBManager {
 		values.put(DBContract.COL_EMAIL, email);
 		values.put(DBContract.COL_ADDRESS, address);
 		values.put(DBContract.COL_PHONE_NUMBER, phoneNumber);
-		
 		helper.getWritableDatabase().insert(DBContract.TABLE_CONTACTS, null, values);
 		helper.close();
 	}
@@ -948,12 +876,10 @@ public class DBManager {
 	 *****/
 	
 	public void removeContact(Contact c) {
-		
 		removeContact(c.getContactID());
 	}
 	
 	public synchronized void removeContact(int id) {
-		
 		helper.getWritableDatabase().delete(DBContract.TABLE_CONTACTS, 
 				DBContract.COL_CONTACT_ID + " LIKE ?", 
 				new String[] {Integer.toString(id)});
@@ -967,15 +893,12 @@ public class DBManager {
 	 *****/
 	
 	public synchronized Contact[] getAllContacts() {
-		
 		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + 
 						DBContract.TABLE_CONTACTS, null);
 		Contact[] contacts = new Contact[c.getCount()];
 		
 		for(int i = 0; i < contacts.length; i++) {
-			
 			c.moveToNext();
-			
 			contacts[i] = new Contact(
 					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
 					c.getInt(c.getColumnIndex(DBContract.COL_CONTACT_ID)),
@@ -987,7 +910,6 @@ public class DBManager {
 		}
 		
 		helper.close();
-		
 		return contacts;
 	}
 	
@@ -1004,7 +926,6 @@ public class DBManager {
 	 *****/
 	
 	public synchronized Contact[] getContactsByColumns(String[] cols, String[] vals) {
-		
 		if(cols.length != vals.length)
 			return null;
 		
@@ -1021,9 +942,7 @@ public class DBManager {
 		Contact[] contacts = new Contact[c.getCount()];
 		
 		for(int i = 0; i < contacts.length; i++) {
-			
 			c.moveToNext();
-			
 			contacts[i] = new Contact(
 					c.getInt(c.getColumnIndex(DBContract.COL_TEAM_NUMBER)),
 					c.getInt(c.getColumnIndex(DBContract.COL_CONTACT_ID)),
@@ -1035,7 +954,6 @@ public class DBManager {
 		}
 		
 		helper.close();
-		
 		return contacts;
 	}
 	
@@ -1071,9 +989,7 @@ public class DBManager {
 		
 		helper.getWritableDatabase().update(DBContract.TABLE_CONTACTS, vals, 
 				queryString, queryVals);
-		
 		helper.close();
-		
 		return true;
 	}
 	
@@ -1090,26 +1006,20 @@ public class DBManager {
 	 *****/
 	
 	public boolean addGame(Game g) {
-		
 		return addGame(g.getName());
 	}
 	
 	public synchronized boolean addGame(String name) {
-		
 		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, name)) {
 			//If the name is not taken...
-			
 			ContentValues values = new ContentValues();	//Add it to the
 			values.put(DBContract.COL_GAME_NAME, name);	//games table
-			
 			helper.getWritableDatabase().insert(DBContract.TABLE_GAMES, null, values);
 			helper.close();
-			
 			return true;
 		}
 		
 		helper.close();
-		
 		return false;
 	}
 	
@@ -1133,13 +1043,11 @@ public class DBManager {
 	}
 	
 	public synchronized boolean removeGame(String name) {
-		
 		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, name))	
 			//If this is not the name of a real game...
 			return false;	//tell the caller that the operation failed.
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
-		
 		Cursor c = db.query(DBContract.TABLE_ROBOTS, 
 				new String[] {DBContract.COL_ROBOT_ID}, 
 				DBContract.COL_GAME_NAME + " LIKE ?", 
@@ -1147,13 +1055,11 @@ public class DBManager {
 				null,null, null);
 		
 		for(int robotCount = 0; robotCount < c.getCount(); robotCount++) {
-			
 			c.moveToNext();
 			removeRobot(c.getInt(c.getColumnIndex(DBContract.COL_ROBOT_ID)));
 		}
 		
 		db = helper.getWritableDatabase();	//Reopen because the removeRobot method closed it.
-		
 		db.delete(DBContract.TABLE_MATCH_PERF_METRICS, 
 				DBContract.COL_GAME_NAME + " LIKE ?", 
 				new String[] {name});
@@ -1174,7 +1080,6 @@ public class DBManager {
 		
 		SharedPreferences prefs = context.getSharedPreferences
 				(OptionsActivity.PREFS_NAME, Context.MODE_PRIVATE);
-		
 		if(name.equals(prefs.getString(OptionsActivity.PREFS_ROBOT_GAME, "none"))) {
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putBoolean(OptionsActivity.PREFS_GENERATE_ROBOTS, false);
@@ -1194,20 +1099,18 @@ public class DBManager {
 	 *****/
 	
 	public synchronized Game[] getAllGames() {
-		
 		Cursor c = helper.getReadableDatabase().rawQuery("SELECT * FROM " + 
 				DBContract.TABLE_GAMES + " ORDER BY " + 
 				DBContract.COL_GAME_NAME + " ASC", null);
 		Game[] g = new Game[c.getCount()];
 		
 		for(int i = 0; i < g.length; i++) {
-			
 			c.moveToNext();
 			g[i] = new Game(c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)));
 		}
 		
+		c.close();
 		helper.close();
-		
 		return g;
 	}
 	
@@ -1239,7 +1142,6 @@ public class DBManager {
 			return false;
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
-		
 		ContentValues values = new ContentValues();
 		values.put(DBContract.COL_TEAM_NUMBER, teamNumber);
 		values.put(DBContract.COL_GAME_NAME, gameName);
@@ -1257,7 +1159,6 @@ public class DBManager {
 		
 		db.insert(DBContract.TABLE_ROBOTS, null, values);
 		helper.close();
-		
 		return true;
 	}
 	
@@ -1275,15 +1176,12 @@ public class DBManager {
 	 * was not passed in the parameter.
 	 *****/
 	public synchronized boolean removeRobot(int robotID) {
-		
 		if(!hasValue(DBContract.TABLE_ROBOTS, DBContract.COL_ROBOT_ID, 
 				Integer.toString(robotID)))
 			return false;
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
-		
 		//Remove all pictures
-		
 		db.delete(DBContract.TABLE_MATCH_PERF, DBContract.COL_ROBOT_ID + " LIKE ?", 
 				new String[] {Integer.toString(robotID)});
 		db.delete(DBContract.TABLE_ROBOTS, DBContract.COL_ROBOT_ID + " LIKE ?", 
@@ -1292,7 +1190,6 @@ public class DBManager {
 				DBContract.COL_ROBOT_ID + " LIKE ?", 
 				new String[] {Integer.toString(robotID)});
 		helper.close();
-		
 		return true;
 	}
 	
@@ -1337,7 +1234,6 @@ public class DBManager {
 			
 		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
 		Robot[] r = new Robot[c.getCount()];
-		
 		helper.close();
 		
 		for(int i = 0; i < c.getCount(); i++) {
@@ -1388,6 +1284,7 @@ public class DBManager {
 					);
 		}
 		
+		c.close();
 		return r;
 	}
 	
@@ -1631,18 +1528,14 @@ public class DBManager {
 		Metric[] m = new Metric[c.getCount()];
 		
 		for(int i = 0; i < c.getCount(); i++) {
-			
 			c.moveToNext();
-			
 			String rangeString = c.getString(c.getColumnIndex(DBContract.COL_RANGE));
 			ArrayList<Object> rangeArrList = new ArrayList<Object>();
-			
 			String currentRangeValString = new String();
 			
 			for(int character = 0; character < rangeString.length(); character++) {
 				if(rangeString.charAt(character) != ':')
 					currentRangeValString += rangeString.charAt(character);
-				
 				else {
 					rangeArrList.add(currentRangeValString);
 					currentRangeValString = new String();
@@ -1662,8 +1555,8 @@ public class DBManager {
 					);
 		}
 		
+		c.close();
 		helper.close();
-		
 		return m;
 	}
 	
@@ -2182,6 +2075,7 @@ public class DBManager {
 					);
 		}
 		
+		c.close();
 		helper.close();
 		
 		return metrics;
@@ -2399,6 +2293,7 @@ public class DBManager {
 		vals.put(DBContract.COL_IS_CHECKED, false);
 		
 		Log.d("FRCKrawler", "" + db.insert(DBContract.TABLE_EVENT_ROBOTS, null, vals));
+		robotCursor.close();
 		helper.close();
 		
 		return true;
@@ -2483,6 +2378,7 @@ public class DBManager {
 			c.moveToNext();
 		}
 		
+		c.close();
 		return robots;
 	}
 	
@@ -2735,6 +2631,7 @@ public class DBManager {
 					);
 		}
 		
+		c.close();
 		helper.close();
 		
 		return d;
@@ -2886,7 +2783,6 @@ public class DBManager {
 	}
 	
 	public CompiledData[] getCompiledEventData(int eventID, Query[] querys, SortKey sortKey) {
-		
 		if(!hasValue(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID, 
 				Integer.toString(eventID)))
 			return null;
@@ -3944,6 +3840,7 @@ public class DBManager {
 			names[i] = c.getString(c.getColumnIndex(DBContract.COL_TEAM_NAME));
 		}
 		
+		c.close();
 		return names;
 	}
 	
@@ -4012,6 +3909,7 @@ public class DBManager {
 					);
 		}
 		
+		c.close();
 		return r;
 	}
 	

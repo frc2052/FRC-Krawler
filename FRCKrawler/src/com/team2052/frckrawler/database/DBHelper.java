@@ -1,7 +1,8 @@
 package com.team2052.frckrawler.database;
 
-import android.content.*;
-import android.database.sqlite.*;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 /*****
  * Class: DatabaseHelper

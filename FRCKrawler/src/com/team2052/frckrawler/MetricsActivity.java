@@ -6,12 +6,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
-import com.team2052.frckrawler.R;
+import android.widget.RadioButton;
+import android.widget.TableLayout;
+import android.widget.TextView;
+
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Metric;
-import com.team2052.frckrawler.gui.*;
+import com.team2052.frckrawler.gui.AbstractRadioGroup;
+import com.team2052.frckrawler.gui.MyButton;
+import com.team2052.frckrawler.gui.MyTableRow;
+import com.team2052.frckrawler.gui.MyTextView;
 
 public class MetricsActivity extends StackableTabActivity implements OnClickListener {
 	

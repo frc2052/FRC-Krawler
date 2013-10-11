@@ -13,8 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.bluetooth.BluetoothScoutClientService;
-import com.team2052.frckrawler.bluetooth.ScoutServiceConnection;
 import com.team2052.frckrawler.bluetooth.ClientThreadListener;
+import com.team2052.frckrawler.bluetooth.ScoutServiceConnection;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.User;
@@ -53,10 +53,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		((TextView)findViewById(R.id.scoutName)).
-				setText(user.getName());
-		
+		((TextView)findViewById(R.id.scoutName)).setText(user.getName());
 		selectedEvent = db.scoutGetEvent();
 		
 		if(selectedEvent != null)
@@ -76,7 +73,6 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		Intent i;
-		
 		switch(v.getId()) {
 			case R.id.matchScout:
 				i = new Intent(this, ScoutActivity.class);
@@ -128,7 +124,6 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onSuccessfulSync() {
-		
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -145,9 +140,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	@Override
 	public void onUnsuccessfulSync(String _errorMessage) {
 		final String errorMessage = _errorMessage;
-		
 		runOnUiThread(new Runnable() {
-			
 			@Override
 			public void run() {
 				unbindService(connection);
@@ -162,9 +155,7 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	@Override
 	public void onUpdate(String _message) {
 		final String message = _message;
-		
 		runOnUiThread(new Runnable() {
-			
 			@Override
 			public void run() {
 				Toast.makeText(getApplicationContext(), message, 

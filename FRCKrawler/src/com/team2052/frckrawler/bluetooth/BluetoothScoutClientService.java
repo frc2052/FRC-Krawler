@@ -90,7 +90,6 @@ public class BluetoothScoutClientService extends Service
 	
 	@Override
 	public void onUnsuccessfulSync(String errorMessage) {
-		
 		if(binder != null && binder.getListener() != null) 
 			binder.getListener().onUnsuccessfulSync(errorMessage);
 	}

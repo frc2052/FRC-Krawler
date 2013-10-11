@@ -66,7 +66,6 @@ public class SummaryActivity extends Activity implements OnClickListener {
 	}
 	
 	private class GetSummaryTask extends AsyncTask<Void, MyTableRow, Void> {
-		
 		AlertDialog progressDialog;
 		
 		@Override

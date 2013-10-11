@@ -2,14 +2,18 @@ package com.team2052.frckrawler;
 
 import java.util.Date;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.database.DBContract;
@@ -29,6 +33,7 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 	private static final int DRIVER_DATA_ID = 5;
 	private static final int COMPILED_DATA_ID = 6;
 	private static final int LISTS_ID = 7;
+	private static final int IMPORT_ID = 8;
 	
 	private DBManager dbManager;
 	
@@ -93,13 +98,17 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 					Integer.valueOf(events[i].getEventID()));
 			matchDataButton.setId(COMP_DATA_ID);
 			
-			MyButton compiledDataButton = new MyButton(this, "Compiled Data", this, 
+			MyButton compiledDataButton = new MyButton(this, "Summary", this, 
 					Integer.valueOf(events[i].getEventID()));
 			compiledDataButton.setId(COMPILED_DATA_ID);
 			
 			MyButton listsButton = new MyButton(this, "Lists", this, 
 					Integer.valueOf(events[i].getEventID()));
 			listsButton.setId(LISTS_ID);
+			
+			MyButton importButton = new MyButton(this, "Import", this, 
+					Integer.valueOf(events[i].getEventID()));
+			importButton.setId(IMPORT_ID);
 			
 			Date dateStamp = events[i].getDateStamp();
 			String dateString = " " + dateStamp.getMonth() + "/" + dateStamp.getDay() + 
@@ -115,19 +124,18 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 					robotsButton,
 					matchDataButton,
 					compiledDataButton,
-					listsButton
+					listsButton,
+					importButton
 			}, color));
 		}
 	}
 	
 	@Override
 	public void onClick(View v) {
-		
 		Intent i;
 		
 		switch(v.getId()) {
 			case R.id.addEventButton:
-				
 				if(parents[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)] != null) {
 					
 					i = new Intent(this, AddEventDialogActivity.class);
@@ -135,29 +143,23 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 							parents[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
 					startActivity(i);
 				}
-				
 				break;
 				
 			case EDIT_EVENT_ID:
-			
 				i = new Intent(this, EditEventDialogActivity.class);
 				i.putExtra(EditEventDialogActivity.EVENT_ID_EXTRA, v.getTag().toString());
 				startActivity(i);
-				
 				break;
 				
 			case ATTENDING_TEAMS_ID:
-				
 				i = new Intent(this, AttendingTeamsDialogActivity.class);
 				i.putExtra(AttendingTeamsDialogActivity.GAME_NAME_EXTRA, 
 						databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
 				i.putExtra(AttendingTeamsDialogActivity.EVENT_ID_EXTRA, v.getTag().toString());
 				startActivity(i);
-				
 				break;
 				
 			case ROBOTS_ID:
-				
 				Robot[] attendingRobots = dbManager.getRobotsAtEvent
 								(Integer.parseInt(v.getTag().toString()));
 				
@@ -174,52 +176,66 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 				i.putExtra(DB_VALUES_EXTRA, dbValsArr);
 				i.putExtra(DB_KEYS_EXTRA, dbKeysArr);
 				startActivity(i);
-				
 				break;
 				
 			case COMP_DATA_ID:
-				
 				i = new Intent(this, RawMatchDataActivity.class);
 				i.putExtra(PARENTS_EXTRA, new String[] {});
 				i.putExtra(DB_VALUES_EXTRA, new String[] {v.getTag().toString()});
 				i.putExtra(DB_KEYS_EXTRA, new String[] {DBContract.COL_EVENT_ID});
 				i.putExtra(RawMatchDataActivity.LIMIT_LOADING_EXTRA, true);
 				startActivity(i);
-				
 				break;
 				
 			case DRIVER_DATA_ID:
-				
 				i = new Intent(this, DriverDataActivity.class);
 				i.putExtra(PARENTS_EXTRA, new String[] {});
 				i.putExtra(DB_VALUES_EXTRA, new String[] {v.getTag().toString()});
 				i.putExtra(DB_KEYS_EXTRA, new String[] {DBContract.COL_EVENT_ID});
 				startActivity(i);
-				
 				break;
 				
 			case COMPILED_DATA_ID:
-				
 				i = new Intent(this, QueryActivity.class);
 				i.putExtra(PARENTS_EXTRA, new String[] {});
 				i.putExtra(DB_VALUES_EXTRA, new String[] {v.getTag().toString()});
 				i.putExtra(DB_KEYS_EXTRA, new String[] {DBContract.COL_EVENT_ID});
 				startActivity(i);
-				
 				break;
 				
 			case LISTS_ID:
-				
 				i = new Intent(this, ListsActivity.class);
-				i.putExtra(ListsActivity.EVENT_ID_EXTRA, Integer.parseInt(v.getTag().toString()));
+				i.putExtra(ListsActivity.EVENT_ID_EXTRA, 
+						Integer.parseInt(v.getTag().toString()));
 				startActivity(i);
+				break;
 				
+			case IMPORT_ID:
+				ConnectivityManager connMgr = (ConnectivityManager) 
+						getSystemService(Context.CONNECTIVITY_SERVICE);
+				NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+				
+				if (networkInfo != null && networkInfo.isConnected()) {
+					i = new Intent(this, ImportDialogActivity.class);
+					i.putExtra(ImportDialogActivity.EVENT_ID_EXTRA, 
+							Integer.parseInt(v.getTag().toString()));
+					startActivity(i);
+				} else {
+					AlertDialog.Builder b = new AlertDialog.Builder(this);
+					b.setMessage("You must have internet connection to import Event data " +
+							"from the web.");
+					b.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+				}
 				break;
 		}
 	}
 	
 	private class GetEventsTask extends AsyncTask<Void, Void, Event[]> {
-		
 		private int eventNum = 0;
 		
 		@Override

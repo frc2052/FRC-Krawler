@@ -235,6 +235,9 @@
         <activity android:name="AddRobotAllActivity"
             	  android:theme="@android:style/Theme.Dialog">
         </activity>
+        <activity android:name="ImportDialogActivity"
+            	  android:theme="@android:style/Theme.Dialog">
+        </activity>
     </application>
 
 </manifest>

@@ -1,7 +1,5 @@
 package com.team2052.frckrawler;
 
-import com.team2052.frckrawler.R;
-
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;

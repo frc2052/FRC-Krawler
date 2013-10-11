@@ -9,10 +9,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 
-import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.*;
+import com.team2052.frckrawler.database.DBContract;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
 
 public class EditEventDialogActivity extends Activity implements OnClickListener, DialogInterface.OnClickListener {

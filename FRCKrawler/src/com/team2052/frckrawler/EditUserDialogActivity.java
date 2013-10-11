@@ -6,9 +6,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.User;
@@ -21,7 +21,6 @@ public class EditUserDialogActivity extends Activity implements OnClickListener,
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialogactivity_edit_user);
 		
@@ -34,7 +33,6 @@ public class EditUserDialogActivity extends Activity implements OnClickListener,
 	
 	@Override
 	public void onResume() {
-		
 		super.onResume();
 		
 		User[] arr = dbManager.getUsersByColumns(
@@ -43,7 +41,6 @@ public class EditUserDialogActivity extends Activity implements OnClickListener,
 		User u = arr[0];
 		
 		((TextView)findViewById(R.id.nameVal)).setText(u.getName());
-		((CheckBox)findViewById(R.id.superuserVal)).setChecked(u.isSuperuser());
 	} 
 	
 	
@@ -56,16 +53,12 @@ public class EditUserDialogActivity extends Activity implements OnClickListener,
 	
 	@Override
 	public void onClick(View v) {
-		
 		switch(v.getId()) {
 			case R.id.cancel :
-			
 				finish();
-			
 				break;
 			
 			case R.id.saveUser :
-				
 				String[] queryCols = new String[] {
 						DBContract.COL_USER_ID
 				};
@@ -75,35 +68,25 @@ public class EditUserDialogActivity extends Activity implements OnClickListener,
 				};
 				
 				String[] updateCols = new String[] {
-						DBContract.COL_USER_NAME,
-						DBContract.COL_SUPERUSER
+						DBContract.COL_USER_NAME
 				};
 				
 				String[] updateVals = new String[] {
 						((TextView)findViewById(R.id.nameVal)).getText().toString(),
-						Boolean.toString(
-								((CheckBox)findViewById(R.id.superuserVal))
-								.isChecked())
 				};
 				
 				dbManager.updateUsers(queryCols, queryVals, updateCols, updateVals);
-				
 				finish();
-			
 				break;
 				
 			case R.id.remove: 
-				
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				
 				builder.setMessage("Are you sure you want to remove this user from the database? " +
 						"They will be cast into the cold void of cyberspace for eternity.");
 				builder.setTitle("");
 				builder.setPositiveButton("Yes", this);
 				builder.setNegativeButton("No", this);
-				
 				builder.show();
-				
 				break;
 		}
 	}
@@ -125,13 +108,11 @@ public class EditUserDialogActivity extends Activity implements OnClickListener,
 	public void onClick(DialogInterface dialog, int which) {
 		
 		if(which == DialogInterface.BUTTON_POSITIVE) {
-			
 			dbManager.removeUser(Integer.parseInt(getIntent().getStringExtra(USER_ID_EXTRA)));
 			dialog.dismiss();
 			finish();
 			
 		} else {
-			
 			dialog.dismiss();
 		}
 		

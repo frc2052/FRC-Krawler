@@ -1,8 +1,6 @@
 package com.team2052.frckrawler;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.Team;
 
 public class AddTeamDialogActivity extends Activity implements OnClickListener {

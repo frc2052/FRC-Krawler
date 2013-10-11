@@ -106,6 +106,7 @@
                     android:layout_alignLeft="@+id/weightValue"
                     android:layout_alignTop="@+id/textView2"
                     android:layout_toLeftOf="@+id/generateHelp"
+                    android:checked="false"
                     android:text=" "
                     android:textOff="No"
                     android:textOn=" " />

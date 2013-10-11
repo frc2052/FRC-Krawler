@@ -65,6 +65,7 @@
         android:layout_toRightOf="@+id/scrollView1" >
 
         <LinearLayout
+            android:id="@+id/lin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -87,39 +88,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="18sp" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/titke" >
-
-            <ScrollView
-                android:id="@+id/scrollView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true" >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <TableLayout
-                        android:id="@+id/gamesDataTable"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true" >
-
-                    </TableLayout>
-
-                </RelativeLayout>
-
-            </ScrollView>
-
-        </RelativeLayout>
-
         <TextView
             android:id="@+id/gamesNum"
             android:layout_width="wrap_content"
@@ -128,6 +96,27 @@
             android:layout_alignParentRight="true"
             android:text=" "
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/lin"
+            android:layout_below="@+id/titke"
+            android:layout_centerHorizontal="true" >
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TableLayout
+                    android:id="@+id/gamesDataTable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+                </TableLayout>
+            </HorizontalScrollView>
+        </ScrollView>
 
     </RelativeLayout>
 

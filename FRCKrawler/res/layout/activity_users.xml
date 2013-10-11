@@ -22,7 +22,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <LinearLayout
-            android:id="@+id/linearLayout1"
+            android:id="@+id/linLayout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -48,7 +48,7 @@
             android:id="@+id/ScrollView01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/linearLayout1"
+            android:layout_above="@+id/linLayout1"
             android:layout_below="@+id/titke"
             android:layout_centerHorizontal="true" >
 
