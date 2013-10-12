@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.MalformedJsonException;
 import com.team2052.frckrawler.fa.types.FAEvent;
 
 public class EventReader {
@@ -35,17 +36,22 @@ public class EventReader {
 		conn.connect();
 		InputStream is = conn.getInputStream();
 		String jsonContent = readJSON(is);
+		FAEvent[] faEvents;
 		
-		//Parse the Json array
-		JsonParser jParser = new JsonParser();
-		JsonObject dataObject = jParser.parse(jsonContent).getAsJsonObject();
-	    JsonArray array = dataObject.get("data").getAsJsonArray();
-	    FAEvent[] faEvents = new FAEvent[array.size()];
-	    
-	    //Get each FAEvent out of the array
-		Gson parser = new Gson();
-		for(int i = 0; i < array.size(); i++) {
-			faEvents[i] = parser.fromJson(array.get(i), FAEvent.class);
+		try {
+			//Parse the Json array
+			JsonParser jParser = new JsonParser();
+			JsonObject dataObject = jParser.parse(jsonContent).getAsJsonObject();
+			JsonArray array = dataObject.get("data").getAsJsonArray();
+			faEvents = new FAEvent[array.size()];
+
+			//Get each FAEvent out of the array
+			Gson parser = new Gson();
+			for(int i = 0; i < array.size(); i++) {
+				faEvents[i] = parser.fromJson(array.get(i), FAEvent.class);
+			}
+		} catch(Exception e) {
+			return null;
 		}
 
 		if(is != null)

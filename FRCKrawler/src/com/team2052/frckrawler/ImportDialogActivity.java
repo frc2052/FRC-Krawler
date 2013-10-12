@@ -5,7 +5,10 @@ import java.io.IOException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +36,7 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 	private DBManager db;
 	private Event frckrawlerEvent;
 	private FAEvent[] faEvents;
+	private AlertDialog tempDownloadProg;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,7 +50,15 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 		frckrawlerEvent = db.getEventsByColumns(
 				new String[] {DBContract.COL_EVENT_ID}, 
 				new String[] {Integer.toString(getIntent().getIntExtra(EVENT_ID_EXTRA, -1))})[0];
+		tempDownloadProg = null;
 		new ImportFAEventsTask().execute();
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		if(tempDownloadProg != null)
+			tempDownloadProg.dismiss();
 	}
 	
 	@Override
@@ -115,17 +127,38 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 		}
 	}
 	
+	private void lockScreenOrientation() {
+		int currentOrientation = getResources().getConfiguration().orientation;
+		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+			else
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}
+		else {
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+			else
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
+	}
+	
+	private void releaseScreenOrientation() {
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+	}
+	
 	private class ImportFAEventsTask extends AsyncTask<Void, Void, FAEvent[]> {
 		
 		private AlertDialog progressDialog;
 		
 		@Override
 		protected void onPreExecute() {
+			lockScreenOrientation();
 			AlertDialog.Builder builder = new AlertDialog.Builder(ImportDialogActivity.this);
 			builder.setTitle("Connecting...");
 			builder.setView(new ProgressSpinner(ImportDialogActivity.this));
 			builder.setCancelable(false);
-			progressDialog = builder.create();
+			progressDialog = tempDownloadProg = builder.create();
 			progressDialog.show();
 		}
 		
@@ -138,7 +171,7 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 				AlertDialog.Builder builder = new AlertDialog.Builder(ImportDialogActivity.this);
 				builder.setTitle("Connection error!");
 				builder.setMessage("There was an in loading the list of events from " +
-						"this Internet:\n" + e.getMessage());
+						"the Internet:\n" + e.getMessage());
 				builder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -153,14 +186,29 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 		
 		@Override
 		protected void onPostExecute(FAEvent[] e) {
-			faEvents = e;
-			ArrayAdapter<FAEvent> adapter = new ArrayAdapter<FAEvent>(ImportDialogActivity.this, 
-					android.R.layout.simple_spinner_item, faEvents);
-			((Spinner)findViewById(R.id.eventsSpinner)).setAdapter(adapter);
-			progressDialog.dismiss();
+			if(e == null) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(ImportDialogActivity.this);
+				builder.setTitle("Redirect Error");
+				builder.setMessage("The request has been redirected. You probably need to " +
+						"sign in to the network on your browser.");
+				builder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						finish();
+					}
+				});
+				builder.show();
+			} else {
+				faEvents = e;
+				ArrayAdapter<FAEvent> adapter = new ArrayAdapter<FAEvent>(ImportDialogActivity.this, 
+						android.R.layout.simple_spinner_item, faEvents);
+				((Spinner)findViewById(R.id.eventsSpinner)).setAdapter(adapter);
+				progressDialog.dismiss();
+				releaseScreenOrientation();
+			}
 		}
 	}
-	
 	
 	private class ImportTeamsAndRobotsTask extends AsyncTask<FAEvent, Void, Void> {
 		
@@ -168,11 +216,12 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 		
 		@Override
 		protected void onPreExecute() {
+			lockScreenOrientation();
 			AlertDialog.Builder builder = new AlertDialog.Builder(ImportDialogActivity.this);
 			builder.setTitle("Downloading...");
 			builder.setView(new ProgressSpinner(ImportDialogActivity.this));
 			builder.setCancelable(false);
-			progressDialog = builder.create();
+			progressDialog = tempDownloadProg = builder.create();
 			progressDialog.show();
 		}
 
@@ -235,6 +284,7 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 		@Override
 		protected void onPostExecute(Void v) {
 			progressDialog.dismiss();
+			releaseScreenOrientation();
 		}
 	}
 	
@@ -251,11 +301,12 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 		
 		@Override
 		protected void onPreExecute() {
+			lockScreenOrientation();
 			AlertDialog.Builder builder = new AlertDialog.Builder(ImportDialogActivity.this);
 			builder.setTitle("Downloading...");
 			builder.setView(new ProgressSpinner(ImportDialogActivity.this));
 			builder.setCancelable(false);
-			progressDialog = builder.create();
+			progressDialog = tempDownloadProg = builder.create();
 			progressDialog.show();
 		}
 		
@@ -290,6 +341,7 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 		@Override
 		protected void onPostExecute(Void v) {
 			progressDialog.dismiss();
+			releaseScreenOrientation();
 		}
 	}
 }
