@@ -196,7 +196,7 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 				break;
 				
 			case COMPILED_DATA_ID:
-				i = new Intent(this, QueryActivity.class);
+				i = new Intent(this, SummaryActivity.class);
 				i.putExtra(PARENTS_EXTRA, new String[] {});
 				i.putExtra(DB_VALUES_EXTRA, new String[] {v.getTag().toString()});
 				i.putExtra(DB_KEYS_EXTRA, new String[] {DBContract.COL_EVENT_ID});

@@ -50,11 +50,11 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 	public void onClick(View v) {
 		
 		if(v.getId() == R.id.cancel) {
-			setResult(QueryActivity.REQUEST_NO_REFRESH);
+			setResult(SummaryActivity.REQUEST_NO_REFRESH);
 			finish();
 			
 		} else {
-			QueryActivity.setQuery(Integer.parseInt(getIntent().getStringExtra
+			SummaryActivity.setQuery(Integer.parseInt(getIntent().getStringExtra
 					(EVENT_ID_EXTRA)), matchQueryWidget.getQuerys(), 
 					pitQueryWidget.getQuerys(), new Query[0]);
 			
@@ -66,15 +66,15 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 				if(itemPos <= matchMetrics.length)
 					metricType = SortKey.MATCH_METRIC_TYPE;
 				
-				QueryActivity.setSortKey(new SortKey(
+				SummaryActivity.setSortKey(new SortKey(
 					metricType,
 					sortMetrics.get(itemPos - 1).getKey())
 				);
 				
 			} else
-				QueryActivity.setSortKey(null);
+				SummaryActivity.setSortKey(null);
 			
-			setResult(QueryActivity.REQUEST_REFRESH);
+			setResult(SummaryActivity.REQUEST_REFRESH);
 			finish();
 		}
 	}
@@ -109,7 +109,7 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 			list.addView(new MyTextView(getApplicationContext(), 
 					"Match Data", 18));
 			matchQueryWidget = new QueryWidget(getApplicationContext(), 
-					matchMetrics, QueryActivity.getMatchQuerys
+					matchMetrics, SummaryActivity.getMatchQuerys
 					(Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA))), 
 					Query.TYPE_MATCH_DATA);
 			list.addView(matchQueryWidget);
@@ -117,7 +117,7 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 			list.addView(new MyTextView(getApplicationContext(), 
 					"Robot Data", 18));
 			pitQueryWidget = new QueryWidget(getApplicationContext(), 
-					pitMetrics, QueryActivity.getPitQuerys
+					pitMetrics, SummaryActivity.getPitQuerys
 					(Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA))),
 					Query.TYPE_ROBOT);
 			list.addView(pitQueryWidget);

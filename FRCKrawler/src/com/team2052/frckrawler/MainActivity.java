@@ -327,7 +327,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			builder.setItems(deviceNames, new SummaryDialogListener());
 			builder.show();
 		} else if(v.getId() == R.id.view_summary) {
-			Intent i = new Intent(this, SummaryActivity.class);
+			Intent i = new Intent(this, ClientSummaryActivity.class);
 			startActivity(i);
 		}
 	}
@@ -395,7 +395,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 					Toast.makeText(getApplicationContext(), 
 							"Sync successful.", Toast.LENGTH_SHORT).show();
 					
-					Intent i = new Intent(MainActivity.this, SummaryActivity.class);
+					Intent i = new Intent(MainActivity.this, ClientSummaryActivity.class);
 					startActivity(i);
 					
 					releaseScreenOrientation();

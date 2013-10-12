@@ -159,7 +159,7 @@
         </service>
 
         <activity
-            android:name="com.team2052.frckrawler.QueryActivity"
+            android:name="com.team2052.frckrawler.SummaryActivity"
             android:windowSoftInputMode="adjustNothing" 
             >
         </activity>
@@ -190,7 +190,7 @@
         </activity>
         <activity android:name="ListTester" >
         </activity>
-        <activity android:name="SummaryActivity" >
+        <activity android:name="ClientSummaryActivity" >
         </activity>
         <activity
             android:name="AboutDialogActivity"
