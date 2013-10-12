@@ -24,7 +24,6 @@ public class TeamReader {
 		teamsURL = "http://www.thefirstalliance.org" +
 				"/api/api.json.php?action=event-teams&event-id=" +
 				faEventID;
-		Log.d("FRCKrawler", faEventID);
 	}
 	
 	public FATeam[] readTeams() throws IOException {
@@ -39,7 +38,6 @@ public class TeamReader {
 		conn.connect();
 		InputStream is = conn.getInputStream();
 		String jsonContent = readJSON(is);
-		Log.d("FRCKrawler", jsonContent);
 		
 		//Parse the Json array
 		JsonParser jParser = new JsonParser();

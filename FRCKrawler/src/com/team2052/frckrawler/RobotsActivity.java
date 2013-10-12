@@ -50,7 +50,6 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 		}
 		
 		dbManager = DBManager.getInstance(this);
-		
 		getRobotsTask = new GetRobotsTask();
 		getRobotsTask.execute();
 	}
@@ -67,7 +66,6 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 		
 		switch(v.getId()) {
 			case R.id.addRobotButton:
-				
 				try {
 					i = new Intent(this, AddRobotDialogActivity.class);
 					i.putExtra(AddRobotDialogActivity.TEAM_NUMBER_EXTRA, 
@@ -183,6 +181,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			staticDesRow.addView(new MyTextView(RobotsActivity.this, "Team #", 18));
 			staticDesRow.addView(new MyTextView(RobotsActivity.this, "Game", 18));
 			descriptorsRow.addView(new MyTextView(RobotsActivity.this, "Comments", 18));
+			descriptorsRow.addView(new MyTextView(RobotsActivity.this, "OPR", 18));
 			
 			for(Metric m : initMetrics) {
 				if(m != null)
@@ -201,6 +200,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 					sDesRow.addView(new MyTextView(RobotsActivity.this, "Team #", 18));
 					sDesRow.addView(new MyTextView(RobotsActivity.this, "Game", 18));
 					dRow.addView(new MyTextView(RobotsActivity.this, "Comments", 18));
+					dRow.addView(new MyTextView(RobotsActivity.this, "OPR", 18));
 					
 					for(Metric m : metrics) {
 						if(m != null)
@@ -252,8 +252,14 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 				else
 					comment = new String();
 					
-				rowArrayList.add(new MyTextView(RobotsActivity.this, comment, 18));
+				double opr = robots[i].getOPR();
+				String oprString = "";
+				if(opr != -1) {
+					oprString = Double.toString(opr);
+				}
 				
+				rowArrayList.add(new MyTextView(RobotsActivity.this, comment, 18));
+				rowArrayList.add(new MyTextView(RobotsActivity.this, oprString, 18));
 				for(MetricValue m : robots[i].getMetricValues()) {
 					rowArrayList.add(new MyTextView(RobotsActivity.this, m.getValueAsHumanReadableString(), 18));
 				}

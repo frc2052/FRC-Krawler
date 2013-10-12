@@ -138,6 +138,7 @@ public class DBContract {
 	public static final String COL_GAME_NAME = "gamename";
 	public static final String COL_COMMENTS = "comments";
 	public static final String COL_IMAGE_PATH = "imagepath";
+	public static final String COL_OPR = "opr";
 	public static String[] COL_KEYS = new String[50];
 	public static String COL_KEYS_LIST;
 	
@@ -159,7 +160,8 @@ public class DBContract {
 	public static final String CREATE_TABLE_ROBOTS = 
 			"CREATE TABLE " + TABLE_ROBOTS + " (" + COL_TEAM_NUMBER + INT + ", " + COL_ROBOT_ID + 
 					INT + ", " + COL_GAME_NAME + STRING + ", " + COL_IMAGE_PATH + STRING + ", "
-					+ COL_COMMENTS + STRING + ", " + COL_KEYS_LIST + ")";
+					+ COL_COMMENTS + STRING + ", " + COL_OPR + DECIMAL + 
+					", " + COL_KEYS_LIST + ")";
 	
 	
 	
@@ -384,12 +386,14 @@ public class DBContract {
 	//COL_KEYS_LIST;
 	public static final String COL_WAS_UPDATED = "wasupdated";
 	//COL_TEAM_NAME
+	//COL_OPR
 	
 	public static final String CREATE_SCOUT_TABLE_ROBOTS = 
 			"CREATE TABLE " + SCOUT_TABLE_ROBOTS + " (" + COL_TEAM_NUMBER + INT + ", " + COL_ROBOT_ID + 
 					INT + ", " + COL_GAME_NAME + STRING + ", " + COL_COMMENTS + STRING + ", " + 
 					COL_IMAGE_PATH + STRING + ", " + COL_KEYS_LIST + ", " + 
-					COL_WAS_UPDATED + ", " + COL_TEAM_NAME + STRING + ")";
+					COL_WAS_UPDATED + ", " + COL_TEAM_NAME + STRING + ", " + COL_OPR +
+					DECIMAL + ")";
 	
 	
 	
@@ -535,8 +539,8 @@ public class DBContract {
 	public static final String CREATE_SUMMARY_TABLE_ROBOTS = 
 			"CREATE TABLE " + SUMMARY_TABLE_ROBOTS + " (" + COL_TEAM_NUMBER + INT + ", " + COL_ROBOT_ID + 
 					INT + ", " + COL_GAME_NAME + STRING + ", " + COL_COMMENTS + STRING + ", " + 
-					COL_IMAGE_PATH + STRING + ", " + COL_KEYS_LIST + ", " + 
-					COL_TEAM_NAME + STRING + ")";
+					COL_IMAGE_PATH + STRING + ", " + COL_KEYS_LIST + 
+					", " + COL_TEAM_NAME + STRING + ", " + COL_OPR + DECIMAL + ")";
 	
 	
 	

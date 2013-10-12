@@ -83,29 +83,47 @@
             android:text="Comments"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <RelativeLayout
+        <EditText
+            android:id="@+id/oprTextBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/comments"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/comments"
+            android:ems="10"
+            android:inputType="numberDecimal|numberSigned"
+            android:text=" " >
+
+            <requestFocus />
+        </EditText>
+
+        <TextView
+            android:id="@+id/opr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/oprTextBox"
+            android:layout_alignBottom="@+id/oprTextBox"
+            android:layout_alignParentLeft="true"
+            android:text="OPR"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/comments" >
+            android:layout_below="@+id/oprTextBox" >
 
-            <ScrollView
-                android:id="@+id/scrollView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true" >
+            <LinearLayout
+                android:id="@+id/metricList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </ScrollView>
 
-                <LinearLayout
-                    android:id="@+id/metricList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical" >
-                </LinearLayout>
-            </ScrollView>
-        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>

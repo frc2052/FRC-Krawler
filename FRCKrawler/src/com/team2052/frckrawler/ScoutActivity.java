@@ -1,5 +1,6 @@
 package com.team2052.frckrawler;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -29,6 +30,7 @@ import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatc
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.database.structures.User;
 import com.team2052.frckrawler.gui.MetricWidget;
+import com.team2052.frckrawler.gui.ProgressSpinner;
 
 public class ScoutActivity extends Activity implements OnClickListener, 
 														OnItemSelectedListener,
@@ -108,14 +110,18 @@ public class ScoutActivity extends Activity implements OnClickListener,
 	@Override
 	public void onItemSelected(AdapterView<?> adapter, View spinner, int index,
 			long id) {
-		((TextView)findViewById(R.id.teamName)).setText(teamNames[index]);
+		((TextView)findViewById(R.id.scoutTeamName)).setText(teamNames[index]);
+		if(robots[index].getOPR() != -1) {
+			DecimalFormat oprFormat = new DecimalFormat("0.00");
+			((TextView)findViewById(R.id.opr)).setText("OPR: " + oprFormat
+					.format(robots[index].getOPR()));
+		}
 		
 		if(getIntent().getIntExtra(SCOUT_TYPE_EXTRA, -1) == SCOUT_TYPE_PIT) {
 			if(robots[index].getComments() == null || 
 					robots[index].getComments().replace(" ", "").equals("")) {
 				((EditText)findViewById(R.id.comments)).
 					setText("");
-				
 			} else {
 				((EditText)findViewById(R.id.comments)).
 						setText(robots[index].getComments());
@@ -207,7 +213,6 @@ public class ScoutActivity extends Activity implements OnClickListener,
 					break;
 					
 				case SCOUT_TYPE_PIT:
-					
 					int selectedRobot = ((Spinner)findViewById(R.id.teamNumber)).
 							getSelectedItemPosition();
 					
@@ -218,11 +223,11 @@ public class ScoutActivity extends Activity implements OnClickListener,
 							((EditText)findViewById(R.id.comments)).
 									getText().toString(),
 							robots[selectedRobot].getImagePath(),
+							robots[selectedRobot].getOPR(),
 							metricVals
 							);
 					
 					new SaveRobotDataTask().execute(robot);
-					
 					break;
 			}
 		}
@@ -241,7 +246,19 @@ public class ScoutActivity extends Activity implements OnClickListener,
 	 */
 	
 	private class GetRobotListTask extends AsyncTask<Void, Void, Robot[]> {
-
+		
+		private AlertDialog progressDialog;
+		
+		@Override
+		protected void onPreExecute() {
+			AlertDialog.Builder builder = new AlertDialog.Builder(ScoutActivity.this);
+			builder.setTitle("Loading...");
+			builder.setView(new ProgressSpinner(ScoutActivity.this));
+			builder.setCancelable(false);
+			progressDialog = builder.create();
+			progressDialog.show();
+		}
+		
 		@Override
 		protected Robot[] doInBackground(Void... arg0) {
 			teamNames = dbManager.scoutGetAllTeamNames();
@@ -251,7 +268,6 @@ public class ScoutActivity extends Activity implements OnClickListener,
 		
 		@Override
 		protected void onPostExecute(Robot[] robots) {
-			
 			String[] teamNumbers = new String[robots.length];
 			for(int i = 0; i < robots.length; i++)
 				teamNumbers[i] = Integer.toString(robots[i].getTeamNumber());
@@ -262,9 +278,9 @@ public class ScoutActivity extends Activity implements OnClickListener,
 			((Spinner)findViewById(R.id.teamNumber)).setAdapter(teamChoices);
 			
 			if(teamNames.length > 0)
-				((TextView)findViewById(R.id.teamName)).setText(teamNames[0]);
-			
+				((TextView)findViewById(R.id.scoutTeamName)).setText(teamNames[0]);
 			resetUI();
+			progressDialog.dismiss();
 		}
 	}
 	
@@ -299,7 +315,6 @@ public class ScoutActivity extends Activity implements OnClickListener,
 							Log.e("FRCKrawler", "Metric mismatch exception.");
 						}
 					}
-					
 					break;
 					
 				case SCOUT_TYPE_PIT:
@@ -317,10 +332,8 @@ public class ScoutActivity extends Activity implements OnClickListener,
 		
 		@Override
 		protected void onPostExecute(MetricValue[] metrics) {
-			LinearLayout metricList = 
-					(LinearLayout)findViewById(R.id.metricWidgetList);
+			LinearLayout metricList = (LinearLayout)findViewById(R.id.metricWidgetList);
 			metricList.removeAllViews();
-			
 			for(MetricValue m : metrics)
 				metricList.addView(MetricWidget.createWidget
 						(getApplicationContext(), m));
@@ -339,10 +352,7 @@ public class ScoutActivity extends Activity implements OnClickListener,
 
 		@Override
 		protected Void doInBackground(MatchData... params) {
-			
 			dbManager.scoutInsertMatchData(params[0]);
-			dbManager.printQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_MATCH_PERF, null);
-			
 			return null;
 		}
 		

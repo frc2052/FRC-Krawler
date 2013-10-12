@@ -32,7 +32,6 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		getWindow().setSoftInputMode
 			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -47,7 +46,6 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 	
 	@Override
 	public void onResume() {
-		
 		super.onResume();
 		
 		//Set the choices for the spinner
@@ -59,16 +57,13 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 		}
 		
 		Spinner gameSpinner = (Spinner)findViewById(R.id.gameSpinner);
-		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
 				android.R.layout.simple_spinner_item, spinnerVals);
-		
 		gameSpinner.setAdapter(adapter);
 	}
 
 	@Override
 	public void onClick(View v) {
-		
 		switch(v.getId()) {
 			case R.id.addRobot:
 				
@@ -91,10 +86,16 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 					}
 				}
 				
+				String oprText = ((EditText)findViewById(R.id.oprTextBox)).getText().toString();
+				double opr = -1;
+				if(!oprText.equals("") && !oprText.equals(" "))
+					opr = Double.parseDouble(oprText);
+				
 				dbManager.addRobot(new Robot(
 						Integer.parseInt(getIntent().getStringExtra(TEAM_NUMBER_EXTRA)),
 						((Spinner)findViewById(R.id.gameSpinner)).getSelectedItem().toString(),
 						((EditText)findViewById(R.id.comments)).getText().toString(),
+						opr,
 						vals
 						));
 				
@@ -132,7 +133,6 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 	
 	@Override
 	public void onNothingSelected(AdapterView<?> adapter) {
-		
 		((ListView)findViewById(R.id.metricList)).removeAllViews();
 	}
 }

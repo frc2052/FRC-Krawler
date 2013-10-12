@@ -62,7 +62,6 @@ public class ImportImageDialogActivity extends Activity implements OnClickListen
 			builder.setMessage("Downloading a new image will erase the old one. Are " +
 					"you sure you want to replace the old image?");
 			builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					new DownloadImageTask().execute();
@@ -70,7 +69,6 @@ public class ImportImageDialogActivity extends Activity implements OnClickListen
 				}
 			});
 			builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
@@ -261,6 +259,9 @@ public class ImportImageDialogActivity extends Activity implements OnClickListen
 			File destination = new File(getIntent().getStringExtra(IMAGE_PATH_EXTRA));
 			
 			try {
+				if(!destination.exists())
+					destination.createNewFile();
+					
 				copy(destination, source[0]);
 				
 			} catch(FileNotFoundException e) {

@@ -8,6 +8,7 @@ public class Robot implements Structure {
 	private String game;
 	private String comments;
 	private String imagePath;
+	private double opr;
 	private MetricValue[] vals;
 	
 	public Robot(int _team, String _game, String _comments) {
@@ -15,16 +16,20 @@ public class Robot implements Structure {
 	}
 	
 	public Robot(int _team, String _game, String _comments, MetricValue[] _vals) {
-		this(_team, -1 , _game, _comments, null, _vals);
+		this(_team, -1 , _game, _comments, null, -1, _vals);
+	}
+	
+	public Robot(int _team, String _game, String _comments, double _opr, MetricValue[] _vals) {
+		this(_team, -1 , _game, _comments, null, _opr, _vals);
 	}
 	
 	public Robot(int _team, int _id, String _game, String _comments, 
-			String _imagePath, MetricValue[] _vals) {
-		this(false, _team, _id, _game, _comments, _imagePath, _vals);
+			String _imagePath, double _opr, MetricValue[] _vals) {
+		this(false, _team, _id, _game, _comments, _imagePath, _opr, _vals);
 	}
 	
 	public Robot(boolean _isChecked, int _team, int _id, String _game, String _comments, 
-			String _imagePath, MetricValue[] _vals) {
+			String _imagePath, double _opr, MetricValue[] _vals) {
 		
 		isChecked = _isChecked;
 		team = _team;
@@ -32,6 +37,7 @@ public class Robot implements Structure {
 		game = _game;
 		comments = _comments;
 		imagePath = _imagePath;
+		opr = _opr;
 		vals = _vals;
 	}
 	
@@ -63,6 +69,10 @@ public class Robot implements Structure {
 	
 	public String getComments() {
 		return comments;
+	}
+	
+	public double getOPR() {
+		return opr;
 	}
 	
 	public MetricValue[] getMetricValues() {

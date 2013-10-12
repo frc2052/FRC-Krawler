@@ -1,5 +1,6 @@
 package com.team2052.frckrawler;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -270,7 +271,8 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 			MyTableRow descriptorsRow = new MyTableRow(activity);
 			staticDescriptorsRow.addView(new MyTextView(activity, " ", 18));
 			staticDescriptorsRow.addView(new MyTextView(activity, "Team", 18));
-			descriptorsRow.addView(new MyTextView(activity, "M. Played", 18));
+			descriptorsRow.addView(new MyTextView(activity, "M. Scouted", 18));
+			descriptorsRow.addView(new MyTextView(activity, "OPR", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Comments", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Pictures", 18));
 			descriptorsRow.addView(new MyTextView(activity, "M. Data", 18));
@@ -316,14 +318,10 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 				}
 				
 				int color;
-				//int buttonColor;
-				
 				if(dataCount % 2 == 0) {
 					color = GlobalValues.ROW_COLOR;
-					//buttonColor = GlobalValues.BUTTON_COLOR;
 				} else {
 					color = Color.TRANSPARENT;
-					//buttonColor = Color.rgb(30, 30, 30);
 				}
 				
 				MyTableRow staticRow = new MyTableRow(activity, color);
@@ -335,6 +333,14 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 						data[dataCount].getRobot().getID()));
 				checkBox.setChecked(data[dataCount].getRobot().isChecked());
 				staticRow.addView(checkBox);
+				
+				double opr = data[dataCount].getRobot().getOPR();
+				DecimalFormat oprFormat = new DecimalFormat("0.00");
+				String oprString;
+				if(opr == -1)
+					oprString = "";
+				else
+					oprString = oprFormat.format(opr);
 				
 				MyButton commentsButton = new MyButton
 						(activity, "Comments", activity);
@@ -360,6 +366,7 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 						data[dataCount].getRobot().getTeamNumber()), 18));
 				dataRow.addView(new MyTextView(activity, Integer.toString(
 						data[dataCount].getMatchesPlayed().length), 18));
+				dataRow.addView(new MyTextView(activity, oprString, 18));
 				dataRow.addView(commentsButton);
 				dataRow.addView(picturesButton);
 				dataRow.addView(matchDataButton);
@@ -411,7 +418,8 @@ public class QueryActivity extends StackableTabActivity implements OnClickListen
 										(0, 0, R.drawable.btn_zoom_page_normal, 0);
 
 								if(matchData[i].getValue().length > 0)
-									chooserButton.setText(matchData[i].getValue()[mostPickedAddress]);
+									chooserButton.setText(matchData[i]
+											.getValue()[mostPickedAddress]);
 								else
 									chooserButton.setText("");
 

@@ -1133,11 +1133,16 @@ public class DBManager {
 	
 	public synchronized boolean addRobot(Robot robot) {
 		return addRobot(robot.getTeamNumber(), robot.getGame(), 
-				robot.getComments(), robot.getImagePath(), robot.getMetricValues());
+				robot.getComments(), robot.getImagePath(), robot.getOPR(), robot.getMetricValues());
 	}
 	
 	public synchronized boolean addRobot(int teamNumber, String gameName, String comments, 
 			String imagePath, MetricValue[] vals) {
+		return addRobot(teamNumber, gameName, comments, imagePath, -1, vals);
+	}
+	
+	public synchronized boolean addRobot(int teamNumber, String gameName, String comments, 
+			String imagePath, double opr, MetricValue[] vals) {
 		if(!hasValue(DBContract.TABLE_GAMES, DBContract.COL_GAME_NAME, gameName))
 			return false;
 		
@@ -1149,6 +1154,7 @@ public class DBManager {
 				DBContract.COL_ROBOT_ID));
 		values.put(DBContract.COL_COMMENTS, comments);
 		values.put(DBContract.COL_IMAGE_PATH, imagePath);
+		values.put(DBContract.COL_OPR, opr);
 		
 		if(vals != null) {
 			for(MetricValue v : vals) {
@@ -1280,6 +1286,7 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
 					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
 					c.getString(c.getColumnIndex(DBContract.COL_IMAGE_PATH)),
+					c.getDouble(c.getColumnIndex(DBContract.COL_OPR)),
 					metricVals.toArray(new MetricValue[0])
 					);
 		}
@@ -3905,6 +3912,7 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
 					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
 					c.getString(c.getColumnIndex(DBContract.COL_IMAGE_PATH)),
+					c.getDouble(c.getColumnIndex(DBContract.COL_OPR)),
 					metricVals.toArray(new MetricValue[0])
 					);
 		}
@@ -3976,6 +3984,7 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
 					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
 					c.getString(c.getColumnIndex(DBContract.COL_IMAGE_PATH)),
+					c.getDouble(c.getColumnIndex(DBContract.COL_OPR)),
 					metricVals.toArray(new MetricValue[0])
 					);
 		}
@@ -4008,6 +4017,7 @@ public class DBManager {
 			values.put(DBContract.COL_IMAGE_PATH, robots[i].getImagePath());
 			values.put(DBContract.COL_WAS_UPDATED, "0");
 			values.put(DBContract.COL_TEAM_NAME, teamNames[i]);
+			values.put(DBContract.COL_OPR, robots[i].getOPR());
 			
 			for(MetricValue v : robots[i].getMetricValues()) {
 				
@@ -4721,7 +4731,6 @@ public class DBManager {
 			values.put(DBContract.COL_DISPLAY, metrics[i].isDisplayed());
 			values.put(DBContract.COL_METRIC_KEY, metrics[i].getKey());
 			values.put(DBContract.COL_POSITION, metrics[i].getPosition());
-			
 			db.insert(DBContract.SUMMARY_TABLE_MATCH_PERF_METRICS, null, values);
 		}
 		
@@ -4890,7 +4899,6 @@ public class DBManager {
 	 */
 	
 	private synchronized void summarySetRobots(Robot[] robots) {
-		
 		if(robots.length == 0)
 			return;
 		
@@ -4905,6 +4913,7 @@ public class DBManager {
 			values.put(DBContract.COL_ROBOT_ID, robots[i].getID());
 			values.put(DBContract.COL_COMMENTS, robots[i].getComments());
 			values.put(DBContract.COL_IMAGE_PATH, robots[i].getImagePath());
+			values.put(DBContract.COL_OPR, robots[i].getOPR());
 			
 			for(MetricValue v : robots[i].getMetricValues()) {
 				
@@ -4984,6 +4993,7 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
 					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
 					c.getString(c.getColumnIndex(DBContract.COL_IMAGE_PATH)),
+					c.getDouble(c.getColumnIndex(DBContract.COL_OPR)),
 					metricVals.toArray(new MetricValue[0])
 					);
 		}

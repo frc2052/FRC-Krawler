@@ -222,14 +222,15 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 					startActivity(i);
 				} else {
 					AlertDialog.Builder b = new AlertDialog.Builder(this);
-					b.setMessage("You must have internet connection to import Event data " +
-							"from the web.");
+					b.setMessage("You must have internet connection to import event data " +
+							"and OPR from the web.");
 					b.setNeutralButton("Close", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
 						}
 					});
+					b.show();
 				}
 				break;
 		}

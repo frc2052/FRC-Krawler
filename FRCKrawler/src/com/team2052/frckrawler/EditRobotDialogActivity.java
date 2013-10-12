@@ -23,7 +23,6 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		getWindow().setSoftInputMode
 			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -38,7 +37,6 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 	
 	@Override
 	public void onResume() {
-		
 		super.onResume();
 		
 		Robot[] rArr = dbManager.getRobotsByColumns
@@ -48,13 +46,19 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 		
 		((TextView)findViewById(R.id.game)).setText(r.getGame());
 		((TextView)findViewById(R.id.comments)).setText(r.getComments());
+		double opr = r.getOPR();
+		String oprString;
+		if(opr == -1)
+			oprString = "";
+		else
+			oprString = Double.toString(opr);
+		((TextView)findViewById(R.id.oprEditText)).setText(oprString);
 		
 		LinearLayout metricList = (LinearLayout)findViewById(R.id.metricList);
 		metricList.removeAllViews();
 		MetricValue[] metricVals = r.getMetricValues();
 		
 		for(int i = 0; i < metricVals.length; i++) {
-			
 			MetricWidget widget = MetricWidget.createWidget(this, metricVals[i]);
 			metricList.addView(widget);
 		}
@@ -62,24 +66,28 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 
 	@Override
 	public void onClick(View v) {
-		
 		switch(v.getId()) {
 			case R.id.save:
-				
 				LinearLayout metricList = (LinearLayout)findViewById(R.id.metricList);
-				String[] updateVals = new String[metricList.getChildCount() + 1];
-				String[] updateCols = new String[metricList.getChildCount() + 1];
+				String[] updateVals = new String[metricList.getChildCount() + 2];
+				String[] updateCols = new String[metricList.getChildCount() + 2];
 				
 				for(int i = 0; i < metricList.getChildCount(); i++) {
-					
 					MetricWidget widget = (MetricWidget)metricList.getChildAt(i);
 					updateVals[i] = widget.getMetricValue().getValueAsDBReadableString();
 					updateCols[i] = widget.getMetric().getKey();
 				}
 				
+				String oprString = ((EditText)findViewById(R.id.oprEditText))
+						.getText().toString();
+				if(oprString.equals("") || oprString.equals(" "))
+					oprString = "-1";
+				
 				updateVals[updateVals.length - 1] = 
 						((EditText)findViewById(R.id.comments)).getText().toString();
 				updateCols[updateCols.length - 1] = DBContract.COL_COMMENTS;
+				updateVals[updateVals.length - 2] = oprString;
+				updateCols[updateCols.length - 2] = DBContract.COL_OPR;
 				
 				dbManager.updateRobots(
 						new String[] {DBContract.COL_ROBOT_ID}, 
@@ -93,7 +101,6 @@ public class EditRobotDialogActivity extends Activity implements OnClickListener
 				break;
 				
 			case R.id.remove:
-				
 				dbManager.removeRobot(Integer.parseInt(
 						getIntent().getStringExtra(ROBOT_ID_EXTRA)));
 				

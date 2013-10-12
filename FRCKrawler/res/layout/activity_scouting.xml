@@ -14,56 +14,72 @@
         android:textSize="24sp" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
+        android:id="@+id/linLayoutLeft"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/scoutingType" >
+        android:layout_below="@+id/scoutingType"
+        android:layout_weight="0.32"
+        android:dividerPadding="10dp"
+        android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="94dp"
+        <Spinner
+            android:id="@+id/teamNumber"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:prompt="@string/team_number" />
+
+        <Spinner
+            android:id="@+id/gameType"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:entries="@array/match_types" />
+
+        <EditText
+            android:id="@+id/matchNumber"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.32"
-            android:orientation="vertical" >
+            android:hint="Match #"
+            android:inputType="number"
+            android:minEms="8" />
+    </LinearLayout>
 
-            <Spinner
-                android:id="@+id/teamNumber"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:prompt="@string/team_number" />
-
-            <Spinner
-                android:id="@+id/gameType"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:entries="@array/match_types" />
-
-            <EditText
-                android:id="@+id/matchNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Match Number"
-                android:inputType="number" >
-
-                <requestFocus />
-            </EditText>
-        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linLayoutRight"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/linLayoutLeft"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/scoutingType"
+        android:layout_toRightOf="@+id/linLayoutLeft"
+        android:layout_weight="0.32"
+        android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/teamName"
-            android:layout_width="wrap_content"
+            android:id="@+id/scoutTeamName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.33"
+            android:ellipsize="none"
             android:gravity="center"
-            android:text="Team Name"
+            android:minWidth="20dp"
+            android:singleLine="false"
+            android:text=" "
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="28sp" />
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/opr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text=" "
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:text="Save"
             android:textSize="20sp" />
     </LinearLayout>
@@ -72,9 +88,10 @@
         android:id="@+id/ScrollView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/linearLayout" >
+        android:layout_below="@+id/linLayoutLeft" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -94,9 +111,11 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Comments"
-                android:inputType="textMultiLine" />
-        </LinearLayout>
+                android:inputType="textMultiLine" >
 
+                <requestFocus />
+            </EditText>
+        </LinearLayout>
     </ScrollView>
 
 </RelativeLayout>

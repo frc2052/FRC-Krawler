@@ -20,6 +20,10 @@ public class FAEvent {
 		return name;
 	}
 	
+	public String getCode() {
+		return api_name;
+	}
+	
 	@Override
 	public String toString() {
 		return name;
