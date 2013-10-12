@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
-        android:text="Version 1.5"
+        android:text="Version 1.6"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="16sp" />
 

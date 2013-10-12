@@ -14,22 +14,12 @@
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titke"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp"
-        android:text="FRCKrawler Scouting Application created"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView12"
         android:layout_centerHorizontal="true"
-        android:text="and maintained by FRC Team 2052"
+        android:text="maintained by Charles Hofer"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <LinearLayout
@@ -53,22 +43,15 @@
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="FRC Team 2052 Scouting Design Team"
+            android:text="FRC 2052 Scouting Design Team"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Programming"
+            android:text="Programming and Development"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Colin Knox"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/textView7"
@@ -88,7 +71,7 @@
             android:id="@+id/textView19"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="FRC Team 2052 Scouting Team"
+            android:text="FRC 2052 Scouting Team"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -102,7 +85,7 @@
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I don&apos;t know yet"
+            android:text="Charles Hofer"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -128,22 +111,41 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/creditsList"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="Questions, Comments, or Emotional Outbursts"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
         android:id="@+id/textView15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView14"
         android:layout_centerHorizontal="true"
         android:text="charlie.drummer.hofer@gmail.com"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titke"
+        android:layout_centerHorizontal="true"
+        android:text="Version 1.6"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="FRCKrawler Scouting Application"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/creditsList"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:text="Questions or Comments?"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
