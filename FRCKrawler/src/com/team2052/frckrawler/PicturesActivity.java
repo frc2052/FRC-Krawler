@@ -68,10 +68,13 @@ public class PicturesActivity extends StackableTabActivity implements OnClickLis
 		        builder.show();
 		    }
 		} else if(v.getId() == R.id.importPicture) {
-			Intent i = new Intent(this, ImportImageDialogActivity.class);
-			i.putExtra(ImportImageDialogActivity.IMAGE_PATH_EXTRA, getOutputMediaFile().getPath());
-			i.putExtra(ImportImageDialogActivity.ROBOT_ID_EXTRA, robot.getID());
-			startActivityForResult(i, IMPORT_REQUEST_CODE);
+			Uri mediaFile = getOutputMediaFile();
+			if(mediaFile != null) {
+				Intent i = new Intent(this, ImportImageDialogActivity.class);
+				i.putExtra(ImportImageDialogActivity.IMAGE_PATH_EXTRA, mediaFile);
+				i.putExtra(ImportImageDialogActivity.ROBOT_ID_EXTRA, robot.getID());
+				startActivityForResult(i, IMPORT_REQUEST_CODE);
+			}
 			
 		} else {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
