@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.fa.types;
 
+import java.text.DecimalFormat;
+
 public class FAOPR {
 	
 	private double OPR;
@@ -11,7 +13,8 @@ public class FAOPR {
 	}
 	
 	public double getOPR() {
-		return OPR;
+		DecimalFormat format = new DecimalFormat("0.00");
+		return Double.parseDouble(format.format(OPR));
 	}
 	
 	public int getTeamNumber() {

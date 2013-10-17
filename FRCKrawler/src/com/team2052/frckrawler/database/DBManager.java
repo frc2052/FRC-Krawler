@@ -3152,23 +3152,19 @@ public class DBManager {
 			ArrayList<CompiledData> selectedRobots = new ArrayList<CompiledData>();
 
 			for(CompiledData robot : compiledData) {
-
 				boolean passed = true;
 
 				for(Query query : querys) {
-
 					//Get the MetricValue to compare against our cuttoff
 					MetricValue metricValue = null;
 
 					switch(query.getType()) {
 					case Query.TYPE_ROBOT:
-
 						for(int i = 0; i < robot.getRobot().getMetricValues().
 								length; i++) {
 							if(robot.getRobot().getMetricValues()[i].getMetric().
 									getID() == query.getMetricID()) {
 								metricValue = robot.getRobot().getMetricValues()[i];
-
 								break;
 							}
 						}
@@ -3176,7 +3172,6 @@ public class DBManager {
 						break;
 
 					case Query.TYPE_MATCH_DATA:
-
 						for(int i = 0; i < robot.getCompiledMatchData().
 								length; i++) {
 							if(robot.getCompiledMatchData()[i].getMetric().
@@ -3185,11 +3180,9 @@ public class DBManager {
 								break;
 							}
 						}
-
 						break;
 
 					case Query.TYPE_DRIVER_DATA:
-
 						for(int i = 0; i < robot.getCompiledDriverData().
 								length; i++) {
 							if(robot.getCompiledMatchData()[i].getMetric().
@@ -3198,22 +3191,34 @@ public class DBManager {
 								break;
 							}
 						}
-
 						break;
 					}
 
 					//Compare with the correct comparison
+					boolean chooserIsNumeric = true;
+					if(metricValue.getMetric().getType() == 
+							DBContract.CHOOSER) {
+						for(Object o : metricValue.getMetric().getRange())
+							try {
+								Double.parseDouble(o.toString());
+							} catch(NumberFormatException e) {
+								chooserIsNumeric = false;
+								break;
+							}
+					} else {
+						chooserIsNumeric = false;
+					}
+					
 					switch(query.getComparison()) {
 					case Query.COMPARISON_EQUAL_TO:
-
 						if(metricValue.getMetric().getType() == DBContract.COUNTER 
-						|| metricValue.getMetric().getType() == 
-						DBContract.SLIDER || (metricValue.getMetric().getType() 
-								== DBContract.BOOLEAN && query.getType() == 
-								Query.TYPE_MATCH_DATA)) {
+						|| metricValue.getMetric().getType() == DBContract.SLIDER 
+						|| metricValue.getMetric().getType() == DBContract.MATH
+						|| (metricValue.getMetric().getType() == DBContract.BOOLEAN 
+							&& query.getType() == Query.TYPE_MATCH_DATA)
+						|| chooserIsNumeric) {
 
 							try {
-								System.out.println(query.getMetricValue());
 								double checkValue = Double.parseDouble
 										(query.getMetricValue());
 								double robotValue = Double.parseDouble
@@ -3224,25 +3229,22 @@ public class DBManager {
 
 							} catch(NumberFormatException e) {
 								passed = false;
-								System.out.println("Format Exception");
 							}
 
 						} else {
-
 							if(!metricValue.getValueAsHumanReadableString().
 									equalsIgnoreCase(query.getMetricValue()))
 								passed = false;
 						}
-
 						break;
 
 					case Query.COMPARISON_LESS_THAN:
-
 						if(metricValue.getMetric().getType() == DBContract.COUNTER 
-						|| metricValue.getMetric().getType() == 
-						DBContract.SLIDER || (metricValue.getMetric().getType() 
-								== DBContract.BOOLEAN && query.getType() == 
-								Query.TYPE_MATCH_DATA)) {
+						|| metricValue.getMetric().getType() == DBContract.SLIDER 
+						|| metricValue.getMetric().getType() == DBContract.MATH
+						|| (metricValue.getMetric().getType() == DBContract.BOOLEAN 
+							&& query.getType() == Query.TYPE_MATCH_DATA)
+						|| chooserIsNumeric) {
 
 							try {
 								double checkValue = Double.parseDouble
@@ -3257,17 +3259,15 @@ public class DBManager {
 								passed = false;
 							}
 						}
-
 						break;
 
 					case Query.COMPARISON_GREATER_THAN:
-
 						if(metricValue.getMetric().getType() == DBContract.COUNTER 
-						|| metricValue.getMetric().getType() == 
-						DBContract.SLIDER || (metricValue.getMetric().getType() 
-								== DBContract.BOOLEAN && query.getType() == 
-								Query.TYPE_MATCH_DATA)) {
-
+						|| metricValue.getMetric().getType() == DBContract.SLIDER 
+						|| metricValue.getMetric().getType() == DBContract.MATH
+						|| (metricValue.getMetric().getType() == DBContract.BOOLEAN 
+							&& query.getType() == Query.TYPE_MATCH_DATA)
+						|| chooserIsNumeric) {
 							try{
 								double checkValue = Double.parseDouble
 										(query.getMetricValue());
@@ -3281,7 +3281,32 @@ public class DBManager {
 								passed = false;
 							}
 						}
-
+						break;
+						
+					case Query.COMPARISON_CHOOSER_COMPARE:
+						if(metricValue.getMetric().getType() == DBContract.CHOOSER) {
+							Object[] range = metricValue.getMetric().getRange();
+							int[] chooserCounts = metricValue.getChooserCounts();
+							int totalCounts = 0;
+							int highestCountValue = -1;
+							int highestCountPos = -1;
+							
+							for(int i = 0; i < chooserCounts.length; i++) {
+								totalCounts += chooserCounts[i];
+								if(highestCountValue < chooserCounts[i]) {
+									highestCountValue = chooserCounts[i];
+									highestCountPos = i;
+								}
+							}
+							
+							if(highestCountPos != -1 && totalCounts > 0 &&
+									totalCounts / 2 <= highestCountValue && 
+									query.getMetricValue().equals(range[highestCountPos])) {
+								passed = true;
+							} else {
+								passed = false;
+							}
+						}
 						break;
 					}
 				}
@@ -3299,12 +3324,10 @@ public class DBManager {
 			
 			switch(sortKey.getMetricType()) {
 				case SortKey.MATCH_METRIC_TYPE:
-					
 					int metricAdress = -1;
-					
 					for(int i = 0; i < compiledData[0].getCompiledMatchData().length; i++) {
 						if(compiledData[0].getCompiledMatchData()[i].
-								getMetric().getKey().equals(sortKey.getColumn())) {
+								getMetric().getID() == sortKey.getMetricID()) {
 							metricAdress = i;
 							break;
 						}
@@ -3312,13 +3335,6 @@ public class DBManager {
 					
 					if(metricAdress == -1)
 						break;	//Break if this metric is not in the comp data
-					
-					int metricType = compiledData[0].getCompiledMatchData()
-							[metricAdress].getMetric().getType();
-					
-					if(metricType != DBContract.BOOLEAN && metricType != DBContract.COUNTER &&
-							metricType != DBContract.MATH && metricType != DBContract.SLIDER)
-						break;
 						
 					for(int i = 0; i < compiledData.length; i++) {
 						try {
@@ -3328,23 +3344,41 @@ public class DBManager {
 							sortValues[i] = -1.0;
 						}
 					}
-					
 					break;
 					
 				case SortKey.PIT_METRIC_TYPE:
+					int mAddress = -1;
+					for(int i = 0; i < compiledData[0].getRobot().getMetricValues().length; i++) {
+						if(compiledData[0].getRobot().getMetricValues()[i].
+								getMetric().getID() == sortKey.getMetricID()) {
+							mAddress = i;
+							break;
+						}
+					}
+					Log.d("FRCKrawler", "mAddress: " + mAddress);
 					
+					if(mAddress == -1)
+						break;	//Break if this metric is not in the comp data
+						
+					for(int i = 0; i < compiledData.length; i++) {
+						try {
+							sortValues[i] = Double.parseDouble(compiledData[i].getRobot()
+									.getMetricValues()[mAddress].getValue()[0]);
+						} catch(ArrayIndexOutOfBoundsException e) {
+							sortValues[i] = -1.0;
+							Log.e("FRCKrawler", e.getMessage());
+						}
+					}
 					break;
 					
-				case SortKey.DRIVER_METRIC_TYPE:
-					//Not used!
+				case SortKey.OPR_TYPE:
+					for(int i = 0; i < compiledData.length; i++)
+						sortValues[i] = compiledData[i].getRobot().getOPR();
 					break;
 			}
 			
 			CompiledDataSorter sorter = new CompiledDataSorter();
 			sorter.sort(sortValues, compiledData);
-			
-			for(double d : sortValues)
-				System.out.println(d);
 		}
 		
 		

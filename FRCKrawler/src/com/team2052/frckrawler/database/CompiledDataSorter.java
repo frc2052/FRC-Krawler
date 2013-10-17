@@ -1,5 +1,10 @@
 package com.team2052.frckrawler.database;
 
+import java.util.Arrays;
+import java.util.Collections;
+
+import com.team2052.frckrawler.database.structures.CompiledData;
+
 /*****
  * Class: CompiledDataSorter
  * 
@@ -11,12 +16,12 @@ package com.team2052.frckrawler.database;
 
 public class CompiledDataSorter {
 	double[] values;
-	private Object[] items;
+	private CompiledData[] items;
 	private int number;
 
-	public void sort(double[] _keys, Object[] _items) {
+	public void sort(double[] _keys, CompiledData[] _items) {
 		// Check for empty or null array
-		if (values == null || values.length == 0 || 
+		if (_keys == null || _keys.length == 0 || 
 				_keys.length != _items.length){
 			return;
 		}
@@ -25,6 +30,7 @@ public class CompiledDataSorter {
 		items = _items;
 		number = values.length;
 		quicksort(0, number - 1);
+		Collections.reverse(Arrays.asList(items));
 	}
 
 	private void quicksort(int low, int high) {
@@ -65,7 +71,7 @@ public class CompiledDataSorter {
 
 	private void exchange(int i, int j) {
 		double tempKey = values[i];
-		Object tempOb = items[i];
+		CompiledData tempOb = items[i];
 		values[i] = values[j];
 		items[i] = items[j];
 		values[j] = tempKey;

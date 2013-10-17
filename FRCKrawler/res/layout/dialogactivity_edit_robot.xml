@@ -45,91 +45,80 @@
             android:text="Cancel" />
     </LinearLayout>
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/titke"
+        android:text="Game"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/comments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/game"
+        android:layout_toRightOf="@+id/textView3"
+        android:ems="10"
+        android:text=" " />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/comments"
+        android:layout_alignBottom="@+id/comments"
+        android:layout_alignParentLeft="true"
+        android:text="Comments"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/oprEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/comments"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/comments"
+        android:ems="10"
+        android:inputType="numberDecimal|numberSigned" />
+
+    <TextView
+        android:id="@+id/opr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/oprEditText"
+        android:layout_alignBottom="@+id/oprEditText"
+        android:layout_alignParentLeft="true"
+        android:text="OPR"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView2"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignLeft="@+id/comments"
+        android:text=" "
+        android:textSize="18sp" />
+
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/titke" >
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/oprEditText" >
 
-        <TextView
-            android:id="@+id/game"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/textView3"
-            android:text=" "
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:text="Game"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/comments"
-            android:layout_alignBottom="@+id/comments"
-            android:layout_alignParentLeft="true"
-            android:text="Comments"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <MultiAutoCompleteTextView
-            android:id="@+id/comments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/game"
-            android:layout_toRightOf="@+id/textView3"
-            android:ems="10"
-            android:text=" " >
-
-            <requestFocus />
-        </MultiAutoCompleteTextView>
-
-        <EditText
-            android:id="@+id/oprEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/comments"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/comments"
-            android:ems="10"
-            android:inputType="numberDecimal|numberSigned" />
-
-        <TextView
-            android:id="@+id/opr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/oprEditText"
-            android:layout_alignBottom="@+id/oprEditText"
-            android:layout_alignParentLeft="true"
-            android:text="OPR"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <ScrollView
-            android:id="@+id/scrollView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/oprEditText" >
-
-            <LinearLayout
-                android:id="@+id/metricList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
-            </LinearLayout>
-        </ScrollView>
-
-    </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/metricList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

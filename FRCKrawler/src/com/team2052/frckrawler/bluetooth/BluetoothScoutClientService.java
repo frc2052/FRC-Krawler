@@ -143,7 +143,6 @@ public class BluetoothScoutClientService extends Service
 		
 		public BluetoothClientThread(Context _context, BluetoothDevice _serverDevice, 
 				ClientThreadListener _listener) {
-			
 			context = _context;
 			dbManager = DBManager.getInstance(context);
 			serverDevice = _serverDevice;
@@ -152,9 +151,8 @@ public class BluetoothScoutClientService extends Service
 		
 		@Override
 		public void run() {
-				
 			try {
-				
+				long startTime = System.currentTimeMillis();
 				//Open the socket
 				BluetoothSocket serverSocket = serverDevice.
 						createRfcommSocketToServiceRecord
@@ -175,7 +173,6 @@ public class BluetoothScoutClientService extends Service
 				//Get the data to send
 				Event event = dbManager.scoutGetEvent();
 				Robot[] robotsArr = dbManager.scoutGetUpdatedRobots();
-				
 				MatchData[] matchDataArr = dbManager.scoutGetAllMatchData();
 				
 				//Write the scout data
@@ -208,6 +205,7 @@ public class BluetoothScoutClientService extends Service
 				
 				if(threadListener != null)
 					threadListener.onSuccessfulSync();
+				Log.d("FRCKrawler", "Time: " + (System.currentTimeMillis() - startTime));
 					
 			} catch (IOException e) {
 				if(threadListener != null)

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -48,7 +49,6 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 
 	@Override
 	public void onClick(View v) {
-		
 		if(v.getId() == R.id.cancel) {
 			setResult(SummaryActivity.REQUEST_NO_REFRESH);
 			finish();
@@ -59,17 +59,21 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 					pitQueryWidget.getQuerys(), new Query[0]);
 			
 			int itemPos = ((Spinner)findViewById(R.id.sortKey)).getSelectedItemPosition();
-			
 			if(itemPos != 0) {
-				int metricType = SortKey.PIT_METRIC_TYPE;
-				
-				if(itemPos <= matchMetrics.length)
+				int metricType;
+				if(itemPos == 1) {
+					metricType = SortKey.OPR_TYPE;
+				}
+				else if(itemPos < matchMetrics.length + 1)
 					metricType = SortKey.MATCH_METRIC_TYPE;
+				else
+					metricType = SortKey.PIT_METRIC_TYPE;
 				
-				SummaryActivity.setSortKey(new SortKey(
-					metricType,
-					sortMetrics.get(itemPos - 1).getKey())
-				);
+				if(metricType != SortKey.OPR_TYPE)
+					SummaryActivity.setSortKey(new SortKey(metricType, 
+							sortMetrics.get(itemPos - 2).getID()));
+				else
+					SummaryActivity.setSortKey(new SortKey(metricType,-1));
 				
 			} else
 				SummaryActivity.setSortKey(null);
@@ -97,7 +101,6 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 			pitMetrics = dbManager.getRobotMetricsByColumns
 					(new String[] {DBContract.COL_GAME_NAME},
 							new String[] {event.getGameName()});
-			
 			return null;
 		}
 		
@@ -107,7 +110,7 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 			list.removeAllViews();
 			
 			list.addView(new MyTextView(getApplicationContext(), 
-					"Match Data", 18));
+					"Query by Match Metrics", 18));
 			matchQueryWidget = new QueryWidget(getApplicationContext(), 
 					matchMetrics, SummaryActivity.getMatchQuerys
 					(Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA))), 
@@ -115,7 +118,7 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 			list.addView(matchQueryWidget);
 			
 			list.addView(new MyTextView(getApplicationContext(), 
-					"Robot Data", 18));
+					"Query by Robot Metrics", 18));
 			pitQueryWidget = new QueryWidget(getApplicationContext(), 
 					pitMetrics, SummaryActivity.getPitQuerys
 					(Integer.parseInt(getIntent().getStringExtra(EVENT_ID_EXTRA))),
@@ -123,25 +126,42 @@ public class QuerySortingDialogActivity extends Activity implements OnClickListe
 			list.addView(pitQueryWidget);
 			
 			for(int i = 0; i < matchMetrics.length; i++) {
-				if(matchMetrics[i].getType() != DBContract.CHOOSER && 
-						matchMetrics[i].getType() != DBContract.TEXT)
+				if(matchMetrics[i].getType() == DBContract.COUNTER ||
+						matchMetrics[i].getType() == DBContract.MATH ||
+						matchMetrics[i].getType() == DBContract.BOOLEAN ||
+						matchMetrics[i].getType() == DBContract.SLIDER || 
+						(matchMetrics[i].getType() == DBContract.CHOOSER && 
+								matchMetrics[i].isNumericChooser()))
 					sortMetrics.add(matchMetrics[i]);
 			}
 				
 			for(int i = 0; i < pitMetrics.length; i++) {
-				if(pitMetrics[i].getType() != DBContract.CHOOSER && 
-						pitMetrics[i].getType() != DBContract.TEXT)
+				if(pitMetrics[i].getType() == DBContract.COUNTER ||
+						pitMetrics[i].getType() == DBContract.MATH ||
+						pitMetrics[i].getType() == DBContract.SLIDER || 
+						(pitMetrics[i].getType() == DBContract.CHOOSER && 
+								pitMetrics[i].isNumericChooser()))
 					sortMetrics.add(pitMetrics[i]);
 			}
 			
 			ArrayAdapter<String> sortChoices = new ArrayAdapter<String>
 					(QuerySortingDialogActivity.this, R.layout.scout_spinner_item);
-			sortChoices.add("None");
+			sortChoices.add("Team Number");
+			sortChoices.add("OPR");
 			
-			for(int i = 0; i < sortMetrics.size(); i++)
+			int selectedPos = -1;
+			for(int i = 0; i < sortMetrics.size(); i++) {
 				sortChoices.add(sortMetrics.get(i).getMetricName());
-			
+				if(SummaryActivity.getSortKey() != null && 
+						sortMetrics.get(i).getID() == SummaryActivity.getSortKey().getMetricID())
+					selectedPos = i + 2;
+			}
 			((Spinner)findViewById(R.id.sortKey)).setAdapter(sortChoices);
+			if(SummaryActivity.getSortKey() != null && 
+					SummaryActivity.getSortKey().getMetricType() == SortKey.OPR_TYPE)
+				((Spinner)findViewById(R.id.sortKey)).setSelection(1);
+			else if(selectedPos != -1)
+				((Spinner)findViewById(R.id.sortKey)).setSelection(selectedPos);
 		}
 	}
 }

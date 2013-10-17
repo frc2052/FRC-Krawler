@@ -68,8 +68,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 				(getIntent().getIntExtra(EVENT_ID_EXTRA, -1));
 		String[] robotTeams = new String[robotChoices.length];
 		
-		int selectedRobotPos = 0;
-				
+		int selectedRobotPos = 0;	
 		for(int i = 0; i < robotChoices.length; i++) {
 			robotTeams[i] = Integer.toString(robotChoices[i].getTeamNumber());
 			
@@ -87,10 +86,8 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 				
 		//Add the metrics to the UI
 		MetricValue[] metrics = matchData.getMetricValues();
-				
 		LinearLayout metricWidgetList = (LinearLayout)findViewById(R.id.metricWidgetList);
 		metricWidgetList.removeAllViews();
-				
 		for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
 			metricWidgetList.addView(MetricWidget.createWidget(this, 
 					metrics[metricCount]));
@@ -118,7 +115,6 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 
 	@Override
 	public void onClick(View v) {
-		
 		if(v.getId() == R.id.save) {
 			try {
 				LinearLayout metricList = (LinearLayout)findViewById(R.id.metricWidgetList);

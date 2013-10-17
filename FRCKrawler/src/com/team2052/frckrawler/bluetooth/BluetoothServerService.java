@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
+import java.util.Timer;
 import java.util.UUID;
 
 import android.app.Service;
@@ -17,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 import android.util.SparseIntArray;
 
 import com.team2052.frckrawler.database.DBContract;
@@ -141,12 +143,11 @@ public class BluetoothServerService extends Service {
 				return;
 			
 			while(isActive) {
+				long startTime = System.currentTimeMillis();
 				ServerDataReader reader = null;
 				
 				try {
-					
 					BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-					
 					serverSocket = adapter.listenUsingRfcommWithServiceRecord
 							(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
 					clientSocket = serverSocket.accept();
@@ -170,10 +171,8 @@ public class BluetoothServerService extends Service {
 					int connectionType = reader.getConnectionType();
 					
 					if(connectionType == BluetoothInfo.SCOUT) {
-						
 						//Compile the data to send
 						User[] usersArr = dbManager.getAllUsers();
-					
 						Robot[] robotsArr = dbManager.getRobotsAtEvent
 								(hostedEvent.getEventID());
 						
@@ -193,7 +192,6 @@ public class BluetoothServerService extends Service {
 						Metric[] rMetricsArr = dbManager.getRobotMetricsByColumns
 								(new String[] {DBContract.COL_GAME_NAME}, 
 									new String[] {hostedEvent.getGameName()});
-						
 						Metric[] mMetricsArr = dbManager.getMatchPerformanceMetricsByColumns
 								(new String[] {DBContract.COL_GAME_NAME}, 
 										new String[] {hostedEvent.getGameName()});
@@ -246,6 +244,7 @@ public class BluetoothServerService extends Service {
 					outputStream.close();
 					inputStream.close();
 					clientSocket.close();
+					Log.d("FRCKrawler", "Time: " + (System.currentTimeMillis() - startTime));
 					
 				} catch (IOException e) {
 					if(reader != null)

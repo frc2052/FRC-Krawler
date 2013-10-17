@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
-            android:text="Save" />
+            android:text="Query" />
 
         <Button
             android:id="@+id/cancel"
@@ -35,7 +35,15 @@
             android:text="Cancel" />
     </LinearLayout>
 
-    <RelativeLayout
+    <Spinner
+        android:id="@+id/sortKey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titke"
+        android:layout_toRightOf="@+id/radioPlaceHolder" />
+
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomLinearLayout"
@@ -43,35 +51,19 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/sortKey" >
 
-        <ScrollView
-            android:id="@+id/scrollView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/queryListList"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <LinearLayout
-                    android:id="@+id/queryListList"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                </LinearLayout>
-
-            </RelativeLayout>
-
-        </ScrollView>
-
-    </RelativeLayout>
-
-    <Spinner
-        android:id="@+id/sortKey"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titke"
-        android:layout_toRightOf="@+id/radioPlaceHolder" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </HorizontalScrollView>
+    </ScrollView>
 
     <TextView
         android:id="@+id/radioPlaceHolder"

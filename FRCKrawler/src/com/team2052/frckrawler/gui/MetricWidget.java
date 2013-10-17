@@ -15,7 +15,6 @@ public abstract class MetricWidget extends FrameLayout {
 	private Metric metric;
 	
 	protected MetricWidget(Context context, Metric m, String[] val) {
-		
 		super(context);
 		metric = m;
 		inflater = (LayoutInflater)context.getSystemService
@@ -23,7 +22,6 @@ public abstract class MetricWidget extends FrameLayout {
 	}
 	
 	public static MetricWidget createWidget(Context c, Metric m) {
-		
 		try {
 			return createWidget(c, new MetricValue(m, new String[0]));
 		} catch(MetricTypeMismatchException e) {
@@ -32,33 +30,26 @@ public abstract class MetricWidget extends FrameLayout {
 	}
 	
 	public static MetricWidget createWidget(Context c, MetricValue m) {
-		
 		if(m == null)
 			return null;
 		
 		switch(m.getMetric().getType()) {
 			case DBContract.BOOLEAN:
-				
 				return new BooleanMetricWidget(c, m);
 				
 			case DBContract.CHOOSER:
-				
 				return new ChooserMetricWidget(c, m);
 				
 			case DBContract.COUNTER:
-				
 				return new CounterMetricWidget(c, m);
 				
 			case DBContract.TEXT:
-				
 				return new TextMetricWidget(c, m);
 				
 			case DBContract.SLIDER:
-				
 				return new SliderMetricWidget(c, m);
 				
 			case DBContract.MATH:
-				
 				return new MathMetricWidget(c, m);
 				
 			default:

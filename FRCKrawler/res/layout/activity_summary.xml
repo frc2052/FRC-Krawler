@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <com.team2052.frckrawler.gui.StaticTableLayout
+        android:id="@+id/adminSummaryTable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomLinearLayout"
+        android:layout_below="@+id/title"
+        android:layout_toRightOf="@+id/scrollView1" >
+
+    </com.team2052.frckrawler.gui.StaticTableLayout>
+
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="wrap_content"
@@ -60,51 +70,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/title"
-        android:layout_toRightOf="@+id/scrollView1" >
-
-        <LinearLayout
-            android:id="@+id/bottomLinearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" >
-
-            <Button
-                android:id="@+id/query"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Query and Sorting" />
-
-            <Button
-                android:id="@+id/lists"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Lists" />
-        </LinearLayout>
-
-            <com.team2052.frckrawler.gui.StaticTableLayout
-                android:id="@+id/queryTable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/bottomLinearLayout" >
-
-            </com.team2052.frckrawler.gui.StaticTableLayout>
-
-        <TextView
-            android:id="@+id/compiledNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:text=" "
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </RelativeLayout>
-
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -112,6 +77,35 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text="Summary"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <LinearLayout
+        android:id="@+id/bottomLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" >
+
+        <Button
+            android:id="@+id/query"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Query and Sorting" />
+
+        <Button
+            android:id="@+id/lists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lists" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/compiledNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text=" "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

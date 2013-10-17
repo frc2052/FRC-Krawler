@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -47,9 +48,9 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 	private static final int PICTURE_BUTTON_ID = 2;
 	private static final int MATCH_DATA_BUTTON_ID = 3;
 	private static final int ADD_TO_LIST_BUTTON_ID = 4;
-	private static HashMap<Integer, Query[]> matchQuerys = new HashMap<Integer, Query[]>();
-	private static HashMap<Integer, Query[]> pitQuerys = new HashMap<Integer, Query[]>();
-	private static HashMap<Integer, Query[]> driverQuerys = new HashMap<Integer, Query[]>();
+	private static SparseArray<Query[]> matchQuerys = new SparseArray<Query[]>();
+	private static SparseArray<Query[]> pitQuerys = new SparseArray<Query[]>();
+	private static SparseArray<Query[]> driverQuerys = new SparseArray<Query[]>();
 	private static SortKey sortKey;
 	
 	private CompiledData[] data;
@@ -59,13 +60,13 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_query);
+		setContentView(R.layout.activity_summary);
 		 
 		findViewById(R.id.query).setOnClickListener(this);
 		findViewById(R.id.lists).setOnClickListener(this);
 		
+		sortKey = null;
 		dbManager = DBManager.getInstance(this);
-		
 		getDataTask = new GetCompiledDataTask();
 		getDataTask.execute(this);
 	}
@@ -213,7 +214,7 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 			((FrameLayout)findViewById(R.id.progressFrame)).
 					addView(new ProgressSpinner(getApplicationContext()));
 			
-			table = (StaticTableLayout)findViewById(R.id.queryTable);
+			table = (StaticTableLayout)findViewById(R.id.adminSummaryTable);
 			table.removeAllViews();
 		}
 
@@ -272,11 +273,11 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 			staticDescriptorsRow.addView(new MyTextView(activity, " ", 18));
 			staticDescriptorsRow.addView(new MyTextView(activity, "Team", 18));
 			descriptorsRow.addView(new MyTextView(activity, "M. Scouted", 18));
-			descriptorsRow.addView(new MyTextView(activity, "OPR", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Comments", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Pictures", 18));
 			descriptorsRow.addView(new MyTextView(activity, "M. Data", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Lists", 18));
+			descriptorsRow.addView(new MyTextView(activity, "OPR", 18));
 			
 			MetricValue[] matchMetrics;
 			Metric[] robotMetrics;
@@ -366,11 +367,11 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 						data[dataCount].getRobot().getTeamNumber()), 18));
 				dataRow.addView(new MyTextView(activity, Integer.toString(
 						data[dataCount].getMatchesPlayed().length), 18));
-				dataRow.addView(new MyTextView(activity, oprString, 18));
 				dataRow.addView(commentsButton);
 				dataRow.addView(picturesButton);
 				dataRow.addView(matchDataButton);
 				dataRow.addView(addToListButton);
+				dataRow.addView(new MyTextView(activity, oprString, 18));
 				
 				//Get the data arrays for the robot, matches, and driver data
 				MetricValue[] matchData = data[dataCount].getCompiledMatchData();

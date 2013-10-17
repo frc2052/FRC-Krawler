@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.database.structures;
 
+import com.team2052.frckrawler.database.DBContract;
+
 public class Metric implements Structure {
 	
 	private int id;
@@ -98,6 +100,19 @@ public class Metric implements Structure {
 	
 	public int getPosition() {
 		return position;
+	}
+	
+	public boolean isNumericChooser() {
+		boolean isNumeric = true;
+		for(Object o : range) {
+			try{
+				Double.parseDouble(o.toString());
+			} catch(NumberFormatException e) {
+				isNumeric = false;
+				break;
+			}
+		}
+		return isNumeric && type == DBContract.CHOOSER;
 	}
 	
 	public static class MetricFactory {

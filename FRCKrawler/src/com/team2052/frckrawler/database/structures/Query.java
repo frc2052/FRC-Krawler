@@ -17,6 +17,7 @@ public class Query implements Structure {
 	public static final int COMPARISON_EQUAL_TO = 1;
 	public static final int COMPARISON_LESS_THAN = 2; //Only works with COUNTER and SLIDER
 	public static final int COMPARISON_GREATER_THAN = 3; //Only works with COUNTER and SLIDER
+	public static final int COMPARISON_CHOOSER_COMPARE = 4; //Only works with match data CHOOSERS
 	
 	private int type;
 	private int metricID;

@@ -30,7 +30,6 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 	ArrayList<QueryItem> querys;
 	
 	public QueryWidget(Context _context, Metric[] _metrics, int _metricType) {
-		
 		this(_context, _metrics, new Query[0], _metricType);
 	}
 	
@@ -103,18 +102,18 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 																OnClickListener {
 		
 		volatile boolean isComplete;
-		
 		volatile Button removeButton;
 		volatile MyTextView frontText;
 		volatile MyTextView equalTextView;
+		volatile MyTextView isUsuallyTextView;
 		volatile Spinner metricSelector;
 		volatile Spinner operationSelector;
-		volatile Spinner valueSelector;
+		volatile Spinner booleanValueSelector;
+		volatile Spinner chooserValueSelector;
 		volatile EditText valueEnterer;
 		volatile Query query;
 		
 		public QueryItem(Context c) {
-			
 			this(c, null);
 		}
 		
@@ -125,11 +124,13 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 			isComplete = false;
 			removeButton = new MyButton(getContext(), "Remove Query", this);
 			removeButton.setId(1);
-			frontText = new MyTextView(getContext(), "Get team when", 18);
+			frontText = new MyTextView(getContext(), "Get robot when ", 18);
 			equalTextView = new MyTextView(getContext(), " = ", 18);
+			isUsuallyTextView = new MyTextView(getContext(), " is usually ", 18);
 			metricSelector = new Spinner(getContext());
 			operationSelector = new Spinner(getContext());
-			valueSelector = new Spinner(getContext());
+			booleanValueSelector = new Spinner(getContext());
+			chooserValueSelector = new Spinner(getContext());
 			valueEnterer = new EditText(getContext());
 			
 			new CreateUITask().execute(this);
@@ -138,6 +139,7 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 		@Override
 		public void onItemSelected(AdapterView<?> adapter, View v, int pos,
 				long id) {
+			Log.d("FRCKrawler", "Item selected");
 			if(adapter.getId() == metricSelector.getId()) {
 				if(metrics[pos].getType() == DBContract.BOOLEAN && 
 						metricType != Query.TYPE_MATCH_DATA) {
@@ -146,8 +148,54 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 					addView(frontText);
 					addView(metricSelector);
 					addView(equalTextView);
-					addView(valueSelector);
-					valueEnterer.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+					addView(booleanValueSelector);
+					
+				} else if(metrics[pos].getType() == DBContract.CHOOSER && 
+						metricType != Query.TYPE_MATCH_DATA) {
+					this.removeAllViews();
+					addView(removeButton);
+					addView(frontText);
+					addView(metricSelector);
+					addView(equalTextView);
+					chooserValueSelector.setAdapter(new ArrayAdapter<Object>(getContext(), 
+							R.layout.simple_spinner_item, metrics[pos].getRange()));
+					int selPos = -1;
+					if(query != null) {
+						for(int i = 0; i < metrics[pos].getRange().length; i++) {
+							if(query.getMetricValue().equals(metrics[pos]
+									.getRange()[i])) {
+								selPos = i;
+								break;
+							}
+						}
+						if(selPos != -1)
+							chooserValueSelector.setSelection(selPos);
+					}
+					addView(chooserValueSelector);
+				
+				} else if(metrics[pos].getType() == DBContract.CHOOSER && 
+						metricType == Query.TYPE_MATCH_DATA && !metrics[pos].isNumericChooser()) {
+					this.removeAllViews();
+					addView(removeButton);
+					addView(frontText);
+					addView(metricSelector);
+					addView(isUsuallyTextView);
+					chooserValueSelector.setAdapter(new ArrayAdapter<Object>(getContext(), 
+							R.layout.simple_spinner_item, metrics[pos].getRange()));
+					int selPos = -1;
+					if(query != null) {
+						for(int i = 0; i < metrics[pos].getRange().length; i++) {
+							if(query.getMetricValue().equals(metrics[pos]
+									.getRange()[i])) {
+								selPos = i;
+								break;
+							}
+						}
+						if(selPos != -1)
+							chooserValueSelector.setSelection(selPos);
+					}
+					addView(chooserValueSelector);
+					
 					
 				} else if(metrics[pos].getType() == DBContract.TEXT) {
 					this.removeAllViews();
@@ -183,10 +231,36 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 			int operation;
 			String value;
 			
+			boolean chooserIsNumeric = true;
+			if(metrics[metricSelector.getSelectedItemPosition()].getType() == 
+					DBContract.CHOOSER) {
+				for(Object o : metrics[metricSelector.getSelectedItemPosition()].getRange())
+					try {
+						Double.parseDouble(o.toString());
+					} catch(NumberFormatException e) {
+						chooserIsNumeric = false;
+						break;
+					}
+			} else {
+				chooserIsNumeric = false;
+			}
+			
 			if(metrics[metricSelector.getSelectedItemPosition()].getType() == 
 					DBContract.BOOLEAN && metricType != Query.TYPE_MATCH_DATA) {
 				operation = Query.COMPARISON_EQUAL_TO;
-				value = valueSelector.getSelectedItem().toString();
+				value = booleanValueSelector.getSelectedItem().toString();
+				
+			} else if(metrics[metricSelector.getSelectedItemPosition()].getType() == 
+					DBContract.CHOOSER && metricType != Query.TYPE_MATCH_DATA) {
+				operation = Query.COMPARISON_EQUAL_TO;
+				value = chooserValueSelector.getSelectedItem().toString();
+				
+			} else if(metrics[metricSelector.getSelectedItemPosition()].getType() == 
+					DBContract.CHOOSER && metricType == Query.TYPE_MATCH_DATA && 
+					!chooserIsNumeric) {
+				operation = Query.COMPARISON_CHOOSER_COMPARE;
+				value = chooserValueSelector.getSelectedItem().toString();
+				
 			} else {
 				operation = operationSelector.getSelectedItemPosition() + 1;
 				value = valueEnterer.getText().toString();
@@ -207,7 +281,6 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 
 			@Override
 			protected Void doInBackground(QueryItem... params) {
-				
 				String[] metricNames = new String[metrics.length];
 				for(int i = 0; i < metricNames.length; i++)
 					metricNames[i] = metrics[i].getMetricName();
@@ -224,14 +297,13 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 						R.layout.simple_spinner_item, 
 						new String[] {" = ", " < ", " > "}));
 				
-				valueSelector.setId(3);
-				valueSelector.setAdapter(new ArrayAdapter<String>(getContext(), 
+				booleanValueSelector.setId(3);
+				booleanValueSelector.setAdapter(new ArrayAdapter<String>(getContext(), 
 						R.layout.simple_spinner_item, new String[] {"true", "false"}));
 				
 				valueEnterer.setHint("Value");
 				
 				if(query != null) {
-					System.out.println("Ran");
 					int selection = 0;
 					
 					for(int i = 0; i < metrics.length; i++) {
@@ -246,7 +318,7 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 					if(query.getType() != Query.TYPE_MATCH_DATA && 
 							metrics[selection].getType() == DBContract.BOOLEAN) {
 						if(query.getMetricValue().equals("false"))
-							valueSelector.setSelection(1);
+							booleanValueSelector.setSelection(1);
 					} else {
 						operationSelector.setSelection(query.getComparison() - 1);
 						valueEnterer.setText(query.getMetricValue());
@@ -261,7 +333,6 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 				addView(removeButton);
 				addView(frontText);
 				addView(metricSelector);
-				
 				refresh(); 
 			}
 		}

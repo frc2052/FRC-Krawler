@@ -25,31 +25,35 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
 		
 		ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getContext(), 
 				android.R.layout.simple_spinner_item);
+		Object[] range = m.getMetric().getRange();
+		int selectedPos = 0;
+		for(int i = 0; i < range.length; i++) {
+			adapter.add(range[i]);
+			if(value != null && value.toString().equals(range[i]))
+				selectedPos = i;
+		}
 		
-		for(Object s : m.getMetric().getRange()) 
-			adapter.add(s);
-		
-		((Spinner)findViewById(R.id.choooserList)).setAdapter(adapter);
-		((Spinner)findViewById(R.id.choooserList)).setOnItemSelectedListener(this);
+		Spinner chooserSpinner = (Spinner)findViewById(R.id.choooserList);
+		chooserSpinner.setAdapter(adapter);
+		chooserSpinner.setOnItemSelectedListener(this);
+		if(!adapter.isEmpty())
+			chooserSpinner.setSelection(selectedPos);
 		((TextView)findViewById(R.id.name)).setText(m.getMetric().getMetricName());
 	}
 
 	@Override
 	public String[] getValues() {
-		
 		return new String[] {value};
 	}
 
 	@Override
 	public void onItemSelected(AdapterView<?> a, View arg1, int arg2,
 			long arg3) {
-		
 		value = (String)a.getSelectedItem();
 	}
 
 	@Override
 	public void onNothingSelected(AdapterView<?> a) {
-		
 		a.setSelection(0);
 	}
 }
