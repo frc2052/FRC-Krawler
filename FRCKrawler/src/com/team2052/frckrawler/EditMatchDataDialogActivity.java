@@ -34,7 +34,6 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		getWindow().setSoftInputMode
 			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -186,9 +185,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 			db.removeMatchData(getIntent().getIntExtra(MATCH_ID_EXTRA, -1));
 			setResult(RESULT_OK);
 			finish();
-			
 		} else {
-			
 			dialog.dismiss();
 		}
 	}

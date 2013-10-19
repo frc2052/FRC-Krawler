@@ -3377,8 +3377,7 @@ public class DBManager {
 					break;
 			}
 			
-			CompiledDataSorter sorter = new CompiledDataSorter();
-			sorter.sort(sortValues, compiledData);
+			Sorter.sortCompiledData(sortValues, compiledData);
 		}
 		
 		
