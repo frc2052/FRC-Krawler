@@ -1240,15 +1240,13 @@ public class DBManager {
 			
 		Cursor c = helper.getWritableDatabase().rawQuery(queryString, vals);
 		Robot[] r = new Robot[c.getCount()];
-		helper.close();
 		
 		for(int i = 0; i < c.getCount(); i++) {
 			c.moveToNext();
 			String thisRobotGame = c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME));
 			ArrayList<MetricValue> metricVals = new ArrayList<MetricValue>();
 			Metric[] metrics = new Metric[0];
-			
-			metrics = this.getRobotMetricsByColumns
+			metrics = getRobotMetricsByColumns
 				(new String[] {DBContract.COL_GAME_NAME}, new String[] {thisRobotGame});
 				
 			for(int metricCount = 0; metricCount < metrics.length; metricCount++) {
@@ -1256,25 +1254,62 @@ public class DBManager {
 						(c.getColumnIndex(metrics[metricCount].getKey()));
 				ArrayList<String> valsArr = new ArrayList<String>();
 				String workingString = new String();
-
-				if(valString == null)
-					valString = new String();
-
-				for(int charCount = 0; charCount < valString.length(); charCount++) {
-					if(valString.charAt(charCount) != ':'){
-						workingString += valString.substring(charCount, charCount + 1);
-					} else {
-						valsArr.add(workingString);
-						workingString = new String();
+				
+				if(metrics[metricCount].getType() != DBContract.MATH) {
+					if(valString == null)
+						valString = new String();
+					for(int charCount = 0; charCount < valString.length(); charCount++) {
+						if(valString.charAt(charCount) != ':'){
+							workingString += valString.substring(charCount, charCount + 1);
+						} else {
+							valsArr.add(workingString);
+							workingString = new String();
+						}
 					}
+				} else {
+					Metric[] addables = new Metric[metrics[metricCount].getRange().length];
+					String[] addableKeys = new String[metrics[metricCount].getRange().length];
+					for(int k = 0; k < addables.length; k++) {
+						addables[k] = getRobotMetricsByColumns(
+								new String[] {DBContract.COL_METRIC_ID}, 
+								new String[] {metrics[metricCount].getRange()[k].toString()})[0];
+						addableKeys[k] = addables[k].getKey();
+					}
+					
+					Cursor addablesCursor = helper.getReadableDatabase().query
+							(DBContract.TABLE_ROBOTS, 
+							addableKeys, 
+							DBContract.COL_ROBOT_ID + " LIKE ?", 
+							new String[] {c.getString(c.getColumnIndex(DBContract.COL_ROBOT_ID))}, 
+							null, 
+							null, 
+							null);
+					addablesCursor.moveToFirst();
+					
+					double total = 0;
+					for(int k = 0; k < addableKeys.length; k++) {
+						try {
+							String s = addablesCursor.getString(addablesCursor
+									.getColumnIndex(addableKeys[k]));
+							if(s != null)
+								total += Double.parseDouble(s.substring(0, s.length() - 1));
+							else {
+								total = -1;
+								break;
+							}
+						} catch(NumberFormatException e) {
+							total = -1;
+							break;
+						}
+					}
+					
+					if(total != -1)
+						valsArr.add(Double.toString(total));
 				}
 
 				try {
-					metricVals.add(
-							new MetricValue(
-									metrics[metricCount],
-									valsArr.toArray(new String[0])
-									));
+					metricVals.add(new MetricValue(metrics[metricCount],
+							valsArr.toArray(new String[0])));
 				} catch(MetricTypeMismatchException e) {
 					Log.e("FRCKrawler", e.getMessage());
 				}
@@ -1292,6 +1327,7 @@ public class DBManager {
 		}
 		
 		c.close();
+		helper.close();
 		return r;
 	}
 	

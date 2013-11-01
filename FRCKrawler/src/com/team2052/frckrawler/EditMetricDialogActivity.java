@@ -2,6 +2,7 @@ package com.team2052.frckrawler;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -41,27 +42,21 @@ public class EditMetricDialogActivity extends Activity implements OnClickListene
 		
 		switch(metricCategory) {
 			case MetricsActivity.MATCH_PERF_METRICS:
-				
 				Metric[] arr = db.getMatchPerformanceMetricsByColumns
 						(new String[] {DBContract.COL_METRIC_ID}, 
 								new String[] {Integer.toString
 								(getIntent().getIntExtra(METRIC_ID_EXTRA, -1))});
-				
 				if(arr.length > 0)
 					metric = arr[0];
-				
 				break;
 				
 			case MetricsActivity.ROBOT_METRICS:
-				
 				Metric[] rarr = db.getRobotMetricsByColumns
 				(new String[] {DBContract.COL_METRIC_ID}, 
 						new String[] {Integer.toString
 						(getIntent().getIntExtra(METRIC_ID_EXTRA, -1))});
-		
 				if(rarr.length > 0)
 					metric = rarr[0];
-		
 			break;
 		}
 		
@@ -71,12 +66,10 @@ public class EditMetricDialogActivity extends Activity implements OnClickListene
 			((EditText)findViewById(R.id.name)).setText(metric.getMetricName());
 			((EditText)findViewById(R.id.description)).setText(metric.getDescription());
 			((CheckBox)findViewById(R.id.displayed)).setChecked(metric.isDisplayed());
-			
 			Object[] range = metric.getRange();
 			
 			switch(metric.getType()) {
 				case DBContract.CHOOSER:
-				
 					list = new TextListEditor(this);
 					for(int i = 0; i < range.length; i++)
 						list.addValue(range[i].toString(), range[i].toString());
@@ -84,11 +77,9 @@ public class EditMetricDialogActivity extends Activity implements OnClickListene
 					
 				case DBContract.TEXT:
 				case DBContract.BOOLEAN:
-					
 					((EditText)findViewById(R.id.min)).setEnabled(false);
 					((EditText)findViewById(R.id.max)).setEnabled(false);
 					((EditText)findViewById(R.id.inc)).setEnabled(false);
-					
 					break;
 					
 				case DBContract.COUNTER:
@@ -108,7 +99,6 @@ public class EditMetricDialogActivity extends Activity implements OnClickListene
 					break;
 					
 				case DBContract.MATH:
-					
 					((EditText)findViewById(R.id.min)).setEnabled(false);
 					((EditText)findViewById(R.id.max)).setEnabled(false);
 					((EditText)findViewById(R.id.inc)).setEnabled(false);
@@ -149,9 +139,7 @@ public class EditMetricDialogActivity extends Activity implements OnClickListene
 					
 					for(int i = 0; i < range.length; i++)
 						list.addValue(range[i].toString(), metricNames[i]);
-						
 					((FrameLayout)findViewById(R.id.listEditorSlot)).addView(list);
-					
 					break;
 			}
 		}
@@ -159,56 +147,41 @@ public class EditMetricDialogActivity extends Activity implements OnClickListene
 
 	@Override
 	public void onClick(View v) {
-		
 		DBManager db = DBManager.getInstance(this);
-		
 		switch(v.getId()) {
 			case R.id.cancel:
-				
 				finish();
-				
 				break;
 				
 			case R.id.remove:
-				
 				switch(metricCategory) {
 					case MetricsActivity.MATCH_PERF_METRICS:
-						
 						db.removeMatchPerformaceMetric
 								(getIntent().getIntExtra(METRIC_ID_EXTRA, -1));
-						
 						break;
 						
 					case MetricsActivity.ROBOT_METRICS:
-						
 						db.removeRobotMetric(getIntent().getIntExtra
 								(METRIC_ID_EXTRA, -1));
-						
 						break;
 						
 					case MetricsActivity.DRIVER_METRICS:
-						
 						db.removeDriverMetric(getIntent().getIntExtra
 								(METRIC_ID_EXTRA, -1));
-						
 						break;
 				}
 				
 				finish();
-				
 				break;
 				
 			case R.id.saveMetric:
-				
 				Object[] range = null;
-				
 				switch(metric.getType()) {
 					case DBContract.TEXT:
 					case DBContract.BOOLEAN:
 						break;
 						
 					case DBContract.COUNTER:
-						
 						range = new Object[3];
 						range[0] = Integer.valueOf(((EditText)findViewById(R.id.min)).
 								getText().toString());
@@ -216,7 +189,6 @@ public class EditMetricDialogActivity extends Activity implements OnClickListene
 								getText().toString());
 						range[2] = Integer.valueOf(((EditText)findViewById(R.id.inc)).
 								getText().toString());
-						
 						break;
 						
 					case DBContract.SLIDER:
@@ -231,14 +203,12 @@ public class EditMetricDialogActivity extends Activity implements OnClickListene
 						
 					case DBContract.MATH:
 					case DBContract.CHOOSER:
-						
 						range = list.getValues();
 						break;
 				}
 				
 				switch(metricCategory) {
 					case MetricsActivity.MATCH_PERF_METRICS:
-						
 						db.updateMatchPerformanceMetrics(
 								new Metric[] {new Metric(
 										metric.getID(),
@@ -254,7 +224,6 @@ public class EditMetricDialogActivity extends Activity implements OnClickListene
 						break;
 						
 					case MetricsActivity.ROBOT_METRICS:
-						
 						db.updateRobotMetrics(
 								new Metric[] {new Metric(
 										metric.getID(),

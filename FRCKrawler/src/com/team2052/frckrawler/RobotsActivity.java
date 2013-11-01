@@ -179,7 +179,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 			MyTableRow descriptorsRow = new MyTableRow(RobotsActivity.this);
 			staticDesRow.addView(new TextView(RobotsActivity.this));
 			staticDesRow.addView(new MyTextView(RobotsActivity.this, "Team #", 18));
-			staticDesRow.addView(new MyTextView(RobotsActivity.this, "Game", 18));
+			descriptorsRow.addView(new MyTextView(RobotsActivity.this, "Game", 18));
 			descriptorsRow.addView(new MyTextView(RobotsActivity.this, "Comments", 18));
 			descriptorsRow.addView(new MyTextView(RobotsActivity.this, "OPR", 18));
 			
@@ -198,7 +198,7 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 					MyTableRow dRow = new MyTableRow(RobotsActivity.this);
 					sDesRow.addView(new TextView(RobotsActivity.this));
 					sDesRow.addView(new MyTextView(RobotsActivity.this, "Team #", 18));
-					sDesRow.addView(new MyTextView(RobotsActivity.this, "Game", 18));
+					dRow.addView(new MyTextView(RobotsActivity.this, "Game", 18));
 					dRow.addView(new MyTextView(RobotsActivity.this, "Comments", 18));
 					dRow.addView(new MyTextView(RobotsActivity.this, "OPR", 18));
 					
@@ -236,11 +236,11 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 				staticRow.addView(editRobot);
 				staticRow.addView(new MyTextView(RobotsActivity.this, Integer.toString(robots[i].
 						getTeamNumber()), 18));
-				staticRow.addView(new MyTextView(RobotsActivity.this, robots[i].getGame(), 18));
 				staticRow.setBackgroundColor(color);
 				
 				//Holds the row's data
 				ArrayList<View> rowArrayList = new ArrayList<View>();
+				rowArrayList.add(new MyTextView(RobotsActivity.this, robots[i].getGame(), 18));
 				//Stops a index out of bounds exception from being thrown if there's a short comment
 				String comment;
 				
@@ -261,7 +261,8 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 				rowArrayList.add(new MyTextView(RobotsActivity.this, comment, 18));
 				rowArrayList.add(new MyTextView(RobotsActivity.this, oprString, 18));
 				for(MetricValue m : robots[i].getMetricValues()) {
-					rowArrayList.add(new MyTextView(RobotsActivity.this, m.getValueAsHumanReadableString(), 18));
+					rowArrayList.add(new MyTextView(RobotsActivity.this, 
+							m.getValueAsHumanReadableString(), 18));
 				}
 				
 				rowArrayList.add(events);
@@ -272,12 +273,11 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 						rowArrayList.toArray(new View[0]), color));
 				
 				try {	//Wait for the UI to update
-					Thread.sleep(50);
+					Thread.sleep(40);
 				} catch(InterruptedException e) {}
 			}
 			
 			numRobots = robots.length;
-			
 			return null;
 		}
 		

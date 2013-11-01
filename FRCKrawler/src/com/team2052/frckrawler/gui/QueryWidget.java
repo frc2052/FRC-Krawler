@@ -120,7 +120,6 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 		public QueryItem(Context c, Query q) {
 			super(c);
 			query = q;
-			
 			isComplete = false;
 			removeButton = new MyButton(getContext(), "Remove Query", this);
 			removeButton.setId(1);
@@ -132,7 +131,7 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 			booleanValueSelector = new Spinner(getContext());
 			chooserValueSelector = new Spinner(getContext());
 			valueEnterer = new EditText(getContext());
-			
+			setOrientation(LinearLayout.VERTICAL);
 			new CreateUITask().execute(this);
 		}
 
@@ -144,16 +143,15 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 				if(metrics[pos].getType() == DBContract.BOOLEAN && 
 						metricType != Query.TYPE_MATCH_DATA) {
 					this.removeAllViews();
-					addView(removeButton);
 					addView(frontText);
 					addView(metricSelector);
 					addView(equalTextView);
 					addView(booleanValueSelector);
+					addView(removeButton);
 					
 				} else if(metrics[pos].getType() == DBContract.CHOOSER && 
 						metricType != Query.TYPE_MATCH_DATA) {
 					this.removeAllViews();
-					addView(removeButton);
 					addView(frontText);
 					addView(metricSelector);
 					addView(equalTextView);
@@ -172,11 +170,11 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 							chooserValueSelector.setSelection(selPos);
 					}
 					addView(chooserValueSelector);
+					addView(removeButton);
 				
 				} else if(metrics[pos].getType() == DBContract.CHOOSER && 
 						metricType == Query.TYPE_MATCH_DATA && !metrics[pos].isNumericChooser()) {
 					this.removeAllViews();
-					addView(removeButton);
 					addView(frontText);
 					addView(metricSelector);
 					addView(isUsuallyTextView);
@@ -195,25 +193,26 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 							chooserValueSelector.setSelection(selPos);
 					}
 					addView(chooserValueSelector);
+					addView(removeButton);
 					
 					
 				} else if(metrics[pos].getType() == DBContract.TEXT) {
 					this.removeAllViews();
-					addView(removeButton);
 					addView(frontText);
 					addView(metricSelector);
 					addView(equalTextView);
 					addView(valueEnterer);
 					valueEnterer.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+					addView(removeButton);
 					
 				} else {
 					this.removeAllViews();
-					addView(removeButton);
 					addView(frontText);
 					addView(metricSelector);
 					addView(operationSelector);
 					addView(valueEnterer);
 					valueEnterer.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+					addView(removeButton);
 				}
 				
 				isComplete = true;

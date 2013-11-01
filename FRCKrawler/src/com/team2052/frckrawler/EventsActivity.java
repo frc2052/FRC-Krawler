@@ -23,6 +23,7 @@ import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
+import com.team2052.frckrawler.gui.ProgressSpinner;
 
 public class EventsActivity extends StackableTabActivity implements OnClickListener {
 	
@@ -39,7 +40,6 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_events);
 		
@@ -47,7 +47,6 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 			String value = 
 					databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)];
 			findViewById(R.id.addEventButton).setOnClickListener(this);
-			
 		} catch(ArrayIndexOutOfBoundsException e) {
 			findViewById(R.id.addEventButton).setEnabled(false);
 		}
@@ -62,7 +61,6 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 	}
 	
 	public void postResults(Event[] events) {
-		
 		TableLayout table = (TableLayout)findViewById(R.id.eventsDataTable);
 		table.removeAllViews();
 		
@@ -160,22 +158,7 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 				break;
 				
 			case ROBOTS_ID:
-				Robot[] attendingRobots = dbManager.getRobotsAtEvent
-								(Integer.parseInt(v.getTag().toString()));
-				
-				String[] dbValsArr = new String[attendingRobots.length];
-				String[] dbKeysArr = new String[attendingRobots.length];
-				
-				for(int k = 0; k < attendingRobots.length; k ++) {
-					
-					dbValsArr[k] = Integer.toString(attendingRobots[k].getID());
-					dbKeysArr[k] = DBContract.COL_ROBOT_ID;
-				}
-				
-				i = new Intent(this, RobotsActivity.class);
-				i.putExtra(DB_VALUES_EXTRA, dbValsArr);
-				i.putExtra(DB_KEYS_EXTRA, dbKeysArr);
-				startActivity(i);
+				new StartRobotsActivityTask().execute(Integer.parseInt(v.getTag().toString()));
 				break;
 				
 			case COMP_DATA_ID:
@@ -250,6 +233,45 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 		protected void onPostExecute(Event[] events) {
 			((TextView)findViewById(R.id.eventNum)).setText(eventNum + " Events");
 			postResults(events);
+		}
+	}
+	
+	private class StartRobotsActivityTask extends AsyncTask<Integer, Void, Intent> {
+		
+		private AlertDialog progressDialog;
+		
+		@Override
+		protected void onPreExecute() {
+			AlertDialog.Builder builder = new AlertDialog.Builder(EventsActivity.this);
+			builder.setTitle("Loading...");
+			builder.setView(new ProgressSpinner(EventsActivity.this));
+			builder.setCancelable(false);
+			progressDialog = builder.create();
+			progressDialog.show();
+		}
+
+		@Override
+		protected Intent doInBackground(Integer... params) {
+			Robot[] attendingRobots = dbManager.getRobotsAtEvent
+					(params[0]);
+			String[] dbValsArr = new String[attendingRobots.length];
+			String[] dbKeysArr = new String[attendingRobots.length];
+
+			for(int k = 0; k < attendingRobots.length; k ++) {
+				dbValsArr[k] = Integer.toString(attendingRobots[k].getID());
+				dbKeysArr[k] = DBContract.COL_ROBOT_ID;
+			}
+			
+			Intent i = new Intent(EventsActivity.this, RobotsActivity.class);
+			i.putExtra(DB_VALUES_EXTRA, dbValsArr);
+			i.putExtra(DB_KEYS_EXTRA, dbKeysArr);
+			return i;
+		}
+		
+		@Override
+		protected void onPostExecute(Intent i) {
+			progressDialog.dismiss();
+			startActivity(i);
 		}
 	}
 }

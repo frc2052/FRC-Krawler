@@ -29,12 +29,10 @@ public class AddMetricDialogActivity extends Activity
 	
 	private int metricCategory;
 	private int selectedMetricType;
-	
 	private ListEditor list;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialogactivity_add_metric);
 		
@@ -43,25 +41,20 @@ public class AddMetricDialogActivity extends Activity
 		
 		findViewById(R.id.add).setOnClickListener(this);
 		findViewById(R.id.cancel).setOnClickListener(this);
-		
 		((Spinner)findViewById(R.id.type)).setOnItemSelectedListener(this);
 		((Spinner)findViewById(R.id.type)).setSelection(0);
 		
 		metricCategory = getIntent().getIntExtra(METRIC_CATEGORY_EXTRA, 1);
 		selectedMetricType = 0;
-		
 		refreshTypeBasedUI();
 	}
 
 	@Override
 	public void onClick(View v) {
-		
 		if(v.getId() == R.id.add) {
 			Metric m = null;
-			
 			switch(selectedMetricType) {
 				case DBContract.BOOLEAN:
-					
 					m = Metric.MetricFactory.createBooleanMetric(
 							getIntent().getStringExtra(GAME_NAME_EXTRA),
 							((EditText)findViewById(R.id.name)).getText().toString(),
@@ -71,7 +64,6 @@ public class AddMetricDialogActivity extends Activity
 					break;
 					
 				case DBContract.COUNTER:
-					
 					try{
 						m = Metric.MetricFactory.createCounterMetric(
 							getIntent().getStringExtra(GAME_NAME_EXTRA),
@@ -89,11 +81,9 @@ public class AddMetricDialogActivity extends Activity
 								Toast.LENGTH_SHORT).show();
 						return;
 					}
-					
 					break;
 					
 				case DBContract.SLIDER:
-					
 					try {
 						m = Metric.MetricFactory.createSliderMetric(
 							getIntent().getStringExtra(GAME_NAME_EXTRA),
@@ -110,11 +100,9 @@ public class AddMetricDialogActivity extends Activity
 								Toast.LENGTH_SHORT).show();
 						return;
 					}
-					
 					break;
 					
 				case DBContract.CHOOSER:
-					
 					m = Metric.MetricFactory.createChooserMetric(
 							getIntent().getStringExtra(GAME_NAME_EXTRA),
 							((EditText)findViewById(R.id.name)).getText().toString(),
@@ -122,25 +110,18 @@ public class AddMetricDialogActivity extends Activity
 							list.getValues(),
 							((CheckBox)findViewById(R.id.displayed)).isChecked()
 							);
-					
-					for(String s : list.getValues())
-						System.out.println(s);
-					
 					break;
 					
 				case DBContract.TEXT:
-					
 					m = Metric.MetricFactory.createTextMetric(
 							getIntent().getStringExtra(GAME_NAME_EXTRA),
 							((EditText)findViewById(R.id.name)).getText().toString(),
 							((EditText)findViewById(R.id.description)).getText().toString(),
 							((CheckBox)findViewById(R.id.displayed)).isChecked()
 							);
-					
 					break;
 					
 				case DBContract.MATH:
-					
 					String[] selectedMetrics = list.getValues();
 					Integer[] selectedMetricIDs = new Integer[selectedMetrics.length];
 					
@@ -184,36 +165,30 @@ public class AddMetricDialogActivity extends Activity
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View v, int pos,
 			long id) {
-		
 		selectedMetricType = pos;
 		refreshTypeBasedUI();
 	}
 
 	@Override
 	public void onNothingSelected(AdapterView<?> v) {
-		
 		((Spinner)findViewById(R.id.game)).setSelection(0);
 		refreshTypeBasedUI();
 	}
 	
 	protected void refreshTypeBasedUI() {
-		
 		if(selectedMetricType == DBContract.COUNTER) {
-			
 			findViewById(R.id.min).setEnabled(true);
 			findViewById(R.id.max).setEnabled(true);
 			findViewById(R.id.inc).setEnabled(true);
 			((FrameLayout)findViewById(R.id.listEditorSlot)).removeAllViews();
 			
 		} else if(selectedMetricType == DBContract.SLIDER) {
-			
 			findViewById(R.id.min).setEnabled(true);
 			findViewById(R.id.max).setEnabled(true);
 			findViewById(R.id.inc).setEnabled(false);
 			((FrameLayout)findViewById(R.id.listEditorSlot)).removeAllViews();
 			
 		} else if(selectedMetricType == DBContract.MATH) {
-			
 			DBManager db = DBManager.getInstance(this);
 			Metric[] choices;
 			
@@ -224,7 +199,6 @@ public class AddMetricDialogActivity extends Activity
 								new String[] {getIntent().getStringExtra
 								(GAME_NAME_EXTRA)});
 					ArrayList<Metric> acceptedMetrics = new ArrayList<Metric>();
-					
 					for(Metric met : matchMetrics) {
 						if(met.getType() == DBContract.COUNTER || 
 								met.getType() == DBContract.SLIDER)
@@ -232,20 +206,19 @@ public class AddMetricDialogActivity extends Activity
 					}
 					
 					choices = acceptedMetrics.toArray(new Metric[0]);
-					
 					break;
 				
 				case MetricsActivity.ROBOT_METRICS:
-					/*choices = db.getRobotMetricsByColumns
+					Metric[] robotMetrics = db.getRobotMetricsByColumns
 					(new String[] {DBContract.COL_GAME_NAME}, 
 							new String[] {getIntent().getStringExtra(GAME_NAME_EXTRA)});
-					break;*/
-				
-				case MetricsActivity.DRIVER_METRICS:
-					/*choices = db.getDriverMetricsByColumns
-					(new String[] {DBContract.COL_GAME_NAME}, 
-							new String[] {getIntent().getStringExtra(GAME_NAME_EXTRA)});
-					break;*/
+					ArrayList<Metric> choosableMetrics = new ArrayList<Metric>();
+					for(Metric m : robotMetrics)
+						if(m.getType() == DBContract.COUNTER || 
+							m.getType() == DBContract.SLIDER)
+								choosableMetrics.add(m);
+					choices = choosableMetrics.toArray(new Metric[0]);
+					break;
 					
 				default:
 					choices = new Metric[0];
@@ -259,7 +232,6 @@ public class AddMetricDialogActivity extends Activity
 			((FrameLayout)findViewById(R.id.listEditorSlot)).addView(list);
 			
 		} else if(selectedMetricType == DBContract.CHOOSER) {
-			
 			findViewById(R.id.min).setEnabled(false);
 			findViewById(R.id.max).setEnabled(false);
 			findViewById(R.id.inc).setEnabled(false);
@@ -268,7 +240,6 @@ public class AddMetricDialogActivity extends Activity
 			((FrameLayout)findViewById(R.id.listEditorSlot)).addView(list);
 			
 		} else {
-			
 			findViewById(R.id.min).setEnabled(false);
 			findViewById(R.id.max).setEnabled(false);
 			findViewById(R.id.inc).setEnabled(false);
