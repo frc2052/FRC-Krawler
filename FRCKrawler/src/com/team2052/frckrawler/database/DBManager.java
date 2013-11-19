@@ -3253,12 +3253,12 @@ public class DBManager {
 						|| (metricValue.getMetric().getType() == DBContract.BOOLEAN 
 							&& query.getType() == Query.TYPE_MATCH_DATA)
 						|| chooserIsNumeric) {
-
 							try {
 								double checkValue = Double.parseDouble
 										(query.getMetricValue());
 								double robotValue = Double.parseDouble
-										(metricValue.getValueAsHumanReadableString());
+										(metricValue.getValueAsHumanReadableString()
+												.replace("%", ""));
 
 								if(checkValue != robotValue)
 									passed = false;
@@ -3281,12 +3281,12 @@ public class DBManager {
 						|| (metricValue.getMetric().getType() == DBContract.BOOLEAN 
 							&& query.getType() == Query.TYPE_MATCH_DATA)
 						|| chooserIsNumeric) {
-
 							try {
 								double checkValue = Double.parseDouble
 										(query.getMetricValue());
 								double robotValue = Double.parseDouble
-										(metricValue.getValueAsHumanReadableString());
+										(metricValue.getValueAsHumanReadableString()
+												.replace("%", ""));
 
 								if(checkValue <= robotValue)
 									passed = false;
@@ -3308,7 +3308,8 @@ public class DBManager {
 								double checkValue = Double.parseDouble
 										(query.getMetricValue());
 								double robotValue = Double.parseDouble
-										(metricValue.getValueAsHumanReadableString());
+										(metricValue.getValueAsHumanReadableString()
+												.replace("%", ""));
 
 								if(checkValue >= robotValue)
 									passed = false;

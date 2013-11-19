@@ -47,7 +47,7 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 		setOrientation(LinearLayout.VERTICAL);
 		
 		addButton = new Button(getContext());
-		addButton.setText("Add...");
+		addButton.setText("Add Query...");
 		addButton.setOnClickListener(this);
 		addView(addButton);
 	}
@@ -70,22 +70,16 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 		if(v.getId() == addButton.getId()) {
 			querys.add(new QueryItem(getContext()));
 			removeAllViews();
-			
-			for(QueryItem i : querys) {
+			for(QueryItem i : querys)
 				addView(i);
-			}
-			
 			addView(addButton);
 		}
 	}
 	
 	public void refresh() {
 		removeAllViews();
-		
-		for(QueryItem i : querys) {
+		for(QueryItem i : querys)
 			addView(i);
-		}
-		
 		addView(addButton);
 	}
 	

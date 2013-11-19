@@ -51,8 +51,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
         setContentView(R.layout.activity_main);
         
         findViewById(R.id.continueScouting).setOnClickListener(this);
-        findViewById(R.id.sync_summary).setOnClickListener(this);
-        findViewById(R.id.view_summary).setOnClickListener(this);
+        /*findViewById(R.id.sync_summary).setOnClickListener(this);
+        findViewById(R.id.view_summary).setOnClickListener(this);*/
         
         OptionsActivity.restoreDefaultOptions(this, false);
     }
@@ -308,7 +308,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			builder.setNegativeButton("Cancel", new UserDialogListener());
 			builder.show();
 			
-		} else if(v.getId() == R.id.sync_summary) {
+		} /*else if(v.getId() == R.id.sync_summary) {
 			if(BluetoothAdapter.getDefaultAdapter() == null) {
 				Toast.makeText(this, "Sorry, your device does not support Bluetooth. " +
 						"You are unable to sync with a server.", Toast.LENGTH_LONG);
@@ -329,7 +329,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 		} else if(v.getId() == R.id.view_summary) {
 			Intent i = new Intent(this, ClientSummaryActivity.class);
 			startActivity(i);
-		}
+		}*/
 	}
 	
 	private class SummaryDialogListener implements DialogInterface.OnClickListener {

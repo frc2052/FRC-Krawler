@@ -1,5 +1,6 @@
 package com.team2052.frckrawler;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.content.Intent;
@@ -254,8 +255,9 @@ public class RobotsActivity extends StackableTabActivity implements OnClickListe
 					
 				double opr = robots[i].getOPR();
 				String oprString = "";
+				DecimalFormat format = new DecimalFormat("0.00");
 				if(opr != -1) {
-					oprString = Double.toString(opr);
+					oprString = format.format(opr);
 				}
 				
 				rowArrayList.add(new MyTextView(RobotsActivity.this, comment, 18));

@@ -118,12 +118,12 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 					new MyTextView(this, events[i].getLocation(), 18),
 					new MyTextView(this, events[i].getGameName(), 18),
 					new MyTextView(this, dateString, 18),
+					importButton,
 					attendingTeamsButton,
 					robotsButton,
 					matchDataButton,
-					compiledDataButton,
 					listsButton,
-					importButton
+					compiledDataButton
 			}, color));
 		}
 	}
@@ -131,7 +131,6 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 	@Override
 	public void onClick(View v) {
 		Intent i;
-		
 		switch(v.getId()) {
 			case R.id.addEventButton:
 				if(parents[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)] != null) {
