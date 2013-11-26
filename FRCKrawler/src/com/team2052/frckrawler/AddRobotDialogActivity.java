@@ -87,9 +87,9 @@ public class AddRobotDialogActivity extends Activity implements OnClickListener,
 				}
 				
 				String oprText = ((EditText)findViewById(R.id.oprTextBox)).getText().toString();
-				double opr = -1;
+				float opr = -1;
 				if(!oprText.equals("") && !oprText.equals(" "))
-					opr = Double.parseDouble(oprText);
+					opr = Float.parseFloat(oprText);
 				
 				dbManager.addRobot(new Robot(
 						Integer.parseInt(getIntent().getStringExtra(TEAM_NUMBER_EXTRA)),

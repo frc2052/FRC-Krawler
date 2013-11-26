@@ -2,6 +2,7 @@ package com.team2052.frckrawler;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -19,8 +20,8 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.bluetooth.BluetoothScoutClientService;
-import com.team2052.frckrawler.bluetooth.BluetoothSummaryClientService;
+import com.team2052.frckrawler.bluetooth.ScoutService;
+import com.team2052.frckrawler.bluetooth.SummaryService;
 import com.team2052.frckrawler.bluetooth.ClientConnection;
 import com.team2052.frckrawler.bluetooth.ClientThreadListener;
 import com.team2052.frckrawler.bluetooth.ScoutServiceConnection;
@@ -73,6 +74,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 	}
     
     public void joinCompetition(View view) {
+    	//if()
+    	
     	if(BluetoothAdapter.getDefaultAdapter() == null) {
 			Toast.makeText(this, "Sorry, your device does not support Bluetooth. " +
 					"You are unable to sync with a server.", Toast.LENGTH_LONG);
@@ -94,7 +97,7 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
     
     public void openAdminInterface(View view) {
     	Intent i = new Intent(getApplicationContext(), 
-				BluetoothServerManagerActivity.class);
+				ServerActivity.class);
 		startActivity(i);
     }
     
@@ -139,8 +142,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 						(GlobalValues.PREFS_FILE_NAME, 0);
 				Editor prefsEditor = prefs.edit();
 				
-				Intent i = new Intent(this, BluetoothScoutClientService.class);
-				i.putExtra(BluetoothScoutClientService.SERVER_MAC_ADDRESS, 
+				Intent i = new Intent(this, ScoutService.class);
+				i.putExtra(ScoutService.SERVER_MAC_ADDRESS, 
 						devices[which].getAddress());
 				connection = new ScoutServiceConnection(this);
 				bindService(i, connection, Context.BIND_AUTO_CREATE);
@@ -166,8 +169,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 			SharedPreferences prefs = getSharedPreferences
 					(GlobalValues.PREFS_FILE_NAME, 0);
 			Editor prefsEditor = prefs.edit();
-			Intent i = new Intent(this, BluetoothScoutClientService.class);
-			i.putExtra(BluetoothScoutClientService.SERVER_MAC_ADDRESS, 
+			Intent i = new Intent(this, ScoutService.class);
+			i.putExtra(ScoutService.SERVER_MAC_ADDRESS, 
 					devices[selectedDeviceAddress].getAddress());
 			connection = new ScoutServiceConnection(this);
 			bindService(i, connection, Context.BIND_AUTO_CREATE);
@@ -356,8 +359,8 @@ public class MainActivity extends Activity implements DialogInterface.OnClickLis
 							new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 					startActivityForResult(enableBtIntent, REQUEST_BT_ENABLE);
 				} else {
-					Intent i = new Intent(MainActivity.this, BluetoothSummaryClientService.class);
-					i.putExtra(BluetoothSummaryClientService.SERVER_MAC_ADDRESS, 
+					Intent i = new Intent(MainActivity.this, SummaryService.class);
+					i.putExtra(SummaryService.SERVER_MAC_ADDRESS, 
 							devices[which].getAddress());
 					summaryConnection = new SummaryServiceConnection(new SummaryClientListener());
 					bindService(i, summaryConnection, Context.BIND_AUTO_CREATE);

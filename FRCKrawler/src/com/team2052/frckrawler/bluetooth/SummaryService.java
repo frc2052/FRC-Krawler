@@ -22,7 +22,7 @@ import com.team2052.frckrawler.database.structures.CompiledData;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.MatchData;
 
-public class BluetoothSummaryClientService extends Service implements ClientThreadListener {
+public class SummaryService extends Service implements ClientThreadListener {
 	
 	public static final String SERVER_MAC_ADDRESS = 
 			"com.team2052.frckrawler.bluetooth.macAddress";

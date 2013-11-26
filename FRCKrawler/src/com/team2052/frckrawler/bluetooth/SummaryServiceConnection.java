@@ -3,7 +3,7 @@ package com.team2052.frckrawler.bluetooth;
 import android.content.ComponentName;
 import android.os.IBinder;
 
-import com.team2052.frckrawler.bluetooth.BluetoothSummaryClientService.SummaryBinder;
+import com.team2052.frckrawler.bluetooth.SummaryService.SummaryBinder;
 
 public class SummaryServiceConnection implements ClientConnection {
 	

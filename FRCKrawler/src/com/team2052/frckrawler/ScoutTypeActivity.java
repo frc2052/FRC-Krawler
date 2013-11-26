@@ -12,7 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.bluetooth.BluetoothScoutClientService;
+import com.team2052.frckrawler.bluetooth.ScoutService;
 import com.team2052.frckrawler.bluetooth.ClientThreadListener;
 import com.team2052.frckrawler.bluetooth.ScoutServiceConnection;
 import com.team2052.frckrawler.database.DBManager;
@@ -104,8 +104,8 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 					break;
 				}
 				
-				i = new Intent(this, BluetoothScoutClientService.class);
-				i.putExtra(BluetoothScoutClientService.SERVER_MAC_ADDRESS, macAdress);
+				i = new Intent(this, ScoutService.class);
+				i.putExtra(ScoutService.SERVER_MAC_ADDRESS, macAdress);
 				bindService(i, connection, Context.BIND_AUTO_CREATE);
 				
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -1321,7 +1321,7 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
 					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
 					c.getString(c.getColumnIndex(DBContract.COL_IMAGE_PATH)),
-					c.getDouble(c.getColumnIndex(DBContract.COL_OPR)),
+					c.getFloat(c.getColumnIndex(DBContract.COL_OPR)),
 					metricVals.toArray(new MetricValue[0])
 					);
 		}
@@ -3982,7 +3982,7 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
 					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
 					c.getString(c.getColumnIndex(DBContract.COL_IMAGE_PATH)),
-					c.getDouble(c.getColumnIndex(DBContract.COL_OPR)),
+					c.getFloat(c.getColumnIndex(DBContract.COL_OPR)),
 					metricVals.toArray(new MetricValue[0])
 					);
 		}
@@ -4054,7 +4054,7 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
 					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
 					c.getString(c.getColumnIndex(DBContract.COL_IMAGE_PATH)),
-					c.getDouble(c.getColumnIndex(DBContract.COL_OPR)),
+					c.getFloat(c.getColumnIndex(DBContract.COL_OPR)),
 					metricVals.toArray(new MetricValue[0])
 					);
 		}
@@ -5063,7 +5063,7 @@ public class DBManager {
 					c.getString(c.getColumnIndex(DBContract.COL_GAME_NAME)),
 					c.getString(c.getColumnIndex(DBContract.COL_COMMENTS)),
 					c.getString(c.getColumnIndex(DBContract.COL_IMAGE_PATH)),
-					c.getDouble(c.getColumnIndex(DBContract.COL_OPR)),
+					c.getFloat(c.getColumnIndex(DBContract.COL_OPR)),
 					metricVals.toArray(new MetricValue[0])
 					);
 		}

@@ -146,7 +146,7 @@ public class TabActivity extends Activity {
 				case R.id.bluetoothTabButton :
 					
 					if(selectedActivity != BLUETOOTH) {
-						i = new Intent(user, BluetoothServerManagerActivity.class);
+						i = new Intent(user, ServerActivity.class);
 						user.startActivity(i);
 						selectedActivity = BLUETOOTH;
 						destroyAllInstances();

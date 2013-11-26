@@ -26,15 +26,15 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import au.com.bytecode.opencsv.CSVWriter;
 
-import com.team2052.frckrawler.bluetooth.BluetoothServerService;
-import com.team2052.frckrawler.bluetooth.BluetoothServerService.CloseBinder;
+import com.team2052.frckrawler.bluetooth.ServerService;
+import com.team2052.frckrawler.bluetooth.ServerService.CloseBinder;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.CompiledData;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.Query;
 
-public class BluetoothServerManagerActivity extends TabActivity 
+public class ServerActivity extends TabActivity 
 							implements View.OnClickListener, DialogInterface.OnClickListener {
 	
 	private int REQUEST_BT_ENABLED = 1;
@@ -61,16 +61,12 @@ public class BluetoothServerManagerActivity extends TabActivity
 	@Override
 	public void onResume() {
 		super.onResume();
-		
 		((ToggleButton)findViewById(R.id.hostToggle)).
-			setChecked(BluetoothServerService.isRunning());
-		
-		Event e = BluetoothServerService.getHostedEvent();
-		
+			setChecked(ServerService.isRunning());
+		Event e = ServerService.getHostedEvent();
 		if(e != null) {
 			((TextView)findViewById(R.id.eventName)).
 				setText(e.getEventName() + ", " + e.getGameName());
-			
 			selectedEvent = e;
 		}
 	}
@@ -79,12 +75,9 @@ public class BluetoothServerManagerActivity extends TabActivity
 	public void onClick(View v) {
 		switch(v.getId()) {
 			case R.id.chooseEvent:
-				
 				events = dbManager.getAllEvents();
 				CharSequence[] eventNames = new String[events.length];
-				
 				for(int i = 0; i < events.length; i++) {
-					
 					eventNames[i] = events[i].getEventName() + 
 							", " + events[i].getGameName();
 				}
@@ -96,13 +89,10 @@ public class BluetoothServerManagerActivity extends TabActivity
 				break;
 				
 			case R.id.hostToggle:
-				
 				ToggleButton toggle = (ToggleButton)findViewById(R.id.hostToggle);
-				
 				if(selectedEvent != null) {
-					
-					Intent btIntent = new Intent(this, BluetoothServerService.class);
-					btIntent.putExtra(BluetoothServerService.HOSTED_EVENT_ID_EXTRA, 
+					Intent btIntent = new Intent(this, ServerService.class);
+					btIntent.putExtra(ServerService.HOSTED_EVENT_ID_EXTRA, 
 							selectedEvent.getEventID());
 				
 					if(toggle.isChecked()) {
@@ -146,150 +136,20 @@ public class BluetoothServerManagerActivity extends TabActivity
 				break;
 				
 			case R.id.exportCSV:
-				
 				new ExportCSVTask().execute(selectedEvent);
-				
 				break;
 				
 			case R.id.importDB:
-				
-				if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-					AlertDialog.Builder bu = new AlertDialog.Builder(this);
-					bu.setTitle("Sorry...");
-					bu.setMessage("FRCKrawler could not import your database. Your device " +
-							"does not have an SD card mounted.");
-					bu.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
-					bu.show();
-				}
-				
-				try {
-			        File sd = Environment.getExternalStorageDirectory();
-
-			        if (sd.canWrite()) {
-			            String backupDBPath = "FRCKrawlerBackup.db";
-			            File currentDB = new File(getFilesDir(), DBContract.DATABASE_NAME);
-			            File backupDB = new File(sd, backupDBPath);
-
-			            if (backupDB.exists()) {
-			            	FileOutputStream fOut = new FileOutputStream(currentDB);
-			            	FileInputStream fIn = new FileInputStream(backupDB);
-			                FileChannel src = fOut.getChannel();
-			                FileChannel dst = fIn.getChannel();
-			                src.transferFrom(dst, 0, dst.size());
-			                src.close();
-			                dst.close();
-			                fOut.close();
-			                fIn.close();
-			                
-			                AlertDialog.Builder bu = new AlertDialog.Builder(this);
-							bu.setTitle("Import Success!");
-							bu.setMessage("Imported the database.");
-							bu.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									dialog.dismiss();
-								}
-							});
-							bu.show();
-							
-			            } else {
-			            	AlertDialog.Builder bu = new AlertDialog.Builder(this);
-							bu.setTitle("Impor Failed!");
-							bu.setMessage("Could not find the backup file " +
-			            			"FRCKrawlerBackup.db in your SD card's " +
-			            			"root folder.");
-							bu.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									dialog.dismiss();
-								}
-							});
-							bu.show();
-			            }
-			        }
-			    } catch (FileNotFoundException e) {
-			    	e.printStackTrace();
-			    	Log.e("FCKrawler", e.getMessage());
-			    	break;
-			    } catch (IOException e) {
-			    	Log.e("FCKrawler", e.getMessage());
-			    	break;
-				}
-				
+				importDB();				
 				break;
 				
 			case R.id.exportDB:
-				
-				if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-					AlertDialog.Builder b = new AlertDialog.Builder(this);
-					b.setTitle("Export Failed!");
-					b.setMessage("FRCKrawler could not export your database to the " +
-							"SD card. Your device does not have an SD card, or it is not " +
-							"available for writing at the moment.");
-					b.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
-					b.show();
-				}
-				
-				try {
-			        File sd = Environment.getExternalStorageDirectory();
-
-			        if (sd.canWrite()) {
-			            String backupDBPath = "FRCKrawlerBackup.db";
-			            File currentDB = new File(getFilesDir(), DBContract.DATABASE_NAME);
-			            File backupDB = new File(sd, backupDBPath);
-
-			            if (currentDB.exists()) {
-			            	FileOutputStream fOut = new FileOutputStream(backupDB);
-			            	FileInputStream fIn = new FileInputStream(currentDB);
-			                FileChannel src = fIn.getChannel();
-			                FileChannel dst = fOut.getChannel();
-			                dst.transferFrom(src, 0, src.size());
-			                src.close();
-			                dst.close();
-			                fOut.close();
-			                fIn.close();
-			            } else 
-			            	Toast.makeText(this, "Error in finding local " +
-			            			"database file.", Toast.LENGTH_LONG).show();
-			        }
-			    } catch (FileNotFoundException e) {
-			    	e.printStackTrace();
-			    	Log.e("FCKrawler", e.getMessage());
-			    	break;
-			    } catch (IOException e) {
-			    	Log.e("FCKrawler", e.getMessage());
-			    	break;
-				}
-				
-				AlertDialog.Builder b = new AlertDialog.Builder(this);
-				b.setTitle("Export Success!");
-				b.setMessage("Exported file to the SD card. File saved as " +
-						"FRCKrawlerBackup.db in the SD card's root directory.");
-				b.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-				b.show();
-				
-				break;
+				exportDB();
 		}
 	}
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		
 		selectedEvent = events[which];
 		((TextView)findViewById(R.id.eventName)).
 				setText(selectedEvent.getEventName() + ", " + selectedEvent.getGameName());
@@ -298,13 +158,132 @@ public class BluetoothServerManagerActivity extends TabActivity
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
 		if(requestCode == REQUEST_BT_ENABLED && resultCode == RESULT_OK) {
-			
-			Intent btIntent = new Intent(this, BluetoothServerService.class);
-			btIntent.putExtra(BluetoothServerService.HOSTED_EVENT_ID_EXTRA, 
+			Intent btIntent = new Intent(this, ServerService.class);
+			btIntent.putExtra(ServerService.HOSTED_EVENT_ID_EXTRA, 
 					selectedEvent.getEventID());
 			startService(btIntent);
+		}
+	}
+	
+	private void exportDB() {
+		if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+			AlertDialog.Builder b = new AlertDialog.Builder(this);
+			b.setTitle("Export Failed!");
+			b.setMessage("FRCKrawler could not export your database to the " +
+					"SD card. Your device does not have an SD card, or it is not " +
+					"available for writing at the moment.");
+			b.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+			b.show();
+		}
+		try {
+	        File sd = Environment.getExternalStorageDirectory();
+	        if (sd.canWrite()) {
+	            String backupDBPath = "FRCKrawlerBackup.db";
+	            File currentDB = new File(getFilesDir(), DBContract.DATABASE_NAME);
+	            File backupDB = new File(sd, backupDBPath);
+	            if (currentDB.exists()) {
+	            	FileOutputStream fOut = new FileOutputStream(backupDB);
+	            	FileInputStream fIn = new FileInputStream(currentDB);
+	                FileChannel src = fIn.getChannel();
+	                FileChannel dst = fOut.getChannel();
+	                dst.transferFrom(src, 0, src.size());
+	                src.close();
+	                dst.close();
+	                fOut.close();
+	                fIn.close();
+	            } else 
+	            	Toast.makeText(this, "Error in finding local " +
+	            			"database file.", Toast.LENGTH_LONG).show();
+	        }
+	    } catch (FileNotFoundException e) {
+	    	e.printStackTrace();
+	    	Log.e("FCKrawler", e.getMessage());
+	    	return;
+	    } catch (IOException e) {
+	    	Log.e("FCKrawler", e.getMessage());
+	    	return;
+		}
+		AlertDialog.Builder b = new AlertDialog.Builder(this);
+		b.setTitle("Export Success!");
+		b.setMessage("Exported file to the SD card. File saved as " +
+				"FRCKrawlerBackup.db in the SD card's root directory.");
+		b.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		b.show();
+	}
+	
+	private void importDB() {
+		if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+			AlertDialog.Builder bu = new AlertDialog.Builder(this);
+			bu.setTitle("Sorry...");
+			bu.setMessage("FRCKrawler could not import your database. Your device " +
+					"does not have an SD card mounted.");
+			bu.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+			bu.show();
+		}
+		try {
+	        File sd = Environment.getExternalStorageDirectory();
+	        if (sd.canWrite()) {
+	            String backupDBPath = "FRCKrawlerBackup.db";
+	            File currentDB = new File(getFilesDir(), DBContract.DATABASE_NAME);
+	            File backupDB = new File(sd, backupDBPath);
+	            if (backupDB.exists()) {
+	            	FileOutputStream fOut = new FileOutputStream(currentDB);
+	            	FileInputStream fIn = new FileInputStream(backupDB);
+	                FileChannel src = fOut.getChannel();
+	                FileChannel dst = fIn.getChannel();
+	                src.transferFrom(dst, 0, dst.size());
+	                src.close();
+	                dst.close();
+	                fOut.close();
+	                fIn.close();
+	                AlertDialog.Builder bu = new AlertDialog.Builder(this);
+					bu.setTitle("Import Success!");
+					bu.setMessage("Imported the database.");
+					bu.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+					bu.show();
+	            } else {
+	            	AlertDialog.Builder bu = new AlertDialog.Builder(this);
+					bu.setTitle("Impor Failed!");
+					bu.setMessage("Could not find the backup file " +
+	            			"FRCKrawlerBackup.db in your SD card's " +
+	            			"root folder.");
+					bu.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+					bu.show();
+	            }
+	        }
+	    } catch (FileNotFoundException e) {
+	    	e.printStackTrace();
+	    	Log.e("FCKrawler", e.getMessage());
+	    	return;
+	    } catch (IOException e) {
+	    	Log.e("FCKrawler", e.getMessage());
+	    	return;
 		}
 	}
 	
@@ -312,7 +291,6 @@ public class BluetoothServerManagerActivity extends TabActivity
 
 		@Override
 		public void onServiceConnected(ComponentName comp, IBinder binder) {
-			
 			CloseBinder closeBinder = (CloseBinder)binder;
 			closeBinder.closeServer();
 		}
@@ -378,7 +356,7 @@ public class BluetoothServerManagerActivity extends TabActivity
 		@Override
 		protected void onPostExecute(Boolean b) {
 			AlertDialog.Builder builder = new AlertDialog.Builder
-					(BluetoothServerManagerActivity.this);
+					(ServerActivity.this);
 			
 			if(b) {
 				builder.setTitle("Export Success!");

@@ -25,7 +25,7 @@ import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.database.structures.User;
 
-public class BluetoothScoutClientService extends Service 
+public class ScoutService extends Service 
 										implements ClientThreadListener {
 	
 	public static final String SERVER_MAC_ADDRESS = 
@@ -36,7 +36,6 @@ public class BluetoothScoutClientService extends Service
 	
 	@Override
 	public void onCreate() {
-		
 		super.onCreate();
 		binder = new ClientBinder();
 		Log.d("FRCKrawler", "Service created.");
@@ -44,25 +43,19 @@ public class BluetoothScoutClientService extends Service
 	
 	@Override
 	public void onDestroy() {
-		
 		clientThread.closeClient();
 		Log.d("FRCKrawler", "Client service destroyed.");
 	}
 	
 	@Override
 	public IBinder onBind(Intent i) {
-		
 		Log.d("FRCKrawler", "Service bound");
-		
 		binder = new ClientBinder();
-		
 		BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().
 				getRemoteDevice(i.getStringExtra(SERVER_MAC_ADDRESS));
 		clientThread = new BluetoothClientThread(this, device, this);
 		clientThread.start();
-			
 		Toast.makeText(this, "Sync started.", Toast.LENGTH_SHORT).show();
-		
 		return binder;
 	}
 	
@@ -191,7 +184,6 @@ public class BluetoothScoutClientService extends Service
 				//Start the reading thread
 				ScoutDataReader reader = new ScoutDataReader(context, inStream);
 				reader.start();
-				
 				while(!reader.isFinished()) {
 					try {
 						Thread.sleep(10);
@@ -260,15 +252,13 @@ public class BluetoothScoutClientService extends Service
 			try{
 				
 				ObjectInputStream ioStream = new ObjectInputStream(iStream);
-				
 				inEvent = (Event)ioStream.readObject();
 				inUsers = (User[])ioStream.readObject();
 				inTeamNames = (String[])ioStream.readObject();
 				inRobots = (Robot[])ioStream.readObject();
 				inRobotMetrics = (Metric[])ioStream.readObject();
 				inMatchMetrics = (Metric[])ioStream.readObject();
-				
-				//inDriverMetrics = (ArrayList<Metric>)ioStream.readObject();
+				Log.d("FRCKrawler", "Scout read data.");
 				
 				//Write the received arrays to the database
 				dbManager.scoutReplaceEvent(inEvent);

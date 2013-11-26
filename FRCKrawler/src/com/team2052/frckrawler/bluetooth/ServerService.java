@@ -32,7 +32,7 @@ import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.database.structures.User;
 
-public class BluetoothServerService extends Service {
+public class ServerService extends Service {
 	
 	public static final String HOSTED_EVENT_ID_EXTRA = 
 			"com.team2052.frckrawler.bluetooth.eventIDExtra";
@@ -102,9 +102,9 @@ public class BluetoothServerService extends Service {
 	
 	public class CloseBinder extends Binder {
 		
-		private BluetoothServerService service;
+		private ServerService service;
 		
-		public CloseBinder(BluetoothServerService s) {
+		public CloseBinder(ServerService s) {
 			service = s;
 		}
 		
@@ -199,15 +199,19 @@ public class BluetoothServerService extends Service {
 						
 						//Send data
 						oStream.writeObject(hostedEvent);
+						oStream.flush();
 						oStream.writeObject(usersArr);
+						oStream.flush();
 						oStream.writeObject(teamNames);
+						oStream.flush();
 						oStream.writeObject(robotsArr);
+						oStream.flush();
 						oStream.writeObject(rMetricsArr);
+						oStream.flush();
 						oStream.writeObject(mMetricsArr);
 						oStream.flush();
 						
 					} else if(connectionType == BluetoothInfo.SUMMARY) {
-						
 						//Compile the SummaryData
 						CompiledData[] compiledData = dbManager.getCompiledEventData
 								(hostedEvent, new Query[0], null);
@@ -241,12 +245,13 @@ public class BluetoothServerService extends Service {
 					}
 					
 					oStream.close();
-					outputStream.close();
 					inputStream.close();
+					outputStream.close();
 					clientSocket.close();
 					Log.d("FRCKrawler", "Time: " + (System.currentTimeMillis() - startTime));
 					
 				} catch (IOException e) {
+					e.printStackTrace();
 					if(reader != null)
 						reader.close();
 				} finally {

@@ -3,7 +3,7 @@ package com.team2052.frckrawler.bluetooth;
 import android.content.ComponentName;
 import android.os.IBinder;
 
-import com.team2052.frckrawler.bluetooth.BluetoothScoutClientService.ClientBinder;
+import com.team2052.frckrawler.bluetooth.ScoutService.ClientBinder;
 
 public class ScoutServiceConnection implements ClientConnection {
 	
