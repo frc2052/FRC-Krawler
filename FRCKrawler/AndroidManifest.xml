@@ -138,11 +138,11 @@
             android:name="com.team2052.frckrawler.RawMatchDataActivity"
             android:windowSoftInputMode="adjustNothing" >
         </activity>
-        <activity android:name="com.team2052.frckrawler.ServerActivity" >
+        <activity android:name="com.team2052.frckrawler.ServerActivity"
+            android:parentActivityName="com.team2052.frckrawler.MainActivity" >
+    	<meta-data android:name="android.support.PARENT_ACTIVITY"
+        	android:value="com.team2052.frckrawler.MainActivity"/>
         </activity>
-
-        <service android:name="com.team2052.frckrawler.bluetooth.ServerService" >
-        </service>
 
         <activity android:name="com.team2052.frckrawler.ClientTestActivity" >
         </activity>
@@ -154,9 +154,6 @@
             android:name="com.team2052.frckrawler.EditMatchDataDialogActivity"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
-
-        <service android:name=".bluetooth.BluetoothScoutClientService" >
-        </service>
 
         <activity
             android:name="com.team2052.frckrawler.SummaryActivity"
@@ -182,7 +179,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ScoutTypeActivity" >
+        <activity android:name="ScoutTypeActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout">
         </activity>
         <activity
             android:name="ScoutActivity"
@@ -196,9 +194,6 @@
             android:name="AboutDialogActivity"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
-
-        <service android:name=".bluetooth.BluetoothSummaryClientService" >
-        </service>
 
         <activity android:name="ScoutMatchDataActivity" >
         </activity>
@@ -238,6 +233,7 @@
         <activity android:name="ImportDialogActivity"
             	  android:theme="@android:style/Theme.Dialog">
         </activity>
+        <service android:name=".bluetooth.ServerService"></service>
     </application>
 
 </manifest>

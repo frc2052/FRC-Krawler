@@ -47,6 +47,7 @@ int id addTeamAccept 0x7f0b00a9
 int id addUser 0x7f0b0077
 int id address 0x7f0b008c
 int id adminSummaryTable 0x7f0b006e
+int id admininster 0x7f0b003e
 int id bluetoothTabButton 0x7f0b0006
 int id bottomLayout 0x7f0b0037
 int id bottomLinearLayout 0x7f0b0025
@@ -114,7 +115,7 @@ int id importSD 0x7f0b00c1
 int id importTeamsAndRobots 0x7f0b00bd
 int id importWeb 0x7f0b00c4
 int id inc 0x7f0b009e
-int id join_button 0x7f0b003b
+int id join 0x7f0b003b
 int id leftLayout 0x7f0b003a
 int id lin 0x7f0b000d
 int id linLayout1 0x7f0b0076
@@ -198,7 +199,6 @@ int id stateVal 0x7f0b00ae
 int id staticSideTable 0x7f0b00ce
 int id summaryEventName 0x7f0b0016
 int id summaryTable 0x7f0b0015
-int id super_button 0x7f0b003e
 int id sync 0x7f0b0061
 int id tabRoot 0x7f0b0018
 int id teamList 0x7f0b00b1

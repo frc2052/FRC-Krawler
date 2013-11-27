@@ -68,6 +68,7 @@ public final class R {
         public static final int addUser=0x7f0b0077;
         public static final int address=0x7f0b008c;
         public static final int adminSummaryTable=0x7f0b006e;
+        public static final int admininster=0x7f0b003e;
         public static final int bluetoothTabButton=0x7f0b0006;
         public static final int bottomLayout=0x7f0b0037;
         public static final int bottomLinearLayout=0x7f0b0025;
@@ -135,7 +136,7 @@ public final class R {
         public static final int importTeamsAndRobots=0x7f0b00bd;
         public static final int importWeb=0x7f0b00c4;
         public static final int inc=0x7f0b009e;
-        public static final int join_button=0x7f0b003b;
+        public static final int join=0x7f0b003b;
         public static final int leftLayout=0x7f0b003a;
         public static final int lin=0x7f0b000d;
         public static final int linLayout1=0x7f0b0076;
@@ -219,7 +220,6 @@ public final class R {
         public static final int staticSideTable=0x7f0b00ce;
         public static final int summaryEventName=0x7f0b0016;
         public static final int summaryTable=0x7f0b0015;
-        public static final int super_button=0x7f0b003e;
         public static final int sync=0x7f0b0061;
         public static final int tabRoot=0x7f0b0018;
         public static final int teamList=0x7f0b00b1;

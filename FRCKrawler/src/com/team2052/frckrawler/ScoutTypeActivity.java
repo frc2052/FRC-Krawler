@@ -2,7 +2,7 @@ package com.team2052.frckrawler;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
+import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,62 +12,44 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.bluetooth.ScoutService;
-import com.team2052.frckrawler.bluetooth.ClientThreadListener;
-import com.team2052.frckrawler.bluetooth.ScoutServiceConnection;
+import com.team2052.frckrawler.bluetooth.SyncAsScoutTask;
+import com.team2052.frckrawler.bluetooth.SyncCallbackHandler;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.User;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 
-public class ScoutTypeActivity extends Activity implements OnClickListener, 
-															ClientThreadListener, android.content.DialogInterface.OnClickListener {
+public class ScoutTypeActivity extends RotationControlActivity implements OnClickListener, 
+					android.content.DialogInterface.OnClickListener,
+					SyncCallbackHandler
+{
 	
 	private AlertDialog progressDialog;
-	private ScoutServiceConnection connection;
 	private Event selectedEvent;
 	private DBManager db;
 	private User user;
+	private SyncAsScoutTask syncTask;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scout_type);
-		
 		findViewById(R.id.matchScout).setOnClickListener(this);
 		findViewById(R.id.pitScout).setOnClickListener(this);
 		findViewById(R.id.matchData).setOnClickListener(this);
 		findViewById(R.id.sync).setOnClickListener(this);
 		findViewById(R.id.logout).setOnClickListener(this);
-		
-		connection = new ScoutServiceConnection(this);
 		db = DBManager.getInstance(this);
-		
+		syncTask = null;
 		User[] allUsers = db.scoutGetAllUsers();
 		for(User u : allUsers)
 			if(GlobalValues.userID == u.getID())
 				user = u;
-		
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
 		((TextView)findViewById(R.id.scoutName)).setText(user.getName());
 		selectedEvent = db.scoutGetEvent();
-		
 		if(selectedEvent != null)
 			((TextView)findViewById(R.id.eventInfo)).setText
 				(selectedEvent.getEventName() + ", " + selectedEvent.getGameName());
-	}
-	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		
-		try {
-			unbindService(connection);
-		} catch(IllegalArgumentException e) {}
 	}
 
 	@Override
@@ -97,23 +79,14 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 				SharedPreferences prefs = getSharedPreferences
 					(GlobalValues.PREFS_FILE_NAME, 0);
 				String macAdress = prefs.getString(GlobalValues.MAC_ADRESS_PREF, "null");
-				
 				if(macAdress.equals("null")) {
 					Toast.makeText(this, "Sync failed. No server " +
-							"adress remembered.", Toast.LENGTH_SHORT);
+							"adress remembered.", Toast.LENGTH_SHORT).show();
 					break;
 				}
-				
-				i = new Intent(this, ScoutService.class);
-				i.putExtra(ScoutService.SERVER_MAC_ADDRESS, macAdress);
-				bindService(i, connection, Context.BIND_AUTO_CREATE);
-				
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setTitle("Syncing...");
-				builder.setView(new ProgressSpinner(this));
-				builder.setNeutralButton("Cancel", this);
-				progressDialog = builder.create();
-				progressDialog.show();
+				syncTask = new SyncAsScoutTask(this, this);
+				syncTask.execute(BluetoothAdapter.getDefaultAdapter()
+						.getRemoteDevice(macAdress));
 				break;
 				
 			case R.id.logout:
@@ -123,51 +96,40 @@ public class ScoutTypeActivity extends Activity implements OnClickListener,
 	}
 
 	@Override
-	public void onSuccessfulSync() {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				unbindService(connection);
-				progressDialog.dismiss();
-				Toast.makeText(getApplicationContext(), 
-						"Sync successful.", Toast.LENGTH_SHORT).show();
-				
-				
-			}
-		});
-	}
-
-	@Override
-	public void onUnsuccessfulSync(String _errorMessage) {
-		final String errorMessage = _errorMessage;
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				unbindService(connection);
-				progressDialog.dismiss();
-				Toast.makeText(getApplicationContext(), "Sync unsuccessful. " + 
-						errorMessage + ".", Toast.LENGTH_SHORT).show();
-			}
-		});
-		
-	}
-	
-	@Override
-	public void onUpdate(String _message) {
-		final String message = _message;
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				Toast.makeText(getApplicationContext(), message, 
-						Toast.LENGTH_SHORT).show();
-			}
-		});
-	}
-
-	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		if(which == DialogInterface.BUTTON_NEUTRAL) {
-			unbindService(connection);
+			syncTask.cancel(true);
 		}
+	}
+
+	@Override
+	public void onSyncStart(String deviceName) {
+		lockScreenOrientation();
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Syncing...");
+		builder.setView(new ProgressSpinner(this));
+		builder.setNeutralButton("Cancel", this);
+		builder.setCancelable(false);
+		progressDialog = builder.create();
+		progressDialog.show();
+		progressDialog.show();
+	}
+
+	@Override
+	public void onSyncSuccess(String deviceName) {
+		progressDialog.dismiss();
+		releaseScreenOrientation();
+	}
+
+	@Override
+	public void onSyncCancel(String deviceName) {
+		progressDialog.dismiss();
+		releaseScreenOrientation();
+	}
+
+	@Override
+	public void onSyncError(String deviceName) {
+		progressDialog.dismiss();
+		releaseScreenOrientation();
 	}
 }

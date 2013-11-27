@@ -10,15 +10,11 @@ import java.nio.channels.FileChannel;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -26,49 +22,40 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import au.com.bytecode.opencsv.CSVWriter;
 
-import com.team2052.frckrawler.bluetooth.ServerService;
-import com.team2052.frckrawler.bluetooth.ServerService.CloseBinder;
+import com.team2052.frckrawler.bluetooth.Server;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.CompiledData;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.Query;
 
-public class ServerActivity extends TabActivity 
-							implements View.OnClickListener, DialogInterface.OnClickListener {
+public class ServerActivity extends TabActivity implements View.OnClickListener, 
+							DialogInterface.OnClickListener {
 	
-	private int REQUEST_BT_ENABLED = 1;
+	private static final int REQUEST_BT_ENABLED = 1;
 	private DBManager dbManager;
 	private Event selectedEvent;
-	
+	private Server server;
 	private Event[] events;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_bluetooth_server_manager);
-		
 		findViewById(R.id.chooseEvent).setOnClickListener(this);
 		findViewById(R.id.hostToggle).setOnClickListener(this);
 		findViewById(R.id.exportCSV).setOnClickListener(this);
 		findViewById(R.id.importDB).setOnClickListener(this);
 		findViewById(R.id.exportDB).setOnClickListener(this);
-		
 		dbManager = DBManager.getInstance(this);
+		server = Server.getInstance(this);
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
 		((ToggleButton)findViewById(R.id.hostToggle)).
-			setChecked(ServerService.isRunning());
-		Event e = ServerService.getHostedEvent();
-		if(e != null) {
-			((TextView)findViewById(R.id.eventName)).
-				setText(e.getEventName() + ", " + e.getGameName());
-			selectedEvent = e;
-		}
+			setChecked(server.isOpen());
 	}
 	
 	@Override
@@ -91,10 +78,6 @@ public class ServerActivity extends TabActivity
 			case R.id.hostToggle:
 				ToggleButton toggle = (ToggleButton)findViewById(R.id.hostToggle);
 				if(selectedEvent != null) {
-					Intent btIntent = new Intent(this, ServerService.class);
-					btIntent.putExtra(ServerService.HOSTED_EVENT_ID_EXTRA, 
-							selectedEvent.getEventID());
-				
 					if(toggle.isChecked()) {
 						if(BluetoothAdapter.getDefaultAdapter() == null) {
 							Toast.makeText(this, "Sorry, your device does not " +
@@ -105,34 +88,24 @@ public class ServerActivity extends TabActivity
 							((ToggleButton)findViewById(R.id.hostToggle)).
 								setChecked(false);
 							return;
-							
 						} else {
-							if(BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-								startService(btIntent);
-								Toast.makeText(this, "Server started.", Toast.LENGTH_LONG).show();
-								
-							} else {
-								
+							if(BluetoothAdapter.getDefaultAdapter().isEnabled()) 
+								server.open(selectedEvent);
+							else {
 								Intent enableBtIntent = 
 							    		new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 							    startActivityForResult(enableBtIntent, REQUEST_BT_ENABLED);
 							}
 						}
 					
-					} else {
-						this.getApplication().bindService(btIntent, 
-								new ServerCloseConnection(), Context.BIND_IMPORTANT);
-						Toast.makeText(this, "Server stopped.", Toast.LENGTH_LONG).show();
-					}
+					} else
+						server.close();
 				} else {
-					
 					Toast.makeText(this, 
-							"Could not start Bluetooth. No event selected.", 
+							"Could not open server. No event selected.", 
 							Toast.LENGTH_LONG).show();
-					
 					toggle.setChecked(false);
 				}
-				
 				break;
 				
 			case R.id.exportCSV:
@@ -159,10 +132,7 @@ public class ServerActivity extends TabActivity
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(requestCode == REQUEST_BT_ENABLED && resultCode == RESULT_OK) {
-			Intent btIntent = new Intent(this, ServerService.class);
-			btIntent.putExtra(ServerService.HOSTED_EVENT_ID_EXTRA, 
-					selectedEvent.getEventID());
-			startService(btIntent);
+			server.open(selectedEvent);
 		}
 	}
 	
@@ -287,56 +257,32 @@ public class ServerActivity extends TabActivity
 		}
 	}
 	
-	private class ServerCloseConnection implements ServiceConnection {
-
-		@Override
-		public void onServiceConnected(ComponentName comp, IBinder binder) {
-			CloseBinder closeBinder = (CloseBinder)binder;
-			closeBinder.closeServer();
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName comp) {
-			
-			
-		}
-	}
-	
 	private class ExportCSVTask extends AsyncTask<Event, Void, Boolean> {
 
 		@Override
 		protected Boolean doInBackground(Event... params) {
 			if(params[0] == null)
 				return false;
-			
 			CompiledData[] compiledData = dbManager.getCompiledEventData
 					(params[0], new Query[0], null);
 			String[][] dataArray = new String[compiledData.length + 1][];
-			
 			if(compiledData.length > 0)
 				dataArray[0] = compiledData[0].getMetricsAsStrings();
 			else
 				dataArray[0] = new String[0];
-			
 			for(int i = 0; i < compiledData.length; i++)
 				dataArray[i + 1] = compiledData[i].getValuesAsStrings();
-			
 			try {
 		        File sd = Environment.getExternalStorageDirectory();
-
 		        if (sd.canWrite()) {
 		            String exportPath = params[0].getEventName() + 
 		            		params[0].getEventID() + "Summary.csv";
 		            File exportFile = new File(sd, exportPath);
-		            
 		            if(!exportFile.exists())
 		            	exportFile.createNewFile();
-		            
 		            CSVWriter csvWriter = new CSVWriter(new FileWriter(exportFile), ',');
-		            
 		            for(String[] arr : dataArray)
 		            	csvWriter.writeNext(arr);
-		            
 		            csvWriter.close();
 		        } else {
 		        	return false;
@@ -359,7 +305,7 @@ public class ServerActivity extends TabActivity
 					(ServerActivity.this);
 			
 			if(b) {
-				builder.setTitle("Export Success!");
+				builder.setTitle("Export Success");
 				builder.setMessage("Event summary was exported succesfully. " +
 						"File saved as (Event Name)(Event ID)Summary.exe in " +
 						"the SD card's root director.");
