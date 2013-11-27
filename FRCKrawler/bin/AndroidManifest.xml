@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.team2052.frckrawler"
     android:installLocation="auto"
-    android:versionCode="9"
-    android:versionName="1.7" >
+    android:versionCode="10"
+    android:versionName="1.7.1" >
 
     <uses-permission android:name="android.permission.BLUETOOTH" >
     </uses-permission>
