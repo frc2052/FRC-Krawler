@@ -56,6 +56,11 @@ public class ServerActivity extends TabActivity implements View.OnClickListener,
 		super.onResume();
 		((ToggleButton)findViewById(R.id.hostToggle)).
 			setChecked(server.isOpen());
+		if(server.isOpen()) {
+			selectedEvent = server.getHostedEvent();
+			((TextView)findViewById(R.id.eventName))
+					.setText(selectedEvent.getEventName());
+		}
 	}
 	
 	@Override
@@ -68,7 +73,6 @@ public class ServerActivity extends TabActivity implements View.OnClickListener,
 					eventNames[i] = events[i].getEventName() + 
 							", " + events[i].getGameName();
 				}
-				
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setTitle("Events");
 				builder.setItems(eventNames, this);

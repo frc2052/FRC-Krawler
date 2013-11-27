@@ -119,6 +119,16 @@ public class ScoutTypeActivity extends RotationControlActivity implements OnClic
 	public void onSyncSuccess(String deviceName) {
 		progressDialog.dismiss();
 		releaseScreenOrientation();
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Sync Success");
+		builder.setMessage("Sync with the server was successful.");
+		builder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		builder.show();
 	}
 
 	@Override
@@ -131,5 +141,16 @@ public class ScoutTypeActivity extends RotationControlActivity implements OnClic
 	public void onSyncError(String deviceName) {
 		progressDialog.dismiss();
 		releaseScreenOrientation();
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Sync Error");
+		builder.setMessage("There was an error in syncing with the server. Make sure " +
+				"that the server device is turned on and is running the FRCKrawler server.");
+		builder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		builder.show();
 	}
 }

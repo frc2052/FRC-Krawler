@@ -204,11 +204,13 @@ public class MainActivity extends RotationControlActivity implements
 	@Override
 	public void onSyncCancel(String deviceName) {
 		progressDialog.dismiss();
+		releaseScreenOrientation();
 	}
 
 	@Override
 	public void onSyncError(String deviceName) {
 		progressDialog.dismiss();
+		releaseScreenOrientation();
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Sync Error");
 		builder.setMessage("There was an error in syncing with the server. Make sure " +
