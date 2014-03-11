@@ -1,13 +1,15 @@
-package com.team2052.frckrawler.fa.types;
+package com.team2052.frckrawler.tba.types;
 
 import java.text.DecimalFormat;
 
-public class FAOPR {
+//***** FIX ME FOR OPR WHEN TBA SUPPORTS IT ****//
+
+public class TBAOPR {
 	
 	private double OPR;
 	private int teamNum;
 	
-	public FAOPR(int _teamNum, int _value) {
+	public TBAOPR(int _teamNum, int _value) {
 		teamNum = _teamNum;
 		OPR = _value;
 	}

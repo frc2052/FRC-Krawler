@@ -57,20 +57,17 @@ public class ServerThread implements Runnable {
 				deviceName = clientSocket.getRemoteDevice().getName();
 				handler.onSyncStart(deviceName);
 				serverSocket.close();
-
 				//Create the streams
 				OutputStream outputStream = clientSocket.getOutputStream();
 				ObjectOutputStream oStream = new ObjectOutputStream(outputStream);
 				InputStream inputStream = clientSocket.getInputStream();
 				ObjectInputStream inStream = new ObjectInputStream(inputStream);
-
 				//Read data
 				int connectionType = inStream.readInt();
 				if(connectionType == BluetoothInfo.SCOUT) {
 					Event inEvent = (Event)inStream.readObject();
 					Robot[] inRobots = (Robot[])inStream.readObject();
 					MatchData[] inMatchData = (MatchData[])inStream.readObject();
-
 					//Send the received data to the database
 					if(inEvent != null && inEvent.getEventID() == 
 							hostedEvent.getEventID()) {
@@ -79,7 +76,6 @@ public class ServerThread implements Runnable {
 							dbManager.insertMatchData(m);
 					}
 				}
-
 				//Compile the data to send
 				//Users
 				User[] usersArr = dbManager.getAllUsers();
@@ -106,7 +102,6 @@ public class ServerThread implements Runnable {
 				Metric[] mMetricsArr = dbManager.getMatchPerformanceMetricsByColumns
 						(new String[] {DBContract.COL_GAME_NAME}, 
 								new String[] {hostedEvent.getGameName()});
-
 				//Send data
 				oStream.writeObject(hostedEvent);
 				oStream.writeObject(usersArr);
@@ -115,7 +110,7 @@ public class ServerThread implements Runnable {
 				oStream.writeObject(rMetricsArr);
 				oStream.writeObject(mMetricsArr);
 				oStream.flush();
-				
+				//Close the socket and notify the sync handler
 				clientSocket.close();
 				handler.onSyncSuccess(deviceName);
 				Log.d("FRCKrawler", "Synced in: " + 

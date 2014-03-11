@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/opr"
         android:layout_centerHorizontal="true"
-        android:text="-Requires Internet Connection-"
+        android:text="Requires Internet Connection"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="12sp" />
 

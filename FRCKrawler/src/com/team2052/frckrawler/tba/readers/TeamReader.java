@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fa.readers;
+package com.team2052.frckrawler.tba.readers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,28 +8,25 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.team2052.frckrawler.fa.types.FAOPR;
+import com.team2052.frckrawler.tba.types.TBATeam;
 
-public class OPRReader {
+public class TeamReader {
 	
-	private static final String oprOverallURL = "http://www.thefirstalliance.org/" +
-			"api/api.json.php?action=team-opr&team-number=";
-	private static final String oprEventURL1 = "http://www.thefirstalliance.org/" +
-			"api/api.json.php?action=team-event-opr&team-number=";
-	private static final String oprEventURL2 = "&event-code=";
+	private String teamsURL;
 	
+	public TeamReader(String faEventID) {
+		teamsURL = "http://www.thebluealliance.com/api/v2/event/" +
+				faEventID + "/teams?X-TBA-App-Id=frckrawler:frckrawler-scouting-system:v18";
+	}
 	
-	public FAOPR readOPR(int teamNum, String eventCode, boolean atEvent) throws IOException {
-		URL url;
-		if(atEvent)
-			url = new URL(oprEventURL1 + teamNum + oprEventURL2 + eventCode);
-		else
-			url = new URL(oprOverallURL + teamNum);
-		
+	public TBATeam[] readTeams() throws IOException {
+		URL url = new URL(teamsURL);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setReadTimeout(10000);
 		conn.setConnectTimeout(15000);
@@ -43,25 +40,21 @@ public class OPRReader {
 		
 		//Parse the Json array
 		JsonParser jParser = new JsonParser();
-		JsonObject dataObject = jParser.parse(jsonContent).getAsJsonObject();
-		JsonObject oprObject;
-		try {
-			oprObject = dataObject.get("data").getAsJsonObject();
-		} catch(IllegalStateException e) {
-			JsonArray arr = dataObject.get("data").getAsJsonArray();
-			oprObject = arr.get(1).getAsJsonObject();
-		}
+		JsonArray array = jParser.parse(jsonContent).getAsJsonArray();
+	    TBATeam[] faTeams = new TBATeam[array.size()];
 	    
 	    //Get each FATeam out of the array
 		Gson parser = new Gson();
-		FAOPR opr = parser.fromJson(oprObject, FAOPR.class);
+		for(int i = 0; i < array.size(); i++) {
+			faTeams[i] = parser.fromJson(array.get(i), TBATeam.class);
+		}
 
 		if(is != null)
 			try {
 				is.close();
 			} catch (IOException e) {}
 		
-		return opr;
+		return faTeams;
 	}
 	
 	public String readJSON(InputStream stream) throws IOException, 

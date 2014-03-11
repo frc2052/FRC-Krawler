@@ -70,28 +70,22 @@ public class CompiledData implements Structure {
 	}
 	
 	public String[] getValuesAsStrings() {
-		
 		ArrayList<String> valsList = new ArrayList<String>();
-		
 		String matchComments = new String();
 		for(int i = 0; i < getMatchComments().length; i++)
-			matchComments += matchesPlayed[i] + ": " + getMatchComments()[i] + " ";
-		
+			matchComments += "Match " + matchesPlayed[i] + ": " + getMatchComments()[i] + " ";
 		valsList.add(Integer.toString(robot.getTeamNumber()));
 		valsList.add(Integer.toString(matchesPlayed.length));
 		valsList.add(robot.getComments().replace(',', ' '));
 		valsList.add(matchComments.replace(',', ' '));
-		
 		for(int i = 0; i < compiledMatchData.length; i++)
 			if(compiledMatchData[i].getMetric().isDisplayed())
 				valsList.add(compiledMatchData[i].getValueAsHumanReadableString().
 					replace(',', ' '));
-		
 		for(int i = 0; i < robot.getMetricValues().length; i++)
 			if(robot.getMetricValues()[i].getMetric().isDisplayed())
 				valsList.add(robot.getMetricValues()[i].getValueAsHumanReadableString().
 					replace(',', ' '));
-		
 		return valsList.toArray(new String[0]);
 	}
 }

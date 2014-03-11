@@ -41,18 +41,13 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_metrics);
-		
 		findViewById(R.id.addMetric).setOnClickListener(this);
 		findViewById(R.id.up).setOnClickListener(this);
 		findViewById(R.id.down).setOnClickListener(this);
-		
 		TextView title = (TextView)findViewById(R.id.title);
-		
 		metricCategory = getIntent().getIntExtra(METRIC_CATEGORY_EXTRA, -1);
-		
 		if(metricCategory == MATCH_PERF_METRICS)
 			title.setText("Match Performance Metrics");
 		else if(metricCategory == ROBOT_METRICS)
@@ -76,31 +71,24 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 	
 	@Override
 	public void onClick(View v) {
-		
 		Intent i;
-		
 		switch(v.getId()) {
 			case R.id.addMetric:
-				
 				i = new Intent(this, AddMetricDialogActivity.class);
 				i.putExtra(AddMetricDialogActivity.METRIC_CATEGORY_EXTRA, metricCategory);
 				i.putExtra(AddMetricDialogActivity.GAME_NAME_EXTRA, 
 						databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
 				startActivity(i);
-				
 				break;
 				
 			case EDIT_BUTTON_ID:
-				
 				i = new Intent(this, EditMetricDialogActivity.class);
 				i.putExtra(EditMetricDialogActivity.METRIC_CATEGORY_EXTRA, metricCategory);
 				i.putExtra(EditMetricDialogActivity.METRIC_ID_EXTRA, (Integer)v.getTag());
 				startActivity(i);
-				
 				break;
 				
 			case R.id.down:
-				
 				if(metrics.length == 0 || radioGroup.getSelectedButton() == null ||
 						isGettingMetrics)
 					break;
@@ -127,12 +115,10 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 					}
 					
 					new GetMetricsTask().execute();
-
 					break;
 				}
 				
 			case R.id.up:
-				
 				if(metrics.length == 0 || radioGroup.getSelectedButton() == null || 
 						isGettingMetrics)
 					break;
@@ -159,21 +145,17 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 					}
 					
 					new GetMetricsTask().execute();
-
 					break;
 				}
 				
 			case SELECTED_BUTTON_ID:
-				
 				radioGroup.notifyClick((RadioButton)v);
 				selectedMetricID = (Integer)v.getTag();
-				
 				break;
 		}
 	}
 	
 	private class GetMetricsTask extends AsyncTask<Void, MyTableRow, Void> {
-		
 		private int metricNum;
 		
 		@Override
@@ -189,27 +171,20 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 		protected Void doInBackground(Void... v) {
 			switch(metricCategory) {
 				case MATCH_PERF_METRICS:
-					
 					metrics = dbManager.getMatchPerformanceMetricsByColumns
 						(new String[] {DBContract.COL_GAME_NAME}, 
 							new String[] {databaseValues[MetricsActivity.this.getAddressOfDatabaseKey
 							                             (DBContract.COL_GAME_NAME)]});
-					
 					break;
 					
 				case ROBOT_METRICS:
-					
 					metrics = dbManager.getRobotMetricsByColumns
 							(new String[] {DBContract.COL_GAME_NAME}, 
 									new String[] {databaseValues[MetricsActivity.this.getAddressOfDatabaseKey
 									                             (DBContract.COL_GAME_NAME)]});
-					
 					break;
 					
-				case DRIVER_METRICS:
-					
 				default:
-					
 					metrics = new Metric[0];
 			}
 			
@@ -225,7 +200,6 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 			
 			for(int i = 0; i < metrics.length; i++) {
 				int color;
-				
 				if(i % 2 == 0)
 					color = GlobalValues.ROW_COLOR;
 				else
@@ -306,7 +280,6 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 						break;
 						
 					default:
-						
 						rangeString = new String();
 				}
 				
@@ -322,6 +295,7 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 				}, color);
 				
 				publishProgress(row);
+				metricNum++;
 			}
 			
 			return null;
