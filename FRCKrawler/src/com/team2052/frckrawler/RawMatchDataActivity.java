@@ -201,7 +201,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 			
 			//Create the descriptors row and add it to the array
 			MyTableRow descriptorsRow = new MyTableRow(activity);
-			
 			descriptorsRow.addView(new MyTextView(activity, " ", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Event", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Team", 18));
@@ -217,40 +216,30 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 							(new MyTextView(activity, v.getMetric().getMetricName(), 18));
 				}
 			}
-			
 			publishProgress(descriptorsRow);
 			
 			//Add a row for every data entry
 			for(int i = 0; i < matchData.length; i++) {
-				
 				int color;
-				
 				if(i % 2 == 0)
 					color = GlobalValues.ROW_COLOR;
 				else
 					color = Color.TRANSPARENT;
-				
-				
 				//These calls to the database should take very little time, so they are 
 				//"acceptable" to do without an AsyncTask
 				Event[] eventArr = dbManager.getEventsByColumns
 						(new String[] {DBContract.COL_EVENT_ID}, 
 								new String[] {Integer.toString(matchData[i].getEventID())});
-				
 				Robot[] robotsArr = dbManager.getRobotsByColumns
 						(new String[] {DBContract.COL_ROBOT_ID}, 
 								new String[] {Integer.toString(matchData[i].getRobotID())});
-				
 				User[] userArr = dbManager.getUsersByColumns
 						(new String[] {DBContract.COL_USER_ID}, 
 								new String[] {Integer.toString(matchData[i].getUserID())});
-				
-				MyButton editButton = new MyButton(activity, "Edit Data", activity);
+				MyButton editButton = new MyButton(activity, "Edit", activity);
 				editButton.setId(EDIT_BUTTON_ID);
 				editButton.setTag(Integer.valueOf(matchData[i].getMatchID()));
-				
 				ArrayList<View> viewArr = new ArrayList<View>();
-				
 				viewArr.add(editButton);
 				viewArr.add(new MyTextView(activity, eventArr[0].getEventName(), 18));
 				viewArr.add(new MyTextView(activity, Integer.toString(robotsArr[0].getTeamNumber()), 
@@ -261,23 +250,19 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 					viewArr.add(new MyTextView(activity, userArr[0].getName(), 18));
 				else 
 					viewArr.add(new MyTextView(activity, " ", 18));
-				
 				viewArr.add(new MyTextView(activity, matchData[i].getMatchType(), 18));
 				
 				//Put a character limit on the comments string
 				String displayedString = new String();
-				
 				if(matchData[i].getComments().length() < COMMENT_CHAR_LIMIT)
 					displayedString = matchData[i].getComments();
 				else
 					displayedString = matchData[i].getComments().
 						substring(0, COMMENT_CHAR_LIMIT - 1);
-					
 				viewArr.add(new MyTextView(activity, displayedString, 18));
 				
 				//Add the metric data
 				MetricValue[] metricValues = matchData[i].getMetricValues();
-				
 				for(int k = 0; k < metricValues.length; k++) {
 					if(metricValues[k].getMetric().getType() != DBContract.MATH)
 						viewArr.add(new MyTextView(activity, metricValues[k].
@@ -286,7 +271,6 @@ public class RawMatchDataActivity extends StackableTabActivity implements OnClic
 				
 				publishProgress(new MyTableRow(activity, viewArr.toArray
 						(new View[0]), color));
-				
 				try {	//Wait for the UI to update
 					Thread.sleep(50);
 				} catch(InterruptedException e) {}

@@ -19,6 +19,7 @@ import com.team2052.frckrawler.database.structures.Game;
 import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
+import com.team2052.frckrawler.gui.PopupMenuButton;
 
 public class GamesActivity extends TabActivity implements OnClickListener {
 	
@@ -33,10 +34,8 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_games);
-		
 		Button add = ((Button)findViewById(R.id.addGameButton));
 		add.setOnClickListener(this);
-		
 		dbManager = DBManager.getInstance(this);
 		metricSelectDialog = null;
 	}
@@ -66,24 +65,83 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 		
 		for(int i = 0; i < games.length; i++) {
 			int color;
-			
 			if(i % 2 == 0)
 				color = GlobalValues.ROW_COLOR;
 			else
 				color = Color.TRANSPARENT;
 			
-			MyButton editButton = new MyButton(this, "Edit Game", this, games[i].getName());
-			editButton.setId(EDIT_BUTTON_ID);
-			MyButton eventsButton = new MyButton(this, "Events", this, games[i].getName());
-			eventsButton.setId(EVENTS_BUTTON_ID);
-			MyButton metricsButton = new MyButton(this, "Metrics", this, games[i].getName());
-			metricsButton.setId(METRICS_BUTTON_ID);
+			PopupMenuButton menu = new PopupMenuButton(this);
+			final String gameName = games[i].getName();
+			menu.addItem("Events", new Runnable(){
+				@Override
+				public void run() {
+					Intent intent = new Intent(GamesActivity.this, EventsActivity.class);
+					intent.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[] 
+							{gameName});
+					intent.putExtra(StackableTabActivity.DB_VALUES_EXTRA, new String[] 
+							{gameName});
+					intent.putExtra(StackableTabActivity.DB_KEYS_EXTRA, new String[] 
+							{DBContract.COL_GAME_NAME});
+					startActivity(intent);
+				}
+			});
+			menu.addItem("Metrics", new Runnable() {
+				@Override
+				public void run() {
+					AlertDialog.Builder builder = new AlertDialog.Builder(GamesActivity.this);
+					LinearLayout l = new LinearLayout(GamesActivity.this);
+					l.setOrientation(LinearLayout.VERTICAL);
+					//Match Metrics Button
+					l.addView(new MyButton(GamesActivity.this, "Match Metrics", new OnClickListener() {
+						@Override
+						public void onClick(View arg0) {
+							Intent i = new Intent(GamesActivity.this, MetricsActivity.class);
+							i.putExtra(MetricsActivity.METRIC_CATEGORY_EXTRA, 
+									MetricsActivity.MATCH_PERF_METRICS);
+							i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[] 
+									{gameName});
+							i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, new String[] 
+									{gameName});
+							i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, new String[] 
+									{DBContract.COL_GAME_NAME});
+							startActivity(i);
+						}
+					}));
+					//Robot Metrics Button
+					l.addView(new MyButton(GamesActivity.this, "Robot Metrics", new OnClickListener() {
+						@Override
+						public void onClick(View arg0) {
+							Intent i = new Intent(GamesActivity.this, MetricsActivity.class);
+							i.putExtra(MetricsActivity.METRIC_CATEGORY_EXTRA, 
+									MetricsActivity.ROBOT_METRICS);
+							i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[] 
+									{gameName});
+							i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, new String[] 
+									{gameName});
+							i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, new String[] 
+									{DBContract.COL_GAME_NAME});
+							startActivity(i);
+						}
+					}));
+					//Cancel Button
+					builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+					builder.setView(l);
+					metricSelectDialog = builder.create();
+					metricSelectDialog.show();
+				}
+			});
 			
+			MyButton editButton = new MyButton(this, "Edit", this, games[i].getName());
+			editButton.setId(EDIT_BUTTON_ID);
 			table.addView(new MyTableRow(this, new View[] {
+					menu,
 					editButton,
-					new MyTextView(this, games[i].getName(), 18),
-					eventsButton,
-					metricsButton
+					new MyTextView(this, games[i].getName(), 18)
 			}, color));
 		}
 	}
@@ -110,71 +168,6 @@ public class GamesActivity extends TabActivity implements OnClickListener {
 				i = new Intent(this, EditGameDialogActivity.class);
 				i.putExtra(EditGameDialogActivity.GAME_NAME_EXTRA, (String)v.getTag());
 				startActivity(i);
-				break;
-				
-			case EVENTS_BUTTON_ID:
-				i = new Intent(this, EventsActivity.class);
-				i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[] 
-						{(String)v.getTag()});
-				i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, new String[] 
-						{(String)v.getTag()});
-				i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, new String[] 
-						{DBContract.COL_GAME_NAME});
-				startActivity(i);
-				break;
-				
-			case METRICS_BUTTON_ID:
-				final View metricsButton = v;
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				LinearLayout l = new LinearLayout(this);
-				l.setOrientation(LinearLayout.VERTICAL);
-				
-				//Match Metrics Button
-				l.addView(new MyButton(this, "Match Metrics", new OnClickListener() {
-					@Override
-					public void onClick(View arg0) {
-						Intent i = new Intent(GamesActivity.this, MetricsActivity.class);
-						i.putExtra(MetricsActivity.METRIC_CATEGORY_EXTRA, 
-								MetricsActivity.MATCH_PERF_METRICS);
-						i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[] 
-								{(String)metricsButton.getTag()});
-						i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, new String[] 
-								{(String)metricsButton.getTag()});
-						i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, new String[] 
-								{DBContract.COL_GAME_NAME});
-						startActivity(i);
-					}
-				}));
-				
-				//Robot Metrics Button
-				l.addView(new MyButton(this, "Robot Metrics", new OnClickListener() {
-					@Override
-					public void onClick(View arg0) {
-						Intent i = new Intent(GamesActivity.this, MetricsActivity.class);
-						i.putExtra(MetricsActivity.METRIC_CATEGORY_EXTRA, 
-								MetricsActivity.ROBOT_METRICS);
-						i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[] 
-								{(String)metricsButton.getTag()});
-						i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, new String[] 
-								{(String)metricsButton.getTag()});
-						i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, new String[] 
-								{DBContract.COL_GAME_NAME});
-						startActivity(i);
-					}
-				}));
-				
-				//Cancel Button
-				builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-				
-				builder.setView(l);
-				metricSelectDialog = builder.create();
-				metricSelectDialog.show();
-				break;
 		}
 	}
 	

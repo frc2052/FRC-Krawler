@@ -52,7 +52,7 @@ public class ContactsActivity extends StackableTabActivity implements OnClickLis
 				color = Color.TRANSPARENT;
 			
 			MyButton editButton = new MyButton
-					(this, "Edit Contact", this, Integer.valueOf(contacts[i].getContactID()));
+					(this, "Edit", this, Integer.valueOf(contacts[i].getContactID()));
 			editButton.setId(EDIT_BUTTON_ID);
 			
 			table.addView(new MyTableRow(this, new View[] {

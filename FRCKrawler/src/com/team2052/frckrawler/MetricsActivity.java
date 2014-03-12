@@ -22,15 +22,12 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 	
 	public static final String METRIC_CATEGORY_EXTRA = 
 			"com.team2052.frckrawler.metricCategoryExtra";
-	
 	public static final int MATCH_PERF_METRICS = 1;
 	public static final int ROBOT_METRICS = 2;
 	public static final int DRIVER_METRICS = 3;	//Currently not used
-	
 	private static final int EDIT_BUTTON_ID = 1;
 	private static final int SELECTED_BUTTON_ID = 2;
 	private static final int DESCRIPTION_CHAR_LIMIT = 20;
-	
 	private boolean isGettingMetrics;
 	private int metricCategory;	//Either MATCH_PERF_METRICS, ROBOT_METRICS, or DRIVER_METRICS
 	private int selectedMetricID;
@@ -58,7 +55,6 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 			metricCategory = MATCH_PERF_METRICS;
 			title.setText("Match Performance Metrics");
 		}
-		
 		isGettingMetrics = false;
 		dbManager = DBManager.getInstance(this);
 	}
@@ -95,25 +91,19 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 				else {
 					int metricPos = 0;
 					int metricID = ((Integer)radioGroup.getSelectedButton().getTag()).intValue();
-
 					for(int k = 0; k < metrics.length; k++) {
 						if(metrics[k].getID() == metricID)
 							metricPos = k;
 					}
-
 					if(metricPos == metrics.length - 1)
 						break;
-
 					int lowerMetricPos = metricPos + 1;
 					int lowerMetricID = metrics[lowerMetricPos].getID();
-
 					if(metricCategory == MATCH_PERF_METRICS) {
 						System.out.println(dbManager.flipMatchMetricPosition(metricID,lowerMetricID));
-
 					} else if(metricCategory == ROBOT_METRICS) {
 						dbManager.flipRobotMetricPosition(metricID, lowerMetricID);
 					}
-					
 					new GetMetricsTask().execute();
 					break;
 				}
@@ -125,25 +115,19 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 				else {
 					int metricPos = 0;
 					int metricID = ((Integer)radioGroup.getSelectedButton().getTag()).intValue();
-
 					for(int k = 0; k < metrics.length; k++) {
 						if(metrics[k].getID() == metricID)
 							metricPos = k;
 					}
-
 					if(metricPos == 0)
 						break;
-
 					int upperMetricPos = metricPos - 1;
 					int upperMetricID = metrics[upperMetricPos].getID();
-
 					if(metricCategory == MATCH_PERF_METRICS) {
 						dbManager.flipMatchMetricPosition(metricID, upperMetricID);
-
 					} else if(metricCategory == ROBOT_METRICS) {
 						dbManager.flipRobotMetricPosition(metricID, upperMetricID);
 					}
-					
 					new GetMetricsTask().execute();
 					break;
 				}
@@ -213,8 +197,8 @@ public class MetricsActivity extends StackableTabActivity implements OnClickList
 				if(selectedMetricID == metrics[i].getID())
 					radioGroup.selectButton(selectedButton);
 				
-				MyButton editButton = new MyButton(MetricsActivity.this, "Edit Metric", MetricsActivity.this, 
-						Integer.valueOf(metrics[i].getID()));
+				MyButton editButton = new MyButton(MetricsActivity.this, "Edit", 
+						MetricsActivity.this, Integer.valueOf(metrics[i].getID()));
 				editButton.setId(EDIT_BUTTON_ID);
 				editButton.setTag(metrics[i].getID());
 				

@@ -2,7 +2,6 @@ package com.team2052.frckrawler;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,9 +33,9 @@ import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.Query;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.database.structures.SortKey;
-import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
+import com.team2052.frckrawler.gui.PopupMenuButton;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 import com.team2052.frckrawler.gui.StaticTableLayout;
 
@@ -44,10 +44,6 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 	public static final int REQUEST_REFRESH = 1;
 	public static final int REQUEST_NO_REFRESH = 2;
 	
-	private static final int COMMENT_BUTTON_ID = 1;
-	private static final int PICTURE_BUTTON_ID = 2;
-	private static final int MATCH_DATA_BUTTON_ID = 3;
-	private static final int ADD_TO_LIST_BUTTON_ID = 4;
 	private static SparseArray<Query[]> matchQuerys = new SparseArray<Query[]>();
 	private static SparseArray<Query[]> pitQuerys = new SparseArray<Query[]>();
 	private static SparseArray<Query[]> driverQuerys = new SparseArray<Query[]>();
@@ -61,10 +57,8 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_summary);
-		 
 		findViewById(R.id.query).setOnClickListener(this);
 		findViewById(R.id.lists).setOnClickListener(this);
-		
 		sortKey = null;
 		dbManager = DBManager.getInstance(this);
 		getDataTask = new GetCompiledDataTask();
@@ -80,8 +74,6 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 	@Override
 	public void onClick(View v) {
 		Intent i;
-		AlertDialog.Builder builder;
-		
 		switch(v.getId()) {
 			case R.id.query:
 				i = new Intent(this, QuerySortingDialogActivity.class);
@@ -96,74 +88,6 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 						Integer.parseInt(databaseValues
 								[getAddressOfDatabaseKey(DBContract.COL_EVENT_ID)]));
 				startActivity(i);
-				break;
-				
-			case COMMENT_BUTTON_ID:
-				i = new Intent(this, CommentDialogActivity.class);
-				i.putExtra(CommentDialogActivity.COMMENT_ARRAY_EXTRA, 
-						data[(Integer)v.getTag()].getMatchComments());
-				i.putExtra(CommentDialogActivity.MATCHES_ARRAY_EXTRA, 
-						data[(Integer)v.getTag()].getMatchesPlayed());
-				startActivity(i);
-				break;
-				
-			case PICTURE_BUTTON_ID:
-				Robot r = data[(Integer)v.getTag()].getRobot();
-				String imagePath = r.getImagePath();
-				
-				builder = new AlertDialog.Builder(this);
-				builder.setTitle("Team " + r.getTeamNumber() + "'s Robot");
-				
-				if(imagePath != null && !imagePath.equals("")) {
-					ImageView image = new ImageView(this);
-					image.setImageURI(Uri.parse(imagePath));
-					builder.setView(image);
-					
-				} else {
-					builder.setView(new MyTextView(this, "No image for this team.", 18));
-				}
-				
-				builder.show();
-				break;
-				
-			case MATCH_DATA_BUTTON_ID:
-				i = new Intent(this, RawMatchDataActivity.class);
-				i.putExtra(PARENTS_EXTRA, new String[] {});
-				i.putExtra(DB_VALUES_EXTRA, new String[] {Integer.toString(data[(Integer)v.
-				                                                 getTag()].getRobot().getID())});
-				i.putExtra(DB_KEYS_EXTRA, new String[] {DBContract.COL_ROBOT_ID});
-				i.putExtra(RawMatchDataActivity.DISABLE_BUTTONS_EXTRA, true);
-				startActivity(i);
-				break;
-				
-			case ADD_TO_LIST_BUTTON_ID:
-				final int robotID = (Integer)v.getTag();
-				final List[] lists = dbManager.getListsByColumns(
-						new String[] {DBContract.COL_EVENT_ID}, 
-						new String[] {(databaseValues[getAddressOfDatabaseKey
-						                              (DBContract.COL_EVENT_ID)])});
-				final CharSequence[] choices = new CharSequence[lists.length];
-				
-				for(int k = 0; k < lists.length; k++) {
-					choices[k] = lists[k].getName();
-				}
-				
-				builder = new AlertDialog.Builder(this);
-				builder.setTitle("Add to List...");
-				builder.setItems(choices, new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						if(!dbManager.addRobotToList(robotID, lists[which].getListID())) {
-							Toast.makeText(SummaryActivity.this, "Robot is already in " +
-									"that list.", Toast.LENGTH_SHORT).show();
-						}
-						
-						dialog.dismiss();
-					}
-				});
-				builder.show();
-				break;
 		}
 	}
 	
@@ -201,7 +125,7 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 	}
 	
 	private class GetCompiledDataTask extends AsyncTask
-										<SummaryActivity, MyTableRow, Void> {
+										<SummaryActivity, View, Void> {
 		private volatile boolean readyForUIUpdate;
 		private int dataNum;
 		private StaticTableLayout table;
@@ -271,18 +195,13 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 			MyTableRow staticDescriptorsRow = new MyTableRow(activity);
 			MyTableRow descriptorsRow = new MyTableRow(activity);
 			staticDescriptorsRow.addView(new MyTextView(activity, " ", 18));
+			staticDescriptorsRow.addView(new MyTextView(activity, " ", 18));
 			staticDescriptorsRow.addView(new MyTextView(activity, "Team", 18));
 			descriptorsRow.addView(new MyTextView(activity, "M. Scouted", 18));
-			descriptorsRow.addView(new MyTextView(activity, "Comments", 18));
-			descriptorsRow.addView(new MyTextView(activity, "Pictures", 18));
-			descriptorsRow.addView(new MyTextView(activity, "M. Data", 18));
-			descriptorsRow.addView(new MyTextView(activity, "Lists", 18));
 			descriptorsRow.addView(new MyTextView(activity, "OPR", 18));
-			
 			MetricValue[] matchMetrics;
 			Metric[] robotMetrics;
 			MetricValue[] driverMetrics;
-			
 			if(data.length > 0) {
 				matchMetrics = data[0].getCompiledMatchData();
 				robotMetrics = data[0].getRobot().getMetrics();
@@ -299,17 +218,15 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 				if(m.getMetric().isDisplayed())
 					descriptorsRow.addView(new MyTextView(activity, 
 						m.getMetric().getMetricName(), 18));
-			
 			for(Metric m : robotMetrics)
 				if(m.isDisplayed())
 					descriptorsRow.addView(new MyTextView(activity, 
 							m.getMetricName(), 18));
-			
 			for(MetricValue m : driverMetrics)
 				if(m.getMetric().isDisplayed())
 					descriptorsRow.addView(new MyTextView(activity, 
 						m.getMetric().getMetricName(), 18));
-			
+			descriptorsRow.setLayoutParams(new TableLayout.LayoutParams());
 			publishProgress(staticDescriptorsRow, descriptorsRow);
 			
 			//Create a new row for each piece of data
@@ -328,6 +245,80 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 				MyTableRow staticRow = new MyTableRow(activity, color);
 				MyTableRow dataRow = new MyTableRow(activity, color);
 				
+				PopupMenuButton menu = new PopupMenuButton(SummaryActivity.this);
+				final Robot robot = data[dataCount].getRobot();
+				final String[] matchComments = data[dataCount].getMatchComments();
+				final int[] matchesPlayed = data[dataCount].getMatchesPlayed();
+				menu.addItem("Match Data", new Runnable() {
+					@Override
+					public void run() {
+						Intent i = new Intent(SummaryActivity.this, RawMatchDataActivity.class);
+						i.putExtra(PARENTS_EXTRA, new String[] {});
+						i.putExtra(DB_VALUES_EXTRA, new String[] {Integer.toString(robot.getID())});
+						i.putExtra(DB_KEYS_EXTRA, new String[] {DBContract.COL_ROBOT_ID});
+						i.putExtra(RawMatchDataActivity.DISABLE_BUTTONS_EXTRA, true);
+						startActivity(i);
+					}
+				});
+				menu.addItem("Match Comments", new Runnable() {
+					@Override
+					public void run() {
+						Intent i = new Intent(SummaryActivity.this, CommentDialogActivity.class);
+						i.putExtra(CommentDialogActivity.COMMENT_ARRAY_EXTRA, matchComments);
+						i.putExtra(CommentDialogActivity.MATCHES_ARRAY_EXTRA, matchesPlayed);
+						startActivity(i);
+					}
+				});
+				menu.addItem("Picture", new Runnable() {
+					@Override
+					public void run() {
+						Robot r = robot;
+						String imagePath = r.getImagePath();
+						AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
+						builder.setTitle("Team " + r.getTeamNumber() + "'s Robot");
+						if(imagePath != null && !imagePath.equals("")) {
+							ImageView image = new ImageView(SummaryActivity.this);
+							image.setImageURI(Uri.parse(imagePath));
+							builder.setView(image);
+						} else {
+							builder.setView(new MyTextView(SummaryActivity.this, "No image for this team.", 18));
+						}
+						builder.show();
+					}
+				});
+				menu.addItem("Add to List", new Runnable() {
+					@Override
+					public void run() {
+						final int robotID = robot.getID();
+						final List[] lists = dbManager.getListsByColumns(
+								new String[] {DBContract.COL_EVENT_ID}, 
+								new String[] {(databaseValues[getAddressOfDatabaseKey
+								                              (DBContract.COL_EVENT_ID)])});
+						final CharSequence[] choices = new CharSequence[lists.length];
+						
+						for(int k = 0; k < lists.length; k++) {
+							choices[k] = lists[k].getName();
+						}
+						
+						AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
+						builder.setTitle("Add to List...");
+						builder.setItems(choices, new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								if(!dbManager.addRobotToList(robotID, lists[which].getListID())) {
+									Toast.makeText(SummaryActivity.this, "Robot is already in " +
+											"that list.", Toast.LENGTH_SHORT).show();
+								}
+								
+								dialog.dismiss();
+							}
+						});
+						builder.show();
+					}
+				});
+				staticRow.addView(menu);
+				
 				CheckBox checkBox = new CheckBox(activity);
 				checkBox.setOnCheckedChangeListener(new CheckListener(
 						data[dataCount].getEventID(), 
@@ -343,34 +334,10 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 				else
 					oprString = oprFormat.format(opr);
 				
-				MyButton commentsButton = new MyButton
-						(activity, "Comments", activity);
-				commentsButton.setId(COMMENT_BUTTON_ID);
-				commentsButton.setTag(Integer.valueOf(dataCount));
-				
-				MyButton picturesButton = new MyButton
-						(activity, "Pictures", activity);
-				picturesButton.setId(PICTURE_BUTTON_ID);
-				picturesButton.setTag(Integer.valueOf(dataCount));
-				
-				MyButton matchDataButton = new MyButton
-						(activity, "M. Data", activity);
-				matchDataButton.setId(MATCH_DATA_BUTTON_ID);
-				matchDataButton.setTag(Integer.valueOf(dataCount));
-				
-				MyButton addToListButton = new MyButton(
-						activity, "Add To List", activity);
-				addToListButton.setId(ADD_TO_LIST_BUTTON_ID);
-				addToListButton.setTag(data[dataCount].getRobot().getID());
-				
 				staticRow.addView(new MyTextView(activity, Integer.toString(
 						data[dataCount].getRobot().getTeamNumber()), 18));
 				dataRow.addView(new MyTextView(activity, Integer.toString(
 						data[dataCount].getMatchesPlayed().length), 18));
-				dataRow.addView(commentsButton);
-				dataRow.addView(picturesButton);
-				dataRow.addView(matchDataButton);
-				dataRow.addView(addToListButton);
 				dataRow.addView(new MyTextView(activity, oprString, 18));
 				
 				//Get the data arrays for the robot, matches, and driver data
@@ -492,9 +459,8 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 		}
 		
 		@Override
-		protected void onProgressUpdate(MyTableRow... rows) {
+		protected void onProgressUpdate(View... rows) {
 			readyForUIUpdate = false;
-			
 			if(rows.length > 1) {
 				table.addViewToStaticTable(rows[0]);
 				table.addViewToMainTable(rows[1]);
@@ -502,7 +468,6 @@ public class SummaryActivity extends StackableTabActivity implements OnClickList
 			} else {
 				table.addViewToMainTable(rows[0]);
 			}
-			
 			readyForUIUpdate = true;
 		}
 		

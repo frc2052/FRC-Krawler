@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.database.DBContract;
@@ -15,25 +16,18 @@ import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
+import com.team2052.frckrawler.gui.PopupMenuButton;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 import com.team2052.frckrawler.gui.StaticTableLayout;
 
 public class TeamsActivity extends TabActivity implements OnClickListener {
-	
 	private static final int EDIT_BUTTON_ID = 1;
-	private static final int ROBOTS_BUTTON_ID = 2;
-	private static final int COMMENTS_BUTTON_ID = 3;
-	private static final int CONTACTS_BUTTON_ID = 4;
-	
-	private final Object ADD_TEAMS_TAG = new Object();
-	
 	private int teamCount;
 	private DBManager dbManager;
 	private GetTeamsTask getTeamsTask;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_teams);
 		
@@ -79,42 +73,6 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 				i.putExtra(EditTeamDialogActivity.TEAM_NUMBER_EXTRA_KEY, 
 						((Integer)v.getTag()).intValue());
 				startActivityForResult(i, 1);
-				break;
-				
-			case ROBOTS_BUTTON_ID:
-				i = new Intent(this, RobotsActivity.class);
-				i.putExtra(StackableTabActivity.PARENTS_EXTRA, 
-						new String[] {v.getTag().toString()});
-				i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, 
-						new String[] {v.getTag().toString()});
-				i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, 
-						new String[] {DBContract.COL_TEAM_NUMBER});
-				startActivity(i);
-				break;
-				
-			case CONTACTS_BUTTON_ID:
-				i = new Intent(this, ContactsActivity.class);
-				i.putExtra(StackableTabActivity.PARENTS_EXTRA, 
-						new String[] {v.getTag().toString()});
-				i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, 
-						new String[] {v.getTag().toString()});
-				i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, 
-						new String[] {DBContract.COL_TEAM_NUMBER});
-				startActivity(i);
-				break;
-				
-			case COMMENTS_BUTTON_ID:
-				
-				/*i = new Intent(this, CommentsActivity.class);
-				i.putExtra(StackableTabActivity.PARENTS_EXTRA, 
-						new String[] {v.getTag().toString()});
-				i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, 
-						new String[] {v.getTag().toString()});
-				i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, 
-						new String[] {DBContract.COL_TEAM_NUMBER});
-				startActivity(i);
-				
-				break;*/
 		}
 	}
 	
@@ -127,7 +85,6 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 	}
 	
 	private class GetTeamsTask extends AsyncTask<TeamsActivity, MyTableRow, Void> {
-		
 		private boolean readyForUIUpdate;
 		private StaticTableLayout table;
 		
@@ -150,6 +107,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			MyTableRow descriptorsRow = new MyTableRow(activity);
 			
 			staticDescriptorsRow.addView(new MyTextView(activity, "", 18));
+			staticDescriptorsRow.addView(new MyTextView(activity, "", 18));
 			staticDescriptorsRow.addView(new MyTextView(activity, "#", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Name", 18));
 			descriptorsRow.addView(new MyTextView(activity, "School", 18));
@@ -158,6 +116,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			descriptorsRow.addView(new MyTextView(activity, "Website", 18));
 			descriptorsRow.addView(new MyTextView(activity, "State", 18));
 			descriptorsRow.addView(new MyTextView(activity, "Colors", 18));
+			descriptorsRow.setLayoutParams(new TableLayout.LayoutParams());
 			publishProgress(staticDescriptorsRow, descriptorsRow);
 			
 			Team[] teams = dbManager.getAllTeams();
@@ -165,32 +124,51 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			for(int i = 0; i < teams.length; i++) {
 				if(isCancelled())
 					break;
-				
 				int color;
 				if(i % 2 == 0)
 					color = GlobalValues.ROW_COLOR;
 				else
 					color = Color.TRANSPARENT;
 				
-				MyButton editTeam = new MyButton(activity, "Edit Team", activity, 
+				PopupMenuButton menu = new PopupMenuButton(TeamsActivity.this);
+				final String teamNumber = Integer.toString(teams[i].getNumber());
+				menu.addItem("Robots", new Runnable() {
+					@Override
+					public void run() {
+						Intent i = new Intent(TeamsActivity.this, RobotsActivity.class);
+						i.putExtra(StackableTabActivity.PARENTS_EXTRA, 
+								new String[] {teamNumber});
+						i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, 
+								new String[] {teamNumber});
+						i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, 
+								new String[] {DBContract.COL_TEAM_NUMBER});
+						startActivity(i);
+					}
+				});
+				menu.addItem("Contacts", new Runnable() {
+					@Override
+					public void run() {
+						Intent i = new Intent(TeamsActivity.this, ContactsActivity.class);
+						i.putExtra(StackableTabActivity.PARENTS_EXTRA, 
+								new String[] {teamNumber});
+						i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, 
+								new String[] {teamNumber});
+						i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, 
+								new String[] {DBContract.COL_TEAM_NUMBER});
+						startActivity(i);
+					}
+				});
+				
+				MyButton editTeam = new MyButton(activity, "Edit", activity, 
 						teams[i].getNumber());
 				editTeam.setId(EDIT_BUTTON_ID);
-				MyButton robots = new MyButton(activity, "Robots", activity, 
-						teams[i].getNumber());
-				robots.setId(ROBOTS_BUTTON_ID);
-				MyButton contacts = new MyButton(activity, "Contacts", activity, 
-						teams[i].getNumber());
-				contacts.setId(CONTACTS_BUTTON_ID);
-				/*MyButton comments = new MyButton(listener, "Comments", listener, 
-						teams[i].getNumber());
-				comments.setId(COMMENTS_BUTTON_ID);*/
 				
 				String rookieYearText = "";
-				
 				if(teams[i].getRookieYear() > 0)
 					rookieYearText = Integer.toString(teams[i].getRookieYear());
 				
 				MyTableRow staticRow = new MyTableRow(activity, new View[] {
+						menu,
 						editTeam,
 						new MyTextView(activity, Integer.toString(teams[i].getNumber()), 18)
 				}, color);
@@ -203,9 +181,6 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 						new MyTextView(activity, teams[i].getWebsite(), 18),
 						new MyTextView(activity, teams[i].getStatePostalCode(), 18),
 						new MyTextView(activity, teams[i].getColors(), 18),
-						robots,
-						contacts,
-						//comments
 				}, color);
 				
 				row.setTag(Integer.valueOf(teams[i].getNumber()));
@@ -215,7 +190,6 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 						Thread.sleep(100);
 					} catch(InterruptedException e) {}
 				}
-				
 				publishProgress(staticRow, row);
 			}
 			

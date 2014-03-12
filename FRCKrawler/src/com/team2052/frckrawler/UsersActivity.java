@@ -57,7 +57,7 @@ public class UsersActivity extends TabActivity implements OnClickListener{
 				color = GlobalValues.ROW_COLOR;
 			
 			table.addView(new MyTableRow(this, new View[] {
-					new MyButton(this, "Edit User", this, Integer.valueOf(users[i].getID())),
+					new MyButton(this, "Edit", this, Integer.valueOf(users[i].getID())),
 					new MyTextView(this, users[i].getName(), 18)
 			}, color));
 		}
