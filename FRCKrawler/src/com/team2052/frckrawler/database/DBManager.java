@@ -21,12 +21,14 @@ import com.team2052.frckrawler.database.structures.Contact;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.Game;
 import com.team2052.frckrawler.database.structures.List;
+import com.team2052.frckrawler.database.structures.Match;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatchException;
 import com.team2052.frckrawler.database.structures.Query;
 import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.database.structures.Schedule;
 import com.team2052.frckrawler.database.structures.SortKey;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.database.structures.User;
@@ -3732,6 +3734,81 @@ public class DBManager {
 	
 	
 	/*****
+	 * Method: getSchedule
+	 * 
+	 * Summary: Gets a schedule based on the entered eventID
+	 *****/
+	public synchronized Schedule getSchedule(int eventID) {
+		SQLiteDatabase db = helper.getReadableDatabase();
+		Cursor c = db.rawQuery("SELECT * FROM " + DBContract.TABLE_SCHEDULES + 
+				" WHERE " + DBContract.COL_EVENT_ID + " LIKE " + eventID + 
+				" ORDER BY " + DBContract.COL_MATCH_NUMBER, null);
+		c.moveToFirst();
+		Match[] matches = new Match[c.getCount()];
+		for(int i = 0; i < c.getCount(); i++) {
+			matches[i] = new Match(
+					c.getInt(c.getColumnIndex(DBContract.COL_MATCH_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_RED1)),
+					c.getInt(c.getColumnIndex(DBContract.COL_RED2)),
+					c.getInt(c.getColumnIndex(DBContract.COL_RED3)),
+					c.getInt(c.getColumnIndex(DBContract.COL_BLUE1)),
+					c.getInt(c.getColumnIndex(DBContract.COL_BLUE2)),
+					c.getInt(c.getColumnIndex(DBContract.COL_BLUE3)),
+					c.getInt(c.getColumnIndex(DBContract.COL_RED_SCORE)),
+					c.getInt(c.getColumnIndex(DBContract.COL_BLUE_SCORE)));
+			c.moveToNext();
+		}
+		helper.close();
+		return new Schedule(eventID, matches);
+	}
+	
+	
+	/*****
+	 * Method: addMatch
+	 * 
+	 * Summary: Adds a schedule match for the given event
+	 *****/
+	public synchronized boolean addMatch(int eventID, Match m) {
+		if(hasValue(
+				DBContract.TABLE_SCHEDULES, 
+				DBContract.COL_MATCH_NUMBER, 
+				Integer.toString(m.getMatchNumber()))) {
+			return false;
+		}
+		SQLiteDatabase db = helper.getWritableDatabase();
+		ContentValues vals = new ContentValues();
+		vals.put(DBContract.COL_EVENT_ID, eventID);
+		vals.put(DBContract.COL_MATCH_NUMBER, m.getMatchNumber());
+		vals.put(DBContract.COL_RED1, m.getRed1RobotID());
+		vals.put(DBContract.COL_RED2, m.getRed2RobotID());
+		vals.put(DBContract.COL_RED3, m.getRed3RobotID());
+		vals.put(DBContract.COL_BLUE1, m.getBlue1RobotID());
+		vals.put(DBContract.COL_BLUE2, m.getBlue2RobotID());
+		vals.put(DBContract.COL_BLUE3, m.getBlue3RobotID());
+		vals.put(DBContract.COL_RED_SCORE, m.getRedScore());
+		vals.put(DBContract.COL_BLUE_SCORE, m.getBlueScore());
+		db.insert(DBContract.TABLE_SCHEDULES, null, vals);
+		helper.close();
+		return true;
+	}
+	
+	
+	/*****
+	 * Method: removeMatch
+	 * 
+	 * Summary: removes a match with the specified number and eventID
+	 *****/
+	public synchronized void removeMatch(int eventID, int matchNum) {
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.delete(DBContract.TABLE_SCHEDULES, 
+				DBContract.COL_EVENT_ID + " LIKE " + eventID + " AND " + 
+				DBContract.COL_MATCH_NUMBER + " LIKE " + matchNum, 
+				null);
+		helper.close();
+	}
+	
+	
+	/*****
 	 * Method: flipRobotPositionInList
 	 * 
 	 * Summary: Flips the position value of the two robots in the specified list.
@@ -3796,7 +3873,6 @@ public class DBManager {
 		Cursor c = helper.getReadableDatabase().
 				rawQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_EVENT, null);
 		if(c.moveToFirst()) {
-		
 			event = new Event(
 				c.getInt(c.getColumnIndex(DBContract.COL_EVENT_ID)),
 				c.getString(c.getColumnIndex(DBContract.COL_EVENT_NAME)),
@@ -3805,10 +3881,9 @@ public class DBManager {
 				c.getString(c.getColumnIndex(DBContract.COL_LOCATION)),
 				c.getString(c.getColumnIndex(DBContract.COL_FMS_EVENT_ID))
 				);
-			
+			helper.close();
 			return event;
 		}
-		
 		helper.close();
 		return null;
 	}

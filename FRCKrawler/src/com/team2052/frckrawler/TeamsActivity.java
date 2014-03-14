@@ -31,7 +31,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_teams);
 		
-		findViewById(R.id.addTeam).setOnClickListener(this);
+		findViewById(R.id.addMatch).setOnClickListener(this);
 		findViewById(R.id.addRobotToAll).setOnClickListener(this);
 		
 		dbManager = DBManager.getInstance(this);
@@ -58,7 +58,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		Intent i;
 		
 		switch(v.getId()) {
-			case R.id.addTeam:
+			case R.id.addMatch:
 				i = new Intent(this, AddTeamDialogActivity.class);
 				startActivityForResult(i, 1);
 				break;
@@ -93,10 +93,8 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			readyForUIUpdate = true;
 			((FrameLayout)findViewById(R.id.progressFrame)).
 				addView(new ProgressSpinner(getApplicationContext()));
-			
 			table = (StaticTableLayout)findViewById(R.id.teamsData);
 			table.removeAllViews();
-			
 			teamCount = -1;
 		}
 		
@@ -105,7 +103,6 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 			TeamsActivity activity = activities[0];
 			MyTableRow staticDescriptorsRow = new MyTableRow(activity);
 			MyTableRow descriptorsRow = new MyTableRow(activity);
-			
 			staticDescriptorsRow.addView(new MyTextView(activity, "", 18));
 			staticDescriptorsRow.addView(new MyTextView(activity, "", 18));
 			staticDescriptorsRow.addView(new MyTextView(activity, "#", 18));
@@ -207,13 +204,13 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 		
 		@Override
 		protected void onPostExecute(Void v) {
-			((TextView)findViewById(R.id.titke)).setText(teamCount + " Teams");
-			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
+			((TextView)findViewById(R.id.matchCount)).setText(teamCount + " Teams");
+				((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 		
 		@Override
 		protected void onCancelled(Void v) {
-			((TextView)findViewById(R.id.titke)).setText(teamCount + " Teams");
+			((TextView)findViewById(R.id.matchCount)).setText(teamCount + " Teams");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
 		}
 	}

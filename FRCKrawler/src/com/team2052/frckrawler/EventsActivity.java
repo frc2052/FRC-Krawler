@@ -27,16 +27,7 @@ import com.team2052.frckrawler.gui.PopupMenuButton;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 
 public class EventsActivity extends StackableTabActivity implements OnClickListener {
-	
 	private static final int EDIT_EVENT_ID = 1;
-	private static final int ATTENDING_TEAMS_ID = 2;
-	private static final int ROBOTS_ID = 3;
-	private static final int COMP_DATA_ID = 4;
-	private static final int DRIVER_DATA_ID = 5;
-	private static final int COMPILED_DATA_ID = 6;
-	private static final int LISTS_ID = 7;
-	private static final int IMPORT_ID = 8;
-	
 	private DBManager dbManager;
 	
 	@Override
@@ -93,6 +84,25 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 					startActivity(i);
 				}
 			});
+			menu.addItem("Attending Teams", new Runnable(){
+				@Override
+				public void run() {
+					Intent i = new Intent(EventsActivity.this, 
+							AttendingTeamsDialogActivity.class);
+					i.putExtra(AttendingTeamsDialogActivity.GAME_NAME_EXTRA, 
+							databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
+					i.putExtra(AttendingTeamsDialogActivity.EVENT_ID_EXTRA, eventID);
+					startActivity(i);
+				}
+			});
+			menu.addItem("Match Schedule", new Runnable() {
+				@Override
+				public void run() {
+					Intent i = new Intent(EventsActivity.this, MatchScheduleActivity.class);
+					i.putExtra(MatchScheduleActivity.EVENT_ID_EXTRA, eventID);
+					startActivity(i);
+				}
+			});
 			menu.addItem("Match Data", new Runnable(){
 				@Override
 				public void run() {
@@ -109,17 +119,6 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 				public void run() {
 					new StartRobotsActivityTask()
 						.execute(Integer.parseInt(eventID));
-				}
-			});
-			menu.addItem("Attending Teams", new Runnable(){
-				@Override
-				public void run() {
-					Intent i = new Intent(EventsActivity.this, 
-							AttendingTeamsDialogActivity.class);
-					i.putExtra(AttendingTeamsDialogActivity.GAME_NAME_EXTRA, 
-							databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
-					i.putExtra(AttendingTeamsDialogActivity.EVENT_ID_EXTRA, eventID);
-					startActivity(i);
 				}
 			});
 			menu.addItem("Lists", new Runnable(){

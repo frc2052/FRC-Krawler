@@ -21,7 +21,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 	
 	
-	public static final int DATABASE_VERSION = 28;	//You must add one when changing the 
+	public static final int DATABASE_VERSION = 29;	//You must add one when changing the 
 		//structure of the database.
 	
 	public DBHelper(Context context, String path) {
@@ -55,10 +55,12 @@ public class DBHelper extends SQLiteOpenHelper {
 				db.execSQL("ALTER TABLE " + DBContract.SCOUT_TABLE_ROBOTS + 
 						" ADD COLUMN " + DBContract.COL_OPR);
 			}
-			
 			if(oldVersion < 28) {
 				db.execSQL("ALTER TABLE " + DBContract.SUMMARY_TABLE_ROBOTS + 
 						" ADD COLUMN " + DBContract.COL_OPR);
+			}
+			if(oldVersion < 29) {
+				db.execSQL(DBContract.CREATE_TABLE_SCHEDULES);
 			}
 		}
 	}

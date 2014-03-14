@@ -13,7 +13,7 @@
         android:layout_toRightOf="@+id/scrollView1" >
 
         <TextView
-            android:id="@+id/titke"
+            android:id="@+id/matchCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/linLayout1"
-            android:layout_below="@+id/titke"
+            android:layout_below="@+id/matchCount"
             android:layout_centerHorizontal="true" >
 
             <TableLayout

@@ -67,7 +67,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/titke"
+        android:layout_below="@+id/matchCount"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:text="Currently Hosting..."
@@ -85,7 +85,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/titke"
+        android:id="@+id/matchCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

@@ -181,6 +181,26 @@ public class DBContract {
 					COL_FMS_EVENT_ID + STRING + ")";
 	
 	
+	public static final String TABLE_SCHEDULES = "schedules";
+	//Event ID, use COL_EVENT_ID
+	public static final String COL_MATCH_NUMBER = "matchnumber";
+	public static final String COL_RED1 = "red1";
+	public static final String COL_RED2 = "red2";
+	public static final String COL_RED3 = "red3";
+	public static final String COL_BLUE1 = "blue1";
+	public static final String COL_BLUE2 = "blue2";
+	public static final String COL_BLUE3 = "blue3";
+	public static final String COL_RED_SCORE = "redscore";
+	public static final String COL_BLUE_SCORE = "bluescore";
+	
+	public static final String CREATE_TABLE_SCHEDULES = 
+			"CREATE TABLE " + TABLE_SCHEDULES + " (" + 
+					COL_EVENT_ID + INT + ", " + COL_MATCH_NUMBER + INT + ", " +
+					COL_RED1 + INT + ", " + COL_RED2 + INT + ", " + 
+					COL_RED3 + INT + ", " + COL_BLUE1 + INT + ", " + 
+					COL_BLUE2 + INT + ", " + COL_BLUE3 + INT + ", " +
+					COL_RED_SCORE + INT + ", " + COL_BLUE_SCORE + INT + ");";
+	
 	
 	public static final String TABLE_GAMES = "games";
 	
@@ -197,7 +217,7 @@ public class DBContract {
 	//Robot ID, use COL_ROBOT_ID
 	//Event ID, use EVENT_ID
 	//User ID, use COL_USER_ID
-	public static final String COL_MATCH_NUMBER = "matchnumber";
+	//Match Number, user COL_MATCH_NUMBER
 	public static final String COL_MATCH_TYPE = "matchtype";
 	//Comments, use COL_COMMENTS
 	
@@ -629,6 +649,7 @@ public class DBContract {
 		database.execSQL(CREATE_TABLE_ROBOTS);
 		database.execSQL(CREATE_TABLE_COMPETITIONS);
 		database.execSQL(CREATE_TABLE_GAMES);
+		database.execSQL(CREATE_TABLE_SCHEDULES);
 		database.execSQL(CREATE_TABLE_MATCH_PERF);
 		database.execSQL(CREATE_TABLE_ROBOT_METRICS);
 		database.execSQL(CREATE_TABLE_MATCH_PERF_METRICS);
@@ -674,6 +695,7 @@ public class DBContract {
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_ROBOTS);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENTS);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_GAMES);
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_SCHEDULES);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_MATCH_PERF);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_MATCH_PERF_METRICS);
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_ROBOT_METRICS);

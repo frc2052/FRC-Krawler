@@ -234,6 +234,9 @@
             	  android:theme="@android:style/Theme.Dialog">
         </activity>
         <service android:name=".bluetooth.ServerService"></service>
+        <activity android:name="MatchScheduleActivity"></activity>
+        <activity android:name="AddMatchDialogActivity"
+            	  android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>
