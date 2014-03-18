@@ -108,24 +108,12 @@ public class MatchScheduleActivity extends StackableTabActivity implements OnCli
 				else
 					color = Color.TRANSPARENT;
 				Match match = schedule.getAllMatches()[i];
-				Robot red1 = db.getRobotsByColumns(
-						new String[] {DBContract.COL_ROBOT_ID}, 
-						new String[] {Integer.toString(match.getRed1RobotID())})[0];
-				Robot red2 = db.getRobotsByColumns(
-						new String[] {DBContract.COL_ROBOT_ID}, 
-						new String[] {Integer.toString(match.getRed2RobotID())})[0];
-				Robot red3 = db.getRobotsByColumns(
-						new String[] {DBContract.COL_ROBOT_ID}, 
-						new String[] {Integer.toString(match.getRed3RobotID())})[0];
-				Robot blue1 = db.getRobotsByColumns(
-						new String[] {DBContract.COL_ROBOT_ID}, 
-						new String[] {Integer.toString(match.getBlue1RobotID())})[0];
-				Robot blue2 = db.getRobotsByColumns(
-						new String[] {DBContract.COL_ROBOT_ID}, 
-						new String[] {Integer.toString(match.getBlue2RobotID())})[0];
-				Robot blue3 = db.getRobotsByColumns(
-						new String[] {DBContract.COL_ROBOT_ID}, 
-						new String[] {Integer.toString(match.getBlue3RobotID())})[0];
+				String red1 = getRobotTeamNum(match.getRed1RobotID());
+				String red2 = getRobotTeamNum(match.getRed2RobotID());
+				String red3 = getRobotTeamNum(match.getRed3RobotID());
+				String blue1 = getRobotTeamNum(match.getBlue1RobotID());
+				String blue2 = getRobotTeamNum(match.getBlue2RobotID());
+				String blue3 = getRobotTeamNum(match.getBlue3RobotID());
 				String redScore = Integer.toString(match.getRedScore());
 				if(-1 == match.getRedScore())
 					redScore = " ";
@@ -146,18 +134,12 @@ public class MatchScheduleActivity extends StackableTabActivity implements OnCli
 				MyTableRow mainRow = new MyTableRow(
 						MatchScheduleActivity.this,
 						new View[] {
-								new MyTextView(MatchScheduleActivity.this, 
-										Integer.toString(red1.getTeamNumber()), 18),
-								new MyTextView(MatchScheduleActivity.this, 
-										Integer.toString(red2.getTeamNumber()), 18),
-								new MyTextView(MatchScheduleActivity.this, 
-										Integer.toString(red3.getTeamNumber()), 18),
-								new MyTextView(MatchScheduleActivity.this, 
-										Integer.toString(blue1.getTeamNumber()), 18),
-								new MyTextView(MatchScheduleActivity.this, 
-										Integer.toString(blue2.getTeamNumber()), 18),
-								new MyTextView(MatchScheduleActivity.this, 
-										Integer.toString(blue3.getTeamNumber()), 18),
+								new MyTextView(MatchScheduleActivity.this, red1, 18),
+								new MyTextView(MatchScheduleActivity.this, red2, 18),
+								new MyTextView(MatchScheduleActivity.this, red3, 18),
+								new MyTextView(MatchScheduleActivity.this, blue1, 18),
+								new MyTextView(MatchScheduleActivity.this, blue2, 18),
+								new MyTextView(MatchScheduleActivity.this, blue3, 18),
 								new MyTextView(MatchScheduleActivity.this, redScore, 18),
 								new MyTextView(MatchScheduleActivity.this, blueScore, 18)
 						}, color);
@@ -183,6 +165,16 @@ public class MatchScheduleActivity extends StackableTabActivity implements OnCli
 		protected void onCancelled(Void v) {
 			((TextView)findViewById(R.id.matchCount)).setText(matchCount + " Matches");
 			((FrameLayout)findViewById(R.id.progressFrame)).removeAllViews();
+		}
+		
+		private String getRobotTeamNum(int robotID) {
+			Robot[] robots = db.getRobotsByColumns(
+					new String[] {DBContract.COL_ROBOT_ID}, 
+					new String[] {Integer.toString(robotID)});
+			if(robots != null && robots.length > 0) {
+				return Integer.toString(robots[0].getTeamNumber());
+			}
+			return "";
 		}
 	}
 }

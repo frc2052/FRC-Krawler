@@ -67,15 +67,15 @@
 
             <Button
                 android:id="@+id/importTeamsAndRobots"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Import Teams and Robots" />
 
             <Button
-                android:id="@+id/importOPR"
-                android:layout_width="match_parent"
+                android:id="@+id/importSchedule"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Import OPR" />
+                android:text="Import Match Schedule" />
         </LinearLayout>
     </ScrollView>
 

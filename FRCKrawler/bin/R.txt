@@ -115,9 +115,9 @@ int id hostToggle 0x7f0b000a
 int id image 0x7f0b0053
 int id importDB 0x7f0b000e
 int id importGallery 0x7f0b00d2
-int id importOPR 0x7f0b00ca
 int id importPicture 0x7f0b0052
 int id importSD 0x7f0b00cd
+int id importSchedule 0x7f0b00ca
 int id importTeamsAndRobots 0x7f0b00c9
 int id importWeb 0x7f0b00d0
 int id inc 0x7f0b00aa

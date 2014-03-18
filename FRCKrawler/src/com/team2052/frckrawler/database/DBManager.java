@@ -586,13 +586,16 @@ public class DBManager {
 	}
 	
 	public synchronized void removeEvent(int eventID) {
+		String id = Integer.toString(eventID);
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.delete(DBContract.TABLE_MATCH_PERF, DBContract.COL_EVENT_ID + " LIKE ?", 
-				new String[] {Integer.toString(eventID)});
+				new String[] {id});
 		db.delete(DBContract.TABLE_EVENTS, DBContract.COL_EVENT_ID + " LIKE ?", 
-				new String[] {Integer.toString(eventID)});
+				new String[] {id});
 		db.delete(DBContract.TABLE_EVENT_ROBOTS, DBContract.COL_EVENT_ID + " LIKE ?", 
-				new String[] {Integer.toString(eventID)});
+				new String[] {id});
+		db.delete(DBContract.TABLE_SCHEDULES, DBContract.COL_EVENT_ID + " LIKE ?", 
+				new String[] {id});
 		helper.close();
 	}
 	
@@ -3769,13 +3772,13 @@ public class DBManager {
 	 * Summary: Adds a schedule match for the given event
 	 *****/
 	public synchronized boolean addMatch(int eventID, Match m) {
-		if(hasValue(
-				DBContract.TABLE_SCHEDULES, 
-				DBContract.COL_MATCH_NUMBER, 
-				Integer.toString(m.getMatchNumber()))) {
-			return false;
-		}
 		SQLiteDatabase db = helper.getWritableDatabase();
+		//Check to see if this match already exists
+		db.rawQuery("SELECT " + DBContract.COL_MATCH_NUMBER + " FROM " + 
+				DBContract.TABLE_SCHEDULES + 
+				" WHERE " + DBContract.COL_EVENT_ID + " LIKE " + eventID +
+				" AND " + DBContract.COL_MATCH_NUMBER + " LIKE " + m.getMatchNumber(), 
+				null);
 		ContentValues vals = new ContentValues();
 		vals.put(DBContract.COL_EVENT_ID, eventID);
 		vals.put(DBContract.COL_MATCH_NUMBER, m.getMatchNumber());
@@ -3803,6 +3806,20 @@ public class DBManager {
 		db.delete(DBContract.TABLE_SCHEDULES, 
 				DBContract.COL_EVENT_ID + " LIKE " + eventID + " AND " + 
 				DBContract.COL_MATCH_NUMBER + " LIKE " + matchNum, 
+				null);
+		helper.close();
+	}
+	
+	
+	/*****
+	 * Method: removeAllMatches
+	 * 
+	 * Summary: removes all matches from the specified event
+	 */
+	public synchronized void removeAllMatches(int eventID) {
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.delete(DBContract.TABLE_SCHEDULES, 
+				DBContract.COL_EVENT_ID + " LIKE " + eventID, 
 				null);
 		helper.close();
 	}

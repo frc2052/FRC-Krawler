@@ -19,14 +19,15 @@ import android.widget.Spinner;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
+import com.team2052.frckrawler.database.structures.Match;
 import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 import com.team2052.frckrawler.tba.readers.EventReader;
-import com.team2052.frckrawler.tba.readers.OPRReader;
+import com.team2052.frckrawler.tba.readers.ScheduleReader;
 import com.team2052.frckrawler.tba.readers.TeamReader;
 import com.team2052.frckrawler.tba.types.TBAEvent;
-import com.team2052.frckrawler.tba.types.TBAOPR;
+import com.team2052.frckrawler.tba.types.TBAMatch;
 import com.team2052.frckrawler.tba.types.TBATeam;
 
 public class ImportDialogActivity extends Activity implements OnClickListener {
@@ -41,11 +42,9 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialogactivity_import);
-		
 		findViewById(R.id.importTeamsAndRobots).setOnClickListener(this);
-		findViewById(R.id.importOPR).setOnClickListener(this);
+		findViewById(R.id.importSchedule).setOnClickListener(this);
 		findViewById(R.id.cancelImport).setOnClickListener(this);
-		
 		db = DBManager.getInstance(this);
 		frckrawlerEvent = db.getEventsByColumns(
 				new String[] {DBContract.COL_EVENT_ID}, 
@@ -89,36 +88,33 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 				trBuilder.show();
 				break;
 				
-			case R.id.importOPR:
-				int spinnerPos = ((Spinner)findViewById(R.id.eventsSpinner))
-										.getSelectedItemPosition();
-				final TBAEvent selectedFAEvent = faEvents[spinnerPos];
-				AlertDialog.Builder oprBuilder = new AlertDialog.Builder(this);
-				oprBuilder.setTitle("Import OPR");
-				oprBuilder.setMessage("Would like to import OPR based on matches played over " +
-						"the entire season, or matches only played at " + 
-						selectedFAEvent.getName() + "? Note: this will only import OPRs for " +
-								"teams at " + frckrawlerEvent.getEventName());
-				oprBuilder.setPositiveButton("Entire Season", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						new ImportOPRTask(selectedFAEvent, false).execute();
-					}
-				});
-				oprBuilder.setNeutralButton("Only " + selectedFAEvent.getName(), 
+			case R.id.importSchedule:
+				final int position = ((Spinner) findViewById(R.id.eventsSpinner))
+					.getSelectedItemPosition();
+				AlertDialog.Builder scBuilder = new AlertDialog.Builder(this);
+				scBuilder.setTitle("Are you sure?");
+				scBuilder
+						.setMessage("Are you sure you want to import the teams and "
+								+ "robots from "
+								+ faEvents[position].getName()
+								+ "? Any robot not on the imported list will be removed from "
+								+ frckrawlerEvent.getEventName()
+								+ " and lose all match data for " + "this event");
+				scBuilder.setNegativeButton("No",
 						new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						new ImportOPRTask(selectedFAEvent, true).execute();
-					}
-				});
-				oprBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-				oprBuilder.show();
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								dialog.dismiss();
+							}
+						});
+				scBuilder.setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								new ImportScheduleTask(faEvents[position]).execute();
+							}
+						});
+				scBuilder.show();
 				break;
 				
 			case R.id.cancelImport:
@@ -231,7 +227,6 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 			try {
 				//Get a list of teams from FIRST Alliance
 				TBATeam[] faTeams = new TeamReader(e[0].getID()).readTeams();
-				Log.d("FRCKrawler", "Size: " + faTeams.length);
 				
 				//Remove old robots and their match data from the event
 				Robot[] oldRobots = db.getRobotsAtEvent(frckrawlerEvent.getEventID());
@@ -289,15 +284,12 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	private class ImportOPRTask extends AsyncTask<Void, Void, Void> {
-		
-		private boolean byEvent;
+	private class ImportScheduleTask extends AsyncTask<Void, Void, Void> {
 		private TBAEvent event;
 		private AlertDialog progressDialog;
 		
-		public ImportOPRTask(TBAEvent _event, boolean _byEvent) {
+		public ImportScheduleTask(TBAEvent _event) {
 			event = _event;
-			byEvent = _byEvent;
 		}
 		
 		@Override
@@ -310,32 +302,52 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 			progressDialog = tempDownloadProg = builder.create();
 			progressDialog.show();
 		}
-		
+
 		@Override
 		protected Void doInBackground(Void... v) {
-			Robot[] robots = db.getRobotsAtEvent(frckrawlerEvent.getEventID());
-			OPRReader reader = new OPRReader();
-			
-			for(int i = 0; i < robots.length; i++) {
-				TBAOPR opr;
-				try {
-					opr = reader.readOPR(
-							robots[i].getTeamNumber(), 
-							event.getID(), 
-							byEvent);
-					Log.d("FRCKrawler", opr.toString());
-				} catch (IOException e) {
-					opr = new TBAOPR(robots[i].getTeamNumber(), -1);
-					e.printStackTrace();
+			ScheduleReader reader = new ScheduleReader(event.getID());
+			try {
+				TBAMatch[] matches = reader.getMatches();
+				db.removeAllMatches(frckrawlerEvent.getEventID());
+				String game = frckrawlerEvent.getGameName();
+				int red1;
+				int red2;
+				int red3;
+				int blue1;
+				int blue2;
+				int blue3;
+				for(int i = 0; i < matches.length; i++) {
+					red1 = matches[i].getAlliances().getRed().getTeam(1);
+					red2 = matches[i].getAlliances().getRed().getTeam(2);
+					red3 = matches[i].getAlliances().getRed().getTeam(3);
+					blue1 = matches[i].getAlliances().getBlue().getTeam(1);
+					blue2 = matches[i].getAlliances().getBlue().getTeam(2);
+					blue3 = matches[i].getAlliances().getBlue().getTeam(3);
+					red1 = getRobotID(game, red1);
+					red2 = getRobotID(game, red2);
+					red3 = getRobotID(game, red3);
+					blue1 = getRobotID(game, blue1);
+					blue2 = getRobotID(game, blue2);
+					blue3 = getRobotID(game, blue3);
+					Log.d("FRCKrawer", red1 + ", " + red2 + ", " + red3);
+					db.addMatch(
+							frckrawlerEvent.getEventID(), 
+							new Match(
+								matches[i].getMatchNumber(),
+								red1,
+								red2,
+								red3,
+								blue1,
+								blue2,
+								blue3,
+								matches[i].getAlliances().getRed().getScore(),
+								matches[i].getAlliances().getBlue().getScore()
+							));
 				}
-				
-				db.updateRobots(
-						new String[] {DBContract.COL_ROBOT_ID}, 
-						new String[] {Integer.toString(robots[i].getID())}, 
-						new String[] {DBContract.COL_OPR}, 
-						new String[] {Double.toString(opr.getOPR())});
+			} catch(IOException e) {
+				e.printStackTrace();
+				Log.e("FRCKrawler", e.getMessage());
 			}
-			
 			return null;
 		}
 		
@@ -343,6 +355,23 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 		protected void onPostExecute(Void v) {
 			progressDialog.dismiss();
 			releaseScreenOrientation();
+		}
+		
+		private int getRobotID(String game, int teamNumber) {
+			Robot[] robots = db.getRobotsByColumns(
+					new String[] {
+							DBContract.COL_TEAM_NUMBER,
+							DBContract.COL_GAME_NAME
+					}, 
+					new String[] {
+							Integer.toString(teamNumber),
+							game
+					});
+			if(robots != null && robots.length > 0) {
+				Log.d("FRCKrawer", "ID: " + robots[0].getID());
+				return robots[0].getID();
+			}
+			return -1;
 		}
 	}
 }

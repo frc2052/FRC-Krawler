@@ -136,9 +136,9 @@ public final class R {
         public static final int image=0x7f0b0053;
         public static final int importDB=0x7f0b000e;
         public static final int importGallery=0x7f0b00d2;
-        public static final int importOPR=0x7f0b00ca;
         public static final int importPicture=0x7f0b0052;
         public static final int importSD=0x7f0b00cd;
+        public static final int importSchedule=0x7f0b00ca;
         public static final int importTeamsAndRobots=0x7f0b00c9;
         public static final int importWeb=0x7f0b00d0;
         public static final int inc=0x7f0b00aa;
