@@ -116,28 +116,17 @@ public class EditTeamDialogActivity extends Activity implements OnClickListener,
 					((Spinner)findViewById(R.id.stateVal)).getSelectedItem().toString(), 
 					((TextView)findViewById(R.id.colorsVal)).getText().toString()
 			};
-			
 			dbManager.updateTeams(new String[] {DBContract.COL_TEAM_NUMBER}, 
 					queryVals, updateCols, updateVals);
-			
 			setResult(RESULT_OK);
 			finish();
-			
 		} else if(v.getId() == R.id.cancel) {
-			
 			finish();
-			
 		} else if(v.getId() == R.id.remove) {
-			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			
-			builder.setMessage("Are you sure you want to remove this team from the database? " +
-					"This will remove all robots, contacts, and match data they have from the database and " +
-					"they will be cast into the cold void of cyberspace for eternity.");
-			builder.setTitle("");
+			builder.setMessage("Are you sure you want to remove this team and all its data?");
 			builder.setPositiveButton("Yes", this);
 			builder.setNegativeButton("No", this);
-			
 			builder.show();
 		}
 	}

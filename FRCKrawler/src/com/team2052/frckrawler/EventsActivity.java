@@ -84,17 +84,6 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 					startActivity(i);
 				}
 			});
-			menu.addItem("Attending Teams", new Runnable(){
-				@Override
-				public void run() {
-					Intent i = new Intent(EventsActivity.this, 
-							AttendingTeamsDialogActivity.class);
-					i.putExtra(AttendingTeamsDialogActivity.GAME_NAME_EXTRA, 
-							databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
-					i.putExtra(AttendingTeamsDialogActivity.EVENT_ID_EXTRA, eventID);
-					startActivity(i);
-				}
-			});
 			menu.addItem("Match Schedule", new Runnable() {
 				@Override
 				public void run() {
@@ -119,6 +108,17 @@ public class EventsActivity extends StackableTabActivity implements OnClickListe
 				public void run() {
 					new StartRobotsActivityTask()
 						.execute(Integer.parseInt(eventID));
+				}
+			});
+			menu.addItem("Attending Teams", new Runnable(){
+				@Override
+				public void run() {
+					Intent i = new Intent(EventsActivity.this, 
+							AttendingTeamsDialogActivity.class);
+					i.putExtra(AttendingTeamsDialogActivity.GAME_NAME_EXTRA, 
+							databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
+					i.putExtra(AttendingTeamsDialogActivity.EVENT_ID_EXTRA, eventID);
+					startActivity(i);
 				}
 			});
 			menu.addItem("Lists", new Runnable(){

@@ -67,11 +67,7 @@ public class EditGameDialogActivity extends Activity implements OnClickListener,
 				
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				
-				builder.setMessage("Are you sure you want to remove this game from the database? " +
-						"This will remove all robots, metrics, and match data associated with " +
-						"this game from the database. It will be cast into the cold void of " +
-						"cyberspace for eternity.");
-				builder.setTitle("");
+				builder.setMessage("Are you sure you want to remove this game and all its data?");
 				builder.setPositiveButton("Yes", this);
 				builder.setNegativeButton("No", this);
 				

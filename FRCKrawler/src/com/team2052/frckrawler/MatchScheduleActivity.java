@@ -1,5 +1,8 @@
 package com.team2052.frckrawler;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -47,8 +50,24 @@ public class MatchScheduleActivity extends StackableTabActivity implements OnCli
 			i.putExtra(EVENT_ID_EXTRA, eventID);
 			startActivityForResult(i, ADD_MATCH_REQUEST);
 		} else if(v.getId() == REMOVE_MATCH_ID) {
-			db.removeMatch(eventID, (Integer)v.getTag());
-			new GetScheduleTask().execute();
+			final int matchNum = (Integer)v.getTag();
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Are you sure you want to remove this match and all its data?");
+			builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					db.removeMatch(eventID, matchNum);
+					dialog.dismiss();
+					new GetScheduleTask().execute();
+				}
+			});
+			builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+			builder.show();
 		}
 	}
 	

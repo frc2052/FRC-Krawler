@@ -165,9 +165,7 @@ public class EditMatchDataDialogActivity extends Activity implements OnClickList
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle("Remove This Entry?");
-			builder.setMessage("Are you sure you want to remove this set of match data from " +
-					"the database? It will be cast into the cold void of cyberspace for" +
-					" eternity.");
+			builder.setMessage("Are you sure you want to remove this set of match data?");
 			builder.setNegativeButton("No", this);
 			builder.setPositiveButton("Yes", this);
 			builder.show();

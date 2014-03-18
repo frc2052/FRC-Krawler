@@ -79,9 +79,7 @@ public class EditContactDialogActivity extends Activity implements OnClickListen
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			
-			builder.setMessage("Are you sure you want to remove this contact from the database? " +
-					"They will be cast into the cold void of cyberspace for eternity.");
-			builder.setTitle("");
+			builder.setMessage("Are you sure you want to remove this contact and all its data?");
 			builder.setPositiveButton("Yes", this);
 			builder.setNegativeButton("No", this);
 			
