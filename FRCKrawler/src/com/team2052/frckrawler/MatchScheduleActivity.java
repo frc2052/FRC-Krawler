@@ -127,28 +127,44 @@ public class MatchScheduleActivity extends StackableTabActivity implements OnCli
 				else
 					color = Color.TRANSPARENT;
 				Match match = schedule.getAllMatches()[i];
+				//Get the team numbers
 				String red1 = getRobotTeamNum(match.getRed1RobotID());
 				String red2 = getRobotTeamNum(match.getRed2RobotID());
 				String red3 = getRobotTeamNum(match.getRed3RobotID());
 				String blue1 = getRobotTeamNum(match.getBlue1RobotID());
 				String blue2 = getRobotTeamNum(match.getBlue2RobotID());
 				String blue3 = getRobotTeamNum(match.getBlue3RobotID());
-				String redScore = Integer.toString(match.getRedScore());
+				//Set up the match scores
+				int redScoreInt = match.getRedScore();
+				String redScore = Integer.toString(redScoreInt);
 				if(-1 == match.getRedScore())
 					redScore = " ";
-				String blueScore = Integer.toString(match.getBlueScore());
+				int blueScoreInt = match.getBlueScore();
+				String blueScore = Integer.toString(blueScoreInt);
 				if(-1 == match.getBlueScore())
 					blueScore = " ";
+				//Set up the remove button
 				MyButton remButton = new MyButton(MatchScheduleActivity.this,
 						"Remove", MatchScheduleActivity.this);
 				remButton.setId(REMOVE_MATCH_ID);
 				remButton.setTag(match.getMatchNumber());
+				//Set up the match number String
+				String matchNumLabel = Integer.toString(match.getMatchNumber());
+				if(-1 != redScoreInt && -1 != blueScoreInt) {
+					if(redScoreInt == blueScoreInt) {
+						matchNumLabel += " (D)";
+					} else if(redScoreInt > blueScoreInt) {
+						matchNumLabel += " (R)";
+					} else {
+						matchNumLabel += " (B)";
+					}
+				}
+				//Crete the static and main table rows
 				MyTableRow statRow = new MyTableRow(
 						MatchScheduleActivity.this,
 						new View[] {
 								remButton,
-								new MyTextView(MatchScheduleActivity.this, 
-										Integer.toString(match.getMatchNumber()), 18)
+								new MyTextView(MatchScheduleActivity.this, matchNumLabel, 18)
 						}, color);
 				MyTableRow mainRow = new MyTableRow(
 						MatchScheduleActivity.this,
