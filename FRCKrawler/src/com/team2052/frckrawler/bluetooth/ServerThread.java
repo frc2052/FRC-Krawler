@@ -20,6 +20,7 @@ import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.database.structures.Schedule;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.database.structures.User;
 
@@ -102,6 +103,7 @@ public class ServerThread implements Runnable {
 				Metric[] mMetricsArr = dbManager.getMatchPerformanceMetricsByColumns
 						(new String[] {DBContract.COL_GAME_NAME}, 
 								new String[] {hostedEvent.getGameName()});
+				Schedule schedule = dbManager.getSchedule(hostedEvent.getEventID());
 				//Send data
 				oStream.writeObject(hostedEvent);
 				oStream.writeObject(usersArr);
@@ -109,13 +111,13 @@ public class ServerThread implements Runnable {
 				oStream.writeObject(robotsArr);
 				oStream.writeObject(rMetricsArr);
 				oStream.writeObject(mMetricsArr);
+				oStream.writeObject(schedule);
 				oStream.flush();
 				//Close the socket and notify the sync handler
 				clientSocket.close();
 				handler.onSyncSuccess(deviceName);
 				Log.d("FRCKrawler", "Synced in: " + 
 						(System.currentTimeMillis() - startTime) + "ms");
-				
 			} catch(IOException e) {
 				e.printStackTrace();
 				Log.e("FRCKrawler", "IO error in server.");

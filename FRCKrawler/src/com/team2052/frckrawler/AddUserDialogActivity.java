@@ -32,7 +32,7 @@ public class AddUserDialogActivity extends Activity implements OnClickListener {
 				
 			case R.id.addUser :
 				DBManager.getInstance(this).addUser(new User(
-						((EditText)findViewById(R.id.nameVal)).getText().toString(),
+						((EditText)findViewById(R.id.nameVal)).getText().toString().trim(),
 						false
 						));
 				finish();

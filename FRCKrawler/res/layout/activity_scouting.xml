@@ -48,7 +48,7 @@
         android:id="@+id/linLayoutRight"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/linLayoutLeft"
+        android:layout_above="@+id/ScrollView1"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/scoutingType"
         android:layout_toRightOf="@+id/linLayoutLeft"
@@ -77,9 +77,16 @@
             android:textSize="18sp" />
 
         <Button
+            android:id="@+id/schedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View Schedule"
+            android:textSize="20sp" />
+
+        <Button
             android:id="@+id/save"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="Save"
             android:textSize="20sp" />
     </LinearLayout>

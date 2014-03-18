@@ -4708,6 +4708,67 @@ public class DBManager {
 		helper.close();
 	}
 	
+	
+	/*****
+	 * Method: scoutSetSchedule
+	 * 
+	 * Summary: removes the old schedule in the scout database and replaces it with
+	 * the new one.
+	 *****/
+	public synchronized void scoutReplaceSchedule(Schedule schedule) {
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.delete(DBContract.SCOUT_TABLE_SCHEDULE, null, null);
+		for(Match m : schedule.getAllMatches()) {
+			ContentValues vals = new ContentValues();
+			vals.put(DBContract.COL_MATCH_NUMBER, m.getMatchNumber());
+			vals.put(DBContract.COL_RED1, m.getRed1RobotID());
+			vals.put(DBContract.COL_RED2, m.getRed2RobotID());
+			vals.put(DBContract.COL_RED3, m.getRed3RobotID());
+			vals.put(DBContract.COL_BLUE1, m.getBlue1RobotID());
+			vals.put(DBContract.COL_BLUE2, m.getBlue2RobotID());
+			vals.put(DBContract.COL_BLUE3, m.getBlue3RobotID());
+			vals.put(DBContract.COL_RED_SCORE, m.getRedScore());
+			vals.put(DBContract.COL_BLUE_SCORE, m.getBlueScore());
+			db.insert(DBContract.SCOUT_TABLE_SCHEDULE, 
+					null, 
+					vals);
+		}
+		helper.close();
+	}
+	
+	
+	/*****
+	 * Method: scoutGetSchedule
+	 * 
+	 * Summary: Gets the last scout schedule that was set
+	 *****/
+	/*****
+	 * Method: getSchedule
+	 * 
+	 * Summary: Gets a schedule based on the entered eventID
+	 *****/
+	public synchronized Schedule scoutGetSchedule() {
+		SQLiteDatabase db = helper.getReadableDatabase();
+		Cursor c = db.rawQuery("SELECT * FROM " + DBContract.SCOUT_TABLE_SCHEDULE, null);
+		c.moveToFirst();
+		Match[] matches = new Match[c.getCount()];
+		for(int i = 0; i < c.getCount(); i++) {
+			matches[i] = new Match(
+					c.getInt(c.getColumnIndex(DBContract.COL_MATCH_NUMBER)),
+					c.getInt(c.getColumnIndex(DBContract.COL_RED1)),
+					c.getInt(c.getColumnIndex(DBContract.COL_RED2)),
+					c.getInt(c.getColumnIndex(DBContract.COL_RED3)),
+					c.getInt(c.getColumnIndex(DBContract.COL_BLUE1)),
+					c.getInt(c.getColumnIndex(DBContract.COL_BLUE2)),
+					c.getInt(c.getColumnIndex(DBContract.COL_BLUE3)),
+					c.getInt(c.getColumnIndex(DBContract.COL_RED_SCORE)),
+					c.getInt(c.getColumnIndex(DBContract.COL_BLUE_SCORE)));
+			c.moveToNext();
+		}
+		helper.close();
+		return new Schedule(-1, matches);
+	}
+	
 	/**********
 	 * SUMMARY METHODS
 	 * 

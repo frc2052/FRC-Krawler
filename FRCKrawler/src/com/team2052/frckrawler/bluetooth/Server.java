@@ -8,7 +8,6 @@ import android.content.Intent;
 import com.team2052.frckrawler.database.structures.Event;
 
 public class Server {
-	
 	private static volatile Server instance = null;
 	private boolean isOpen;
 	private Event event;

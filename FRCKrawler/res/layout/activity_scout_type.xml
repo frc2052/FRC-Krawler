@@ -70,6 +70,14 @@
             android:textSize="20sp" />
 
         <Button
+            android:id="@+id/matchSchedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="Schedule"
+            android:textSize="20sp" />
+
+        <Button
             android:id="@+id/sync"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

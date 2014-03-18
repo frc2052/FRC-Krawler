@@ -232,13 +232,11 @@ public class DBContract {
 	
 	/*THIS TABLE IS CURRENTLY UNUSED*/
 	public static final String TABLE_DRIVER_DATA = "driverdata";
-	
 	//Robot ID, use COL_ROBOT_ID
 	//Event ID, use COL_EVENT_ID
 	//Match Number, use COL_MATCH_NUMBER
 	//Comments, use COL_COMMENTS
 	//Keys, use COL_KEYS
-	
 	public static final String CREATE_TABLE_DRIVER_DATA = 
 			"CREATE TABLE " + TABLE_DRIVER_DATA + " (" + COL_ROBOT_ID + INT + ", " +
 					COL_EVENT_ID + INT + ", " + COL_MATCH_NUMBER + INT + ", " +
@@ -263,7 +261,6 @@ public class DBContract {
 	 */
 	
 	public static final String TABLE_ROBOT_METRICS = "robotmetrics";
-	
 	//Game ID, use COL_GAME_NAME
 	public static final String COL_METRIC_ID = "metricid";
 	public static final String COL_METRIC_NAME = "metricname";
@@ -273,7 +270,6 @@ public class DBContract {
 	public static final String COL_RANGE = "range";
 	public static final String COL_DISPLAY = "display";
 	public static final String COL_POSITION = "metricPosition";
-	
 	public static final String CREATE_TABLE_ROBOT_METRICS =
 			"CREATE TABLE " + TABLE_ROBOT_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
 					COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
@@ -284,7 +280,6 @@ public class DBContract {
 	
 	
 	public static final String TABLE_MATCH_PERF_METRICS = "compmetrics";
-	
 	//Game ID, use COL_GAME_NAME
 	//Metric Name, use COL_METRIC_NAME
 	//Description, use COL_DESCRIPTION
@@ -293,7 +288,6 @@ public class DBContract {
 	//Range, use COL_RANGE
 	//Display, use COL_DISPLAY
 	//Position, use COL_POSITION
-	
 	public static final String CREATE_TABLE_MATCH_PERF_METRICS = 
 				"CREATE TABLE " + TABLE_MATCH_PERF_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
 						COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
@@ -304,7 +298,6 @@ public class DBContract {
 	
 	
 	public static final String TABLE_DRIVER_METRICS = "drivermetrics";
-	
 		//Game ID, use COL_GAME_NAME
 		//Metric Name, use COL_METRIC_NAME
 		//Description, use COL_DESCRIPTION
@@ -312,7 +305,6 @@ public class DBContract {
 		//Type, use COL_TYPE
 		//Range, use COL_RANGE
 		//
-	
 	public static final String CREATE_TABLE_DRIVER_METRICS = 
 			"CREATE TABLE " + TABLE_DRIVER_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
 					COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
@@ -323,11 +315,9 @@ public class DBContract {
 	
 	
 	public static final String TABLE_EVENT_ROBOTS = "eventrobots";
-	
 	//Event ID, use COL_EVENT_ID
 	//Robot ID, use COL_ROBOT_ID
 	public static final String COL_IS_CHECKED = "isChecked";
-	
 	public static final String CREATE_TABLE_EVENT_ROBOTS = 
 			"CREATE TABLE " + TABLE_EVENT_ROBOTS + " (" + COL_EVENT_ID + INT + ", " +
 					COL_ROBOT_ID + INT + ", " + COL_IS_CHECKED + INT + ")";
@@ -335,12 +325,10 @@ public class DBContract {
 	
 	
 	public static final String TABLE_LISTS = "lists";
-	
 	//Event ID, use COL_EVENT_ID
 	public static final String COL_LIST_ID = "listid";
 	public static final String COL_LIST_NAME = "listname";
 	//Description, us COL_DESCRIPTION
-	
 	public static final String CREATE_TABLE_LISTS = 
 			"CREATE TABLE " + TABLE_LISTS + " (" + COL_EVENT_ID + INT + ", " +
 			COL_LIST_ID + INT + ", " + COL_LIST_NAME + STRING + ", " + 
@@ -368,10 +356,8 @@ public class DBContract {
 	 ***************************************/
 	
 	public static final String SCOUT_TABLE_USERS = "scoutusers";
-	
 	//COL_USER_ID = "userid";
 	//COL_USER_NAME = "username";
-	
 	public static final String CREATE_SCOUT_TABLE_USERS = 
 			"CREATE TABLE " + SCOUT_TABLE_USERS + " (" + COL_USER_ID + INT + ", " + COL_USER_NAME + 
 					STRING + ")";
@@ -379,14 +365,12 @@ public class DBContract {
 	
 	
 	public static final String SCOUT_TABLE_EVENT = "scoutevent";
-	
 	//Game ID, use COL_GAME_NAME
 	//Event ID, use COL_EVENT_ID
 	//COL_EVENT_NAME = "eventname";
 	//Date, use COL_DATE_STAMP
 	//COL_LOCATION = "location";
 	//COL_FMS_EVENT_ID = "fmseventid";
-	
 	public static final String CREATE_SCOUT_TABLE_EVENT =
 				"CREATE TABLE " + SCOUT_TABLE_EVENT + " (" + COL_GAME_NAME + STRING + ", " + 
 						COL_EVENT_ID + INT + ", " + COL_EVENT_NAME + STRING + ", " + 
@@ -471,7 +455,6 @@ public class DBContract {
 					COL_POSITION + INT + ")";
 	
 	
-	
 	public static final String SCOUT_TABLE_MATCH_PERF_METRICS = "scoutmatchmetrics";
 	//Game ID, use COL_GAME_NAME
 	//Metric Name, use COL_METRIC_NAME
@@ -481,7 +464,6 @@ public class DBContract {
 	//Range, use COL_RANGE
 	//Display, use COL_DISPLAY
 	//Position, use COL_POSITION
-	
 	public static final String CREATE_SCOUT_TABLE_MATCH_PERF_METRICS = 
 				"CREATE TABLE " + SCOUT_TABLE_MATCH_PERF_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
 						COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
@@ -489,8 +471,8 @@ public class DBContract {
 						COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
 						", " + COL_POSITION + INT + ")";
 	
-	public static final String SCOUT_TABLE_DRIVER_METRICS = "scoutdrivermetrics";
 	
+	public static final String SCOUT_TABLE_DRIVER_METRICS = "scoutdrivermetrics";
 	//Game ID, use COL_GAME_NAME
 	//Metric Name, use COL_METRIC_NAME
 	//Description, use COL_DESCRIPTION
@@ -498,13 +480,32 @@ public class DBContract {
 	//Type, use COL_TYPE
 	//Range, use COL_RANGE
 	//
-
 	public static final String CREATE_SCOUT_TABLE_DRIVER_METRICS = 
 		"CREATE TABLE " + SCOUT_TABLE_DRIVER_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
 				COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
 				COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
 				COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
 				", " + COL_POSITION + INT + ")";
+	
+	
+	public static final String SCOUT_TABLE_SCHEDULE = "scoutschedule";
+	//public static final String COL_MATCH_NUMBER = "matchnumber";
+	//public static final String COL_RED1 = "red1";
+	//public static final String COL_RED2 = "red2";
+	//public static final String COL_RED3 = "red3";
+	//public static final String COL_BLUE1 = "blue1";
+	//public static final String COL_BLUE2 = "blue2";
+	//public static final String COL_BLUE3 = "blue3";
+	//public static final String COL_RED_SCORE = "redscore";
+	//public static final String COL_BLUE_SCORE = "bluescore";
+	public static final String CREATE_SCOUT_TABLE_SCHEDULE = 
+			"CREATE TABLE " + SCOUT_TABLE_SCHEDULE + " (" + 
+					COL_MATCH_NUMBER + INT + ", " +
+					COL_RED1 + INT + ", " + COL_RED2 + INT + ", " + 
+					COL_RED3 + INT + ", " + COL_BLUE1 + INT + ", " + 
+					COL_BLUE2 + INT + ", " + COL_BLUE3 + INT + ", " +
+					COL_RED_SCORE + INT + ", " + COL_BLUE_SCORE + INT + ");";
+	
 	
 	
 	/**********
@@ -668,6 +669,7 @@ public class DBContract {
 		database.execSQL(CREATE_SCOUT_TABLE_ROBOT_METRICS);
 		database.execSQL(CREATE_SCOUT_TABLE_MATCH_PERF_METRICS);
 		database.execSQL(CREATE_SCOUT_TABLE_DRIVER_METRICS);
+		database.execSQL(CREATE_SCOUT_TABLE_SCHEDULE);
 		
 		//SUMMARY TABLES//
 		database.execSQL(CREATE_SUMMARY_TABLE_EVENT);
@@ -714,6 +716,7 @@ public class DBContract {
 		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_ROBOT_METRICS);
 		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_MATCH_PERF_METRICS);
 		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_DRIVER_METRICS);
+		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_SCHEDULE);
 		
 		//SUMMARY TABLES//
 		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_EVENT);

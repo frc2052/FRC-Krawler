@@ -15,13 +15,14 @@ import android.util.Log;
 
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
+import com.team2052.frckrawler.database.structures.Match;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.database.structures.Schedule;
 import com.team2052.frckrawler.database.structures.User;
 
 public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
-	
 	private static int SYNC_SUCCESS = 1;
 	private static int SYNC_SERVER_OPEN = 2;
 	private static int SYNC_CANCELLED = 3;
@@ -59,37 +60,29 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
 			BluetoothSocket serverSocket = dev[0].createRfcommSocketToServiceRecord
 					(UUID.fromString(BluetoothInfo.UUID));
 			serverSocket.connect();
-			
 			if(isCancelled())
 				return SYNC_CANCELLED;
-			
 			//Open the streams
 			InputStream inStream = serverSocket.getInputStream();
 			ObjectInputStream ioStream = new ObjectInputStream(inStream);
 			OutputStream outStream = serverSocket.getOutputStream();
 			ObjectOutputStream ooStream = new ObjectOutputStream(outStream);
-			
 			//Get the data to send
 			Event event = dbManager.scoutGetEvent();
 			Robot[] robotsArr = dbManager.scoutGetUpdatedRobots();
 			MatchData[] matchDataArr = dbManager.scoutGetAllMatchData();
-			
 			if(isCancelled())
 				return SYNC_CANCELLED;
-			
 			//Write the scout data
 			ooStream.writeInt(BluetoothInfo.SCOUT);
 			ooStream.writeObject(event);
 			ooStream.writeObject(robotsArr);
 			ooStream.writeObject(matchDataArr);
 			ooStream.flush();
-			
 			//Clear out the old data after it is sent
 			dbManager.scoutClearMatchData();
-			
 			if(isCancelled())
 				return SYNC_CANCELLED;
-			
 			//Start the reading thread
 			Event inEvent = (Event)ioStream.readObject();
 			User[] inUsers = (User[])ioStream.readObject();
@@ -97,17 +90,16 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
 			Robot[] inRobots = (Robot[])ioStream.readObject();
 			Metric[] inRobotMetrics = (Metric[])ioStream.readObject();
 			Metric[] inMatchMetrics = (Metric[])ioStream.readObject();
-			
+			Schedule inSchedule = (Schedule)ioStream.readObject();
 			if(isCancelled())
 				return SYNC_CANCELLED;
-			
 			//Write the received arrays to the database
 			dbManager.scoutReplaceEvent(inEvent);
 			dbManager.scoutReplaceUsers(inUsers);
 			dbManager.scoutReplaceRobots(inRobots, inTeamNames);
 			dbManager.scoutReplaceRobotMetrics(inRobotMetrics);
 			dbManager.scoutReplaceMatchMetrics(inMatchMetrics);
-			
+			dbManager.scoutReplaceSchedule(inSchedule);
 			//Close the streams
 			ooStream.close();
 			outStream.close();
@@ -122,7 +114,6 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
 			Log.e("FRCKrawler", "Scout not synced, class not found.");
 			return SYNC_ERROR;
 		}
-		
 		return SYNC_SUCCESS;
 	}
 	
