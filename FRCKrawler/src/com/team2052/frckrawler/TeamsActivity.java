@@ -30,12 +30,9 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_teams);
-		
 		findViewById(R.id.addMatch).setOnClickListener(this);
 		findViewById(R.id.addRobotToAll).setOnClickListener(this);
-		
 		dbManager = DBManager.getInstance(this);
-		
 		getTeamsTask = new GetTeamsTask();
 		getTeamsTask.execute(this);
 	}

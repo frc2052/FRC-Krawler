@@ -262,7 +262,7 @@ public class ServerActivity extends TabActivity implements View.OnClickListener,
 	}
 	
 	private class ExportCSVTask extends AsyncTask<Event, Void, Boolean> {
-
+		
 		@Override
 		protected Boolean doInBackground(Event... params) {
 			if(params[0] == null)

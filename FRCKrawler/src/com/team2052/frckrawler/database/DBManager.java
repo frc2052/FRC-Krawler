@@ -2838,30 +2838,24 @@ public class DBManager {
 		SharedPreferences prefs = context.getSharedPreferences
 				(OptionsActivity.PREFS_NAME, Context.MODE_PRIVATE);
 		float weightingRatio = prefs.getFloat(OptionsActivity.PREFS_COMPILE_WEIGHT, 1);
-		
 		//Get the event arr
 		Event[] eventArr = this.getEventsByColumns(new String[] {DBContract.COL_EVENT_ID}, 
 				new String[] {Integer.toString(eventID)});
-		
 		//See if the given ID exists and assign it to an event object
 		if(eventArr.length < 1)
 			return null;
-		
 		Event event = eventArr[0];
-		
 		//Get the robots, and our metrics, and make CompiledData for each robot
 		Robot[] robots = getRobotsAtEvent(eventID);
 		Metric[] metrics = this.getMatchPerformanceMetricsByColumns
 				(new String[] {DBContract.COL_GAME_NAME}, new String[] {event.getGameName()});
 		CompiledData[] compiledData = new CompiledData[robots.length];
-		
 		for(int robotCount = 0; robotCount < robots.length; robotCount++) {
 			//Create our array for compiled data, and get our match data for this robot
 			MetricValue[] metricVals = new MetricValue[metrics.length];
 			MatchData[] matchData = this.getMatchDataByColumns
 					(new String[] {DBContract.COL_ROBOT_ID}, 
 							new String[] {Integer.toString(robots[robotCount].getID())});
-			
 			//Array for compiling comments
 			boolean isCommentsFilled = false;
 			String[] comments = new String[matchData.length];
@@ -3131,7 +3125,6 @@ public class DBManager {
 							} else {
 								if(mathDenominator == 0)
 									mathDenominator = 1;
-
 								double weightedAverage = mathNumerator / mathDenominator;
 								compiledValue = new String[] {Double.toString
 										(weightedAverage)};
@@ -3140,26 +3133,20 @@ public class DBManager {
 							break;
 							
 						case DBContract.TEXT:
-							
 							compiledValue = new String[matchData.length];
-							
 							for(int matchCount = 0; matchCount < matchData.length; 
 									matchCount++) {
-								
 								//Comments
 								if(!isCommentsFilled)
 									comments[matchCount] = matchData[matchCount].
 										getComments();
-								
 								//Matches played
 								if(!isMatchesPlayedFilled)
 									matchesPlayed[matchCount] = matchData[matchCount].
 										getMatchNumber();
-								
 								String stringValue = matchData[matchCount].
 										getMetricValues()[metricCount].
 										getValueAsHumanReadableString();
-								
 								if(stringValue != null)
 									compiledValue[matchCount] = stringValue;
 							}
@@ -3172,11 +3159,9 @@ public class DBManager {
 				} catch(MetricTypeMismatchException e) {
 					e.printStackTrace();
 				}
-				
 				isCommentsFilled = true;
 				isMatchesPlayedFilled = true;
 			}
-			
 			compiledData[robotCount] = new CompiledData(
 					eventID,
 					matchesPlayed,

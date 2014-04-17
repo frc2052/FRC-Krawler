@@ -79,13 +79,19 @@ public class CompiledData implements Structure {
 		valsList.add(robot.getComments().replace(',', ' '));
 		valsList.add(matchComments.replace(',', ' '));
 		for(int i = 0; i < compiledMatchData.length; i++)
-			if(compiledMatchData[i].getMetric().isDisplayed())
+			if(compiledMatchData[i] != null && compiledMatchData[i].getMetric() != null
+					&& compiledMatchData[i].getMetric().isDisplayed())
 				valsList.add(compiledMatchData[i].getValueAsHumanReadableString().
 					replace(',', ' '));
+			else
+				valsList.add("");
 		for(int i = 0; i < robot.getMetricValues().length; i++)
-			if(robot.getMetricValues()[i].getMetric().isDisplayed())
+			if(robot.getMetricValues()[i] != null && robot.getMetricValues()[i].getMetric() != null
+					&& robot.getMetricValues()[i].getMetric().isDisplayed())
 				valsList.add(robot.getMetricValues()[i].getValueAsHumanReadableString().
 					replace(',', ' '));
+			else
+				valsList.add("");
 		return valsList.toArray(new String[0]);
 	}
 }

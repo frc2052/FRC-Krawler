@@ -37,6 +37,7 @@ public class ScoutTypeActivity extends RotationControlActivity implements OnClic
 		findViewById(R.id.matchScout).setOnClickListener(this);
 		findViewById(R.id.pitScout).setOnClickListener(this);
 		findViewById(R.id.matchData).setOnClickListener(this);
+		findViewById(R.id.matchSchedule).setOnClickListener(this);
 		findViewById(R.id.sync).setOnClickListener(this);
 		findViewById(R.id.logout).setOnClickListener(this);
 		db = DBManager.getInstance(this);
@@ -72,6 +73,11 @@ public class ScoutTypeActivity extends RotationControlActivity implements OnClic
 				
 			case R.id.matchData:
 				i = new Intent(this, ScoutMatchDataActivity.class);
+				startActivity(i);
+				break;
+				
+			case R.id.matchSchedule:
+				i = new Intent(this, ScoutScheduleDialogActivity.class);
 				startActivity(i);
 				break;
 				

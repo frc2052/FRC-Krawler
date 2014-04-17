@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +22,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.MatchData;
 import com.team2052.frckrawler.database.structures.Metric;
@@ -55,10 +55,9 @@ public class ScoutActivity extends Activity implements OnClickListener,
 		getWindow().setSoftInputMode
 			(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.activity_scouting);
-		
 		findViewById(R.id.save).setOnClickListener(this);
+		findViewById(R.id.schedule).setOnClickListener(this);
 		((Spinner)findViewById(R.id.teamNumber)).setOnItemSelectedListener(this);
-		
 		ArrayList<String> matchTypes = new ArrayList<String>();
 		matchTypes.add("Qualifications");
 		matchTypes.add("Finals");
@@ -156,6 +155,9 @@ public class ScoutActivity extends Activity implements OnClickListener,
 				builder.setNegativeButton("No", this);
 				builder.show();
 			}
+		} else if(v.getId() == R.id.schedule) {
+			Intent i = new Intent(this, ScoutScheduleDialogActivity.class);
+			startActivity(i);
 		}
 	}
 	

@@ -237,6 +237,8 @@
         <activity android:name="MatchScheduleActivity"></activity>
         <activity android:name="AddMatchDialogActivity"
             	  android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name="ScoutScheduleDialogActivity"
+            	  android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>
