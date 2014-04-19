@@ -271,9 +271,8 @@ public class ImportDialogActivity extends Activity implements OnClickListener {
 					db.addRobotToEvent(frckrawlerEvent.getEventID(), r.getID());
 				}
 			} catch (IOException e1) {
-				Log.e("FRCKrawler", e1.getMessage());
+				Log.e("FRCKrawler", e1.getMessage() + "");
 			}
-			
 			return null;
 		}
 		

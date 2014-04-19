@@ -64,12 +64,10 @@ public class TeamReader {
 		StringBuilder sb=new StringBuilder();
 		BufferedReader br = new BufferedReader(is);
 		String read = br.readLine();
-
 		while(read != null) {
 		    sb.append(read);
 		    read =br.readLine();
 		}
-
 		return sb.toString();
 	}
 }

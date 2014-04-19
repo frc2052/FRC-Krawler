@@ -76,42 +76,44 @@ public class ServerThread implements Runnable {
 						for(MatchData m : inMatchData)
 							dbManager.insertMatchData(m);
 					}
+					//Compile the data to send
+					//Users
+					User[] usersArr = dbManager.getAllUsers();
+					//Robots
+					Robot[] robotsArr = dbManager.getRobotsAtEvent
+							(hostedEvent.getEventID());
+					//Team Numbers
+					String[] teamNumbers = new String[robotsArr.length];
+					String[] colStrings = new String[robotsArr.length];
+					for(int i = 0; i < teamNumbers.length; i++) {
+						teamNumbers[i] = Integer.toString(robotsArr[i].getTeamNumber());
+						colStrings[i] = DBContract.COL_TEAM_NUMBER;
+					}
+					//Teams
+					Team[] teams = dbManager.getTeamsByColumns(colStrings, teamNumbers, true);
+					String[] teamNames = new String[teams.length];
+					for(int i = 0; i < teams.length; i++) {
+						teamNames[i] = teams[i].getName();
+					}
+					//Metrics
+					Metric[] rMetricsArr = dbManager.getRobotMetricsByColumns
+							(new String[] {DBContract.COL_GAME_NAME}, 
+									new String[] {hostedEvent.getGameName()});
+					Metric[] mMetricsArr = dbManager.getMatchPerformanceMetricsByColumns
+							(new String[] {DBContract.COL_GAME_NAME}, 
+									new String[] {hostedEvent.getGameName()});
+					Schedule schedule = dbManager.getSchedule(hostedEvent.getEventID());
+					//Send data
+					oStream.writeObject(hostedEvent);
+					oStream.writeObject(usersArr);
+					oStream.writeObject(teamNames);
+					oStream.writeObject(robotsArr);
+					oStream.writeObject(rMetricsArr);
+					oStream.writeObject(mMetricsArr);
+					oStream.writeObject(schedule);
+				} else {
+					//Sync as a summary
 				}
-				//Compile the data to send
-				//Users
-				User[] usersArr = dbManager.getAllUsers();
-				//Robots
-				Robot[] robotsArr = dbManager.getRobotsAtEvent
-						(hostedEvent.getEventID());
-				//Team Numbers
-				String[] teamNumbers = new String[robotsArr.length];
-				String[] colStrings = new String[robotsArr.length];
-				for(int i = 0; i < teamNumbers.length; i++) {
-					teamNumbers[i] = Integer.toString(robotsArr[i].getTeamNumber());
-					colStrings[i] = DBContract.COL_TEAM_NUMBER;
-				}
-				//Teams
-				Team[] teams = dbManager.getTeamsByColumns(colStrings, teamNumbers, true);
-				String[] teamNames = new String[teams.length];
-				for(int i = 0; i < teams.length; i++) {
-					teamNames[i] = teams[i].getName();
-				}
-				//Metrics
-				Metric[] rMetricsArr = dbManager.getRobotMetricsByColumns
-						(new String[] {DBContract.COL_GAME_NAME}, 
-								new String[] {hostedEvent.getGameName()});
-				Metric[] mMetricsArr = dbManager.getMatchPerformanceMetricsByColumns
-						(new String[] {DBContract.COL_GAME_NAME}, 
-								new String[] {hostedEvent.getGameName()});
-				Schedule schedule = dbManager.getSchedule(hostedEvent.getEventID());
-				//Send data
-				oStream.writeObject(hostedEvent);
-				oStream.writeObject(usersArr);
-				oStream.writeObject(teamNames);
-				oStream.writeObject(robotsArr);
-				oStream.writeObject(rMetricsArr);
-				oStream.writeObject(mMetricsArr);
-				oStream.writeObject(schedule);
 				oStream.flush();
 				//Close the socket and notify the sync handler
 				clientSocket.close();

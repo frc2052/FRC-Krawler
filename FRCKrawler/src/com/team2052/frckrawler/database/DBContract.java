@@ -515,111 +515,6 @@ public class DBContract {
 	 * summary buttons.
 	 **********/
 	
-	public static final String SUMMARY_TABLE_EVENT = "summaryevents";
-	//Game ID, use COL_GAME_NAME
-	//Event ID, use COL_EVENT_ID
-	//COL_EVENT_NAME = "eventname";
-	//Date, use COL_DATE_STAMP
-	//COL_LOCATION = "location";
-	//COL_FMS_EVENT_ID = "fmseventid";
-		
-	public static final String CREATE_SUMMARY_TABLE_EVENT =
-				"CREATE TABLE " + SUMMARY_TABLE_EVENT + " (" + COL_GAME_NAME + STRING + ", " + 
-						COL_EVENT_ID + INT + ", " + COL_EVENT_NAME + STRING + ", " + 
-						COL_DATE_STAMP + INT + ", " + COL_LOCATION + STRING + ", " + 
-						COL_FMS_EVENT_ID + STRING + ")";
-	
-	
-	public static final String SUMMARY_TABLE_MATCH_DATA = "summarymatchdata";
-	//Data ID, use COL_DATA_ID
-	//Robot ID, use COL_ROBOT_ID
-	//Event ID, use EVENT_ID
-	//User ID, use COL_USER_ID
-	//"matchnumber";
-	//"matchtype";
-	//Comments, use COL_COMMENTS
-	//Keys, use COL_KEYS[]
-	
-	public static final String CREATE_SUMMARY_TABLE_MATCH_DATA = 
-			"CREATE TABLE " + SUMMARY_TABLE_MATCH_DATA + " (" + COL_DATA_ID + INT + ", " +
-					COL_ROBOT_ID + INT + ", " + COL_EVENT_ID + INT + ", " + COL_USER_ID + INT + ", " + 
-					COL_MATCH_NUMBER + INT + ", " + COL_MATCH_TYPE + STRING + ", " +
-					COL_COMMENTS + STRING + ", " + COL_KEYS_LIST + ")";
-	
-	
-	public static final String SUMMARY_TABLE_ROBOTS = "summaryrobotdata";
-	//Team number, use COL_NUMBER
-	//Robot ID, use COL_ROBOT_ID
-	//COL_GAME_NAME
-	//COL_COMMENTS
-	//COL_IMAGE_PATH
-	//COL_KEYS
-	//COL_KEYS_LIST;
-	//COL_TEAM_NAME
-	
-	public static final String CREATE_SUMMARY_TABLE_ROBOTS = 
-			"CREATE TABLE " + SUMMARY_TABLE_ROBOTS + " (" + COL_TEAM_NUMBER + INT + ", " + COL_ROBOT_ID + 
-					INT + ", " + COL_GAME_NAME + STRING + ", " + COL_COMMENTS + STRING + ", " + 
-					COL_IMAGE_PATH + STRING + ", " + COL_KEYS_LIST + 
-					", " + COL_TEAM_NAME + STRING + ", " + COL_OPR + DECIMAL + ")";
-	
-	
-	
-	public static final String SUMMARY_TABLE_MATCHES_PLAYED = "summarytablematchesplayed";
-	//COL_ROBOT_ID
-	//COL_MATCH_NUMBER
-	
-	public static final String CREATE_SUMMARY_TABLE_MATCHES_PLAYED = 
-			"CREATE TABLE " + SUMMARY_TABLE_MATCHES_PLAYED + " (" + 
-					COL_MATCH_NUMBER + INT + ", " + COL_ROBOT_ID + INT + ")";
-		
-	
-	
-	public static final String SUMMARY_TABLE_COMPILED_MATCH_DATA = "summarycompiledmatchdata";
-	//Robot ID, use COL_ROBOT_ID
-	//Keys, use COL_KEYS[]
-	
-	public static final String CREATE_SUMMARY_TABLE_COMPILED_MATCH_DATA = 
-			"CREATE TABLE " + SUMMARY_TABLE_COMPILED_MATCH_DATA + " (" +
-					COL_ROBOT_ID + INT + ", " + COL_KEYS_LIST + ")";
-	
-	
-	
-	public static final String SUMMARY_TABLE_MATCH_PERF_METRICS = "summarymatchmetrics";
-	//Game ID, use COL_GAME_NAME
-	//Metric Name, use COL_METRIC_NAME
-	//Description, use COL_DESCRIPTION
-	//Key, use COL_KEY
-	//Type, use COL_TYPE
-	//Range, use COL_RANGE
-	//Display, use COL_DISPLAY
-	
-	public static final String CREATE_SUMMARY_TABLE_MATCH_PERF_METRICS = 
-				"CREATE TABLE " + SUMMARY_TABLE_MATCH_PERF_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
-						COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
-						COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
-						COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
-						", " + COL_POSITION + INT + ")";
-	
-	
-	
-	public static final String SUMMARY_TABLE_ROBOT_METRICS = "summaryrobotmetrics";
-	//Game ID, use COL_GAME_NAME
-	//COL_METRIC_ID
-	//COL_METRIC_NAME
-	//COL_DESCRIPTION
-	//COL_METRIC_KEY
-	//COL_TYPE
-	//COL_RANGE
-	//COL_DISPLAY
-	
-	public static final String CREATE_SUMMARY_TABLE_ROBOT_METRICS =
-			"CREATE TABLE " + SUMMARY_TABLE_ROBOT_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
-					COL_GAME_NAME + STRING + ", " + COL_METRIC_NAME + STRING + ", " + 
-					COL_DESCRIPTION + STRING + ", " + COL_METRIC_KEY + INT + ", " + 
-					COL_TYPE + INT + ", " + COL_RANGE + STRING + ", " + COL_DISPLAY + INT + 
-					", " + COL_POSITION + INT + ")";
-	
 	
 	
 	//Additions may be made to this contract to include tables for Awards and OPR or CCWM
@@ -672,13 +567,6 @@ public class DBContract {
 		database.execSQL(CREATE_SCOUT_TABLE_SCHEDULE);
 		
 		//SUMMARY TABLES//
-		database.execSQL(CREATE_SUMMARY_TABLE_EVENT);
-		database.execSQL(CREATE_SUMMARY_TABLE_ROBOTS);
-		database.execSQL(CREATE_SUMMARY_TABLE_COMPILED_MATCH_DATA);
-		database.execSQL(CREATE_SUMMARY_TABLE_MATCH_DATA);
-		database.execSQL(CREATE_SUMMARY_TABLE_ROBOT_METRICS);
-		database.execSQL(CREATE_SUMMARY_TABLE_MATCH_PERF_METRICS);
-		database.execSQL(CREATE_SUMMARY_TABLE_MATCHES_PLAYED);
 	}
 	
 	/*****
@@ -719,13 +607,7 @@ public class DBContract {
 		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_SCHEDULE);
 		
 		//SUMMARY TABLES//
-		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_EVENT);
-		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_ROBOTS);
-		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_COMPILED_MATCH_DATA);
-		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_MATCH_DATA);
-		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_ROBOT_METRICS);
-		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_MATCH_PERF_METRICS);
-		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_MATCHES_PLAYED);
+		
 	}
 	
 	private DBContract() {}

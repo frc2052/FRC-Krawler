@@ -19,9 +19,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class DBHelper extends SQLiteOpenHelper {
-	
-	
-	public static final int DATABASE_VERSION = 30;	//You must add one when changing the 
+	public static final int DATABASE_VERSION = 31;	//You must add one when changing the 
 		//structure of the database.
 	
 	public DBHelper(Context context, String path) {
@@ -55,16 +53,21 @@ public class DBHelper extends SQLiteOpenHelper {
 				db.execSQL("ALTER TABLE " + DBContract.SCOUT_TABLE_ROBOTS + 
 						" ADD COLUMN " + DBContract.COL_OPR);
 			}
-			if(oldVersion < 28) {
-				db.execSQL("ALTER TABLE " + DBContract.SUMMARY_TABLE_ROBOTS + 
-						" ADD COLUMN " + DBContract.COL_OPR);
-			}
 		}
 		if(oldVersion < 29) {
 			db.execSQL(DBContract.CREATE_TABLE_SCHEDULES);
 		}
 		if(oldVersion < 30) {
 			db.execSQL(DBContract.CREATE_SCOUT_TABLE_SCHEDULE);
+		}
+		if(oldVersion < 31) {
+			db.execSQL("DROP TABLE IF EXISTS summaryevents");
+			db.execSQL("DROP TABLE IF EXISTS summarymatchdata");
+			db.execSQL("DROP TABLE IF EXISTS summaryrobotdata");
+			db.execSQL("DROP TABLE IF EXISTS summarytablematchesplayed");
+			db.execSQL("DROP TABLE IF EXISTS summarycompiledmatchdata");
+			db.execSQL("DROP TABLE IF EXISTS summarymatchmetrics");
+			db.execSQL("DROP TABLE IF EXISTS summaryrobotmetrics");
 		}
 	}
 	

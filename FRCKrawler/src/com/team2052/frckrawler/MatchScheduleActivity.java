@@ -203,13 +203,7 @@ public class MatchScheduleActivity extends StackableTabActivity implements OnCli
 		}
 		
 		private String getRobotTeamNum(int robotID) {
-			Robot[] robots = db.getRobotsByColumns(
-					new String[] {DBContract.COL_ROBOT_ID}, 
-					new String[] {Integer.toString(robotID)});
-			if(robots != null && robots.length > 0) {
-				return Integer.toString(robots[0].getTeamNumber());
-			}
-			return "";
+			return db.getTeamNumberByRobotID(robotID);
 		}
 	}
 }
