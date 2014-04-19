@@ -1,6 +1,7 @@
 package com.team2052.frckrawler;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,13 +9,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TableLayout;
 
-import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Match;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.database.structures.Schedule;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
+import com.team2052.frckrawler.gui.ProgressSpinner;
 import com.team2052.frckrawler.gui.StaticTableLayout;
 
 public class ScoutScheduleDialogActivity extends Activity implements OnClickListener {
@@ -37,7 +38,18 @@ public class ScoutScheduleDialogActivity extends Activity implements OnClickList
 	}
 	
 	private class GetScheduleTask extends AsyncTask<Void, MyTableRow, Void> {
+		AlertDialog progressDialog;
 		Robot[] robots;
+		
+		@Override
+		protected void onPreExecute() {
+			AlertDialog.Builder builder = new AlertDialog.Builder(ScoutScheduleDialogActivity.this);
+			builder.setTitle("Loading...");
+			builder.setView(new ProgressSpinner(ScoutScheduleDialogActivity.this));
+			builder.setCancelable(false);
+			progressDialog = builder.create();
+			progressDialog.show();
+		}
 		
 		@Override
 		protected Void doInBackground(Void... v) {
@@ -123,6 +135,11 @@ public class ScoutScheduleDialogActivity extends Activity implements OnClickList
 		protected void onProgressUpdate(MyTableRow... rows) {
 			dataTable.addViewToStaticTable(rows[0]);
 			dataTable.addViewToMainTable(rows[1]);
+		}
+		
+		@Override
+		protected void onPostExecute(Void v) {
+			progressDialog.dismiss();
 		}
 		
 		private String getRobotTeamNum(int robotID) {
