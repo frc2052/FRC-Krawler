@@ -51,4 +51,9 @@ public class Event implements Structure {
 	public String getFMSID() {
 		return fmsID;
 	}
+	
+	@Override
+	public String toString() {
+		return eventName + ", " + gameName;
+	}
 }

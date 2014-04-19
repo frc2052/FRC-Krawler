@@ -3,15 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/eventName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true"
-        android:text="comp name"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="wrap_content"
@@ -50,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:background="@drawable/tab_button"
-                android:text="Bluetooth" />
+                android:text="Sharing" />
 
             <Button
                 android:id="@+id/optionsTabButton"
@@ -58,31 +49,8 @@
                 android:layout_height="60dp"
                 android:background="@drawable/tab_button"
                 android:text="Options" />
-
         </LinearLayout>
-
     </ScrollView>
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/matchCount"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="Currently Hosting..."
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="24sp" />
-
-    <Button
-        android:id="@+id/chooseEvent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/eventName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
-        android:text="Choose Event"
-        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/matchCount"
@@ -90,9 +58,47 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Bluetooth and Sharing"
+        android:text="Sharing"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/dbBackups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/excel"
+        android:layout_alignRight="@+id/excel"
+        android:layout_below="@+id/excel"
+        android:text="Database Backups" />
+
+    <Button
+        android:id="@+id/excel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_below="@+id/matchCount"
+        android:layout_marginTop="15dp"
+        android:text="Excel Exporting" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dbBackups"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Bluetooth Server"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="24sp" />
+
+    <Spinner
+        android:id="@+id/chooseEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_below="@+id/textView3" />
 
     <ToggleButton
         android:id="@+id/hostToggle"
@@ -100,74 +106,10 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/chooseEvent"
         android:layout_alignRight="@+id/chooseEvent"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/chooseEvent"
         android:text="ToggleButton"
         android:textOff="Closed"
         android:textOn="Running"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/chooseEvent"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="63dp"
-        android:text="Bluetooth Server"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="24sp" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/hostToggle"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:text="DB Backup"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="24sp" />
-
-    <LinearLayout
-        android:id="@+id/lin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView4"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical" >
-
-        <Button
-            android:id="@+id/importDB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Import Database"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/exportDB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Export Database"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/radioPlaceHolder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/hostToggle"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Export to CSV"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <Button
-        android:id="@+id/exportCSV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/radioPlaceHolder"
-        android:layout_centerHorizontal="true"
-        android:text="Export"
         android:textSize="18sp" />
 
 </RelativeLayout>
