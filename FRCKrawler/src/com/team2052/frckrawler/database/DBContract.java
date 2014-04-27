@@ -51,17 +51,13 @@ public class DBContract {
 	/*****
 	 * Schema
 	 *****/
-	
 	public static final String DATABASE_NAME = "scoutingdb";
 	
 	
-	
 	public static final String TABLE_USERS = "users";
-	
 	public static final String COL_USER_ID = "userid";
 	public static final String COL_USER_NAME = "username";
 	public static final String COL_SUPERUSER = "superuser";
-	
 	public static final String CREATE_TABLE_USERS = 
 			"CREATE TABLE " + TABLE_USERS + " (" + COL_USER_ID + INT + ", " + COL_USER_NAME + 
 					STRING + ", " + COL_SUPERUSER + STRING + ")";
@@ -69,7 +65,6 @@ public class DBContract {
 	
 	
 	public static final String TABLE_TEAMS = "teams";
-	
 	public static final String COL_TEAM_NUMBER = "number";
 	public static final String COL_TEAM_NAME = "name";
 	public static final String COL_SCHOOL = "school";
@@ -78,7 +73,6 @@ public class DBContract {
 	public static final String COL_WEBSITE = "website";
 	public static final String COL_STATE_POSTAL_CODE = "state";
 	public static final String COL_COLORS = "colors";
-	
 	public static final String CREATE_TABLE_TEAMS = 
 			"CREATE TABLE " + TABLE_TEAMS + " (" + COL_TEAM_NUMBER + INT + ", " + COL_TEAM_NAME + STRING + 
 					", " + COL_SCHOOL + STRING + ", " + COL_CITY + STRING + ", " + COL_ROOKIE_YEAR + 
@@ -103,11 +97,9 @@ public class DBContract {
 	
 	
 	public static final String TABLE_PICTURES = "pictures";
-	
 	public static final String COL_ROBOT_ID = "robotid";
 	public static final String COL_FILE_PATH = "filepath";
 	//Date stamp, user COL_DATE_STAMP
-	
 	public static final String CREATE_TABLE_PICTURES = 
 			"CREATE TABLE " + TABLE_PICTURES + " (" + COL_ROBOT_ID + INT + ", " + 
 					COL_FILE_PATH + STRING + ", " + COL_DATE_STAMP + INT +")";
@@ -115,14 +107,12 @@ public class DBContract {
 	
 	
 	public static final String TABLE_CONTACTS = "contacts";
-	
 	//Team number, use COL_NUMBER
 	public static final String COL_CONTACT_ID = "contactid";
 	public static final String COL_CONTACT_NAME = "contactname";
 	public static final String COL_EMAIL = "email";
 	public static final String COL_ADDRESS = "address";
 	public static final String COL_PHONE_NUMBER = "phonenumber";
-	
 	public static final String CREATE_TABLE_CONTACTS = 
 			"CREATE TABLE " + TABLE_CONTACTS + " (" + COL_TEAM_NUMBER + INT + ", " + 
 					COL_CONTACT_ID + STRING +", " + COL_CONTACT_NAME + STRING + ", " + 
@@ -132,7 +122,6 @@ public class DBContract {
 	
 	
 	public static final String TABLE_ROBOTS = "robots";
-	
 	//Team number, use COL_NUMBER
 	//Robot ID, use COL_ROBOT_ID
 	public static final String COL_GAME_NAME = "gamename";
@@ -141,16 +130,11 @@ public class DBContract {
 	public static final String COL_OPR = "opr";
 	public static String[] COL_KEYS = new String[50];
 	public static String COL_KEYS_LIST;
-	
 	static {
-		
 		COL_KEYS_LIST = new String("");
-		
 		for(int i = 0; i < COL_KEYS.length; i++) {
-			
 			COL_KEYS[i] = "d" + i;
 			COL_KEYS_LIST += COL_KEYS[i] + ANY;
-			
 			if(i < COL_KEYS.length - 1) {
 				COL_KEYS_LIST += ", ";
 			}
@@ -166,7 +150,6 @@ public class DBContract {
 	
 	
 	public static final String TABLE_EVENTS = "events";
-	
 	//Game ID, use COL_GAME_NAME
 	//Event ID, use COL_EVENT_ID
 	public static final String COL_EVENT_NAME = "eventname";
@@ -212,7 +195,6 @@ public class DBContract {
 	
 	
 	public static final String TABLE_MATCH_PERF = "matchperformance";
-	
 	public static final String COL_DATA_ID = "matchid";
 	//Robot ID, use COL_ROBOT_ID
 	//Event ID, use EVENT_ID
@@ -220,9 +202,7 @@ public class DBContract {
 	//Match Number, user COL_MATCH_NUMBER
 	public static final String COL_MATCH_TYPE = "matchtype";
 	//Comments, use COL_COMMENTS
-	
 	//Keys, use COL_KEYS[]
-	
 	public static final String CREATE_TABLE_MATCH_PERF = 
 			"CREATE TABLE " + TABLE_MATCH_PERF + " (" + COL_DATA_ID + INT + ", " +
 					COL_ROBOT_ID + INT + ", " + COL_EVENT_ID + INT + ", " + COL_USER_ID + INT + ", " + 
@@ -514,7 +494,66 @@ public class DBContract {
 	 * These tables are used when a device syncs with the
 	 * summary buttons.
 	 **********/
+	public static final String[] SUMMARY_MATCH_KEYS = new String[50];
+	public static final String[] SUMMARY_ROBOT_KEYS = new String[50];
+	public static String SUMMARY_MATCH_KEYS_LIST = "";
+	public static String SUMMARY_ROBOT_KEYS_LIST = "";
+	static {
+		for(int i = 0; i < COL_KEYS.length; i++) {
+			SUMMARY_MATCH_KEYS[i] = "md" + i;
+			SUMMARY_ROBOT_KEYS[i] = "rd" + i;
+			SUMMARY_MATCH_KEYS_LIST += SUMMARY_MATCH_KEYS[i] + ANY;
+			SUMMARY_ROBOT_KEYS_LIST += SUMMARY_ROBOT_KEYS[i] + ANY;
+			if(i < COL_KEYS.length - 1) {
+				SUMMARY_MATCH_KEYS_LIST += ", ";
+				SUMMARY_ROBOT_KEYS_LIST += ", ";
+			}
+		}
+	}
 	
+	public static final String SUMMARY_TABLE_ROBOT_METRICS = "summaryrobotmetrics";
+	//COL_METRIC_ID = "metricid";
+	//COL_METRIC_NAME = "metricname";
+	//COL_METRIC_KEY = "metrickey";
+	//COL_TYPE = "type";
+	//Position, use COL_POSITION
+	public static final String CREATE_SUMMARY_TABLE_ROBOT_METRICS =
+			"CREATE TABLE " + SUMMARY_TABLE_ROBOT_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
+					COL_METRIC_NAME + STRING + ", " + COL_METRIC_KEY + INT + ", " + 
+					COL_TYPE + INT + ", " + COL_POSITION + INT + ");";
+	
+	
+	public static final String SUMMARY_TABLE_MATCH_PERF_METRICS = "summarymatchmetrics";
+	//Metric Name, use COL_METRIC_NAME
+	//Key, use COL_KEY
+	//Type, use COL_TYPE
+	//Position, use COL_POSITION
+	public static final String CREATE_SUMMARY_TABLE_MATCH_PERF_METRICS = 
+				"CREATE TABLE " + SUMMARY_TABLE_MATCH_PERF_METRICS + " (" + COL_METRIC_ID + INT + ", " + 
+						COL_METRIC_NAME + STRING + ", " + COL_METRIC_KEY + STRING + ", " + 
+						COL_TYPE + INT + ", " + COL_POSITION + INT + ");";
+	
+	public static final String SUMMARY_TABLE_SUMMARY_DATA = "summarysummarydata";
+	//Checked
+	//Team Number
+	//OPR
+	//Match Data
+	//Robot Data
+	public static final String CREATE_SUMMARY_TABLE_SUMMARY_DATA = 
+			"CREATE TABLE " + SUMMARY_TABLE_SUMMARY_DATA + " (" + COL_IS_CHECKED + INT + ", " +
+					COL_TEAM_NUMBER + INT + ", " + COL_OPR + DECIMAL + ", " + 
+					SUMMARY_MATCH_KEYS_LIST + ", " + SUMMARY_ROBOT_KEYS_LIST + ");";
+	
+	
+	public static final String SUMMARY_TABLE_MATCH_PERF = "summarymatchperformance";
+	//Match Number, user COL_MATCH_NUMBER
+	//Team Number
+	//Comments, use COL_COMMENTS
+	//Keys, use COL_KEYS[]
+	public static final String CREATE_SUMMARY_TABLE_MATCH_PERF = 
+			"CREATE TABLE " + SUMMARY_TABLE_MATCH_PERF + " (" + COL_TEAM_NUMBER + INT + ", " +
+					COL_MATCH_NUMBER + INT + ", " +
+					COL_COMMENTS + STRING + ", " + SUMMARY_MATCH_KEYS_LIST + ");";
 	
 	
 	//Additions may be made to this contract to include tables for Awards and OPR or CCWM
@@ -567,6 +606,10 @@ public class DBContract {
 		database.execSQL(CREATE_SCOUT_TABLE_SCHEDULE);
 		
 		//SUMMARY TABLES//
+		database.execSQL(CREATE_SUMMARY_TABLE_ROBOT_METRICS);
+		database.execSQL(CREATE_SUMMARY_TABLE_MATCH_PERF_METRICS);
+		database.execSQL(CREATE_SUMMARY_TABLE_MATCH_PERF);
+		database.execSQL(CREATE_SUMMARY_TABLE_SUMMARY_DATA);
 	}
 	
 	/*****
@@ -607,7 +650,10 @@ public class DBContract {
 		database.execSQL("DROP TABLE IF EXISTS " + SCOUT_TABLE_SCHEDULE);
 		
 		//SUMMARY TABLES//
-		
+		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_SUMMARY_DATA);
+		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_MATCH_PERF_METRICS);
+		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_ROBOT_METRICS);
+		database.execSQL("DROP TABLE IF EXISTS " + SUMMARY_TABLE_MATCH_PERF);
 	}
 	
 	private DBContract() {}
