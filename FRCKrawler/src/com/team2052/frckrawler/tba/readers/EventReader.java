@@ -69,22 +69,4 @@ public final class EventReader {
 		}
 		return sb.toString();
 	}
-
-	private TBAEvent[] readTBAEvents(String[] keys) throws IOException {
-		List<TBAEvent> events = new ArrayList<TBAEvent>();
-		for (String key : keys) {
-
-		}
-		return events.toArray(new TBAEvent[0]);
-	}
-
-	private String clean(String s) {
-		s = s.replace("[", "");
-		s = s.replace("]", "");
-		s = s.replace("\"", "");
-		s = s.replace(" ", "");
-		s = s.replace("}", "");
-		s = s.replace("{", "");
-		return s;
-	}
 }
