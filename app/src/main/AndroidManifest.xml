@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.team2052.frckrawler"
     android:installLocation="auto">
 
@@ -16,6 +17,7 @@
         android:required="false" />
 
     <application
+        tools:replace="android:label"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
@@ -94,7 +96,7 @@
         <activity android:name=".activity.dialog.ImportImageDialogActivity" />
         <activity
             android:name="com.ipaulpro.afilechooser.FileChooserActivity"
-            android:icon="@drawable/ic_chooser"
+            android:icon="@drawable/ic_choosers"
             android:label="@string/chooser_label">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />

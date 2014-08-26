@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="2" >
+
+    <dataSet config="main" >
+        <source path="E:\Documents\2013-frckrawler\aFileChooser\src\main\assets" />
+    </dataSet>
+    <dataSet config="debug" >
+        <source path="E:\Documents\2013-frckrawler\aFileChooser\src\debug\assets" />
+    </dataSet>
+
+</merger>

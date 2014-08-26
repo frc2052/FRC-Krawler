@@ -33,4 +33,5 @@ dependencies {
     compile 'com.android.support:support-v4:20.+'
     // You must install or update the Google Repository through the SDK manager to use this dependency.
     compile 'com.google.android.gms:play-services:4.2.42'
+    compile project(':aFileChooser')
 }
