@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_view_event_edit_button"
+        android:src="@drawable/ic_action_edit"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/list_view_event_name"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="16dp"
+        android:layout_toLeftOf="@+id/list_view_event_spinner" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Location: "
+        android:id="@+id/list_view_event_location_default"
+        android:layout_below="@+id/list_view_event_name"
+        android:layout_alignLeft="@+id/list_view_event_name"
+        android:layout_alignStart="@+id/list_view_event_name"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/list_view_event_location"
+        android:layout_below="@+id/list_view_event_name"
+        android:layout_toRightOf="@+id/list_view_event_location_default"
+        android:layout_marginLeft="4dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Date:"
+        android:id="@+id/list_view_event_date_default"
+        android:layout_below="@+id/list_view_event_location_default"
+        android:layout_alignLeft="@+id/list_view_event_location_default"
+        android:layout_alignStart="@+id/list_view_event_location_default"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/list_view_event_date"
+        android:layout_toRightOf="@+id/list_view_event_date_default"
+        android:layout_below="@+id/list_view_event_location"
+        android:layout_marginLeft="4dp" />
+
+    <Spinner
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_view_event_spinner"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/list_view_event_edit_button"
+        android:layout_marginRight="8dp" />
+</RelativeLayout>

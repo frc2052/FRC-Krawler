@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" >
+
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/matchCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Sharing"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/dbBackups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/excel"
+        android:layout_alignRight="@+id/excel"
+        android:layout_below="@+id/excel"
+        android:text="Database Backups" />
+
+    <Button
+        android:id="@+id/excel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_below="@+id/matchCount"
+        android:layout_marginTop="15dp"
+        android:text="Excel Exporting" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dbBackups"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Bluetooth Server"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="24sp" />
+
+    <Spinner
+        android:id="@+id/chooseEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_below="@+id/textView3" />
+
+    <Switch
+        android:id="@+id/hostToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_below="@+id/chooseEvent"
+        android:layout_alignLeft="@+id/matchCount"
+        android:layout_alignStart="@+id/matchCount"
+        android:layout_marginTop="36dp"
+        android:checked="false" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Toggle Server"
+        android:id="@+id/textView"
+        android:layout_below="@+id/chooseEvent"
+        android:layout_alignRight="@+id/hostToggle"
+        android:layout_alignEnd="@+id/hostToggle" />
+
+</RelativeLayout>

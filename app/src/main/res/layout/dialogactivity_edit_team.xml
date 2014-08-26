@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" >
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:text="Save" />
+
+        <Button
+            android:id="@+id/remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:text="Remove Team" />
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:text="Cancel" />
+    </LinearLayout>
+
+    TextView
+        android:id="@+id/matchCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Edit Team"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="24sp" />
+
+    <RelativeLayout
+        android:id="@+id/data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/matchCount" >
+
+        <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" >
+
+            <RelativeLayout
+                android:id="@+id/RelativeLayout01"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/numberVal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/textView5"
+                    android:clickable="false"
+                    android:editable="true"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:text=" "
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/numberVal"
+                    android:layout_alignBottom="@+id/numberVal"
+                    android:layout_alignParentLeft="true"
+                    android:text="#"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/cityVal"
+                    android:layout_alignBottom="@+id/cityVal"
+                    android:layout_alignParentLeft="true"
+                    android:text="City"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/rookieYearVal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/cityVal"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/cityVal"
+                    android:ems="10"
+                    android:inputType="number" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/rookieYearVal"
+                    android:layout_alignBottom="@+id/rookieYearVal"
+                    android:layout_alignParentLeft="true"
+                    android:text="Rookie Year"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/colorsVal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/stateVal"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/stateVal"
+                    android:ems="10"
+                    android:inputType="textNoSuggestions" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/colorsVal"
+                    android:layout_alignBottom="@+id/colorsVal"
+                    android:layout_alignParentLeft="true"
+                    android:text="Colors"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignTop="@+id/stateVal"
+                    android:text="State"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/cityVal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/schoolVal"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/schoolVal"
+                    android:ems="10"
+                    android:inputType="textNoSuggestions" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/schoolVal"
+                    android:layout_alignBottom="@+id/schoolVal"
+                    android:layout_alignParentLeft="true"
+                    android:text="School"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/nameVal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/numberVal"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/numberVal"
+                    android:editable="true"
+                    android:ems="10"
+                    android:inputType="textNoSuggestions" />
+
+                <EditText
+                    android:id="@+id/schoolVal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/nameVal"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/nameVal"
+                    android:ems="10"
+                    android:inputType="textNoSuggestions|textPersonName" />
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/nameVal"
+                    android:layout_alignBottom="@+id/nameVal"
+                    android:layout_alignParentLeft="true"
+                    android:text="Name"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/websiteVal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/rookieYearVal"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/rookieYearVal"
+                    android:ems="10"
+                    android:inputType="textNoSuggestions" />
+
+                <Spinner
+                    android:id="@+id/stateVal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/websiteVal"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/websiteVal"
+                    android:entries="@array/states" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/websiteVal"
+                    android:layout_alignBottom="@+id/websiteVal"
+                    android:layout_alignParentLeft="true"
+                    android:text="Website"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </RelativeLayout>
+
+        </ScrollView>
+    </RelativeLayout>
+
+</RelativeLayout>

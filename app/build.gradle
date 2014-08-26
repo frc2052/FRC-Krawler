@@ -1,0 +1,36 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 20
+    buildToolsVersion '19.1.0'
+    defaultConfig {
+        applicationId 'com.team2052.frckrawler'
+        minSdkVersion 14
+        targetSdkVersion 20
+        versionCode 15
+        versionName '2.0-a1'
+    }
+    buildTypes {
+        debug {
+            versionNameSuffix '-DEVELOPMENT'
+            applicationIdSuffix '.devleopment'
+        }
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
+    compile 'com.android.support:support-v13:20.+'
+    compile 'com.google.code.gson:gson:2.2.4'
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
+    compile 'com.android.support:support-v4:20.+'
+    // You must install or update the Google Repository through the SDK manager to use this dependency.
+    compile 'com.google.android.gms:play-services:4.2.42'
+}
