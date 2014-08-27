@@ -22,11 +22,16 @@ android {
     }
     productFlavors {
     }
+
+    dexOptions {
+        preDexLibraries = false
+    }
 }
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.gms:play-services:5.2.08'
+    compile 'com.google.code.gson:gson:2.2.4'
     compile project(':aFileChooser')
-    compile 'com.android.support:support-v4:+'
+    compile 'com.android.support:support-v4:19.+'
 }
