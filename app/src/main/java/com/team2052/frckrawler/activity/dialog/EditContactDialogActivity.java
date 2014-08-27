@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -10,11 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Contact;
 
-public class EditContactDialogActivity extends Activity implements OnClickListener, DialogInterface.OnClickListener {
+public class EditContactDialogActivity extends BaseActivity implements OnClickListener, DialogInterface.OnClickListener {
 
     public static final String CONTACT_ID_EXTRA = "com.team2052.frckrawler.contactIDExtra";
 

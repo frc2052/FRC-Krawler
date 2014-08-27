@@ -25,7 +25,7 @@ import com.team2052.frckrawler.database.structures.User;
 import com.team2052.frckrawler.fragment.AboutDialogFragment;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 
-public class MainActivity extends FragmentActivity implements DialogInterface.OnClickListener, OnClickListener, SyncCallbackHandler {
+public class MainActivity extends BaseActivity implements DialogInterface.OnClickListener, OnClickListener, SyncCallbackHandler {
 
     private static final int REQUEST_BT_ENABLE = 1;
 

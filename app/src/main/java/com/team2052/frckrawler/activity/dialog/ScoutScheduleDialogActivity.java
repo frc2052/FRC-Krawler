@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -11,6 +10,7 @@ import android.widget.TableLayout;
 
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Match;
 import com.team2052.frckrawler.database.structures.Robot;
@@ -20,7 +20,7 @@ import com.team2052.frckrawler.gui.MyTextView;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 import com.team2052.frckrawler.gui.StaticTableLayout;
 
-public class ScoutScheduleDialogActivity extends Activity implements OnClickListener {
+public class ScoutScheduleDialogActivity extends BaseActivity implements OnClickListener {
     private StaticTableLayout dataTable;
     private DBManager db;
 

@@ -1,15 +1,15 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.gui.MyTextView;
 
-public class CommentDialogActivity extends Activity {
+public class CommentDialogActivity extends BaseActivity {
 
     public static final String COMMENT_ARRAY_EXTRA =
             "com.team2052.frckrawler.commentArrayExtra";

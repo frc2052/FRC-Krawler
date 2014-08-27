@@ -1,12 +1,11 @@
 package com.team2052.frckrawler.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 /**
  * Created by Adam on 8/24/2014.
  */
-public class DatabaseActivity extends Activity {
+public class DatabaseActivity extends BaseActivity {
 
     public static final String PARENTS_EXTRA = "com.team2052.frckrawler.parentsArrayExtra";
     public static final String DB_VALUES_EXTRA = "com.team2052.frckrawler.dbValsExtra";

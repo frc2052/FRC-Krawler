@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,13 +9,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.gui.MetricWidget;
 
-public class EditRobotDialogActivity extends Activity implements OnClickListener {
+public class EditRobotDialogActivity extends BaseActivity implements OnClickListener {
 
     public static final String ROBOT_ID_EXTRA = "com.team2052.frckrawler.robotIDExtra";
 

@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +13,7 @@ import android.widget.EditText;
 import com.ipaulpro.afilechooser.FileChooserActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Robot;
@@ -32,7 +32,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class ImportImageDialogActivity extends Activity implements OnClickListener {
+public class ImportImageDialogActivity extends BaseActivity implements OnClickListener {
 
     public static final String ROBOT_ID_EXTRA = "com.team2052.frckrawler.robotIDExtra";
     public static final String IMAGE_PATH_EXTRA = "com.team2052.frckrawler.imagePathExtra";

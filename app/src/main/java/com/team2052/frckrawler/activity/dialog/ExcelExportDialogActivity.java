@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.CompiledData;
 import com.team2052.frckrawler.database.structures.Event;
@@ -25,7 +25,7 @@ import java.io.IOException;
 
 import au.com.bytecode.opencsv.CSVWriter;
 
-public class ExcelExportDialogActivity extends Activity implements OnClickListener {
+public class ExcelExportDialogActivity extends BaseActivity implements OnClickListener {
     private DBManager db;
     private Event[] events;
 

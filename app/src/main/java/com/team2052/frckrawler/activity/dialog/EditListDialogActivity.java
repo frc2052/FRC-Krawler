@@ -1,18 +1,18 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.activity.ListsActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.List;
 
-public class EditListDialogActivity extends Activity implements OnClickListener {
+public class EditListDialogActivity extends BaseActivity implements OnClickListener {
 
     public static final String LIST_ID_EXTRA = "com.team2052.frckrawler.listIDExtra";
 

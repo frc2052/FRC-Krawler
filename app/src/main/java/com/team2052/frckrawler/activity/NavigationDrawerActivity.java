@@ -53,10 +53,6 @@ public class NavigationDrawerActivity extends FragmentActivity implements Naviga
     @Override
     public void onNavDrawerItemClicked(NavDrawerItem item) {
         int id = item.getId();
-        if (id == R.id.nav_item_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-            return;
-        }
         TaskStackBuilder.create(this).addNextIntent(HomeActivity.newInstance(this, id)).startActivities();
     }
 

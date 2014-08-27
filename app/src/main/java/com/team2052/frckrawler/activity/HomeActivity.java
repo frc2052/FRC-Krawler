@@ -33,6 +33,17 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         int initNavId = R.id.nav_item_server;
+
+        //Used to switch to a different fragment if it came from a separate activity
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            if(b.containsKey(REQUESTED_MODE)){
+                if (b.getInt(REQUESTED_MODE, -1) != -1) {
+                    initNavId = b.getInt(REQUESTED_MODE);
+                }
+            }
+        }
+
         if (savedInstanceState != null) {
             mFromSavedInstanceState = true;
             if (savedInstanceState.containsKey(STATE_SELECTED_NAV_ID)) {

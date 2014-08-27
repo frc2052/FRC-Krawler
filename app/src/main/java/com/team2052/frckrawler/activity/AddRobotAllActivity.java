@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,7 +16,7 @@ import com.team2052.frckrawler.database.structures.Game;
 import com.team2052.frckrawler.database.structures.Team;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 
-public class AddRobotAllActivity extends Activity implements OnClickListener {
+public class AddRobotAllActivity extends BaseActivity implements OnClickListener {
 
     private DBManager db;
 

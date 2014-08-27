@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -9,11 +8,12 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.activity.ListsActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.List;
 
-public class AddListDialogActivity extends Activity implements OnClickListener {
+public class AddListDialogActivity extends BaseActivity implements OnClickListener {
 
     public static final int REQUEST_REFRESH_CODE = 1;
     public static final String EVENT_ID_EXTRA = "com.team2052.frckralwer.eventIDExtra";

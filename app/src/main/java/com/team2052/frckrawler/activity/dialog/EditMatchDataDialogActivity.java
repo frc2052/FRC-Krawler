@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.MatchData;
@@ -23,7 +23,7 @@ import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.gui.MetricWidget;
 
 
-public class EditMatchDataDialogActivity extends Activity implements OnClickListener,
+public class EditMatchDataDialogActivity extends BaseActivity implements OnClickListener,
         android.content.DialogInterface.OnClickListener {
 
     public static final String GAME_NAME_EXTRA = "com.team2052.frckrawler.gameNameExtra";

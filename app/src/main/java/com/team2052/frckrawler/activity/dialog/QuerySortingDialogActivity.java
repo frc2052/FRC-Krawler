@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.activity.SummaryActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
@@ -22,7 +22,7 @@ import com.team2052.frckrawler.gui.QueryWidget;
 
 import java.util.ArrayList;
 
-public class QuerySortingDialogActivity extends Activity implements OnClickListener {
+public class QuerySortingDialogActivity extends BaseActivity implements OnClickListener {
 
     public static final String EVENT_ID_EXTRA = "com.team2052.frckrawler.eventID";
 

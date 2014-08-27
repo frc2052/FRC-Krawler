@@ -1,12 +1,11 @@
 package com.team2052.frckrawler.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 
-public class RotationControlActivity extends Activity {
+public class RotationControlActivity extends BaseActivity {
 
     @SuppressLint("InlinedApi")
     protected void lockScreenOrientation() {

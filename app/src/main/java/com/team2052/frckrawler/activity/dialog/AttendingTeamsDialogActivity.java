@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,12 +9,13 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 
-public class AttendingTeamsDialogActivity extends Activity implements OnClickListener {
+public class AttendingTeamsDialogActivity extends BaseActivity implements OnClickListener {
 
     public static String GAME_NAME_EXTRA = "com.team2052.frckrawler.gameNameExtra";
     public static String EVENT_ID_EXTRA = "com.team2052.frckrawler.eventIDExtra";

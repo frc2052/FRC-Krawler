@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
@@ -18,7 +18,7 @@ import com.team2052.frckrawler.gui.ListEditor;
 import com.team2052.frckrawler.gui.MathMetricListEditor;
 import com.team2052.frckrawler.gui.TextListEditor;
 
-public class EditMetricDialogActivity extends Activity implements OnClickListener {
+public class EditMetricDialogActivity extends BaseActivity implements OnClickListener {
 
     public static final String METRIC_ID_EXTRA = "com.team2052.frckrawler.metricIDExtra";
     public static final String METRIC_CATEGORY_EXTRA = "com.team2052.frckrawler.categoryExtra";

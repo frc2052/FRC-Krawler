@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -20,7 +19,7 @@ import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.gui.MetricWidget;
 
-public class ScoutEditMatchDataActivity extends Activity implements OnClickListener {
+public class ScoutEditMatchDataActivity extends BaseActivity implements OnClickListener {
 
     public static final int REQUEST_CODE = 1;
     public static final int RESULT_REFRESH = 2;

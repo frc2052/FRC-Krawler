@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,9 +8,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
 
-public class AddGameDialogActivity extends Activity implements OnClickListener {
+public class AddGameDialogActivity extends BaseActivity implements OnClickListener {
 
     private DBManager dbManager;
 

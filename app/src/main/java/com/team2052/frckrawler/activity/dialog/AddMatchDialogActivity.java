@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -13,12 +12,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.activity.MatchScheduleActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Match;
 import com.team2052.frckrawler.database.structures.Robot;
 
-public class AddMatchDialogActivity extends Activity implements OnClickListener {
+public class AddMatchDialogActivity extends BaseActivity implements OnClickListener {
     private int eventID;
     private Robot[] robots;
 

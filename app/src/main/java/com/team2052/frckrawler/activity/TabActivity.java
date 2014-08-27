@@ -9,7 +9,6 @@ package com.team2052.frckrawler.activity;
  * it is pressed. Most activities that the superuser sees should extend this class.
  *****/
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +25,7 @@ import com.team2052.frckrawler.UsersActivity;
 import java.util.WeakHashMap;
 
 @Deprecated
-public class TabActivity extends Activity {
+public class TabActivity extends BaseActivity {
 
     private static final WeakHashMap<Integer, TabActivity> instances =
             new WeakHashMap<Integer, TabActivity>();

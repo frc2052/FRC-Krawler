@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,7 +34,7 @@ import com.team2052.frckrawler.gui.ProgressSpinner;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class ScoutActivity extends Activity implements OnClickListener,
+public class ScoutActivity extends BaseActivity implements OnClickListener,
         OnItemSelectedListener,
         DialogInterface.OnClickListener {
 

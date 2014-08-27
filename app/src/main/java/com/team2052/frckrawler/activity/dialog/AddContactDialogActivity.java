@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -8,10 +7,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Contact;
 
-public class AddContactDialogActivity extends Activity implements OnClickListener {
+public class AddContactDialogActivity extends BaseActivity implements OnClickListener {
 
     public static final String TEAM_NUMBER_EXTRA = "com.team2052.frckrawler.teamNumberExtra";
 

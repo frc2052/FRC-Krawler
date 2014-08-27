@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -21,7 +20,7 @@ import com.team2052.frckrawler.gui.MyButton;
 import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.gui.MyTextView;
 
-public class ScoutMatchDataActivity extends Activity implements OnClickListener {
+public class ScoutMatchDataActivity extends BaseActivity implements OnClickListener {
 
     private static final int EDIT_BUTTON_ID = 1;
 

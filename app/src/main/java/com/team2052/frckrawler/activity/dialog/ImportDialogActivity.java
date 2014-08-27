@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
@@ -15,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
@@ -31,7 +31,7 @@ import com.team2052.frckrawler.tba.types.TBATeam;
 
 import java.io.IOException;
 
-public class ImportDialogActivity extends Activity implements OnClickListener {
+public class ImportDialogActivity extends BaseActivity implements OnClickListener {
 
     public static final String EVENT_ID_EXTRA = "com.team2052.frckrawler.eventIDExtra";
 

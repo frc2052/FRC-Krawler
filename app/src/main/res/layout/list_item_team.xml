@@ -21,8 +21,7 @@
         android:text="KnightKrawler"
         android:id="@+id/list_item_team_name"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/list_item_team_number"
-        android:layout_marginLeft="16dp" />
+        android:layout_marginLeft="72dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,7 +29,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Location"
         android:id="@+id/list_item_team_location"
-        android:layout_alignStart="@+id/list_item_team_name"
         android:layout_below="@+id/list_item_team_name"
-        android:layout_toRightOf="@+id/list_item_team_number" />
+        android:layout_alignLeft="@+id/list_item_team_name"
+        android:layout_alignStart="@+id/list_item_team_name" />
 </RelativeLayout>

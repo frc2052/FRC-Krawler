@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Game;
@@ -23,7 +23,7 @@ import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatc
 import com.team2052.frckrawler.database.structures.Robot;
 import com.team2052.frckrawler.gui.MetricWidget;
 
-public class AddRobotDialogActivity extends Activity implements OnClickListener,
+public class AddRobotDialogActivity extends BaseActivity implements OnClickListener,
         OnItemSelectedListener {
 
     public static final String TEAM_NUMBER_EXTRA = "com.team2052.frckrawler.teamNumberExtra";

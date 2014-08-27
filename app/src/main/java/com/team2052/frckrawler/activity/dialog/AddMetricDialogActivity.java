@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity.dialog;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
@@ -23,7 +23,7 @@ import com.team2052.frckrawler.gui.TextListEditor;
 
 import java.util.ArrayList;
 
-public class AddMetricDialogActivity extends Activity implements OnClickListener, OnItemSelectedListener {
+public class AddMetricDialogActivity extends BaseActivity implements OnClickListener, OnItemSelectedListener {
 
     public static final String GAME_NAME_EXTRA = "com.team2052.frckrawler.gameNameExtra";
     public static final String METRIC_CATEGORY_EXTRA = "com.team2052.frckrawler.categoryExtra";
