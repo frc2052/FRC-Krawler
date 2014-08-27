@@ -10,13 +10,12 @@ import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.team2052.frckrawler.activity.AddRobotAllActivity;
-import com.team2052.frckrawler.activity.dialog.AddTeamDialogActivity;
 import com.team2052.frckrawler.activity.ContactsActivity;
-import com.team2052.frckrawler.activity.dialog.EditTeamDialogActivity;
 import com.team2052.frckrawler.activity.RobotsActivity;
 import com.team2052.frckrawler.activity.StackableTabActivity;
 import com.team2052.frckrawler.activity.TabActivity;
+import com.team2052.frckrawler.activity.dialog.AddTeamDialogActivity;
+import com.team2052.frckrawler.activity.dialog.EditTeamDialogActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Team;
@@ -97,7 +96,7 @@ public class TeamsActivity extends TabActivity implements OnClickListener {
             readyForUIUpdate = true;
             ((FrameLayout) findViewById(R.id.progressFrame)).
                     addView(new ProgressSpinner(getApplicationContext()));
-           //table = (StaticTableLayout) findViewById(R.id.teamsData);
+            //table = (StaticTableLayout) findViewById(R.id.teamsData);
             table.removeAllViews();
             teamCount = -1;
         }

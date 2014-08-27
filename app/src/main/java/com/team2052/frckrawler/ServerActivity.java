@@ -10,9 +10,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.team2052.frckrawler.activity.TabActivity;
 import com.team2052.frckrawler.activity.dialog.DBBackupDialogActivity;
 import com.team2052.frckrawler.activity.dialog.ExcelExportDialogActivity;
-import com.team2052.frckrawler.activity.TabActivity;
 import com.team2052.frckrawler.bluetooth.Server;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;

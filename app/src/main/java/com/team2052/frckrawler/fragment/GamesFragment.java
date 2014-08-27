@@ -3,7 +3,6 @@ package com.team2052.frckrawler.fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,7 +35,7 @@ public class GamesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateGames();
+        new GetGamesTask().execute();
     }
 
     @Override
@@ -46,22 +45,18 @@ public class GamesFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.add_metric_action){
+        if (item.getItemId() == R.id.add_metric_action) {
             Intent i = new Intent(getActivity(), AddGameDialogActivity.class);
             startActivity(i);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void updateGames() {
-        new GetGamesTask().execute();
     }
 
     private class GetGamesTask extends AsyncTask<Void, Void, Game[]> {

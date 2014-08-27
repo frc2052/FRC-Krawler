@@ -27,13 +27,13 @@ public class NavDrawerItem implements ListItem {
 
     @Override
     public View getView(Context c, LayoutInflater inflater, View convertView) {
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = inflater.inflate(layout, null);
         }
-        if(icon != -1){
+        if (icon != -1) {
             ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(icon);
         }
-        ((TextView)convertView.findViewById(R.id.title)).setText(title);
+        ((TextView) convertView.findViewById(R.id.title)).setText(title);
         return convertView;
     }
 

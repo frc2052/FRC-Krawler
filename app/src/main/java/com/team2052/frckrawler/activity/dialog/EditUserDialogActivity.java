@@ -35,7 +35,7 @@ public class EditUserDialogActivity extends Activity implements OnClickListener,
     @Override
     public void onResume() {
         super.onResume();
-        User[] arr = dbManager.getUsersByColumns(new String[]{DBContract.COL_USER_ID},new String[]{getIntent().getStringExtra(USER_ID_EXTRA)});
+        User[] arr = dbManager.getUsersByColumns(new String[]{DBContract.COL_USER_ID}, new String[]{getIntent().getStringExtra(USER_ID_EXTRA)});
         User u = arr[0];
         ((TextView) findViewById(R.id.nameVal)).setText(u.getName());
     }

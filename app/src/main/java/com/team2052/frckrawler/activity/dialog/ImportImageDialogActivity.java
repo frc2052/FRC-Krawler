@@ -95,13 +95,13 @@ public class ImportImageDialogActivity extends Activity implements OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CHOOSER && resultCode == RESULT_OK) {
-            Uri uri = data.getData();
-            File file = FileUtils.getFile(uri);
+           Uri uri = data.getData();
+            File file = FileUtils.getFile(this,uri);
             new CopyImageFileTask().execute(file);
 
         } else if (requestCode == REQUEST_GALLERY_IMAGE && resultCode == RESULT_OK) {
             Uri uri = data.getData();
-            File file = FileUtils.getFile(uri);
+            File file = FileUtils.getFile(this, uri);
             new CopyImageFileTask().execute(file);
         }
     }
@@ -205,7 +205,6 @@ public class ImportImageDialogActivity extends Activity implements OnClickListen
          * **
          * Method: downloadFromUrl
          *
-         * @param DownloadUrl
          * @param fileName    Summary: Downloads a file from the specified url and stores it in
          *                    FRCKrawler's image with the name in the passed parameter.
          *                    ***
@@ -224,7 +223,7 @@ public class ImportImageDialogActivity extends Activity implements OnClickListen
             BufferedInputStream bis = new BufferedInputStream(is);
 
 			/*
-			 * Read bytes to the Buffer until there is nothing more to read(-1).
+             * Read bytes to the Buffer until there is nothing more to read(-1).
 			 */
             ByteArrayBuffer baf = new ByteArrayBuffer(5000);
             int current = 0;

@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,8 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.TableLayout;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.dialog.AddMetricDialogActivity;
@@ -19,8 +16,6 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Metric;
-import com.team2052.frckrawler.gui.AbstractRadioGroup;
-import com.team2052.frckrawler.gui.MyTableRow;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.MetricListElement;
 
@@ -71,7 +66,7 @@ public class MetricsActivity extends DatabaseActivity implements OnClickListener
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.add_metric_action){
+        if (item.getItemId() == R.id.add_metric_action) {
             Intent i = new Intent(this, AddMetricDialogActivity.class);
             i.putExtra(AddMetricDialogActivity.METRIC_CATEGORY_EXTRA, metricCategory);
             i.putExtra(AddMetricDialogActivity.GAME_NAME_EXTRA, databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
@@ -141,6 +136,14 @@ public class MetricsActivity extends DatabaseActivity implements OnClickListener
         }
     }
 
+    public void editMetric(int metricId) {
+        //TODO Fragment dialog?
+        Intent i = new Intent(this, EditMetricDialogActivity.class);
+        i.putExtra(EditMetricDialogActivity.METRIC_CATEGORY_EXTRA, metricCategory);
+        i.putExtra(EditMetricDialogActivity.METRIC_ID_EXTRA, metricId);
+        startActivity(i);
+    }
+
     private class GetMetricsTask extends AsyncTask<Void, Void, ListViewAdapter> {
         private int metricNum;
 
@@ -175,13 +178,5 @@ public class MetricsActivity extends DatabaseActivity implements OnClickListener
         protected void onPostExecute(ListViewAdapter adapter) {
             ((ListView) findViewById(R.id.metric_list)).setAdapter(adapter);
         }
-    }
-
-    public void editMetric(int metricId) {
-        //TODO Fragment dialog?
-        Intent i = new Intent(this, EditMetricDialogActivity.class);
-        i.putExtra(EditMetricDialogActivity.METRIC_CATEGORY_EXTRA, metricCategory);
-        i.putExtra(EditMetricDialogActivity.METRIC_ID_EXTRA, metricId);
-        startActivity(i);
     }
 }

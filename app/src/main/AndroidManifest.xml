@@ -96,7 +96,7 @@
         <activity android:name=".activity.dialog.ImportImageDialogActivity" />
         <activity
             android:name="com.ipaulpro.afilechooser.FileChooserActivity"
-            android:icon="@drawable/ic_choosers"
+            android:icon="@drawable/ic_chooser"
             android:label="@string/chooser_label">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />

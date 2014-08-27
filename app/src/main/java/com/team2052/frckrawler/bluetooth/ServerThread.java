@@ -97,7 +97,7 @@ public class ServerThread implements Runnable {
                         teamNames[i] = teams[i].getName();
                     }
                     //Metrics
-                    Metric[] rMetricsArr = dbManager.getRobotMetricsByColumns(new String[]{DBContract.COL_GAME_NAME},new String[]{hostedEvent.getGameName()});
+                    Metric[] rMetricsArr = dbManager.getRobotMetricsByColumns(new String[]{DBContract.COL_GAME_NAME}, new String[]{hostedEvent.getGameName()});
                     Metric[] mMetricsArr = dbManager.getMatchPerformanceMetricsByColumns(new String[]{DBContract.COL_GAME_NAME}, new String[]{hostedEvent.getGameName()});
                     Schedule schedule = dbManager.getSchedule(hostedEvent.getEventID());
                     //Send data

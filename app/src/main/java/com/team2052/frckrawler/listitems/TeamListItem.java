@@ -14,7 +14,7 @@ import com.team2052.frckrawler.database.structures.Team;
 public class TeamListItem extends ListElement {
     private final Team team;
 
-    public TeamListItem(Team team){
+    public TeamListItem(Team team) {
         super(Integer.toString(team.getNumber()));
         this.team = team;
     }
@@ -22,9 +22,9 @@ public class TeamListItem extends ListElement {
     @Override
     public View getView(Context c, LayoutInflater inflater, View convertView) {
         convertView = inflater.inflate(R.layout.list_item_team, null);
-        ((TextView)convertView.findViewById(R.id.list_item_team_number)).setText(Integer.toString(team.getNumber()));
-        ((TextView)convertView.findViewById(R.id.list_item_team_name)).setText(team.getName());
-        ((TextView)convertView.findViewById(R.id.list_item_team_location)).setText(team.getCity() + ", " + team.getStatePostalCode());
+        ((TextView) convertView.findViewById(R.id.list_item_team_number)).setText(Integer.toString(team.getNumber()));
+        ((TextView) convertView.findViewById(R.id.list_item_team_name)).setText(team.getName());
+        ((TextView) convertView.findViewById(R.id.list_item_team_location)).setText(team.getCity() + ", " + team.getStatePostalCode());
         return convertView;
     }
 }

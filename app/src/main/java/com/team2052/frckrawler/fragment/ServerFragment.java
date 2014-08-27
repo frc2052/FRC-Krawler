@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.dialog.DBBackupDialogActivity;
@@ -40,7 +39,7 @@ public class ServerFragment extends Fragment implements View.OnClickListener {
         v.findViewById(R.id.excel).setOnClickListener(this);
         v.findViewById(R.id.dbBackups).setOnClickListener(this);
         v.findViewById(R.id.hostToggle).setOnClickListener(this);
-        ((Switch)v.findViewById(R.id.hostToggle)).setChecked(server.isOpen());
+        ((Switch) v.findViewById(R.id.hostToggle)).setChecked(server.isOpen());
         return v;
     }
 
@@ -83,6 +82,17 @@ public class ServerFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_BT_ENABLED && resultCode == getActivity().RESULT_OK) {
+            Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
+            Event selectedEvent = (Event) eventChooser.getSelectedItem();
+            if (null != selectedEvent) {
+                server.open(selectedEvent);
+            }
+        }
+    }
+
     private class GetEventsTask extends AsyncTask<Void, Void, Event[]> {
 
         @Override
@@ -95,17 +105,6 @@ public class ServerFragment extends Fragment implements View.OnClickListener {
             Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
             ArrayAdapter<Event> adapter = new ArrayAdapter<Event>(getActivity(), android.R.layout.simple_list_item_1, _events);
             eventChooser.setAdapter(adapter);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_BT_ENABLED && resultCode == getActivity().RESULT_OK) {
-            Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
-            Event selectedEvent = (Event) eventChooser.getSelectedItem();
-            if (null != selectedEvent) {
-                server.open(selectedEvent);
-            }
         }
     }
 }

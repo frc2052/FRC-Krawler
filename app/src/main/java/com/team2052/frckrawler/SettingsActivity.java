@@ -52,21 +52,21 @@ public class SettingsActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.action_server:
                 fragment = new ServerFragment();
-                if(menu != null){
+                if (menu != null) {
                     menu.findItem(R.id.add_game).setVisible(false);
                 }
                 setTitle("Server");
                 break;
             case R.id.action_games:
                 fragment = new GamesFragment();
-                if(menu != null){
+                if (menu != null) {
                     menu.findItem(R.id.add_game).setVisible(true);
                 }
                 setTitle("Games");
                 break;
             case R.id.action_options:
                 fragment = new OptionsFragment();
-                if(menu != null){
+                if (menu != null) {
                     menu.findItem(R.id.add_game).setVisible(false);
                 }
                 setTitle("Options");

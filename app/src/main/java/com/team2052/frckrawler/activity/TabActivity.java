@@ -24,6 +24,7 @@ import com.team2052.frckrawler.TeamsActivity;
 import com.team2052.frckrawler.UsersActivity;
 
 import java.util.WeakHashMap;
+
 @Deprecated
 public class TabActivity extends Activity {
 

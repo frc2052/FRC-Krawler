@@ -10,7 +10,7 @@ public class ListGroup {
     public final List<ListItem> children = new ArrayList<ListItem>();
     private final String name;
 
-    public ListGroup(String name){
+    public ListGroup(String name) {
         this.name = name;
     }
 

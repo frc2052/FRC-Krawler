@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.team2052.frckrawler.activity.dialog.EditGameDialogActivity;
 import com.team2052.frckrawler.activity.TabActivity;
+import com.team2052.frckrawler.activity.dialog.EditGameDialogActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Game;
 
@@ -47,7 +47,6 @@ public class GamesActivity extends TabActivity implements OnClickListener {
         super.onDestroy();
         setNoRootActivitySelected();
     }
-
 
 
     public void postResults(Game[] games) {

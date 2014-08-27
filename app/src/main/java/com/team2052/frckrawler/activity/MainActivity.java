@@ -119,7 +119,6 @@ public class MainActivity extends FragmentActivity implements DialogInterface.On
     }
 
 
-
     public void onCreditsClicked(View v) {
         /*Intent i = new Intent(this, AboutDialogActivity.class);
         startActivity(i);*/

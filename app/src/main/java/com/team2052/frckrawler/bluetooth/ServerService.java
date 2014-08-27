@@ -7,10 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.ServerActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Event;
@@ -44,10 +42,10 @@ public class ServerService extends Service {
             b.setContentText("The FRCKrawler server is open for scouts to sync");
             b.setOngoing(true);
             NotificationManager m = (NotificationManager)
-            getSystemService(Context.NOTIFICATION_SERVICE);
+                    getSystemService(Context.NOTIFICATION_SERVICE);
             m.notify(SERVER_OPEN_ID, b.build());
             int eventID = intent.getIntExtra(EVENT_ID_EXTRA, -1);
-            Event e = db.getEventsByColumns( new String[]{DBContract.COL_EVENT_ID}, new String[]{Integer.toString(eventID)})[0];
+            Event e = db.getEventsByColumns(new String[]{DBContract.COL_EVENT_ID}, new String[]{Integer.toString(eventID)})[0];
             thread = new ServerThread(this, e, new ServerCallbackHandler(this));
             new Thread(thread).start();
         }

@@ -1,4 +1,4 @@
-package com.frcKrawlTest.adam.myapplication;
+package frckrawler.knightkrawler.com.frckrawler;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

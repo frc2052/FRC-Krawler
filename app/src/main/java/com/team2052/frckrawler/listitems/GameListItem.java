@@ -46,11 +46,11 @@ public class GameListItem implements ListItem {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selected = parent.getItemAtPosition(position).toString();
-                if(selected.equals("Edit Game")){
+                if (selected.equals("Edit Game")) {
                     return;
                 }
 
-                if(selected.equals("Events")){
+                if (selected.equals("Events")) {
                     Intent intent = new Intent(c, EventsActivity.class);
                     intent.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[]{name});
                     intent.putExtra(StackableTabActivity.DB_VALUES_EXTRA, new String[]{name});
@@ -58,7 +58,7 @@ public class GameListItem implements ListItem {
                     c.startActivity(intent);
                     return;
                 }
-                if(selected.equals("Match Metrics")){
+                if (selected.equals("Match Metrics")) {
                     Intent i = new Intent(c, MetricsActivity.class);
                     i.putExtra(MetricsActivity.METRIC_CATEGORY_EXTRA, MetricsActivity.MATCH_PERF_METRICS);
                     i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[]{GameListItem.this.name});
@@ -68,7 +68,7 @@ public class GameListItem implements ListItem {
                     return;
                 }
 
-                if(selected.equals("Pit Metrics")){
+                if (selected.equals("Pit Metrics")) {
                     Intent i = new Intent(c, MetricsActivity.class);
                     i.putExtra(MetricsActivity.METRIC_CATEGORY_EXTRA, MetricsActivity.ROBOT_METRICS);
                     i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[]{GameListItem.this.name});
@@ -95,7 +95,6 @@ public class GameListItem implements ListItem {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         DBManager.getInstance(c).removeGame(GameListItem.this.name);
                         dialogInterface.dismiss();
-                        fragment.updateGames();
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

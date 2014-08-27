@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.adapters;
 
-import android.app.LauncherActivity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,18 +10,18 @@ import com.team2052.frckrawler.listitems.ListItem;
 
 import java.util.List;
 
-public class ListViewAdapter extends ArrayAdapter<ListItem>{
+public class ListViewAdapter extends ArrayAdapter<ListItem> {
     private final List<ListItem> values;
     private final LayoutInflater inflater;
 
-    public ListViewAdapter(Context context, List<ListItem> values){
+    public ListViewAdapter(Context context, List<ListItem> values) {
         super(context, android.R.layout.simple_expandable_list_item_1, values);
         this.values = values;
         inflater = LayoutInflater.from(context);
     }
 
-    public void removeAt(int index){
-        if(index >= 0){
+    public void removeAt(int index) {
+        if (index >= 0) {
             values.remove(index);
         }
     }
@@ -32,7 +31,7 @@ public class ListViewAdapter extends ArrayAdapter<ListItem>{
         return getItem(position).getView(getContext(), inflater, convertView);
     }
 
-    public void updateListData(){
+    public void updateListData() {
         notifyDataSetChanged();
     }
 }

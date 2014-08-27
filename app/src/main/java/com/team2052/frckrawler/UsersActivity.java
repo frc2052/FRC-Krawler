@@ -1,23 +1,17 @@
 package com.team2052.frckrawler;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.TextView;
 
+import com.team2052.frckrawler.activity.TabActivity;
 import com.team2052.frckrawler.activity.dialog.AddUserDialogActivity;
 import com.team2052.frckrawler.activity.dialog.EditUserDialogActivity;
-import com.team2052.frckrawler.activity.TabActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.User;
-import com.team2052.frckrawler.gui.MyButton;
-import com.team2052.frckrawler.gui.MyTableRow;
-import com.team2052.frckrawler.gui.MyTextView;
 
 public class UsersActivity extends TabActivity implements OnClickListener {
 

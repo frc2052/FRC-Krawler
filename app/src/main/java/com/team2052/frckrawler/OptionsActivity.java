@@ -11,7 +11,6 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ToggleButton;
 
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.TabActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Game;

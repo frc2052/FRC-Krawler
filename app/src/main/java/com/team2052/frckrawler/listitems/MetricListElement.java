@@ -18,10 +18,10 @@ public class MetricListElement implements ListItem {
     private final String name;
     private final int metricId;
     private final MetricsActivity activity;
-    private String typeString = "";
-    private String rangeString = "";
     private final String descripstionString;
     private final String isDisplayed;
+    private String typeString = "";
+    private String rangeString = "";
 
     public MetricListElement(Metric metric, MetricsActivity activity) {
         name = metric.getMetricName();

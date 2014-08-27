@@ -12,7 +12,7 @@ import com.team2052.frckrawler.listitems.NavDrawerItem;
 
 import java.util.List;
 
-public class NavDrawerAdataper extends  ListViewAdapter{
+public class NavDrawerAdataper extends ListViewAdapter {
     private int mSelectedItemPosition = -1;
 
     public NavDrawerAdataper(Context context, List<ListItem> values) {

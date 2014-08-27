@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.activity;
 
 import android.os.Bundle;
+
 @Deprecated
 public class StackableTabActivity extends TabActivity {
 
@@ -42,7 +43,7 @@ public class StackableTabActivity extends TabActivity {
          * CHARLIE! YOU MAY WANT TO FIX THIS, BUT IT IS ONLY FOR COSMETICS.
          */
         /*LinearLayout l = (LinearLayout)findViewById(R.id.treeView);
-		
+
 		if(l != null) {
 			
 			l.removeAllViews();

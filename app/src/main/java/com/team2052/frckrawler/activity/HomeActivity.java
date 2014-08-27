@@ -33,7 +33,7 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         int initNavId = R.id.nav_item_server;
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mFromSavedInstanceState = true;
             if (savedInstanceState.containsKey(STATE_SELECTED_NAV_ID)) {
                 mCurrentSelectedNavigationItemId = savedInstanceState.getInt(STATE_SELECTED_NAV_ID);
@@ -52,14 +52,14 @@ public class HomeActivity extends BaseActivity {
     @Override
     public void onNavDrawerItemClicked(NavDrawerItem item) {
         int id = item.getId();
-        if(id != mCurrentSelectedNavigationItemId){
+        if (id != mCurrentSelectedNavigationItemId) {
             switchToModeForId(id);
         }
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(!isDrawerOpen()){
+        if (!isDrawerOpen()) {
             //Reset the action bar
             ActionBar bar = getActionBar();
             if (bar != null) {
@@ -68,7 +68,7 @@ public class HomeActivity extends BaseActivity {
                 bar.setDisplayShowTitleEnabled(true);
             }
 
-            switch (mCurrentSelectedNavigationItemId){
+            switch (mCurrentSelectedNavigationItemId) {
                 case R.id.nav_item_scout:
                     getActionBar().setTitle("Scout");
                     break;
@@ -93,7 +93,7 @@ public class HomeActivity extends BaseActivity {
 
     private void switchToModeForId(int id) {
         Fragment fragment = null;
-        switch (id){
+        switch (id) {
             case R.id.nav_item_scout:
                 startActivity(new Intent(this, MainActivity.class));
                 return;

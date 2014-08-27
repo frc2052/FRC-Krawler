@@ -394,9 +394,13 @@ public class DBContract {
                     COL_TYPE + INT + ", " + COL_POSITION + INT + ");";
     public static final String SUMMARY_TABLE_SUMMARY_DATA = "summarysummarydata";
     public static final String SUMMARY_TABLE_MATCH_PERF = "summarymatchperformance";
+    //Match Number, user COL_MATCH_NUMBER
+    //Team Number
+    //Comments, use COL_COMMENTS
+    //Keys, use COL_KEYS[]
+    public static final String CREATE_SUMMARY_TABLE_MATCH_PERF = "CREATE TABLE " + SUMMARY_TABLE_MATCH_PERF + " (" + COL_TEAM_NUMBER + INT + ", " + COL_MATCH_NUMBER + INT + ", " + COL_COMMENTS + STRING + ")";
     public static String[] COL_KEYS = new String[50];
     public static String COL_KEYS_LIST;
-
     static {
         COL_KEYS_LIST = new String("");
         for (int i = 0; i < COL_KEYS.length; i++) {
@@ -407,7 +411,6 @@ public class DBContract {
             }
         }
     }
-
     public static final String CREATE_TABLE_ROBOTS =
             "CREATE TABLE " + TABLE_ROBOTS + " (" + COL_TEAM_NUMBER + INT + ", " + COL_ROBOT_ID +
                     INT + ", " + COL_GAME_NAME + STRING + ", " + COL_IMAGE_PATH + STRING + ", "
@@ -445,11 +448,6 @@ public class DBContract {
                     COL_EVENT_ID + INT + ", " + COL_MATCH_NUMBER + INT + ", " +
                     COL_COMMENTS + STRING + ", " + COL_KEYS_LIST + ")";
     public static String SUMMARY_MATCH_KEYS_LIST = "";
-    //Match Number, user COL_MATCH_NUMBER
-    //Team Number
-    //Comments, use COL_COMMENTS
-    //Keys, use COL_KEYS[]
-    public static final String CREATE_SUMMARY_TABLE_MATCH_PERF = "CREATE TABLE " + SUMMARY_TABLE_MATCH_PERF + " (" + COL_TEAM_NUMBER + INT + ", " + COL_MATCH_NUMBER + INT + ", " + COL_COMMENTS + STRING + ")";
     public static String SUMMARY_ROBOT_KEYS_LIST = "";
 
     static {

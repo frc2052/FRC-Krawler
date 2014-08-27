@@ -13,13 +13,14 @@ import com.team2052.frckrawler.database.structures.User;
 /**
  * Created by Adam on 8/25/2014.
  */
-public class UserListItem implements ListItem{
+public class UserListItem implements ListItem {
 
     private final User user;
 
-    public UserListItem(User user){
+    public UserListItem(User user) {
         this.user = user;
     }
+
     @Override
     public View getView(final Context c, LayoutInflater inflater, View convertView) {
         convertView = inflater.inflate(R.layout.list_item_user, null);

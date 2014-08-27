@@ -25,6 +25,20 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
     private SharedPreferences preferences;
     private String gameName;
 
+    public static void restoreDefaultOptions(Context context, boolean overwrite) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
+        if (!prefs.getBoolean(PREFS_IS_WRITTEN, false) || overwrite) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(PREFS_IS_WRITTEN, true);
+            editor.putFloat(PREFS_COMPILE_WEIGHT, 1.0f);
+            editor.putBoolean(PREFS_GENERATE_ROBOTS, false);
+            editor.putString(PREFS_ROBOT_GAME, "none");
+            editor.commit();
+        }
+        //TODO set text
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_options, null);
@@ -45,20 +59,6 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
         v.findViewById(R.id.generateRobots).setOnClickListener(this);
         v.findViewById(R.id.generateHelp).setOnClickListener(this);
         return v;
-    }
-
-    public static void restoreDefaultOptions(Context context, boolean overwrite) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-
-        if (!prefs.getBoolean(PREFS_IS_WRITTEN, false) || overwrite) {
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean(PREFS_IS_WRITTEN, true);
-            editor.putFloat(PREFS_COMPILE_WEIGHT, 1.0f);
-            editor.putBoolean(PREFS_GENERATE_ROBOTS, false);
-            editor.putString(PREFS_ROBOT_GAME, "none");
-            editor.commit();
-        }
-        //TODO set text
     }
 
     @Override

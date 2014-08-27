@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -46,7 +45,7 @@ public class EventsActivity extends DatabaseActivity implements OnClickListener 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.add_metric_action){
+        if (item.getItemId() == R.id.add_metric_action) {
             Intent i = new Intent(this, AddEventDialogActivity.class);
             i.putExtra(AddEventDialogActivity.GAME_NAME_EXTRA, parents[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
             startActivity(i);
@@ -74,7 +73,7 @@ public class EventsActivity extends DatabaseActivity implements OnClickListener 
         table.addView(descriptorsRow);
 */
         ArrayList<ListItem> eventList = new ArrayList<ListItem>();
-        for (Event event: events) {
+        for (Event event : events) {
             eventList.add(new EventListItem(event));
             /*int color;
             if (i % 2 == 0)
@@ -183,7 +182,7 @@ public class EventsActivity extends DatabaseActivity implements OnClickListener 
             }, color));*/
         }
         ListViewAdapter adapter = new ListViewAdapter(this, eventList);
-        ((ListView)findViewById(R.id.events_list)).setAdapter(adapter);
+        ((ListView) findViewById(R.id.events_list)).setAdapter(adapter);
     }
 
     @Override
