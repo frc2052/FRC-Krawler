@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.ScaleInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingRightInAnimationAdapter;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.activity.RobotsActivity;
@@ -39,7 +42,7 @@ public class TeamsFragment extends Fragment {
         ((ListView)view.findViewById(R.id.teams_list_view)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                String teamNumber = ((ListElement) ((ListViewAdapter) adapterView.getAdapter()).getItem(position)).getKey();
+                String teamNumber = ((ListElement) adapterView.getAdapter().getItem(position)).getKey();
                 Intent i = new Intent(getActivity(), RobotsActivity.class);
                 i.putExtra(DatabaseActivity.PARENTS_EXTRA, new String[]{teamNumber});
                 i.putExtra(DatabaseActivity.DB_VALUES_EXTRA, new String[]{teamNumber});
@@ -69,7 +72,9 @@ public class TeamsFragment extends Fragment {
             for (Team team : teams) {
                 teamItems.add(new TeamListItem(team));
             }
-            ((ListView) getView().findViewById(R.id.teams_list_view)).setAdapter(new ListViewAdapter(getActivity(), teamItems));
+            AlphaInAnimationAdapter adapter = new AlphaInAnimationAdapter(new ListViewAdapter(getActivity(), teamItems));
+            adapter.setAbsListView(((ListView)getView().findViewById(R.id.teams_list_view)));
+            ((ListView) getView().findViewById(R.id.teams_list_view)).setAdapter(adapter);
         }
     }
 }

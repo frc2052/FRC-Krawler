@@ -3,7 +3,6 @@ package com.team2052.frckrawler;
 import android.graphics.Color;
 
 public class GlobalValues {
-
     /**
      * SharedPreferences file name
      */

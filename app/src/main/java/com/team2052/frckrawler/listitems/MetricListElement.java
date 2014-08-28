@@ -75,9 +75,7 @@ public class MetricListElement implements ListItem {
         ((TextView) convertView.findViewById(R.id.metric_list_type)).setText(typeString);
         ((ImageView) convertView.findViewById(R.id.metric_list_edit)).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                activity.editMetric(metricId);
-            }
+            public void onClick(View v) {activity.editMetric(metricId);    }
         });
         return convertView;
     }

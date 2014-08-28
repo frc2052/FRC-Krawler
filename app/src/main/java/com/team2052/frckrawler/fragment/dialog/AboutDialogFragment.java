@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment;
+package com.team2052.frckrawler.fragment.dialog;
 
 import android.app.DialogFragment;
 import android.os.Bundle;

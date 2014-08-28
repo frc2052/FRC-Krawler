@@ -86,7 +86,7 @@ public class GamesActivity extends TabActivity implements OnClickListener {
                         @Override
                         public void onClick(View arg0) {
                             Intent i = new Intent(GamesActivity.this, MetricsActivity.class);
-                            i.putExtra(MetricsActivity.METRIC_CATEGORY_EXTRA,
+                            i.putExtra(MetricsActivity.METRIC_CATEGORY,
                                     MetricsActivity.MATCH_PERF_METRICS);
                             i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[]
                                     {gameName});
@@ -102,7 +102,7 @@ public class GamesActivity extends TabActivity implements OnClickListener {
                         @Override
                         public void onClick(View arg0) {
                             Intent i = new Intent(GamesActivity.this, MetricsActivity.class);
-                            i.putExtra(MetricsActivity.METRIC_CATEGORY_EXTRA,
+                            i.putExtra(MetricsActivity.METRIC_CATEGORY,
                                     MetricsActivity.ROBOT_METRICS);
                             i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[]
                                     {gameName});

@@ -7,15 +7,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ListView;
 
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.animateaddition.AnimateAdditionAdapter;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.dialog.AddMetricDialogActivity;
 import com.team2052.frckrawler.activity.dialog.EditMetricDialogActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.structures.Metric;
+import com.team2052.frckrawler.fragment.AddMetricFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.MetricListElement;
 
@@ -29,10 +31,12 @@ public class MetricsActivity extends DatabaseActivity implements OnClickListener
     public static final int DRIVER_METRICS = 3;    //Currently not used
     private static final int EDIT_BUTTON_ID = 1;
     private static final int SELECTED_BUTTON_ID = 2;
-    private int metricCategory;    //Either MATCH_PERF_METRICS, ROBOT_METRICS, or DRIVER_METRICS
+    private int metricCategory;    //Either MATCH_PERF_METRpublicOBOT_METRICS, or DRIVER_METRICS
     private int selectedMetricID;
     private DBManager dbManager;
-    private Metric[] metrics;
+    public Metric[] metrics;
+    public DynamicListView mDynamicListView;
+    public AlphaInAnimationAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,12 +53,8 @@ public class MetricsActivity extends DatabaseActivity implements OnClickListener
             metricCategory = MATCH_PERF_METRICS;
             setTitle("Match Performance Metrics");
         }
+        mDynamicListView = (DynamicListView) findViewById(R.id.metric_list);
         dbManager = DBManager.getInstance(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         new GetMetricsTask().execute();
     }
 
@@ -67,74 +67,74 @@ public class MetricsActivity extends DatabaseActivity implements OnClickListener
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_metric_action) {
-            Intent i = new Intent(this, AddMetricDialogActivity.class);
-            i.putExtra(AddMetricDialogActivity.METRIC_CATEGORY_EXTRA, metricCategory);
-            i.putExtra(AddMetricDialogActivity.GAME_NAME_EXTRA, databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
-            startActivity(i);
+            AddMetricFragment fragment = AddMetricFragment.newInstance(metricCategory, databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
+            fragment.show(getSupportFragmentManager(), "Add Metric");
             return true;
-        }
+        } else if(item.getItemId() == android.R.id.home){
+                     startActivity(HomeActivity.newInstance(this, R.id.nav_item_games).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                 }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onClick(View v) {
-        Intent i;
-        switch (v.getId()) {
-            //TODO REIMPLEMENT
-            /*case R.id.down:
-                if (metrics.length == 0 || radioGroup.getSelectedButton() == null ||
-                        isGettingMetrics)
-                    break;
-                else {
-                    int metricPos = 0;
-                    int metricID = ((Integer) radioGroup.getSelectedButton().getTag()).intValue();
-                    for (int k = 0; k < metrics.length; k++) {
-                        if (metrics[k].getID() == metricID)
-                            metricPos = k;
-                    }
-                    if (metricPos == metrics.length - 1)
-                        break;
-                    int lowerMetricPos = metricPos + 1;
-                    int lowerMetricID = metrics[lowerMetricPos].getID();
-                    if (metricCategory == MATCH_PERF_METRICS) {
-                        System.out.println(dbManager.flipMatchMetricPosition(metricID, lowerMetricID));
-                    } else if (metricCategory == ROBOT_METRICS) {
-                        dbManager.flipRobotMetricPosition(metricID, lowerMetricID);
-                    }
-                    new GetMetricsTask().execute();
-                    break;
-                }
+         public void onClick(View v) {
+             Intent i;
+             switch (v.getId()) {
+                 //TODO REIMPLEMENT
+                              /*case R.id.down:
+                                  if (metrics.length == 0 || radioGroup.getSelectedButton() == null ||
+                                          isGettingMetrics)
+                                      break;
+                                  else {
+                                      int metricPos = 0;
+                                      int metricID = ((Integer) radioGroup.getSelectedButton().getTag()).intValue();
+                                      for (int k = 0; k < metrics.length; k++) {
+                                          if (metrics[k].getID() == metricID)
+                                              metricPos = k;
+                                      }
+                                      if (metricPos == metrics.length - 1)
+                                          break;
+                                      int lowerMetricPos = metricPos + 1;
+                                      int lowerMetricID = metrics[lowerMetricPos].getID();
+                                      if (metricCategory == MATCH_PERF_METRICS) {
+                                          System.out.println(dbManager.flipMatchMetricPosition(metricID, lowerMetricID));
+                                      } else if (metricCategory == ROBOT_METRICS) {
+                                          dbManager.flipRobotMetricPosition(metricID, lowerMetricID);
+                                      }
+                                      new GetMetricsTask().execute();
+                                      break;
+                                  }
 
-            case R.id.up:
-                if (metrics.length == 0 || radioGroup.getSelectedButton() == null ||
-                        isGettingMetrics)
-                    break;
-                else {
-                    int metricPos = 0;
-                    int metricID = ((Integer) radioGroup.getSelectedButton().getTag()).intValue();
-                    for (int k = 0; k < metrics.length; k++) {
-                        if (metrics[k].getID() == metricID)
-                            metricPos = k;
-                    }
-                    if (metricPos == 0)
-                        break;
-                    int upperMetricPos = metricPos - 1;
-                    int upperMetricID = metrics[upperMetricPos].getID();
-                    if (metricCategory == MATCH_PERF_METRICS) {
-                        dbManager.flipMatchMetricPosition(metricID, upperMetricID);
-                    } else if (metricCategory == ROBOT_METRICS) {
-                        dbManager.flipRobotMetricPosition(metricID, upperMetricID);
-                    }
-                    new GetMetricsTask().execute();
-                    break;
-                }
+                              case R.id.up:
+                                  if (metrics.length == 0 || radioGroup.getSelectedButton() == null ||
+                                          isGettingMetrics)
+                                      break;
+                                  else {
+                                      int metricPos = 0;
+                                      int metricID = ((Integer) radioGroup.getSelectedButton().getTag()).intValue();
+                                      for (int k = 0; k < metrics.length; k++) {
+                                          if (metrics[k].getID() == metricID)
+                                              metricPos = k;
+                                      }
+                                      if (metricPos == 0)
+                                          break;
+                                      int upperMetricPos = metricPos - 1;
+                                      int upperMetricID = metrics[upperMetricPos].getID();
+                                      if (metricCategory == MATCH_PERF_METRICS) {
+                                          dbManager.flipMatchMetricPosition(metricID, upperMetricID);
+                                      } else if (metricCategory == ROBOT_METRICS) {
+                                          dbManager.flipRobotMetricPosition(metricID, upperMetricID);
+                                      }
+                                      new GetMetricsTask().execute();
+                                      break;
+                                  }
 
-            case SELECTED_BUTTON_ID:
-                radioGroup.notifyClick((RadioButton) v);
-                selectedMetricID = (Integer) v.getTag();
-                break;*/
-        }
-    }
+                              case SELECTED_BUTTON_ID:
+                                  radioGroup.notifyClick((RadioButton) v);
+                                  selectedMetricID = (Integer) v.getTag();
+                                  break;*/
+             }
+         }
 
     public void editMetric(int metricId) {
         //TODO Fragment dialog?
@@ -176,7 +176,9 @@ public class MetricsActivity extends DatabaseActivity implements OnClickListener
 
         @Override
         protected void onPostExecute(ListViewAdapter adapter) {
-            ((ListView) findViewById(R.id.metric_list)).setAdapter(adapter);
+            mAdapter = new AlphaInAnimationAdapter(adapter);
+            mAdapter.setAbsListView(mDynamicListView);
+            mDynamicListView.setAdapter(mAdapter);
         }
     }
 }

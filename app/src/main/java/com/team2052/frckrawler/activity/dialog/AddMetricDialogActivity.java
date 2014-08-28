@@ -22,7 +22,7 @@ import com.team2052.frckrawler.gui.MathMetricListEditor;
 import com.team2052.frckrawler.gui.TextListEditor;
 
 import java.util.ArrayList;
-
+@Deprecated
 public class AddMetricDialogActivity extends BaseActivity implements OnClickListener, OnItemSelectedListener {
 
     public static final String GAME_NAME_EXTRA = "com.team2052.frckrawler.gameNameExtra";

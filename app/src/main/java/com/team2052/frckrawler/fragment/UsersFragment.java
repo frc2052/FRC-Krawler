@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.dialog.AddUserDialogActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
@@ -82,7 +83,9 @@ public class UsersFragment extends Fragment {
             for (User user : users) {
                 userList.add(new UserListItem(user));
             }
-            ((ListView) getView().findViewById(R.id.users_list_view)).setAdapter(new ListViewAdapter(getActivity(), userList));
+            AlphaInAnimationAdapter adapter = new AlphaInAnimationAdapter(new ListViewAdapter(getActivity(), userList));
+            adapter.setAbsListView(((ListView)getView().findViewById(R.id.users_list_view)));
+            ((ListView) getView().findViewById(R.id.users_list_view)).setAdapter(adapter);
         }
     }
 }
