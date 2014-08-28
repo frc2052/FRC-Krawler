@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.models.Game;
 
 public class AddGameDialogActivity extends BaseActivity implements OnClickListener {
 
@@ -32,13 +33,7 @@ public class AddGameDialogActivity extends BaseActivity implements OnClickListen
 
         switch (v.getId()) {
             case R.id.addGame:
-                if (dbManager.addGame(((EditText) findViewById(R.id.nameVal)).
-                        getText().toString()))
-                    finish();
-                else
-                    Toast.makeText(this, "Could not add game to the Database. " +
-                            "Name entered is already taken.", Toast.LENGTH_LONG).show();
-                break;
+                new Game(((EditText) findViewById(R.id.nameVal)).getText().toString()).save();
             case R.id.cancel:
                 finish();
                 break;

@@ -144,7 +144,7 @@ public class AddMetricDialogActivity extends BaseActivity implements OnClickList
 
             DBManager db = DBManager.getInstance(this);
 
-            switch (metricCategory) {
+            /*switch (metricCategory) {
                 case MetricsActivity.MATCH_PERF_METRICS:
                     db.addMatchPerformanceMetric(m);
                     break;
@@ -156,7 +156,7 @@ public class AddMetricDialogActivity extends BaseActivity implements OnClickList
                 case MetricsActivity.DRIVER_METRICS:
                     db.addDriverMetric(m);
                     break;
-            }
+            }*/
 
             finish();
 
@@ -195,7 +195,7 @@ public class AddMetricDialogActivity extends BaseActivity implements OnClickList
             DBManager db = DBManager.getInstance(this);
             Metric[] choices;
 
-            switch (metricCategory) {
+            /*switch (metricCategory) {
                 case MetricsActivity.MATCH_PERF_METRICS:
                     Metric[] matchMetrics = db.getMatchPerformanceMetricsByColumns
                             (new String[]{DBContract.COL_GAME_NAME},
@@ -226,14 +226,14 @@ public class AddMetricDialogActivity extends BaseActivity implements OnClickList
 
                 default:
                     choices = new Metric[0];
-            }
+            }*/
 
-            findViewById(R.id.min).setEnabled(false);
+            /*findViewById(R.id.min).setEnabled(false);
             findViewById(R.id.max).setEnabled(false);
             findViewById(R.id.inc).setEnabled(false);
             list = new MathMetricListEditor(this, new String[0], choices);
             ((FrameLayout) findViewById(R.id.listEditorSlot)).removeAllViews();
-            ((FrameLayout) findViewById(R.id.listEditorSlot)).addView(list);
+            ((FrameLayout) findViewById(R.id.listEditorSlot)).addView(list);*/
 
         } else if (selectedMetricType == DBContract.CHOOSER) {
             findViewById(R.id.min).setEnabled(false);

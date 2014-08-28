@@ -11,11 +11,7 @@ public class Match implements Structure {
     private int redScore;
     private int blueScore;
 
-    public Match(int _matchNum, int _red1RobotID,
-                 int _red2RobotID, int _red3RobotID,
-                 int _blue1RobotID, int _blue2RobotID,
-                 int _blue3RobotID, int _redScore,
-                 int _blueScore) {
+    public Match(int _matchNum, int _red1RobotID, int _red2RobotID, int _red3RobotID, int _blue1RobotID, int _blue2RobotID, int _blue3RobotID, int _redScore, int _blueScore) {
         matchNum = _matchNum;
         red1RobotID = _red1RobotID;
         red2RobotID = _red2RobotID;
@@ -27,8 +23,7 @@ public class Match implements Structure {
         blueScore = _blueScore;
     }
 
-    public Match(int _matchNum, Robot[] robots,
-                 int _redScore, int _blueScore) {
+    public Match(int _matchNum, Robot[] robots, int _redScore, int _blueScore) {
         matchNum = _matchNum;
         red1RobotID = robots[0].getID();
         red2RobotID = robots[1].getID();

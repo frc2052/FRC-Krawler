@@ -12,12 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.activeandroid.query.Select;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.dialog.AddUserDialogActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.structures.User;
+import com.team2052.frckrawler.database.models.User;
+import com.team2052.frckrawler.fragment.dialog.AddUserDialogFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.UserListItem;
 
@@ -28,13 +30,6 @@ import java.util.List;
  * Created by Adam on 8/25/2014.
  */
 public class UsersFragment extends Fragment {
-    private DBManager dbManager;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        dbManager = DBManager.getInstance(getActivity());
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -52,8 +47,8 @@ public class UsersFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_metric_action) {
-            Intent i = new Intent(getActivity(), AddUserDialogActivity.class);
-            startActivity(i);
+            AddUserDialogFragment fragment = new AddUserDialogFragment();
+            fragment.show(getFragmentManager(), "Add User");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -69,16 +64,18 @@ public class UsersFragment extends Fragment {
         super.onResume();
         new GetUsersTask().execute();
     }
-
-    private class GetUsersTask extends AsyncTask<Void, Void, User[]> {
+    public void updateUsers(){
+        new GetUsersTask().execute();
+    }
+    private class GetUsersTask extends AsyncTask<Void, Void, List<User>> {
 
         @Override
-        protected User[] doInBackground(Void... params) {
-            return dbManager.getAllUsers();
+        protected List<User> doInBackground(Void... params) {
+            return new Select().from(User.class).execute();
         }
 
         @Override
-        protected void onPostExecute(User[] users) {
+        protected void onPostExecute(List<User> users) {
             List<ListItem> userList = new ArrayList<ListItem>();
             for (User user : users) {
                 userList.add(new UserListItem(user));

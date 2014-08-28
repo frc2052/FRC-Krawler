@@ -12,15 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.dialog.AddGameDialogActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.structures.Game;
+import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.listitems.GameListItem;
 import com.team2052.frckrawler.listitems.ListItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GamesFragment extends Fragment {
     private DBManager dbManager;
@@ -35,6 +37,10 @@ public class GamesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        new GetGamesTask().execute();
+    }
+
+    public void updateList(){
         new GetGamesTask().execute();
     }
 
@@ -59,15 +65,15 @@ public class GamesFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private class GetGamesTask extends AsyncTask<Void, Void, Game[]> {
+    private class GetGamesTask extends AsyncTask<Void, Void, List<Game>> {
 
         @Override
-        protected Game[] doInBackground(Void... params) {
-            return dbManager.getAllGames();
+        protected List<Game> doInBackground(Void... params) {
+            return new Select().from(Game.class).execute();
         }
 
         @Override
-        protected void onPostExecute(Game[] games) {
+        protected void onPostExecute(List<Game> games) {
             ListView listView = (ListView) getView().findViewById(R.id.games_list);
             ArrayList<ListItem> element = new ArrayList<ListItem>();
             for (Game game : games) {

@@ -1,8 +1,7 @@
-package com.team2052.frckrawler.fragment;
+package com.team2052.frckrawler.fragment.dialog;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,6 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.nhaarman.listviewanimations.ArrayAdapter;
-import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
-import com.nhaarman.listviewanimations.itemmanipulation.animateaddition.AnimateAdditionAdapter;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.DBContract;
@@ -25,7 +21,6 @@ import com.team2052.frckrawler.database.structures.Metric;
 import com.team2052.frckrawler.gui.ListEditor;
 import com.team2052.frckrawler.gui.MathMetricListEditor;
 import com.team2052.frckrawler.gui.TextListEditor;
-import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.MetricListElement;
 
 import java.util.ArrayList;
@@ -55,7 +50,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        mMetricCategory = args.getInt(METRIC_CATEGORY, MetricsActivity.MATCH_PERF_METRICS);
+        //mMetricCategory = args.getInt(METRIC_CATEGORY, MetricsActivity.MATCH_PERF_METRICS);
         mGameName = args.getString(GAME_NAME_EXTRA, "");
         list = new TextListEditor(getActivity());
     }
@@ -93,7 +88,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
             case DBContract.MATH:
                 DBManager db = DBManager.getInstance(getActivity());
                 Metric[] choices;
-                switch (mMetricCategory) {
+                /*switch (mMetricCategory) {
                     case MetricsActivity.MATCH_PERF_METRICS:
                         Metric[] matchMetrics = db.getMatchPerformanceMetricsByColumns(new String[]{DBContract.COL_GAME_NAME}, new String[]{mGameName});
                         ArrayList<Metric> acceptedMetrics = new ArrayList<Metric>();
@@ -117,14 +112,14 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
 
                     default:
                         choices = new Metric[0];
-                }
+                }*/
 
-                getView().findViewById(R.id.min).setEnabled(false);
+                /*getView().findViewById(R.id.min).setEnabled(false);
                 getView().findViewById(R.id.max).setEnabled(false);
                 getView().findViewById(R.id.inc).setEnabled(false);
                 list = new MathMetricListEditor(getActivity(), new String[0], choices);
                 ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).removeAllViews();
-                ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).addView(list);
+                ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).addView(list);*/
                 break;
             case DBContract.CHOOSER:
                 getView().findViewById(R.id.min).setEnabled(false);
@@ -235,7 +230,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
 
             DBManager db = DBManager.getInstance(getActivity());
 
-            switch (mMetricCategory) {
+            /*switch (mMetricCategory) {
                 case MetricsActivity.MATCH_PERF_METRICS:
                     db.addMatchPerformanceMetric(m);
                     break;
@@ -247,7 +242,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 case MetricsActivity.DRIVER_METRICS:
                     db.addDriverMetric(m);
                     break;
-            }
+            }*/
             MetricsActivity activity = (MetricsActivity) getActivity();
             activity.mAdapter.add(activity.mAdapter.getCount(), new MetricListElement(m, activity));
             activity.mAdapter.notifyDataSetChanged();

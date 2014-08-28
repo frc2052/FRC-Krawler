@@ -17,6 +17,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.Match;
 import com.team2052.frckrawler.database.structures.MetricValue;
@@ -253,9 +254,9 @@ public class ImportDialogActivity extends BaseActivity implements OnClickListene
 
                 //Create teams that don't exist yet and give them robots
                 for (TBATeam t : faTeams) {
-                    db.addTeam(Integer.parseInt(t.getNumber()), t.getName(),
-                            null, t.getCity(), -1, t.getWebsite(), t.getState(), null);
-
+                    db.addTeam(Integer.parseInt(t.getNumber()), t.getName(), null, t.getCity(), -1, t.getWebsite(), t.getState(), null);
+                    Team team = new Team(Integer.parseInt(t.getNumber()), t.getName(), null, t.getCity(), -1, t.getWebsite(), t.getState(), null);
+                    team.save();
                     if (db.getRobotsByColumns(
                             new String[]{DBContract.COL_TEAM_NUMBER, DBContract.COL_GAME_NAME},
                             new String[]{t.getNumber(), frckrawlerEvent.getGameName()})

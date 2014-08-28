@@ -17,14 +17,21 @@
         android:required="false" />
 
     <application
-        tools:replace="android:label"
+        android:name=".FRCKrawler"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:logo="@drawable/ic_launcher"
-        android:name=".FRCKrawler"
-        android:theme="@style/AppBaseTheme">
+        android:theme="@style/AppBaseTheme"
+        tools:replace="android:label">
+        <!-- Active Android Database-->
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="FRCKrawler.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="1" />
+
         <activity
             android:name=".TeamsActivity"
             android:windowSoftInputMode="adjustNothing" />

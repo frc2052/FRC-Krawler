@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,49 +11,54 @@ import android.view.View.OnClickListener;
 
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
-import com.nhaarman.listviewanimations.itemmanipulation.animateaddition.AnimateAdditionAdapter;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.dialog.EditMetricDialogActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.database.structures.Metric;
-import com.team2052.frckrawler.fragment.AddMetricFragment;
+import com.team2052.frckrawler.fragment.dialog.AddMetricFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.MetricListElement;
 
 import java.util.ArrayList;
 
-public class MetricsActivity extends DatabaseActivity implements OnClickListener {
+public class MetricsActivity extends NewDatabaseActivity implements OnClickListener {
 
-    public static final String METRIC_CATEGORY_EXTRA = "com.team2052.frckrawler.metricCategoryExtra";
-    public static final int MATCH_PERF_METRICS = 1;
-    public static final int ROBOT_METRICS = 2;
-    public static final int DRIVER_METRICS = 3;    //Currently not used
-    private static final int EDIT_BUTTON_ID = 1;
-    private static final int SELECTED_BUTTON_ID = 2;
-    private int metricCategory;    //Either MATCH_PERF_METRpublicOBOT_METRICS, or DRIVER_METRICS
+    public static final String METRIC_CATEGORY = "METRIC_CATEGORY";
+    private int metricCategory; //Either MATCH_PERF_METRpublicOBOT_METRICS, or DRIVER_METRICS
     private int selectedMetricID;
     private DBManager dbManager;
     public Metric[] metrics;
     public DynamicListView mDynamicListView;
     public AlphaInAnimationAdapter mAdapter;
+    private Game mGame;
+
+    public static Intent newInstance(Context context, Game game, MetricType type) {
+        Intent i = new Intent(context, MetricsActivity.class);
+        i.putExtra(PARENT_ID, game.getId());
+        i.putExtra(METRIC_CATEGORY, type.ordinal());
+        return i;
+    }
+
+    public static enum MetricType {
+        MATCH_PERF_METRICS("Match Performance Metrics"), ROBOT_METRICS("Pit Scout Metrics"), DRIVER_METRICS("Driver Metrics");
+        public final String title;
+        public static final MetricType[] VALID_TYPES = values();
+
+        MetricType(String title) {
+            this.title = title;
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_metrics);
-        metricCategory = getIntent().getIntExtra(METRIC_CATEGORY_EXTRA, -1);
-        if (metricCategory == MATCH_PERF_METRICS)
-            setTitle("Match Performance Metrics");
-        else if (metricCategory == ROBOT_METRICS)
-            setTitle("Pit Scout Metrics");
-        else if (metricCategory == DRIVER_METRICS)
-            setTitle("Driver Metrics");
-        else {
-            metricCategory = MATCH_PERF_METRICS;
-            setTitle("Match Performance Metrics");
-        }
+        metricCategory = getIntent().getIntExtra(METRIC_CATEGORY, -1);
+        mGame = Game.load(Game.class, getIntent().getIntExtra(PARENT_ID, -1));
+        getActionBar().setTitle(MetricType.VALID_TYPES[metricCategory].title);
         mDynamicListView = (DynamicListView) findViewById(R.id.metric_list);
         dbManager = DBManager.getInstance(this);
         new GetMetricsTask().execute();
@@ -67,20 +73,20 @@ public class MetricsActivity extends DatabaseActivity implements OnClickListener
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_metric_action) {
-            AddMetricFragment fragment = AddMetricFragment.newInstance(metricCategory, databaseValues[getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]);
+            AddMetricFragment fragment = AddMetricFragment.newInstance(metricCategory, mGame.name);
             fragment.show(getSupportFragmentManager(), "Add Metric");
             return true;
-        } else if(item.getItemId() == android.R.id.home){
-                     startActivity(HomeActivity.newInstance(this, R.id.nav_item_games).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                 }
+        } else if (item.getItemId() == android.R.id.home) {
+            startActivity(HomeActivity.newInstance(this, R.id.nav_item_games).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-         public void onClick(View v) {
-             Intent i;
-             switch (v.getId()) {
-                 //TODO REIMPLEMENT
+    public void onClick(View v) {
+        Intent i;
+        switch (v.getId()) {
+            //TODO REIMPLEMENT
                               /*case R.id.down:
                                   if (metrics.length == 0 || radioGroup.getSelectedButton() == null ||
                                           isGettingMetrics)
@@ -133,8 +139,8 @@ public class MetricsActivity extends DatabaseActivity implements OnClickListener
                                   radioGroup.notifyClick((RadioButton) v);
                                   selectedMetricID = (Integer) v.getTag();
                                   break;*/
-             }
-         }
+        }
+    }
 
     public void editMetric(int metricId) {
         //TODO Fragment dialog?
@@ -154,13 +160,13 @@ public class MetricsActivity extends DatabaseActivity implements OnClickListener
 
         @Override
         protected ListViewAdapter doInBackground(Void... v) {
-            switch (metricCategory) {
+            switch (MetricType.VALID_TYPES[metricCategory]) {
                 case MATCH_PERF_METRICS:
-                    metrics = dbManager.getMatchPerformanceMetricsByColumns(new String[]{DBContract.COL_GAME_NAME}, new String[]{databaseValues[MetricsActivity.this.getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]});
+                    //metrics = dbManager.getMatchPerformanceMetricsByColumns(new String[]{DBContract.COL_GAME_NAME}, new String[]{databaseValues[MetricsActivity.this.getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]});
                     break;
 
                 case ROBOT_METRICS:
-                    metrics = dbManager.getRobotMetricsByColumns(new String[]{DBContract.COL_GAME_NAME}, new String[]{databaseValues[MetricsActivity.this.getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]});
+                    //metrics = dbManager.getRobotMetricsByColumns(new String[]{DBContract.COL_GAME_NAME}, new String[]{databaseValues[MetricsActivity.this.getAddressOfDatabaseKey(DBContract.COL_GAME_NAME)]});
                     break;
 
                 default:

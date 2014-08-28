@@ -9,7 +9,7 @@ import android.widget.EditText;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.structures.User;
+import com.team2052.frckrawler.database.models.User;
 
 public class AddUserDialogActivity extends BaseActivity implements OnClickListener {
 
@@ -32,10 +32,7 @@ public class AddUserDialogActivity extends BaseActivity implements OnClickListen
                 break;
 
             case R.id.addUser:
-                DBManager.getInstance(this).addUser(new User(
-                        ((EditText) findViewById(R.id.nameVal)).getText().toString().trim(),
-                        false
-                ));
+                new User(((EditText) findViewById(R.id.nameVal)).getText().toString().trim()).save();
                 finish();
                 break;
         }

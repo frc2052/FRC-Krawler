@@ -41,7 +41,7 @@ public class EditMetricDialogActivity extends BaseActivity implements OnClickLis
 
         db = DBManager.getInstance(this);
 
-        switch (metricCategory) {
+        /*switch (metricCategory) {
             case MetricsActivity.MATCH_PERF_METRICS:
                 Metric[] arr = db.getMatchPerformanceMetricsByColumns
                         (new String[]{DBContract.COL_METRIC_ID},
@@ -61,7 +61,7 @@ public class EditMetricDialogActivity extends BaseActivity implements OnClickLis
                 if (rarr.length > 0)
                     metric = rarr[0];
                 break;
-        }
+        }*/
 
         if (metric != null) {
             String[] metricTypes = getResources().getStringArray(R.array.metric_types);
@@ -109,7 +109,7 @@ public class EditMetricDialogActivity extends BaseActivity implements OnClickLis
                     Metric[] addableMetrics = new Metric[0];
                     DBManager db = DBManager.getInstance(this);
 
-                    if (metricCategory == MetricsActivity.MATCH_PERF_METRICS) {
+                    /*if (metricCategory == MetricsActivity.MATCH_PERF_METRICS) {
                         addableMetrics = db.getMatchPerformanceMetricsByColumns(
                                 new String[]{DBContract.COL_TYPE, DBContract.COL_TYPE},
                                 new String[]{Integer.toString(DBContract.COUNTER),
@@ -124,7 +124,7 @@ public class EditMetricDialogActivity extends BaseActivity implements OnClickLis
                                         Integer.toString(DBContract.SLIDER)},
                                 true
                         );
-                    }
+                    }*/
 
                     String[] metricNames = new String[range.length];
 
@@ -159,7 +159,7 @@ public class EditMetricDialogActivity extends BaseActivity implements OnClickLis
                 break;
 
             case R.id.remove:
-                switch (metricCategory) {
+                /*switch (metricCategory) {
                     case MetricsActivity.MATCH_PERF_METRICS:
                         db.removeMatchPerformaceMetric
                                 (getIntent().getIntExtra(METRIC_ID_EXTRA, -1));
@@ -174,7 +174,7 @@ public class EditMetricDialogActivity extends BaseActivity implements OnClickLis
                         db.removeDriverMetric(getIntent().getIntExtra
                                 (METRIC_ID_EXTRA, -1));
                         break;
-                }
+                }*/
 
                 finish();
                 break;
@@ -212,7 +212,7 @@ public class EditMetricDialogActivity extends BaseActivity implements OnClickLis
                         break;
                 }
 
-                switch (metricCategory) {
+                /*switch (metricCategory) {
                     case MetricsActivity.MATCH_PERF_METRICS:
                         db.updateMatchPerformanceMetrics(
                                 new Metric[]{new Metric(
@@ -248,7 +248,7 @@ public class EditMetricDialogActivity extends BaseActivity implements OnClickLis
                     case MetricsActivity.DRIVER_METRICS:
                         //NOT USED!//
                         break;
-                }
+                }*/
 
                 finish();
 

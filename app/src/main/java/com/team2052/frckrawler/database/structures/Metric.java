@@ -48,7 +48,6 @@ public class Metric implements Structure {
     }
 
     public Metric(int _id, String _gameName, String _metricName, String _description, String _key, int _type, Object[] _range, boolean _displayed, int _position) {
-
         id = _id;
         gameName = _gameName;
         metricName = _metricName;

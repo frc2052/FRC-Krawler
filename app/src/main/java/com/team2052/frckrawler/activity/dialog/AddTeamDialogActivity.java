@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.structures.Team;
+import com.team2052.frckrawler.database.models.Team;
 
 public class AddTeamDialogActivity extends BaseActivity implements OnClickListener {
 
@@ -59,8 +59,8 @@ public class AddTeamDialogActivity extends BaseActivity implements OnClickListen
                         ((Spinner) findViewById(R.id.stateVal)).getSelectedItem().toString(),
                         ((TextView) findViewById(R.id.colorsVal)).getText().toString()
                 );
-                new AddTeamTask().execute(team);
-
+                team.save();
+                finish();
             } catch (NumberFormatException e) {
                 Toast.makeText(this, "Please enter a team number.", Toast.LENGTH_SHORT).show();
             }
@@ -74,7 +74,6 @@ public class AddTeamDialogActivity extends BaseActivity implements OnClickListen
             boolean added = true;
 
             try {
-                added = dbManager.addTeams(team);
             } catch (NumberFormatException e) {
             }
 

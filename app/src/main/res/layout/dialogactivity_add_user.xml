@@ -3,13 +3,13 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/matchCount" >
+        android:layout_alignParentLeft="true">
 
         <EditText
             android:id="@+id/nameVal"
@@ -58,15 +58,5 @@
             android:layout_weight="0.50"
             android:text="Cancel" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/matchCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="Add User"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="24sp" />
 
 </RelativeLayout>

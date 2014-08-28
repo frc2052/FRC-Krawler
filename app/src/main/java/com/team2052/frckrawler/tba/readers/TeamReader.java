@@ -18,8 +18,7 @@ public class TeamReader {
     private String teamsURL;
 
     public TeamReader(String faEventID) {
-        teamsURL = "http://www.thebluealliance.com/api/v2/event/" +
-                faEventID + "/teams?X-TBA-App-Id=frckrawler:frckrawler-scouting-system:v18";
+        teamsURL = "http://www.thebluealliance.com/api/v2/event/" + faEventID + "/teams?X-TBA-App-Id=frckrawler:frckrawler-scouting-system:v18";
     }
 
     public TBATeam[] readTeams() throws IOException {
