@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.activity.dialog;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -8,25 +10,30 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.BaseActivity;
-import com.team2052.frckrawler.activity.MetricsActivity;
-import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.structures.Metric;
+import com.team2052.frckrawler.database.models.Metric;
 import com.team2052.frckrawler.gui.ListEditor;
 import com.team2052.frckrawler.gui.MathMetricListEditor;
 import com.team2052.frckrawler.gui.TextListEditor;
 
+import java.util.List;
+
 public class EditMetricDialogActivity extends BaseActivity implements OnClickListener {
 
-    public static final String METRIC_ID_EXTRA = "com.team2052.frckrawler.metricIDExtra";
-    public static final String METRIC_CATEGORY_EXTRA = "com.team2052.frckrawler.categoryExtra";
+    public static final String METRIC_ID = "METRIC_ID";
 
     private int metricCategory;
     private Metric metric;
-    private DBManager db;
     private ListEditor list;
+
+    public static Intent newInstance(Context c, Metric metric) {
+        Intent i = new Intent(c, EditMetricDialogActivity.class);
+        i.putExtra(METRIC_ID, metric.getId());
+        return i;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,55 +44,31 @@ public class EditMetricDialogActivity extends BaseActivity implements OnClickLis
         findViewById(R.id.remove).setOnClickListener(this);
         findViewById(R.id.saveMetric).setOnClickListener(this);
 
-        metricCategory = getIntent().getIntExtra(METRIC_CATEGORY_EXTRA, 1);
-
-        db = DBManager.getInstance(this);
-
-        /*switch (metricCategory) {
-            case MetricsActivity.MATCH_PERF_METRICS:
-                Metric[] arr = db.getMatchPerformanceMetricsByColumns
-                        (new String[]{DBContract.COL_METRIC_ID},
-                                new String[]{Integer.toString
-                                        (getIntent().getIntExtra(METRIC_ID_EXTRA, -1))}
-                        );
-                if (arr.length > 0)
-                    metric = arr[0];
-                break;
-
-            case MetricsActivity.ROBOT_METRICS:
-                Metric[] rarr = db.getRobotMetricsByColumns
-                        (new String[]{DBContract.COL_METRIC_ID},
-                                new String[]{Integer.toString
-                                        (getIntent().getIntExtra(METRIC_ID_EXTRA, -1))}
-                        );
-                if (rarr.length > 0)
-                    metric = rarr[0];
-                break;
-        }*/
+        metric = Metric.load(Metric.class, getIntent().getLongExtra(METRIC_ID, -1));
 
         if (metric != null) {
             String[] metricTypes = getResources().getStringArray(R.array.metric_types);
-            ((TextView) findViewById(R.id.type)).setText(metricTypes[metric.getType()]);
-            ((EditText) findViewById(R.id.name)).setText(metric.getMetricName());
-            ((EditText) findViewById(R.id.description)).setText(metric.getDescription());
-            ((CheckBox) findViewById(R.id.displayed)).setChecked(metric.isDisplayed());
-            Object[] range = metric.getRange();
+            ((TextView) findViewById(R.id.type)).setText(metricTypes[metric.type]);
+            ((EditText) findViewById(R.id.name)).setText(metric.name);
+            ((EditText) findViewById(R.id.description)).setText(metric.description);
+            ((CheckBox) findViewById(R.id.displayed)).setChecked(metric.display);
+            Object[] range = metric.parseRange();
 
-            switch (metric.getType()) {
-                case DBContract.CHOOSER:
+            switch (metric.type) {
+                case Metric.CHOOSER:
                     list = new TextListEditor(this);
                     for (int i = 0; i < range.length; i++)
                         list.addValue(range[i].toString(), range[i].toString());
                     ((FrameLayout) findViewById(R.id.listEditorSlot)).addView(list);
 
-                case DBContract.TEXT:
-                case DBContract.BOOLEAN:
-                    ((EditText) findViewById(R.id.min)).setEnabled(false);
-                    ((EditText) findViewById(R.id.max)).setEnabled(false);
-                    ((EditText) findViewById(R.id.inc)).setEnabled(false);
+                case Metric.TEXT:
+                case Metric.BOOLEAN:
+                    findViewById(R.id.min).setEnabled(false);
+                    findViewById(R.id.max).setEnabled(false);
+                    findViewById(R.id.inc).setEnabled(false);
                     break;
 
-                case DBContract.COUNTER:
+                case Metric.COUNTER:
 
                     ((EditText) findViewById(R.id.min)).setText((String) range[0]);
                     ((EditText) findViewById(R.id.max)).setText((String) range[1]);
@@ -93,54 +76,32 @@ public class EditMetricDialogActivity extends BaseActivity implements OnClickLis
 
                     break;
 
-                case DBContract.SLIDER:
+                case Metric.SLIDER:
 
                     ((EditText) findViewById(R.id.min)).setText((String) range[0]);
                     ((EditText) findViewById(R.id.max)).setText((String) range[1]);
-                    ((EditText) findViewById(R.id.inc)).setEnabled(false);
+                    findViewById(R.id.inc).setEnabled(false);
 
                     break;
 
-                case DBContract.MATH:
-                    ((EditText) findViewById(R.id.min)).setEnabled(false);
-                    ((EditText) findViewById(R.id.max)).setEnabled(false);
-                    ((EditText) findViewById(R.id.inc)).setEnabled(false);
+                case Metric.MATH:
+                    findViewById(R.id.min).setEnabled(false);
+                    findViewById(R.id.max).setEnabled(false);
+                    findViewById(R.id.inc).setEnabled(false);
 
-                    Metric[] addableMetrics = new Metric[0];
-                    DBManager db = DBManager.getInstance(this);
-
-                    /*if (metricCategory == MetricsActivity.MATCH_PERF_METRICS) {
-                        addableMetrics = db.getMatchPerformanceMetricsByColumns(
-                                new String[]{DBContract.COL_TYPE, DBContract.COL_TYPE},
-                                new String[]{Integer.toString(DBContract.COUNTER),
-                                        Integer.toString(DBContract.SLIDER)},
-                                true
-                        );
-
-                    } else if (metricCategory == MetricsActivity.ROBOT_METRICS) {
-                        addableMetrics = db.getRobotMetricsByColumns(
-                                new String[]{DBContract.COL_TYPE, DBContract.COL_TYPE},
-                                new String[]{Integer.toString(DBContract.COUNTER),
-                                        Integer.toString(DBContract.SLIDER)},
-                                true
-                        );
-                    }*/
-
+                    List<Metric> addableMetrics = new Select().from(Metric.class).where("Game = ?", metric.game.getId()).where("Category = ?", metric.category).where("Type = ?", Metric.COUNTER).where("Type = ?", Metric.SLIDER).execute();
                     String[] metricNames = new String[range.length];
 
                     for (int i = 0; i < range.length; i++) {
-                        for (int k = 0; k < addableMetrics.length; k++) {
-                            if (addableMetrics[k].getID() ==
-                                    Integer.valueOf((String) range[i]).intValue() &&
-                                    addableMetrics[k].getGameName().
-                                            equals(metric.getGameName())) {
-                                metricNames[i] = addableMetrics[k].getMetricName();
+                        for (Metric met : addableMetrics) {
+                            if (met.getId() == Integer.valueOf((String) range[i]).intValue()) {
+                                metricNames[i] = met.name;
                                 break;
                             }
                         }
                     }
 
-                    list = new MathMetricListEditor(this, new String[0], addableMetrics);
+                    list = new MathMetricListEditor(this, new String[0], (Metric[]) addableMetrics.toArray());
 
                     for (int i = 0; i < range.length; i++)
                         list.addValue(range[i].toString(), metricNames[i]);
@@ -159,100 +120,43 @@ public class EditMetricDialogActivity extends BaseActivity implements OnClickLis
                 break;
 
             case R.id.remove:
-                /*switch (metricCategory) {
-                    case MetricsActivity.MATCH_PERF_METRICS:
-                        db.removeMatchPerformaceMetric
-                                (getIntent().getIntExtra(METRIC_ID_EXTRA, -1));
-                        break;
-
-                    case MetricsActivity.ROBOT_METRICS:
-                        db.removeRobotMetric(getIntent().getIntExtra
-                                (METRIC_ID_EXTRA, -1));
-                        break;
-
-                    case MetricsActivity.DRIVER_METRICS:
-                        db.removeDriverMetric(getIntent().getIntExtra
-                                (METRIC_ID_EXTRA, -1));
-                        break;
-                }*/
-
+                metric.delete();
                 finish();
                 break;
 
             case R.id.saveMetric:
                 Object[] range = null;
-                switch (metric.getType()) {
-                    case DBContract.TEXT:
-                    case DBContract.BOOLEAN:
+                switch (metric.type) {
+                    case Metric.TEXT:
+                    case Metric.BOOLEAN:
                         break;
-
-                    case DBContract.COUNTER:
+                    case Metric.COUNTER:
                         range = new Object[3];
-                        range[0] = Integer.valueOf(((EditText) findViewById(R.id.min)).
-                                getText().toString());
-                        range[1] = Integer.valueOf(((EditText) findViewById(R.id.max)).
-                                getText().toString());
-                        range[2] = Integer.valueOf(((EditText) findViewById(R.id.inc)).
-                                getText().toString());
+                        range[0] = Integer.valueOf(((EditText) findViewById(R.id.min)).getText().toString());
+                        range[1] = Integer.valueOf(((EditText) findViewById(R.id.max)).getText().toString());
+                        range[2] = Integer.valueOf(((EditText) findViewById(R.id.inc)).getText().toString());
                         break;
-
-                    case DBContract.SLIDER:
-
+                    case Metric.SLIDER:
                         range = new Object[2];
-                        range[0] = Integer.valueOf(((EditText) findViewById(R.id.min)).
-                                getText().toString());
-                        range[1] = Integer.valueOf(((EditText) findViewById(R.id.max)).
-                                getText().toString());
-
+                        range[0] = Integer.valueOf(((EditText) findViewById(R.id.min)).getText().toString());
+                        range[1] = Integer.valueOf(((EditText) findViewById(R.id.max)).getText().toString());
                         break;
-
-                    case DBContract.MATH:
-                    case DBContract.CHOOSER:
+                    case Metric.MATH:
+                    case Metric.CHOOSER:
                         range = list.getValues();
                         break;
                 }
 
-                /*switch (metricCategory) {
-                    case MetricsActivity.MATCH_PERF_METRICS:
-                        db.updateMatchPerformanceMetrics(
-                                new Metric[]{new Metric(
-                                        metric.getID(),
-                                        metric.getGameName(),
-                                        ((EditText) findViewById(R.id.name)).getText().toString(),
-                                        ((EditText) findViewById(R.id.description)).getText().toString(),
-                                        metric.getKey(),
-                                        metric.getType(),
-                                        range,
-                                        ((CheckBox) findViewById(R.id.displayed)).isChecked()
-                                )}
-                        );
-
-                        break;
-
-                    case MetricsActivity.ROBOT_METRICS:
-                        db.updateRobotMetrics(
-                                new Metric[]{new Metric(
-                                        metric.getID(),
-                                        metric.getGameName(),
-                                        ((EditText) findViewById(R.id.name)).getText().toString(),
-                                        ((EditText) findViewById(R.id.description)).getText().toString(),
-                                        metric.getKey(),
-                                        metric.getType(),
-                                        range,
-                                        ((CheckBox) findViewById(R.id.displayed)).isChecked()
-                                )}
-                        );
-
-                        break;
-
-                    case MetricsActivity.DRIVER_METRICS:
-                        //NOT USED!//
-                        break;
-                }*/
+                //Save the metric
+                metric.name = ((EditText) findViewById(R.id.name)).getText().toString();
+                metric.description = ((EditText) findViewById(R.id.description)).getText().toString();
+                metric.display = ((CheckBox) findViewById(R.id.displayed)).isChecked();
+                if (range != null) {
+                    metric.range = Metric.unparseRange(range);
+                }
+                metric.save();
 
                 finish();
-
-                break;
         }
     }
 }

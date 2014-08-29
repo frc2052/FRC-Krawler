@@ -59,9 +59,9 @@ public class EventsActivity extends NewDatabaseActivity implements OnClickListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_metric_action) {
-            ImportDataSimpleDialogFragment importFragment = new ImportDataSimpleDialogFragment();
-            importFragment.show(getSupportFragmentManager(), "ImportEvent");
-            // startActivity(AddEventDialogActivity.newInstance(this, mGame));
+            /*ImportDataSimpleDialogFragment importFragment = new ImportDataSimpleDialogFragment();
+            importFragment.show(getSupportFragmentManager(), "ImportEvent");*/
+            startActivity(AddEventDialogActivity.newInstance(this, mGame));
         }
         return super.onOptionsItemSelected(item);
     }

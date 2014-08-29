@@ -4,7 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-import com.team2052.frckrawler.database.structures.Metric;
+import com.team2052.frckrawler.database.models.Metric;
+
 
 public class MathMetricListEditor extends ListEditor implements
         DialogInterface.OnClickListener {
@@ -22,7 +23,7 @@ public class MathMetricListEditor extends ListEditor implements
         CharSequence[] c = new CharSequence[choices.length];
 
         for (int i = 0; i < choices.length; i++)
-            c[i] = choices[i].getMetricName();
+            c[i] = choices[i].name;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Add Metric...");
@@ -32,7 +33,7 @@ public class MathMetricListEditor extends ListEditor implements
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        addValue(Integer.toString(choices[which].getID()), choices[which].getMetricName());
+        addValue(Long.toString(choices[which].getId()), choices[which].name);
         dialog.dismiss();
     }
 }

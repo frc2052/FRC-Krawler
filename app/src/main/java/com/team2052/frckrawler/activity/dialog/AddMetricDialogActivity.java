@@ -144,7 +144,7 @@ public class AddMetricDialogActivity extends BaseActivity implements OnClickList
 
             DBManager db = DBManager.getInstance(this);
 
-            /*switch (metricCategory) {
+            /*switch (category) {
                 case MetricsActivity.MATCH_PERF_METRICS:
                     db.addMatchPerformanceMetric(m);
                     break;
@@ -195,7 +195,7 @@ public class AddMetricDialogActivity extends BaseActivity implements OnClickList
             DBManager db = DBManager.getInstance(this);
             Metric[] choices;
 
-            /*switch (metricCategory) {
+            /*switch (category) {
                 case MetricsActivity.MATCH_PERF_METRICS:
                     Metric[] matchMetrics = db.getMatchPerformanceMetricsByColumns
                             (new String[]{DBContract.COL_GAME_NAME},

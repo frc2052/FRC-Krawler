@@ -8,34 +8,31 @@ import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
+import com.team2052.frckrawler.activity.dialog.EditMetricDialogActivity;
 import com.team2052.frckrawler.database.DBContract;
-import com.team2052.frckrawler.database.structures.Metric;
+import com.team2052.frckrawler.database.models.Metric;
 
 /**
  * Created by Adam on 8/23/2014.
  */
 public class MetricListElement implements ListItem {
-    private final String name;
-    private final int metricId;
-    private final MetricsActivity activity;
     private final String descripstionString;
     private final String isDisplayed;
+    private final Metric metric;
     private String typeString = "";
     private String rangeString = "";
 
-    public MetricListElement(Metric metric, MetricsActivity activity) {
-        name = metric.getMetricName();
-        this.metricId = metric.getID();
-        this.activity = activity;
-        Object[] rangeArr = metric.getRange();
-        isDisplayed = Boolean.toString(metric.isDisplayed());
-        if (metric.getDescription().equals("")) {
+    public MetricListElement(Metric metric) {
+        this.metric = metric;
+        Object[] rangeArr = metric.parseRange();
+        isDisplayed = Boolean.toString(metric.display);
+        if (metric.description.equals("")) {
             descripstionString = "No Description";
         } else {
-            descripstionString = metric.getDescription();
+            descripstionString = metric.description;
         }
-        switch (metric.getType()) {
-            case DBContract.BOOLEAN:
+        switch (metric.type) {
+            case Metric.BOOLEAN:
                 typeString = "Boolean";
                 rangeString = "Not Applicable";
                 break;
@@ -66,16 +63,16 @@ public class MetricListElement implements ListItem {
     }
 
     @Override
-    public View getView(Context c, LayoutInflater inflater, View convertView) {
+    public View getView(final Context c, LayoutInflater inflater, View convertView) {
         convertView = inflater.inflate(R.layout.list_item_metric, null);
-        ((TextView) convertView.findViewById(R.id.metric_list_name)).setText(name);
+        ((TextView) convertView.findViewById(R.id.metric_list_name)).setText(metric.name);
         ((TextView) convertView.findViewById(R.id.metric_list_description)).setText(descripstionString);
         ((TextView) convertView.findViewById(R.id.metric_list_displayed)).setText(isDisplayed);
         ((TextView) convertView.findViewById(R.id.metric_list_range)).setText(rangeString);
         ((TextView) convertView.findViewById(R.id.metric_list_type)).setText(typeString);
         ((ImageView) convertView.findViewById(R.id.metric_list_edit)).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {activity.editMetric(metricId);    }
+            public void onClick(View v) {c.startActivity(EditMetricDialogActivity.newInstance(c, metric));    }
         });
         return convertView;
     }

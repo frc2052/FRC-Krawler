@@ -6,8 +6,7 @@ public class SummaryMatchData implements Structure {
     private String comments;
     private SummaryMetricValue[] data;
 
-    public SummaryMatchData(int matchNumber, int teamNumber,
-                            String comments, SummaryMetricValue[] data) {
+    public SummaryMatchData(int matchNumber, int teamNumber, String comments, SummaryMetricValue[] data) {
         this.matchNumber = matchNumber;
         this.teamNumber = teamNumber;
         this.comments = comments;

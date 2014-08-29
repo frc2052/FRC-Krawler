@@ -33,6 +33,7 @@ public class AddUserDialogFragment extends DialogFragment implements View.OnClic
                 break;
             case R.id.addUser:
                 new User(((EditText) getView().findViewById(R.id.nameVal)).getText().toString().trim()).save();
+                getActivity().startActivityForResult(getActivity().getIntent(), 10);
                 dismiss();
                 return;
         }

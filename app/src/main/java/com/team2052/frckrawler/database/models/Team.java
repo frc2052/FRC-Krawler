@@ -7,19 +7,19 @@ import com.activeandroid.annotation.Table;
 /**
  * @author Adam
  */
-@Table(name = "Teams")
+@Table(name = "teams")
 public class Team extends Model {
-    @Column(name = "Number", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    @Column(name = "TeamKey", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE, index = true)
+    public String teamKey;
+
+    @Column(name = "Number", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE, index = true)
     public int number;
 
     @Column(name = "Name")
     public String name;
 
-    @Column(name = "School")
-    public String school;
-
-    @Column(name = "City")
-    public String city;
+    @Column(name = "Location")
+    public String location;
 
     @Column(name = "RookieYear")
     public int rookieYear;
@@ -27,29 +27,15 @@ public class Team extends Model {
     @Column(name = "Website")
     public String website;
 
-    @Column(name = "PostalCode")
-    public String postalCode;
-
-    @Column(name = "Colors")
-    public String colors;
-
-
-    public Team(int number, String name, String school, String city, int rookieYear, String website, String postalCode, String colors) {
-        super();
+    public Team(String teamKey, int number, String name, String location, int rookieYear, String website) {
+        this.teamKey = teamKey;
         this.number = number;
         this.name = name;
-        this.school = school;
-        this.city = city;
+        this.location = location;
         this.rookieYear = rookieYear;
         this.website = website;
-        this.postalCode = postalCode;
-        this.colors = colors;
     }
 
-    public Team() {}
-
-    public Team(int number, String name) {
-        this(number, name, null, null, -1, null, null, null);
+    public Team() {
     }
-
 }

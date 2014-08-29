@@ -1,7 +1,11 @@
 package com.team2052.frckrawler.listitems;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.dialog.ImportDialogActivity;
 import com.team2052.frckrawler.database.models.Event;
 
 import java.sql.Date;
@@ -25,7 +30,7 @@ public class EventListItem implements ListItem {
     public View getView(final Context c, LayoutInflater inflater, View convertView) {
         convertView = inflater.inflate(R.layout.list_item_event, null);
         ((TextView) convertView.findViewById(R.id.list_view_event_location)).setText(event.location);
-        ((TextView) convertView.findViewById(R.id.list_view_event_date)).setText(event.date);
+        ((TextView) convertView.findViewById(R.id.list_view_event_date)).setText(Long.toString(event.date.getTime()));
         ((TextView) convertView.findViewById(R.id.list_view_event_name)).setText(event.name);
         convertView.findViewById(R.id.list_view_event_edit_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,7 +46,6 @@ public class EventListItem implements ListItem {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = null;
-                System.out.println(position);
                 switch (position) {
                     case 0:
                         return;
@@ -69,14 +73,13 @@ public class EventListItem implements ListItem {
                         break;
                     case 5:
                         //Attending Teams
-                        //TODO MAKE FULL ACTIVITY NOT DIALOG
                         /*i = new Intent(c, AttendingTeamsDialogActivity.class);
                         i.putExtra(AttendingTeamsDialogActivity.GAME_NAME_EXTRA, event.getGameName());
                         i.putExtra(AttendingTeamsDialogActivity.EVENT_ID_EXTRA, Integer.toString(event.getEventID()));
                         break;*/
                     case 6:
                         //Import
-                        /*ConnectivityManager connMgr = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+                        ConnectivityManager connMgr = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
                         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
                         if (networkInfo != null && networkInfo.isConnected()) {
@@ -93,7 +96,7 @@ public class EventListItem implements ListItem {
                                 }
                             });
                             b.show();
-                        }*/
+                        }
                         return;
                 }
                 if (i != null)

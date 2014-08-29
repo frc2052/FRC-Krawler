@@ -4,19 +4,21 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+import java.sql.Date;
+
 /**
  * @author Adam
  */
-@Table(name = "Event")
+@Table(name = "events")
 public class Event extends Model {
     @Column(name = "Name")
     public String name;
 
-    @Column(name = "Game")
+    @Column(name = "Game", onDelete = Column.ForeignKeyAction.CASCADE)
     public Game game;
 
     @Column(name = "Date")
-    public String date;
+    public Date date;
 
     @Column(name = "Location")
     public String location;
@@ -24,7 +26,7 @@ public class Event extends Model {
     @Column(name = "FMSId")
     public String fmsId;
 
-    public Event(String name, Game game, String date, String location, String fmsId) {
+    public Event(String name, Game game, Date date, String location, String fmsId) {
         this.name = name;
         this.game = game;
         this.date = date;

@@ -3,6 +3,7 @@ package com.team2052.frckrawler.listitems;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.activeandroid.query.Delete;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.EventsActivity;
+import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.fragment.GamesFragment;
 
@@ -47,22 +49,12 @@ public class GameListItem implements ListItem {
                     return;
                 }
                 if (selected.equals("Match Metrics")) {
-                    /*Intent i = new Intent(c, MetricsActivity.class);
-                    i.putExtra(MetricsActivity.METRIC_CATEGORY, MetricsActivity.MATCH_PERF_METRICS);
-                    i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[]{game.name});
-                    i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, new String[]{game.name});
-                    i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, new String[]{game.name});
-                    c.startActivity(i);
-                    return;*/
+                    c.startActivity(MetricsActivity.newInstance(c, game, MetricsActivity.MetricType.MATCH_PERF_METRICS));
+                    return;
                 }
 
                 if (selected.equals("Pit Metrics")) {
-                    /*Intent i = new Intent(c, MetricsActivity.class);
-                    i.putExtra(MetricsActivity.METRIC_CATEGORY, MetricsActivity.ROBOT_METRICS);
-                    i.putExtra(StackableTabActivity.PARENTS_EXTRA, new String[]{game.name});
-                    i.putExtra(StackableTabActivity.DB_VALUES_EXTRA, new String[]{game.name});
-                    i.putExtra(StackableTabActivity.DB_KEYS_EXTRA, new String[]{DBContract.COL_GAME_NAME});
-                    c.startActivity(i);*/
+                    c.startActivity(MetricsActivity.newInstance(c, game, MetricsActivity.MetricType.ROBOT_METRICS));
                     return;
                 }
             }
@@ -81,7 +73,7 @@ public class GameListItem implements ListItem {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        new Delete().from(Game.class).where("Id = ?", game.getId()).execute();
+                        game.delete();
                         fragment.updateList();
                         dialogInterface.dismiss();
                     }

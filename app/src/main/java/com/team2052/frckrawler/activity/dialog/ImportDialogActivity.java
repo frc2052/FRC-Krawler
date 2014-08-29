@@ -1,7 +1,9 @@
 package com.team2052.frckrawler.activity.dialog;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -14,11 +16,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.BaseActivity;
+import com.team2052.frckrawler.activity.NewDatabaseActivity;
 import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Team;
-import com.team2052.frckrawler.database.structures.Event;
 import com.team2052.frckrawler.database.structures.Match;
 import com.team2052.frckrawler.database.structures.MetricValue;
 import com.team2052.frckrawler.database.structures.Robot;
@@ -32,14 +34,16 @@ import com.team2052.frckrawler.tba.types.TBATeam;
 
 import java.io.IOException;
 
-public class ImportDialogActivity extends BaseActivity implements OnClickListener {
-
-    public static final String EVENT_ID_EXTRA = "com.team2052.frckrawler.eventIDExtra";
-
-    private DBManager db;
-    private Event frckrawlerEvent;
+public class ImportDialogActivity extends NewDatabaseActivity implements OnClickListener {
+    private Event mEvent;
     private TBAEvent[] faEvents;
     private AlertDialog tempDownloadProg;
+
+    public static Intent newInstance(Context context, Event event){
+        Intent i = new Intent(context, ImportDialogActivity.class);
+        i.putExtra(PARENT_ID, event.getId());
+        return i;
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +51,7 @@ public class ImportDialogActivity extends BaseActivity implements OnClickListene
         findViewById(R.id.importTeamsAndRobots).setOnClickListener(this);
         findViewById(R.id.importSchedule).setOnClickListener(this);
         findViewById(R.id.cancelImport).setOnClickListener(this);
-        db = DBManager.getInstance(this);
-        frckrawlerEvent = db.getEventsByColumns(
-                new String[]{DBContract.COL_EVENT_ID},
-                new String[]{Integer.toString(getIntent().getIntExtra(EVENT_ID_EXTRA, -1))})[0];
+        mEvent = Event.load(Event.class, getIntent().getLongExtra(PARENT_ID, -1));
         tempDownloadProg = null;
         new ImportFAEventsTask().execute();
     }
@@ -73,7 +74,7 @@ public class ImportDialogActivity extends BaseActivity implements OnClickListene
                 trBuilder.setMessage("Are you sure you want to import the teams and " +
                         "robots from " + faEvents[pos].getName() +
                         "? Any robot not on the imported list will be removed from " +
-                        frckrawlerEvent.getEventName() + " and lose all match data for " +
+                        mEvent.name + " and lose all match data for " +
                         "this event");
                 trBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
@@ -100,7 +101,7 @@ public class ImportDialogActivity extends BaseActivity implements OnClickListene
                                 + "robots from "
                                 + faEvents[position].getName()
                                 + "? Any robot not on the imported list will be removed from "
-                                + frckrawlerEvent.getEventName()
+                                + mEvent.name
                                 + " and lose all match data for " + "this event");
                 scBuilder.setNegativeButton("No",
                         new DialogInterface.OnClickListener() {
@@ -232,7 +233,7 @@ public class ImportDialogActivity extends BaseActivity implements OnClickListene
                 TBATeam[] faTeams = new TeamReader(e[0].getID()).readTeams();
 
                 //Remove old robots and their match data from the event
-                Robot[] oldRobots = db.getRobotsAtEvent(frckrawlerEvent.getEventID());
+                Robot[] oldRobots = db.getRobotsAtEvent(mEvent.getEventID());
                 for (Robot r : oldRobots) {
                     boolean isAtEvent = false;
                     for (TBATeam t : faTeams) {
@@ -245,24 +246,24 @@ public class ImportDialogActivity extends BaseActivity implements OnClickListene
                     if (!isAtEvent) {
                         db.removeMatchDataByColumns(
                                 new String[]{DBContract.COL_EVENT_ID, DBContract.COL_ROBOT_ID},
-                                new String[]{Integer.toString(frckrawlerEvent.getEventID()),
+                                new String[]{Integer.toString(mEvent.getEventID()),
                                         Integer.toString(r.getID())}
                         );
-                        db.removeRobotFromEvent(frckrawlerEvent.getEventID(), r.getID());
+                        db.removeRobotFromEvent(mEvent.getEventID(), r.getID());
                     }
                 }
 
                 //Create teams that don't exist yet and give them robots
                 for (TBATeam t : faTeams) {
                     db.addTeam(Integer.parseInt(t.getNumber()), t.getName(), null, t.getCity(), -1, t.getWebsite(), t.getState(), null);
-                    Team team = new Team(Integer.parseInt(t.getNumber()), t.getName(), null, t.getCity(), -1, t.getWebsite(), t.getState(), null);
+                    Team team = new Team("frc" + t.getNumber(), Integer.parseInt(t.getNumber()), t.getName(), t.getCity(), -1, t.getWebsite());
                     team.save();
                     if (db.getRobotsByColumns(
                             new String[]{DBContract.COL_TEAM_NUMBER, DBContract.COL_GAME_NAME},
-                            new String[]{t.getNumber(), frckrawlerEvent.getGameName()})
+                            new String[]{t.getNumber(), mEvent.getGameName()})
                             .length < 1) {
                         db.addRobot(Integer.parseInt(t.getNumber()),
-                                frckrawlerEvent.getGameName(),
+                                mEvent.getGameName(),
                                 "",
                                 "",
                                 new MetricValue[0]);
@@ -271,8 +272,8 @@ public class ImportDialogActivity extends BaseActivity implements OnClickListene
                     //Add the new robot to the FRCKrawler Event
                     Robot r = db.getRobotsByColumns(
                             new String[]{DBContract.COL_TEAM_NUMBER, DBContract.COL_GAME_NAME},
-                            new String[]{t.getNumber(), frckrawlerEvent.getGameName()})[0];
-                    db.addRobotToEvent(frckrawlerEvent.getEventID(), r.getID());
+                            new String[]{t.getNumber(), mEvent.getGameName()})[0];
+                    db.addRobotToEvent(mEvent.getEventID(), r.getID());
                 }
             } catch (IOException e1) {
                 Log.e("FRCKrawler", e1.getMessage() + "");
@@ -311,8 +312,8 @@ public class ImportDialogActivity extends BaseActivity implements OnClickListene
             ScheduleReader reader = new ScheduleReader(event.getID());
             try {
                 TBAMatch[] matches = reader.getMatches();
-                db.removeAllMatches(frckrawlerEvent.getEventID());
-                String game = frckrawlerEvent.getGameName();
+                db.removeAllMatches(mEvent.getEventID());
+                String game = mEvent.getGameName();
                 int red1;
                 int red2;
                 int red3;
@@ -334,7 +335,7 @@ public class ImportDialogActivity extends BaseActivity implements OnClickListene
                     blue3 = getRobotID(game, blue3);
                     Log.d("FRCKrawer", red1 + ", " + red2 + ", " + red3);
                     db.addMatch(
-                            frckrawlerEvent.getEventID(),
+                            mEvent.getEventID(),
                             new Match(
                                     matches[i].getMatchNumber(),
                                     red1,

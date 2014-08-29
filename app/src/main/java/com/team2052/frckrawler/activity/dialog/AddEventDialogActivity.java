@@ -13,6 +13,7 @@ import com.team2052.frckrawler.activity.NewDatabaseActivity;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Game;
 
+import java.sql.Date;
 import java.util.GregorianCalendar;
 
 public class AddEventDialogActivity extends NewDatabaseActivity implements OnClickListener {
@@ -48,7 +49,7 @@ public class AddEventDialogActivity extends NewDatabaseActivity implements OnCli
             new Event(
                     ((EditText) findViewById(R.id.eventName)).getText().toString(),
                     mGame,
-                    new GregorianCalendar(year, month, day, 0, 0).getTime().toString(),
+                    new Date(new GregorianCalendar(year, month, day, 0, 0).getTime().getTime()),
                     ((EditText) findViewById(R.id.location)).getText().toString(),
                     ((EditText) findViewById(R.id.fmsID)).getText().toString()).save();
 

@@ -24,7 +24,7 @@ public class TeamListItem extends ListElement {
         convertView = inflater.inflate(R.layout.list_item_team, null);
         ((TextView) convertView.findViewById(R.id.list_item_team_number)).setText(Integer.toString(team.number));
         ((TextView) convertView.findViewById(R.id.list_item_team_name)).setText(team.name);
-        ((TextView) convertView.findViewById(R.id.list_item_team_location)).setText(team.city + ", " + team.postalCode);
+        ((TextView) convertView.findViewById(R.id.list_item_team_location)).setText(team.location);
         return convertView;
     }
 }

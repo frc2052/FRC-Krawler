@@ -43,21 +43,17 @@ public class AddTeamDialogActivity extends BaseActivity implements OnClickListen
             int rookieYear = -1;
 
             try {
-                rookieYear = Integer.parseInt(((TextView) findViewById
-                        (R.id.rookieYearVal)).getText().toString());
-            } catch (NumberFormatException e) {
-            }
+                rookieYear = Integer.parseInt(((TextView) findViewById(R.id.rookieYearVal)).getText().toString());
+            } catch (NumberFormatException e) {}
 
             try {
-                Team team = new Team(Integer.parseInt
-                        (((TextView) findViewById(R.id.numberVal)).getText().toString()),
+                Team team = new Team(
+                        "frc" + ((TextView) findViewById(R.id.numberVal)).getText().toString(),
+                        Integer.parseInt(((TextView) findViewById(R.id.numberVal)).getText().toString()),
                         ((TextView) findViewById(R.id.nameVal)).getText().toString(),
-                        ((TextView) findViewById(R.id.schoolVal)).getText().toString(),
                         ((TextView) findViewById(R.id.cityVal)).getText().toString(),
                         rookieYear,
-                        ((TextView) findViewById(R.id.websiteVal)).getText().toString(),
-                        ((Spinner) findViewById(R.id.stateVal)).getSelectedItem().toString(),
-                        ((TextView) findViewById(R.id.colorsVal)).getText().toString()
+                        ((TextView) findViewById(R.id.websiteVal)).getText().toString()
                 );
                 team.save();
                 finish();
