@@ -3,7 +3,6 @@ package com.team2052.frckrawler.listitems;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,12 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.activeandroid.query.Delete;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.EventsActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.models.Game;
-import com.team2052.frckrawler.fragment.GamesFragment;
+import com.team2052.frckrawler.fragment.server.GamesFragment;
 
 /**
  * Created by Adam on 8/22/2014.

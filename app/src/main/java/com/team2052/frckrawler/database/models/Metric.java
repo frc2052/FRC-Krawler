@@ -4,6 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.team2052.frckrawler.activity.MetricsActivity;
+import com.team2052.frckrawler.database.models.Game;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,10 @@ public class Metric extends Model {
     public static final int TEXT = 4;
     public static final int MATH = 5;
 
+    //To avoid duplicates between Client and Server
+    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    public int remoteId;
+
     @Column(name = "Name")
     public String name;
 
@@ -30,9 +35,9 @@ public class Metric extends Model {
 
     @Column(name = "Type")
     public int type;
-mk
+
     @Column(name = "Range")
-    public String range;
+    public Object[] range;
 
     @Column(name = "Display")
     public boolean display;
@@ -41,39 +46,16 @@ mk
     public Game game;
 
     public Metric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, int type, Object[] range, boolean display) {
+        this.remoteId = (int)(Math.random() * 1000000);
         this.game = game;
         this.name = name;
         this.category = metricCategory.ordinal();
         this.description = description;
         this.type = type;
-        this.range = unparseRange(range);
+        this.range = range;
         this.display = display;
     }
 
     public Metric() {
     }
-
-    public Object[] parseRange() {
-        String currentRangeValString = "";
-        ArrayList<Object> rangeArrList = new ArrayList<Object>();
-        for (int character = 0; character < range.length(); character++) {
-            if (range.charAt(character) != ':')
-                currentRangeValString += range.charAt(character);
-            else {
-                rangeArrList.add(currentRangeValString);
-                currentRangeValString = new String();
-            }
-        }
-        return rangeArrList.toArray();
-    }
-
-    public static String unparseRange(Object[] range) {
-        String rangeInput = "";
-        for (Object obj : range) {
-            rangeInput += obj.toString() + ":";
-        }
-        return rangeInput;
-    }
-
-
 }

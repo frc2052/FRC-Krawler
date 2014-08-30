@@ -31,14 +31,10 @@
         <meta-data
             android:name="AA_DB_VERSION"
             android:value="1" />
-
-        <activity
-            android:name=".TeamsActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity
-            android:name=".UsersActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".GamesActivity" />
+        <meta-data
+            android:name="AA_SERIALIZERS"
+            android:value="com.team2052.frckrawler.database.serializers.StringArraySerializer,com.team2052.frckrawler.database.serializers.ObjectArraySerializer" />
+        <!--Active Android Database-->
         <activity
             android:name=".activity.EventsActivity"
             android:windowSoftInputMode="adjustNothing" />
@@ -49,13 +45,7 @@
         <activity android:name=".activity.dialog.AddGameDialogActivity" />
         <activity android:name=".activity.dialog.EditGameDialogActivity" />
         <activity
-            android:name=".activity.RobotsActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity
             android:name=".activity.MetricsActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity
-            android:name=".activity.ContactsActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".activity.dialog.AddCommentDialogActivity" />
         <activity android:name=".activity.dialog.AddContactDialogActivity" />
@@ -66,23 +56,11 @@
         <activity android:name=".activity.dialog.AddRobotDialogActivity" />
         <activity android:name=".activity.dialog.EditRobotDialogActivity" />
         <activity android:name=".activity.dialog.AddMetricDialogActivity" />
-        <activity android:name=".activity.PicturesActivity" />
         <activity android:name=".activity.dialog.EditMetricDialogActivity" />
-        <activity
-            android:name=".activity.RawMatchDataActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".ServerActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.team2052.frckrawler.MainActivity" />
-        </activity>
         <activity android:name=".activity.dialog.AddMatchDataDialogActivity" />
         <activity android:name=".activity.dialog.EditMatchDataDialogActivity" />
         <activity
             android:name=".activity.SummaryActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity
-            android:name=".activity.DriverDataActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".activity.dialog.QuerySortingDialogActivity" />
         <activity android:name=".activity.dialog.CommentDialogActivity" />
@@ -96,7 +74,6 @@
             android:name=".activity.ScoutActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ListTester" />
-        <activity android:name=".activity.ClientSummaryActivity" />
         <activity android:name=".activity.ScoutMatchDataActivity" />
         <activity android:name=".activity.ScoutEditMatchDataActivity" />
         <activity android:name=".activity.ListsActivity" />
@@ -115,13 +92,11 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".OptionsActivity" />
         <activity android:name=".activity.AddRobotAllActivity" />
         <activity android:name=".activity.dialog.ImportDialogActivity" />
 
         <service android:name=".bluetooth.ServerService" />
 
-        <activity android:name=".activity.MatchScheduleActivity" />
         <activity android:name=".activity.dialog.AddMatchDialogActivity" />
         <activity android:name=".activity.dialog.ScoutScheduleDialogActivity" />
         <activity android:name=".activity.dialog.ExcelExportDialogActivity" />

@@ -9,21 +9,22 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.DBContract;
-import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.structures.Event;
+import com.team2052.frckrawler.database.models.Event;
 
 public class ServerService extends Service {
     public static int SERVER_OPEN_ID = 10;
-    public static String EVENT_ID_EXTRA = "com.team2052.frckrawler.bluetooth.eventIDExtra";
-    public static String HANDLER_EXTRA = "com.team2052.frckrawler.bluetooth.handlerExtra";
-    private DBManager db;
+    public static String EVENT_ID = "EVENT_ID";
     private ServerThread thread;
     private PendingIntent openServerIntent;
 
+    public Intent newInstance(Context context, Event hostedEvent) {
+        Intent i = new Intent(context, ServerService.class);
+        i.putExtra(EVENT_ID, hostedEvent.getId());
+        return i;
+    }
+
     @Override
     public void onCreate() {
-        db = DBManager.getInstance(this);
         thread = null;
     }
 
@@ -35,17 +36,14 @@ public class ServerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (thread == null) {
-            //TODO Intent
+            Event e = Event.load(Event.class, intent.getLongExtra(EVENT_ID, -1));
             NotificationCompat.Builder b = new NotificationCompat.Builder(this);
             b.setSmallIcon(R.drawable.notification_bluetooth);
             b.setContentTitle("Server open");
             b.setContentText("The FRCKrawler server is open for scouts to sync");
             b.setOngoing(true);
-            NotificationManager m = (NotificationManager)
-                    getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             m.notify(SERVER_OPEN_ID, b.build());
-            int eventID = intent.getIntExtra(EVENT_ID_EXTRA, -1);
-            Event e = db.getEventsByColumns(new String[]{DBContract.COL_EVENT_ID}, new String[]{Integer.toString(eventID)})[0];
             thread = new ServerThread(this, e, new ServerCallbackHandler(this));
             new Thread(thread).start();
         }

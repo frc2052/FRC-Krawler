@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.dialog.ImportDialogActivity;
 import com.team2052.frckrawler.database.models.Event;
 
 import java.sql.Date;
@@ -83,9 +82,7 @@ public class EventListItem implements ListItem {
                         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
                         if (networkInfo != null && networkInfo.isConnected()) {
-                            Intent intent = new Intent(c, ImportDialogActivity.class);
-                            intent.putExtra(ImportDialogActivity.EVENT_ID_EXTRA, event.getEventID());
-                            c.startActivity(intent);
+                            //c.startActivity(ImportDialogActivity.newInstance(c, event));
                         } else {
                             AlertDialog.Builder b = new AlertDialog.Builder(c);
                             b.setMessage("You must have internet connection to import event data " + "and OPR from the web.");

@@ -12,9 +12,10 @@ import android.view.View.OnClickListener;
 import com.activeandroid.query.Select;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.animateaddition.AnimateAdditionAdapter;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.dialog.EditMetricDialogActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.database.models.Metric;
 import com.team2052.frckrawler.fragment.dialog.AddMetricFragment;
@@ -30,7 +31,7 @@ public class MetricsActivity extends NewDatabaseActivity implements OnClickListe
     private int metricCategory;
 
     private DynamicListView mDynamicListView;
-    private AlphaInAnimationAdapter mAdapter;
+    private AnimateAdditionAdapter mAdapter;
     private Game mGame;
 
     public static Intent newInstance(Context context, Game game, MetricType type) {
@@ -152,21 +153,16 @@ public class MetricsActivity extends NewDatabaseActivity implements OnClickListe
     }
 
     public void addMetricToList(Metric metric){
+        //Current version of ListViewAnimations is borked
+        //mDynamicListView.insert(mAdapter.getCount(), new MetricListElement(metric));
         mAdapter.add(mAdapter.getCount(), new MetricListElement(metric));
         mAdapter.notifyDataSetChanged();
     }
 
     private class GetMetricsTask extends AsyncTask<Void, Void, ListViewAdapter> {
-        private int metricNum;
-
-        @Override
-        protected void onPreExecute() {
-            metricNum = 0;
-        }
-
         @Override
         protected ListViewAdapter doInBackground(Void... v) {
-            List<Metric> metrics = new Select().from(Metric.class).where("Game = ?", mGame.getId()).and("Category = ?", metricCategory).execute();
+            List<Metric> metrics = DBManager.loadFromMetrics().where("Game = ?", mGame.getId()).and("Category = ?", metricCategory).execute();
             ArrayList<ListItem> listMetrics = new ArrayList<ListItem>();
             for (Metric metric : metrics) {
                 listMetrics.add(new MetricListElement(metric));
@@ -177,8 +173,7 @@ public class MetricsActivity extends NewDatabaseActivity implements OnClickListe
 
         @Override
         protected void onPostExecute(ListViewAdapter adapter) {
-            mAdapter = new AlphaInAnimationAdapter(adapter);
-            mAdapter.setAbsListView(mDynamicListView);
+            mAdapter = new AnimateAdditionAdapter(new AlphaInAnimationAdapter(adapter));
             mDynamicListView.setAdapter(mAdapter);
         }
     }

@@ -2,7 +2,7 @@ package com.team2052.frckrawler.gui;
 
 import android.content.Context;
 
-import com.team2052.frckrawler.database.structures.MetricValue;
+import com.team2052.frckrawler.database.MetricValue;
 
 public class MathMetricWidget extends MetricWidget {
 

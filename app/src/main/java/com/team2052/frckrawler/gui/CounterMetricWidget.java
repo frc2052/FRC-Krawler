@@ -6,7 +6,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.structures.MetricValue;
+import com.team2052.frckrawler.database.MetricValue;
 
 public class CounterMetricWidget extends MetricWidget implements OnClickListener {
 
@@ -20,12 +20,12 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
         super(context, m.getMetric(), m.getValue());
         inflater.inflate(R.layout.widget_metric_counter, this);
 
-        ((TextView) findViewById(R.id.title)).setText(m.getMetric().getMetricName());
+        ((TextView) findViewById(R.id.title)).setText(m.getMetric().name);
 
         findViewById(R.id.plus).setOnClickListener(this);
         findViewById(R.id.minus).setOnClickListener(this);
 
-        Object[] o = m.getMetric().getRange();
+        Object[] o = m.getMetric().range;
 
         max = 10;
         min = 0;

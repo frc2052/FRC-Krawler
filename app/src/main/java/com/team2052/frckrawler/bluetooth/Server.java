@@ -5,7 +5,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 
-import com.team2052.frckrawler.database.structures.Event;
+import com.team2052.frckrawler.database.models.Event;
+
 
 public class Server {
     private static volatile Server instance = null;
@@ -35,7 +36,7 @@ public class Server {
         if (SyncAsScoutTask.isTaskRunning())
             return false;
         Intent serverIntent = new Intent(context, ServerService.class);
-        serverIntent.putExtra(ServerService.EVENT_ID_EXTRA, hostedEvent.getEventID());
+        serverIntent.putExtra(ServerService.EVENT_ID, hostedEvent.getId());
         context.startService(serverIntent);
         isOpen = true;
         event = hostedEvent;

@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
-import com.team2052.frckrawler.database.DBContract;
 import com.team2052.frckrawler.database.MetricFactory;
 import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.database.models.Metric;
@@ -75,26 +74,26 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mCurrentSelectedMetricType = position;
         switch (position) {
-            case DBContract.COUNTER:
+            case Metric.COUNTER:
                 getView().findViewById(R.id.min).setEnabled(true);
                 getView().findViewById(R.id.max).setEnabled(true);
                 getView().findViewById(R.id.inc).setEnabled(true);
                 ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).removeAllViews();
                 break;
-            case DBContract.SLIDER:
+            case Metric.SLIDER:
                 getView().findViewById(R.id.min).setEnabled(true);
                 getView().findViewById(R.id.max).setEnabled(true);
                 getView().findViewById(R.id.inc).setEnabled(false);
                 ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).removeAllViews();
                 break;
-            case DBContract.MATH:
+            case Metric.MATH:
                 Metric[] choices;
                 switch (MetricsActivity.MetricType.VALID_TYPES[mMetricCategory]) {
                     case MATCH_PERF_METRICS:
                         List<Metric> matchMetrics = new Select().from(Metric.class).where("Game = ?", mGame.getId()).and("Category = ?", MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal()).execute();
                         ArrayList<Metric> acceptedMetrics = new ArrayList<Metric>();
                         for (Metric met : matchMetrics) {
-                            if (met.type == DBContract.COUNTER || met.type == DBContract.SLIDER)
+                            if (met.type == Metric.COUNTER || met.type == Metric.SLIDER)
                                 acceptedMetrics.add(met);
                         }
                         choices = acceptedMetrics.toArray(new Metric[0]);
@@ -104,7 +103,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                         List<Metric> robotMetrics = new Select().from(Metric.class).where("Game = ?", mGame.getId()).and("Category = ?", MetricsActivity.MetricType.ROBOT_METRICS.ordinal()).execute();
                         ArrayList<Metric> choosableMetrics = new ArrayList<Metric>();
                         for (Metric m : robotMetrics)
-                            if (m.type == DBContract.COUNTER || m.type == DBContract.SLIDER)
+                            if (m.type == Metric.COUNTER || m.type == Metric.SLIDER)
                                 choosableMetrics.add(m);
                         choices = choosableMetrics.toArray(new Metric[0]);
                         break;
@@ -119,7 +118,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).removeAllViews();
                 ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).addView(list);
                 break;
-            case DBContract.CHOOSER:
+            case Metric.CHOOSER:
                 getView().findViewById(R.id.min).setEnabled(false);
                 getView().findViewById(R.id.max).setEnabled(false);
                 getView().findViewById(R.id.inc).setEnabled(false);

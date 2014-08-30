@@ -9,7 +9,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.structures.MetricValue;
+import com.team2052.frckrawler.database.MetricValue;
 
 public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedListener {
 
@@ -25,7 +25,7 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
 
         ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getContext(),
                 android.R.layout.simple_spinner_item);
-        Object[] range = m.getMetric().getRange();
+        Object[] range = m.getMetric().range;
         int selectedPos = 0;
         for (int i = 0; i < range.length; i++) {
             adapter.add(range[i]);
@@ -38,7 +38,7 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
         chooserSpinner.setOnItemSelectedListener(this);
         if (!adapter.isEmpty())
             chooserSpinner.setSelection(selectedPos);
-        ((TextView) findViewById(R.id.name)).setText(m.getMetric().getMetricName());
+        ((TextView) findViewById(R.id.name)).setText(m.getMetric().name);
     }
 
     @Override

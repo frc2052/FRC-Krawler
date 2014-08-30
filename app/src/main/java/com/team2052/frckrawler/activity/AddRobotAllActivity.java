@@ -9,47 +9,42 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.DBContract;
-import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.structures.Game;
-import com.team2052.frckrawler.database.structures.Team;
+import com.team2052.frckrawler.database.models.Game;
+import com.team2052.frckrawler.database.models.Robot;
+import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.gui.ProgressSpinner;
+
+import java.util.List;
 
 public class AddRobotAllActivity extends BaseActivity implements OnClickListener {
 
-    private DBManager db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialogactivity_add_robot_all);
-
         findViewById(R.id.addRobotsToAll).setOnClickListener(this);
         findViewById(R.id.cancelAddRobots).setOnClickListener(this);
-
-        db = DBManager.getInstance(this);
-
-        Game[] games = db.getAllGames();
-        ArrayAdapter<String> gameArray =
-                new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        List<Game> games = new Select().from(Game.class).execute();
+        ArrayAdapter<String> gameArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         for (Game g : games)
-            gameArray.add(g.getName());
+            gameArray.add(g.name);
         ((Spinner) findViewById(R.id.robotGameSpinner)).setAdapter(gameArray);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.addRobotsToAll) {
-            String gameName = (String) ((Spinner) findViewById(R.id.robotGameSpinner)).
-                    getSelectedItem();
-            new AddRobotsTask().execute(gameName);
+            String gameName = (String) ((Spinner) findViewById(R.id.robotGameSpinner)).getSelectedItem();
+            new AddRobotsTask().execute((Game) new Select().from(Game.class).where("Name = ?", gameName).executeSingle());
         } else {
             finish();
         }
     }
 
-    private class AddRobotsTask extends AsyncTask<String, Void, Void> {
+    private class AddRobotsTask extends AsyncTask<Game, Void, Void> {
 
         private AlertDialog progressDialog;
 
@@ -63,19 +58,17 @@ public class AddRobotAllActivity extends BaseActivity implements OnClickListener
         }
 
         @Override
-        protected Void doInBackground(String... gameName) {
+        protected Void doInBackground(Game... gameName) {
             if (gameName.length < 1) {
                 Log.e("FRCKrawler", "No robots added. No game name specified.");
                 return null;
             }
 
-            Team[] teams = db.getAllTeams();
+            List<Team> teams = new Select().from(Team.class).execute();
 
             for (Team t : teams) {
-                if (0 == db.getRobotsByColumns(
-                        new String[]{DBContract.COL_GAME_NAME, DBContract.COL_TEAM_NUMBER},
-                        new String[]{gameName[0], Integer.toString(t.getNumber())}).length) {
-                    db.addRobot(t.getNumber(), gameName[0], null, null, null);
+                if (0 == new Select().from(Robot.class).where("Team = ?", t.getId()).execute().size()) {
+                    new Robot(t, null, -1.0, gameName[0]);
                 }
             }
 

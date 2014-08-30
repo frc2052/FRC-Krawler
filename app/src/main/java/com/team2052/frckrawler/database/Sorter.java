@@ -2,7 +2,6 @@ package com.team2052.frckrawler.database;
 
 import android.util.Log;
 
-import com.team2052.frckrawler.database.structures.CompiledData;
 import com.team2052.frckrawler.util.Tuple;
 
 /**
@@ -18,8 +17,8 @@ import com.team2052.frckrawler.util.Tuple;
 
 public class Sorter {
 
-    public static void sortCompiledData(double[] keys, CompiledData[] vals) {
-        if (keys.length != vals.length)
+    public static void sortCompiledData(double[] keys) {//, CompiledData[] vals
+        /*if (keys.length != vals.length)
             return;
 
         Tuple<CompiledData>[] tuples = new Tuple[keys.length];
@@ -27,7 +26,7 @@ public class Sorter {
             tuples[i] = new Tuple<CompiledData>(keys[i], vals[i]);
         mergeSort(tuples);
         for (int i = 0; i < tuples.length; i++)
-            vals[i] = tuples[i].getValue();
+            vals[i] = tuples[i].getValue();*/
     }
 
     public static void mergeSort(Tuple[] arr) {

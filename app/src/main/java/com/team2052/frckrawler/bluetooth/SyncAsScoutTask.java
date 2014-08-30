@@ -7,21 +7,24 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.structures.Event;
-import com.team2052.frckrawler.database.structures.MatchData;
-import com.team2052.frckrawler.database.structures.Metric;
-import com.team2052.frckrawler.database.structures.Robot;
-import com.team2052.frckrawler.database.structures.Schedule;
-import com.team2052.frckrawler.database.structures.User;
+import com.team2052.frckrawler.database.Schedule;
+import com.team2052.frckrawler.database.models.Event;
+import com.team2052.frckrawler.database.models.Match;
+import com.team2052.frckrawler.database.models.MatchData;
+import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.Robot;
+import com.team2052.frckrawler.database.models.User;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.UUID;
 
 public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
+    //TODO
     private static int SYNC_SUCCESS = 1;
     private static int SYNC_SERVER_OPEN = 2;
     private static int SYNC_CANCELLED = 3;
@@ -29,13 +32,11 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     private static int tasksRunning = 0;
     private volatile String deviceName;
     private Context context;
-    private DBManager dbManager;
     private SyncCallbackHandler handler;
 
     public SyncAsScoutTask(Context c, SyncCallbackHandler h) {
         deviceName = "device";
         context = c.getApplicationContext();
-        dbManager = DBManager.getInstance(context);
         handler = h;
     }
 
@@ -56,8 +57,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             return SYNC_SERVER_OPEN;
         try {
             long startTime = System.currentTimeMillis();
-            BluetoothSocket serverSocket = dev[0].createRfcommSocketToServiceRecord
-                    (UUID.fromString(BluetoothInfo.UUID));
+            BluetoothSocket serverSocket = dev[0].createRfcommSocketToServiceRecord(UUID.fromString(BluetoothInfo.UUID));
             serverSocket.connect();
             if (isCancelled())
                 return SYNC_CANCELLED;
@@ -67,38 +67,42 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             OutputStream outStream = serverSocket.getOutputStream();
             ObjectOutputStream ooStream = new ObjectOutputStream(outStream);
             //Get the data to send
-            Event event = dbManager.scoutGetEvent();
-            Robot[] robotsArr = dbManager.scoutGetUpdatedRobots();
-            MatchData[] matchDataArr = dbManager.scoutGetAllMatchData();
+            Event event = DBManager.loadFromEvents().executeSingle();
+            List<MatchData> matchDataArr = DBManager.loadAllFromType(MatchData.class);
             if (isCancelled())
                 return SYNC_CANCELLED;
             //Write the scout data
             ooStream.writeInt(BluetoothInfo.SCOUT);
             ooStream.writeObject(event);
-            ooStream.writeObject(robotsArr);
             ooStream.writeObject(matchDataArr);
             ooStream.flush();
             //Clear out the old data after it is sent
-            dbManager.scoutClearMatchData();
+            DBManager.deleteAllFromType(MatchData.class);
+            DBManager.deleteAllFromType(Event.class);
             if (isCancelled())
                 return SYNC_CANCELLED;
             //Start the reading thread
             Event inEvent = (Event) ioStream.readObject();
-            User[] inUsers = (User[]) ioStream.readObject();
-            String[] inTeamNames = (String[]) ioStream.readObject();
-            Robot[] inRobots = (Robot[]) ioStream.readObject();
-            Metric[] inRobotMetrics = (Metric[]) ioStream.readObject();
-            Metric[] inMatchMetrics = (Metric[]) ioStream.readObject();
+            List<User> inUsers = (List<User>) ioStream.readObject();
+            List<Robot> inRobots = (List<Robot>) ioStream.readObject();
+            List<Metric> metrics = (List<Metric>) ioStream.readObject();
             Schedule inSchedule = (Schedule) ioStream.readObject();
             if (isCancelled())
                 return SYNC_CANCELLED;
-            //Write the received arrays to the database
-            dbManager.scoutReplaceEvent(inEvent);
-            dbManager.scoutReplaceUsers(inUsers);
-            dbManager.scoutReplaceRobots(inRobots, inTeamNames);
-            dbManager.scoutReplaceRobotMetrics(inRobotMetrics);
-            dbManager.scoutReplaceMatchMetrics(inMatchMetrics);
-            dbManager.scoutReplaceSchedule(inSchedule);
+            for (User user : inUsers) {
+                user.save();
+            }
+            for (Robot robot : inRobots) {
+                robot.save();
+            }
+            for (Metric metric : metrics) {
+                metric.save();
+            }
+            for (Match match : inSchedule.matches) {
+                match.save();
+            }
+            inEvent.save();
+
             //Close the streams
             ooStream.close();
             outStream.close();

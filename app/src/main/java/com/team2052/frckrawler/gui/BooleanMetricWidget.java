@@ -7,7 +7,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.structures.MetricValue;
+import com.team2052.frckrawler.database.MetricValue;
 
 public class BooleanMetricWidget extends MetricWidget implements OnClickListener {
 
@@ -17,7 +17,7 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
 
         super(context, m.getMetric(), m.getValue());
         inflater.inflate(R.layout.widget_metric_boolean, this);
-        ((TextView) findViewById(R.id.name)).setText(m.getMetric().getMetricName());
+        ((TextView) findViewById(R.id.name)).setText(m.getMetric().name);
         findViewById(R.id.yes).setOnClickListener(this);
         findViewById(R.id.no).setOnClickListener(this);
 

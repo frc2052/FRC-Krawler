@@ -11,6 +11,10 @@ import java.sql.Date;
  */
 @Table(name = "events")
 public class Event extends Model {
+    //To avoid duplicates between Client and Server
+    @Column(name = "remote_id")
+    public int remoteId;
+
     @Column(name = "Name")
     public String name;
 
@@ -27,6 +31,7 @@ public class Event extends Model {
     public String fmsId;
 
     public Event(String name, Game game, Date date, String location, String fmsId) {
+        this.remoteId = (int)(Math.random() * 1000000);
         this.name = name;
         this.game = game;
         this.date = date;

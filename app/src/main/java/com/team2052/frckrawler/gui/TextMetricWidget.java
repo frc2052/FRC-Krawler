@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.structures.MetricValue;
+import com.team2052.frckrawler.database.MetricValue;
 
 public class TextMetricWidget extends MetricWidget implements TextWatcher {
 
@@ -25,7 +25,7 @@ public class TextMetricWidget extends MetricWidget implements TextWatcher {
 
         ((EditText) findViewById(R.id.text)).addTextChangedListener(this);
         ((EditText) findViewById(R.id.text)).setText(textVal);
-        ((TextView) findViewById(R.id.name)).setText(m.getMetric().getMetricName());
+        ((TextView) findViewById(R.id.name)).setText(m.getMetric().name);
     }
 
     @Override

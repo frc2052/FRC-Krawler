@@ -9,11 +9,12 @@ import android.util.Log;
 import android.view.Menu;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.fragment.GamesFragment;
-import com.team2052.frckrawler.fragment.OptionsFragment;
-import com.team2052.frckrawler.fragment.ServerFragment;
-import com.team2052.frckrawler.fragment.TeamsFragment;
-import com.team2052.frckrawler.fragment.UsersFragment;
+import com.team2052.frckrawler.fragment.server.GamesFragment;
+import com.team2052.frckrawler.fragment.server.OptionsFragment;
+import com.team2052.frckrawler.fragment.scout.ScoutFragment;
+import com.team2052.frckrawler.fragment.server.ServerFragment;
+import com.team2052.frckrawler.fragment.server.TeamsFragment;
+import com.team2052.frckrawler.fragment.server.UsersFragment;
 import com.team2052.frckrawler.listitems.NavDrawerItem;
 
 public class HomeActivity extends BaseActivity {
@@ -106,8 +107,8 @@ public class HomeActivity extends BaseActivity {
         Fragment fragment = null;
         switch (id) {
             case R.id.nav_item_scout:
-                startActivity(new Intent(this, MainActivity.class));
-                return;
+                fragment = new ScoutFragment();
+                break;
             case R.id.nav_item_server:
                 fragment = new ServerFragment();
                 break;

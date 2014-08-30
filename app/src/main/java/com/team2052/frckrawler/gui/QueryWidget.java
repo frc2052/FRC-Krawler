@@ -1,3 +1,4 @@
+/*
 package com.team2052.frckrawler.gui;
 
 import android.R;
@@ -15,9 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import com.team2052.frckrawler.database.DBContract;
-import com.team2052.frckrawler.database.structures.Metric;
-import com.team2052.frckrawler.database.structures.Query;
+import com.team2052.frckrawler.database.models.Metric;
 
 import java.util.ArrayList;
 
@@ -84,7 +83,8 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
     }
 
 
-    /**
+    */
+/**
      * **
      * Class: QueryItem
      *
@@ -92,7 +92,8 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
      *         <p/>
      *         Description: a query element in the list of querys
      *         ***
-     */
+     *//*
+
 
     private class QueryItem extends LinearLayout implements OnItemSelectedListener,
             OnClickListener {
@@ -335,10 +336,13 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
     }
 
 
-    /**
+    */
+/**
      * **
      * Class: QueryIncompleteException
-     */
+     *//*
+
     private class QueryIncompleteException extends Exception {
     }
 }
+*/

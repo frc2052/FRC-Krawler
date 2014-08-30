@@ -1,7 +1,6 @@
 package com.team2052.frckrawler;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
@@ -10,10 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.team2052.frckrawler.activity.BaseActivity;
-import com.team2052.frckrawler.activity.dialog.AddGameDialogActivity;
-import com.team2052.frckrawler.fragment.GamesFragment;
-import com.team2052.frckrawler.fragment.OptionsFragment;
-import com.team2052.frckrawler.fragment.ServerFragment;
+import com.team2052.frckrawler.fragment.server.GamesFragment;
+import com.team2052.frckrawler.fragment.server.OptionsFragment;
+import com.team2052.frckrawler.fragment.server.ServerFragment;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -71,9 +69,6 @@ public class SettingsActivity extends BaseActivity {
                 }
                 setTitle("Options");
                 break;
-            case R.id.add_game:
-                Intent i = new Intent(this, AddGameDialogActivity.class);
-                startActivity(i);
         }
         if (fragment != null) {
             fragment.setRetainInstance(true);

@@ -9,8 +9,11 @@ import com.activeandroid.annotation.Table;
  */
 @Table(name = "robots")
 public class Robot extends Model{
-    @Column(name = "TeamNumber")
-    public int teamNumber;
+    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    public int remoteId;
+
+    @Column(name = "Team", onDelete = Column.ForeignKeyAction.CASCADE)
+    public Team team;
 
     @Column(name = "Comments")
     public String comments;
@@ -20,4 +23,15 @@ public class Robot extends Model{
 
     @Column(name = "Game", onDelete = Column.ForeignKeyAction.CASCADE)
     public Game game;
+
+    public Robot(Team team, String comments, double opr, Game game) {
+        this.remoteId = (int)(Math.random() * 1000000);
+        this.team = team;
+        this.comments = comments;
+        this.opr = opr;
+        this.game = game;
+    }
+
+    public Robot() {
+    }
 }

@@ -12,36 +12,29 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.BaseActivity;
-import com.team2052.frckrawler.database.DBContract;
-import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.structures.Game;
-import com.team2052.frckrawler.database.structures.Metric;
-import com.team2052.frckrawler.database.structures.MetricValue;
-import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatchException;
-import com.team2052.frckrawler.database.structures.Robot;
+import com.team2052.frckrawler.activity.NewDatabaseActivity;
+import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.MetricValue.MetricTypeMismatchException;
+import com.team2052.frckrawler.database.models.Game;
+import com.team2052.frckrawler.database.models.Metric;
 import com.team2052.frckrawler.gui.MetricWidget;
 
-public class AddRobotDialogActivity extends BaseActivity implements OnClickListener,
-        OnItemSelectedListener {
+import java.util.List;
+
+public class AddRobotDialogActivity extends NewDatabaseActivity implements OnClickListener, OnItemSelectedListener {
 
     public static final String TEAM_NUMBER_EXTRA = "com.team2052.frckrawler.teamNumberExtra";
-
-    private DBManager dbManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode
-                (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(R.layout.dialogactivity_add_robot);
-
         findViewById(R.id.cancel).setOnClickListener(this);
         findViewById(R.id.addRobot).setOnClickListener(this);
         ((Spinner) findViewById(R.id.gameSpinner)).setOnItemSelectedListener(this);
-
-        dbManager = DBManager.getInstance(this);
     }
 
     @Override
@@ -49,16 +42,15 @@ public class AddRobotDialogActivity extends BaseActivity implements OnClickListe
         super.onResume();
 
         //Set the choices for the spinner
-        Game[] games = dbManager.getAllGames();
-        String[] spinnerVals = new String[games.length];
+        List<Game> games = new Select().from(Game.class).execute();
+        String[] spinnerVals = new String[games.size()];
 
         for (int i = 0; i < spinnerVals.length; i++) {
-            spinnerVals[i] = games[i].getName();
+            spinnerVals[i] = games.get(i).name;
         }
 
         Spinner gameSpinner = (Spinner) findViewById(R.id.gameSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, spinnerVals);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerVals);
         gameSpinner.setAdapter(adapter);
     }
 
@@ -90,15 +82,10 @@ public class AddRobotDialogActivity extends BaseActivity implements OnClickListe
                 float opr = -1;
                 if (!oprText.equals("") && !oprText.equals(" "))
                     opr = Float.parseFloat(oprText);
-
-                dbManager.addRobot(new Robot(
-                        Integer.parseInt(getIntent().getStringExtra(TEAM_NUMBER_EXTRA)),
-                        ((Spinner) findViewById(R.id.gameSpinner)).getSelectedItem().toString(),
+                /*new Robot(Integer.parseInt(getIntent().getStringExtra(TEAM_NUMBER_EXTRA)),((Spinner) findViewById(R.id.gameSpinner)).getSelectedItem().toString(),
                         ((EditText) findViewById(R.id.comments)).getText().toString(),
                         opr,
-                        vals
-                ));
-
+                        vals);*/
                 setResult(RESULT_OK);
                 finish();
 
@@ -115,19 +102,17 @@ public class AddRobotDialogActivity extends BaseActivity implements OnClickListe
     @Override
     public void onItemSelected(AdapterView<?> adapter, View v, int selectedItem, long id) {
 
-        LinearLayout metricList = (LinearLayout) findViewById(R.id.metricList);
+        /*LinearLayout metricList = (LinearLayout) findViewById(R.id.metricList);
         metricList.removeAllViews();
 
-        Metric[] metrics = dbManager.getRobotMetricsByColumns
-                (new String[]{DBContract.COL_GAME_NAME},
-                        new String[]{(String) adapter.getSelectedItem()});
+        Metric[] metrics = new Select().from(Metric.class).where("Game = ?", )
 
         for (int i = 0; i < metrics.length; i++) {
 
             MetricWidget m = MetricWidget.createWidget(this, metrics[i]);
             m.setTag(metrics[i].getKey());
             metricList.addView(m);
-        }
+        }*/
     }
 
     @Override

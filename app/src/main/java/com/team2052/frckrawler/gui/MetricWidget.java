@@ -4,10 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
-import com.team2052.frckrawler.database.DBContract;
-import com.team2052.frckrawler.database.structures.Metric;
-import com.team2052.frckrawler.database.structures.MetricValue;
-import com.team2052.frckrawler.database.structures.MetricValue.MetricTypeMismatchException;
+import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.MetricValue.MetricTypeMismatchException;
+import com.team2052.frckrawler.database.models.Metric;
 
 public abstract class MetricWidget extends FrameLayout {
 
@@ -33,23 +32,23 @@ public abstract class MetricWidget extends FrameLayout {
         if (m == null)
             return null;
 
-        switch (m.getMetric().getType()) {
-            case DBContract.BOOLEAN:
+        switch (m.getMetric().type) {
+            case Metric.BOOLEAN:
                 return new BooleanMetricWidget(c, m);
 
-            case DBContract.CHOOSER:
+            case Metric.CHOOSER:
                 return new ChooserMetricWidget(c, m);
 
-            case DBContract.COUNTER:
+            case Metric.COUNTER:
                 return new CounterMetricWidget(c, m);
 
-            case DBContract.TEXT:
+            case Metric.TEXT:
                 return new TextMetricWidget(c, m);
 
-            case DBContract.SLIDER:
+            case Metric.SLIDER:
                 return new SliderMetricWidget(c, m);
 
-            case DBContract.MATH:
+            case Metric.MATH:
                 return new MathMetricWidget(c, m);
 
             default:

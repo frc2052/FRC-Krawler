@@ -9,6 +9,7 @@ import com.activeandroid.annotation.Table;
  */
 @Table(name = "games")
 public class Game extends Model{
+
     @Column(name = "Name")
     public String name;
 
