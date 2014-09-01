@@ -12,7 +12,6 @@ import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.database.models.MatchData;
 import com.team2052.frckrawler.database.models.Metric;
-import com.team2052.frckrawler.database.models.Robot;
 import com.team2052.frckrawler.database.models.User;
 
 import java.io.IOException;
@@ -56,6 +55,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
         if (Server.getInstance(context).isOpen())
             return SYNC_SERVER_OPEN;
         try {
+            Log.i("FRCKrawler", "Syncing With Server");
             long startTime = System.currentTimeMillis();
             BluetoothSocket serverSocket = dev[0].createRfcommSocketToServiceRecord(UUID.fromString(BluetoothInfo.UUID));
             serverSocket.connect();
@@ -82,26 +82,22 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             if (isCancelled())
                 return SYNC_CANCELLED;
             //Start the reading thread
-            Event inEvent = (Event) ioStream.readObject();
+            ((Event) ioStream.readObject()).save();
+            List<Metric> inMetric = (List<Metric>) ioStream.readObject();
             List<User> inUsers = (List<User>) ioStream.readObject();
-            List<Robot> inRobots = (List<Robot>) ioStream.readObject();
-            List<Metric> metrics = (List<Metric>) ioStream.readObject();
             Schedule inSchedule = (Schedule) ioStream.readObject();
             if (isCancelled())
                 return SYNC_CANCELLED;
             for (User user : inUsers) {
                 user.save();
             }
-            for (Robot robot : inRobots) {
-                robot.save();
-            }
-            for (Metric metric : metrics) {
-                metric.save();
-            }
             for (Match match : inSchedule.matches) {
                 match.save();
             }
-            inEvent.save();
+            for (Metric metric1 : inMetric) {
+                Log.d("FRCKrawler", metric1.name);
+                metric1.save();
+            }
 
             //Close the streams
             ooStream.close();

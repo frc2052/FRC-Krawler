@@ -3,12 +3,18 @@ package com.team2052.frckrawler.database.models;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.team2052.frckrawler.database.DBManager;
+
+import java.io.Serializable;
 
 /**
  * @author Adam
  */
 @Table(name = "robotevents")
-public class RobotEvents extends Model {
+public class RobotEvents extends Model implements Serializable {
+    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    private int remoteId;
+
     @Column(name = "Robot", onDelete = Column.ForeignKeyAction.CASCADE)
     public Robot robot;
 
@@ -19,6 +25,7 @@ public class RobotEvents extends Model {
     public boolean isAttending;
 
     public RobotEvents(Robot robot, Event event, boolean isAttending) {
+        this.remoteId = DBManager.generateRemoteId();
         this.robot = robot;
         this.event = event;
         this.isAttending = isAttending;

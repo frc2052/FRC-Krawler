@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.util.Log;
 
+import com.activeandroid.query.Select;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.database.models.Event;
@@ -63,9 +64,9 @@ public class ServerThread implements Runnable {
                 //Read data
                 int connectionType = inStream.readInt();
                 if (connectionType == BluetoothInfo.SCOUT) {
+                    Log.i("FRCKrawler", "Received Scout Sync Read Data From Scout");
                     //TODO RECEIVE
                     Event inEvent = (Event) inStream.readObject();
-                    List<Robot> inRobots = (List<Robot>) inStream.readObject();
                     List<MatchData> inMatchData = (List<MatchData>) inStream.readObject();
                     //Send the received data to the database
                     if (inEvent != null && inEvent == hostedEvent) {
@@ -73,8 +74,15 @@ public class ServerThread implements Runnable {
                             m.save();
                     }
                     //Compile Data To Send
+                    Log.i("FRCKrawler", "Received Scout Sync Read Data From Scout");
                     List<User> usersArr = DBManager.loadAllFromType(User.class);
+                    List<Metric> metrics = new Select().from(Metric.class).where("Game = ?", hostedEvent.game.getId()).execute();
+                    for(Metric metric: metrics){
+                        Log.d("FRCKrawler", metric.name);
+                    }
                     Schedule schedule = DBManager.genenerateSchedule(hostedEvent);
+                    oStream.writeObject(hostedEvent);
+                    oStream.writeObject(metrics);
                     oStream.writeObject(usersArr);
                     oStream.writeObject(schedule);
                 } else {

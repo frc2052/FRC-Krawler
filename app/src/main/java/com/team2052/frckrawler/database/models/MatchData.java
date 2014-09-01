@@ -5,11 +5,13 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.team2052.frckrawler.database.MetricValue;
 
+import java.io.Serializable;
+
 /**
  * @author Adam
  */
 @Table(name = "matchdata")
-public class MatchData extends Model {
+public class MatchData extends Model implements Serializable {
 
     @Column(name = "Robot", onDelete = Column.ForeignKeyAction.CASCADE)
     public Robot robot;

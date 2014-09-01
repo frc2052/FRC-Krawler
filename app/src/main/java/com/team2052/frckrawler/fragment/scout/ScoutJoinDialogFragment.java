@@ -34,19 +34,7 @@ public class ScoutJoinDialogFragment extends DialogFragment implements DialogInt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (BluetoothAdapter.getDefaultAdapter() != null) {
-            AlertDialog.Builder builder;
-            devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices().toArray(new BluetoothDevice[0]);
-            CharSequence[] deviceNames = new String[devices.length];
-            for (int k = 0; k < deviceNames.length; k++)
-                deviceNames[k] = devices[k].getName();
-            builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Select Server Device");
-            builder.setItems(deviceNames, this);
-            builder.show();
-        } else {
-            Toast.makeText(getActivity(), "Sorry, your device does not support Bluetooth. " + "You are unable to sync with a server.", Toast.LENGTH_LONG);
-        }
+
 
     }
 

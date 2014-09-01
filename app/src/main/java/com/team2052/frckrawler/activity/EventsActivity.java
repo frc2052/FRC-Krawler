@@ -14,6 +14,7 @@ import com.team2052.frckrawler.activity.dialog.AddEventDialogActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Game;
+import com.team2052.frckrawler.fragment.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.listitems.EventListItem;
 import com.team2052.frckrawler.listitems.ListItem;
 
@@ -47,7 +48,8 @@ public class EventsActivity extends NewDatabaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_metric_action) {
-            startActivity(AddEventDialogActivity.newInstance(this, mGame));
+            ImportDataSimpleDialogFragment.newInstance(mGame).show(getSupportFragmentManager(), "ImportEvent");
+            /*startActivity(AddEventDialogActivity.newInstance(this, mGame));*/
         }
         return super.onOptionsItemSelected(item);
     }

@@ -11,18 +11,17 @@ import android.widget.TextView;
 public class SimpleListElement extends ListElement {
     private final String text;
 
-    public SimpleListElement(String name) {
-        super(name);
+    public SimpleListElement(String name, String key) {
+        super(key);
         this.text = name;
     }
 
     @Override
     public View getView(Context c, LayoutInflater inflater, View convertView) {
-        View view = inflater.inflate(android.R.layout.simple_expandable_list_item_1, null);
+        View view = inflater.inflate(android.R.layout.simple_list_item_1, null);
         TextView text = (TextView) view.findViewById(android.R.id.text1);
-        text.setPadding(8, 8, 8, 8);
+        text.setPadding(16, 16, 16, 16);
         text.setText(this.text);
-        text.setTextSize(40);
         return view;
     }
 }

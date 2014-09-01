@@ -17,6 +17,9 @@ import java.util.List;
  */
 //MAY NEED TO CREATE A Remote_id column to handle syncing
 public class DBManager {
+    public static int generateRemoteId(){
+        return ((int) (Math.random() * 10000000));
+    }
     public static <T extends Model> List<T> loadAllFromType(Class<T> type) {
         return new Select().from(type).execute();
     }

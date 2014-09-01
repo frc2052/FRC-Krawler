@@ -3,59 +3,51 @@ package com.team2052.frckrawler.database.models;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.team2052.frckrawler.database.DBManager;
+
+import java.io.Serializable;
 
 /**
  * @author Adam
  */
 @Table(name = "matches")
-public class Match extends Model{
+public class Match extends Model implements Serializable {
     //To avoid duplicates between Client and Server
-    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-    public int remoteId;
+    @Column(name = "key")
+    public String key;
+
+    @Column(name = "MatchType")
+    public String matchType;
 
     @Column(name = "MatchNumber")
     public int matchNumber;
 
-    @Column(name = "Red1")
-    public int red1;
-
-    @Column(name = "Red2")
-    public int red2;
-
-    @Column(name = "Red3")
-    public int red3;
-
-    @Column(name = "Blue1")
-    public int blue1;
-
-    @Column(name = "Blue2")
-    public int blue2;
-
-    @Column(name = "BLue3")
-    public int blue3;
-
-    @Column(name = "RedScore")
-    public int redScore;
-
-    @Column(name = "BlueScore")
-    public int blueScore;
-
     @Column(name = "Event", onDelete = Column.ForeignKeyAction.CASCADE)
     public Event event;
 
-    public Match(int matchNumber, int red1, int red2, int red3, int blue1, int blue2, int blue3, int redScore, int blueScore) {
-        this.remoteId = (int)(Math.random() * 1000000);
+    @Column(name = "Alliance", onDelete = Column.ForeignKeyAction.CASCADE)
+    public Alliance alliance;
+
+    public Match(String key, Alliance alliance, String matchType, int matchNumber, Event event) {
+        this.key = key;
+        this.alliance = alliance;
+        this.matchType = matchType;
         this.matchNumber = matchNumber;
-        this.red1 = red1;
-        this.red2 = red2;
-        this.red3 = red3;
-        this.blue1 = blue1;
-        this.blue2 = blue2;
-        this.blue3 = blue3;
-        this.redScore = redScore;
-        this.blueScore = blueScore;
+        this.event = event;
     }
 
     public Match() {
+    }
+
+    public Long saveAll(){
+        alliance.blue1.save();
+        alliance.blue2.save();
+        alliance.blue3.save();
+        alliance.red1.save();
+        alliance.red2.save();
+        alliance.red3.save();
+        alliance.save();
+        event.save();
+        return save();
     }
 }

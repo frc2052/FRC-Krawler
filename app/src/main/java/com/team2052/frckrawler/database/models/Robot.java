@@ -3,14 +3,17 @@ package com.team2052.frckrawler.database.models;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.team2052.frckrawler.database.DBManager;
+
+import java.io.Serializable;
 
 /**
  * @author Adam
  */
 @Table(name = "robots")
-public class Robot extends Model{
+public class Robot extends Model implements Serializable {
     @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-    public int remoteId;
+    private int remoteId;
 
     @Column(name = "Team", onDelete = Column.ForeignKeyAction.CASCADE)
     public Team team;
@@ -25,11 +28,16 @@ public class Robot extends Model{
     public Game game;
 
     public Robot(Team team, String comments, double opr, Game game) {
-        this.remoteId = (int)(Math.random() * 1000000);
+        this.remoteId = DBManager.generateRemoteId();
         this.team = team;
         this.comments = comments;
         this.opr = opr;
         this.game = game;
+    }
+
+    public int setRemoteId(){
+        remoteId = DBManager.generateRemoteId();
+        return remoteId;
     }
 
     public Robot() {

@@ -4,12 +4,14 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+import java.io.Serializable;
+
 /**
  * @author Adam
  */
 @Table(name = "teams")
-public class Team extends Model {
-    @Column(name = "TeamKey", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE, index = true)
+public class Team extends Model implements Serializable {
+    @Column(name = "TeamKey")
     public String teamKey;
 
     @Column(name = "Number", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE, index = true)

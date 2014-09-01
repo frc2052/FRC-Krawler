@@ -29,7 +29,7 @@ public class EventListItem implements ListItem {
     public View getView(final Context c, LayoutInflater inflater, View convertView) {
         convertView = inflater.inflate(R.layout.list_item_event, null);
         ((TextView) convertView.findViewById(R.id.list_view_event_location)).setText(event.location);
-        ((TextView) convertView.findViewById(R.id.list_view_event_date)).setText(Long.toString(event.date.getTime()));
+        //((TextView) convertView.findViewById(R.id.list_view_event_date)).setText(Long.toString(event.date.getTime()));
         ((TextView) convertView.findViewById(R.id.list_view_event_name)).setText(event.name);
         convertView.findViewById(R.id.list_view_event_edit_button).setOnClickListener(new View.OnClickListener() {
             @Override

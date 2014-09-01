@@ -4,17 +4,14 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  * @author Adam
  */
 @Table(name = "events")
-public class Event extends Model {
-    //To avoid duplicates between Client and Server
-    @Column(name = "remote_id")
-    public int remoteId;
-
+public class Event extends Model implements Serializable {
     @Column(name = "Name")
     public String name;
 
@@ -31,7 +28,6 @@ public class Event extends Model {
     public String fmsId;
 
     public Event(String name, Game game, Date date, String location, String fmsId) {
-        this.remoteId = (int)(Math.random() * 1000000);
         this.name = name;
         this.game = game;
         this.date = date;
