@@ -12,6 +12,8 @@ import java.io.Serializable;
  */
 @Table(name = "matches")
 public class Match extends Model implements Serializable {
+    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    public int remoteId;
     //To avoid duplicates between Client and Server
     @Column(name = "key")
     public String key;
@@ -29,6 +31,7 @@ public class Match extends Model implements Serializable {
     public Alliance alliance;
 
     public Match(String key, Alliance alliance, String matchType, int matchNumber, Event event) {
+        this.remoteId = DBManager.generateRemoteId();
         this.key = key;
         this.alliance = alliance;
         this.matchType = matchType;
@@ -37,6 +40,11 @@ public class Match extends Model implements Serializable {
     }
 
     public Match() {
+    }
+
+    public int setRemoteId(){
+        remoteId = DBManager.generateRemoteId();
+        return remoteId;
     }
 
     public Long saveAll(){

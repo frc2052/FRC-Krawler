@@ -11,6 +11,7 @@ import com.activeandroid.query.Select;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.database.models.Event;
+import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.database.models.MatchData;
 import com.team2052.frckrawler.database.models.Metric;
 import com.team2052.frckrawler.database.models.Robot;
@@ -77,14 +78,13 @@ public class ServerThread implements Runnable {
                     Log.i("FRCKrawler", "Received Scout Sync Read Data From Scout");
                     List<User> usersArr = DBManager.loadAllFromType(User.class);
                     List<Metric> metrics = new Select().from(Metric.class).where("Game = ?", hostedEvent.game.getId()).execute();
-                    for(Metric metric: metrics){
-                        Log.d("FRCKrawler", metric.name);
-                    }
+                    List<Robot> robots = new Select().from(Robot.class).where("Game = ?", hostedEvent.game.getId()).execute();
                     Schedule schedule = DBManager.genenerateSchedule(hostedEvent);
-                    oStream.writeObject(hostedEvent);
                     oStream.writeObject(metrics);
                     oStream.writeObject(usersArr);
+                    oStream.writeObject(robots);
                     oStream.writeObject(schedule);
+
                 } else {
                     //Sync as a summary
                 }

@@ -132,6 +132,11 @@ public class ScoutFragment extends Fragment implements DialogInterface.OnClickLi
         progressDialog.dismiss();
         scoutLoginName = new EditText(getActivity());
         scoutLoginName.setHint("Name");
+        SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        //Used to tell deny access to edit any of the database besides putting match data.
+        SharedPreferences.Editor editor = scoutPrefs.edit();
+        editor.putBoolean(GlobalValues.IS_SCOUT_PREF, true);
+        editor.apply();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Login");
         builder.setView(scoutLoginName);

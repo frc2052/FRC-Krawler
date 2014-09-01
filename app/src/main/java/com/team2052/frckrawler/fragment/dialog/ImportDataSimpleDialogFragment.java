@@ -74,7 +74,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (new Select().from(Event.class).where("FMSid = ?", ((ListElement) eventSpinner.getSelectedItem()).getKey()).execute().size() == 0) {
-                    //progressBar = ProgressDialog.show(getActivity() == null ? getParentFragment().getActivity() : getActivity(), "Importing Event Data...", "", true);
+                    progressBar = ProgressDialog.show(getActivity() == null ? getParentFragment().getActivity() : getActivity(), "Importing Event Data...", "", true);
                     new LoadAllEventData(((ListElement) eventSpinner.getSelectedItem()).getKey()).execute();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity() == null ? getParentFragment().getActivity() : getActivity());
@@ -178,6 +178,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                 robot.team.save();
                 robot.save();
             }
+
             //Convert JsonMatches to Matches
             List<Match> matches = new ArrayList<Match>();
             Log.d("FRCKrawler", "Parsing Matches");
@@ -189,6 +190,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             for (Match match : matches) {
                 Log.d("FRCKrawler", String.format("Importing Match %s", match.key));
                 match.alliance.save();
+                match.save();
             }
 
             return null;
@@ -196,7 +198,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            //progressBar.dismiss();
+            progressBar.dismiss();
             dismiss();
             super.onPostExecute(aVoid);
         }

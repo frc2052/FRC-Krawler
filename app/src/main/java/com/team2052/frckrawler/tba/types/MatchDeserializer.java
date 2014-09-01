@@ -29,8 +29,8 @@ public class MatchDeserializer implements JsonDeserializer<Match>{
             match.matchType = object.get("comp_level").getAsString();
         }
 
-        if(object.has("set_number") && !object.get("set_number").isJsonNull()){
-            match.matchNumber = object.get("set_number").getAsInt();
+        if(object.has("match_number") && !object.get("match_number").isJsonNull()){
+            match.matchNumber = object.get("match_number").getAsInt();
         }
 
         if(object.has("event_key") && !object.get("event_key").isJsonNull()){
@@ -40,7 +40,7 @@ public class MatchDeserializer implements JsonDeserializer<Match>{
         if(object.has("alliances") && !object.get("alliances").isJsonNull()){
             match.alliance = JSON.getGson().fromJson(object.get("alliances").getAsJsonObject(), Alliance.class);
         }
-
+        match.setRemoteId();
         return match;
     }
 }

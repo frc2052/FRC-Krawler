@@ -1,13 +1,16 @@
 package com.team2052.frckrawler.activity;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 
+import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.fragment.server.GamesFragment;
 import com.team2052.frckrawler.fragment.server.OptionsFragment;
@@ -22,6 +25,7 @@ public class HomeActivity extends BaseActivity {
     private static final String STATE_SELECTED_NAV_ID = "selected_navigation_drawer_position";
     private int mCurrentSelectedNavigationItemId;
     private boolean mFromSavedInstanceState;
+    private boolean mIsScout;
 
     public static Intent newInstance(Context context, int requestedMode) {
         Intent i = new Intent(context, HomeActivity.class);
@@ -32,6 +36,9 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        mIsScout = sharedPreferences.getBoolean(GlobalValues.IS_SCOUT_PREF, false);
+
         setContentView(R.layout.activity_home);
         int initNavId = R.id.nav_item_server;
 
@@ -110,26 +117,41 @@ public class HomeActivity extends BaseActivity {
                 fragment = new ScoutFragment();
                 break;
             case R.id.nav_item_server:
-                fragment = new ServerFragment();
+                if(!mIsScout){
+                    fragment = new ServerFragment();
+                }
                 break;
             case R.id.nav_item_teams:
-                fragment = new TeamsFragment();
+                if (!mIsScout) {
+                    fragment = new TeamsFragment();
+                }
                 break;
             case R.id.nav_item_users:
-                fragment = new UsersFragment();
+                if (!mIsScout) {
+                    fragment = new UsersFragment();
+                }
                 break;
             case R.id.nav_item_games:
-                fragment = new GamesFragment();
+                if (!mIsScout) {
+                    fragment = new GamesFragment();
+                }
                 break;
             case R.id.nav_item_options:
-                Log.d("FRCKrawler", "Options");
-                fragment = new OptionsFragment();
+                if (!mIsScout) {
+                    fragment = new OptionsFragment();
+                }
                 break;
         }
         if (fragment != null) {
             fragment.setRetainInstance(true);
             getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content, fragment, "mainFragment").commit();
+            mCurrentSelectedNavigationItemId = id;
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Denied");
+            builder.setMessage("You can't edit the database. Contact the handler of the server");
+            builder.show();
         }
-        mCurrentSelectedNavigationItemId = id;
+
     }
 }

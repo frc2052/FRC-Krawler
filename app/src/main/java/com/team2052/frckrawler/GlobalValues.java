@@ -7,6 +7,7 @@ public class GlobalValues {
      * SharedPreferences file name
      */
     public static final String PREFS_FILE_NAME = "FRCKrawlerPrefs";
+    public static final String IS_SCOUT_PREF = "isScout";
     /**
      * The SharedPreferences key for the MAC address of the
      * most recently connected server

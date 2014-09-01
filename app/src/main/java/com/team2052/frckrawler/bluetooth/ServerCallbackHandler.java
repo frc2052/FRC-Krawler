@@ -34,7 +34,7 @@ public class ServerCallbackHandler implements SyncCallbackHandler {
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
         b.setSmallIcon(R.drawable.splash_logo);
         b.setContentTitle("Synced with " + deviceName);
-        b.setContentText("The FRCKrawler server successfully synced with " + deviceName);
+        b.setContentText("The Server successfully synced with " + deviceName);
         m.notify(0, b.build());
     }
 

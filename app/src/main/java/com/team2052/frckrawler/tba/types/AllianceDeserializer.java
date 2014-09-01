@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.tba.types;
 
+import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -29,12 +30,12 @@ public class AllianceDeserializer implements JsonDeserializer<Alliance>{
             }
             if(blue.has("teams") && !blue.get("teams").isJsonNull()){
                 JsonArray jBlueTeams = blue.get("teams").getAsJsonArray();
-                List<Team> blue1 = new Select().from(Team.class).where("TeamKey = ?", jBlueTeams.get(0).getAsString()).execute();
-                List<Team> blue2 = new Select().from(Team.class).where("TeamKey = ?", jBlueTeams.get(1).getAsString()).execute();
-                List<Team> blue3 = new Select().from(Team.class).where("TeamKey = ?", jBlueTeams.get(2).getAsString()).execute();
-                alliance.blue1 = blue1.get(0);
-                alliance.blue2 = blue2.get(0);
-                alliance.blue3 = blue3.get(0);
+                Team blue1 = new Select().from(Team.class).where("TeamKey = ?", jBlueTeams.get(0).getAsString()).executeSingle();
+                Team blue2 = new Select().from(Team.class).where("TeamKey = ?", jBlueTeams.get(1).getAsString()).executeSingle();
+                Team blue3 = new Select().from(Team.class).where("TeamKey = ?", jBlueTeams.get(2).getAsString()).executeSingle();
+                alliance.blue1 = blue1;
+                alliance.blue2 = blue2;
+                alliance.blue3 = blue3;
             }
         }
 
@@ -45,12 +46,12 @@ public class AllianceDeserializer implements JsonDeserializer<Alliance>{
             }
             if(red.has("teams") && !red.get("teams").isJsonNull()){
                 JsonArray jRedTeams = red.get("teams").getAsJsonArray();
-                List<Team> red1 = new Select().from(Team.class).where("TeamKey = ?", jRedTeams.get(0).getAsString()).execute();
-                List<Team> red2 = new Select().from(Team.class).where("TeamKey = ?", jRedTeams.get(1).getAsString()).execute();
-                List<Team> red3 = new Select().from(Team.class).where("TeamKey = ?", jRedTeams.get(2).getAsString()).execute();
-                alliance.red1 = red1.get(0);
-                alliance.red2 = red2.get(0);
-                alliance.red3 = red3.get(0);
+                Team red1 = new Select().from(Team.class).where("TeamKey = ?", jRedTeams.get(0).getAsString()).executeSingle();
+                Team red2 = new Select().from(Team.class).where("TeamKey = ?", jRedTeams.get(1).getAsString()).executeSingle();
+                Team red3 = new Select().from(Team.class).where("TeamKey = ?", jRedTeams.get(2).getAsString()).executeSingle();
+                alliance.red1 = red1;
+                alliance.red2 = red2;
+                alliance.red3 = red3;
             }
         }
         //Generate a remote id so we don't unique conflicts
