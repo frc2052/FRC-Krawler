@@ -25,6 +25,7 @@ import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.database.models.Robot;
+import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
@@ -176,7 +177,9 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                 Robot robot = new Robot(team, null, -1, mGame);
                 robot.setRemoteId();
                 robot.team.save();
-                robot.save();
+                RobotEvents robotEvents = new RobotEvents(robot, event, true);
+                robotEvents.robot.save();
+                robotEvents.save();
             }
 
             //Convert JsonMatches to Matches

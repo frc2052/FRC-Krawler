@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.widget.FrameLayout;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.fragment.server.NavigationDrawerFragment;
+import com.team2052.frckrawler.fragment.NavigationDrawerFragment;
 import com.team2052.frckrawler.listitems.NavDrawerItem;
 
 /**

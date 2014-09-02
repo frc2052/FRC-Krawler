@@ -6,5 +6,4 @@ import com.activeandroid.app.Application;
  * Created by Adam on 8/28/2014.
  */
 //Used to initiate ActiveAndroid Database
-public class FRCKrawler extends Application {
-}
+public class FRCKrawler extends Application {}

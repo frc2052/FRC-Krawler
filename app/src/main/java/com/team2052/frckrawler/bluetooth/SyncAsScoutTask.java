@@ -3,9 +3,11 @@ package com.team2052.frckrawler.bluetooth;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.database.models.Event;
@@ -13,6 +15,7 @@ import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.database.models.MatchData;
 import com.team2052.frckrawler.database.models.Metric;
 import com.team2052.frckrawler.database.models.Robot;
+import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.User;
 
 import java.io.IOException;
@@ -83,17 +86,27 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             if (isCancelled())
                 return SYNC_CANCELLED;
             //Start the reading thread
+            //Set the current event id hosted by the server
+            SharedPreferences sharedPreferences = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            Event event1 = (Event) ioStream.readObject();
+            event1.save();
+            editor.putLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, event1.getId());
+            editor.apply();
             List<Metric> inMetric = (List<Metric>) ioStream.readObject();
             List<User> inUsers = (List<User>) ioStream.readObject();
-            List<Robot> inRobots = (List<Robot>) ioStream.readObject();
+            List<RobotEvents> inRobots = (List<RobotEvents>) ioStream.readObject();
             Schedule inSchedule = (Schedule) ioStream.readObject();
 
             if (isCancelled())
                 return SYNC_CANCELLED;
 
-            for(Robot robot: inRobots){
-                robot.team.save();
-                robot.game.save();
+            for(RobotEvents robot: inRobots){
+                Log.d("FRCKrawler", "Importing robot events " + robot.robot.team.number);
+                robot.robot.team.save();
+                robot.robot.game.save();
+                robot.robot.save();
+                robot.event.save();
                 robot.save();
             }
 

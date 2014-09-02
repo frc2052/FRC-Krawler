@@ -15,6 +15,7 @@ import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.database.models.MatchData;
 import com.team2052.frckrawler.database.models.Metric;
 import com.team2052.frckrawler.database.models.Robot;
+import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.User;
 
 import java.io.IOException;
@@ -78,8 +79,9 @@ public class ServerThread implements Runnable {
                     Log.i("FRCKrawler", "Received Scout Sync Read Data From Scout");
                     List<User> usersArr = DBManager.loadAllFromType(User.class);
                     List<Metric> metrics = new Select().from(Metric.class).where("Game = ?", hostedEvent.game.getId()).execute();
-                    List<Robot> robots = new Select().from(Robot.class).where("Game = ?", hostedEvent.game.getId()).execute();
+                    List<RobotEvents> robots = new Select().from(RobotEvents.class).where("Event = ?", hostedEvent.getId()).and("Attending = ?", true).execute();
                     Schedule schedule = DBManager.genenerateSchedule(hostedEvent);
+                    oStream.writeObject(hostedEvent);
                     oStream.writeObject(metrics);
                     oStream.writeObject(usersArr);
                     oStream.writeObject(robots);
