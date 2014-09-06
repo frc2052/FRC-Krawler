@@ -15,8 +15,7 @@ import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.models.Event;
-
-import java.sql.Date;
+import com.team2052.frckrawler.activity.MatchListActivity;
 
 public class EventListItem implements ListItem {
     private final Event event;
@@ -56,9 +55,7 @@ public class EventListItem implements ListItem {
                         i.putExtra(DatabaseActivity.DB_KEYS_EXTRA, new String[]{DBContract.COL_EVENT_ID});*/
                         break;
                     case 2:
-                        //Match Scedule
-                        /*i = new Intent(c, MatchScheduleActivity.class);
-                        i.putExtra(MatchScheduleActivity.EVENT_ID_EXTRA, Integer.toString(event.getEventID()));*/
+                        c.startActivity(MatchListActivity.newInstance(c, event));
                         break;
                     case 3:
                         //match Data

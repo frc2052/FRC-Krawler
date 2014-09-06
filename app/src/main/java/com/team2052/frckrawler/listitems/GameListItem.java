@@ -21,11 +21,9 @@ import com.team2052.frckrawler.fragment.server.GamesFragment;
  */
 public class GameListItem implements ListItem {
     private final Game game;
-    private final GamesFragment fragment;
 
-    public GameListItem(Game game, GamesFragment fragment) {
+    public GameListItem(Game game) {
         this.game = game;
-        this.fragment = fragment;
     }
 
     @Override
@@ -72,7 +70,6 @@ public class GameListItem implements ListItem {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         game.delete();
-                        fragment.updateList();
                         dialogInterface.dismiss();
                     }
                 });

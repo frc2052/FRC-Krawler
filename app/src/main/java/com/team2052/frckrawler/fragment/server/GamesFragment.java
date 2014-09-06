@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.activeandroid.query.Select;
+import com.team2052.frckrawler.AddItemToListListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.fragment.dialog.AddGameDialogFragment;
 import com.team2052.frckrawler.listitems.GameListItem;
@@ -23,23 +23,16 @@ import com.team2052.frckrawler.listitems.ListItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GamesFragment extends Fragment {
-    private DBManager dbManager;
+public class GamesFragment extends Fragment implements AddItemToListListener {
+    private ListView mListView;
+    private ListViewAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_games, null);
+        mListView = (ListView) view.findViewById(R.id.games_list);
+        new GetGamesTask().execute();
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        new GetGamesTask().execute();
-    }
-
-    public void updateList() {
-        new GetGamesTask().execute();
     }
 
     @Override
@@ -56,14 +49,21 @@ public class GamesFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_metric_action) {
+        if (item.getItemId() == R.id.add_action) {
             AddGameDialogFragment fragment = new AddGameDialogFragment();
-            fragment.show(getFragmentManager(), "Add Game");
+            fragment.show(getChildFragmentManager(), "addGame");
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void addToList(ListItem listItem) {
+        mAdapter.add(listItem);
+        mAdapter.updateListData();
+    }
+
     private class GetGamesTask extends AsyncTask<Void, Void, List<Game>> {
+
 
         @Override
         protected List<Game> doInBackground(Void... params) {
@@ -72,13 +72,13 @@ public class GamesFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Game> games) {
-            ListView listView = (ListView) getView().findViewById(R.id.games_list);
+
             ArrayList<ListItem> element = new ArrayList<ListItem>();
             for (Game game : games) {
-                element.add(new GameListItem(game, GamesFragment.this));
+                element.add(new GameListItem(game));
             }
-            final ListViewAdapter adapter = new ListViewAdapter(getActivity(), element);
-            listView.setAdapter(adapter);
+            mAdapter = new ListViewAdapter(getActivity(), element);
+            mListView.setAdapter(mAdapter);
         }
     }
 }

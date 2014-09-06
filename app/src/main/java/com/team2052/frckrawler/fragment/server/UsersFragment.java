@@ -40,12 +40,12 @@ public class UsersFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.addbutton, menu);
-        menu.findItem(R.id.add_metric_action).setIcon(R.drawable.ic_action_add_person);
+        menu.findItem(R.id.add_action).setIcon(R.drawable.ic_action_add_person);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_metric_action) {
+        if (item.getItemId() == R.id.add_action) {
             AddUserDialogFragment fragment = new AddUserDialogFragment();
             fragment.show(getFragmentManager(), "Add User");
         }

@@ -47,7 +47,7 @@ public class EventsActivity extends NewDatabaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_metric_action) {
+        if (item.getItemId() == R.id.add_action) {
             ImportDataSimpleDialogFragment.newInstance(mGame).show(getSupportFragmentManager(), "ImportEvent");
             /*startActivity(AddEventDialogActivity.newInstance(this, mGame));*/
         }

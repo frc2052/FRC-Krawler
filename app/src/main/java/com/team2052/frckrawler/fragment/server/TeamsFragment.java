@@ -39,7 +39,7 @@ public class TeamsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_metric_action) {
+        if (item.getItemId() == R.id.add_action) {
             /*Intent i = new Intent(getActivity(), AddTeamDialogActivity.class);
             startActivityForResult(i, 1);*/
         }
@@ -83,9 +83,7 @@ public class TeamsFragment extends Fragment {
             for (Team team : teams) {
                 teamItems.add(new TeamListItem(team));
             }
-            AlphaInAnimationAdapter adapter = new AlphaInAnimationAdapter(new ListViewAdapter(getActivity(), teamItems));
-            adapter.setAbsListView(((ListView) getView().findViewById(R.id.teams_list_view)));
-            ((ListView) getView().findViewById(R.id.teams_list_view)).setAdapter(adapter);
+            ((ListView) getView().findViewById(R.id.teams_list_view)).setAdapter(new ListViewAdapter(getActivity(), teamItems));
         }
     }
 }

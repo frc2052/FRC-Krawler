@@ -82,7 +82,7 @@ public class MetricsActivity extends NewDatabaseActivity implements OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_metric_action) {
+        if (item.getItemId() == R.id.add_action) {
             AddMetricFragment fragment = AddMetricFragment.newInstance(metricCategory, mGame);
             fragment.show(getSupportFragmentManager(), "Add Metric");
             return true;

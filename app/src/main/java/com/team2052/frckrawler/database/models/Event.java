@@ -36,4 +36,9 @@ public class Event extends Model implements Serializable {
     }
 
     public Event() {}
+
+    @Override
+    public String toString() {
+        return name + ", " + game.name;
+    }
 }

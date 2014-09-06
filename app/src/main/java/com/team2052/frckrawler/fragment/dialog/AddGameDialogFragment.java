@@ -6,16 +6,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.TextView;
 
+import com.team2052.frckrawler.AddItemToListListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.models.Game;
+import com.team2052.frckrawler.listitems.GameListItem;
 
 /**
  * @author Adam
  */
 public class AddGameDialogFragment extends DialogFragment implements View.OnClickListener {
+    private AddItemToListListener listener;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        System.out.println(getParentFragment());
+        listener = (AddItemToListListener) getParentFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialogactivity_add_game, null);
@@ -28,15 +38,15 @@ public class AddGameDialogFragment extends DialogFragment implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.addGame:
-                new Game(((TextView)getView().findViewById(R.id.nameVal)).getText().toString()).save();
+                Game game = new Game(((TextView) getView().findViewById(R.id.nameVal)).getText().toString());
+                listener.addToList(new GameListItem(game));
+                game.save();
                 dismiss();
                 break;
-
             case R.id.cancel:
                 dismiss();
-                return;
         }
     }
 }

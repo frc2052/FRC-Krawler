@@ -1,14 +1,14 @@
+
 apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    buildToolsVersion '20.0.0'
     defaultConfig {
         applicationId 'com.team2052.frckrawler'
         minSdkVersion 14
-        targetSdkVersion 19
-        versionCode 15
-        versionName '2.0-a1'
+        targetSdkVersion 20
+        versionName 'debug'
     }
     buildTypes {
         debug {
@@ -39,5 +39,5 @@ dependencies {
     compile 'com.nhaarman.listviewanimations:lib-core:3.1.0@aar'
     compile 'com.nhaarman.listviewanimations:lib-manipulation:3.1.0@aar'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
-    compile 'com.android.support:support-v4:19.+'
+    compile 'com.android.support:support-v4:20.0.0'
 }

@@ -13,27 +13,25 @@ public class MetricValue {
     private String[] value; //Array only used for
     private int[] chooserCounts;    //Only used if this addbutton value is a COMPILED chooser
 
-    public MetricValue(Metric _metric, String[] _value) throws MetricTypeMismatchException {
-        this(_metric, _value, null);
+    public MetricValue(Metric metric, String[] value) throws MetricTypeMismatchException {
+        this(metric, value, null);
     }
 
-    public MetricValue(Metric _metric, String[] _value, int[] _chooserCounts) throws MetricTypeMismatchException {
-        if (_metric.type == Metric.COUNTER || _metric.type == Metric.SLIDER) {
-            for (String v : _value) {
+    public MetricValue(Metric metric, String[] value, int[] chooserCounts) throws MetricTypeMismatchException {
+        if (metric.type == Metric.COUNTER || metric.type == Metric.SLIDER) {
+            for (String v : value) {
+                //Check to see if the values are valid
                 try {
                     Double.parseDouble(v);
-                } catch (Exception e) {
-                    Log.e("FRCKrawler", _metric.name);
-                    Log.e("FRCKrawler", v);
-                    Log.e("FRCKrawler", "MetricTypeMismatchException thrown.");
+                } catch (NumberFormatException e) {
                     throw new MetricTypeMismatchException();
                 }
             }
         }
 
-        metric = _metric;
-        value = _value;
-        chooserCounts = _chooserCounts;
+        this.metric = metric;
+        this.value = value;
+        this.chooserCounts = chooserCounts;
     }
 
     public String getValueAsDBReadableString() {
