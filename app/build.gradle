@@ -35,7 +35,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'net.sf.opencsv:opencsv:2.3'
     compile 'com.google.code.gson:gson:2.2.4'
-    compile project(':aFileChooser')
     compile 'com.nhaarman.listviewanimations:lib-core:3.1.0@aar'
     compile 'com.nhaarman.listviewanimations:lib-manipulation:3.1.0@aar'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
