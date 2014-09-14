@@ -18,7 +18,7 @@ public class ListViewAdapter extends ArrayAdapter<ListItem> {
 
 
     public ListViewAdapter(Context context, List<ListItem> values) {
-        super(context, android.R.layout.simple_expandable_list_item_1, values);
+        super(context, android.R.layout.simple_list_item_1, values);
         this.values = values;
         this.context = context;
         inflater = LayoutInflater.from(context);
