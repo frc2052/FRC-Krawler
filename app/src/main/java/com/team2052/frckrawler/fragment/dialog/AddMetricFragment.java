@@ -234,7 +234,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 m.save();
             }
             MetricsActivity activity = (MetricsActivity) getActivity();
-            activity.addMetricToList(m);
+            activity.updateMetricList();
             dismiss();
 
         } else if (v.getId() == R.id.cancel) {

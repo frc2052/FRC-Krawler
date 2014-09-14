@@ -4,8 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
-import com.nhaarman.listviewanimations.ArrayAdapter;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.listitems.ListItem;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class ListViewAdapter extends ArrayAdapter<ListItem> {
 
 
     public ListViewAdapter(Context context, List<ListItem> values) {
-        super(values);
+        super(context, android.R.layout.simple_expandable_list_item_1, values);
         this.values = values;
         this.context = context;
         inflater = LayoutInflater.from(context);

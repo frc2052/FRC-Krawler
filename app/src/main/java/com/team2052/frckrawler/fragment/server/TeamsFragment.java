@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.activeandroid.query.Select;
-import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Team;

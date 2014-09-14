@@ -8,11 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ListView;
 
-import com.activeandroid.query.Select;
-import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
-import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
-import com.nhaarman.listviewanimations.itemmanipulation.animateaddition.AnimateAdditionAdapter;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
@@ -30,15 +27,18 @@ public class MetricsActivity extends NewDatabaseActivity implements OnClickListe
     public static final String METRIC_CATEGORY = "METRIC_CATEGORY";
     private int metricCategory;
 
-    private DynamicListView mDynamicListView;
-    private AnimateAdditionAdapter mAdapter;
     private Game mGame;
+    private ListView mListView;
 
     public static Intent newInstance(Context context, Game game, MetricType type) {
         Intent i = new Intent(context, MetricsActivity.class);
         i.putExtra(PARENT_ID, game.getId());
         i.putExtra(METRIC_CATEGORY, type.ordinal());
         return i;
+    }
+
+    public void updateMetricList() {
+        new GetMetricsTask().execute();
     }
 
     public static enum MetricType {
@@ -58,7 +58,7 @@ public class MetricsActivity extends NewDatabaseActivity implements OnClickListe
         mGame = Game.load(Game.class, getIntent().getLongExtra(PARENT_ID, -1));
         getActionBar().setTitle(MetricType.VALID_TYPES[metricCategory].title);
         metricCategory = getIntent().getIntExtra(METRIC_CATEGORY, -1);
-        mDynamicListView = (DynamicListView) findViewById(R.id.metric_list);
+        mListView = (ListView) findViewById(R.id.metric_list);
 
     }
 
@@ -152,13 +152,6 @@ public class MetricsActivity extends NewDatabaseActivity implements OnClickListe
         }
     }
 
-    public void addMetricToList(Metric metric){
-        //Current version of ListViewAnimations is borked
-        //mDynamicListView.insert(mAdapter.getCount(), new MetricListElement(metric));
-        mAdapter.add(mAdapter.getCount(), new MetricListElement(metric));
-        mAdapter.notifyDataSetChanged();
-    }
-
     private class GetMetricsTask extends AsyncTask<Void, Void, ListViewAdapter> {
         @Override
         protected ListViewAdapter doInBackground(Void... v) {
@@ -173,8 +166,7 @@ public class MetricsActivity extends NewDatabaseActivity implements OnClickListe
 
         @Override
         protected void onPostExecute(ListViewAdapter adapter) {
-            mAdapter = new AnimateAdditionAdapter(new AlphaInAnimationAdapter(adapter));
-            mDynamicListView.setAdapter(mAdapter);
+            mListView.setAdapter(adapter);
         }
     }
 }

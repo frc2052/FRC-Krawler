@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.fragment.server;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,10 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.activeandroid.query.Select;
-import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.models.User;
 import com.team2052.frckrawler.fragment.dialog.AddUserDialogFragment;
 import com.team2052.frckrawler.listitems.ListItem;
@@ -63,9 +60,11 @@ public class UsersFragment extends Fragment {
         super.onResume();
         new GetUsersTask().execute();
     }
-    public void updateUsers(){
+
+    public void updateUsers() {
         new GetUsersTask().execute();
     }
+
     private class GetUsersTask extends AsyncTask<Void, Void, List<User>> {
 
         @Override
@@ -79,9 +78,7 @@ public class UsersFragment extends Fragment {
             for (User user : users) {
                 userList.add(new UserListItem(user));
             }
-            AlphaInAnimationAdapter adapter = new AlphaInAnimationAdapter(new ListViewAdapter(getActivity(), userList));
-            adapter.setAbsListView(((ListView)getView().findViewById(R.id.users_list_view)));
-            ((ListView) getView().findViewById(R.id.users_list_view)).setAdapter(adapter);
+            ((ListView) getView().findViewById(R.id.users_list_view)).setAdapter(new ListViewAdapter(getActivity(), userList));
         }
     }
 }
