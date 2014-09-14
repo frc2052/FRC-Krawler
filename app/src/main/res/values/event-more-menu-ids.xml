@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="event_more_summary"></item>
+    <item type="id" name="event_more_schedule"></item>
+    <item type="id" name="event_more_match_data"></item>
+    <item type="id" name="event_more_robots"></item>
+</resources>

@@ -112,6 +112,8 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (position == 0) return;
         LoadAllEventsByYear eventsByYear = new LoadAllEventsByYear(Integer.parseInt((String) yearSpinner.getSelectedItem()));
+        eventSpinner.setVisibility(View.GONE);
+        getDialog().findViewById(R.id.progress).setVisibility(View.VISIBLE);
         eventsByYear.execute();
     }
 
@@ -156,6 +158,8 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             //Set the adapter for the events spinner
             ListViewAdapter adapter = new ListViewAdapter(getActivity(), listItems);
             eventSpinner.setAdapter(adapter);
+            getDialog().findViewById(R.id.progress).setVisibility(View.GONE);
+            eventSpinner.setVisibility(View.VISIBLE);
         }
     }
 
@@ -202,6 +206,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             for (JsonElement element : jMatches) {
                 //Save all the matches and alliances
                 Match match = JSON.getGson().fromJson(element, Match.class);
+                //Only save Qualifications
                 if(match.matchType.contains("qm")){
                     match.alliance.save();
                     match.save();

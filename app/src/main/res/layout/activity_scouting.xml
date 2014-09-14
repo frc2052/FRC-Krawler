@@ -25,71 +25,16 @@
         android:orientation="vertical" >
 
         <Spinner
-            android:id="@+id/team"
+            android:id="@+id/match_number"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:prompt="@string/team_number" />
 
         <Spinner
-            android:id="@+id/gameType"
+            android:id="@+id/team"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:entries="@array/match_types" />
+            android:layout_height="50dp" />
 
-        <EditText
-            android:id="@+id/matchNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Match #"
-            android:inputType="number"
-            android:minEms="8" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linLayoutRight"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/ScrollView1"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/scoutingType"
-        android:layout_toRightOf="@+id/linLayoutLeft"
-        android:layout_weight="0.32"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/scoutTeamName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="none"
-            android:gravity="center"
-            android:minWidth="20dp"
-            android:singleLine="false"
-            android:text=" "
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="22sp" />
-
-        <TextView
-            android:id="@+id/opr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text=" "
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/schedule"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="View Schedule"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:textSize="20sp" />
     </LinearLayout>
 
     <ScrollView
@@ -109,7 +54,7 @@
             <LinearLayout
                 android:id="@+id/metricWidgetList"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical" >
             </LinearLayout>
 

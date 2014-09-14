@@ -16,15 +16,9 @@ android {
             applicationIdSuffix '.devleopment'
         }
         release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {
-    }
-
-    dexOptions {
-        preDexLibraries = false
     }
 }
 repositories {

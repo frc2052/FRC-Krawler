@@ -58,4 +58,9 @@ public class Match extends Model implements Serializable {
         event.save();
         return save();
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(matchNumber);
+    }
 }

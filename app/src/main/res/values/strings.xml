@@ -7,13 +7,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string-array name="game_spinner">
-        <item>Edit Game</item>
         <item>Events</item>
         <item>Match Metrics</item>
         <item>Pit Metrics</item>
     </string-array>
     <string-array name="event_spinner">
-        <item>Edit Event</item>
         <item>Summary</item>
         <item>Match Schedule</item>
         <item>Match Data</item>

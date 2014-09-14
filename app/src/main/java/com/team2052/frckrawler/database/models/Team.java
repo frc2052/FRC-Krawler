@@ -40,4 +40,9 @@ public class Team extends Model implements Serializable {
 
     public Team() {
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(number);
+    }
 }

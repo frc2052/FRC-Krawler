@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.UUID;
 
-public class ServerThread implements Runnable {
+public class ServerThread extends Thread {
 
     private boolean open;
     private Context context;

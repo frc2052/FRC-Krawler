@@ -11,7 +11,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/list_view_game_spinner"
         android:layout_alignParentLeft="true" />
 
     <ImageView
@@ -20,16 +19,17 @@
         android:layout_alignParentTop="false"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/edit_game_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"/>
-
-    <Spinner
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/list_view_game_spinner"
-        android:layout_alignParentTop="true"
+        android:layout_marginRight="8dp"
         android:layout_toLeftOf="@+id/remove_game_button"
-        android:layout_marginRight="8dp" />
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_action_edit"/>
 
 </RelativeLayout>

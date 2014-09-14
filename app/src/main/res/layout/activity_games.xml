@@ -6,5 +6,6 @@
     <ListView
         android:id="@+id/games_list"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"/>
+        android:layout_height="fill_parent"
+        android:listSelector="@android:color/transparent"/>
 </RelativeLayout>

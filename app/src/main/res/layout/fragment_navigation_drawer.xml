@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:choiceMode="singleChoice"
-    android:background="@color/nav_drawer_background"
-    android:divider="@null">
+    android:background="@color/nav_drawer_background">
 
 </ListView>

@@ -61,7 +61,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Spinner
-                android:id="@+id/gameType"
+                android:id="@+id/team"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/matchNumber"
@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignTop="@+id/gameType"
+                android:layout_alignTop="@+id/team"
                 android:text="Game Type"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -91,9 +91,9 @@
                 android:id="@+id/comments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/gameType"
+                android:layout_alignLeft="@+id/team"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/gameType"
+                android:layout_below="@+id/team"
                 android:ems="10"
                 android:hint="Comments"
                 android:inputType="textMultiLine|textNoSuggestions" />

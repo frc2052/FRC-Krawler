@@ -25,6 +25,6 @@ public class GlobalValues {
      */
     public static Long userID = (long) 0;
 
-    public static final int MAX_COMP_YEAR = 2014;
+    public static final int MAX_COMP_YEAR = 2015;
     public static final int FIRST_COMP_YEAR = 1992;
 }

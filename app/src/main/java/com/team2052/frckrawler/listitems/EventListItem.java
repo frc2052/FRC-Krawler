@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -33,12 +34,13 @@ public class EventListItem implements ListItem {
         convertView.findViewById(R.id.list_view_event_edit_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO
                 /*Intent i = new Intent(c, EditEventDialogActivity.class);
                 i.putExtra(EditEventDialogActivity.EVENT_ID_EXTRA, Integer.toString(event.getId()));
                 c.startActivity(i);*/
             }
         });
-        Spinner spinner = (Spinner) convertView.findViewById(R.id.list_view_event_spinner);
+       /* Spinner spinner = (Spinner) convertView.findViewById(R.id.list_view_event_spinner);
         spinner.setAdapter(ArrayAdapter.createFromResource(c, R.array.event_spinner, android.R.layout.simple_list_item_1));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -48,33 +50,32 @@ public class EventListItem implements ListItem {
                     case 0:
                         return;
                     case 1:
-                        //Summary
-                        /*i = new Intent(c, SummaryActivity.class);
+                        //Summary TODO
+                        *//*i = new Intent(c, SummaryActivity.class);
                         i.putExtra(DatabaseActivity.PARENTS_EXTRA, new String[]{});
                         i.putExtra(DatabaseActivity.DB_VALUES_EXTRA, new String[]{Integer.toString(event.getEventID())});
-                        i.putExtra(DatabaseActivity.DB_KEYS_EXTRA, new String[]{DBContract.COL_EVENT_ID});*/
+                        i.putExtra(DatabaseActivity.DB_KEYS_EXTRA, new String[]{DBContract.COL_EVENT_ID});*//*
                         break;
                     case 2:
                         c.startActivity(MatchListActivity.newInstance(c, event));
                         break;
                     case 3:
-                        //match Data
-                        /*i = new Intent(c, RawMatchDataActivity.class);
+                        //match Data TODO
+                        *//*i = new Intent(c, RawMatchDataActivity.class);
                         i.putExtra(DatabaseActivity.PARENTS_EXTRA, new String[]{});
                         i.putExtra(DatabaseActivity.DB_VALUES_EXTRA, new String[]{Integer.toString(event.getEventID())});
                         i.putExtra(DatabaseActivity.DB_KEYS_EXTRA, new String[]{DBContract.COL_EVENT_ID});
-                        i.putExtra(RawMatchDataActivity.LIMIT_LOADING_EXTRA, true);*/
+                        i.putExtra(RawMatchDataActivity.LIMIT_LOADING_EXTRA, true);*//*
                         break;
                     case 4:
                         break;
                     case 5:
-                        //Attending Teams
-                        /*i = new Intent(c, AttendingTeamsDialogActivity.class);
+                        //Attending Teams TODO
+                        *//*i = new Intent(c, AttendingTeamsDialogActivity.class);
                         i.putExtra(AttendingTeamsDialogActivity.GAME_NAME_EXTRA, event.getGameName());
                         i.putExtra(AttendingTeamsDialogActivity.EVENT_ID_EXTRA, Integer.toString(event.getEventID()));
-                        break;*/
+                        break;*//*
                     case 6:
-                        //Import
                         ConnectivityManager connMgr = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
                         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
@@ -101,7 +102,7 @@ public class EventListItem implements ListItem {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
         return convertView;
     }
 }
