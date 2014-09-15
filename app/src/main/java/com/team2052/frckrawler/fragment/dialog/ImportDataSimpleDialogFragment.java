@@ -26,7 +26,6 @@ import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.database.models.Robot;
 import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.Team;
-import com.team2052.frckrawler.helpers.MatchHelper;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.SimpleListElement;
@@ -39,6 +38,7 @@ import java.util.List;
 
 /**
  * Used to import a event to a game in the most simple way for the user.
+ *
  * @author Adam
  */
 public class ImportDataSimpleDialogFragment extends DialogFragment implements AdapterView.OnItemSelectedListener {
@@ -51,6 +51,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
 
     /**
      * Used to create the dialog. To import the event to the game
+     *
      * @param game the game that the event will eventually be imported to.
      * @return The fragment with the specific arguments to run the dialog
      */
@@ -119,7 +120,6 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     /**
@@ -207,7 +207,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                 //Save all the matches and alliances
                 Match match = JSON.getGson().fromJson(element, Match.class);
                 //Only save Qualifications
-                if(match.matchType.contains("qm")){
+                if (match.matchType.contains("qm")) {
                     match.alliance.save();
                     match.save();
                 }

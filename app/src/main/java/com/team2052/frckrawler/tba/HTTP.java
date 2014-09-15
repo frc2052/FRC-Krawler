@@ -18,7 +18,7 @@ public class HTTP {
         try {
             HttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
-            httpGet.addHeader("X-TBA-App_Id", "frckrawler:frckrawler-scouting-system:v2");
+            httpGet.addHeader("X-TBA-App_Id", "frc2052:frckrawler-scouting-system:v2");
             return httpClient.execute(httpGet);
         } catch (Exception e){
             e.printStackTrace();

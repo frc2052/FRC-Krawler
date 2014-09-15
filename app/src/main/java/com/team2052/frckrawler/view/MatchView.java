@@ -48,7 +48,6 @@ public class MatchView extends FrameLayout {
         redScore = (TextView) findViewById(R.id.red_score);
         redAlliance = findViewById(R.id.red_alliance);
         blueAlliance = findViewById(R.id.blue_alliance);
-
     }
 
     public void init(Match match){
