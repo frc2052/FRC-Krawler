@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.activeandroid.query.Select;
-import com.team2052.frckrawler.AddItemToListListener;
+import com.team2052.frckrawler.ListUpdateListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Game;
@@ -23,7 +23,7 @@ import com.team2052.frckrawler.listitems.ListItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GamesFragment extends Fragment implements AddItemToListListener {
+public class GamesFragment extends Fragment implements ListUpdateListener {
     private ListView mListView;
     private ListViewAdapter mAdapter;
 
@@ -31,7 +31,7 @@ public class GamesFragment extends Fragment implements AddItemToListListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_games, null);
         mListView = (ListView) view.findViewById(R.id.games_list);
-        new GetGamesTask().execute();
+        updateList();
         return view;
     }
 
@@ -57,9 +57,8 @@ public class GamesFragment extends Fragment implements AddItemToListListener {
     }
 
     @Override
-    public void addToList(ListItem listItem) {
-        mAdapter.add(listItem);
-        mAdapter.updateListData();
+    public void updateList() {
+        new GetGamesTask().execute();
     }
 
     private class GetGamesTask extends AsyncTask<Void, Void, List<Game>> {

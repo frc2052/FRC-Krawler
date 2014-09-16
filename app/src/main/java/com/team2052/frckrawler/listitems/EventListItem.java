@@ -36,7 +36,7 @@ public class EventListItem implements ListItem {
         //Menu Items
         menu.getMenu().add(Menu.NONE, R.id.event_more_summary, Menu.NONE, "Summary");
         menu.getMenu().add(Menu.NONE, R.id.event_more_schedule, Menu.NONE, "Schedule");
-        menu.getMenu().add(Menu.NONE, R.id.event_more_schedule, Menu.NONE, "Match Data");
+        menu.getMenu().add(Menu.NONE, R.id.event_more_match_data, Menu.NONE, "Match Data");
         menu.getMenu().add(Menu.NONE, R.id.event_more_robots, Menu.NONE, "Robots");
         //On Menu Item Clicked
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

@@ -1,52 +1,51 @@
 package com.team2052.frckrawler.fragment.dialog;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.team2052.frckrawler.AddItemToListListener;
+import com.team2052.frckrawler.ListUpdateListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.models.Game;
-import com.team2052.frckrawler.listitems.GameListItem;
 
 /**
  * @author Adam
  */
-public class AddGameDialogFragment extends DialogFragment implements View.OnClickListener {
-    private AddItemToListListener listener;
+public class AddGameDialogFragment extends DialogFragment {
+    private ListUpdateListener listener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println(getParentFragment());
-        listener = (AddItemToListListener) getParentFragment();
+        listener = (ListUpdateListener) getParentFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialogactivity_add_game, null);
-        getDialog().setTitle("Add Game");
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        view.findViewById(R.id.addGame).setOnClickListener(this);
-        view.findViewById(R.id.cancel).setOnClickListener(this);
-        return view;
-    }
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        View view = getActivity().getLayoutInflater().inflate(R.layout.dialogactivity_add_game, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.addGame:
-                Game game = new Game(((TextView) getView().findViewById(R.id.nameVal)).getText().toString());
-                listener.addToList(new GameListItem(game));
+        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Game game = new Game(((TextView) getDialog().getWindow().findViewById(R.id.nameVal)).getText().toString());
+                listener.updateList();
                 game.save();
                 dismiss();
-                break;
-            case R.id.cancel:
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 dismiss();
-        }
+            }
+        });
+        builder.setView(view);
+        builder.setTitle("Add Game");
+        return builder.create();
     }
 }

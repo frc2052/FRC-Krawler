@@ -17,6 +17,7 @@ import com.activeandroid.query.Select;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.ListUpdateListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.NewDatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
@@ -240,6 +241,12 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             getDialog().setOnDismissListener(null);
         }
         super.onDestroyView();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        ((ListUpdateListener) getActivity()).updateList();
+        super.onDismiss(dialog);
     }
 }
 
