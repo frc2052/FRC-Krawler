@@ -39,15 +39,15 @@ public class ScoutTypeFragment extends Fragment implements AdapterView.OnItemSel
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences preferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
-        Long eventId = preferences.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, -1);
+        /*Long eventId = preferences.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, -1);
         if (eventId == -1) {
             try {
                 throw new Exception("Event Id Can't be -1 Try Resyncing");
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        mEvent = Event.load(Event.class, eventId);
+        }*/
+        mEvent = new Select().from(Event.class).executeSingle();
     }
 
     @Override
@@ -56,8 +56,8 @@ public class ScoutTypeFragment extends Fragment implements AdapterView.OnItemSel
         mMatchSpinner = (Spinner) view.findViewById(R.id.match_number);
         mAllianceSpinner = (Spinner) view.findViewById(R.id.team);
         mMatchSpinner.setOnItemSelectedListener(this);
-        new GetAllMatches().execute();
         new GetAllMetrics().execute();
+        new GetAllMatches().execute();
         return view;
     }
 
@@ -76,19 +76,6 @@ public class ScoutTypeFragment extends Fragment implements AdapterView.OnItemSel
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-    }
-
-    public class GetAllRobots extends AsyncTask<Void, Void, List<RobotEvents>> {
-
-        @Override
-        protected List<RobotEvents> doInBackground(Void... params) {
-            return new Select().from(RobotEvents.class).where("Event = ?", mEvent.getId()).execute();
-        }
-
-        @Override
-        protected void onPostExecute(List<RobotEvents> robotEventses) {
-
-        }
     }
 
     public class GetAllMatches extends AsyncTask<Void, Void, List<Match>> {

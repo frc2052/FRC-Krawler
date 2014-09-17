@@ -48,4 +48,10 @@ public class AddGameDialogFragment extends DialogFragment {
         builder.setTitle("Add Game");
         return builder.create();
     }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        listener.updateList();
+        super.onDismiss(dialog);
+    }
 }

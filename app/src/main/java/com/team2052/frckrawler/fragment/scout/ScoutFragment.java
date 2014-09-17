@@ -42,7 +42,8 @@ public class ScoutFragment extends Fragment implements DialogInterface.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (BluetoothAdapter.getDefaultAdapter() != null) {
+        //FOR DEBUG REASONS
+        /*if (BluetoothAdapter.getDefaultAdapter() != null) {
             AlertDialog.Builder builder;
             devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices().toArray(new BluetoothDevice[0]);
             CharSequence[] deviceNames = new String[devices.length];
@@ -54,7 +55,7 @@ public class ScoutFragment extends Fragment implements DialogInterface.OnClickLi
             builder.show();
         } else {
             Toast.makeText(getActivity(), "Sorry, your device does not support Bluetooth. " + "You are unable to sync with a server.", Toast.LENGTH_LONG);
-        }
+        }*/
     }
 
     @Override
