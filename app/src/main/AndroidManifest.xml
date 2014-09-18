@@ -29,7 +29,7 @@
             android:value="FRCKrawler2.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="2" />
+            android:value="3" />
         <meta-data
             android:name="AA_SERIALIZERS"
             android:value="com.team2052.frckrawler.database.serializers.StringArraySerializer,com.team2052.frckrawler.database.serializers.ObjectArraySerializer" />
@@ -68,6 +68,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.TeamInfoActivity"/>
     </application>
 
 </manifest>

@@ -9,9 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.team2052.frckrawler.activity.BaseActivity;
-import com.team2052.frckrawler.fragment.server.GamesFragment;
-import com.team2052.frckrawler.fragment.server.OptionsFragment;
-import com.team2052.frckrawler.fragment.server.ServerFragment;
+import com.team2052.frckrawler.fragment.GamesFragment;
+import com.team2052.frckrawler.fragment.OptionsFragment;
+import com.team2052.frckrawler.fragment.ServerFragment;
 
 public class SettingsActivity extends BaseActivity {
 

@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment.server;
+package com.team2052.frckrawler.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.TeamInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.listitems.ListElement;
@@ -34,9 +35,8 @@ public class TeamsFragment extends Fragment {
         ((ListView) view.findViewById(R.id.teams_list_view)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                RobotsFragment fragment = RobotsFragment.newInstance((Team) new Select().from(Team.class).where("Number = ?", ((ListElement) adapterView.getAdapter().getItem(position)).getKey()).executeSingle());
-                fragment.setRetainInstance(true);
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content, fragment, "mainFragment").commit();
+                Team team = new Select().from(Team.class).where("Number = ?", ((ListElement) adapterView.getAdapter().getItem(position)).getKey()).executeSingle();
+                startActivity(TeamInfoActivity.newInstance(getActivity(), team));
             }
         });
         return view;

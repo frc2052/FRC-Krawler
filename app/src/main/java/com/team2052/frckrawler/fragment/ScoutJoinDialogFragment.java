@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment.scout;
+package com.team2052.frckrawler.fragment;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;

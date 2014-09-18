@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment.server;
+package com.team2052.frckrawler.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.widget.ListView;
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.ListUpdateListener;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.NewDatabaseActivity;
+import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Game;
@@ -39,7 +39,7 @@ public class RobotsFragment extends Fragment implements ListUpdateListener {
         RobotsFragment fragment = new RobotsFragment();
         Bundle b = new Bundle();
         b.putInt(VIEW_TYPE, 0);
-        b.putLong(NewDatabaseActivity.PARENT_ID, team.getId());
+        b.putLong(DatabaseActivity.PARENT_ID, team.getId());
         fragment.setArguments(b);
         return fragment;
     }
@@ -48,7 +48,7 @@ public class RobotsFragment extends Fragment implements ListUpdateListener {
         RobotsFragment fragment = new RobotsFragment();
         Bundle b = new Bundle();
         b.putInt(VIEW_TYPE, 1);
-        b.putLong(NewDatabaseActivity.PARENT_ID, event.getId());
+        b.putLong(DatabaseActivity.PARENT_ID, event.getId());
         fragment.setArguments(b);
         return fragment;
     }
@@ -59,7 +59,7 @@ public class RobotsFragment extends Fragment implements ListUpdateListener {
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
         this.mViewType = b.getInt(VIEW_TYPE, 0);
-        mKey = b.getLong(NewDatabaseActivity.PARENT_ID);
+        mKey = b.getLong(DatabaseActivity.PARENT_ID);
     }
 
     @Override
@@ -86,7 +86,8 @@ public class RobotsFragment extends Fragment implements ListUpdateListener {
         protected void onPostExecute(List<Robot> robots) {
             List<ListItem> listItems = new ArrayList<ListItem>();
             for (Robot robot : robots) {
-                listItems.add(new SimpleListElement(robot.team.toString(), robot.team.toString()));
+                //TODO List Item
+                listItems.add(new SimpleListElement(robot.team.toString() + " - " + robot.game.name, robot.team.toString()));
             }
             mListView.setAdapter(new ListViewAdapter(getActivity(), listItems));
         }

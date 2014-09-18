@@ -21,7 +21,7 @@ import com.team2052.frckrawler.listitems.ListItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventsActivity extends NewDatabaseActivity implements ListUpdateListener {
+public class EventsActivity extends DatabaseActivity implements ListUpdateListener {
     private static final int EDIT_EVENT_ID = 1;
     private Game mGame;
 

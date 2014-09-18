@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @author Adam
  */
-public class MatchListActivity extends NewDatabaseActivity {
+public class MatchListActivity extends DatabaseActivity {
     private Event mEvent;
     private ListView mListView;
 
@@ -34,7 +34,7 @@ public class MatchListActivity extends NewDatabaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.match_list_view);
-        mEvent = Event.load(Event.class, getIntent().getLongExtra(NewDatabaseActivity.PARENT_ID, 0));
+        mEvent = Event.load(Event.class, getIntent().getLongExtra(DatabaseActivity.PARENT_ID, 0));
         mListView = (ListView) findViewById(R.id.list_view_match);
         new GetMatchesByEvent().execute();
     }

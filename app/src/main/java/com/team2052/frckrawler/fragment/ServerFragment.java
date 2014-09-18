@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment.server;
+package com.team2052.frckrawler.fragment;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;

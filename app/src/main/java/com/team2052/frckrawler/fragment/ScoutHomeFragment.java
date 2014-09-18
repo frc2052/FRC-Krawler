@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment.scout;
+package com.team2052.frckrawler.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

@@ -22,7 +22,7 @@ import com.team2052.frckrawler.listitems.MetricListElement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MetricsActivity extends NewDatabaseActivity implements OnClickListener {
+public class MetricsActivity extends DatabaseActivity implements OnClickListener {
 
     public static final String METRIC_CATEGORY = "METRIC_CATEGORY";
     private int metricCategory;

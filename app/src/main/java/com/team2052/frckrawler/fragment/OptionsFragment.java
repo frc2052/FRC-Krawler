@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment.server;
+package com.team2052.frckrawler.fragment;
 
 import android.app.AlertDialog;
 import android.content.Context;

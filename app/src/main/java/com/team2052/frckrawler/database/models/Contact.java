@@ -22,15 +22,18 @@ public class Contact extends Model implements Serializable {
     public String address;
     @Column(name = "PhoneNumber")
     public String phoneNumber;
+    @Column(name = "TeamRole")
+    public String teamRole;
     @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-    private int remoteId;
+    public int remoteId;
 
-    public Contact(Team team, String name, String email, String address, String phoneNumber) {
+    public Contact(Team team, String name, String email, String address, String teamRole, String phoneNumber) {
         this.remoteId = DBManager.generateRemoteId();
         this.team = team;
         this.name = name;
         this.email = email;
         this.address = address;
+        this.teamRole = teamRole;
         this.phoneNumber = phoneNumber;
     }
 

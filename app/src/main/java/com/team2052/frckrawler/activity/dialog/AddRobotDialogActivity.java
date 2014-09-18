@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.NewDatabaseActivity;
+import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.database.MetricValue.MetricTypeMismatchException;
 import com.team2052.frckrawler.database.models.Game;
@@ -22,7 +22,7 @@ import com.team2052.frckrawler.gui.MetricWidget;
 
 import java.util.List;
 
-public class AddRobotDialogActivity extends NewDatabaseActivity implements OnClickListener, OnItemSelectedListener {
+public class AddRobotDialogActivity extends DatabaseActivity implements OnClickListener, OnItemSelectedListener {
 
     public static final String TEAM_NUMBER_EXTRA = "com.team2052.frckrawler.teamNumberExtra";
 

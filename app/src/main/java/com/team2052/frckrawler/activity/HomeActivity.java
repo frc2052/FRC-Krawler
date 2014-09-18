@@ -11,12 +11,12 @@ import android.view.Menu;
 
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.fragment.scout.ScoutFragment;
-import com.team2052.frckrawler.fragment.server.GamesFragment;
-import com.team2052.frckrawler.fragment.server.OptionsFragment;
-import com.team2052.frckrawler.fragment.server.ServerFragment;
-import com.team2052.frckrawler.fragment.server.TeamsFragment;
-import com.team2052.frckrawler.fragment.server.UsersFragment;
+import com.team2052.frckrawler.fragment.GamesFragment;
+import com.team2052.frckrawler.fragment.OptionsFragment;
+import com.team2052.frckrawler.fragment.ScoutFragment;
+import com.team2052.frckrawler.fragment.ServerFragment;
+import com.team2052.frckrawler.fragment.TeamsFragment;
+import com.team2052.frckrawler.fragment.UsersFragment;
 import com.team2052.frckrawler.listitems.NavDrawerItem;
 
 public class HomeActivity extends BaseActivity {

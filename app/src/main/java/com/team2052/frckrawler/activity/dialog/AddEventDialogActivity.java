@@ -9,14 +9,14 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.NewDatabaseActivity;
+import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Game;
 
 import java.sql.Date;
 import java.util.GregorianCalendar;
 
-public class AddEventDialogActivity extends NewDatabaseActivity implements OnClickListener {
+public class AddEventDialogActivity extends DatabaseActivity implements OnClickListener {
 
     private Game mGame;
 

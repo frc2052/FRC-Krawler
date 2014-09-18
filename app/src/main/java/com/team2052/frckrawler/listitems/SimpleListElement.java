@@ -16,6 +16,7 @@ public class SimpleListElement extends ListElement {
         this.name = name;
     }
 
+
     @Override
     public View getView(Context c, LayoutInflater inflater, View convertView) {
         if (convertView == null) {
