@@ -21,7 +21,7 @@ public class TeamListItem extends ListElement {
 
     @Override
     public View getView(Context c, LayoutInflater inflater, View convertView) {
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_team, null);
         }
         ((TextView) convertView.findViewById(R.id.list_item_team_number)).setText(Integer.toString(team.number));

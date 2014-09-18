@@ -12,16 +12,16 @@ import java.io.Serializable;
  */
 @Table(name = "users")
 public class User extends Model implements Serializable {
-    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-    private int remoteId;
-
     @Column(name = "Name")
     public String name;
+    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    private int remoteId;
 
     public User(String name) {
         this.remoteId = DBManager.generateRemoteId();
         this.name = name;
     }
 
-    public User() {}
+    public User() {
+    }
 }

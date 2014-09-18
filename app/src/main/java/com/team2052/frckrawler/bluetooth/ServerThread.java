@@ -11,10 +11,8 @@ import com.activeandroid.query.Select;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.database.models.MatchData;
 import com.team2052.frckrawler.database.models.Metric;
-import com.team2052.frckrawler.database.models.Robot;
 import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.User;
 
@@ -94,7 +92,7 @@ public class ServerThread extends Thread {
                 //Close the socket and notify the sync handler
                 clientSocket.close();
                 handler.onSyncSuccess(deviceName);
-                Log.d("FRCKrawler", "Synced in: " +(System.currentTimeMillis() - startTime) + "ms");
+                Log.d("FRCKrawler", "Synced in: " + (System.currentTimeMillis() - startTime) + "ms");
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("FRCKrawler", "IO error in server.");
@@ -113,7 +111,8 @@ public class ServerThread extends Thread {
         if (serverSocket != null)
             try {
                 serverSocket.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         m.cancel(ServerService.SERVER_OPEN_ID);
         m.cancel(ServerCallbackHandler.SYNC_ONGOING_ID);

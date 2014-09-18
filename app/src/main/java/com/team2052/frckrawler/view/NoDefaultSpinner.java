@@ -84,9 +84,8 @@ public class NoDefaultSpinner extends Spinner {
             this.obj = obj;
             try {
                 this.getView = SpinnerAdapter.class.getMethod(
-                        "getView",int.class,View.class,ViewGroup.class);
-            }
-            catch( Exception e ) {
+                        "getView", int.class, View.class, ViewGroup.class);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
@@ -94,14 +93,12 @@ public class NoDefaultSpinner extends Spinner {
         public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
             try {
                 return m.equals(getView) &&
-                        (Integer)(args[0])<0 ?
-                        getView((Integer)args[0],(View)args[1],(ViewGroup)args[2]) :
+                        (Integer) (args[0]) < 0 ?
+                        getView((Integer) args[0], (View) args[1], (ViewGroup) args[2]) :
                         m.invoke(obj, args);
-            }
-            catch (InvocationTargetException e) {
+            } catch (InvocationTargetException e) {
                 throw e.getTargetException();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
@@ -109,15 +106,15 @@ public class NoDefaultSpinner extends Spinner {
         protected View getView(int position, View convertView, ViewGroup parent)
                 throws IllegalAccessException {
 
-            if( position<0 ) {
+            if (position < 0) {
                 final TextView v =
-                        (TextView) ((LayoutInflater)getContext().getSystemService(
+                        (TextView) ((LayoutInflater) getContext().getSystemService(
                                 Context.LAYOUT_INFLATER_SERVICE)).inflate(
-                                android.R.layout.simple_spinner_item,parent,false);
+                                android.R.layout.simple_spinner_item, parent, false);
                 v.setText(getPrompt());
                 return v;
             }
-            return obj.getView(position,convertView,parent);
+            return obj.getView(position, convertView, parent);
         }
     }
 }

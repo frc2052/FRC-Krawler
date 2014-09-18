@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.tba.types;
 
-import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -12,23 +11,22 @@ import com.team2052.frckrawler.database.models.Alliance;
 import com.team2052.frckrawler.database.models.Team;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  * @author Adam
  */
-public class AllianceDeserializer implements JsonDeserializer<Alliance>{
+public class AllianceDeserializer implements JsonDeserializer<Alliance> {
 
     @Override
     public Alliance deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         final Alliance alliance = new Alliance();
         final JsonObject object = json.getAsJsonObject();
-        if(object.has("blue") &&!object.get("blue").isJsonNull()){
+        if (object.has("blue") && !object.get("blue").isJsonNull()) {
             JsonObject blue = object.get("blue").getAsJsonObject();
-            if(blue.has("score") && !blue.get("score").isJsonNull()){
+            if (blue.has("score") && !blue.get("score").isJsonNull()) {
                 alliance.blueScore = blue.get("score").getAsInt();
             }
-            if(blue.has("teams") && !blue.get("teams").isJsonNull()){
+            if (blue.has("teams") && !blue.get("teams").isJsonNull()) {
                 JsonArray jBlueTeams = blue.get("teams").getAsJsonArray();
                 Team blue1 = new Select().from(Team.class).where("TeamKey = ?", jBlueTeams.get(0).getAsString()).executeSingle();
                 Team blue2 = new Select().from(Team.class).where("TeamKey = ?", jBlueTeams.get(1).getAsString()).executeSingle();
@@ -39,12 +37,12 @@ public class AllianceDeserializer implements JsonDeserializer<Alliance>{
             }
         }
 
-        if(object.has("red") &&!object.get("red").isJsonNull()){
+        if (object.has("red") && !object.get("red").isJsonNull()) {
             JsonObject red = object.get("red").getAsJsonObject();
-            if(red.has("score") && !red.get("score").isJsonNull()){
+            if (red.has("score") && !red.get("score").isJsonNull()) {
                 alliance.redScore = red.get("score").getAsInt();
             }
-            if(red.has("teams") && !red.get("teams").isJsonNull()){
+            if (red.has("teams") && !red.get("teams").isJsonNull()) {
                 JsonArray jRedTeams = red.get("teams").getAsJsonArray();
                 Team red1 = new Select().from(Team.class).where("TeamKey = ?", jRedTeams.get(0).getAsString()).executeSingle();
                 Team red2 = new Select().from(Team.class).where("TeamKey = ?", jRedTeams.get(1).getAsString()).executeSingle();

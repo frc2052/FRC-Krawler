@@ -27,7 +27,7 @@ public class AddUserDialogFragment extends DialogFragment implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.cancel:
                 dismiss();
                 break;

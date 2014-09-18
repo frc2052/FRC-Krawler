@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author Adam
  */
 @Table(name = "matchcomments")
-public class RobotMatchComment extends Model implements Serializable{
+public class RobotMatchComment extends Model implements Serializable {
     @Column(name = "Comment")
     public String comment;
 
@@ -18,5 +18,6 @@ public class RobotMatchComment extends Model implements Serializable{
         this.comment = comment;
     }
 
-    public RobotMatchComment() {}
+    public RobotMatchComment() {
+    }
 }

@@ -14,13 +14,13 @@ import java.io.InputStreamReader;
  * @author Adam
  */
 public class HTTP {
-    public static HttpResponse getResponse(String url){
+    public static HttpResponse getResponse(String url) {
         try {
             HttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
             httpGet.addHeader("X-TBA-App_Id", "frc2052:frckrawler-scouting-system:v2");
             return httpClient.execute(httpGet);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -30,7 +30,7 @@ public class HTTP {
         InputStream is;
         String result;
         // Read response to string
-        if(response != null) {
+        if (response != null) {
             try {
                 HttpEntity entity = response.getEntity();
 

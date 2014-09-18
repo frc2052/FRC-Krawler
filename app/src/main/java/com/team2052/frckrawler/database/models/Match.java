@@ -42,12 +42,12 @@ public class Match extends Model implements Serializable {
     public Match() {
     }
 
-    public int setRemoteId(){
+    public int setRemoteId() {
         remoteId = DBManager.generateRemoteId();
         return remoteId;
     }
 
-    public Long saveAll(){
+    public Long saveAll() {
         alliance.blue1.save();
         alliance.blue2.save();
         alliance.blue3.save();

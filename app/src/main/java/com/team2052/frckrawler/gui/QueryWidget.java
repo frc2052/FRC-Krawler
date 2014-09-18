@@ -85,14 +85,14 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 
     */
 /**
-     * **
-     * Class: QueryItem
-     *
-     * @author Charles Hofer
-     *         <p/>
-     *         Description: a query element in the list of querys
-     *         ***
-     *//*
+ * **
+ * Class: QueryItem
+ *
+ * @author Charles Hofer
+ *         <p/>
+ *         Description: a query element in the list of querys
+ *         ***
+ *//*
 
 
     private class QueryItem extends LinearLayout implements OnItemSelectedListener,
@@ -338,9 +338,9 @@ public class QueryWidget extends LinearLayout implements OnClickListener {
 
     */
 /**
-     * **
-     * Class: QueryIncompleteException
-     *//*
+ * **
+ * Class: QueryIncompleteException
+ *//*
 
     private class QueryIncompleteException extends Exception {
     }

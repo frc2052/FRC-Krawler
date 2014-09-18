@@ -13,7 +13,7 @@ import com.team2052.frckrawler.database.models.Match;
 
 /**
  * @author Adam
- * Costom view just for matches
+ *         Costom view just for matches
  */
 public class MatchView extends FrameLayout {
     private TextView matchTitle, red1, red2, red3, redScore, blue1, blue2, blue3, blueScore;
@@ -50,7 +50,7 @@ public class MatchView extends FrameLayout {
         blueAlliance = findViewById(R.id.blue_alliance);
     }
 
-    public void init(Match match){
+    public void init(Match match) {
         Alliance alliance = match.alliance;
         matchTitle.setText(Integer.toString(match.matchNumber));
         red1.setText(Integer.toString(alliance.red1.number));
@@ -61,12 +61,16 @@ public class MatchView extends FrameLayout {
         blue3.setText(Integer.toString(alliance.blue3.number));
         blueScore.setText(Integer.toString(alliance.blueScore));
         redScore.setText(Integer.toString(alliance.redScore));
-        if(alliance.redScore > alliance.blueScore){
+
+        if (alliance.redScore > alliance.blueScore) {
             redAlliance.setBackgroundResource(R.drawable.alliance_border);
             blueAlliance.setBackgroundResource(R.drawable.no_border);
-        } else if(alliance.blueScore > alliance.redScore) {
+        } else if (alliance.blueScore > alliance.redScore) {
             blueAlliance.setBackgroundResource(R.drawable.alliance_border);
             redAlliance.setBackgroundResource(R.drawable.no_border);
+        } else {
+            redAlliance.setBackgroundResource(R.drawable.no_border);
+            blueAlliance.setBackgroundResource(R.drawable.no_border);
         }
     }
 }

@@ -1,24 +1,16 @@
 package com.team2052.frckrawler.listitems;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.PopupMenu;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.activity.MatchListActivity;
+import com.team2052.frckrawler.database.models.Event;
 
 public class EventListItem implements ListItem {
     private final Event event;
@@ -43,7 +35,7 @@ public class EventListItem implements ListItem {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 //TODO
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.event_more_schedule:
                         c.startActivity(MatchListActivity.newInstance(c, event));
                         break;

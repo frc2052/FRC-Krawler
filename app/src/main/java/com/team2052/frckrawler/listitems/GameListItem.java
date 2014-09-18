@@ -7,18 +7,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.PopupMenu;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.EventsActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.models.Game;
-import com.team2052.frckrawler.fragment.server.GamesFragment;
-import com.team2052.frckrawler.view.NoDefaultSpinner;
 
 /**
  * Created by Adam on 8/22/2014.
@@ -50,7 +45,7 @@ public class GameListItem implements ListItem {
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.game_edit_event:
                         c.startActivity(EventsActivity.newInstance(c, game));
                         break;

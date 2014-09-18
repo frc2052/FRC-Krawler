@@ -7,7 +7,7 @@ import com.activeandroid.annotation.Table;
  * @author Adam
  */
 @Table(name = "compileddata")
-public class CompiledData extends Model{
+public class CompiledData extends Model {
     public String data;
     public Metric metric;
     public Robot robot;

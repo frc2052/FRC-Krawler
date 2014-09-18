@@ -12,20 +12,16 @@ import java.io.Serializable;
  */
 @Table(name = "robots")
 public class Robot extends Model implements Serializable {
-    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-    private int remoteId;
-
     @Column(name = "Team", onDelete = Column.ForeignKeyAction.CASCADE)
     public Team team;
-
     @Column(name = "Comments")
     public String comments;
-
     @Column(name = "Opr")
     public double opr;
-
     @Column(name = "Game", onDelete = Column.ForeignKeyAction.CASCADE)
     public Game game;
+    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    private int remoteId;
 
     public Robot(Team team, String comments, double opr, Game game) {
         this.remoteId = DBManager.generateRemoteId();
@@ -35,11 +31,11 @@ public class Robot extends Model implements Serializable {
         this.game = game;
     }
 
-    public int setRemoteId(){
-        remoteId = DBManager.generateRemoteId();
-        return remoteId;
+    public Robot() {
     }
 
-    public Robot() {
+    public int setRemoteId() {
+        remoteId = DBManager.generateRemoteId();
+        return remoteId;
     }
 }

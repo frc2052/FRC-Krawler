@@ -14,6 +14,8 @@ public class GlobalValues {
      * most recently connected server
      */
     public static final String MAC_ADRESS_PREF = "MACAdress";
+    public static final int MAX_COMP_YEAR = 2015;
+    public static final int FIRST_COMP_YEAR = 1992;
     /**
      * The default color for the rows of tables and certain buttons.
      */
@@ -24,7 +26,4 @@ public class GlobalValues {
      * somebody logs in. Only used for the scout's interface.
      */
     public static Long userID = (long) 0;
-
-    public static final int MAX_COMP_YEAR = 2015;
-    public static final int FIRST_COMP_YEAR = 1992;
 }

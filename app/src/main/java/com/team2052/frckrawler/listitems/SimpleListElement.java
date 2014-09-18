@@ -18,7 +18,7 @@ public class SimpleListElement extends ListElement {
 
     @Override
     public View getView(Context c, LayoutInflater inflater, View convertView) {
-        if(convertView == null){
+        if (convertView == null) {
             convertView = inflater.inflate(android.R.layout.simple_list_item_1, null);
         }
         //Set the name based on the key

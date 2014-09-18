@@ -41,16 +41,6 @@ public class MetricsActivity extends NewDatabaseActivity implements OnClickListe
         new GetMetricsTask().execute();
     }
 
-    public static enum MetricType {
-        MATCH_PERF_METRICS("Match Performance Metrics"), ROBOT_METRICS("Pit Scout Metrics"), DRIVER_METRICS("Driver Metrics");
-        public final String title;
-        public static final MetricType[] VALID_TYPES = values();
-
-        MetricType(String title) {
-            this.title = title;
-        }
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,6 +139,16 @@ public class MetricsActivity extends NewDatabaseActivity implements OnClickListe
                                   radioGroup.notifyClick((RadioButton) v);
                                   selectedMetricID = (Integer) v.getTag();
                                   break;*/
+        }
+    }
+
+    public static enum MetricType {
+        MATCH_PERF_METRICS("Match Performance Metrics"), ROBOT_METRICS("Pit Scout Metrics"), DRIVER_METRICS("Driver Metrics");
+        public static final MetricType[] VALID_TYPES = values();
+        public final String title;
+
+        MetricType(String title) {
+            this.title = title;
         }
     }
 

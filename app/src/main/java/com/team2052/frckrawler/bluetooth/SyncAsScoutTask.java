@@ -14,7 +14,6 @@ import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.database.models.MatchData;
 import com.team2052.frckrawler.database.models.Metric;
-import com.team2052.frckrawler.database.models.Robot;
 import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.User;
 
@@ -101,7 +100,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             if (isCancelled())
                 return SYNC_CANCELLED;
 
-            for(RobotEvents robot: inRobots){
+            for (RobotEvents robot : inRobots) {
                 Log.d("FRCKrawler", "Importing robot events " + robot.robot.team.number);
                 robot.robot.team.save();
                 robot.robot.game.save();

@@ -42,7 +42,7 @@ public class EditUserDialogFragment extends DialogFragment implements View.OnCli
         view.findViewById(R.id.cancel).setOnClickListener(this);
         getDialog().setTitle("Edit User");
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        ((EditText)view.findViewById(R.id.nameVal)).setText(mUser.name);
+        ((EditText) view.findViewById(R.id.nameVal)).setText(mUser.name);
         return view;
     }
 

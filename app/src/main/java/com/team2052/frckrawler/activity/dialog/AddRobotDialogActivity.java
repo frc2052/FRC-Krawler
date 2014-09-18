@@ -18,7 +18,6 @@ import com.team2052.frckrawler.activity.NewDatabaseActivity;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.database.MetricValue.MetricTypeMismatchException;
 import com.team2052.frckrawler.database.models.Game;
-import com.team2052.frckrawler.database.models.Metric;
 import com.team2052.frckrawler.gui.MetricWidget;
 
 import java.util.List;

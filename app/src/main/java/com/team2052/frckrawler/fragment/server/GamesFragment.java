@@ -38,6 +38,7 @@ public class GamesFragment extends Fragment implements ListUpdateListener {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.addbutton, menu);
+        menu.findItem(R.id.add_action).setIcon(R.drawable.ic_action_new_event);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -71,7 +72,6 @@ public class GamesFragment extends Fragment implements ListUpdateListener {
 
         @Override
         protected void onPostExecute(List<Game> games) {
-
             ArrayList<ListItem> element = new ArrayList<ListItem>();
             for (Game game : games) {
                 element.add(new GameListItem(game));

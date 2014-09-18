@@ -20,7 +20,6 @@ import com.team2052.frckrawler.database.models.Alliance;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.database.models.Metric;
-import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.gui.MetricWidget;
 
@@ -101,7 +100,7 @@ public class ScoutTypeFragment extends Fragment implements AdapterView.OnItemSel
         @Override
         protected void onPostExecute(List<Metric> metrics) {
             ((LinearLayout) getView().findViewById(R.id.metricWidgetList)).removeAllViews();
-            for(Metric metric: metrics) {
+            for (Metric metric : metrics) {
                 ((LinearLayout) getView().findViewById(R.id.metricWidgetList)).addView(MetricWidget.createWidget(getActivity(), metric));
             }
         }

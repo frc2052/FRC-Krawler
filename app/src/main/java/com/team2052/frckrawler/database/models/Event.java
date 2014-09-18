@@ -35,7 +35,8 @@ public class Event extends Model implements Serializable {
         this.fmsId = fmsId;
     }
 
-    public Event() {}
+    public Event() {
+    }
 
     @Override
     public String toString() {

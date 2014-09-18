@@ -24,7 +24,7 @@ public class MatchListActivity extends NewDatabaseActivity {
     private Event mEvent;
     private ListView mListView;
 
-    public static Intent newInstance(Context c,Event event) {
+    public static Intent newInstance(Context c, Event event) {
         Intent i = new Intent(c, MatchListActivity.class);
         i.putExtra(PARENT_ID, event.getId());
         return i;
@@ -43,8 +43,8 @@ public class MatchListActivity extends NewDatabaseActivity {
 
         @Override
         protected List<Match> doInBackground(Void... params) {
-        return new Select().from(Match.class).orderBy("MatchNumber ASC").where("Event = ?", mEvent.getId()).execute();
-    }
+            return new Select().from(Match.class).orderBy("MatchNumber ASC").where("Event = ?", mEvent.getId()).execute();
+        }
 
         @Override
         protected void onPostExecute(List<Match> matches) {

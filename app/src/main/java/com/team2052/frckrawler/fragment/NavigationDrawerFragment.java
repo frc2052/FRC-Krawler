@@ -27,6 +27,7 @@ import java.util.List;
 
 public class NavigationDrawerFragment extends Fragment {
     public static final List<ListItem> NAV_ITEMS = new ArrayList<ListItem>();
+
     static {
         NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, "Scout", R.drawable.ic_action_paste, R.layout.nav_list_item));
         NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, "Server", R.drawable.ic_action_bluetooth, R.layout.nav_list_item));
@@ -36,6 +37,7 @@ public class NavigationDrawerFragment extends Fragment {
         NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, "Options", R.drawable.ic_action_settings, R.layout.nav_list_item));
         //NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_settings, "Settings", R.drawable.ic_action_settings, R.layout.nav_list_item));
     }
+
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     private NavDrawerAdataper navAdapter;
     private ListView drawerListView;

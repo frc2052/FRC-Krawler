@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author Adam
  */
-public class Schedule implements Serializable{
+public class Schedule implements Serializable {
     public Event event;
     public List<Match> matches;
 

@@ -13,14 +13,14 @@ public class MatchHelper {
         SHORT_TYPES(String name) {
         }
     }
+
     public static enum LONG_TYPES {
         QUALS("Qualification"),
         Q_FINALS("Quarter Finals"),
         S_FINALS("Semi Finals"),
         FINALS("Finals");
-
-        public String name;
         public static final LONG_TYPES[] VALID_TYPES = values();
+        public String name;
 
         LONG_TYPES(String name) {
             this.name = name;

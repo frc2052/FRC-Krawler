@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.listitems;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;

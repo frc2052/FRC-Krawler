@@ -12,17 +12,14 @@ import java.io.Serializable;
  */
 @Table(name = "robotevents")
 public class RobotEvents extends Model implements Serializable {
-    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-    private int remoteId;
-
     @Column(name = "Robot", onDelete = Column.ForeignKeyAction.CASCADE)
     public Robot robot;
-
     @Column(name = "Event", onDelete = Column.ForeignKeyAction.CASCADE)
     public Event event;
-
     @Column(name = "Attending")
     public boolean isAttending;
+    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    private int remoteId;
 
     public RobotEvents(Robot robot, Event event, boolean isAttending) {
         this.remoteId = DBManager.generateRemoteId();

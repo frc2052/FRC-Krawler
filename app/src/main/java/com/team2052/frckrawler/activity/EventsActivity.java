@@ -11,7 +11,6 @@ import android.widget.ListView;
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.ListUpdateListener;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.dialog.AddEventDialogActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Game;
@@ -22,7 +21,7 @@ import com.team2052.frckrawler.listitems.ListItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventsActivity extends NewDatabaseActivity implements ListUpdateListener{
+public class EventsActivity extends NewDatabaseActivity implements ListUpdateListener {
     private static final int EDIT_EVENT_ID = 1;
     private Game mGame;
 

@@ -20,7 +20,7 @@ public class MatchListItem implements ListItem {
 
     @Override
     public View getView(Context c, LayoutInflater inflater, View convertView) {
-        if(convertView == null || !(convertView instanceof MatchView)){
+        if (convertView == null || !(convertView instanceof MatchView)) {
             convertView = inflater.inflate(R.layout.match_view, null);
         }
         MatchView matchView = (MatchView) convertView;

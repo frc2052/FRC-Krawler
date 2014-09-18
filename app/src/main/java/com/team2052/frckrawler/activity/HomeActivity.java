@@ -7,14 +7,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Menu;
 
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.fragment.scout.ScoutFragment;
 import com.team2052.frckrawler.fragment.server.GamesFragment;
 import com.team2052.frckrawler.fragment.server.OptionsFragment;
-import com.team2052.frckrawler.fragment.scout.ScoutFragment;
 import com.team2052.frckrawler.fragment.server.ServerFragment;
 import com.team2052.frckrawler.fragment.server.TeamsFragment;
 import com.team2052.frckrawler.fragment.server.UsersFragment;
@@ -44,8 +43,8 @@ public class HomeActivity extends BaseActivity {
 
         //Used to switch to a different fragment if it came from a separate activity
         Bundle b = getIntent().getExtras();
-        if(b != null){
-            if(b.containsKey(REQUESTED_MODE)){
+        if (b != null) {
+            if (b.containsKey(REQUESTED_MODE)) {
                 if (b.getInt(REQUESTED_MODE, -1) != -1) {
                     initNavId = b.getInt(REQUESTED_MODE);
                 }
@@ -117,7 +116,7 @@ public class HomeActivity extends BaseActivity {
                 fragment = new ScoutFragment();
                 break;
             case R.id.nav_item_server:
-                if(!mIsScout){
+                if (!mIsScout) {
                     fragment = new ServerFragment();
                 }
                 break;

@@ -5,10 +5,8 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.models.Game;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * @author Adam
@@ -21,31 +19,23 @@ public class Metric extends Model implements Serializable {
     public static final int CHOOSER = 3;
     public static final int TEXT = 4;
     public static final int MATH = 5;
-
+    @Column(name = "Name")
+    public String name;
+    @Column(name = "Category")
+    public int category;
+    @Column(name = "Description")
+    public String description;
+    @Column(name = "Type")
+    public int type;
+    @Column(name = "Range")
+    public Object[] range;
+    @Column(name = "Display")
+    public boolean display;
+    @Column(name = "Game", onDelete = Column.ForeignKeyAction.CASCADE)
+    public Game game;
     //To avoid duplicates between Client and Server
     @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private int remoteId;
-
-    @Column(name = "Name")
-    public String name;
-
-    @Column(name = "Category")
-    public int category;
-
-    @Column(name = "Description")
-    public String description;
-
-    @Column(name = "Type")
-    public int type;
-
-    @Column(name = "Range")
-    public Object[] range;
-
-    @Column(name = "Display")
-    public boolean display;
-
-    @Column(name = "Game", onDelete = Column.ForeignKeyAction.CASCADE)
-    public Game game;
 
     public Metric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, int type, Object[] range, boolean display) {
         this.remoteId = DBManager.generateRemoteId();

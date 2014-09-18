@@ -4,9 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,6 +13,7 @@ import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Team;
+import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.TeamListItem;
 
@@ -24,25 +22,9 @@ import java.util.List;
 
 public class TeamsFragment extends Fragment {
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.addbutton, menu);
-
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_action) {
-            /*Intent i = new Intent(getActivity(), AddTeamDialogActivity.class);
-            startActivityForResult(i, 1);*/
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -52,12 +34,9 @@ public class TeamsFragment extends Fragment {
         ((ListView) view.findViewById(R.id.teams_list_view)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                     /*String teamNumber = ((ListElement) adapterView.getAdapter().getItem(position)).getKey();
-                     Intent i = new Intent(getActivity(), RobotsActivity.class);
-                     i.putExtra(DatabaseActivity.PARENTS_EXTRA, new String[]{teamNumber});
-                     i.putExtra(DatabaseActivity.DB_VALUES_EXTRA, new String[]{teamNumber});
-                     i.putExtra(DatabaseActivity.DB_KEYS_EXTRA, new String[]{DBContract.COL_TEAM_NUMBER});
-                     startActivity(i);*/
+                RobotsFragment fragment = RobotsFragment.newInstance((Team) new Select().from(Team.class).where("Number = ?", ((ListElement) adapterView.getAdapter().getItem(position)).getKey()).executeSingle());
+                fragment.setRetainInstance(true);
+                getFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content, fragment, "mainFragment").commit();
             }
         });
         return view;

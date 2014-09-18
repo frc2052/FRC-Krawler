@@ -16,9 +16,10 @@ import java.util.List;
  * @author Adam
  */
 public class DBManager {
-    public static int generateRemoteId(){
+    public static int generateRemoteId() {
         return ((int) (Math.random() * 2147483646));
     }
+
     public static <T extends Model> List<T> loadAllFromType(Class<T> type) {
         return new Select().from(type).execute();
     }
@@ -31,7 +32,7 @@ public class DBManager {
         return Model.load(type, id);
     }
 
-    public static void deleteAllFromType(Class<? extends Model> type){
+    public static void deleteAllFromType(Class<? extends Model> type) {
         new Delete().from(type).execute();
     }
 
@@ -48,7 +49,7 @@ public class DBManager {
         return new Select().from(Match.class);
     }
 
-    public static Schedule genenerateSchedule(Event e){
+    public static Schedule genenerateSchedule(Event e) {
         return new Schedule(e, loadAllMatchesWhere("Event", e.getId()));
     }
 

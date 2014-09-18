@@ -13,16 +13,16 @@ import java.io.Serializable;
 @Table(name = "games")
 public class Game extends Model implements Serializable {
 
-    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-    private int remoteId;
-
     @Column(name = "Name")
     public String name;
+    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    private int remoteId;
 
     public Game(String name) {
         this.remoteId = DBManager.generateRemoteId();
         this.name = name;
     }
 
-    public Game() {}
+    public Game() {
+    }
 }

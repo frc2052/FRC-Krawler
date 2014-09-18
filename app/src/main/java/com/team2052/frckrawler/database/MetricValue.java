@@ -1,8 +1,6 @@
 package com.team2052.frckrawler.database;
 
 
-import android.util.Log;
-
 import com.team2052.frckrawler.database.models.Metric;
 
 import java.text.DecimalFormat;
@@ -96,5 +94,6 @@ public class MetricValue {
         return chooserCounts;
     }
 
-    public class MetricTypeMismatchException extends Exception {}
+    public class MetricTypeMismatchException extends Exception {
+    }
 }

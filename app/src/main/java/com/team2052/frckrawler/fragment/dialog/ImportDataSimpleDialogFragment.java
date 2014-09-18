@@ -123,6 +123,20 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null && getRetainInstance()) {
+            getDialog().setOnDismissListener(null);
+        }
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        ((ListUpdateListener) getActivity()).updateList();
+        super.onDismiss(dialog);
+    }
+
     /**
      * Used to load all events and post it to a spinner list
      *
@@ -233,20 +247,6 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             dismiss();
             super.onPostExecute(aVoid);
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (getDialog() != null && getRetainInstance()) {
-            getDialog().setOnDismissListener(null);
-        }
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        ((ListUpdateListener) getActivity()).updateList();
-        super.onDismiss(dialog);
     }
 }
 
