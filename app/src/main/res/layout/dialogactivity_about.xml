@@ -33,7 +33,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/teamRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Design"
@@ -47,7 +47,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/contact_team_role"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Programming and Development"

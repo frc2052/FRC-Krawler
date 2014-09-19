@@ -58,7 +58,7 @@
             android:layout_below="@+id/matchCount">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/teamRole"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/textView2"
+                android:layout_toRightOf="@+id/teamRole"
                 android:ems="10"
                 android:text=" "
                 android:textSize="24sp">

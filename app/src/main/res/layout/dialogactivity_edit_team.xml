@@ -80,7 +80,7 @@
                     android:textSize="24sp" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/contact_team_role"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/numberVal"
@@ -159,7 +159,7 @@
                     android:inputType="textNoSuggestions" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/teamRole"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/schoolVal"

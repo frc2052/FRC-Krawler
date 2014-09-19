@@ -28,7 +28,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/teamRole"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/opr"
@@ -44,7 +44,7 @@
         android:layout_above="@+id/linLayoutLeft"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/teamRole"
         android:layout_marginTop="20dp">
 
         <LinearLayout
@@ -54,7 +54,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/contact_team_role"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Event:"

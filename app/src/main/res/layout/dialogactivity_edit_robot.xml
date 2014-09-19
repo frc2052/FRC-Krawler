@@ -46,7 +46,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/teamRole"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -60,12 +60,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/game"
-        android:layout_toRightOf="@+id/textView3"
+        android:layout_toRightOf="@+id/contact_team_role"
         android:ems="10"
         android:text=" " />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/contact_team_role"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/comments"
@@ -98,8 +98,8 @@
         android:id="@+id/game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView2"
-        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignBaseline="@+id/teamRole"
+        android:layout_alignBottom="@+id/teamRole"
         android:layout_alignLeft="@+id/comments"
         android:text=" "
         android:textSize="18sp" />

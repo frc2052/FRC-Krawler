@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
-                android:layout_below="@id/textView2">
+                android:layout_below="@id/teamRole">
 
                 <TextView
                     android:id="@+id/textView4"
@@ -51,7 +51,7 @@
                 android:layout_alignParentTop="true">
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/contact_team_role"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="From Web..."
@@ -62,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/textView3"
+                    android:layout_below="@+id/contact_team_role"
                     android:layout_toLeftOf="@+id/importWeb"
                     android:ems="10"
                     android:hint="Image Url" />
@@ -78,7 +78,7 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/teamRole"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/web"
@@ -90,7 +90,7 @@
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/textView2"
+                android:layout_alignLeft="@+id/teamRole"
                 android:layout_below="@+id/sd"
                 android:text="Or"
                 android:textAppearance="?android:attr/textAppearanceMedium" />

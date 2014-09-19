@@ -71,11 +71,11 @@
                     android:src="@android:drawable/ic_menu_help" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/contact_team_role"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/textView2"
+                    android:layout_below="@+id/teamRole"
                     android:text="robots with"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -84,12 +84,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/textView3"
+                    android:layout_below="@+id/contact_team_role"
                     android:text="new teams"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/teamRole"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -104,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/textView4"
                     android:layout_alignLeft="@+id/weightValue"
-                    android:layout_alignTop="@+id/textView2"
+                    android:layout_alignTop="@+id/teamRole"
                     android:layout_toLeftOf="@+id/generateHelp"
                     android:checked="false"
                     android:text=" "

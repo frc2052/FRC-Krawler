@@ -15,7 +15,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/teamRole"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/opr"
@@ -24,10 +24,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/contact_team_role"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/teamRole"
         android:layout_centerHorizontal="true"
         android:text="if they don&apos;t have one for"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -36,7 +36,7 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/contact_team_role"
         android:layout_centerHorizontal="true"
         android:text="the specified game."
         android:textAppearance="?android:attr/textAppearanceMedium" />

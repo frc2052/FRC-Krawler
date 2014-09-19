@@ -49,8 +49,10 @@ public class MetricsActivity extends DatabaseActivity implements OnClickListener
         getActionBar().setTitle(MetricType.VALID_TYPES[metricCategory].title);
         metricCategory = getIntent().getIntExtra(METRIC_CATEGORY, -1);
         mListView = (ListView) findViewById(R.id.metric_list);
-
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

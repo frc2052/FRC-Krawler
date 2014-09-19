@@ -13,6 +13,7 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Contact;
 import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.fragment.dialog.AddContactDialogFragment;
+import com.team2052.frckrawler.listitems.ContactListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.SimpleListElement;
 
@@ -70,10 +71,12 @@ public class ContactsFragment extends ListFragment {
         @Override
         protected void onPostExecute(List<Contact> contacts) {
             List<ListItem> listItems = new ArrayList<ListItem>();
+
             for (Contact contact : contacts) {
                 //TODO List Item
-                listItems.add(new SimpleListElement(contact.name, Integer.toString(contact.remoteId)));
+                listItems.add(new ContactListElement(contact, ContactsFragment.this));
             }
+
             mListView.setAdapter(new ListViewAdapter(getActivity(), listItems));
         }
     }

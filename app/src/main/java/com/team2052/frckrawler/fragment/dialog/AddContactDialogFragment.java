@@ -45,7 +45,7 @@ public class AddContactDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-        builder.setPositiveButton("Add Contact", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String name = ((EditText) view.findViewById(R.id.nameVal)).getText().toString();
@@ -57,6 +57,7 @@ public class AddContactDialogFragment extends DialogFragment {
                 ((ListUpdateListener) getParentFragment()).updateList();
             }
         });
+        builder.setTitle("Add Contact");
         return builder.create();
     }
 }

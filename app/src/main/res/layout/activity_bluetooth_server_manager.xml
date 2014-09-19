@@ -35,14 +35,14 @@
         android:id="@+id/excel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_alignRight="@+id/textView3"
+        android:layout_alignLeft="@+id/contact_team_role"
+        android:layout_alignRight="@+id/contact_team_role"
         android:layout_below="@+id/matchCount"
         android:layout_marginTop="15dp"
         android:text="Excel Exporting" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/contact_team_role"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/dbBackups"
@@ -56,9 +56,9 @@
         android:id="@+id/chooseEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_alignRight="@+id/textView3"
-        android:layout_below="@+id/textView3" />
+        android:layout_alignLeft="@+id/contact_team_role"
+        android:layout_alignRight="@+id/contact_team_role"
+        android:layout_below="@+id/contact_team_role" />
 
     <Switch
         android:id="@+id/hostToggle"
@@ -72,7 +72,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/contact_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/hostToggle"

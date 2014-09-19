@@ -13,7 +13,7 @@
         android:layout_centerHorizontal="true">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/teamRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Welcome "
