@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/tabRoot"
@@ -10,25 +10,24 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:orientation="vertical"
-        android:windowSoftInputMode="adjustNothing" >
+        android:windowSoftInputMode="adjustNothing">
 
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true" >
+            android:layout_centerVertical="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <FrameLayout
                     android:id="@+id/progressFrame"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-                </FrameLayout>
+                    android:layout_height="wrap_content"></FrameLayout>
 
                 <Button
                     android:id="@+id/teamsSelectionButton"
@@ -85,7 +84,7 @@
         android:layout_above="@+id/addList"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/title"
-        android:layout_toRightOf="@+id/tabRoot" >
+        android:layout_toRightOf="@+id/tabRoot">
 
         <ScrollView
             android:id="@+id/scrollView2"
@@ -94,12 +93,12 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" >
+            android:layout_alignParentTop="true">
 
             <RelativeLayout
                 android:id="@+id/relLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
 
                 <LinearLayout
                     android:id="@+id/robotListContainor"
@@ -109,7 +108,7 @@
                     android:layout_centerHorizontal="true"
                     android:dividerPadding="15dp"
                     android:gravity="center_horizontal|center_vertical"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                 </LinearLayout>
 

@@ -1,108 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:padding="8dp">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/metric_list_edit"
-        android:src="@drawable/ic_action_edit"
-        android:padding="8dp"
-        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_centerVertical="true"
+        android:padding="8dp"
+        android:src="@drawable/ic_action_edit" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/metric_list_name"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/metric_list_type"
-        android:layout_alignTop="@+id/metric_list_default_type"
-        android:layout_toRightOf="@+id/metric_list_default_type"
-        android:layout_alignParentBottom="false"
-        android:layout_marginLeft="4dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/metric_list_description"
-        android:layout_below="@+id/metric_list_name"
-        android:layout_marginLeft="4dp"
-        android:layout_toRightOf="@+id/metric_list_default_description" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/metric_list_range"
-        android:singleLine="false"
-        android:layout_alignTop="@+id/metric_list_default_range"
-        android:layout_toRightOf="@+id/metric_list_default_range"
-        android:layout_marginLeft="4dp"
-        android:layout_toLeftOf="@+id/metric_list_edit" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/metric_list_displayed"
-        android:layout_alignTop="@+id/metric_list_default_displayed"
-        android:layout_toRightOf="@+id/metric_list_default_displayed"
-        android:layout_marginLeft="4dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Type:"
-        android:id="@+id/metric_list_default_type"
-        android:layout_below="@+id/metric_list_description"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/metric_list_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_alignTop="@+id/metric_list_default_type"
+        android:layout_marginLeft="4dp"
+        android:layout_toRightOf="@+id/metric_list_default_type"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/metric_list_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/metric_list_name"
+        android:layout_marginLeft="4dp"
+        android:layout_toRightOf="@+id/metric_list_default_description"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/metric_list_range"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/metric_list_default_range"
+        android:layout_marginLeft="4dp"
+        android:layout_toLeftOf="@+id/metric_list_edit"
+        android:layout_toRightOf="@+id/metric_list_default_range"
+        android:singleLine="false"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/metric_list_displayed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/metric_list_default_displayed"
+        android:layout_marginLeft="4dp"
+        android:layout_toRightOf="@+id/metric_list_default_displayed"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/metric_list_default_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/metric_list_description"
+        android:text="Type:"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/metric_list_default_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Description:"
-        android:id="@+id/metric_list_default_description"
         android:layout_above="@+id/metric_list_type"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:text="Description:"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/metric_list_default_displayed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Displayed:"
-        android:id="@+id/metric_list_default_displayed"
         android:layout_alignTop="@+id/metric_list_type"
+        android:layout_marginLeft="8dp"
         android:layout_toRightOf="@+id/metric_list_type"
-        android:textStyle="bold"
-        android:layout_marginLeft="8dp" />
+        android:text="Displayed:"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/metric_list_default_range"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Range:"
-        android:id="@+id/metric_list_default_range"
         android:layout_alignBottom="@+id/metric_list_description"
-        android:layout_toRightOf="@+id/metric_list_description"
         android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/metric_list_description"
+        android:text="Range:"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textStyle="bold" />
 </RelativeLayout>

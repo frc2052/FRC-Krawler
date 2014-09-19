@@ -12,6 +12,7 @@ import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Contact;
 import com.team2052.frckrawler.database.models.Team;
+import com.team2052.frckrawler.fragment.dialog.AddContactDialogFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.SimpleListElement;
 
@@ -54,9 +55,7 @@ public class ContactsFragment extends ListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_action) {
-            //TODO
-            new Contact(mTeam, "Adam", "build.adam8234@gmail.com", "USA", "Programming", "651-488-8888").save();
-            updateList();
+            AddContactDialogFragment.newInstance(mTeam).show(getChildFragmentManager(), "addContact");
         }
         return super.onOptionsItemSelected(item);
     }

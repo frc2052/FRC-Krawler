@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/matchCount"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" >
+        android:layout_alignParentRight="true">
 
         <Button
             android:id="@+id/about"
@@ -58,14 +58,14 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomLayout"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" >
+        android:layout_alignParentRight="true">
 
         <LinearLayout
             android:id="@+id/leftLayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/radioPlaceHolder"
@@ -90,44 +90,44 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-         <!--<LinearLayout
-            android:id="@+id/centerLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical" >
+        <!--<LinearLayout
+           android:id="@+id/centerLayout"
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:layout_weight="1"
+           android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Summarize"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+           <TextView
+               android:id="@+id/textView4"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:text="Summarize"
+               android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <Button
-                android:id="@+id/sync_summary"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_weight="0.50"
-                android:text="Sync"
-                android:textSize="18sp" />
+           <Button
+               android:id="@+id/sync_summary"
+               android:layout_width="match_parent"
+               android:layout_height="60dp"
+               android:layout_weight="0.50"
+               android:text="Sync"
+               android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/view_summary"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_weight="0.50"
-                android:text="View"
-                android:textSize="18sp" />
-        </LinearLayout>-->
+           <Button
+               android:id="@+id/view_summary"
+               android:layout_width="match_parent"
+               android:layout_height="60dp"
+               android:layout_weight="0.50"
+               android:text="View"
+               android:textSize="18sp" />
+       </LinearLayout>-->
 
         <LinearLayout
             android:id="@+id/rightLayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textView5"
@@ -152,7 +152,7 @@
         android:layout_above="@+id/mainButtonLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView3" >
+        android:layout_below="@+id/textView3">
 
         <ImageView
             android:id="@+id/logo"

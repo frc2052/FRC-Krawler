@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true" >
+        android:layout_centerVertical="true">
 
     </ScrollView>
 
@@ -64,21 +64,21 @@
         android:id="@+id/hostToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_below="@+id/chooseEvent"
         android:layout_alignLeft="@+id/matchCount"
         android:layout_alignStart="@+id/matchCount"
+        android:layout_below="@+id/chooseEvent"
         android:layout_marginTop="36dp"
-        android:checked="false" />
+        android:checked="false"
+        android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Toggle Server"
-        android:id="@+id/textView"
-        android:layout_below="@+id/chooseEvent"
+        android:layout_alignEnd="@+id/hostToggle"
         android:layout_alignRight="@+id/hostToggle"
-        android:layout_alignEnd="@+id/hostToggle" />
+        android:layout_below="@+id/chooseEvent"
+        android:text="Toggle Server"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/listName"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/listDescription" >
+        android:layout_below="@+id/listDescription">
 
         <TableLayout
             android:id="@+id/listTable"
@@ -37,7 +37,7 @@
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/sideLayout"
             android:layout_toRightOf="@+id/sideLayout"
-            android:minWidth="100dp" >
+            android:minWidth="100dp">
 
         </TableLayout>
 
@@ -48,7 +48,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/moveUp"
@@ -72,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/centerLayout"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true">
 
         <Button
             android:id="@+id/addRobotToList"

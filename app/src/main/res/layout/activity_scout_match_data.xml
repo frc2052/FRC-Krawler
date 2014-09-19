@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/listName" >
+        android:layout_below="@+id/listName">
 
         <ScrollView
             android:id="@+id/verticalScroller"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:scrollbars="horizontal|vertical" >
+            android:scrollbars="horizontal|vertical">
 
             <HorizontalScrollView
                 android:id="@+id/horizontalScroller"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <RelativeLayout
                     android:id="@+id/dataTableParent"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent">
 
                     <TableLayout
                         android:id="@+id/dataTable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:dividerPadding="2dp" >
+                        android:dividerPadding="2dp">
 
                         <TableRow
                             android:id="@+id/descriptorsRow"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content">
 
                             <TextView
                                 android:id="@+id/buttonPlaceHoder"

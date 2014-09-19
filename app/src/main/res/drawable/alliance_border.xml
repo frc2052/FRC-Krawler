@@ -4,9 +4,10 @@
     android:shape="rectangle">
     <stroke
         android:width="4dp"
-        android:color="#000000"/>
-    <padding android:top="2dp"
+        android:color="#000000" />
+    <padding
         android:bottom="2dp"
         android:left="2dp"
-        android:right="2dp"/>
+        android:right="2dp"
+        android:top="2dp" />
 </shape>

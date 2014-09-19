@@ -9,12 +9,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/matchCount" >
+            android:layout_below="@+id/matchCount">
 
             <TextView
                 android:id="@+id/textView2"
@@ -31,12 +32,12 @@
                 android:layout_alignParentRight="true"
                 android:layout_toRightOf="@+id/textView2"
                 android:ems="10"
-                android:hint="Name" >
+                android:hint="Name">
 
                 <requestFocus />
             </EditText>
 
         </RelativeLayout>
-        </ScrollView>
+    </ScrollView>
 
 </RelativeLayout>

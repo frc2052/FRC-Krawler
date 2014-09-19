@@ -1,145 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
-        <ScrollView
-            android:id="@+id/scrollView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true" >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
-
-                <FrameLayout
-                    android:id="@+id/progressFrame"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-                </FrameLayout>
-
-                <Button
-                    android:id="@+id/teamsSelectionButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-
-                    android:text="Teams" />
-
-                <Button
-                    android:id="@+id/usersSelectionButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-
-                    android:text="Users" />
-
-                <Button
-                    android:id="@+id/gamesSelectionButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-
-                    android:text="Games" />
-
-                <Button
-                    android:id="@+id/bluetoothTabButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-
-                    android:text="Sharing" />
-
-                <Button
-                    android:id="@+id/optionsTabButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-
-                    android:text="Options" />
-
-            </LinearLayout>
-
-        </ScrollView>
-
-                    <ScrollView
-                        android:id="@+id/verticalScroller"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_above="@+id/linearLayout"
-                        android:layout_alignParentRight="true"
-                        android:layout_below="@+id/title"
-                        android:layout_toRightOf="@+id/scrollView1"
-                        android:scrollbars="horizontal|vertical" >
-
-                        <HorizontalScrollView
-                            android:id="@+id/horizontalScroller"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" >
-
-                                <TableLayout
-                                    android:id="@+id/dataTable"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:dividerPadding="2dp" >
-
-                                </TableLayout>
-                        </HorizontalScrollView>
-                    </ScrollView>
-
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="Raw Match Data"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true">
 
         <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/progressFrame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></FrameLayout>
 
             <Button
-                android:id="@+id/changeSelection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select Matches" />
+                android:id="@+id/teamsSelectionButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+
+                android:text="Teams" />
 
             <Button
-                android:id="@+id/addData"
+                android:id="@+id/usersSelectionButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+
+                android:text="Users" />
+
+            <Button
+                android:id="@+id/gamesSelectionButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+
+                android:text="Games" />
+
+            <Button
+                android:id="@+id/bluetoothTabButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Match Data" />
+                android:layout_height="60dp"
+
+                android:text="Sharing" />
+
+            <Button
+                android:id="@+id/optionsTabButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+
+                android:text="Options" />
+
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/matchNumTextBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:text=" "
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </ScrollView>
 
-        <TextView
-            android:id="@+id/matches"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/scrollView1"
-            android:text=" "
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+    <ScrollView
+        android:id="@+id/verticalScroller"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linearLayout"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/title"
+        android:layout_toRightOf="@+id/scrollView1"
+        android:scrollbars="horizontal|vertical">
 
-        <TextView
-            android:id="@+id/opr"
+        <HorizontalScrollView
+            android:id="@+id/horizontalScroller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableLayout
+                android:id="@+id/dataTable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:dividerPadding="2dp">
+
+            </TableLayout>
+        </HorizontalScrollView>
+    </ScrollView>
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Raw Match Data"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:id="@+id/changeSelection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/matches"
-            android:layout_alignLeft="@+id/matches"
-            android:text="Matches:"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:text="Select Matches" />
+
+        <Button
+            android:id="@+id/addData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Match Data" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/matchNumTextBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text=" "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/matches"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/scrollView1"
+        android:text=" "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/opr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/matches"
+        android:layout_alignLeft="@+id/matches"
+        android:text="Matches:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

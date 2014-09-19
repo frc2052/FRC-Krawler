@@ -3,13 +3,13 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true" >
+            android:layout_alignParentRight="true">
 
             <Button
                 android:id="@+id/addComment"
@@ -40,20 +40,19 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/linearLayout"
             android:layout_below="@+id/matchCount"
-            android:layout_centerHorizontal="true" >
+            android:layout_centerHorizontal="true">
 
             <ScrollView
                 android:id="@+id/scrollView1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true" >
+                android:layout_centerVertical="true">
 
                 <RelativeLayout
                     android:id="@+id/RelativeLayout_add_comment"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-                </RelativeLayout>
+                    android:layout_height="wrap_content"></RelativeLayout>
             </ScrollView>
         </RelativeLayout>
 

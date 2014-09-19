@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -9,7 +9,7 @@
         android:layout_above="@+id/dataCount"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/topLayout" >
+        android:layout_below="@+id/topLayout">
 
         <ScrollView
             android:id="@+id/scrollView1"
@@ -17,18 +17,17 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" >
+            android:layout_alignParentTop="true">
 
             <HorizontalScrollView
                 android:id="@+id/horizontalScrollView1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
 
                 <TableLayout
                     android:id="@+id/summaryTable"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-                </TableLayout>
+                    android:layout_height="match_parent"></TableLayout>
             </HorizontalScrollView>
         </ScrollView>
 
@@ -39,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/matchCount"

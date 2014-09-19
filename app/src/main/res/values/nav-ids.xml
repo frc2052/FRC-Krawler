@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item type="id" name="nav_item_scout" />
-    <item type="id" name="nav_item_server" />
-    <item type="id" name="nav_item_settings" />
-    <item type="id" name="nav_item_teams"/>
-    <item type="id" name="nav_item_users"/>
-    <item type="id" name="nav_item_games"/>
-    <item type="id" name="nav_item_options"/>
+    <item name="nav_item_scout" type="id" />
+    <item name="nav_item_server" type="id" />
+    <item name="nav_item_settings" type="id" />
+    <item name="nav_item_teams" type="id" />
+    <item name="nav_item_users" type="id" />
+    <item name="nav_item_games" type="id" />
+    <item name="nav_item_options" type="id" />
 </resources>

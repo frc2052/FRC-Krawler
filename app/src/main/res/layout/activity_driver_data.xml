@@ -3,13 +3,13 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true">
 
         <RelativeLayout
             android:id="@+id/tabRoot"
@@ -17,19 +17,19 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <ScrollView
                 android:id="@+id/scrollView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true" >
+                android:layout_centerVertical="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <Button
                         android:id="@+id/teamsSelectionButton"
@@ -74,21 +74,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title"
-                android:layout_toRightOf="@+id/scrollView1" >
+                android:layout_toRightOf="@+id/scrollView1">
 
                 <RelativeLayout
                     android:id="@+id/teamsContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true" >
+                    android:layout_centerHorizontal="true">
 
                     <LinearLayout
                         android:id="@+id/bottomLinearLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true" >
+                        android:layout_centerHorizontal="true">
 
                         <Button
                             android:id="@+id/addData"
@@ -105,32 +105,31 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true" >
+                        android:layout_centerHorizontal="true">
 
                         <HorizontalScrollView
                             android:id="@+id/horizontalScroller"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true" >
+                            android:layout_alignParentTop="true">
 
                             <ScrollView
                                 android:id="@+id/verticalScroller"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:scrollbars="horizontal|vertical" >
+                                android:scrollbars="horizontal|vertical">
 
                                 <RelativeLayout
                                     android:id="@+id/dataTableParent"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="match_parent" >
+                                    android:layout_height="match_parent">
 
                                     <TableLayout
                                         android:id="@+id/dataTable"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:dividerPadding="2dp" >
-                                    </TableLayout>
+                                        android:dividerPadding="2dp"></TableLayout>
                                 </RelativeLayout>
                             </ScrollView>
                         </HorizontalScrollView>

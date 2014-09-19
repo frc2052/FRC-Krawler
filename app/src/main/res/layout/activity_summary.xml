@@ -3,7 +3,7 @@
     android:id="@+id/tabRoot"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <com.team2052.frckrawler.gui.StaticTableLayout
         android:id="@+id/adminSummaryTable"
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomLinearLayout"
         android:layout_below="@+id/title"
-        android:layout_toRightOf="@+id/scrollView1" >
+        android:layout_toRightOf="@+id/scrollView1">
 
     </com.team2052.frckrawler.gui.StaticTableLayout>
 
@@ -20,18 +20,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true" >
+        android:layout_centerVertical="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <FrameLayout
                 android:id="@+id/progressFrame"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-            </FrameLayout>
+                android:layout_height="wrap_content"></FrameLayout>
 
             <Button
                 android:id="@+id/teamsSelectionButton"
@@ -84,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true">
 
         <Button
             android:id="@+id/query"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/root"
@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/matchCount"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true" >
+            android:layout_alignParentRight="true">
 
             <Button
                 android:id="@+id/save"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/matchCount" >
+            android:layout_below="@+id/matchCount">
 
             <TextView
                 android:id="@+id/textView2"
@@ -74,7 +74,7 @@
                 android:layout_toRightOf="@+id/textView2"
                 android:ems="10"
                 android:text=" "
-                android:textSize="24sp" >
+                android:textSize="24sp">
 
                 <requestFocus />
             </TextView>

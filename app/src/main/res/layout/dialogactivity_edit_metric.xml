@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/matchCount"
@@ -17,12 +17,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomLayout"
-        android:layout_below="@+id/matchCount" >
+        android:layout_below="@+id/matchCount">
 
         <RelativeLayout
             android:id="@+id/root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/name"
@@ -164,8 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/inc"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/inc" >
-            </FrameLayout>
+                android:layout_below="@+id/inc"></FrameLayout>
 
             <TextView
                 android:id="@+id/textView4"
@@ -184,7 +183,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" >
+        android:layout_alignParentRight="true">
 
         <Button
             android:id="@+id/saveMetric"
