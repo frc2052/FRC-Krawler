@@ -7,32 +7,33 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.MetricsActivity;
+import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.models.Alliance;
 import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.database.models.Metric;
-import com.team2052.frckrawler.database.models.Team;
+import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.gui.MetricWidget;
+import com.team2052.frckrawler.listitems.ListItem;
+import com.team2052.frckrawler.listitems.SimpleListElement;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * @author Adam
  */
-public class ScoutTypeFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class ScoutPitFragment extends Fragment {
     private Event mEvent;
-    private Spinner mMatchSpinner;
-    private Spinner mAllianceSpinner;
+    private Spinner mTeamSpinner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,42 +52,35 @@ public class ScoutTypeFragment extends Fragment implements AdapterView.OnItemSel
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_scouting, null);
-        mMatchSpinner = (Spinner) view.findViewById(R.id.match_number);
-        mAllianceSpinner = (Spinner) view.findViewById(R.id.team);
-        mMatchSpinner.setOnItemSelectedListener(this);
+        View view = inflater.inflate(R.layout.activity_scouting_pit, null);
+        mTeamSpinner = (Spinner) view.findViewById(R.id.team);
         new GetAllMetrics().execute();
-        new GetAllMatches().execute();
+        new GetAllRobots().execute();
         return view;
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Alliance alliance = ((Match) mMatchSpinner.getSelectedItem()).alliance;
-        List<Team> teams = new ArrayList<Team>();
-        teams.add(alliance.blue1);
-        teams.add(alliance.blue2);
-        teams.add(alliance.blue3);
-        teams.add(alliance.red1);
-        teams.add(alliance.red2);
-        teams.add(alliance.red3);
-        mAllianceSpinner.setAdapter(new ArrayAdapter<Team>(getActivity(), android.R.layout.simple_list_item_1, teams));
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-    }
-
-    public class GetAllMatches extends AsyncTask<Void, Void, List<Match>> {
-
+    public class GetAllRobots extends AsyncTask<Void, Void, List<RobotEvents>> {
         @Override
-        protected List<Match> doInBackground(Void... params) {
-            return new Select().from(Match.class).where("Event = ?", mEvent.getId()).orderBy("MatchNumber ASC").execute();
+        protected List<RobotEvents> doInBackground(Void... params) {
+            return new Select().from(RobotEvents.class).where("Event = ?", mEvent.getId()).and("Attending = ?", true).execute();
         }
 
         @Override
-        protected void onPostExecute(List<Match> matches) {
-            mMatchSpinner.setAdapter(new ArrayAdapter<Match>(getActivity(), android.R.layout.simple_list_item_1, matches));
+        protected void onPostExecute(List<RobotEvents> robotEventses) {
+            //Sort by Team number
+            Collections.sort(robotEventses, new Comparator<RobotEvents>() {
+                @Override
+                public int compare(RobotEvents lhs, RobotEvents rhs) {
+                    return Double.compare(lhs.robot.team.number, rhs.robot.team.number);
+                }
+            });
+
+            List<ListItem> listItems = new ArrayList<ListItem>();
+
+            for (RobotEvents robotEvents : robotEventses) {
+                listItems.add(new SimpleListElement(Integer.toString(robotEvents.robot.team.number) + " - " + robotEvents.robot.team.name, robotEvents.robot.team.teamKey));
+            }
+            mTeamSpinner.setAdapter(new ListViewAdapter(getActivity(), listItems));
         }
     }
 
@@ -94,7 +88,7 @@ public class ScoutTypeFragment extends Fragment implements AdapterView.OnItemSel
 
         @Override
         protected List<Metric> doInBackground(Void... params) {
-            return DBManager.loadAllMetricsWhere("Game", mEvent.game.getId());
+            return new Select().from(Metric.class).where("Game = ?", mEvent.game.getId()).and("Category = ?", MetricsActivity.MetricType.ROBOT_METRICS.ordinal()).execute();
         }
 
         @Override

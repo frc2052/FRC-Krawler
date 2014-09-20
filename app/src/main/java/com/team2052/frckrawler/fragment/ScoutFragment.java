@@ -166,10 +166,10 @@ public class ScoutFragment extends Fragment implements DialogInterface.OnClickLi
                     fragment = new ScoutHomeFragment();
                     break;
                 case 1:
-                    fragment = new ScoutTypeFragment();
+                    fragment = new ScoutMatchFragment();
                     break;
                 case 2:
-                    fragment = new ScoutTypeFragment();
+                    fragment = new ScoutPitFragment();
                     break;
                 case 3:
                     fragment = new ScoutHomeFragment();
