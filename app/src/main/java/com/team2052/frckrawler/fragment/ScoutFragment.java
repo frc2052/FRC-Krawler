@@ -17,12 +17,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.astuetz.PagerSlidingTabStrip;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.SyncAsScoutTask;
 import com.team2052.frckrawler.bluetooth.SyncCallbackHandler;
+import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.User;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 
@@ -38,6 +40,7 @@ public class ScoutFragment extends Fragment implements DialogInterface.OnClickLi
     private AlertDialog progressDialog;
     private int selectedDeviceAddress;
     private int REQUEST_BT_ENABLE = 1;
+    private Event mEvent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,7 @@ public class ScoutFragment extends Fragment implements DialogInterface.OnClickLi
         } else {
             Toast.makeText(getActivity(), "Sorry, your device does not support Bluetooth. " + "You are unable to sync with a server.", Toast.LENGTH_LONG);
         }*/
+        mEvent = new Select().from(Event.class).executeSingle();
     }
 
     @Override
@@ -147,7 +151,7 @@ public class ScoutFragment extends Fragment implements DialogInterface.OnClickLi
     }
 
     public class ScoutPagerAdapter extends FragmentPagerAdapter {
-        public final String[] headers = {"Home", "Match Scouting", "Pit Scouting", "Summary"};
+        public final String[] headers = {"Home", "Match Scouting", "Pit Scouting", "Summary", "Schedule"};
 
         public ScoutPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -174,6 +178,8 @@ public class ScoutFragment extends Fragment implements DialogInterface.OnClickLi
                 case 3:
                     fragment = new ScoutHomeFragment();
                     break;
+                case 4:
+                    fragment = MatchListFragment.newInstance(mEvent);
             }
             return fragment;
         }
