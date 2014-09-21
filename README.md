@@ -1,0 +1,4 @@
+### The Goal Of This Project ###
+This project is to work out kinks and struggles the scouting team had last year with FRCKrawler. Also, it is to improve the overall experience with FRCKrawler including the following. Functionality, ease of use, and a more pleasing design. Currenly for anybody wanting to know how to use FRCKrawler for version 1.8.1 has to read a manual. My goal is to make the app very intuitive so that the user doesn’t need a manual to even use the app.
+
+To view screenshots of current progress click [here](https://drive.google.com/folderview?id=0B560TT78WfD-UDM1VnRBaS1vU0U&usp=sharing)

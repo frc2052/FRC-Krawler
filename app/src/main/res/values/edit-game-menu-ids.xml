@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="game_edit_event" type="id" />
+    <item name="game_edit_match_metrics" type="id" />
+    <item name="game_edit_pit_metrics" type="id" />
+</resources>

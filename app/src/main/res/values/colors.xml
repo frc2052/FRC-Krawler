@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <color name="off_white">#eee</color>
+    <color name="nav_drawer_background">#f7f7f7</color>
+    <color name="red">#F00</color>
+    <color name="blue">#00F</color>
+</resources>

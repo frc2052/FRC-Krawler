@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <string name="select_file">Choose file from SD</string>
+    <string name="app_name">FRCKrawler</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string-array name="game_spinner">
+        <item>Events</item>
+        <item>Match Metrics</item>
+        <item>Pit Metrics</item>
+    </string-array>
+    <string-array name="event_spinner">
+        <item>Summary</item>
+        <item>Match Schedule</item>
+        <item>Match Data</item>
+        <item>Robots</item>
+        <item>Attending Teams</item>
+        <item>Import</item>
+    </string-array>
+    <string-array name="states">
+        <item>AL</item>
+        <item>AK</item>
+        <item>AS</item>
+        <item>AZ</item>
+        <item>AR</item>
+        <item>CA</item>
+        <item>CO</item>
+        <item>CT</item>
+        <item>DE</item>
+        <item>DC</item>
+        <item>FL</item>
+        <item>GA</item>
+        <item>HI</item>
+        <item>ID</item>
+        <item>IL</item>
+        <item>IN</item>
+        <item>IA</item>
+        <item>KS</item>
+        <item>KY</item>
+        <item>LA</item>
+        <item>ME</item>
+        <item>MD</item>
+        <item>MA</item>
+        <item>MI</item>
+        <item>MN</item>
+        <item>MS</item>
+        <item>MO</item>
+        <item>MT</item>
+        <item>NE</item>
+        <item>NV</item>
+        <item>NH</item>
+        <item>NJ</item>
+        <item>NM</item>
+        <item>NY</item>
+        <item>NC</item>
+        <item>ND</item>
+        <item>OH</item>
+        <item>OK</item>
+        <item>OR</item>
+        <item>PA</item>
+        <item>PR</item>
+        <item>RI</item>
+        <item>SC</item>
+        <item>SD</item>
+        <item>TN</item>
+        <item>UT</item>
+        <item>VT</item>
+        <item>VA</item>
+        <item>VI</item>
+        <item>WA</item>
+        <item>WV</item>
+        <item>WI</item>
+        <item>WY</item>
+    </string-array>
+    <string-array name="metric_types">
+        <item>Boolean</item>
+        <item>Counter</item>
+        <item>Slider</item>
+        <item>Chooser</item>
+        <item>Text</item>
+        <item>Math</item>
+    </string-array>
+
+    <string name="team_number">Team Number</string>
+
+    <string-array name="match_types">
+        <item>Qualifications</item>
+        <item>Finals</item>
+        <item>Practice</item>
+    </string-array>
+
+    <string name="name">FRCKrawler Scouting System</string>
+    <string name="chooser_label">Charlie Put This Here</string>
+    <string name="preference_key_avg_weight">avgWeight</string>
+    <string name="preferences_key_robot_game">game</string>
+    <string name="preference_key_autogenerate_robot">autoRobot</string>
+
+    <string-array name="empty_array" />
+
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_server">Server</string>
+    <string name="action_games">Games</string>
+    <string name="action_options">Options</string>
+
+    <string name="drawer_open">Drawer Open</string>
+    <string name="drawer_close">Drawer Close</string>
+
+</resources>

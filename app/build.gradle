@@ -1,0 +1,41 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion '20.0.0'
+    defaultConfig {
+        applicationId 'com.team2052.frckrawler'
+        minSdkVersion 14
+        targetSdkVersion 19
+        versionName 'debug'
+    }
+    buildTypes {
+        debug {
+            versionNameSuffix '-DEVELOPMENT'
+            applicationIdSuffix '.devleopment'
+        }
+        release {
+        }
+    }
+    productFlavors {
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'net.sf.opencsv:opencsv:2.3'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'com.android.support:support-v4:19.+'
+}

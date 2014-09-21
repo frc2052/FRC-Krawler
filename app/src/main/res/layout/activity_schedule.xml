@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.team2052.frckrawler.gui.StaticTableLayout
+        android:id="@+id/scheduleTable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/addMatch"
+        android:layout_below="@+id/title"
+        android:layout_toRightOf="@+id/scrollView1">
+
+    </com.team2052.frckrawler.gui.StaticTableLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Match Schedule"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/progressFrame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></FrameLayout>
+
+            <Button
+                android:id="@+id/teamsSelectionButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+
+                android:text="Teams" />
+
+            <Button
+                android:id="@+id/usersSelectionButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+
+                android:text="Users" />
+
+            <Button
+                android:id="@+id/gamesSelectionButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+
+                android:text="Games" />
+
+            <Button
+                android:id="@+id/bluetoothTabButton"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+
+                android:text="Sharing" />
+
+            <Button
+                android:id="@+id/optionsTabButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+
+                android:text="Options" />
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/addMatch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Add Match" />
+
+    <TextView
+        android:id="@+id/matchCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text=" "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>
