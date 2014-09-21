@@ -11,7 +11,7 @@ import com.team2052.frckrawler.database.models.User;
 import com.team2052.frckrawler.fragment.dialog.EditUserDialogFragment;
 
 /**
- * Created by Adam on 8/25/2014.
+ * @author Adam
  */
 public class UserListItem implements ListItem {
 

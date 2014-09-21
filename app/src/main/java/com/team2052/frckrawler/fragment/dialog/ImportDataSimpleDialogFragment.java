@@ -2,11 +2,11 @@ package com.team2052.frckrawler.fragment.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -48,7 +48,6 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     private Spinner yearSpinner;
     private Spinner eventSpinner;
     private Game mGame;
-    private ProgressDialog progressBar;
 
     /**
      * Used to create the dialog. To import the event to the game
@@ -84,7 +83,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (new Select().from(Event.class).where("FMSid = ?", ((ListElement) eventSpinner.getSelectedItem()).getKey()).execute().size() == 0) {
-                    progressBar = ProgressDialog.show(getActivity() == null ? getParentFragment().getActivity() : getActivity(), "", "Downloading Event Data...", true);
+                    ProgressDialogFragment.showLoadingProgress(getFragmentManager());
                     new LoadAllEventData(((ListElement) eventSpinner.getSelectedItem()).getKey()).execute();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity() == null ? getParentFragment().getActivity() : getActivity());
@@ -102,7 +101,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             }
         });
         yearSpinner = (Spinner) view.findViewById(R.id.import_year_spinner);
-        yearSpinner.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, yearDropDownItems));
+        yearSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, yearDropDownItems));
         yearSpinner.setOnItemSelectedListener(this);
         eventSpinner = (Spinner) view.findViewById(R.id.import_event_spinner);
         b.setView(view);
@@ -121,14 +120,6 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (getDialog() != null && getRetainInstance()) {
-            getDialog().setOnDismissListener(null);
-        }
-        super.onDestroyView();
     }
 
     @Override
@@ -154,7 +145,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             //Get the response for the events by year
             JsonArray jsonArray = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url)));
             //Create an array for events
-            List<Event> events = new ArrayList<Event>();
+            List<Event> events = new ArrayList<>();
             for (JsonElement element : jsonArray) {
                 //Add the events to the list
                 events.add(JSON.getGson().fromJson(element, Event.class));
@@ -166,7 +157,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         @Override
         protected void onPostExecute(List<Event> events) {
             //Create listitems so the UI can read it
-            ArrayList<ListItem> listItems = new ArrayList<ListItem>();
+            ArrayList<ListItem> listItems = new ArrayList<>();
             for (Event event : events) {
                 listItems.add(new SimpleListElement(event.name, event.fmsId));
             }
@@ -183,9 +174,10 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
      *
      * @author Adam
      */
-    public class LoadAllEventData extends AsyncTask<Void, String, Void> {
+    public class LoadAllEventData extends AsyncTask<Void, Void, Void> {
+        //TODO Separate to avoid losing the fragment manager when you dismiss the host dialog
         private final String url;
-
+        final FragmentManager fragman = getFragmentManager();
         public LoadAllEventData(String eventKey) {
             //Get the main event url based on the key
             this.url = TBA.BASE_TBA_URL + String.format(TBA.EVENT_REQUEST, eventKey);
@@ -207,17 +199,15 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             for (JsonElement element : jTeams) {
                 //Convert json element to team
                 Team team = JSON.getGson().fromJson(element, Team.class);
-                publishProgress("Saving Team " + team.number);
                 //Create a robot and save that robot to the database as well with the team
                 Robot robot = new Robot(team, null, -1, mGame);
                 robot.setRemoteId();
                 robot.team.save();
-                RobotEvents robotEvents = new RobotEvents(robot, event, true);
+                RobotEvents robotEvents = new RobotEvents(robot, event);
                 robotEvents.robot.save();
                 robotEvents.save();
             }
             Log.d("FRCKrawler", "Parsing Matches");
-            publishProgress("Saving Matches");
             for (JsonElement element : jMatches) {
                 //Save all the matches and alliances
                 Match match = JSON.getGson().fromJson(element, Match.class);
@@ -231,21 +221,8 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         }
 
         @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-            //Change the message that is displayed on the progress dialog
-            progressBar.setMessage(values[0]);
-        }
-
-        @Override
         protected void onPostExecute(Void aVoid) {
-            if (progressBar != null) {
-                //Dismiss the dialog when done
-                progressBar.dismiss();
-            }
-            //Dismiss the this dialog
-            dismiss();
-            super.onPostExecute(aVoid);
+            ProgressDialogFragment.dismissLoadingProgress(fragman);
         }
     }
 }

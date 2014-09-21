@@ -11,7 +11,7 @@ public class AbstractRadioGroup {
 
     public AbstractRadioGroup() {
         selectedButtonPos = -1;
-        buttons = new ArrayList<RadioButton>();
+        buttons = new ArrayList<>();
     }
 
     public AbstractRadioGroup(ArrayList<RadioButton> _buttons) {

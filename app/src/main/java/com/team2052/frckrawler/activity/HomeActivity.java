@@ -63,7 +63,7 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     public void onCreateNavigationDrawer() {
-        useActionBarToggle(true);
+        useActionBarToggle();
         encourageLearning(!mFromSavedInstanceState);
     }
 

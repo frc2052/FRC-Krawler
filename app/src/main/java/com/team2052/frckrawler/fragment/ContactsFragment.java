@@ -69,7 +69,7 @@ public class ContactsFragment extends ListFragment {
 
         @Override
         protected void onPostExecute(List<Contact> contacts) {
-            List<ListItem> listItems = new ArrayList<ListItem>();
+            List<ListItem> listItems = new ArrayList<>();
 
             for (Contact contact : contacts) {
                 //TODO List Item

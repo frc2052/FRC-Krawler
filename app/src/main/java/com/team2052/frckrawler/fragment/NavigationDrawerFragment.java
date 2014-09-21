@@ -26,15 +26,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NavigationDrawerFragment extends Fragment {
-    public static final List<ListItem> NAV_ITEMS = new ArrayList<ListItem>();
+    public static final List<ListItem> NAV_ITEMS = new ArrayList<>();
 
     static {
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, "Scout", R.drawable.ic_action_paste, R.layout.nav_list_item));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, "Server", R.drawable.ic_action_bluetooth, R.layout.nav_list_item));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, "Teams", R.drawable.ic_action_group, R.layout.nav_list_item));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, "Users", R.drawable.ic_action_person, R.layout.nav_list_item));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, "Games", R.drawable.ic_action_event, R.layout.nav_list_item));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, "Options", R.drawable.ic_action_settings, R.layout.nav_list_item));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, "Scout", R.drawable.ic_action_paste));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, "Server", R.drawable.ic_action_bluetooth));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, "Teams", R.drawable.ic_action_group));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, "Users", R.drawable.ic_action_person));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, "Games", R.drawable.ic_action_event));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, "Options", R.drawable.ic_action_settings));
         //NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_settings, "Settings", R.drawable.ic_action_settings, R.layout.nav_list_item));
     }
 
@@ -55,7 +55,7 @@ public class NavigationDrawerFragment extends Fragment {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         userLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
         fromSavedInstanceState = (savedInstanceState == null ? true : false);
-        navAdapter = new NavDrawerAdataper(getActivity(), NAV_ITEMS);
+        navAdapter = new NavDrawerAdataper(getActivity());
     }
 
     @Override

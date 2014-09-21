@@ -72,14 +72,14 @@ public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSe
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Alliance alliance = ((Match) mMatchSpinner.getSelectedItem()).alliance;
-        List<Team> teams = new ArrayList<Team>();
+        List<Team> teams = new ArrayList<>();
         teams.add(alliance.blue1);
         teams.add(alliance.blue2);
         teams.add(alliance.blue3);
         teams.add(alliance.red1);
         teams.add(alliance.red2);
         teams.add(alliance.red3);
-        mAllianceSpinner.setAdapter(new ArrayAdapter<Team>(getActivity(), android.R.layout.simple_list_item_1, teams));
+        mAllianceSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, teams));
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSe
 
         @Override
         protected void onPostExecute(List<Match> matches) {
-            mMatchSpinner.setAdapter(new ArrayAdapter<Match>(getActivity(), android.R.layout.simple_list_item_1, matches));
+            mMatchSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, matches));
         }
     }
 

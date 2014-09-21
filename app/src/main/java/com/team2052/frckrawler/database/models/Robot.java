@@ -26,7 +26,7 @@ public class Robot extends Model implements Serializable {
     public Robot(Team team, String comments, double opr, Game game) {
         this.remoteId = DBManager.generateRemoteId();
         this.team = team;
-        this.comments = comments;
+        this.comments = null;
         this.opr = opr;
         this.game = game;
     }

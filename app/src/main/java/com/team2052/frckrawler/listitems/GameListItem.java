@@ -16,7 +16,7 @@ import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.models.Game;
 
 /**
- * Created by Adam on 8/22/2014.
+ * @author Adam
  */
 public class GameListItem implements ListItem {
     private final Game game;

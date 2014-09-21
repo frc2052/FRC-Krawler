@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.view.PagerAdapter;
 
-import com.astuetz.PagerSlidingTabStrip;
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.fragment.ContactsFragment;
 import com.team2052.frckrawler.fragment.RobotsFragment;
@@ -18,9 +16,7 @@ import com.team2052.frckrawler.fragment.ScoutHomeFragment;
 /**
  * @author Adam
  */
-public class TeamInfoActivity extends DatabaseActivity {
-    private ViewPager mPager;
-    private PagerSlidingTabStrip mTabs;
+public class TeamInfoActivity extends ViewPagerActivity {
     private Team mTeam;
 
     public static Intent newInstance(Context context, Team team) {
@@ -32,13 +28,13 @@ public class TeamInfoActivity extends DatabaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_team_info);
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        mPager.setAdapter(new ViewTeamPagerAdapter(getSupportFragmentManager()));
-        mTabs.setViewPager(mPager);
         mTeam = Team.load(Team.class, getIntent().getLongExtra(PARENT_ID, 0));
         getActionBar().setTitle("Team " + mTeam.number);
+    }
+
+    @Override
+    public PagerAdapter setAdapter() {
+        return new ViewTeamPagerAdapter(getSupportFragmentManager());
     }
 
     public class ViewTeamPagerAdapter extends FragmentPagerAdapter {

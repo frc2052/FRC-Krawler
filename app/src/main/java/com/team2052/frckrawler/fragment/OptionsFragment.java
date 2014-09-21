@@ -28,10 +28,10 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
     private SharedPreferences preferences;
     private String gameName;
 
-    public static void restoreDefaultOptions(Context context, boolean overwrite) {
+    public static void restoreDefaultOptions(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-        if (!prefs.getBoolean(PREFS_IS_WRITTEN, false) || overwrite) {
+        if (!prefs.getBoolean(PREFS_IS_WRITTEN, false) || true) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean(PREFS_IS_WRITTEN, true);
             editor.putFloat(PREFS_COMPILE_WEIGHT, 1.0f);
@@ -93,7 +93,7 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.restoreDefaults:
-                restoreDefaultOptions(getActivity(), true);
+                restoreDefaultOptions(getActivity());
                 break;
 
             case R.id.cancelOptions:
@@ -130,7 +130,7 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
                 final ToggleButton b = (ToggleButton) view;
                 if (b.isChecked()) {
                     List<Game> games = DBManager.loadAllGames();
-                    final ArrayList<CharSequence> choices = new ArrayList<CharSequence>();
+                    final ArrayList<CharSequence> choices = new ArrayList<>();
 
                     for (Game game : games) {
                         choices.add(game.name);

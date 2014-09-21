@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Adam on 8/25/2014.
+ * @author Adam
  */
 public class ListGroup {
-    public final List<ListItem> children = new ArrayList<ListItem>();
+    public final List<ListItem> children = new ArrayList<>();
     private final String name;
 
     public ListGroup(String name) {

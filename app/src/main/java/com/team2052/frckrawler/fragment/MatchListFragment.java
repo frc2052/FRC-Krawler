@@ -52,7 +52,7 @@ public class MatchListFragment extends ListFragment {
         @Override
         protected void onPostExecute(List<Match> matches) {
             Log.i("FRCKrawler", "Update List");
-            List<ListItem> listItems = new ArrayList<ListItem>();
+            List<ListItem> listItems = new ArrayList<>();
 
             for (Match match : matches) {
                 listItems.add(new MatchListItem(match));

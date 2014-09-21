@@ -34,7 +34,7 @@ public class StringArraySerializer extends TypeSerializer {
     public String[] deserialize(Object data) {
         String currentValsString = "";
         String valueString = (String) data;
-        ArrayList<String> valuesList = new ArrayList<String>();
+        ArrayList<String> valuesList = new ArrayList<>();
         for (int character = 0; character < valueString.length(); character++) {
             if (valueString.charAt(character) != ':')
                 currentValsString += valueString.charAt(character);

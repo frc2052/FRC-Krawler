@@ -21,11 +21,11 @@ public class RobotEvents extends Model implements Serializable {
     @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private int remoteId;
 
-    public RobotEvents(Robot robot, Event event, boolean isAttending) {
+    public RobotEvents(Robot robot, Event event) {
         this.remoteId = DBManager.generateRemoteId();
         this.robot = robot;
         this.event = event;
-        this.isAttending = isAttending;
+        this.isAttending = true;
     }
 
     public RobotEvents() {

@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Adam on 8/27/2014.
+ * @author Adam
  */
 public class AddMetricFragment extends DialogFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
@@ -91,12 +91,12 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 switch (MetricsActivity.MetricType.VALID_TYPES[mMetricCategory]) {
                     case MATCH_PERF_METRICS:
                         List<Metric> matchMetrics = new Select().from(Metric.class).where("Game = ?", mGame.getId()).and("Category = ?", MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal()).execute();
-                        ArrayList<Metric> acceptedMetrics = new ArrayList<Metric>();
+                        ArrayList<Metric> acceptedMetrics = new ArrayList<>();
                         for (Metric met : matchMetrics) {
                             if (met.type == Metric.COUNTER || met.type == Metric.SLIDER)
                                 acceptedMetrics.add(met);
                         }
-                        choices = acceptedMetrics.toArray(new Metric[0]);
+                        choices = acceptedMetrics.toArray(new Metric[acceptedMetrics.size()]);
                         break;
 
                     case ROBOT_METRICS:
@@ -105,7 +105,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                         for (Metric m : robotMetrics)
                             if (m.type == Metric.COUNTER || m.type == Metric.SLIDER)
                                 choosableMetrics.add(m);
-                        choices = choosableMetrics.toArray(new Metric[0]);
+                        choices = choosableMetrics.toArray(new Metric[choosableMetrics.size()]);
                         break;
                     default:
                         choices = new Metric[0];

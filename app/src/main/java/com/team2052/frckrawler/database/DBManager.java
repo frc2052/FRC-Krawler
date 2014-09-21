@@ -41,8 +41,8 @@ public class DBManager {
         return loadAllFromType(Match.class);
     }
 
-    public static List<Match> loadAllMatchesWhere(String columnName, Object where) {
-        return loadAllWhere(Match.class, columnName, where);
+    public static List<Match> loadAllMatchesWhere(Object where) {
+        return loadAllWhere(Match.class, "Event", where);
     }
 
     public static From loadFromMatches() {
@@ -50,7 +50,7 @@ public class DBManager {
     }
 
     public static Schedule genenerateSchedule(Event e) {
-        return new Schedule(e, loadAllMatchesWhere("Event", e.getId()));
+        return new Schedule(e, loadAllMatchesWhere(e.getId()));
     }
 
 

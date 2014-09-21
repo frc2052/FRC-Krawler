@@ -1,7 +1,7 @@
 package com.team2052.frckrawler.listitems;
 
 /**
- * Created by Adam on 8/22/2014.
+ * @author Adam
  */
 public abstract class ListElement implements ListItem {
     protected final String key;

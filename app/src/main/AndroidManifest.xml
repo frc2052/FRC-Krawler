@@ -78,6 +78,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.TeamInfoActivity" />
+        <activity android:name=".activity.RobotActivity" />
     </application>
 
 </manifest>

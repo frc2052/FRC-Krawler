@@ -49,7 +49,7 @@ public class AddRobotDialogActivity extends DatabaseActivity implements OnClickL
         }
 
         Spinner gameSpinner = (Spinner) findViewById(R.id.gameSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerVals);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerVals);
         gameSpinner.setAdapter(adapter);
     }
 

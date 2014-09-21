@@ -1,7 +1,7 @@
 package com.team2052.frckrawler.activity;
 
 /**
- * Created by Adam on 8/24/2014.
+ * @author Adam
  */
 public class BaseActivity extends NavigationDrawerActivity {
 }

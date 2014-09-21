@@ -20,8 +20,8 @@ public class PopupMenuButton extends ImageButton
         super(context);
         setOnClickListener(this);
         setImageResource(android.R.drawable.ic_menu_more);
-        actionText = new ArrayList<String>();
-        clickActions = new ArrayList<Runnable>();
+        actionText = new ArrayList<>();
+        clickActions = new ArrayList<>();
     }
 
     public void addItem(String text, Runnable clickAction) {
@@ -32,7 +32,7 @@ public class PopupMenuButton extends ImageButton
     @Override
     public void onClick(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setItems(actionText.toArray(new String[0]), this);
+        builder.setItems(actionText.toArray(new String[actionText.size()]), this);
         builder.show();
     }
 

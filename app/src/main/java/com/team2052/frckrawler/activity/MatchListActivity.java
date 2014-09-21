@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ListView;
 
 import com.activeandroid.query.Select;
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Match;
@@ -20,9 +18,8 @@ import java.util.List;
 /**
  * @author Adam
  */
-public class MatchListActivity extends DatabaseActivity {
+public class MatchListActivity extends ListActivity {
     private Event mEvent;
-    private ListView mListView;
 
     public static Intent newInstance(Context c, Event event) {
         Intent i = new Intent(c, MatchListActivity.class);
@@ -32,10 +29,12 @@ public class MatchListActivity extends DatabaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.match_list_view);
         mEvent = Event.load(Event.class, getIntent().getLongExtra(DatabaseActivity.PARENT_ID, 0));
-        mListView = (ListView) findViewById(R.id.list_view_match);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void updateList() {
         new GetMatchesByEvent().execute();
     }
 
@@ -48,7 +47,7 @@ public class MatchListActivity extends DatabaseActivity {
 
         @Override
         protected void onPostExecute(List<Match> matches) {
-            List<ListItem> listItems = new ArrayList<ListItem>();
+            List<ListItem> listItems = new ArrayList<>();
             for (Match match : matches) {
                 listItems.add(new MatchListItem(match));
             }

@@ -14,28 +14,17 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="24sp" />
 
-    <LinearLayout
-        android:id="@+id/linLayoutLeft"
-        android:layout_width="140dp"
+    <Spinner
+        android:id="@+id/match_number"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/scoutingType"
-        android:layout_weight="0.32"
-        android:dividerPadding="10dp"
-        android:orientation="vertical">
+        android:prompt="@string/team_number" />
 
-        <Spinner
-            android:id="@+id/match_number"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:prompt="@string/team_number" />
-
-        <Spinner
-            android:id="@+id/team"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp" />
-
-    </LinearLayout>
+    <Spinner
+        android:id="@+id/team"
+        android:layout_below="@id/match_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <ScrollView
         android:id="@+id/ScrollView1"
