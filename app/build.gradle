@@ -16,14 +16,6 @@ android {
         }
         release {
         }
-        snapshot {
-            debuggable true
-            jniDebugBuild false
-            renderscriptDebugBuild false
-            runProguard false
-            applicationIdSuffix '.snapshot'
-            versionNameSuffix '-SNAPSHOT'
-        }
     }
     productFlavors {
     }
