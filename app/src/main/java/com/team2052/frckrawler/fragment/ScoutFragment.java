@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.astuetz.PagerSlidingTabStrip;
 import com.team2052.frckrawler.GlobalValues;
@@ -170,10 +169,10 @@ public class ScoutFragment extends Fragment implements DialogInterface.OnClickLi
                     fragment = new ScoutHomeFragment();
                     break;
                 case 1:
-                    fragment = new ScoutMatchFragment();
+                    fragment = ScoutMatchFragment.newInstance(mEvent);
                     break;
                 case 2:
-                    fragment = new ScoutPitFragment();
+                    fragment = ScoutPitFragment.newInstance(mEvent);
                     break;
                 case 3:
                     fragment = new ScoutHomeFragment();

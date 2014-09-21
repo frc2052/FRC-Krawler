@@ -11,12 +11,10 @@ import com.team2052.frckrawler.ListUpdateListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.models.Contact;
 
-import org.w3c.dom.Text;
-
 /**
  * @author Adam
  */
-public class ContactListElement extends ListElement{
+public class ContactListElement extends ListElement {
     private final ListUpdateListener listener;
     private final Contact contact;
 
@@ -51,8 +49,8 @@ public class ContactListElement extends ListElement{
                 builder.create().show();
             }
         });
-        ((TextView)convertView.findViewById(R.id.contact_name)).setText(contact.name);
-        ((TextView)convertView.findViewById(R.id.contact_team_role)).setText(contact.teamRole);
+        ((TextView) convertView.findViewById(R.id.contact_name)).setText(contact.name);
+        ((TextView) convertView.findViewById(R.id.contact_team_role)).setText(contact.teamRole);
         return convertView;
     }
 }

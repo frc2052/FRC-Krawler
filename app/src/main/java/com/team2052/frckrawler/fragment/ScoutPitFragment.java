@@ -13,9 +13,9 @@ import android.widget.Spinner;
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Metric;
 import com.team2052.frckrawler.database.models.RobotEvents;
@@ -35,6 +35,15 @@ public class ScoutPitFragment extends Fragment {
     private Event mEvent;
     private Spinner mTeamSpinner;
 
+
+    public static ScoutPitFragment newInstance(Event event) {
+        ScoutPitFragment fragment = new ScoutPitFragment();
+        Bundle bundle = new Bundle();
+        bundle.putLong(DatabaseActivity.PARENT_ID, event.getId());
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +56,7 @@ public class ScoutPitFragment extends Fragment {
                 e.printStackTrace();
             }
         }*/
-        mEvent = new Select().from(Event.class).executeSingle();
+        mEvent = Event.load(Event.class, getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override

@@ -46,6 +46,7 @@ public class MatchView extends FrameLayout {
         blue3 = (TextView) findViewById(R.id.blue3);
         blueScore = (TextView) findViewById(R.id.blue_score);
         redScore = (TextView) findViewById(R.id.red_score);
+
         redAlliance = findViewById(R.id.red_alliance);
         blueAlliance = findViewById(R.id.blue_alliance);
     }
@@ -59,8 +60,18 @@ public class MatchView extends FrameLayout {
         blue1.setText(Integer.toString(alliance.blue1.number));
         blue2.setText(Integer.toString(alliance.blue2.number));
         blue3.setText(Integer.toString(alliance.blue3.number));
-        blueScore.setText(Integer.toString(alliance.blueScore));
-        redScore.setText(Integer.toString(alliance.redScore));
+        //Matches that aren't played yet have a score of -1
+        if (alliance.redScore < 0)
+            redScore.setText("?");
+        else
+            redScore.setText(Integer.toString(alliance.redScore));
+
+
+        if (alliance.blueScore < 0)
+            blueScore.setText("?");
+        else
+            blueScore.setText(Integer.toString(alliance.blueScore));
+
 
         if (alliance.redScore > alliance.blueScore) {
             redAlliance.setBackgroundResource(R.drawable.alliance_border);

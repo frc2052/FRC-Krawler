@@ -2,6 +2,7 @@ package com.team2052.frckrawler.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.activity.DatabaseActivity;
@@ -26,6 +27,7 @@ public class MatchListFragment extends ListFragment {
         Bundle b = new Bundle();
         b.putLong(DatabaseActivity.PARENT_ID, event.getId());
         fragment.setArguments(b);
+
         return fragment;
     }
 
@@ -49,13 +51,14 @@ public class MatchListFragment extends ListFragment {
 
         @Override
         protected void onPostExecute(List<Match> matches) {
+            Log.i("FRCKrawler", "Update List");
             List<ListItem> listItems = new ArrayList<ListItem>();
 
-            for (Match match : matches){
+            for (Match match : matches) {
                 listItems.add(new MatchListItem(match));
             }
-
-            mListView.setAdapter(new ListViewAdapter(getActivity(), listItems));
+            mAdapter = new ListViewAdapter(getActivity(), listItems);
+            mListView.setAdapter(mAdapter);
         }
     }
 }

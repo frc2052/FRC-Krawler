@@ -15,7 +15,6 @@ import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.fragment.dialog.AddContactDialogFragment;
 import com.team2052.frckrawler.listitems.ContactListElement;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.SimpleListElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +75,8 @@ public class ContactsFragment extends ListFragment {
                 //TODO List Item
                 listItems.add(new ContactListElement(contact, ContactsFragment.this));
             }
-
-            mListView.setAdapter(new ListViewAdapter(getActivity(), listItems));
+            mAdapter = new ListViewAdapter(getActivity(), listItems);
+            mListView.setAdapter(mAdapter);
         }
     }
 }

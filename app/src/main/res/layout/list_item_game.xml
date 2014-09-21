@@ -30,8 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginRight="8dp"
-        android:padding="8dp"
         android:layout_toLeftOf="@+id/remove_game_button"
+        android:padding="8dp"
         android:src="@drawable/ic_action_edit" />
 
 </RelativeLayout>

@@ -53,7 +53,6 @@ public class MetricsActivity extends DatabaseActivity implements OnClickListener
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.addbutton, menu);

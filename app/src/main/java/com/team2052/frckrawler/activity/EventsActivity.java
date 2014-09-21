@@ -56,7 +56,7 @@ public class EventsActivity extends DatabaseActivity implements ListUpdateListen
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_action) {
             ImportDataSimpleDialogFragment.newInstance(mGame).show(getSupportFragmentManager(), "ImportEvent");
-        } else if(item.getItemId() == android.R.id.home){
+        } else if (item.getItemId() == android.R.id.home) {
             startActivity(HomeActivity.newInstance(this, R.id.nav_item_games).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
         return super.onOptionsItemSelected(item);
