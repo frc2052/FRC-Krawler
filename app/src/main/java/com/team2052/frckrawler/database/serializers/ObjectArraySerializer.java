@@ -31,7 +31,7 @@ public class ObjectArraySerializer extends TypeSerializer {
     public Object deserialize(Object o) {
         String range = (String) o;
         String currentRangeValString = "";
-        ArrayList<Object> rangeArrList = new ArrayList<Object>();
+        ArrayList<Object> rangeArrList = new ArrayList<>();
         for (int character = 0; character < range.length(); character++) {
             if (range.charAt(character) != ':')
                 currentRangeValString += range.charAt(character);

@@ -2,14 +2,9 @@ package com.team2052.frckrawler.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.ListUpdateListener;
@@ -23,17 +18,7 @@ import com.team2052.frckrawler.listitems.ListItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GamesFragment extends Fragment implements ListUpdateListener {
-    private ListView mListView;
-    private ListViewAdapter mAdapter;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_games, null);
-        mListView = (ListView) view.findViewById(R.id.games_list);
-        updateList();
-        return view;
-    }
+public class GamesFragment extends ListFragment implements ListUpdateListener {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -72,12 +57,11 @@ public class GamesFragment extends Fragment implements ListUpdateListener {
 
         @Override
         protected void onPostExecute(List<Game> games) {
-            ArrayList<ListItem> element = new ArrayList<ListItem>();
+            ArrayList<ListItem> element = new ArrayList<>();
             for (Game game : games) {
                 element.add(new GameListItem(game));
             }
-            mAdapter = new ListViewAdapter(getActivity(), element);
-            mListView.setAdapter(mAdapter);
+            mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), element));
         }
     }
 }

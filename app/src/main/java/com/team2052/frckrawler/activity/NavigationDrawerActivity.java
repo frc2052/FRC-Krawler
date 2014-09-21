@@ -13,7 +13,7 @@ import com.team2052.frckrawler.fragment.NavigationDrawerFragment;
 import com.team2052.frckrawler.listitems.NavDrawerItem;
 
 /**
- * Created by Adam on 8/24/2014.
+ * @author Adam
  */
 public class NavigationDrawerActivity extends FragmentActivity implements NavigationDrawerFragment.NavigationDrawerListener {
     private static final String IS_DRAWER_OPEN = "is_drawer_open";
@@ -113,8 +113,8 @@ public class NavigationDrawerActivity extends FragmentActivity implements Naviga
         }
     }
 
-    public void useActionBarToggle(boolean use) {
-        mUseActionBarToggle = use;
+    public void useActionBarToggle() {
+        mUseActionBarToggle = true;
     }
 
     @Override

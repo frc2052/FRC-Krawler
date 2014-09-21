@@ -83,7 +83,8 @@ public class MainActivity extends BaseActivity implements DialogInterface.OnClic
     private void openJoin() {
         if (BluetoothAdapter.getDefaultAdapter() != null) {
             AlertDialog.Builder builder;
-            devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices().toArray(new BluetoothDevice[0]);
+            java.util.Set<BluetoothDevice> var = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
+            devices = var.toArray(new BluetoothDevice[var.size()]);
             CharSequence[] deviceNames = new String[devices.length];
             for (int k = 0; k < deviceNames.length; k++)
                 deviceNames[k] = devices[k].getName();

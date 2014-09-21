@@ -35,7 +35,6 @@ public class AddUserDialogFragment extends DialogFragment implements View.OnClic
                 new User(((EditText) getView().findViewById(R.id.nameVal)).getText().toString().trim()).save();
                 getActivity().startActivityForResult(getActivity().getIntent(), 10);
                 dismiss();
-                return;
         }
     }
 }

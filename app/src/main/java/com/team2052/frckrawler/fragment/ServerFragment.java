@@ -101,7 +101,7 @@ public class ServerFragment extends Fragment implements View.OnClickListener {
         @Override
         protected void onPostExecute(List<Event> _events) {
             Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
-            ArrayAdapter<Event> adapter = new ArrayAdapter<Event>(getActivity(), android.R.layout.simple_list_item_1, _events);
+            ArrayAdapter<Event> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, _events);
             eventChooser.setAdapter(adapter);
         }
     }

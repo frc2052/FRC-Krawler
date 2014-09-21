@@ -29,7 +29,7 @@ public class MetricValue {
 
         this.metric = metric;
         this.value = value;
-        this.chooserCounts = chooserCounts;
+        this.chooserCounts = null;
     }
 
     public String getValueAsDBReadableString() {
@@ -37,8 +37,8 @@ public class MetricValue {
             return new String();
 
         String returnString = new String();
-        for (int i = 0; i < value.length; i++) {
-            returnString += value[i] + ":";
+        for (String aValue : value) {
+            returnString += aValue + ":";
         }
 
         return returnString;

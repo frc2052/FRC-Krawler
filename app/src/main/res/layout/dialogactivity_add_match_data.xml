@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/comments"
                 android:layout_centerHorizontal="true"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical"/>
 
             <EditText
                 android:id="@+id/comments"

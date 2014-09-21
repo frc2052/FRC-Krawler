@@ -6,10 +6,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import com.activeandroid.query.Select;
-import com.team2052.frckrawler.ListUpdateListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Event;
@@ -21,8 +19,7 @@ import com.team2052.frckrawler.listitems.ListItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventsActivity extends DatabaseActivity implements ListUpdateListener {
-    private static final int EDIT_EVENT_ID = 1;
+public class EventsActivity extends ListActivity {
     private Game mGame;
 
     public static Intent newInstance(Context context, Game game) {
@@ -34,17 +31,13 @@ public class EventsActivity extends DatabaseActivity implements ListUpdateListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_events);
         mGame = Game.load(Game.class, getIntent().getLongExtra(PARENT_ID, -1));
-        getActionBar().setTitle(mGame == null ? "Edit Events" : "Edit Events - " + mGame.name);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getActionBar() != null) {
+            getActionBar().setTitle(mGame == null ? "Edit Events" : "Edit Events - " + mGame.name);
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
-    @Override
-    protected void onResume() {
-        updateList();
-        super.onResume();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,12 +70,11 @@ public class EventsActivity extends DatabaseActivity implements ListUpdateListen
 
         @Override
         protected void onPostExecute(List<Event> events) {
-            ArrayList<ListItem> eventList = new ArrayList<ListItem>();
+            ArrayList<ListItem> eventList = new ArrayList<>();
             for (Event event : events) {
                 eventList.add(new EventListItem(event));
             }
-            ListViewAdapter adapter = new ListViewAdapter(EventsActivity.this, eventList);
-            ((ListView) findViewById(R.id.events_list)).setAdapter(adapter);
+            mListView.setAdapter(mAdapter = new ListViewAdapter(EventsActivity.this, eventList));
         }
     }
 }

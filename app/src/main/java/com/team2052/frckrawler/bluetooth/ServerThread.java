@@ -111,7 +111,7 @@ public class ServerThread extends Thread {
         if (serverSocket != null)
             try {
                 serverSocket.close();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         m.cancel(ServerService.SERVER_OPEN_ID);

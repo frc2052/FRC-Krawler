@@ -13,7 +13,7 @@ import com.team2052.frckrawler.listitems.ListGroup;
 import java.util.ArrayList;
 
 /**
- * Created by Adam on 8/25/2014.
+ * @author Adam
  */
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public final ArrayList<ListGroup> groups;
@@ -22,7 +22,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private boolean mIsChildSelectable = true;
 
     public ExpandableListAdapter() {
-        groups = new ArrayList<ListGroup>();
+        groups = new ArrayList<>();
     }
 
     public ExpandableListAdapter(Activity act, ArrayList<ListGroup> groups) {

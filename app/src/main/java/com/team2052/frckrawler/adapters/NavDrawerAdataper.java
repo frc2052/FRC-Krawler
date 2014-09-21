@@ -15,8 +15,8 @@ import java.util.List;
 public class NavDrawerAdataper extends ListViewAdapter {
     private int mSelectedItemPosition = -1;
 
-    public NavDrawerAdataper(Context context, List<ListItem> values) {
-        super(context, values);
+    public NavDrawerAdataper(Context context) {
+        super(context, com.team2052.frckrawler.fragment.NavigationDrawerFragment.NAV_ITEMS);
     }
 
     public void setItemSelected(int position) {

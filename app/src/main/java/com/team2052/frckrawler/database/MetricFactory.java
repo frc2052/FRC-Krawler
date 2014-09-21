@@ -13,11 +13,11 @@ public class MetricFactory {
     }
 
     public static Metric createCounterMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, int min, int max, int incrementation, boolean displayed) {
-        return new Metric(game, metricCategory, name, description, Metric.COUNTER, new Integer[]{Integer.valueOf(min), Integer.valueOf(max), Integer.valueOf(incrementation)}, displayed);
+        return new Metric(game, metricCategory, name, description, Metric.COUNTER, new Integer[]{min, max, incrementation}, displayed);
     }
 
     public static Metric createSliderMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, int min, int max, boolean displayed) {
-        return new Metric(game, metricCategory, name, description, Metric.SLIDER, new Integer[]{Integer.valueOf(min), Integer.valueOf(max)}, displayed);
+        return new Metric(game, metricCategory, name, description, Metric.SLIDER, new Integer[]{min, max}, displayed);
     }
 
     public static Metric createChooserMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, String[] choices, boolean displayed) {

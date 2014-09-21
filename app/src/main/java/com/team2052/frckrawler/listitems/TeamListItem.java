@@ -9,7 +9,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.models.Team;
 
 /**
- * Created by Adam on 8/24/2014.
+ * @author Adam
  */
 public class TeamListItem extends ListElement {
     private final Team team;

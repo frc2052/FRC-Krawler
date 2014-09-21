@@ -52,7 +52,7 @@
                 <RelativeLayout
                     android:id="@+id/RelativeLayout_add_comment"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"></RelativeLayout>
+                    android:layout_height="wrap_content"/>
             </ScrollView>
         </RelativeLayout>
 

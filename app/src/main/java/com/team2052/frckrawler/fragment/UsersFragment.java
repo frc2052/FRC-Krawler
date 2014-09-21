@@ -2,14 +2,12 @@ package com.team2052.frckrawler.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
@@ -25,7 +23,7 @@ import java.util.List;
 /**
  * Created by Adam on 8/25/2014.
  */
-public class UsersFragment extends Fragment {
+public class UsersFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -55,13 +53,12 @@ public class UsersFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void updateUsers() {
         new GetUsersTask().execute();
     }
 
-    public void updateUsers() {
+    @Override
+    public void updateList() {
         new GetUsersTask().execute();
     }
 
@@ -74,11 +71,11 @@ public class UsersFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<User> users) {
-            List<ListItem> userList = new ArrayList<ListItem>();
+            List<ListItem> userList = new ArrayList<>();
             for (User user : users) {
                 userList.add(new UserListItem(user));
             }
-            ((ListView) getView().findViewById(R.id.users_list_view)).setAdapter(new ListViewAdapter(getActivity(), userList));
+            mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), userList));
         }
     }
 }

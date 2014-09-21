@@ -28,7 +28,7 @@ public class AddRobotAllActivity extends BaseActivity implements OnClickListener
         findViewById(R.id.addRobotsToAll).setOnClickListener(this);
         findViewById(R.id.cancelAddRobots).setOnClickListener(this);
         List<Game> games = new Select().from(Game.class).execute();
-        ArrayAdapter<String> gameArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> gameArray = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
         for (Game g : games)
             gameArray.add(g.name);
         ((Spinner) findViewById(R.id.robotGameSpinner)).setAdapter(gameArray);

@@ -129,7 +129,7 @@
                                         android:id="@+id/dataTable"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:dividerPadding="2dp"></TableLayout>
+                                        android:dividerPadding="2dp"/>
                                 </RelativeLayout>
                             </ScrollView>
                         </HorizontalScrollView>

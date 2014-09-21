@@ -23,7 +23,7 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
         if (m.getValue() != null && m.getValue().length > 0)
             value = m.getValue()[0];
 
-        ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getContext(),
+        ArrayAdapter<Object> adapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item);
         Object[] range = m.getMetric().range;
         int selectedPos = 0;

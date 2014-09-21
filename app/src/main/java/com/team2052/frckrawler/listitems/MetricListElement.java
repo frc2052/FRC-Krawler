@@ -3,14 +3,13 @@ package com.team2052.frckrawler.listitems;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.models.Metric;
 
 /**
- * Created by Adam on 8/23/2014.
+ * @author Adam
  */
 public class MetricListElement implements ListItem {
     private final String descripstionString;
@@ -67,7 +66,7 @@ public class MetricListElement implements ListItem {
         ((TextView) convertView.findViewById(R.id.metric_list_displayed)).setText(isDisplayed);
         ((TextView) convertView.findViewById(R.id.metric_list_range)).setText(rangeString);
         ((TextView) convertView.findViewById(R.id.metric_list_type)).setText(typeString);
-        ((ImageView) convertView.findViewById(R.id.metric_list_edit)).setOnClickListener(new View.OnClickListener() {
+        convertView.findViewById(R.id.metric_list_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //c.startActivity(EditMetricDialogActivity.newInstance(c, metric));

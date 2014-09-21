@@ -84,7 +84,7 @@ public class ScoutPitFragment extends Fragment {
                 }
             });
 
-            List<ListItem> listItems = new ArrayList<ListItem>();
+            List<ListItem> listItems = new ArrayList<>();
 
             for (RobotEvents robotEvents : robotEventses) {
                 listItems.add(new SimpleListElement(Integer.toString(robotEvents.robot.team.number) + " - " + robotEvents.robot.team.name, robotEvents.robot.team.teamKey));

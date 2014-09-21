@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 /**
- * Created by Adam on 8/22/2014.
+ * @author Adam
  */
 public class SimpleListElement extends ListElement {
     private final String name;

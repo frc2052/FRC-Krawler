@@ -42,11 +42,11 @@ public class CommentDialogActivity extends BaseActivity {
             t.setLayoutParams(new LinearLayout.LayoutParams
                     (ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-            commentList.addView(new MyTextView(this, commentString, 18));
+            commentList.addView(new MyTextView(this, commentString));
         }
 
         if (matches.length == 0)
             commentList.addView(new MyTextView(this,
-                    "This team hasn't played any matches yet.", 18));
+                    "This team hasn't played any matches yet."));
     }
 }
