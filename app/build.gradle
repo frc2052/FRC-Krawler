@@ -17,7 +17,7 @@ android {
         release {
         }
         snapshot {
-            debuggable false
+            debuggable true
             jniDebugBuild false
             renderscriptDebugBuild false
             runProguard false
