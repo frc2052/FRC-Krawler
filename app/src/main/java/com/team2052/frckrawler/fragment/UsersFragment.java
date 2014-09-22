@@ -35,26 +35,16 @@ public class UsersFragment extends ListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.addbutton, menu);
+        //Change the icon
         menu.findItem(R.id.add_action).setIcon(R.drawable.ic_action_add_person);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_action) {
-            AddUserDialogFragment fragment = new AddUserDialogFragment();
-            fragment.show(getFragmentManager(), "Add User");
+            new AddUserDialogFragment().show(getChildFragmentManager(), "addUser");
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_users, null);
-        return view;
-    }
-
-    public void updateUsers() {
-        new GetUsersTask().execute();
     }
 
     @Override

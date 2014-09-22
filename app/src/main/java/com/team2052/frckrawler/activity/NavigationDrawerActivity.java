@@ -44,6 +44,10 @@ public class NavigationDrawerActivity extends FragmentActivity implements Naviga
         }
     }
 
+    public void setNavigationDrawerItemSelected(int position) {
+        mNavDrawerFragment.setItemSelected(position);
+    }
+
     public void onCreateNavigationDrawer() {
 
     }

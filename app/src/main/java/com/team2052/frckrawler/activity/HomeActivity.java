@@ -76,6 +76,12 @@ public class HomeActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        setNavigationDrawerItemSelected(mCurrentSelectedNavigationItemId);
+    }
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (!isDrawerOpen()) {
             //Reset the action bar

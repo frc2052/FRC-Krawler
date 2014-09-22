@@ -108,5 +108,7 @@
 
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

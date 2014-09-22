@@ -1,40 +1,36 @@
 package com.team2052.frckrawler.fragment.dialog;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 
+import com.team2052.frckrawler.ListUpdateListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.models.User;
 
 /**
  * @author Adam
  */
-public class AddUserDialogFragment extends DialogFragment implements View.OnClickListener {
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialogactivity_add_user, null);
-        view.findViewById(R.id.addUser).setOnClickListener(this);
-        view.findViewById(R.id.cancel).setOnClickListener(this);
-        getDialog().setTitle("Add User");
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        return view;
-    }
+public class AddUserDialogFragment extends DialogFragment {
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.cancel:
-                dismiss();
-                break;
-            case R.id.addUser:
-                new User(((EditText) getView().findViewById(R.id.nameVal)).getText().toString().trim()).save();
-                getActivity().startActivityForResult(getActivity().getIntent(), 10);
-                dismiss();
-        }
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_add_user, null);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Add User");
+        builder.setView(view);
+        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                new User(((EditText) view.findViewById(R.id.name)).getText().toString().trim()).save();
+                ((ListUpdateListener) getParentFragment()).updateList();
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        return builder.create();
     }
 }

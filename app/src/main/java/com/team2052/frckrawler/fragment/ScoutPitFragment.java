@@ -61,7 +61,7 @@ public class ScoutPitFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_scouting_pit, null);
+        View view = inflater.inflate(R.layout.fragment_scouting_pit, null);
         mTeamSpinner = (Spinner) view.findViewById(R.id.team);
         new GetAllMetrics().execute();
         new GetAllRobots().execute();

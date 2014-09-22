@@ -30,12 +30,12 @@ public class EventsActivity extends ListActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         mGame = Game.load(Game.class, getIntent().getLongExtra(PARENT_ID, -1));
         if (getActionBar() != null) {
             getActionBar().setTitle(mGame == null ? "Edit Events" : "Edit Events - " + mGame.name);
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        super.onCreate(savedInstanceState);
     }
 
 

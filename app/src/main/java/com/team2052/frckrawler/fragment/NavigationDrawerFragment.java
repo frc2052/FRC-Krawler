@@ -29,12 +29,12 @@ public class NavigationDrawerFragment extends Fragment {
     public static final List<ListItem> NAV_ITEMS = new ArrayList<>();
 
     static {
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, "Scout", R.drawable.ic_action_paste));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, "Server", R.drawable.ic_action_bluetooth));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, "Teams", R.drawable.ic_action_group));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, "Users", R.drawable.ic_action_person));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, "Games", R.drawable.ic_action_event));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, "Options", R.drawable.ic_action_settings));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, "Scout", R.drawable.icon_scout_selector));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, "Server", R.drawable.icon_bluetooth_selector));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, "Teams", R.drawable.icon_team_selector));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, "Users", R.drawable.icon_user_selector));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, "Games", R.drawable.icon_game_selector));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, "Options", R.drawable.icon_settings_selector));
         //NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_settings, "Settings", R.drawable.ic_action_settings, R.layout.nav_list_item));
     }
 
@@ -87,6 +87,13 @@ public class NavigationDrawerFragment extends Fragment {
         listener.onNavDrawerItemClicked(item);
         if (drawerLayout != null) {
             drawerLayout.closeDrawer(fragmentContainerView);
+        }
+    }
+
+    public void setItemSelected(int itemId) {
+        if (drawerListView != null) {
+            int position = navAdapter.getPositionForId(itemId);
+            drawerListView.setItemChecked(position, true);
         }
     }
 

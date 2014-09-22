@@ -28,7 +28,7 @@
             android:value="FRCKrawler2.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="3" />
+            android:value="4" />
         <meta-data
             android:name="AA_SERIALIZERS"
             android:value="com.team2052.frckrawler.database.serializers.StringArraySerializer,com.team2052.frckrawler.database.serializers.ObjectArraySerializer" />
@@ -48,29 +48,16 @@
                 android:value=".activity.HomeActivity" />
         </activity>
 
-        <activity android:name=".activity.dialog.AddCommentDialogActivity" />
-        <activity android:name=".activity.dialog.AddEventDialogActivity" />
-        <activity android:name=".activity.dialog.AddRobotDialogActivity" />
         <activity android:name=".activity.dialog.CommentDialogActivity" />
         <activity android:name=".activity.MainActivity">
 
         </activity>
         <activity android:name=".ListTester" />
 
-        <activity android:name=".activity.AddRobotAllActivity" />
         <activity android:name=".activity.MatchListActivity" />
 
         <service android:name=".bluetooth.ServerService" />
 
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".activity.MainActivity"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.team2052.frckrawler.activity.MainActivity" />
-        </activity>
         <activity android:name=".activity.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

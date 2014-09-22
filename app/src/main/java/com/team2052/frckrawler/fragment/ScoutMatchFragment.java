@@ -60,7 +60,7 @@ public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_scouting_match, null);
+        View view = inflater.inflate(R.layout.fragment_scouting_match, null);
         mMatchSpinner = (Spinner) view.findViewById(R.id.match_number);
         mAllianceSpinner = (Spinner) view.findViewById(R.id.team);
         mMatchSpinner.setOnItemSelectedListener(this);

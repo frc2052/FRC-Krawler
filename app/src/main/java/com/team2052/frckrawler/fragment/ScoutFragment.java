@@ -10,17 +10,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.astuetz.PagerSlidingTabStrip;
 import com.team2052.frckrawler.GlobalValues;
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.SyncAsScoutTask;
 import com.team2052.frckrawler.bluetooth.SyncCallbackHandler;
 import com.team2052.frckrawler.database.models.Event;
@@ -29,7 +26,7 @@ import com.team2052.frckrawler.gui.ProgressSpinner;
 
 import java.util.List;
 
-public class ScoutFragment extends Fragment implements DialogInterface.OnClickListener, SyncCallbackHandler {
+public class ScoutFragment extends  ViewPagerFragment implements DialogInterface.OnClickListener, SyncCallbackHandler {
 
     private ViewPager mPager;
     private PagerSlidingTabStrip mTabs;
@@ -62,13 +59,8 @@ public class ScoutFragment extends Fragment implements DialogInterface.OnClickLi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_scout, null);
-        mPager = (ViewPager) view.findViewById(R.id.pager);
-        mTabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
-        mPager.setAdapter(new ScoutPagerAdapter(getFragmentManager()));
-        mTabs.setViewPager(mPager);
-        return view;
+    public PagerAdapter setAdapter() {
+        return new ScoutPagerAdapter(getFragmentManager());
     }
 
     @Override

@@ -26,7 +26,7 @@ public class AddGameDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialogactivity_add_game, null);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_add_game, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {

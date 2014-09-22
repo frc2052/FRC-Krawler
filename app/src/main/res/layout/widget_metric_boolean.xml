@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
-        android:text=" "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <RadioGroup
@@ -26,14 +25,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false"
-            android:text="Yes" />
+            android:text="@string/yes" />
 
         <RadioButton
             android:id="@+id/no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="No" />
+            android:text="@string/no" />
     </RadioGroup>
 
 </RelativeLayout>

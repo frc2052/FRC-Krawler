@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.SettingsActivity;
 import com.team2052.frckrawler.bluetooth.SyncAsScoutTask;
 import com.team2052.frckrawler.bluetooth.SyncCallbackHandler;
 import com.team2052.frckrawler.database.models.User;
@@ -48,7 +47,6 @@ public class MainActivity extends BaseActivity implements DialogInterface.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.admininster:
-                openAdminister();
                 break;
             case R.id.join:
                 openJoin();
@@ -74,10 +72,6 @@ public class MainActivity extends BaseActivity implements DialogInterface.OnClic
         builder.setPositiveButton("Login", new UserDialogListener());
         builder.setNegativeButton("Cancel", new UserDialogListener());
         builder.show();
-    }
-
-    private void openAdminister() {
-        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
     }
 
     private void openJoin() {

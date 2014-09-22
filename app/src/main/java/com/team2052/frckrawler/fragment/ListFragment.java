@@ -3,6 +3,7 @@ package com.team2052.frckrawler.fragment;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,12 +36,13 @@ public abstract class ListFragment extends Fragment implements ListUpdateListene
 
     @Override
     public void onPause() {
-        super.onPause();
+        Log.d("FRCKrawler", "onPause called in ListFragment");
         if (mListView != null) {
             if (mAdapter == null) {
                 mAdapter = mListView.getAdapter();
             }
             mListState = mListView.onSaveInstanceState();
         }
+        super.onPause();
     }
 }

@@ -4,16 +4,6 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/scoutingType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text=" "
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="24sp" />
-
     <Spinner
         android:id="@+id/match_number"
         android:layout_width="match_parent"
@@ -32,8 +22,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/linLayoutLeft">
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/team">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,7 +45,6 @@
                 android:ems="10"
                 android:hint="Comments"
                 android:inputType="textMultiLine">
-
                 <requestFocus />
             </EditText>
         </LinearLayout>

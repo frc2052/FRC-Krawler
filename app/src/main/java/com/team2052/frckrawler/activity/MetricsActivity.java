@@ -39,13 +39,13 @@ public class MetricsActivity extends ListActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         mGame = Game.load(Game.class, getIntent().getLongExtra(PARENT_ID, -1));
         metricCategory = getIntent().getIntExtra(METRIC_CATEGORY, -1);
         if(getActionBar() != null){
             getActionBar().setTitle(MetricType.VALID_TYPES[metricCategory].title);
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        super.onCreate(savedInstanceState);
     }
 
 
