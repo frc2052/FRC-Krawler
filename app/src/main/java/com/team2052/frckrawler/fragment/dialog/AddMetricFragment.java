@@ -86,38 +86,6 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 getView().findViewById(R.id.inc).setEnabled(false);
                 ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).removeAllViews();
                 break;
-            case Metric.MATH:
-                Metric[] choices;
-                switch (MetricsActivity.MetricType.VALID_TYPES[mMetricCategory]) {
-                    case MATCH_PERF_METRICS:
-                        List<Metric> matchMetrics = new Select().from(Metric.class).where("Game = ?", mGame.getId()).and("Category = ?", MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal()).execute();
-                        ArrayList<Metric> acceptedMetrics = new ArrayList<>();
-                        for (Metric met : matchMetrics) {
-                            if (met.type == Metric.COUNTER || met.type == Metric.SLIDER)
-                                acceptedMetrics.add(met);
-                        }
-                        choices = acceptedMetrics.toArray(new Metric[acceptedMetrics.size()]);
-                        break;
-
-                    case ROBOT_METRICS:
-                        List<Metric> robotMetrics = new Select().from(Metric.class).where("Game = ?", mGame.getId()).and("Category = ?", MetricsActivity.MetricType.ROBOT_METRICS.ordinal()).execute();
-                        ArrayList<Metric> choosableMetrics = new ArrayList<Metric>();
-                        for (Metric m : robotMetrics)
-                            if (m.type == Metric.COUNTER || m.type == Metric.SLIDER)
-                                choosableMetrics.add(m);
-                        choices = choosableMetrics.toArray(new Metric[choosableMetrics.size()]);
-                        break;
-                    default:
-                        choices = new Metric[0];
-                }
-
-                getView().findViewById(R.id.min).setEnabled(false);
-                getView().findViewById(R.id.max).setEnabled(false);
-                getView().findViewById(R.id.inc).setEnabled(false);
-                list = new MathMetricListEditor(getActivity(), new String[0], choices);
-                ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).removeAllViews();
-                ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).addView(list);
-                break;
             case Metric.CHOOSER:
                 getView().findViewById(R.id.min).setEnabled(false);
                 getView().findViewById(R.id.max).setEnabled(false);
@@ -208,23 +176,6 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                             MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
                             ((TextView) getView().findViewById(R.id.name)).getText().toString(),
                             ((EditText) getView().findViewById(R.id.description)).getText().toString(),
-                            ((CheckBox) getView().findViewById(R.id.displayed)).isChecked()
-                    );
-                    break;
-
-                case Metric.MATH:
-                    String[] selectedMetrics = list.getValues();
-                    Integer[] selectedMetricIDs = new Integer[selectedMetrics.length];
-
-                    for (int i = 0; i < selectedMetrics.length; i++)
-                        selectedMetricIDs[i] = Integer.valueOf(selectedMetrics[i]);
-
-                    m = MetricFactory.createMathMetric(
-                            mGame,
-                            MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
-                            ((TextView) getView().findViewById(R.id.name)).getText().toString(),
-                            ((EditText) getView().findViewById(R.id.description)).getText().toString(),
-                            selectedMetricIDs,
                             ((CheckBox) getView().findViewById(R.id.displayed)).isChecked()
                     );
                     break;

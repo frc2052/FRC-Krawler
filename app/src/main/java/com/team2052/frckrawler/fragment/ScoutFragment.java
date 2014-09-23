@@ -142,7 +142,7 @@ public class ScoutFragment extends  ViewPagerFragment implements DialogInterface
     }
 
     public class ScoutPagerAdapter extends FragmentPagerAdapter {
-        public final String[] headers = {"Home", "Match Scouting", "Pit Scouting", "Summary", "Schedule"};
+        public final String[] headers = {"Home", "Match Scouting", "Pit Scouting", "Schedule"};
 
         public ScoutPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -167,9 +167,6 @@ public class ScoutFragment extends  ViewPagerFragment implements DialogInterface
                     fragment = ScoutPitFragment.newInstance(mEvent);
                     break;
                 case 3:
-                    fragment = new ScoutHomeFragment();
-                    break;
-                case 4:
                     fragment = MatchListFragment.newInstance(mEvent);
             }
             return fragment;

@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -190,6 +191,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             JsonArray jTeams = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/teams")));
             JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
 
+            ActiveAndroid.beginTransaction();
             //Save the event
             Event event = JSON.getGson().fromJson(jEvent, Event.class);
             event.game = mGame;
@@ -207,7 +209,6 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                 robotEvents.robot.save();
                 robotEvents.save();
             }
-            Log.d("FRCKrawler", "Parsing Matches");
             for (JsonElement element : jMatches) {
                 //Save all the matches and alliances
                 Match match = JSON.getGson().fromJson(element, Match.class);
@@ -217,6 +218,8 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                     match.save();
                 }
             }
+            ActiveAndroid.setTransactionSuccessful();
+            ActiveAndroid.endTransaction();
             return null;
         }
 

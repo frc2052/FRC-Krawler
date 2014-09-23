@@ -33,8 +33,8 @@ public class MatchListFragment extends ListFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         mEvent = Event.load(Event.class, getArguments().getLong(DatabaseActivity.PARENT_ID));
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -46,6 +46,7 @@ public class MatchListFragment extends ListFragment {
 
         @Override
         protected List<Match> doInBackground(Void... params) {
+            //Get Matches ascending from the provided event id
             return new Select().from(Match.class).orderBy("MatchNumber ASC").where("Event = ?", mEvent.getId()).execute();
         }
 
@@ -57,8 +58,7 @@ public class MatchListFragment extends ListFragment {
             for (Match match : matches) {
                 listItems.add(new MatchListItem(match));
             }
-            mAdapter = new ListViewAdapter(getActivity(), listItems);
-            mListView.setAdapter(mAdapter);
+            mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), listItems));
         }
     }
 }

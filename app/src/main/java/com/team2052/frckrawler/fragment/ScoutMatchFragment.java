@@ -1,26 +1,39 @@
 package com.team2052.frckrawler.fragment;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Cache;
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
+import com.team2052.frckrawler.activity.MatchListActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.models.Alliance;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Match;
+import com.team2052.frckrawler.database.models.MatchComments;
+import com.team2052.frckrawler.database.models.MetricMatchData;
 import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.Robot;
 import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.gui.MetricWidget;
 
@@ -56,6 +69,25 @@ public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSe
             }
         }*/
         mEvent = Event.load(Event.class, getArguments().getLong(DatabaseActivity.PARENT_ID));
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.scout, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_save) {
+            if (mAllianceSpinner.getSelectedItem() != null && mMatchSpinner.getSelectedItem() != null) {
+                new SaveAllMetrics().execute();
+            }
+        } /*else if (item.getItemId() == R.id.action_schedule) {
+            getActivity().startActivity(MatchListActivity.newInstance(getActivity(), mEvent));
+        }*/
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -112,6 +144,45 @@ public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSe
             for (Metric metric : metrics) {
                 ((LinearLayout) getView().findViewById(R.id.metricWidgetList)).addView(MetricWidget.createWidget(getActivity(), metric));
             }
+        }
+    }
+
+    public class SaveAllMetrics extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            //Get data from view
+            Team team = (Team) mAllianceSpinner.getSelectedItem();
+            Match match = (Match) mMatchSpinner.getSelectedItem();
+            Robot robot = new Select().from(Robot.class).where("Team = ?", team.getId()).and("Game = ?", mEvent.game.getId()).executeSingle();
+
+            //TODO Load from database instead for metric data, allowing you to change it, after you changed it
+            if(new Select().from(MetricMatchData.class).where("Robot = ?", robot.getId()).and("Match = ?", match.getId()).execute().size() > 0){
+                return 1;
+            }
+
+            LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.metricWidgetList);
+            List<MetricWidget> widgets = new ArrayList<>();
+
+            for (int i = 0; i < linearLayout.getChildCount(); i++) {
+                widgets.add((MetricWidget) linearLayout.getChildAt(i));
+            }
+
+            //Begin Saving
+            ActiveAndroid.beginTransaction();
+            for (MetricWidget widget : widgets) {
+                new MetricMatchData(robot, widget.getMetric(), widget.getMetricValue(), match).save();
+            }
+            new MatchComments(match, robot, ((EditText) getView().findViewById(R.id.comments)).getText().toString()).save();
+            ActiveAndroid.setTransactionSuccessful();
+            ActiveAndroid.endTransaction();
+
+            return 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer aVoid) {
+            Toast.makeText(getActivity(), aVoid == 0 ? "Save Complete!" : "Cannot Save Match Data. Match Is Already Saved", Toast.LENGTH_LONG).show();
         }
     }
 }

@@ -13,7 +13,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:ems="10"
-        android:focusable="false"
         android:hint="Name">
         <requestFocus />
     </EditText>

@@ -26,7 +26,7 @@ public class ContactListElement extends ListElement {
 
     @Override
     public View getView(final Context c, LayoutInflater inflater, View convertView) {
-        convertView = inflater.inflate(R.layout.contact_list_item, null);
+        convertView = inflater.inflate(R.layout.list_item_contact, null);
         convertView.findViewById(R.id.contact_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

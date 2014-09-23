@@ -51,10 +51,6 @@ public class MetricListElement implements ListItem {
                 rangeString = rangeArr[0] + " to " + rangeArr[1];
                 typeString = "Slider";
                 break;
-            case Metric.MATH:
-                rangeString = "";
-                typeString = "Math";
-                break;
         }
     }
 

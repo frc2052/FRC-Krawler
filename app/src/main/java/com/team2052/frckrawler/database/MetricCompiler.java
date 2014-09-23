@@ -1,6 +1,6 @@
 package com.team2052.frckrawler.database;
 
-import com.team2052.frckrawler.database.models.MatchData;
+import com.team2052.frckrawler.database.models.MetricMatchData;
 
 import java.util.List;
 
@@ -12,11 +12,11 @@ public class MetricCompiler {
      * Compile all the corresponding data in the list and return the compiled value
      * Make sure the MatchData is corresponding to the metric and the same robot
      *
-     * @param matchDataList
+     * @param metricMatchDataList
      * @return
      */
-    public static String compileData(List<MatchData> matchDataList) {
-        for (MatchData data : matchDataList) {
+    public static String compileData(List<MetricMatchData> metricMatchDataList) {
+        for (MetricMatchData data : metricMatchDataList) {
             //TODO
         }
         return "";

@@ -25,5 +25,5 @@ public class GlobalValues {
      * The user id of a logged in user. Initialized to 0 until
      * somebody logs in. Only used for the scout's interface.
      */
-    public static Long userID = (long) 0;
+    public static long userID = 0L;
 }

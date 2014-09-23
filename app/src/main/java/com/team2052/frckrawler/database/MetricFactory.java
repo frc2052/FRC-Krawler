@@ -28,7 +28,4 @@ public class MetricFactory {
         return new Metric(game, metricCategory, name, description, Metric.TEXT, new Object[]{}, displayed);
     }
 
-    public static Metric createMathMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, Integer[] operendIDs, boolean displayed) {
-        return new Metric(game, metricCategory, name, description, Metric.MATH, operendIDs, displayed);
-    }
 }

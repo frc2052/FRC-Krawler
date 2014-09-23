@@ -12,7 +12,7 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Match;
-import com.team2052.frckrawler.database.models.MatchData;
+import com.team2052.frckrawler.database.models.MetricMatchData;
 import com.team2052.frckrawler.database.models.Metric;
 import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.User;
@@ -71,16 +71,16 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             ObjectOutputStream ooStream = new ObjectOutputStream(outStream);
             //Get the data to send
             Event event = DBManager.loadFromEvents().executeSingle();
-            List<MatchData> matchDataArr = DBManager.loadAllFromType(MatchData.class);
+            List<MetricMatchData> metricMatchDataArr = DBManager.loadAllFromType(MetricMatchData.class);
             if (isCancelled())
                 return SYNC_CANCELLED;
             //Write the scout data
             ooStream.writeInt(BluetoothInfo.SCOUT);
             ooStream.writeObject(event);
-            ooStream.writeObject(matchDataArr);
+            ooStream.writeObject(metricMatchDataArr);
             ooStream.flush();
             //Clear out the old data after it is sent
-            DBManager.deleteAllFromType(MatchData.class);
+            DBManager.deleteAllFromType(MetricMatchData.class);
             DBManager.deleteAllFromType(Event.class);
             if (isCancelled())
                 return SYNC_CANCELLED;

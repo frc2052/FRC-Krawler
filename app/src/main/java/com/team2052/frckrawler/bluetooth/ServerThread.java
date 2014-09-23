@@ -11,7 +11,7 @@ import com.activeandroid.query.Select;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.MatchData;
+import com.team2052.frckrawler.database.models.MetricMatchData;
 import com.team2052.frckrawler.database.models.Metric;
 import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.User;
@@ -67,10 +67,10 @@ public class ServerThread extends Thread {
                     Log.i("FRCKrawler", "Received Scout Sync Read Data From Scout");
                     //TODO RECEIVE
                     Event inEvent = (Event) inStream.readObject();
-                    List<MatchData> inMatchData = (List<MatchData>) inStream.readObject();
+                    List<MetricMatchData> inMetricMatchData = (List<MetricMatchData>) inStream.readObject();
                     //Send the received data to the database
                     if (inEvent != null && inEvent == hostedEvent) {
-                        for (MatchData m : inMatchData)
+                        for (MetricMatchData m : inMetricMatchData)
                             m.save();
                     }
                     //Compile Data To Send

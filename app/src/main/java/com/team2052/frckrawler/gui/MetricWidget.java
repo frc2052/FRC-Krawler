@@ -48,9 +48,6 @@ public abstract class MetricWidget extends FrameLayout {
             case Metric.SLIDER:
                 return new SliderMetricWidget(c, m);
 
-            case Metric.MATH:
-                return new MathMetricWidget(c, m);
-
             default:
 
                 return null;

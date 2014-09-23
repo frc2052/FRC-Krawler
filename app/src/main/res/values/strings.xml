@@ -80,7 +80,6 @@
         <item>Slider</item>
         <item>Chooser</item>
         <item>Text</item>
-        <item>Math</item>
     </string-array>
 
     <string name="team_number">Team Number</string>
