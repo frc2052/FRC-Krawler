@@ -25,7 +25,6 @@ public abstract class ViewPagerActivity extends DatabaseActivity {
     }
 
     /**
-     *
      * @return The adapter that you want to attach to the ViewPager and the Tabs
      */
     public abstract PagerAdapter setAdapter();

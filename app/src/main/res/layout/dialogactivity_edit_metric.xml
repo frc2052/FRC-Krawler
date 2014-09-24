@@ -164,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/inc"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/inc"/>
+                android:layout_below="@+id/inc" />
 
             <TextView
                 android:id="@+id/textView4"

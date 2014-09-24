@@ -34,7 +34,7 @@ public abstract class ListActivity extends DatabaseActivity implements ListUpdat
         super.onPause();
         if (mListView != null) {
             //Set the adapter if we are too lazy to set the variable
-            if(mAdapter == null){
+            if (mAdapter == null) {
                 mAdapter = mListView.getAdapter();
             }
             mListState = mListView.onSaveInstanceState();

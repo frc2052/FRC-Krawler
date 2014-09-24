@@ -14,10 +14,10 @@ import com.team2052.frckrawler.fragment.ScoutHomeFragment;
 /**
  * @author Adam
  */
-public class RobotActivity extends ViewPagerActivity{
+public class RobotActivity extends ViewPagerActivity {
     private Robot mRobot;
 
-    public static Intent newInstance(Context context, long rKey){
+    public static Intent newInstance(Context context, long rKey) {
         Intent intent = new Intent(context, RobotActivity.class);
         intent.putExtra(PARENT_ID, rKey);
         return intent;

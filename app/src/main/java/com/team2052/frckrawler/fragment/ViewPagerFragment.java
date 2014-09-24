@@ -14,7 +14,7 @@ import com.team2052.frckrawler.R;
 /**
  * @author Adam
  */
-public abstract class ViewPagerFragment extends Fragment{
+public abstract class ViewPagerFragment extends Fragment {
     private PagerSlidingTabStrip mTabs;
     private ViewPager mViewPager;
 

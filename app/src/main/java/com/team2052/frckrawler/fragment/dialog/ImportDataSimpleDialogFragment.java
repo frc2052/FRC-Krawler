@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -176,9 +175,10 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
      * @author Adam
      */
     public class LoadAllEventData extends AsyncTask<Void, Void, Void> {
+        final FragmentManager fragman = getFragmentManager();
         //TODO Separate to avoid losing the fragment manager when you dismiss the host dialog
         private final String url;
-        final FragmentManager fragman = getFragmentManager();
+
         public LoadAllEventData(String eventKey) {
             //Get the main event url based on the key
             this.url = TBA.BASE_TBA_URL + String.format(TBA.EVENT_REQUEST, eventKey);

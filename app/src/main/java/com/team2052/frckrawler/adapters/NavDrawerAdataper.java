@@ -7,10 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.NavDrawerItem;
-
-import java.util.List;
 
 public class NavDrawerAdataper extends ListViewAdapter {
     private int mSelectedItemPosition = -1;

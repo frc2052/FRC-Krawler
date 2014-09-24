@@ -66,6 +66,8 @@
         </activity>
         <activity android:name=".activity.TeamInfoActivity" />
         <activity android:name=".activity.RobotActivity" />
+        <activity android:name=".activity.SummaryMetricsActivity" />
+        <activity android:name=".activity.SummaryDataActivity" />
     </application>
 
 </manifest>

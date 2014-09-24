@@ -26,7 +26,7 @@ import com.team2052.frckrawler.gui.ProgressSpinner;
 
 import java.util.List;
 
-public class ScoutFragment extends  ViewPagerFragment implements DialogInterface.OnClickListener, SyncCallbackHandler {
+public class ScoutFragment extends ViewPagerFragment implements DialogInterface.OnClickListener, SyncCallbackHandler {
 
     private ViewPager mPager;
     private PagerSlidingTabStrip mTabs;

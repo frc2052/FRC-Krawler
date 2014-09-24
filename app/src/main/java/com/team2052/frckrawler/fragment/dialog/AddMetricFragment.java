@@ -14,18 +14,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.MetricFactory;
 import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.database.models.Metric;
 import com.team2052.frckrawler.gui.ListEditor;
-import com.team2052.frckrawler.gui.MathMetricListEditor;
 import com.team2052.frckrawler.gui.TextListEditor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Adam

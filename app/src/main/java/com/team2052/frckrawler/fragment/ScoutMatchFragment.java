@@ -1,11 +1,9 @@
 package com.team2052.frckrawler.fragment;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,19 +18,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
-import com.activeandroid.Cache;
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
-import com.team2052.frckrawler.activity.MatchListActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.models.Alliance;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.database.models.MatchComments;
-import com.team2052.frckrawler.database.models.MetricMatchData;
 import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.MetricMatchData;
 import com.team2052.frckrawler.database.models.Robot;
 import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.gui.MetricWidget;
@@ -157,7 +153,7 @@ public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSe
             Robot robot = new Select().from(Robot.class).where("Team = ?", team.getId()).and("Game = ?", mEvent.game.getId()).executeSingle();
 
             //TODO Load from database instead for metric data, allowing you to change it, after you changed it
-            if(new Select().from(MetricMatchData.class).where("Robot = ?", robot.getId()).and("Match = ?", match.getId()).execute().size() > 0){
+            if (new Select().from(MetricMatchData.class).where("Robot = ?", robot.getId()).and("Match = ?", match.getId()).execute().size() > 0) {
                 return 1;
             }
 

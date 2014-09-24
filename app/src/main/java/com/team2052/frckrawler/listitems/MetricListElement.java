@@ -6,12 +6,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.SummaryMetricsActivity;
 import com.team2052.frckrawler.database.models.Metric;
 
 /**
  * @author Adam
  */
-public class MetricListElement implements ListItem {
+public class MetricListElement extends ListElement {
     private final String descripstionString;
     private final String isDisplayed;
     private final Metric metric;
@@ -19,6 +20,7 @@ public class MetricListElement implements ListItem {
     private String rangeString = "";
 
     public MetricListElement(Metric metric) {
+        super(Long.toString(metric.getId()));
         this.metric = metric;
         Object[] rangeArr = metric.range;
         isDisplayed = Boolean.toString(metric.display);
@@ -68,6 +70,9 @@ public class MetricListElement implements ListItem {
                 //c.startActivity(EditMetricDialogActivity.newInstance(c, metric));
             }
         });
+        if (c instanceof SummaryMetricsActivity) {
+            convertView.findViewById(R.id.metric_list_edit).setVisibility(View.GONE);
+        }
         return convertView;
     }
 }

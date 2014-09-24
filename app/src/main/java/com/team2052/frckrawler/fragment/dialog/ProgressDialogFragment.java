@@ -22,18 +22,6 @@ public class ProgressDialogFragment extends DialogFragment {
         mMessage = message;
     }
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final ProgressDialog dialog = new ProgressDialog(getActivity());
-
-        dialog.setMessage(mMessage);
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(false);
-
-
-        return dialog;
-    }
-
     public static void showLoadingProgress(FragmentManager fragman) {
         dismissLoadingProgress(fragman);
         ProgressDialogFragment loading = new ProgressDialogFragment("Loading...");
@@ -47,5 +35,17 @@ public class ProgressDialogFragment extends DialogFragment {
             tr.remove(frag);
         }
         tr.commit();
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final ProgressDialog dialog = new ProgressDialog(getActivity());
+
+        dialog.setMessage(mMessage);
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+
+
+        return dialog;
     }
 }

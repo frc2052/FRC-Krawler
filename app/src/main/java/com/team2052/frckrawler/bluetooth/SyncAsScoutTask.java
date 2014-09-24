@@ -12,8 +12,8 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Match;
-import com.team2052.frckrawler.database.models.MetricMatchData;
 import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.MetricMatchData;
 import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.User;
 

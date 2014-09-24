@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MatchListActivity;
+import com.team2052.frckrawler.activity.SummaryMetricsActivity;
 import com.team2052.frckrawler.database.models.Event;
 
 public class EventListItem implements ListItem {
@@ -34,11 +35,12 @@ public class EventListItem implements ListItem {
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                //TODO
                 switch (item.getItemId()) {
                     case R.id.event_more_schedule:
                         c.startActivity(MatchListActivity.newInstance(c, event));
                         break;
+                    case R.id.event_more_summary:
+                        c.startActivity(SummaryMetricsActivity.newInstance(c, event));
                 }
                 return true;
             }

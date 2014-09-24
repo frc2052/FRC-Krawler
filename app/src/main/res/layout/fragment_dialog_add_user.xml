@@ -10,11 +10,12 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:ems="10"
         android:hint="Name"
         android:inputType="textPersonName">
+
         <requestFocus />
     </EditText>
 
