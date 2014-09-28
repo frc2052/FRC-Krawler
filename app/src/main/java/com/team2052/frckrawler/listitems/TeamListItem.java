@@ -1,8 +1,7 @@
 package com.team2052.frckrawler.listitems;
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
@@ -11,16 +10,19 @@ import com.team2052.frckrawler.database.models.Team;
 /**
  * @author Adam
  */
-public class TeamListItem extends ListElement {
+public class TeamListItem extends ListElement
+{
     private final Team team;
 
-    public TeamListItem(Team team) {
+    public TeamListItem(Team team)
+    {
         super(Integer.toString(team.number));
         this.team = team;
     }
 
     @Override
-    public View getView(Context c, LayoutInflater inflater, View convertView) {
+    public View getView(Context c, LayoutInflater inflater, View convertView)
+    {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_team, null);
         }

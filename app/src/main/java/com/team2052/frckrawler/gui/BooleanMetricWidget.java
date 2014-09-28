@@ -3,17 +3,18 @@ package com.team2052.frckrawler.gui;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.RadioButton;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
 
-public class BooleanMetricWidget extends MetricWidget implements OnClickListener {
+public class BooleanMetricWidget extends MetricWidget implements OnClickListener
+{
 
     private boolean value;
 
-    public BooleanMetricWidget(Context context, MetricValue m) {
+    public BooleanMetricWidget(Context context, MetricValue m)
+    {
 
         super(context, m.getMetric(), m.getValue());
         inflater.inflate(R.layout.widget_metric_boolean, this);
@@ -34,12 +35,14 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
     }
 
     @Override
-    public String[] getValues() {
+    public String[] getValues()
+    {
         return new String[]{Boolean.toString(value)};
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(View view)
+    {
 
         boolean checked = ((RadioButton) view).isChecked();
 

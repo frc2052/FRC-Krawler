@@ -1,24 +1,20 @@
 package com.team2052.frckrawler.tba.types;
 
 import com.activeandroid.query.Select;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.team2052.frckrawler.database.models.Alliance;
-import com.team2052.frckrawler.database.models.Team;
+import com.google.gson.*;
+import com.team2052.frckrawler.database.models.*;
 
 import java.lang.reflect.Type;
 
 /**
  * @author Adam
  */
-public class AllianceDeserializer implements JsonDeserializer<Alliance> {
+public class AllianceDeserializer implements JsonDeserializer<Alliance>
+{
 
     @Override
-    public Alliance deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public Alliance deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+    {
         final Alliance alliance = new Alliance();
         final JsonObject object = json.getAsJsonObject();
         if (object.has("blue") && !object.get("blue").isJsonNull()) {

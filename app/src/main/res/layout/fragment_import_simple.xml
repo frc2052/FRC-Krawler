@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp">
 
     <Spinner
         android:id="@+id/import_year_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"/>
 
     <Spinner
         android:id="@+id/import_event_spinner"
@@ -20,7 +20,7 @@
         android:layout_alignStart="@+id/import_year_spinner"
         android:layout_below="@+id/import_year_spinner"
         android:layout_marginTop="8dp"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/progress"
@@ -29,6 +29,6 @@
         android:layout_below="@id/import_year_spinner"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </RelativeLayout>

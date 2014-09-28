@@ -1,23 +1,22 @@
 package com.team2052.frckrawler.activity;
 
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.os.*;
+import android.widget.*;
 
-import com.team2052.frckrawler.ListUpdateListener;
-import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.*;
 
 /**
  * @author Adam
  */
-public abstract class ListActivity extends DatabaseActivity implements ListUpdateListener {
+public abstract class ListActivity extends DatabaseActivity implements ListUpdateListener
+{
     protected ListView mListView;
     protected ListAdapter mAdapter;
     private Parcelable mListState;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view);
         mListView = (ListView) findViewById(R.id.list_layout);
@@ -30,7 +29,8 @@ public abstract class ListActivity extends DatabaseActivity implements ListUpdat
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
         if (mListView != null) {
             //Set the adapter if we are too lazy to set the variable

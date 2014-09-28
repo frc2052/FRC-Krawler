@@ -8,14 +8,16 @@ import android.widget.TextView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
 
-public class CounterMetricWidget extends MetricWidget implements OnClickListener {
+public class CounterMetricWidget extends MetricWidget implements OnClickListener
+{
 
     private int max;
     private int min;
     private int increment;
     private int currentValue;
 
-    public CounterMetricWidget(Context context, MetricValue m) {
+    public CounterMetricWidget(Context context, MetricValue m)
+    {
 
         super(context, m.getMetric(), m.getValue());
         inflater.inflate(R.layout.widget_metric_counter, this);
@@ -47,12 +49,14 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
     }
 
     @Override
-    public String[] getValues() {
+    public String[] getValues()
+    {
         return new String[]{Integer.toString(currentValue)};
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v)
+    {
 
         if (v.getId() == R.id.plus) {
 

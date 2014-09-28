@@ -1,8 +1,7 @@
 package com.team2052.frckrawler.database.models;
 
 import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.activeandroid.annotation.*;
 import com.team2052.frckrawler.database.DBManager;
 
 import java.io.Serializable;
@@ -11,7 +10,8 @@ import java.io.Serializable;
  * @author Adam
  */
 @Table(name = "alliances")
-public class Alliance extends Model implements Serializable {
+public class Alliance extends Model implements Serializable
+{
     @Column(name = "Red1", onDelete = Column.ForeignKeyAction.CASCADE)
     public Team red1;
     @Column(name = "Red2", onDelete = Column.ForeignKeyAction.CASCADE)
@@ -31,7 +31,8 @@ public class Alliance extends Model implements Serializable {
     @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private int remoteId;
 
-    public Alliance(Team red1, Team red2, Team red3, Team blue1, Team blue2, Team blue3, int redScore, int blueScore) {
+    public Alliance(Team red1, Team red2, Team red3, Team blue1, Team blue2, Team blue3, int redScore, int blueScore)
+    {
         this.remoteId = DBManager.generateRemoteId();
         this.red1 = red1;
         this.red2 = red2;
@@ -43,10 +44,12 @@ public class Alliance extends Model implements Serializable {
         this.blueScore = blueScore;
     }
 
-    public Alliance() {
+    public Alliance()
+    {
     }
 
-    public int setRemoteId() {
+    public int setRemoteId()
+    {
         return remoteId = DBManager.generateRemoteId();
     }
 }

@@ -7,19 +7,23 @@ import java.util.ArrayList;
 /**
  * @author Adam
  */
-public class ObjectArraySerializer extends TypeSerializer {
+public class ObjectArraySerializer extends TypeSerializer
+{
     @Override
-    public Class<?> getDeserializedType() {
+    public Class<?> getDeserializedType()
+    {
         return Object[].class;
     }
 
     @Override
-    public Class<?> getSerializedType() {
+    public Class<?> getSerializedType()
+    {
         return String.class;
     }
 
     @Override
-    public Object serialize(Object o) {
+    public Object serialize(Object o)
+    {
         String rangeInput = "";
         for (Object obj : (Object[]) o) {
             rangeInput += obj.toString() + ":";
@@ -28,7 +32,8 @@ public class ObjectArraySerializer extends TypeSerializer {
     }
 
     @Override
-    public Object deserialize(Object o) {
+    public Object deserialize(Object o)
+    {
         String range = (String) o;
         String currentRangeValString = "";
         ArrayList<Object> rangeArrList = new ArrayList<>();

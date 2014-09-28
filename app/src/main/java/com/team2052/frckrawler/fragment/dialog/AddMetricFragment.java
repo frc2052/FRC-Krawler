@@ -2,30 +2,20 @@ package com.team2052.frckrawler.fragment.dialog;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.MetricFactory;
-import com.team2052.frckrawler.database.models.Game;
-import com.team2052.frckrawler.database.models.Metric;
-import com.team2052.frckrawler.gui.ListEditor;
-import com.team2052.frckrawler.gui.TextListEditor;
+import com.team2052.frckrawler.database.models.*;
+import com.team2052.frckrawler.gui.*;
 
 /**
  * @author Adam
  */
-public class AddMetricFragment extends DialogFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class AddMetricFragment extends DialogFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener
+{
 
     public static final String GAME_NAME_EXTRA = "GAME_NAME";
     public static final String METRIC_CATEGORY = "METRIC_CATEGORY";
@@ -34,7 +24,8 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     private int mCurrentSelectedMetricType;
     private Game mGame;
 
-    public static AddMetricFragment newInstance(int metricCategory, Game game) {
+    public static AddMetricFragment newInstance(int metricCategory, Game game)
+    {
         AddMetricFragment f = new AddMetricFragment();
         Bundle args = new Bundle();
         args.putInt(METRIC_CATEGORY, metricCategory);
@@ -44,7 +35,8 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         mMetricCategory = args.getInt(METRIC_CATEGORY, -1);
@@ -53,7 +45,8 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         View view = inflater.inflate(R.layout.dialogactivity_add_metric, null);
         Spinner metricType = (Spinner) view.findViewById(R.id.type);
         getDialog().setTitle("Add Metric");
@@ -66,7 +59,8 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    {
         mCurrentSelectedMetricType = position;
         switch (position) {
             case Metric.COUNTER:
@@ -99,11 +93,13 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    public void onNothingSelected(AdapterView<?> parent)
+    {
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v)
+    {
         if (v.getId() == R.id.add) {
             Metric m = null;
             switch (mCurrentSelectedMetricType) {

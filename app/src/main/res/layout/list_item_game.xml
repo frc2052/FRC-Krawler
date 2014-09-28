@@ -1,37 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:src="@drawable/ic_action_event"/>
 
     <TextView
         android:id="@+id/text_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ImageView
-        android:id="@+id/remove_game_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="false"
-        android:layout_centerVertical="true"
-        android:padding="8dp"
-        android:src="@drawable/ic_action_discard" />
-
-    <ImageView
-        android:id="@+id/edit_game_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
-        android:layout_toLeftOf="@+id/remove_game_button"
-        android:padding="8dp"
-        android:src="@drawable/ic_action_edit" />
+        android:layout_toRightOf="@+id/imageView"
+        android:text="Aerial Assist"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
 </RelativeLayout>

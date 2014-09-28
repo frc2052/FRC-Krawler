@@ -1,35 +1,81 @@
 package com.team2052.frckrawler.fragment;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.os.*;
+import android.view.*;
+import android.widget.AdapterView;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.User;
-import com.team2052.frckrawler.fragment.dialog.AddUserDialogFragment;
-import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.UserListItem;
+import com.team2052.frckrawler.fragment.dialog.*;
+import com.team2052.frckrawler.listitems.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Adam on 8/25/2014.
  */
-public class UsersFragment extends ListFragment {
+public class UsersFragment extends ListFragment
+{
+    private ActionMode currentActionMode;
+    private final ActionMode.Callback callback = new ActionMode.Callback()
+    {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu)
+        {
+            long userId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
+            User user = User.load(User.class, userId);
+            mode.setTitle(user.name);
+            mode.getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu)
+        {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item)
+        {
+            long userId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
+            User user = User.load(User.class, userId);
+            switch (item.getItemId()) {
+                case R.id.menu_edit:
+                    EditUserDialogFragment fragment = EditUserDialogFragment.newInstance(user);
+                    fragment.show(getChildFragmentManager(), "editUser");
+                    currentActionMode.finish();
+                    return true;
+                case R.id.menu_delete:
+                    user.delete();
+                    currentActionMode.finish();
+                    updateList();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode)
+        {
+            currentActionMode = null;
+        }
+    };
+    private int currentSelectedListItem;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.addbutton, menu);
         //Change the icon
@@ -37,7 +83,28 @@ public class UsersFragment extends ListFragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                if (currentActionMode != null) {
+                    return false;
+                }
+                currentSelectedListItem = position;
+                currentActionMode = getActivity().startActionMode(callback);
+                return true;
+            }
+        });
+        return view;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         if (item.getItemId() == R.id.add_action) {
             new AddUserDialogFragment().show(getChildFragmentManager(), "addUser");
         }
@@ -45,19 +112,31 @@ public class UsersFragment extends ListFragment {
     }
 
     @Override
-    public void updateList() {
+    public void onDestroy()
+    {
+        if (currentActionMode != null)
+            currentActionMode.finish();
+        super.onDestroy();
+    }
+
+    @Override
+    public void updateList()
+    {
         new GetUsersTask().execute();
     }
 
-    private class GetUsersTask extends AsyncTask<Void, Void, List<User>> {
+    private class GetUsersTask extends AsyncTask<Void, Void, List<User>>
+    {
 
         @Override
-        protected List<User> doInBackground(Void... params) {
+        protected List<User> doInBackground(Void... params)
+        {
             return new Select().from(User.class).execute();
         }
 
         @Override
-        protected void onPostExecute(List<User> users) {
+        protected void onPostExecute(List<User> users)
+        {
             List<ListItem> userList = new ArrayList<>();
             for (User user : users) {
                 userList.add(new UserListItem(user));

@@ -1,44 +1,26 @@
 package com.team2052.frckrawler.fragment;
 
-import android.app.ActionBar;
-import android.app.Activity;
+import android.app.*;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.*;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.*;
+import android.widget.*;
 
-import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.*;
 import com.team2052.frckrawler.adapters.NavDrawerAdataper;
-import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.NavDrawerItem;
+import com.team2052.frckrawler.listitems.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class NavigationDrawerFragment extends Fragment {
-    public static final List<ListItem> NAV_ITEMS = new ArrayList<>();
-
-    static {
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, "Scout", R.drawable.icon_scout_selector));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, "Server", R.drawable.icon_bluetooth_selector));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, "Teams", R.drawable.icon_team_selector));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, "Users", R.drawable.icon_user_selector));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, "Games", R.drawable.icon_game_selector));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, "Options", R.drawable.icon_settings_selector));
-        //NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_settings, "Settings", R.drawable.ic_action_settings, R.layout.nav_list_item));
-    }
-
+public class NavigationDrawerFragment extends Fragment
+{
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
+    public final List<ListItem> NAV_ITEMS = new ArrayList<>();
     private NavDrawerAdataper navAdapter;
     private ListView drawerListView;
     private View fragmentContainerView;
@@ -50,26 +32,41 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean fromSavedInstanceState;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        //Deny the scout to access all the items
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, "Scout", R.drawable.icon_scout_selector));
+        if (!scoutPrefs.getBoolean(GlobalValues.IS_SCOUT_PREF, false)) {
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, "Server", R.drawable.icon_bluetooth_selector));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, "Teams", R.drawable.icon_team_selector));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, "Users", R.drawable.icon_user_selector));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, "Games", R.drawable.icon_game_selector));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, "Options", R.drawable.icon_settings_selector));
+        }
         userLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
         fromSavedInstanceState = (savedInstanceState == null);
-        navAdapter = new NavDrawerAdataper(getActivity());
+        navAdapter = new NavDrawerAdataper(getActivity(), NAV_ITEMS);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         drawerListView = (ListView) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-        drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
                 selectItem(position);
             }
         });
@@ -78,7 +75,8 @@ public class NavigationDrawerFragment extends Fragment {
         return drawerListView;
     }
 
-    private void selectItem(int position) {
+    private void selectItem(int position)
+    {
         if (drawerListView != null) {
             drawerListView.setItemChecked(position, true);
             navAdapter.setItemSelected(position);
@@ -90,18 +88,21 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
-    public void setItemSelected(int itemId) {
+    public void setItemSelected(int itemId)
+    {
         if (drawerListView != null) {
             int position = navAdapter.getPositionForId(itemId);
             drawerListView.setItemChecked(position, true);
         }
     }
 
-    public boolean isDrawerOpen() {
+    public boolean isDrawerOpen()
+    {
         return drawerLayout != null && drawerLayout.isDrawerOpen(fragmentContainerView);
     }
 
-    public void setUp(int fragmentId, DrawerLayout drawerLayout, boolean encourageLearning, boolean useActionBarToggle) {
+    public void setUp(int fragmentId, DrawerLayout drawerLayout, boolean encourageLearning, boolean useActionBarToggle)
+    {
         fragmentContainerView = getActivity().findViewById(fragmentId);
         this.drawerLayout = drawerLayout;
         this.useActionBarToggle = useActionBarToggle;
@@ -116,9 +117,11 @@ public class NavigationDrawerFragment extends Fragment {
                     R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
                     R.string.drawer_open, /* "open drawer" description for accessibility */
                     R.string.drawer_close /* "close drawer" description for accessibility */
-            ) {
+            )
+            {
                 @Override
-                public void onDrawerClosed(View drawerView) {
+                public void onDrawerClosed(View drawerView)
+                {
                     super.onDrawerClosed(drawerView);
                     if (!isAdded()) {
                         return;
@@ -128,7 +131,8 @@ public class NavigationDrawerFragment extends Fragment {
                 }
 
                 @Override
-                public void onDrawerOpened(View drawerView) {
+                public void onDrawerOpened(View drawerView)
+                {
                     super.onDrawerOpened(drawerView);
                     if (!isAdded()) {
                         return;
@@ -143,16 +147,20 @@ public class NavigationDrawerFragment extends Fragment {
                 }
             };
             this.drawerLayout.setDrawerListener(this.drawerToggle);
-            this.drawerLayout.post(new Runnable() {
+            this.drawerLayout.post(new Runnable()
+            {
                 @Override
-                public void run() {
+                public void run()
+                {
                     NavigationDrawerFragment.this.drawerToggle.syncState();
                 }
             });
         } else {
-            drawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            drawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener()
+            {
                 @Override
-                public void onDrawerOpened(View drawerView) {
+                public void onDrawerOpened(View drawerView)
+                {
                     if (!isAdded()) {
                         return;
                     }
@@ -167,7 +175,8 @@ public class NavigationDrawerFragment extends Fragment {
                 }
 
                 @Override
-                public void onDrawerClosed(View drawerView) {
+                public void onDrawerClosed(View drawerView)
+                {
                     if (!isAdded()) {
                         return;
                     }
@@ -182,7 +191,8 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Activity activity)
+    {
         super.onAttach(activity);
         if (activity instanceof NavigationDrawerListener) {
             this.listener = (NavigationDrawerListener) activity;
@@ -192,7 +202,8 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(Menu menu)
+    {
         if (drawerLayout != null && isDrawerOpen()) {
             ActionBar actionBar = getActivity().getActionBar();
             actionBar.setDisplayShowTitleEnabled(true);
@@ -203,7 +214,8 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         if (useActionBarToggle && drawerToggle != null) {
             return drawerToggle.onOptionsItemSelected(item);
         }
@@ -212,12 +224,14 @@ public class NavigationDrawerFragment extends Fragment {
 
 
     @Override
-    public void onDetach() {
+    public void onDetach()
+    {
         super.onDetach();
         listener = null;
     }
 
-    public interface NavigationDrawerListener {
+    public interface NavigationDrawerListener
+    {
         /**
          * Called when a NavDrawerItem in the navigation drawer is clicked
          *

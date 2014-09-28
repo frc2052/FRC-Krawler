@@ -2,20 +2,19 @@ package com.team2052.frckrawler.gui;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
 
-public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedListener {
+public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedListener
+{
 
     private String value;
 
-    public ChooserMetricWidget(Context context, MetricValue m) {
+    public ChooserMetricWidget(Context context, MetricValue m)
+    {
 
         super(context, m.getMetric(), m.getValue());
         inflater.inflate(R.layout.widget_metric_chooser, this);
@@ -41,18 +40,21 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
     }
 
     @Override
-    public String[] getValues() {
+    public String[] getValues()
+    {
         return new String[]{value};
     }
 
     @Override
     public void onItemSelected(AdapterView<?> a, View arg1, int arg2,
-                               long arg3) {
+                               long arg3)
+    {
         value = (String) a.getSelectedItem();
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> a) {
+    public void onNothingSelected(AdapterView<?> a)
+    {
         a.setSelection(0);
     }
 }

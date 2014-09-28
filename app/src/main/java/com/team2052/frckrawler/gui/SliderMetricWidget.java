@@ -1,20 +1,21 @@
 package com.team2052.frckrawler.gui;
 
 import android.content.Context;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
 
 public class SliderMetricWidget extends MetricWidget implements
-        SeekBar.OnSeekBarChangeListener {
+        SeekBar.OnSeekBarChangeListener
+{
 
     private int value;
     private int min;
     private int max;
 
-    public SliderMetricWidget(Context context, MetricValue m) {
+    public SliderMetricWidget(Context context, MetricValue m)
+    {
 
         super(context, m.getMetric(), m.getValue());
         inflater.inflate(R.layout.widget_metric_slider, this);
@@ -51,28 +52,32 @@ public class SliderMetricWidget extends MetricWidget implements
     }
 
     @Override
-    public String[] getValues() {
+    public String[] getValues()
+    {
 
         return new String[]{Integer.toString(value)};
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress,
-                                  boolean fromUser) {
+                                  boolean fromUser)
+    {
 
         value = seekBar.getProgress() + min;
         ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
+    public void onStartTrackingTouch(SeekBar seekBar)
+    {
 
         value = seekBar.getProgress() + min;
         ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));
     }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
+    public void onStopTrackingTouch(SeekBar seekBar)
+    {
 
         value = seekBar.getProgress() + min;
         ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));

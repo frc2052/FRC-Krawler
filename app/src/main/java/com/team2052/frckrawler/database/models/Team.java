@@ -1,8 +1,7 @@
 package com.team2052.frckrawler.database.models;
 
 import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.activeandroid.annotation.*;
 
 import java.io.Serializable;
 
@@ -10,7 +9,8 @@ import java.io.Serializable;
  * @author Adam
  */
 @Table(name = "teams")
-public class Team extends Model implements Serializable {
+public class Team extends Model implements Serializable
+{
     @Column(name = "TeamKey")
     public String teamKey;
 
@@ -29,7 +29,8 @@ public class Team extends Model implements Serializable {
     @Column(name = "Website")
     public String website;
 
-    public Team(String teamKey, int number, String name, String location, int rookieYear, String website) {
+    public Team(String teamKey, int number, String name, String location, int rookieYear, String website)
+    {
         this.teamKey = teamKey;
         this.number = number;
         this.name = name;
@@ -38,11 +39,13 @@ public class Team extends Model implements Serializable {
         this.website = website;
     }
 
-    public Team() {
+    public Team()
+    {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return String.valueOf(number);
     }
 }

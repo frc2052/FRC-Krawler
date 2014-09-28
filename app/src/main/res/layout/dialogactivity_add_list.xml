@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/listNumber"
@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text="Add List"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <EditText
         android:id="@+id/listsName"
@@ -21,7 +21,7 @@
         android:layout_below="@+id/listNumber"
         android:ems="10">
 
-        <requestFocus />
+        <requestFocus/>
     </EditText>
 
     <EditText
@@ -32,7 +32,7 @@
         android:layout_below="@+id/listsName"
         android:layout_toRightOf="@+id/contact_team_role"
         android:ems="10"
-        android:inputType="textMultiLine" />
+        android:inputType="textMultiLine"/>
 
     <TextView
         android:id="@+id/teamRole"
@@ -42,7 +42,7 @@
         android:layout_alignBottom="@+id/listsName"
         android:layout_alignParentLeft="true"
         android:text="Name"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
         android:id="@+id/contact_team_role"
@@ -52,7 +52,7 @@
         android:layout_alignBottom="@+id/listsDescription"
         android:layout_alignParentLeft="true"
         android:text="Description"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -64,13 +64,13 @@
             android:id="@+id/addListButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add List" />
+            android:text="Add List"/>
 
         <Button
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel" />
+            android:text="Cancel"/>
 
     </LinearLayout>
 

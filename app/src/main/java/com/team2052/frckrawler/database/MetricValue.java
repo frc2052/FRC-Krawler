@@ -5,17 +5,20 @@ import com.team2052.frckrawler.database.models.Metric;
 
 import java.text.DecimalFormat;
 
-public class MetricValue {
+public class MetricValue
+{
 
     private Metric metric;
     private String[] value; //Array only used for
     private int[] chooserCounts;    //Only used if this addbutton value is a COMPILED chooser
 
-    public MetricValue(Metric metric, String[] value) throws MetricTypeMismatchException {
+    public MetricValue(Metric metric, String[] value) throws MetricTypeMismatchException
+    {
         this(metric, value, null);
     }
 
-    public MetricValue(Metric metric, String[] value, int[] chooserCounts) throws MetricTypeMismatchException {
+    public MetricValue(Metric metric, String[] value, int[] chooserCounts) throws MetricTypeMismatchException
+    {
         if (metric.type == Metric.COUNTER || metric.type == Metric.SLIDER) {
             for (String v : value) {
                 //Check to see if the values are valid
@@ -32,7 +35,8 @@ public class MetricValue {
         this.chooserCounts = null;
     }
 
-    public String getValueAsDBReadableString() {
+    public String getValueAsDBReadableString()
+    {
         if (value == null)
             return new String();
 
@@ -44,7 +48,8 @@ public class MetricValue {
         return returnString;
     }
 
-    public String getValueAsHumanReadableString() {
+    public String getValueAsHumanReadableString()
+    {
         if (value == null)
             return new String();
 
@@ -82,18 +87,22 @@ public class MetricValue {
         return returnString;
     }
 
-    public Metric getMetric() {
+    public Metric getMetric()
+    {
         return metric;
     }
 
-    public String[] getValue() {
+    public String[] getValue()
+    {
         return value;
     }
 
-    public int[] getChooserCounts() {
+    public int[] getChooserCounts()
+    {
         return chooserCounts;
     }
 
-    public class MetricTypeMismatchException extends Exception {
+    public class MetricTypeMismatchException extends Exception
+    {
     }
 }

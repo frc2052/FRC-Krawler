@@ -6,17 +6,19 @@ import android.support.v4.app.NotificationCompat;
 
 import com.team2052.frckrawler.R;
 
-public class ServerCallbackHandler implements SyncCallbackHandler {
+public class ServerCallbackHandler implements SyncCallbackHandler
+{
     public static final int SYNC_ONGOING_ID = 1;
     private Context context;
 
-    //TODO INTENT
-    public ServerCallbackHandler(Context c) {
+    public ServerCallbackHandler(Context c)
+    {
         context = c.getApplicationContext();
     }
 
     @Override
-    public void onSyncStart(String deviceName) {
+    public void onSyncStart(String deviceName)
+    {
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
         b.setSmallIcon(android.R.drawable.ic_popup_sync);
         b.setContentTitle("Syncing");
@@ -28,7 +30,8 @@ public class ServerCallbackHandler implements SyncCallbackHandler {
     }
 
     @Override
-    public void onSyncSuccess(String deviceName) {
+    public void onSyncSuccess(String deviceName)
+    {
         NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         m.cancel(SYNC_ONGOING_ID);
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
@@ -39,12 +42,14 @@ public class ServerCallbackHandler implements SyncCallbackHandler {
     }
 
     @Override
-    public void onSyncCancel(String deviceName) {
+    public void onSyncCancel(String deviceName)
+    {
         ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(ServerCallbackHandler.SYNC_ONGOING_ID);
     }
 
     @Override
-    public void onSyncError(String deviceName) {
+    public void onSyncError(String deviceName)
+    {
         NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         m.cancel(SYNC_ONGOING_ID);
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);

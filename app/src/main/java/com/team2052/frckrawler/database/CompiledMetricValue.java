@@ -1,8 +1,6 @@
 package com.team2052.frckrawler.database;
 
-import com.team2052.frckrawler.database.models.Metric;
-import com.team2052.frckrawler.database.models.MetricMatchData;
-import com.team2052.frckrawler.database.models.Robot;
+import com.team2052.frckrawler.database.models.*;
 import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 
 import java.text.DecimalFormat;
@@ -11,7 +9,8 @@ import java.util.List;
 /**
  * @author Adam
  */
-public class CompiledMetricValue {
+public class CompiledMetricValue
+{
     public static DecimalFormat format = new DecimalFormat("0.0");
     private final List<MetricMatchData> metricData;
     public Robot robot;
@@ -20,7 +19,8 @@ public class CompiledMetricValue {
     private Metric metric;
     private double compileWeight;
 
-    public CompiledMetricValue(Robot robot, Metric metric, List<MetricMatchData> metricData, int metricType, float compileWeight) {
+    public CompiledMetricValue(Robot robot, Metric metric, List<MetricMatchData> metricData, int metricType, float compileWeight)
+    {
         this.robot = robot;
         this.metric = metric;
         this.metricData = metricData;
@@ -30,7 +30,8 @@ public class CompiledMetricValue {
         compileMetricValues();
     }
 
-    private void compileMetricValues() {
+    private void compileMetricValues()
+    {
         switch (metricType) {
             case Metric.BOOLEAN:
                 double yes = 0;

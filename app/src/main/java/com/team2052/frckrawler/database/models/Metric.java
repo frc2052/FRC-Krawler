@@ -1,8 +1,7 @@
 package com.team2052.frckrawler.database.models;
 
 import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.activeandroid.annotation.*;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.DBManager;
 
@@ -12,7 +11,8 @@ import java.io.Serializable;
  * @author Adam
  */
 @Table(name = "metrics")
-public class Metric extends Model implements Serializable {
+public class Metric extends Model implements Serializable
+{
     public static final int BOOLEAN = 0;
     public static final int COUNTER = 1;
     public static final int SLIDER = 2;
@@ -36,7 +36,8 @@ public class Metric extends Model implements Serializable {
     @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private int remoteId;
 
-    public Metric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, int type, Object[] range, boolean display) {
+    public Metric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, int type, Object[] range, boolean display)
+    {
         this.remoteId = DBManager.generateRemoteId();
         this.game = game;
         this.name = name;
@@ -47,6 +48,7 @@ public class Metric extends Model implements Serializable {
         this.display = display;
     }
 
-    public Metric() {
+    public Metric()
+    {
     }
 }

@@ -1,14 +1,14 @@
 package com.team2052.frckrawler.database.models;
 
 import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.activeandroid.annotation.*;
 
 /**
  * @author Adam
  */
 @Table(name = "matchcomments")
-public class MatchComments extends Model {
+public class MatchComments extends Model
+{
     @Column(name = "Match")
     public Match match;
 
@@ -18,12 +18,14 @@ public class MatchComments extends Model {
     @Column(name = "Comment")
     public String comment;
 
-    public MatchComments(Match match, Robot robot, String comment) {
+    public MatchComments(Match match, Robot robot, String comment)
+    {
         this.match = match;
         this.robot = robot;
         this.comment = comment;
     }
 
-    public MatchComments() {
+    public MatchComments()
+    {
     }
 }

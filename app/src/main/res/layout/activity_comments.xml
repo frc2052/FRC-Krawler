@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<RelativeLayout android:id="@+id/root"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/tabRoot"
@@ -29,35 +29,35 @@
                     android:id="@+id/teamsSelectionButton"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:text="Teams" />
+                    android:text="Teams"/>
 
                 <Button
                     android:id="@+id/usersSelectionButton"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
 
-                    android:text="Users" />
+                    android:text="Users"/>
 
                 <Button
                     android:id="@+id/gamesSelectionButton"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
 
-                    android:text="Games" />
+                    android:text="Games"/>
 
                 <Button
                     android:id="@+id/bluetoothTabButton"
                     android:layout_width="wrap_content"
                     android:layout_height="60dp"
 
-                    android:text="Bluetooth" />
+                    android:text="Bluetooth"/>
 
                 <Button
                     android:id="@+id/optionsTabButton"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
 
-                    android:text="Options" />
+                    android:text="Options"/>
 
             </LinearLayout>
 
@@ -82,7 +82,7 @@
                     android:id="@+id/addComment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Add Comment" />
+                    android:text="Add Comment"/>
             </LinearLayout>
 
             <TextView
@@ -92,7 +92,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:text="Comments"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -124,7 +124,7 @@
                                 <TableRow
                                     android:id="@+id/descriptorsRow"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"/>
                             </TableLayout>
                         </ScrollView>
                     </RelativeLayout>
@@ -138,7 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/scrollView1"
-            android:orientation="vertical" />
+            android:orientation="vertical"/>
     </RelativeLayout>
 
 </RelativeLayout>

@@ -12,16 +12,19 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.TextView;
 
-public class MyTextView extends TextView {
+public class MyTextView extends TextView
+{
 
-    public MyTextView(Context context, String _text) {
+    public MyTextView(Context context, String _text)
+    {
         super(context);
         setText(_text);
         setPadding(2, 2, 2, 2);
         setGravity(Gravity.CENTER);
     }
 
-    public MyTextView(Context context, String _text, float _textSize) {
+    public MyTextView(Context context, String _text, float _textSize)
+    {
         super(context);
         setText(_text);
         setTextSize(TypedValue.COMPLEX_UNIT_SP, _textSize);

@@ -4,30 +4,36 @@ import android.widget.RadioButton;
 
 import java.util.ArrayList;
 
-public class AbstractRadioGroup {
+public class AbstractRadioGroup
+{
 
     private int selectedButtonPos;
     private ArrayList<RadioButton> buttons;
 
-    public AbstractRadioGroup() {
+    public AbstractRadioGroup()
+    {
         selectedButtonPos = -1;
         buttons = new ArrayList<>();
     }
 
-    public AbstractRadioGroup(ArrayList<RadioButton> _buttons) {
+    public AbstractRadioGroup(ArrayList<RadioButton> _buttons)
+    {
         selectedButtonPos = -1;
         buttons = _buttons;
     }
 
-    public void add(RadioButton button) {
+    public void add(RadioButton button)
+    {
         buttons.add(button);
     }
 
-    public void remove(RadioButton button) {
+    public void remove(RadioButton button)
+    {
         buttons.remove(button);
     }
 
-    public RadioButton getSelectedButton() {
+    public RadioButton getSelectedButton()
+    {
         if (selectedButtonPos != -1)
             return buttons.get(selectedButtonPos);
         else
@@ -44,7 +50,8 @@ public class AbstractRadioGroup {
      *                      ***
      */
 
-    public void notifyClick(RadioButton clickedButton) {
+    public void notifyClick(RadioButton clickedButton)
+    {
         for (int i = 0; i < buttons.size(); i++) {
             if (buttons.get(i) != null && buttons.get(i) != clickedButton)
                 buttons.get(i).setChecked(false);
@@ -55,7 +62,8 @@ public class AbstractRadioGroup {
         }
     }
 
-    public void selectButton(RadioButton button) {
+    public void selectButton(RadioButton button)
+    {
         button.setChecked(true);
         notifyClick(button);
     }

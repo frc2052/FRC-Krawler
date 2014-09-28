@@ -1,20 +1,15 @@
 package com.team2052.frckrawler.fragment.dialog;
 
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.bluetooth.*;
+import android.content.*;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.*;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.GlobalValues;
-import com.team2052.frckrawler.bluetooth.SyncAsScoutTask;
-import com.team2052.frckrawler.bluetooth.SyncCallbackHandler;
+import com.team2052.frckrawler.bluetooth.*;
 import com.team2052.frckrawler.database.models.User;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 
@@ -23,7 +18,8 @@ import java.util.List;
 /**
  * @author Adam
  */
-public class ScoutJoinDialogFragment extends DialogFragment implements DialogInterface.OnClickListener, SyncCallbackHandler {
+public class ScoutJoinDialogFragment extends DialogFragment implements DialogInterface.OnClickListener, SyncCallbackHandler
+{
     private static final int REQUEST_BT_ENABLE = 1;
     private BluetoothDevice[] devices;
     private int selectedDeviceAddress;
@@ -32,14 +28,16 @@ public class ScoutJoinDialogFragment extends DialogFragment implements DialogInt
     private EditText scoutLoginName;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
 
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which) {
+    public void onClick(DialogInterface dialog, int which)
+    {
         if (which == DialogInterface.BUTTON_NEUTRAL) {
             scoutSyncTask.cancel(true);
         } else {
@@ -57,7 +55,8 @@ public class ScoutJoinDialogFragment extends DialogFragment implements DialogInt
         }
     }
 
-    private void startScoutSync() {
+    private void startScoutSync()
+    {
         SharedPreferences prefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
         scoutSyncTask = new SyncAsScoutTask(getActivity(), this);
@@ -67,7 +66,8 @@ public class ScoutJoinDialogFragment extends DialogFragment implements DialogInt
     }
 
     @Override
-    public void onSyncStart(String deviceName) {
+    public void onSyncStart(String deviceName)
+    {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Syncing...");
         builder.setView(new ProgressSpinner(getActivity()));
@@ -78,7 +78,8 @@ public class ScoutJoinDialogFragment extends DialogFragment implements DialogInt
     }
 
     @Override
-    public void onSyncSuccess(String deviceName) {
+    public void onSyncSuccess(String deviceName)
+    {
         progressDialog.dismiss();
         scoutLoginName = new EditText(getActivity());
         scoutLoginName.setHint("Name");
@@ -91,29 +92,35 @@ public class ScoutJoinDialogFragment extends DialogFragment implements DialogInt
     }
 
     @Override
-    public void onSyncCancel(String deviceName) {
+    public void onSyncCancel(String deviceName)
+    {
         progressDialog.dismiss();
     }
 
     @Override
-    public void onSyncError(String deviceName) {
+    public void onSyncError(String deviceName)
+    {
         progressDialog.dismiss();
         //releaseScreenOrientation();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Sync Error");
         builder.setMessage("There was an error in syncing with the server. Make sure " + "that the server device is turned on and is running the FRCKrawler server.");
-        builder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("Close", new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 dialog.dismiss();
             }
         });
         builder.show();
     }
 
-    private class UserDialogListener implements DialogInterface.OnClickListener {
+    private class UserDialogListener implements DialogInterface.OnClickListener
+    {
         @Override
-        public void onClick(DialogInterface dialog, int which) {
+        public void onClick(DialogInterface dialog, int which)
+        {
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 List<User> users = new Select().from(User.class).execute();
                 boolean isValid = false;

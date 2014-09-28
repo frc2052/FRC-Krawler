@@ -1,8 +1,7 @@
 package com.team2052.frckrawler.database.models;
 
 import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.activeandroid.annotation.*;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -11,7 +10,8 @@ import java.sql.Date;
  * @author Adam
  */
 @Table(name = "events")
-public class Event extends Model implements Serializable {
+public class Event extends Model implements Serializable
+{
     @Column(name = "Name")
     public String name;
 
@@ -27,7 +27,8 @@ public class Event extends Model implements Serializable {
     @Column(name = "FMSId")
     public String fmsId;
 
-    public Event(String name, Game game, Date date, String location, String fmsId) {
+    public Event(String name, Game game, Date date, String location, String fmsId)
+    {
         this.name = name;
         this.game = game;
         this.date = date;
@@ -35,11 +36,13 @@ public class Event extends Model implements Serializable {
         this.fmsId = fmsId;
     }
 
-    public Event() {
+    public Event()
+    {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return name + ", " + game.name;
     }
 }

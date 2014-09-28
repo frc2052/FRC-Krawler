@@ -1,8 +1,7 @@
 package com.team2052.frckrawler.database.models;
 
 import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.activeandroid.annotation.*;
 import com.team2052.frckrawler.database.DBManager;
 
 import java.io.Serializable;
@@ -11,7 +10,8 @@ import java.io.Serializable;
  * @author Adam
  */
 @Table(name = "contacts")
-public class Contact extends Model implements Serializable {
+public class Contact extends Model implements Serializable
+{
     @Column(name = "Team", onDelete = Column.ForeignKeyAction.CASCADE)
     public Team team;
     @Column(name = "Name")
@@ -27,7 +27,8 @@ public class Contact extends Model implements Serializable {
     @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     public int remoteId;
 
-    public Contact(Team team, String name, String email, String address, String teamRole, String phoneNumber) {
+    public Contact(Team team, String name, String email, String address, String teamRole, String phoneNumber)
+    {
         this.remoteId = DBManager.generateRemoteId();
         this.team = team;
         this.name = name;
@@ -37,6 +38,7 @@ public class Contact extends Model implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public Contact() {
+    public Contact()
+    {
     }
 }

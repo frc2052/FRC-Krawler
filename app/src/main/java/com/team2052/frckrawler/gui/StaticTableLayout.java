@@ -2,10 +2,8 @@ package com.team2052.frckrawler.gui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.TableLayout;
+import android.view.*;
+import android.widget.*;
 
 import com.team2052.frckrawler.R;
 
@@ -22,28 +20,33 @@ import com.team2052.frckrawler.R;
  *         ***
  */
 
-public class StaticTableLayout extends FrameLayout {
+public class StaticTableLayout extends FrameLayout
+{
     TableLayout mainTable;
     TableLayout staticSideTable;
 
-    public StaticTableLayout(Context context) {
+    public StaticTableLayout(Context context)
+    {
         super(context);
         init();
     }
 
-    public StaticTableLayout(Context context, AttributeSet set) {
+    public StaticTableLayout(Context context, AttributeSet set)
+    {
         super(context, set);
         init();
     }
 
-    private void init() {
+    private void init()
+    {
         inflate(getContext(), R.layout.view_static_table_layout, this);
         mainTable = (TableLayout) findViewById(R.id.mainTable);
         staticSideTable = (TableLayout) findViewById(R.id.staticSideTable);
     }
 
     @Override
-    public void addView(View child) {
+    public void addView(View child)
+    {
         if (null == child.getLayoutParams()) {
             TableLayout.LayoutParams params = new TableLayout.LayoutParams(
                     TableLayout.LayoutParams.MATCH_PARENT,
@@ -56,7 +59,8 @@ public class StaticTableLayout extends FrameLayout {
     }
 
     @Override
-    public void addView(View child, int pos) {
+    public void addView(View child, int pos)
+    {
         if (null == child.getLayoutParams()) {
             TableLayout.LayoutParams params = new TableLayout.LayoutParams(
                     TableLayout.LayoutParams.MATCH_PARENT,
@@ -68,16 +72,19 @@ public class StaticTableLayout extends FrameLayout {
         mainTable.addView(child, pos);
     }
 
-    public void addViewToStaticTable(View child) {
+    public void addViewToStaticTable(View child)
+    {
         staticSideTable.addView(child);
     }
 
-    public void addViewToMainTable(View child) {
+    public void addViewToMainTable(View child)
+    {
         addView(child);
     }
 
     @Override
-    public void removeAllViews() {
+    public void removeAllViews()
+    {
         staticSideTable.removeAllViews();
         mainTable.removeAllViews();
     }

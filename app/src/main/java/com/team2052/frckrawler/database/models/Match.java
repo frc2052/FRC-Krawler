@@ -1,8 +1,7 @@
 package com.team2052.frckrawler.database.models;
 
 import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.activeandroid.annotation.*;
 import com.team2052.frckrawler.database.DBManager;
 
 import java.io.Serializable;
@@ -11,7 +10,8 @@ import java.io.Serializable;
  * @author Adam
  */
 @Table(name = "matches")
-public class Match extends Model implements Serializable {
+public class Match extends Model implements Serializable
+{
     @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     public int remoteId;
     //To avoid duplicates between Client and Server
@@ -30,7 +30,8 @@ public class Match extends Model implements Serializable {
     @Column(name = "Alliance", onDelete = Column.ForeignKeyAction.CASCADE)
     public Alliance alliance;
 
-    public Match(String key, Alliance alliance, String matchType, int matchNumber, Event event) {
+    public Match(String key, Alliance alliance, String matchType, int matchNumber, Event event)
+    {
         this.remoteId = DBManager.generateRemoteId();
         this.key = key;
         this.alliance = alliance;
@@ -39,15 +40,18 @@ public class Match extends Model implements Serializable {
         this.event = event;
     }
 
-    public Match() {
+    public Match()
+    {
     }
 
-    public int setRemoteId() {
+    public int setRemoteId()
+    {
         remoteId = DBManager.generateRemoteId();
         return remoteId;
     }
 
-    public Long saveAll() {
+    public Long saveAll()
+    {
         alliance.blue1.save();
         alliance.blue2.save();
         alliance.blue3.save();
@@ -60,7 +64,8 @@ public class Match extends Model implements Serializable {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return String.valueOf(matchNumber);
     }
 }

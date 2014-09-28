@@ -1,20 +1,19 @@
 package com.team2052.frckrawler.tba;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 /**
  * @author Adam
  */
-public class HTTP {
-    public static HttpResponse getResponse(String url) {
+public class HTTP
+{
+    public static HttpResponse getResponse(String url)
+    {
         try {
             HttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
@@ -26,7 +25,8 @@ public class HTTP {
         }
     }
 
-    public static String dataFromResponse(HttpResponse response) {
+    public static String dataFromResponse(HttpResponse response)
+    {
         InputStream is;
         String result;
         // Read response to string

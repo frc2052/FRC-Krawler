@@ -1,25 +1,20 @@
 package com.team2052.frckrawler.fragment;
 
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ToggleButton;
+import android.view.*;
+import android.widget.*;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.models.Game;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class OptionsFragment extends Fragment implements View.OnClickListener {
+public class OptionsFragment extends Fragment implements View.OnClickListener
+{
     public static final String PREFS_NAME = "userSettings";
     public static final String PREFS_IS_WRITTEN = "isWritten";
     public static final String PREFS_COMPILE_WEIGHT = "compileWeight";
@@ -28,7 +23,8 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
     private SharedPreferences preferences;
     private String gameName;
 
-    public static void restoreDefaultOptions(Context context) {
+    public static void restoreDefaultOptions(Context context)
+    {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
         if (!prefs.getBoolean(PREFS_IS_WRITTEN, false) || true) {
@@ -43,7 +39,8 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         View v = inflater.inflate(R.layout.activity_options, null);
         preferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         ((EditText) v.findViewById(R.id.weightValue)).setText(Float.toString(preferences.getFloat(PREFS_COMPILE_WEIGHT, 1.0f)));
@@ -65,7 +62,8 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(View view)
+    {
         switch (view.getId()) {
             case R.id.saveOptions:
                 SharedPreferences.Editor editor = preferences.edit();
@@ -81,10 +79,12 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("Options Not Saved");
                     builder.setMessage("You must enter a number for the weight when " + "compiling data.");
-                    builder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+                    builder.setNeutralButton("Close", new DialogInterface.OnClickListener()
+                    {
 
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
                             dialog.dismiss();
                         }
                     });
@@ -117,9 +117,11 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
                         "to 0.5, the average shown will be 12.5. Match #1 is more 'valuable' " +
                         "in the averaging process. Be careful, values larger than 2 or 3 will" +
                         " seriously skew data towards later matches. The default setting is 1.");
-                weightBuilder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+                weightBuilder.setNeutralButton("Close", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         dialog.dismiss();
                     }
                 });
@@ -138,9 +140,11 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
 
                     AlertDialog.Builder generateBuilder = new AlertDialog.Builder(getActivity());
                     generateBuilder.setTitle("Choose a game for new robots");
-                    generateBuilder.setItems((CharSequence[]) choices.toArray(), new DialogInterface.OnClickListener() {
+                    generateBuilder.setItems(Arrays.copyOf(choices.toArray(), choices.size(), CharSequence[].class), new DialogInterface.OnClickListener()
+                    {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
                             gameName = choices.get(which).toString();
                             b.setText(choices.get(which));
                             dialog.dismiss();
@@ -148,10 +152,12 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
                     });
 
                     AlertDialog gameDialog = generateBuilder.create();
-                    gameDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    gameDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+                    {
 
                         @Override
-                        public void onCancel(DialogInterface dialog) {
+                        public void onCancel(DialogInterface dialog)
+                        {
                             b.setChecked(false);
                         }
                     });
@@ -170,9 +176,11 @@ public class OptionsFragment extends Fragment implements View.OnClickListener {
                         "the specified Game every time a new Team is added to the database. " +
                         "This is extremely useful for adding new Teams to the database for " +
                         "this first time, or for the next competition season.");
-                generateBuilder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+                generateBuilder.setNeutralButton("Close", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         dialog.dismiss();
                     }
                 });

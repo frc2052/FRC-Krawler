@@ -2,7 +2,8 @@ package com.team2052.frckrawler.bluetooth;
 
 import java.io.Serializable;
 
-public interface SyncCallbackHandler extends Serializable {
+public interface SyncCallbackHandler extends Serializable
+{
 
     public void onSyncStart(String deviceName);
 

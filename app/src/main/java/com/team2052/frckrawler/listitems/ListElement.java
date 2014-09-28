@@ -3,18 +3,22 @@ package com.team2052.frckrawler.listitems;
 /**
  * @author Adam
  */
-public abstract class ListElement implements ListItem {
+public abstract class ListElement implements ListItem
+{
     protected final String key;
 
-    public ListElement() {
+    public ListElement()
+    {
         key = "";
     }
 
-    public ListElement(String key) {
+    public ListElement(String key)
+    {
         this.key = key;
     }
 
-    public String getKey() {
+    public String getKey()
+    {
         return key;
     }
 }

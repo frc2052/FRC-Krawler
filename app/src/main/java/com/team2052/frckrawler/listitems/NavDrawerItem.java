@@ -1,24 +1,25 @@
 package com.team2052.frckrawler.listitems;
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 
 import com.team2052.frckrawler.R;
 
-public class NavDrawerItem implements ListItem {
+public class NavDrawerItem implements ListItem
+{
     private final String title;
     private int icon = -1;
     private int layout;
     private int id;
 
-    public NavDrawerItem(String title) {
+    public NavDrawerItem(String title)
+    {
         this.title = title;
     }
 
-    public NavDrawerItem(int id, String title, int icon) {
+    public NavDrawerItem(int id, String title, int icon)
+    {
         this.id = id;
         this.title = title;
         this.icon = icon;
@@ -26,7 +27,8 @@ public class NavDrawerItem implements ListItem {
     }
 
     @Override
-    public View getView(Context c, LayoutInflater inflater, View convertView) {
+    public View getView(Context c, LayoutInflater inflater, View convertView)
+    {
         if (convertView == null) {
             convertView = inflater.inflate(layout, null);
         }
@@ -37,7 +39,8 @@ public class NavDrawerItem implements ListItem {
         return convertView;
     }
 
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 }

@@ -2,17 +2,10 @@ package com.team2052.frckrawler.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 /**
  * A modified Spinner that doesn't automatically select the first entry in the list.
@@ -23,30 +16,37 @@ import java.lang.reflect.Method;
  *
  * @author Adam
  */
-public class NoDefaultSpinner extends Spinner {
+public class NoDefaultSpinner extends Spinner
+{
 
-    public NoDefaultSpinner(Context context) {
+    public NoDefaultSpinner(Context context)
+    {
         super(context);
     }
 
-    public NoDefaultSpinner(Context context, int mode) {
+    public NoDefaultSpinner(Context context, int mode)
+    {
         super(context, mode);
     }
 
-    public NoDefaultSpinner(Context context, AttributeSet attrs) {
+    public NoDefaultSpinner(Context context, AttributeSet attrs)
+    {
         super(context, attrs);
     }
 
-    public NoDefaultSpinner(Context context, AttributeSet attrs, int defStyle) {
+    public NoDefaultSpinner(Context context, AttributeSet attrs, int defStyle)
+    {
         super(context, attrs, defStyle);
     }
 
-    public NoDefaultSpinner(Context context, AttributeSet attrs, int defStyle, int mode) {
+    public NoDefaultSpinner(Context context, AttributeSet attrs, int defStyle, int mode)
+    {
         super(context, attrs, defStyle, mode);
     }
 
     @Override
-    public void setAdapter(SpinnerAdapter orig) {
+    public void setAdapter(SpinnerAdapter orig)
+    {
         final SpinnerAdapter adapter = newProxy(orig);
 
         super.setAdapter(adapter);
@@ -64,7 +64,8 @@ public class NoDefaultSpinner extends Spinner {
         }
     }
 
-    protected SpinnerAdapter newProxy(SpinnerAdapter obj) {
+    protected SpinnerAdapter newProxy(SpinnerAdapter obj)
+    {
         return (SpinnerAdapter) java.lang.reflect.Proxy.newProxyInstance(
                 obj.getClass().getClassLoader(),
                 new Class[]{SpinnerAdapter.class},
@@ -74,13 +75,15 @@ public class NoDefaultSpinner extends Spinner {
     /**
      * Intercepts getView() to display the prompt if position < 0
      */
-    protected class SpinnerAdapterProxy implements InvocationHandler {
+    protected class SpinnerAdapterProxy implements InvocationHandler
+    {
 
         protected SpinnerAdapter obj;
         protected Method getView;
 
 
-        protected SpinnerAdapterProxy(SpinnerAdapter obj) {
+        protected SpinnerAdapterProxy(SpinnerAdapter obj)
+        {
             this.obj = obj;
             try {
                 this.getView = SpinnerAdapter.class.getMethod(
@@ -90,7 +93,8 @@ public class NoDefaultSpinner extends Spinner {
             }
         }
 
-        public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
+        public Object invoke(Object proxy, Method m, Object[] args) throws Throwable
+        {
             try {
                 return m.equals(getView) &&
                         (Integer) (args[0]) < 0 ?
@@ -104,7 +108,8 @@ public class NoDefaultSpinner extends Spinner {
         }
 
         protected View getView(int position, View convertView, ViewGroup parent)
-                throws IllegalAccessException {
+                throws IllegalAccessException
+        {
 
             if (position < 0) {
                 final TextView v =

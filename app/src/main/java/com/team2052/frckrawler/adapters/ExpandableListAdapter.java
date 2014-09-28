@@ -1,11 +1,8 @@
 package com.team2052.frckrawler.adapters;
 
 import android.app.Activity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.listitems.ListGroup;
@@ -15,74 +12,88 @@ import java.util.ArrayList;
 /**
  * @author Adam
  */
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class ExpandableListAdapter extends BaseExpandableListAdapter
+{
     public final ArrayList<ListGroup> groups;
     public LayoutInflater inflater;
     public Activity activity;
     private boolean mIsChildSelectable = true;
 
-    public ExpandableListAdapter() {
+    public ExpandableListAdapter()
+    {
         groups = new ArrayList<>();
     }
 
-    public ExpandableListAdapter(Activity act, ArrayList<ListGroup> groups) {
+    public ExpandableListAdapter(Activity act, ArrayList<ListGroup> groups)
+    {
         activity = act;
         this.groups = groups;
         inflater = act.getLayoutInflater();
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
+    public Object getChild(int groupPosition, int childPosition)
+    {
         return groups.get(groupPosition).children.get(childPosition);
     }
 
     @Override
-    public long getChildId(int groupPosition, int childPosition) {
+    public long getChildId(int groupPosition, int childPosition)
+    {
         return 0;
     }
 
     @Override
-    public int getChildrenCount(int groupPosition) {
+    public int getChildrenCount(int groupPosition)
+    {
         if (groups == null || groups.get(groupPosition) == null)
             return 0;
         return groups.get(groupPosition).children.size();
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
+    public Object getGroup(int groupPosition)
+    {
         return groups.get(groupPosition);
     }
 
-    public void addGroup(int position, ListGroup group) {
+    public void addGroup(int position, ListGroup group)
+    {
         groups.add(position, group);
     }
 
-    public void addGroup(ListGroup group) {
+    public void addGroup(ListGroup group)
+    {
         groups.add(group);
     }
 
     @Override
-    public int getGroupCount() {
+    public int getGroupCount()
+    {
         return groups.size();
     }
 
     @Override
-    public void onGroupCollapsed(int groupPosition) {
+    public void onGroupCollapsed(int groupPosition)
+    {
         super.onGroupCollapsed(groupPosition);
     }
 
     @Override
-    public void onGroupExpanded(int groupPosition) {
+    public void onGroupExpanded(int groupPosition)
+    {
         super.onGroupExpanded(groupPosition);
     }
 
     @Override
-    public long getGroupId(int groupPosition) {
+    public long getGroupId(int groupPosition)
+    {
         return 0;
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent)
+    {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.expandable_list_group, null);
         }
@@ -92,21 +103,25 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public boolean hasStableIds() {
+    public boolean hasStableIds()
+    {
         return false;
     }
 
     @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
+    public boolean isChildSelectable(int groupPosition, int childPosition)
+    {
         return mIsChildSelectable;
     }
 
-    public void setChildSelectable(boolean isSelectable) {
+    public void setChildSelectable(boolean isSelectable)
+    {
         mIsChildSelectable = isSelectable;
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent)
+    {
         return groups.get(groupPosition).children.get(childPosition).getView(activity, inflater, convertView);
     }
 }
