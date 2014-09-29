@@ -28,15 +28,13 @@ public class Metric extends Model implements Serializable
     public int type;
     @Column(name = "Range")
     public Object[] range;
-    @Column(name = "Display")
-    public boolean display;
     @Column(name = "Game", onDelete = Column.ForeignKeyAction.CASCADE)
     public Game game;
     //To avoid duplicates between Client and Server
     @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private int remoteId;
 
-    public Metric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, int type, Object[] range, boolean display)
+    public Metric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, int type, Object[] range)
     {
         this.remoteId = DBManager.generateRemoteId();
         this.game = game;
@@ -45,7 +43,6 @@ public class Metric extends Model implements Serializable
         this.description = description;
         this.type = type;
         this.range = range;
-        this.display = display;
     }
 
     public Metric()

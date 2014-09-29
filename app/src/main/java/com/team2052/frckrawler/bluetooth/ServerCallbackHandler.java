@@ -35,7 +35,7 @@ public class ServerCallbackHandler implements SyncCallbackHandler
         NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         m.cancel(SYNC_ONGOING_ID);
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
-        b.setSmallIcon(R.drawable.splash_logo);
+        b.setSmallIcon(R.drawable.ic_stat_navigation_accept);
         b.setContentTitle("Synced with " + deviceName);
         b.setContentText("The Server successfully synced with " + deviceName);
         m.notify(0, b.build());

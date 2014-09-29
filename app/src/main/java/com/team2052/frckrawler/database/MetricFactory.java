@@ -8,29 +8,29 @@ import com.team2052.frckrawler.database.models.*;
  */
 public class MetricFactory
 {
-    public static Metric createBooleanMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, boolean displayed)
+    public static Metric createBooleanMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description)
     {
-        return new Metric(game, metricCategory, name, description, Metric.BOOLEAN, new Object[]{}, displayed);
+        return new Metric(game, metricCategory, name, description, Metric.BOOLEAN, new Object[]{});
     }
 
-    public static Metric createCounterMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, int min, int max, int incrementation, boolean displayed)
+    public static Metric createCounterMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, int min, int max, int incrementation)
     {
-        return new Metric(game, metricCategory, name, description, Metric.COUNTER, new Integer[]{min, max, incrementation}, displayed);
+        return new Metric(game, metricCategory, name, description, Metric.COUNTER, new Integer[]{min, max, incrementation});
     }
 
-    public static Metric createSliderMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, int min, int max, boolean displayed)
+    public static Metric createSliderMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, int min, int max)
     {
-        return new Metric(game, metricCategory, name, description, Metric.SLIDER, new Integer[]{min, max}, displayed);
+        return new Metric(game, metricCategory, name, description, Metric.SLIDER, new Integer[]{min, max});
     }
 
-    public static Metric createChooserMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, String[] choices, boolean displayed)
+    public static Metric createChooserMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, String[] choices)
     {
-        return new Metric(game, metricCategory, name, description, Metric.CHOOSER, choices, displayed);
+        return new Metric(game, metricCategory, name, description, Metric.CHOOSER, choices);
     }
 
-    public static Metric createTextMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description, boolean displayed)
+    public static Metric createTextMetric(Game game, MetricsActivity.MetricType metricCategory, String name, String description)
     {
-        return new Metric(game, metricCategory, name, description, Metric.TEXT, new Object[]{}, displayed);
+        return new Metric(game, metricCategory, name, description, Metric.TEXT, new Object[]{});
     }
 
 }

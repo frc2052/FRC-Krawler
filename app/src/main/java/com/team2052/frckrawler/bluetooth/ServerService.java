@@ -40,7 +40,7 @@ public class ServerService extends Service
         if (thread == null) {
             Event e = Event.load(Event.class, intent.getLongExtra(EVENT_ID, -1));
             NotificationCompat.Builder b = new NotificationCompat.Builder(this);
-            b.setSmallIcon(R.drawable.notification_bluetooth);
+            b.setSmallIcon(R.drawable.ic_stat_knightkrawler);
             b.setContentTitle("Server open");
             b.setContentText("The FRCKrawler server is open for scouts to sync");
             b.setOngoing(true);

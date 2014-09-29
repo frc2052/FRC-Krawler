@@ -29,11 +29,6 @@ public class MetricsActivity extends ListActivity
         return i;
     }
 
-    public void updateMetricList()
-    {
-        new GetMetricsTask().execute();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {

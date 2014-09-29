@@ -1,11 +1,13 @@
 package com.team2052.frckrawler.fragment.dialog;
 
+import android.app.*;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.*;
+import android.view.View;
 import android.widget.*;
 
-import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.*;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.MetricFactory;
 import com.team2052.frckrawler.database.models.*;
@@ -23,6 +25,9 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     private ListEditor list;
     private int mCurrentSelectedMetricType;
     private Game mGame;
+    private Spinner mMetricTypeSpinner;
+    private EditText mName, mDescription, mMinimum, mMaximum, mIncrementation;
+    private FrameLayout mListEditor;
 
     public static AddMetricFragment newInstance(int metricCategory, Game game)
     {
@@ -45,16 +50,36 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public Dialog onCreateDialog(final Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.dialogactivity_add_metric, null);
-        Spinner metricType = (Spinner) view.findViewById(R.id.type);
-        getDialog().setTitle("Add Metric");
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        metricType.setOnItemSelectedListener(this);
-        metricType.setSelection(0);
-        view.findViewById(R.id.add).setOnClickListener(this);
-        view.findViewById(R.id.cancel).setOnClickListener(this);
+
+        AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+        b.setTitle("Add Metric");
+        b.setView(initViews());
+        b.setPositiveButton("Add", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                saveMetric();
+            }
+        });
+        b.setNegativeButton("Cancel", null);
+        mMetricTypeSpinner.setOnItemSelectedListener(this);
+        mMetricTypeSpinner.setSelection(0);
+        return b.create();
+    }
+
+    private View initViews()
+    {
+        View view = getActivity().getLayoutInflater().inflate(R.layout.dialogactivity_add_metric, null);
+        mMetricTypeSpinner = (Spinner) view.findViewById(R.id.type);
+        mName = (EditText) view.findViewById(R.id.name);
+        mDescription = (EditText) view.findViewById(R.id.description);
+        mMinimum = (EditText) view.findViewById(R.id.minimum);
+        mMaximum = (EditText) view.findViewById(R.id.maximum);
+        mIncrementation = (EditText) view.findViewById(R.id.incrementation);
+        mListEditor = (FrameLayout) view.findViewById(R.id.list_editor);
         return view;
     }
 
@@ -64,30 +89,30 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
         mCurrentSelectedMetricType = position;
         switch (position) {
             case Metric.COUNTER:
-                getView().findViewById(R.id.min).setEnabled(true);
-                getView().findViewById(R.id.max).setEnabled(true);
-                getView().findViewById(R.id.inc).setEnabled(true);
-                ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).removeAllViews();
+                mMinimum.setEnabled(true);
+                mMaximum.setEnabled(true);
+                mIncrementation.setEnabled(true);
+                mListEditor.removeAllViews();
                 break;
             case Metric.SLIDER:
-                getView().findViewById(R.id.min).setEnabled(true);
-                getView().findViewById(R.id.max).setEnabled(true);
-                getView().findViewById(R.id.inc).setEnabled(false);
-                ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).removeAllViews();
+                mMinimum.setEnabled(true);
+                mMaximum.setEnabled(true);
+                mIncrementation.setEnabled(false);
+                mListEditor.removeAllViews();
                 break;
             case Metric.CHOOSER:
-                getView().findViewById(R.id.min).setEnabled(false);
-                getView().findViewById(R.id.max).setEnabled(false);
-                getView().findViewById(R.id.inc).setEnabled(false);
+                mMinimum.setEnabled(false);
+                mMaximum.setEnabled(false);
+                mIncrementation.setEnabled(false);
                 list = new TextListEditor(getActivity());
-                ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).removeAllViews();
-                ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).addView(list);
+                mListEditor.removeAllViews();
+                mListEditor.addView(list);
                 break;
             default:
-                getView().findViewById(R.id.min).setEnabled(false);
-                getView().findViewById(R.id.max).setEnabled(false);
-                getView().findViewById(R.id.inc).setEnabled(false);
-                ((FrameLayout) getView().findViewById(R.id.listEditorSlot)).removeAllViews();
+                mMinimum.setEnabled(false);
+                mMaximum.setEnabled(false);
+                mIncrementation.setEnabled(false);
+                mListEditor.removeAllViews();
                 break;
         }
     }
@@ -100,88 +125,80 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == R.id.add) {
-            Metric m = null;
-            switch (mCurrentSelectedMetricType) {
-                case Metric.BOOLEAN:
-                    m = MetricFactory.createBooleanMetric(
-                            mGame,
-                            MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
-                            ((TextView) getView().findViewById(R.id.name)).getText().toString(),
-                            ((EditText) getView().findViewById(R.id.description)).getText().toString(),
-                            ((CheckBox) getView().findViewById(R.id.displayed)).isChecked()
-                    );
-                    break;
+        if (v.getId() == 0) {
 
-                case Metric.COUNTER:
-                    try {
-                        m = MetricFactory.createCounterMetric(
-                                mGame,
-                                MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
-                                ((TextView) getView().findViewById(R.id.name)).getText().toString(),
-                                ((EditText) getView().findViewById(R.id.description)).getText().toString(),
-                                Integer.parseInt(((TextView) getView().findViewById(R.id.min)).getText().toString()),
-                                Integer.parseInt(((TextView) getView().findViewById(R.id.max)).getText().toString()),
-                                Integer.parseInt(((EditText) getView().findViewById(R.id.inc)).getText().toString()),
-                                ((CheckBox) getView().findViewById(R.id.displayed)).isChecked()
-                        );
-                    } catch (NumberFormatException e) {
-
-                        Toast.makeText(getActivity(), "Could not create addbutton. Make sure you " + "have filled out all of the necessary fields.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    break;
-
-                case Metric.SLIDER:
-                    try {
-                        m = MetricFactory.createSliderMetric(
-                                mGame,
-                                MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
-                                ((TextView) getView().findViewById(R.id.name)).getText().toString(),
-                                ((EditText) getView().findViewById(R.id.description)).getText().toString(),
-                                Integer.parseInt(((TextView) getView().findViewById(R.id.min)).getText().toString()),
-                                Integer.parseInt(((TextView) getView().findViewById(R.id.max)).getText().toString()),
-                                ((CheckBox) getView().findViewById(R.id.displayed)).isChecked()
-                        );
-                    } catch (NumberFormatException e) {
-
-                        Toast.makeText(getActivity(), "Could not create addbutton. Make sure you " + "have filled out all of the necessary fields.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    break;
-
-                case Metric.CHOOSER:
-                    m = MetricFactory.createChooserMetric(
-                            mGame,
-                            MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
-                            ((TextView) getView().findViewById(R.id.name)).getText().toString(),
-                            ((EditText) getView().findViewById(R.id.description)).getText().toString(),
-                            list.getValues(),
-                            ((CheckBox) getView().findViewById(R.id.displayed)).isChecked()
-                    );
-                    break;
-
-                case Metric.TEXT:
-                    m = MetricFactory.createTextMetric(
-                            mGame,
-                            MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
-                            ((TextView) getView().findViewById(R.id.name)).getText().toString(),
-                            ((EditText) getView().findViewById(R.id.description)).getText().toString(),
-                            ((CheckBox) getView().findViewById(R.id.displayed)).isChecked()
-                    );
-                    break;
-            }
-
-            if (m != null) {
-                m.save();
-            }
-            MetricsActivity activity = (MetricsActivity) getActivity();
-            activity.updateMetricList();
-            dismiss();
 
         } else if (v.getId() == R.id.cancel) {
             dismiss();
         }
+    }
+
+    private void saveMetric()
+    {
+        Metric m = null;
+        switch (mCurrentSelectedMetricType) {
+            case Metric.BOOLEAN:
+                m = MetricFactory.createBooleanMetric(
+                        mGame,
+                        MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
+                        mName.getText().toString(),
+                        mDescription.getText().toString());
+                break;
+
+            case Metric.COUNTER:
+                try {
+                    m = MetricFactory.createCounterMetric(
+                            mGame,
+                            MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
+                            mName.getText().toString(),
+                            mDescription.getText().toString(),
+                            Integer.parseInt(mMinimum.getText().toString()),
+                            Integer.parseInt(mMaximum.getText().toString()),
+                            Integer.parseInt(mIncrementation.getText().toString()));
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getActivity(), "Could not create addbutton. Make sure you " + "have filled out all of the necessary fields.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                break;
+
+            case Metric.SLIDER:
+                try {
+                    m = MetricFactory.createSliderMetric(
+                            mGame,
+                            MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
+                            mName.getText().toString(),
+                            mDescription.getText().toString(),
+                            Integer.parseInt(mMinimum.getText().toString()),
+                            Integer.parseInt(mMaximum.getText().toString()));
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getActivity(), "Could not create addbutton. Make sure you " + "have filled out all of the necessary fields.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                break;
+
+            case Metric.CHOOSER:
+                m = MetricFactory.createChooserMetric(
+                        mGame,
+                        MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
+                        mName.getText().toString(),
+                        mDescription.getText().toString(),
+                        list.getValues());
+                break;
+
+            case Metric.TEXT:
+                m = MetricFactory.createTextMetric(
+                        mGame,
+                        MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
+                        mName.getText().toString(),
+                        mDescription.getText().toString());
+                break;
+        }
+
+        if (m != null) {
+            m.save();
+        }
+        ((ListUpdateListener) getActivity()).updateList();
+        dismiss();
     }
 
 }

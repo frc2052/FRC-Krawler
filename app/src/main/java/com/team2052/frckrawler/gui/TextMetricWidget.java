@@ -38,7 +38,6 @@ public class TextMetricWidget extends MetricWidget implements TextWatcher
     @Override
     public void afterTextChanged(Editable e)
     {
-
         textVal = e.toString();
     }
 
