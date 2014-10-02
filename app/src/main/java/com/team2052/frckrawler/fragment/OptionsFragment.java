@@ -35,7 +35,6 @@ public class OptionsFragment extends Fragment implements View.OnClickListener
             editor.putString(PREFS_ROBOT_GAME, "none");
             editor.commit();
         }
-        //TODO set text
     }
 
     @Override

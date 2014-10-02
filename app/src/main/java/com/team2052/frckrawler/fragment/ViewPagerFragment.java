@@ -13,8 +13,8 @@ import com.team2052.frckrawler.R;
  */
 public abstract class ViewPagerFragment extends Fragment
 {
-    private PagerSlidingTabStrip mTabs;
-    private ViewPager mViewPager;
+    protected PagerSlidingTabStrip mTabs;
+    protected ViewPager mViewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

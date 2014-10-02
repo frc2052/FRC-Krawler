@@ -34,7 +34,6 @@ public abstract class ListFragment extends Fragment implements ListUpdateListene
     @Override
     public void onPause()
     {
-        Log.d("FRCKrawler", "onPause called in ListFragment");
         if (mListView != null) {
             if (mAdapter == null) {
                 mAdapter = mListView.getAdapter();

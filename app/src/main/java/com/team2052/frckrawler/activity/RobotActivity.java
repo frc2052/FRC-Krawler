@@ -6,7 +6,7 @@ import android.support.v4.app.*;
 import android.support.v4.view.PagerAdapter;
 
 import com.team2052.frckrawler.database.models.Robot;
-import com.team2052.frckrawler.fragment.ScoutHomeFragment;
+import com.team2052.frckrawler.fragment.NeedSyncFragment;
 
 /**
  * @author Adam
@@ -53,7 +53,7 @@ public class RobotActivity extends ViewPagerActivity
         @Override
         public Fragment getItem(int position)
         {
-            return new ScoutHomeFragment();
+            return new NeedSyncFragment();
         }
 
         @Override

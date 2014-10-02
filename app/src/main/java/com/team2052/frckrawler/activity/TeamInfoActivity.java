@@ -57,7 +57,7 @@ public class TeamInfoActivity extends ViewPagerActivity
             Fragment fragment = null;
             switch (position) {
                 case 0:
-                    fragment = new ScoutHomeFragment();
+                    fragment = new NeedSyncFragment();
                     break;
                 case 1:
                     fragment = RobotsFragment.newInstance(mTeam);

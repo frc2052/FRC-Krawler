@@ -185,13 +185,6 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                         list.getValues());
                 break;
 
-            case Metric.TEXT:
-                m = MetricFactory.createTextMetric(
-                        mGame,
-                        MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
-                        mName.getText().toString(),
-                        mDescription.getText().toString());
-                break;
         }
 
         if (m != null) {

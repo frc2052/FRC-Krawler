@@ -5,7 +5,6 @@ import android.view.*;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.SummaryMetricsActivity;
 import com.team2052.frckrawler.database.models.Metric;
 
 /**
@@ -13,7 +12,7 @@ import com.team2052.frckrawler.database.models.Metric;
  */
 public class MetricListElement extends ListElement
 {
-    private final String descripstionString;
+    private final String descriptionString;
     private final Metric metric;
     private String typeString = "";
     private String rangeString = "";
@@ -24,17 +23,13 @@ public class MetricListElement extends ListElement
         this.metric = metric;
         Object[] rangeArr = metric.range;
         if (metric.description.equals("")) {
-            descripstionString = "No Description";
+            descriptionString = "No Description";
         } else {
-            descripstionString = metric.description;
+            descriptionString = metric.description;
         }
         switch (metric.type) {
             case Metric.BOOLEAN:
                 typeString = "Boolean";
-                rangeString = "Not Applicable";
-                break;
-            case Metric.TEXT:
-                typeString = "Text";
                 rangeString = "Not Applicable";
                 break;
             case Metric.COUNTER:
@@ -65,7 +60,7 @@ public class MetricListElement extends ListElement
     {
         convertView = inflater.inflate(R.layout.list_item_metric, null);
         ((TextView) convertView.findViewById(R.id.metric_list_name)).setText(metric.name);
-        ((TextView) convertView.findViewById(R.id.metric_list_description)).setText(descripstionString);
+        ((TextView) convertView.findViewById(R.id.metric_list_description)).setText(descriptionString);
         ((TextView) convertView.findViewById(R.id.metric_list_range)).setText(rangeString);
         ((TextView) convertView.findViewById(R.id.metric_list_type)).setText(typeString);
         return convertView;

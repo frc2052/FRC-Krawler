@@ -8,6 +8,7 @@ import android.view.Menu;
 
 import com.team2052.frckrawler.*;
 import com.team2052.frckrawler.fragment.*;
+import com.team2052.frckrawler.fragment.scout.ScoutFragment;
 import com.team2052.frckrawler.listitems.NavDrawerItem;
 
 public class HomeActivity extends BaseActivity

@@ -17,7 +17,6 @@ public class Metric extends Model implements Serializable
     public static final int COUNTER = 1;
     public static final int SLIDER = 2;
     public static final int CHOOSER = 3;
-    public static final int TEXT = 4;
     @Column(name = "Name")
     public String name;
     @Column(name = "Category")
