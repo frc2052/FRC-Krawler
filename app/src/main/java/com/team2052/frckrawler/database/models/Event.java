@@ -1,7 +1,8 @@
 package com.team2052.frckrawler.database.models;
 
 import com.activeandroid.Model;
-import com.activeandroid.annotation.*;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 import java.io.Serializable;
 import java.sql.Date;

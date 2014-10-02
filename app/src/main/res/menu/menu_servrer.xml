@@ -5,7 +5,6 @@
         android:icon="@android:drawable/ic_menu_share"
         android:showAsAction="ifRoom"
         android:title="Share">
-        <menu>
-        </menu>
+        <menu></menu>
     </item>
 </menu>

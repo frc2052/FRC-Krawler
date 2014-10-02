@@ -1,7 +1,8 @@
 package com.team2052.frckrawler.gui;
 
 import android.app.AlertDialog;
-import android.content.*;
+import android.content.Context;
+import android.content.DialogInterface;
 
 import com.team2052.frckrawler.database.models.Metric;
 

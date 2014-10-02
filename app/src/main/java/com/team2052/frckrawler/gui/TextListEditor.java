@@ -1,7 +1,8 @@
 package com.team2052.frckrawler.gui;
 
 import android.app.AlertDialog;
-import android.content.*;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.widget.EditText;
 
 public class TextListEditor extends ListEditor implements DialogInterface.OnClickListener

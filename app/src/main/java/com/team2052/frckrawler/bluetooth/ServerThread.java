@@ -1,18 +1,30 @@
 package com.team2052.frckrawler.bluetooth;
 
 import android.app.NotificationManager;
-import android.bluetooth.*;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
-import com.team2052.frckrawler.database.*;
-import com.team2052.frckrawler.database.models.*;
+import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.Schedule;
+import com.team2052.frckrawler.database.models.Event;
+import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.MetricMatchData;
+import com.team2052.frckrawler.database.models.RobotEvents;
+import com.team2052.frckrawler.database.models.User;
 import com.team2052.frckrawler.util.LogHelper;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.UUID;
 
 public class ServerThread extends Thread
 {

@@ -2,11 +2,14 @@ package com.team2052.frckrawler.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.models.*;
+import com.team2052.frckrawler.database.models.Alliance;
+import com.team2052.frckrawler.database.models.Match;
 
 /**
  * @author Adam
@@ -15,8 +18,7 @@ import com.team2052.frckrawler.database.models.*;
 public class MatchView extends FrameLayout
 {
     private TextView matchTitle, red1, red2, red3, redScore, blue1, blue2, blue3, blueScore;
-    private View redAlliance;
-    private View blueAlliance;
+    private View redAlliance, blueAlliance;
 
     public MatchView(Context context)
     {

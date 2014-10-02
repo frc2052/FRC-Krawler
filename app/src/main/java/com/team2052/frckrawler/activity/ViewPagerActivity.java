@@ -1,7 +1,8 @@
 package com.team2052.frckrawler.activity;
 
 import android.os.Bundle;
-import android.support.v4.view.*;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.team2052.frckrawler.R;

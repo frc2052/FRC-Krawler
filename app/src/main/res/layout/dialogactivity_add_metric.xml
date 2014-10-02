@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -22,84 +22,84 @@
                 android:id="@+id/type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/metric_types"
+                android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"/>
+                android:entries="@array/metric_types" />
 
             <EditText
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/type"
-                android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
-                android:hint="Name"/>
+                android:layout_marginTop="4dp"
+                android:hint="Name" />
 
             <EditText
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/name"
-                android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
-                android:hint="Description"/>
+                android:layout_marginTop="4dp"
+                android:hint="Description" />
 
             <EditText
                 android:id="@+id/minimum"
-                android:layout_below="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_below="@+id/description"
                 android:layout_marginBottom="4dp"
-                android:inputType="number"
-                android:hint="Minimum"/>
+                android:layout_marginTop="4dp"
+                android:hint="Minimum"
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/maximum"
-                android:layout_below="@+id/minimum"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_below="@+id/minimum"
                 android:layout_marginBottom="4dp"
-                android:inputType="number"
-                android:hint="Maximum"/>
+                android:layout_marginTop="4dp"
+                android:hint="Maximum"
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/incrementation"
-                android:layout_below="@+id/maximum"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_below="@+id/maximum"
                 android:layout_marginBottom="4dp"
-                android:inputType="number"
-                android:hint="Incrementation"/>
+                android:layout_marginTop="4dp"
+                android:hint="Incrementation"
+                android:inputType="number" />
 
             <TextView
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_below="@id/incrementation"
+                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="List"
-                android:textColor="@android:color/darker_gray"
-                android:id="@+id/textView"
-                android:textStyle="bold"
+                android:layout_below="@id/incrementation"
                 android:layout_marginBottom="4dp"
-                android:textAllCaps="true"/>
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:text="List"
+                android:textAllCaps="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/darker_gray"
+                android:textStyle="bold" />
 
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="?android:attr/listDivider"
                 android:layout_below="@+id/textView"
-                />
+                android:background="?android:attr/listDivider" />
+
             <FrameLayout
                 android:id="@+id/list_editor"
-                android:layout_below="@+id/divider"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider" />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

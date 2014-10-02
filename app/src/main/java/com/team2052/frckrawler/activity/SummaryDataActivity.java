@@ -1,14 +1,20 @@
 package com.team2052.frckrawler.activity;
 
-import android.content.*;
-import android.os.*;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
 
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.*;
-import com.team2052.frckrawler.database.models.*;
-import com.team2052.frckrawler.listitems.*;
+import com.team2052.frckrawler.database.CompiledMetricValue;
+import com.team2052.frckrawler.database.MetricCompiler;
+import com.team2052.frckrawler.database.models.Event;
+import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.listitems.ListItem;
+import com.team2052.frckrawler.listitems.SimpleListElement;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Adam

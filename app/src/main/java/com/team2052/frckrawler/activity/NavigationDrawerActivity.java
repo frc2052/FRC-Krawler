@@ -1,9 +1,11 @@
 package com.team2052.frckrawler.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.*;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
-import android.view.*;
+import android.view.Gravity;
+import android.view.Menu;
 import android.widget.FrameLayout;
 
 import com.team2052.frckrawler.R;

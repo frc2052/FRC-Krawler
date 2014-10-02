@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/matchCount"
@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text="Querys and Sorting"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
         android:id="@+id/bottomLinearLayout"
@@ -25,14 +25,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
-            android:text="Query"/>
+            android:text="Query" />
 
         <Button
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
-            android:text="Cancel"/>
+            android:text="Cancel" />
     </LinearLayout>
 
     <Spinner
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/matchCount"
-        android:layout_toRightOf="@+id/radioPlaceHolder"/>
+        android:layout_toRightOf="@+id/radioPlaceHolder" />
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -75,6 +75,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/sortKey"
         android:text="Sort by: "
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

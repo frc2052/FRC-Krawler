@@ -6,15 +6,12 @@ import com.activeandroid.annotation.Table;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 
-import java.io.Serializable;
-
 /**
- * @author Adam
+ * Created by Adam on 10/1/2014.
  */
-@Table(name = "metricmatchdata")
-public class MetricMatchData extends Model implements Serializable
+@Table(name = "metricpitdata")
+public class MetricPitData extends Model
 {
-
     @Column(name = "Robot", onDelete = Column.ForeignKeyAction.CASCADE)
     public Robot robot;
 
@@ -24,18 +21,15 @@ public class MetricMatchData extends Model implements Serializable
     @Column(name = "MetricValue")
     public String data;
 
-    @Column(name = "Match", onDelete = Column.ForeignKeyAction.CASCADE)
-    public Match match;
 
-    public MetricMatchData(Robot robot, Metric metric, MetricValue values, Match match)
+    public MetricPitData(Robot robot, Metric metric, MetricValue values)
     {
         this.robot = robot;
         this.metric = metric;
         this.data = StringArrayDeserializer.deserialize(values.getValue());
-        this.match = match;
     }
 
-    public MetricMatchData()
+    public MetricPitData()
     {
     }
 }

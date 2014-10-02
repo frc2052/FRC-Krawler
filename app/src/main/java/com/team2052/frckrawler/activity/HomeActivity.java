@@ -1,13 +1,20 @@
 package com.team2052.frckrawler.activity;
 
 import android.app.ActionBar;
-import android.content.*;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 
-import com.team2052.frckrawler.*;
-import com.team2052.frckrawler.fragment.*;
+import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.fragment.GamesFragment;
+import com.team2052.frckrawler.fragment.OptionsFragment;
+import com.team2052.frckrawler.fragment.ServerFragment;
+import com.team2052.frckrawler.fragment.TeamsFragment;
+import com.team2052.frckrawler.fragment.UsersFragment;
 import com.team2052.frckrawler.fragment.scout.ScoutFragment;
 import com.team2052.frckrawler.listitems.NavDrawerItem;
 

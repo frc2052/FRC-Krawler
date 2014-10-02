@@ -1,12 +1,14 @@
 package com.team2052.frckrawler.gui;
 
 import android.app.AlertDialog;
-import android.content.*;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PopupMenuButton extends ImageButton
         implements OnClickListener,

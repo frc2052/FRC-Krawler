@@ -1,16 +1,25 @@
 package com.team2052.frckrawler.fragment;
 
-import android.os.*;
-import android.view.*;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.activeandroid.query.Select;
-import com.team2052.frckrawler.activity.*;
+import com.team2052.frckrawler.activity.DatabaseActivity;
+import com.team2052.frckrawler.activity.RobotActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.*;
-import com.team2052.frckrawler.listitems.*;
+import com.team2052.frckrawler.database.models.Event;
+import com.team2052.frckrawler.database.models.Robot;
+import com.team2052.frckrawler.database.models.Team;
+import com.team2052.frckrawler.listitems.ListElement;
+import com.team2052.frckrawler.listitems.ListItem;
+import com.team2052.frckrawler.listitems.SimpleListElement;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Adam

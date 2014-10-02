@@ -7,16 +7,16 @@
         android:title="Edit">
         <menu>
             <item
-                android:id="@+id/menu_event"
-                android:title="Events" />
+                android:id="@+id/menu_summary"
+                android:title="Summary" />
 
             <item
-                android:id="@+id/menu_pit_metrics"
-                android:title="Pit Metrics" />
+                android:id="@+id/menu_schedule"
+                android:title="Schedule" />
 
             <item
-                android:id="@+id/menu_match_metrics"
-                android:title="Match Metrics" />
+                android:id="@+id/menu_robots"
+                android:title="Robots" />
         </menu>
     </item>
 

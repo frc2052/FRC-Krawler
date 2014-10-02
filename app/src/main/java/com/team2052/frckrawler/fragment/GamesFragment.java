@@ -2,19 +2,31 @@ package com.team2052.frckrawler.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.*;
-import android.view.*;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.ActionMode;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.activeandroid.query.Select;
-import com.team2052.frckrawler.*;
-import com.team2052.frckrawler.activity.*;
+import com.team2052.frckrawler.ListUpdateListener;
+import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activity.EventsActivity;
+import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.fragment.dialog.AddGameDialogFragment;
-import com.team2052.frckrawler.listitems.*;
+import com.team2052.frckrawler.listitems.GameListItem;
+import com.team2052.frckrawler.listitems.ListElement;
+import com.team2052.frckrawler.listitems.ListItem;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GamesFragment extends ListFragment implements ListUpdateListener
 {
@@ -161,7 +173,7 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
         @Override
         protected List<Game> doInBackground(Void... params)
         {
-            return new Select().from(Game.class).execute();
+            return DBManager.loadAllGames();
         }
 
         @Override

@@ -1,17 +1,24 @@
 package com.team2052.frckrawler.fragment;
 
 import android.app.AlertDialog;
-import android.content.*;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ToggleButton;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.models.Game;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class OptionsFragment extends Fragment implements View.OnClickListener
 {

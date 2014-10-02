@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.database.serializers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author Adam

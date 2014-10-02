@@ -1,15 +1,18 @@
 package com.team2052.frckrawler.fragment.dialog;
 
-import android.app.*;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.EditText;
 
-import com.team2052.frckrawler.*;
+import com.team2052.frckrawler.ListUpdateListener;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
-import com.team2052.frckrawler.database.models.*;
+import com.team2052.frckrawler.database.models.Contact;
+import com.team2052.frckrawler.database.models.Team;
 
 /**
  * @author Adam

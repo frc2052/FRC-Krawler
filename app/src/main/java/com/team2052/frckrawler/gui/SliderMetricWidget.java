@@ -1,7 +1,8 @@
 package com.team2052.frckrawler.gui;
 
 import android.content.Context;
-import android.widget.*;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;

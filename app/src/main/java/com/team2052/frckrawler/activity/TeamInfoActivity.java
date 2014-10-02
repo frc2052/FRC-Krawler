@@ -1,12 +1,17 @@
 package com.team2052.frckrawler.activity;
 
-import android.content.*;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.*;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
 import com.team2052.frckrawler.database.models.Team;
-import com.team2052.frckrawler.fragment.*;
+import com.team2052.frckrawler.fragment.ContactsFragment;
+import com.team2052.frckrawler.fragment.NeedSyncFragment;
+import com.team2052.frckrawler.fragment.RobotsFragment;
 
 /**
  * @author Adam

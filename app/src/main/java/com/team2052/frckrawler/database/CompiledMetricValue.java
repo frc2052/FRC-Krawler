@@ -1,6 +1,8 @@
 package com.team2052.frckrawler.database;
 
-import com.team2052.frckrawler.database.models.*;
+import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.MetricMatchData;
+import com.team2052.frckrawler.database.models.Robot;
 import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 
 import java.text.DecimalFormat;

@@ -12,7 +12,8 @@ import android.R.color;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.*;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 

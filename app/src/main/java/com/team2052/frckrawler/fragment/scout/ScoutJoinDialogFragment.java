@@ -1,15 +1,20 @@
 package com.team2052.frckrawler.fragment.scout;
 
 import android.app.AlertDialog;
-import android.bluetooth.*;
-import android.content.*;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.GlobalValues;
-import com.team2052.frckrawler.bluetooth.*;
+import com.team2052.frckrawler.bluetooth.SyncAsScoutTask;
+import com.team2052.frckrawler.bluetooth.SyncCallbackHandler;
 import com.team2052.frckrawler.database.models.User;
 import com.team2052.frckrawler.gui.ProgressSpinner;
 

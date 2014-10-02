@@ -2,7 +2,8 @@ package com.team2052.frckrawler.bluetooth;
 
 
 import android.bluetooth.BluetoothAdapter;
-import android.content.*;
+import android.content.Context;
+import android.content.Intent;
 
 import com.team2052.frckrawler.database.models.Event;
 

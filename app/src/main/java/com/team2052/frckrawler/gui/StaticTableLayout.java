@@ -2,8 +2,10 @@ package com.team2052.frckrawler.gui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.*;
-import android.widget.*;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TableLayout;
 
 import com.team2052.frckrawler.R;
 

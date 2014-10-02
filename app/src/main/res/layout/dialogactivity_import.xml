@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/linLayoutLeft"
@@ -15,7 +15,7 @@
             android:id="@+id/cancelImport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Close"/>
+            android:text="Close" />
     </LinearLayout>
 
     <TextView
@@ -25,7 +25,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text="Import Event Data"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/teamRole"
@@ -35,7 +35,7 @@
         android:layout_centerHorizontal="true"
         android:text="Requires Internet Connection"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="12sp"/>
+        android:textSize="12sp" />
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -58,24 +58,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Event:"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Spinner
                 android:id="@+id/eventsSpinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/importTeamsAndRobots"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Import Teams and Robots"/>
+                android:text="Import Teams and Robots" />
 
             <Button
                 android:id="@+id/importSchedule"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Import Match Schedule"/>
+                android:text="Import Match Schedule" />
 
         </LinearLayout>
     </ScrollView>

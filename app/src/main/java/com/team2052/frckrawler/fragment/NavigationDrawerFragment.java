@@ -1,21 +1,30 @@
 package com.team2052.frckrawler.fragment;
 
-import android.app.*;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.*;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
-import com.team2052.frckrawler.*;
+import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.NavDrawerAdataper;
-import com.team2052.frckrawler.listitems.*;
+import com.team2052.frckrawler.listitems.ListItem;
+import com.team2052.frckrawler.listitems.NavDrawerItem;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NavigationDrawerFragment extends Fragment
 {

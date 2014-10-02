@@ -1,9 +1,12 @@
 package com.team2052.frckrawler.activity;
 
-import android.os.*;
-import android.widget.*;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
-import com.team2052.frckrawler.*;
+import com.team2052.frckrawler.ListUpdateListener;
+import com.team2052.frckrawler.R;
 
 /**
  * @author Adam

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/name"
@@ -11,7 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
         android:text=" "
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/text"
@@ -20,6 +20,6 @@
         android:layout_below="@+id/name"
         android:layout_centerHorizontal="true"
         android:ems="10"
-        android:inputType="textMultiLine"/>
+        android:inputType="textMultiLine" />
 
 </RelativeLayout>

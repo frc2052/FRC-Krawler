@@ -7,13 +7,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.*;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.GlobalValues;
@@ -24,10 +24,9 @@ import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.fragment.MatchListFragment;
 import com.team2052.frckrawler.fragment.NeedSyncFragment;
 import com.team2052.frckrawler.fragment.ViewPagerFragment;
-import com.team2052.frckrawler.gui.ProgressSpinner;
-import com.team2052.frckrawler.util.LogHelper;
 
-public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHandler, DialogInterface.OnClickListener{
+public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHandler, DialogInterface.OnClickListener
+{
 
     private Event mEvent;
     private boolean mNeedsSync;
@@ -39,7 +38,8 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
     private Menu mOptionsMenu;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         mAddress = scoutPrefs.getString(GlobalValues.MAC_ADRESS_PREF, "null");
@@ -55,8 +55,9 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId()) {
             case R.id.menu_sync:
                 if (!mAddress.contains("null")) {
                     scoutSyncTask = new SyncAsScoutTask(getActivity(), this);
@@ -81,20 +82,22 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
     }
 
 
-
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
         inflater.inflate(R.menu.scout_main_sync, menu);
         mOptionsMenu = menu;
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public PagerAdapter setAdapter() {
+    public PagerAdapter setAdapter()
+    {
         return new ScoutPagerAdapter(getChildFragmentManager());
     }
 
-    private void startScoutSync() {
+    private void startScoutSync()
+    {
         SharedPreferences prefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
         scoutSyncTask = new SyncAsScoutTask(getActivity(), this);
@@ -104,20 +107,24 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
     }
 
     @Override
-    public void onSyncCancel(String deviceName) {
+    public void onSyncCancel(String deviceName)
+    {
         mOptionsMenu.findItem(R.id.menu_sync).setActionView(null);
     }
 
     @Override
-    public void onSyncError(String deviceName) {
+    public void onSyncError(String deviceName)
+    {
         mOptionsMenu.findItem(R.id.menu_sync).setActionView(null);
         //releaseScreenOrientation();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Sync Error");
         builder.setMessage("There was an error in syncing with the server. Make sure " + "that the server device is turned on and is running the FRCKrawler server.");
-        builder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("Close", new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 dialog.dismiss();
             }
         });
@@ -125,12 +132,14 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
     }
 
     @Override
-    public void onSyncStart(String deviceName) {
+    public void onSyncStart(String deviceName)
+    {
         mOptionsMenu.findItem(R.id.menu_sync).setActionView(R.layout.actionbar_progress);
     }
 
     @Override
-    public void onSyncSuccess(String deviceName) {
+    public void onSyncSuccess(String deviceName)
+    {
         mOptionsMenu.findItem(R.id.menu_sync).setActionView(null);
         /*scoutLoginName = new EditText(getActivity());
         scoutLoginName.setHint("Name");*/
@@ -152,7 +161,8 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
     }
 
     @Override
-    public void onClick(DialogInterface dialogInterface, int which) {
+    public void onClick(DialogInterface dialogInterface, int which)
+    {
         if (which == DialogInterface.BUTTON_NEUTRAL) {
             scoutSyncTask.cancel(true);
         } else {
@@ -170,7 +180,8 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
         }
     }
 
-    private void reload(){
+    private void reload()
+    {
         SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         mAddress = scoutPrefs.getString(GlobalValues.MAC_ADRESS_PREF, "null");
         if (scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
@@ -183,20 +194,24 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
     }
 
 
-    public class ScoutPagerAdapter extends FragmentStatePagerAdapter {
+    public class ScoutPagerAdapter extends FragmentStatePagerAdapter
+    {
         public final String[] headers = {"Match Scouting"/*, "Pit Scouting"*/, "Schedule"};
 
-        public ScoutPagerAdapter(FragmentManager fm) {
+        public ScoutPagerAdapter(FragmentManager fm)
+        {
             super(fm);
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
+        public CharSequence getPageTitle(int position)
+        {
             return headers[position];
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(int position)
+        {
             Fragment fragment = null;
             switch (position) {
                 case 0:
@@ -225,7 +240,8 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
         }
 
         @Override
-        public int getCount() {
+        public int getCount()
+        {
             return headers.length;
         }
     }

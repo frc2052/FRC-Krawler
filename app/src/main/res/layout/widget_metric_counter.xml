@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/root"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/title"
@@ -13,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
         android:text=" "
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/plus"
@@ -22,7 +23,7 @@
         android:layout_height="50dp"
         android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
-        android:text="+"/>
+        android:text="+" />
 
     <TextView
         android:id="@+id/value"
@@ -31,7 +32,7 @@
         android:layout_below="@+id/plus"
         android:layout_centerHorizontal="true"
         android:text=" "
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/minus"
@@ -40,6 +41,6 @@
         android:layout_height="50dp"
         android:layout_alignLeft="@+id/plus"
         android:layout_below="@+id/value"
-        android:text="-"/>
+        android:text="-" />
 
 </RelativeLayout>

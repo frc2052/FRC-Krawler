@@ -1,9 +1,13 @@
 package com.team2052.frckrawler.database;
 
 import com.activeandroid.query.Select;
-import com.team2052.frckrawler.database.models.*;
+import com.team2052.frckrawler.database.models.Event;
+import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.MetricMatchData;
+import com.team2052.frckrawler.database.models.RobotEvents;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Adam

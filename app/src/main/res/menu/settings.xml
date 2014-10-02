@@ -1,35 +1,35 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context="com.team2052.frckrawler.SettingsActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.team2052.frckrawler.SettingsActivity">
     <item
         android:id="@+id/action_server"
         android:orderInCategory="99"
         android:showAsAction="never"
-        android:title="@string/action_server"/>
+        android:title="@string/action_server" />
 
     <item
         android:id="@+id/action_games"
         android:orderInCategory="99"
         android:showAsAction="never"
-        android:title="@string/action_games"/>
+        android:title="@string/action_games" />
 
     <item
         android:id="@+id/action_options"
         android:orderInCategory="99"
         android:showAsAction="never"
-        android:title="@string/action_options"/>
+        android:title="@string/action_options" />
 
     <item
         android:id="@+id/action_teams"
         android:orderInCategory="99"
         android:showAsAction="never"
-        android:title="Teams"/>
+        android:title="Teams" />
 
     <item
         android:id="@+id/add_game"
         android:icon="@drawable/ic_action_new"
         android:orderInCategory="1"
         android:showAsAction="ifRoom"
-        android:title="Add Game"/>
+        android:title="Add Game" />
 
 </menu>

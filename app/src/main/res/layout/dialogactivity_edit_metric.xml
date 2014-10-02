@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/matchCount"
@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text="Edit Metric"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -31,7 +31,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/type"
                 android:layout_toRightOf="@+id/textView9"
-                android:ems="10"/>
+                android:ems="10" />
 
             <TextView
                 android:id="@+id/teamRole"
@@ -41,7 +41,7 @@
                 android:layout_alignBottom="@+id/name"
                 android:layout_alignParentLeft="true"
                 android:text="Name"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/contact_team_role"
@@ -50,7 +50,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:text="Type"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <CheckBox
                 android:id="@+id/displayed"
@@ -59,7 +59,7 @@
                 android:layout_alignLeft="@+id/description"
                 android:layout_below="@+id/description"
                 android:checked="true"
-                android:text=" "/>
+                android:text=" " />
 
             <TextView
                 android:id="@+id/textView5"
@@ -69,7 +69,7 @@
                 android:layout_alignBottom="@+id/description"
                 android:layout_alignParentLeft="true"
                 android:text="Description"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -79,7 +79,7 @@
                 android:layout_alignBottom="@+id/displayed"
                 android:layout_alignParentLeft="true"
                 android:text="Displayed"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/type"
@@ -88,7 +88,7 @@
                 android:layout_alignLeft="@+id/name"
                 android:layout_alignParentTop="true"
                 android:text=" "
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/min"
@@ -98,7 +98,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/displayed"
                 android:ems="10"
-                android:inputType="number"/>
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/max"
@@ -108,7 +108,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/min"
                 android:ems="10"
-                android:inputType="number"/>
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/inc"
@@ -118,7 +118,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/max"
                 android:ems="10"
-                android:inputType="number"/>
+                android:inputType="number" />
 
             <TextView
                 android:id="@+id/textView7"
@@ -128,7 +128,7 @@
                 android:layout_alignBottom="@+id/min"
                 android:layout_alignParentLeft="true"
                 android:text="Minimum"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/textView8"
@@ -138,7 +138,7 @@
                 android:layout_alignBottom="@+id/max"
                 android:layout_alignParentLeft="true"
                 android:text="Maximum"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/textView9"
@@ -148,7 +148,7 @@
                 android:layout_alignBottom="@+id/inc"
                 android:layout_alignParentLeft="true"
                 android:text="Incrementation"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
                 android:id="@+id/description"
@@ -156,7 +156,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/name"
                 android:layout_toRightOf="@+id/textView9"
-                android:ems="10"/>
+                android:ems="10" />
 
             <FrameLayout
                 android:id="@+id/listEditorSlot"
@@ -164,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/inc"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/inc"/>
+                android:layout_below="@+id/inc" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -173,7 +173,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignTop="@+id/listEditorSlot"
                 android:text="List"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </RelativeLayout>
     </ScrollView>
 
@@ -190,21 +190,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.35"
-            android:text="Save"/>
+            android:text="Save" />
 
         <Button
             android:id="@+id/remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.33"
-            android:text="Remove Metric"/>
+            android:text="Remove Metric" />
 
         <Button
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.35"
-            android:text="Cancel"/>
+            android:text="Cancel" />
 
     </LinearLayout>
 

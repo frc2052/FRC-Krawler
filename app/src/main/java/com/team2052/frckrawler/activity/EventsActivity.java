@@ -1,21 +1,83 @@
 package com.team2052.frckrawler.activity;
 
-import android.content.*;
-import android.os.*;
-import android.view.*;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.*;
+import com.team2052.frckrawler.database.models.Event;
+import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.fragment.dialog.ImportDataSimpleDialogFragment;
-import com.team2052.frckrawler.listitems.*;
+import com.team2052.frckrawler.listitems.EventListItem;
+import com.team2052.frckrawler.listitems.ListElement;
+import com.team2052.frckrawler.listitems.ListItem;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventsActivity extends ListActivity
 {
     private Game mGame;
+    private ActionMode mCurrentActionMode;
+    private final ActionMode.Callback callback = new ActionMode.Callback()
+    {
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu)
+        {
+            long eventId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
+            Event event = Event.load(Event.class, eventId);
+            actionMode.getMenuInflater().inflate(R.menu.edit_delete_event_menu, menu);
+            actionMode.setTitle(event.name);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu)
+        {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem)
+        {
+            long eventId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
+            Event event = Event.load(Event.class, eventId);
+            switch (menuItem.getItemId()) {
+                case R.id.menu_delete:
+                    event.delete();
+                    updateList();
+                    actionMode.finish();
+                    break;
+                case R.id.menu_schedule:
+                    EventsActivity.this.startActivity(MatchListActivity.newInstance(EventsActivity.this, event));
+                    break;
+                case R.id.menu_summary:
+                    EventsActivity.this.startActivity(SummaryMetricsActivity.newInstance(EventsActivity.this, event));
+                    break;
+                case R.id.menu_robots:
+                    //Tease Tyler until I get the Robot view done
+                    Toast.makeText(EventsActivity.this, "Fix it Tyler!", Toast.LENGTH_LONG).show();
+                    break;
+            }
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode)
+        {
+            mCurrentActionMode = null;
+        }
+    };
+    private int mCurrentSelectedItem;
 
     public static Intent newInstance(Context context, Game game)
     {
@@ -33,6 +95,19 @@ public class EventsActivity extends ListActivity
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
         super.onCreate(savedInstanceState);
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                if (mCurrentActionMode != null) {
+                    return false;
+                }
+                mCurrentSelectedItem = i;
+                mCurrentActionMode = startActionMode(callback);
+                return true;
+            }
+        });
     }
 
 

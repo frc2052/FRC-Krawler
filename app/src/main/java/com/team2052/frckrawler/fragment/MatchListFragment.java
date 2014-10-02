@@ -1,15 +1,18 @@
 package com.team2052.frckrawler.fragment;
 
-import android.os.*;
-import android.util.Log;
+import android.os.AsyncTask;
+import android.os.Bundle;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.*;
-import com.team2052.frckrawler.listitems.*;
+import com.team2052.frckrawler.database.models.Event;
+import com.team2052.frckrawler.database.models.Match;
+import com.team2052.frckrawler.listitems.ListItem;
+import com.team2052.frckrawler.listitems.MatchListItem;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Adam

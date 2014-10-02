@@ -6,7 +6,8 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 
 import com.team2052.frckrawler.activity.BaseActivity;
-import com.team2052.frckrawler.gui.*;
+import com.team2052.frckrawler.gui.ListEditor;
+import com.team2052.frckrawler.gui.TextListEditor;
 
 public class ListTester extends BaseActivity implements OnClickListener
 {

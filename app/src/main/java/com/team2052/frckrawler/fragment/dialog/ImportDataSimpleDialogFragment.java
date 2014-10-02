@@ -1,24 +1,41 @@
 package com.team2052.frckrawler.fragment.dialog;
 
-import android.app.*;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
-import android.os.*;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
-import com.google.gson.*;
-import com.team2052.frckrawler.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.ListUpdateListener;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.*;
-import com.team2052.frckrawler.listitems.*;
-import com.team2052.frckrawler.tba.*;
+import com.team2052.frckrawler.database.models.Event;
+import com.team2052.frckrawler.database.models.Game;
+import com.team2052.frckrawler.database.models.Match;
+import com.team2052.frckrawler.database.models.Robot;
+import com.team2052.frckrawler.database.models.RobotEvents;
+import com.team2052.frckrawler.database.models.Team;
+import com.team2052.frckrawler.listitems.ListElement;
+import com.team2052.frckrawler.listitems.ListItem;
+import com.team2052.frckrawler.listitems.SimpleListElement;
+import com.team2052.frckrawler.tba.HTTP;
+import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.tba.TBA;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Used to import a event to a game in the most simple way for the user.

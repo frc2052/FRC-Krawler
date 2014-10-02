@@ -1,25 +1,29 @@
 package com.team2052.frckrawler.fragment.scout;
 
-import android.app.*;
-import android.bluetooth.*;
-import android.content.*;
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.activeandroid.query.Select;
-import com.team2052.frckrawler.*;
-import com.team2052.frckrawler.bluetooth.*;
+import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.models.User;
-import com.team2052.frckrawler.gui.ProgressSpinner;
 
 import java.util.List;
 
 /**
  * @author Adam
  */
-public class ScoutHomeFragment extends Fragment implements View.OnClickListener, AlertDialog.OnClickListener {
+public class ScoutHomeFragment extends Fragment implements View.OnClickListener, AlertDialog.OnClickListener
+{
     private EditText scoutLoginName;
     private BluetoothDevice[] devices;
     private int selectedDeviceAddress;
@@ -27,7 +31,8 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener,
     private String mAddress;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         mAddress = sharedPreferences.getString(GlobalValues.MAC_ADRESS_PREF, "null");
@@ -35,14 +40,16 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         View view = inflater.inflate(R.layout.activity_scout_type, null);
         view.findViewById(R.id.sync).setOnClickListener(this);
         return view;
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v)
+    {
         switch (v.getId()) {
             case R.id.sync:
                 break;
@@ -52,15 +59,17 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener,
     }
 
 
-
     @Override
-    public void onClick(DialogInterface dialog, int which) {
+    public void onClick(DialogInterface dialog, int which)
+    {
 
     }
 
-    private class UserDialogListener implements DialogInterface.OnClickListener {
+    private class UserDialogListener implements DialogInterface.OnClickListener
+    {
         @Override
-        public void onClick(DialogInterface dialog, int which) {
+        public void onClick(DialogInterface dialog, int which)
+        {
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 List<User> users = new Select().from(User.class).execute();
                 boolean isValid = false;

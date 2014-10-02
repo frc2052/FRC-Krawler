@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/title"
@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text="Options"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
                     android:ems="10"
                     android:hint="Weight"
                     android:inputType="numberDecimal"
-                    android:minWidth="10dp"/>
+                    android:minWidth="10dp" />
 
                 <ImageButton
                     android:id="@+id/weightHelp"
@@ -50,7 +50,7 @@
                     android:layout_alignBottom="@+id/weightValue"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:src="@android:drawable/ic_menu_help"/>
+                    android:src="@android:drawable/ic_menu_help" />
 
                 <TextView
                     android:id="@+id/matches"
@@ -59,7 +59,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:text="Compiled data\n weight"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ImageButton
                     android:id="@+id/generateHelp"
@@ -68,7 +68,7 @@
                     android:layout_alignBottom="@+id/generateRobots"
                     android:layout_alignTop="@+id/generateRobots"
                     android:layout_toRightOf="@+id/weightValue"
-                    android:src="@android:drawable/ic_menu_help"/>
+                    android:src="@android:drawable/ic_menu_help" />
 
                 <TextView
                     android:id="@+id/contact_team_role"
@@ -77,7 +77,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_below="@+id/teamRole"
                     android:text="robots with"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
                     android:id="@+id/textView4"
@@ -86,7 +86,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_below="@+id/contact_team_role"
                     android:text="new teams"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
                     android:id="@+id/teamRole"
@@ -96,7 +96,7 @@
                     android:layout_below="@+id/weightValue"
                     android:layout_marginTop="20dp"
                     android:text="Generate"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <ToggleButton
                     android:id="@+id/generateRobots"
@@ -109,7 +109,7 @@
                     android:checked="false"
                     android:text=" "
                     android:textOff="No"
-                    android:textOn=" "/>
+                    android:textOn=" " />
 
             </RelativeLayout>
 
@@ -128,21 +128,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.33"
-                android:text="Save"/>
+                android:text="Save" />
 
             <Button
                 android:id="@+id/restoreDefaults"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.33"
-                android:text="Restore Defaults"/>
+                android:text="Restore Defaults" />
 
             <Button
                 android:id="@+id/cancelOptions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.34"
-                android:text="Cancel"/>
+                android:text="Cancel" />
         </LinearLayout>
 
     </RelativeLayout>

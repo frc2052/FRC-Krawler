@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.fragment.dialog;
 
-import android.app.*;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;

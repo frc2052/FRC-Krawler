@@ -2,7 +2,9 @@ package com.team2052.frckrawler.fragment.dialog;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.team2052.frckrawler.R;
 

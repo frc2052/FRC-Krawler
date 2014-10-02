@@ -1,17 +1,23 @@
 package com.team2052.frckrawler.fragment;
 
-import android.os.*;
-import android.view.*;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.*;
+import com.team2052.frckrawler.database.models.Contact;
+import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.fragment.dialog.AddContactDialogFragment;
-import com.team2052.frckrawler.listitems.*;
+import com.team2052.frckrawler.listitems.ContactListElement;
+import com.team2052.frckrawler.listitems.ListItem;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Adam

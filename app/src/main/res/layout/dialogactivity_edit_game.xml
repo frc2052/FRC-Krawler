@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/root"
@@ -19,7 +19,7 @@
             android:layout_centerHorizontal="true"
             android:text="Edit Game"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -33,21 +33,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.32"
-                android:text="Save"/>
+                android:text="Save" />
 
             <Button
                 android:id="@+id/remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.33"
-                android:text="Remove Game"/>
+                android:text="Remove Game" />
 
             <Button
                 android:id="@+id/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.32"
-                android:text="Cancel"/>
+                android:text="Cancel" />
         </LinearLayout>
 
         <RelativeLayout
@@ -64,7 +64,7 @@
                 android:layout_alignParentLeft="true"
                 android:text="Name"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/nameVal"
@@ -76,7 +76,7 @@
                 android:text=" "
                 android:textSize="24sp">
 
-                <requestFocus/>
+                <requestFocus />
             </TextView>
         </RelativeLayout>
     </RelativeLayout>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/root"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="16dp">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -19,21 +20,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.32"
-            android:text="Save"/>
+            android:text="Save" />
 
         <Button
             android:id="@+id/remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.32"
-            android:text="Remove User"/>
+            android:text="Remove User" />
 
         <Button
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.33"
-            android:text="Cancel"/>
+            android:text="Cancel" />
     </LinearLayout>
 
     <ScrollView
@@ -60,7 +61,7 @@
                 android:text=" "
                 android:textSize="18sp">
 
-                <requestFocus/>
+                <requestFocus />
             </EditText>
 
             <TextView
@@ -71,7 +72,7 @@
                 android:layout_alignBottom="@+id/nameVal"
                 android:layout_alignParentLeft="true"
                 android:text="Name"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </RelativeLayout>
     </ScrollView>

@@ -1,12 +1,16 @@
 package com.team2052.frckrawler.fragment;
 
-import android.os.*;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
-import com.team2052.frckrawler.*;
+import com.team2052.frckrawler.ListUpdateListener;
+import com.team2052.frckrawler.R;
 
 /**
  * @author Adam

@@ -1,8 +1,10 @@
 package com.team2052.frckrawler.gui;
 
 import android.content.Context;
-import android.text.*;
-import android.widget.*;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;

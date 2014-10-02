@@ -1,8 +1,14 @@
 package com.team2052.frckrawler.tba.types;
 
 import com.activeandroid.query.Select;
-import com.google.gson.*;
-import com.team2052.frckrawler.database.models.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.team2052.frckrawler.database.models.Alliance;
+import com.team2052.frckrawler.database.models.Event;
+import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.tba.JSON;
 
 import java.lang.reflect.Type;

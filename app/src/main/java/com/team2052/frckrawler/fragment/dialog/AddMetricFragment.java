@@ -1,17 +1,25 @@
 package com.team2052.frckrawler.fragment.dialog;
 
-import android.app.*;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
-import com.team2052.frckrawler.*;
+import com.team2052.frckrawler.ListUpdateListener;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.MetricFactory;
-import com.team2052.frckrawler.database.models.*;
-import com.team2052.frckrawler.gui.*;
+import com.team2052.frckrawler.database.models.Game;
+import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.gui.ListEditor;
+import com.team2052.frckrawler.gui.TextListEditor;
 
 /**
  * @author Adam

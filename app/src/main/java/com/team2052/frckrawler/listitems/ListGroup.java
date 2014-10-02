@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.listitems;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Adam

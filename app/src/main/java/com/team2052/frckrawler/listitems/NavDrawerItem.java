@@ -1,8 +1,10 @@
 package com.team2052.frckrawler.listitems;
 
 import android.content.Context;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 

@@ -1,18 +1,38 @@
 package com.team2052.frckrawler.fragment.scout;
 
-import android.os.*;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.*;
-import com.team2052.frckrawler.database.models.*;
+import com.team2052.frckrawler.activity.DatabaseActivity;
+import com.team2052.frckrawler.activity.MetricsActivity;
+import com.team2052.frckrawler.database.models.Alliance;
+import com.team2052.frckrawler.database.models.Event;
+import com.team2052.frckrawler.database.models.Match;
+import com.team2052.frckrawler.database.models.MatchComments;
+import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.MetricMatchData;
+import com.team2052.frckrawler.database.models.Robot;
+import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.gui.MetricWidget;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Adam

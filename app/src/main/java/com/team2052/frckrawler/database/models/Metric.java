@@ -1,7 +1,8 @@
 package com.team2052.frckrawler.database.models;
 
 import com.activeandroid.Model;
-import com.activeandroid.annotation.*;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.DBManager;
 

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/root"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/matchCount"
@@ -13,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:text="Edit Robot"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="24sp"/>
+        android:textSize="24sp" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -28,21 +29,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
-            android:text="Save"/>
+            android:text="Save" />
 
         <Button
             android:id="@+id/remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
-            android:text="Remove Robot"/>
+            android:text="Remove Robot" />
 
         <Button
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
-            android:text="Cancel"/>
+            android:text="Cancel" />
     </LinearLayout>
 
     <TextView
@@ -52,7 +53,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/matchCount"
         android:text="Game"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <MultiAutoCompleteTextView
         android:id="@+id/comments"
@@ -62,7 +63,7 @@
         android:layout_below="@+id/game"
         android:layout_toRightOf="@+id/contact_team_role"
         android:ems="10"
-        android:text=" "/>
+        android:text=" " />
 
     <TextView
         android:id="@+id/contact_team_role"
@@ -72,7 +73,7 @@
         android:layout_alignBottom="@+id/comments"
         android:layout_alignParentLeft="true"
         android:text="Comments"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/oprEditText"
@@ -82,7 +83,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/comments"
         android:ems="10"
-        android:inputType="numberDecimal|numberSigned"/>
+        android:inputType="numberDecimal|numberSigned" />
 
     <TextView
         android:id="@+id/opr"
@@ -92,7 +93,7 @@
         android:layout_alignBottom="@+id/oprEditText"
         android:layout_alignParentLeft="true"
         android:text="OPR"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/game"
@@ -102,7 +103,7 @@
         android:layout_alignBottom="@+id/teamRole"
         android:layout_alignLeft="@+id/comments"
         android:text=" "
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -117,7 +118,7 @@
             android:id="@+id/metricList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
     </ScrollView>
 
 </RelativeLayout>

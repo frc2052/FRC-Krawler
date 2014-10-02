@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:minHeight="?android:attr/listPreferredItemHeightSmall">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall">
 
     <TextView
         android:id="@+id/group_name"
@@ -16,5 +16,5 @@
         android:paddingLeft="16dp"
         android:paddingRight="48dp"
         android:singleLine="true"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 </RelativeLayout>

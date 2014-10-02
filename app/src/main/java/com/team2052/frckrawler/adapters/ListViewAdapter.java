@@ -1,7 +1,9 @@
 package com.team2052.frckrawler.adapters;
 
 import android.content.Context;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.team2052.frckrawler.listitems.ListItem;
