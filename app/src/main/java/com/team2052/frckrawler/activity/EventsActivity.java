@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
@@ -17,7 +16,7 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.fragment.dialog.ImportDataSimpleDialogFragment;
-import com.team2052.frckrawler.listitems.EventListItem;
+import com.team2052.frckrawler.listitems.elements.EventListElement;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 
@@ -64,8 +63,7 @@ public class EventsActivity extends ListActivity
                     EventsActivity.this.startActivity(SummaryMetricsActivity.newInstance(EventsActivity.this, event));
                     break;
                 case R.id.menu_robots:
-                    //Tease Tyler until I get the Robot view done
-                    Toast.makeText(EventsActivity.this, "Fix it Tyler!", Toast.LENGTH_LONG).show();
+                    EventsActivity.this.startActivity(RobotsActivity.newInstance(EventsActivity.this, event));
                     break;
             }
             return true;
@@ -91,10 +89,11 @@ public class EventsActivity extends ListActivity
     {
         mGame = Game.load(Game.class, getIntent().getLongExtra(PARENT_ID, -1));
         if (getActionBar() != null) {
-            getActionBar().setTitle(mGame == null ? "Edit Events" : "Edit Events - " + mGame.name);
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
         super.onCreate(savedInstanceState);
+        setActionBarTitle("Events");
+        setActionBarSubtitle(mGame.name);
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
         {
             @Override
@@ -150,7 +149,7 @@ public class EventsActivity extends ListActivity
         {
             ArrayList<ListItem> eventList = new ArrayList<>();
             for (Event event : events) {
-                eventList.add(new EventListItem(event));
+                eventList.add(new EventListElement(event));
             }
             mListView.setAdapter(mAdapter = new ListViewAdapter(EventsActivity.this, eventList));
         }

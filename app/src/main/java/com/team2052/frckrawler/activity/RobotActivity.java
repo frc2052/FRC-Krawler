@@ -9,7 +9,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
 import com.team2052.frckrawler.database.models.Robot;
+import com.team2052.frckrawler.database.models.RobotPhoto;
 import com.team2052.frckrawler.fragment.NeedSyncFragment;
+import com.team2052.frckrawler.fragment.PhotosFragment;
 
 /**
  * @author Adam
@@ -28,8 +30,8 @@ public class RobotActivity extends ViewPagerActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
         mRobot = Robot.load(Robot.class, getIntent().getLongExtra(PARENT_ID, 0));
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -56,7 +58,15 @@ public class RobotActivity extends ViewPagerActivity
         @Override
         public Fragment getItem(int position)
         {
-            return new NeedSyncFragment();
+            switch (position){
+                case 0:
+                    return new NeedSyncFragment();
+                case 1:
+                    return new NeedSyncFragment();
+                case 2:
+                    return PhotosFragment.newInstance(mRobot);
+            }
+            return null;
         }
 
         @Override

@@ -1,9 +1,7 @@
 package com.team2052.frckrawler.database;
 
-import com.team2052.frckrawler.database.models.Metric;
-import com.team2052.frckrawler.database.models.MetricMatchData;
+import com.team2052.frckrawler.database.models.metric.Metric;
 import com.team2052.frckrawler.database.models.Robot;
-import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -14,14 +12,14 @@ import java.util.List;
 public class CompiledMetricValue
 {
     public static DecimalFormat format = new DecimalFormat("0.0");
-    private final List<MetricMatchData> metricData;
+    private final List<MetricValue> metricData;
     public Robot robot;
     public int metricType;
     public String compiledValue = "";
     private Metric metric;
     private double compileWeight;
 
-    public CompiledMetricValue(Robot robot, Metric metric, List<MetricMatchData> metricData, int metricType, float compileWeight)
+    public CompiledMetricValue(Robot robot, Metric metric, List<MetricValue> metricData, int metricType, float compileWeight)
     {
         this.robot = robot;
         this.metric = metric;
@@ -39,9 +37,9 @@ public class CompiledMetricValue
                 double yes = 0;
                 double no = 0;
 
-                for (MetricMatchData matchData : metricData) {
+                for (MetricValue matchData : metricData) {
                     //Get the value
-                    String data = StringArrayDeserializer.deserialize(matchData.data)[0];
+                    String data = matchData.getValue();
                     //Parse the value and weight it
                     if (Boolean.parseBoolean(data)) {
                         yes += compileWeight;
@@ -63,8 +61,8 @@ public class CompiledMetricValue
                 double numerator = 0;
                 double denominator = 0;
 
-                for (MetricMatchData matchData : metricData) {
-                    int value = Integer.parseInt(StringArrayDeserializer.deserialize(matchData.data)[0]);
+                for (MetricValue metricValue : metricData) {
+                    int value = Integer.parseInt(metricValue.getValue());
                     numerator += value * compileWeight;
                     denominator += compileWeight;
                 }
@@ -80,8 +78,8 @@ public class CompiledMetricValue
                 Object[] range = metric.range;
                 double[] counts = new double[range.length];
 
-                for (MetricMatchData matchData : metricData) {
-                    String value = StringArrayDeserializer.deserialize(matchData.data)[0];
+                for (MetricValue metricValue : metricData) {
+                    String value = metricValue.getValue();
                     int rangeAddress = -1;
 
                     for (int choiceCount = 0; choiceCount < range.length; choiceCount++) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -19,21 +19,21 @@
             android:layout_width="72dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
-            android:text="Save" />
+            android:text="Save"/>
 
         <Button
             android:id="@+id/remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
-            android:text="Remove Team" />
+            android:text="Remove Team"/>
 
         <Button
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
-            android:text="Cancel" />
+            android:text="Cancel"/>
     </LinearLayout>
 
     TextView
@@ -78,7 +78,7 @@
                     android:ems="10"
                     android:inputType="number"
                     android:text=" "
-                    android:textSize="24sp" />
+                    android:textSize="24sp"/>
 
                 <TextView
                     android:id="@+id/contact_team_role"
@@ -88,7 +88,7 @@
                     android:layout_alignBottom="@+id/numberVal"
                     android:layout_alignParentLeft="true"
                     android:text="#"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <TextView
                     android:id="@+id/textView4"
@@ -98,7 +98,7 @@
                     android:layout_alignBottom="@+id/cityVal"
                     android:layout_alignParentLeft="true"
                     android:text="City"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <EditText
                     android:id="@+id/rookieYearVal"
@@ -108,7 +108,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/cityVal"
                     android:ems="10"
-                    android:inputType="number" />
+                    android:inputType="number"/>
 
                 <TextView
                     android:id="@+id/textView5"
@@ -118,7 +118,7 @@
                     android:layout_alignBottom="@+id/rookieYearVal"
                     android:layout_alignParentLeft="true"
                     android:text="Rookie Year"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <EditText
                     android:id="@+id/colorsVal"
@@ -128,7 +128,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/stateVal"
                     android:ems="10"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"/>
 
                 <TextView
                     android:id="@+id/textView7"
@@ -138,7 +138,7 @@
                     android:layout_alignBottom="@+id/colorsVal"
                     android:layout_alignParentLeft="true"
                     android:text="Colors"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <TextView
                     android:id="@+id/textView6"
@@ -147,7 +147,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignTop="@+id/stateVal"
                     android:text="State"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <EditText
                     android:id="@+id/cityVal"
@@ -157,7 +157,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/schoolVal"
                     android:ems="10"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"/>
 
                 <TextView
                     android:id="@+id/teamRole"
@@ -167,7 +167,7 @@
                     android:layout_alignBottom="@+id/schoolVal"
                     android:layout_alignParentLeft="true"
                     android:text="School"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <EditText
                     android:id="@+id/nameVal"
@@ -178,7 +178,7 @@
                     android:layout_below="@+id/numberVal"
                     android:editable="true"
                     android:ems="10"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"/>
 
                 <EditText
                     android:id="@+id/schoolVal"
@@ -188,7 +188,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/nameVal"
                     android:ems="10"
-                    android:inputType="textNoSuggestions|textPersonName" />
+                    android:inputType="textNoSuggestions|textPersonName"/>
 
                 <TextView
                     android:id="@+id/textView8"
@@ -198,7 +198,7 @@
                     android:layout_alignBottom="@+id/nameVal"
                     android:layout_alignParentLeft="true"
                     android:text="Name"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <EditText
                     android:id="@+id/websiteVal"
@@ -208,7 +208,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/rookieYearVal"
                     android:ems="10"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"/>
 
                 <Spinner
                     android:id="@+id/stateVal"
@@ -217,7 +217,7 @@
                     android:layout_alignLeft="@+id/websiteVal"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/websiteVal"
-                    android:entries="@array/states" />
+                    android:entries="@array/states"/>
 
                 <TextView
                     android:id="@+id/textView9"
@@ -227,7 +227,7 @@
                     android:layout_alignBottom="@+id/websiteVal"
                     android:layout_alignParentLeft="true"
                     android:text="Website"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
             </RelativeLayout>
 
         </ScrollView>

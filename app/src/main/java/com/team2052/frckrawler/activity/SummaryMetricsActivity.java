@@ -10,10 +10,10 @@ import android.widget.AdapterView;
 import com.activeandroid.query.Select;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.metric.Metric;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.MetricListElement;
+import com.team2052.frckrawler.listitems.elements.MetricListElement;
 
 import java.util.ArrayList;
 import java.util.List;

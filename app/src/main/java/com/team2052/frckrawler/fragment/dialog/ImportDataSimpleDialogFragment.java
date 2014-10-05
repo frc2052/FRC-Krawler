@@ -17,7 +17,7 @@ import com.activeandroid.query.Select;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.GlobalValues;
-import com.team2052.frckrawler.ListUpdateListener;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
@@ -29,7 +29,7 @@ import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.SimpleListElement;
+import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 import com.team2052.frckrawler.tba.HTTP;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.tba.TBA;
@@ -192,7 +192,6 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     public class LoadAllEventData extends AsyncTask<Void, Void, Void>
     {
         final FragmentManager fragman = getFragmentManager();
-        //TODO Separate to avoid losing the fragment manager when you dismiss the host dialog
         private final String url;
 
         public LoadAllEventData(String eventKey)
@@ -219,13 +218,29 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             for (JsonElement element : jTeams) {
                 //Convert json element to team
                 Team team = JSON.getGson().fromJson(element, Team.class);
+                team.save();
                 //Create a robot and save that robot to the database as well with the team
-                Robot robot = new Robot(team, null, -1, mGame);
-                robot.setRemoteId();
-                robot.team.save();
-                RobotEvents robotEvents = new RobotEvents(robot, event);
-                robotEvents.robot.save();
-                robotEvents.save();
+                Robot robot = null;
+
+                List<Robot> robots = new Select().from(Robot.class).where("Game = ?", mGame.getId()).execute();
+                for (Robot robot1 : robots) {
+                    if (robot1.team.number == team.number) {
+                        robot = robot1;
+                        break;
+                    }
+                }
+
+                if (robot == null) {
+                    robot = new Robot(team, null, -1, mGame);
+                    robot.setRemoteId();
+                    RobotEvents robotEvents = new RobotEvents(robot, event);
+                    robotEvents.robot.save();
+                    robotEvents.save();
+                } else if (new Select().from(RobotEvents.class).where("Robot = ?", robot.getId()).and("Event = ?", event.getId()).execute().size() <= 0) {
+                    RobotEvents robotEvents = new RobotEvents(robot, event);
+                    robotEvents.robot.save();
+                    robotEvents.save();
+                }
             }
             for (JsonElement element : jMatches) {
                 //Save all the matches and alliances

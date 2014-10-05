@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.team2052.frckrawler"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="auto">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="false"/>
 
     <application
         android:name=".FRCKrawler"
@@ -26,44 +26,45 @@
         <!-- Active Android Database-->
         <meta-data
             android:name="AA_DB_NAME"
-            android:value="FRCKrawler.db" />
+            android:value="FRCKrawler.db"/>
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="7" />
+            android:value="7"/>
         <meta-data
             android:name="AA_SERIALIZERS"
-            android:value="com.team2052.frckrawler.database.serializers.ObjectArraySerializer" />
+            android:value="com.team2052.frckrawler.database.serializers.ObjectArraySerializer"/>
         <!--Active Android Database-->
         <activity
             android:name=".activity.EventsActivity"
             android:windowSoftInputMode="adjustNothing">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.team2052.frckrawler.activity.HomeActivity" />
+                android:value="com.team2052.frckrawler.activity.HomeActivity"/>
         </activity>
         <activity
             android:name=".activity.MetricsActivity"
             android:windowSoftInputMode="adjustNothing">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeActivity" />
+                android:value=".activity.HomeActivity"/>
         </activity>
         <activity android:name=".activity.MainActivity"></activity>
-        <activity android:name=".ListTester" />
-        <activity android:name=".activity.MatchListActivity" />
+        <activity android:name=".ListTester"/>
+        <activity android:name=".activity.MatchListActivity"/>
 
-        <service android:name=".bluetooth.ServerService" />
+        <service android:name=".bluetooth.ServerService"/>
 
         <activity android:name=".activity.HomeActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TeamInfoActivity" />
-        <activity android:name=".activity.RobotActivity" />
-        <activity android:name=".activity.SummaryMetricsActivity" />
-        <activity android:name=".activity.SummaryDataActivity" />
+        <activity android:name=".activity.TeamInfoActivity"/>
+        <activity android:name=".activity.RobotActivity"/>
+        <activity android:name=".activity.SummaryMetricsActivity"/>
+        <activity android:name=".activity.SummaryDataActivity"/>
+        <activity android:name=".activity.RobotsActivity"/>
     </application>
 
 </manifest>

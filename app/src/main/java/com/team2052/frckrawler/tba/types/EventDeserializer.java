@@ -39,12 +39,14 @@ public class EventDeserializer implements JsonDeserializer<Event>
         }
 
         //Parse the date
-        if (object.get("start_date").isJsonNull()) {
+        if (!object.get("start_date").isJsonNull()) {
             try {
-                event.date = new Date(format.parse(object.get("start_date").toString()).getTime());
+                event.date = format.parse(object.get("start_date").toString().replace("\"", ""));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+        } else {
+            event.date = new Date(0, 0, 0);
         }
         return event;
     }

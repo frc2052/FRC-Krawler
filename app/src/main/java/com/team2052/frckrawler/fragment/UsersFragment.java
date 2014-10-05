@@ -19,7 +19,7 @@ import com.team2052.frckrawler.fragment.dialog.AddUserDialogFragment;
 import com.team2052.frckrawler.fragment.dialog.EditUserDialogFragment;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.UserListItem;
+import com.team2052.frckrawler.listitems.elements.UserListElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +150,7 @@ public class UsersFragment extends ListFragment
         {
             List<ListItem> userList = new ArrayList<>();
             for (User user : users) {
-                userList.add(new UserListItem(user));
+                userList.add(new UserListElement(user));
             }
             mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), userList));
         }

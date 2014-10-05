@@ -16,7 +16,7 @@ import com.team2052.frckrawler.fragment.ServerFragment;
 import com.team2052.frckrawler.fragment.TeamsFragment;
 import com.team2052.frckrawler.fragment.UsersFragment;
 import com.team2052.frckrawler.fragment.scout.ScoutFragment;
-import com.team2052.frckrawler.listitems.NavDrawerItem;
+import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 
 public class HomeActivity extends BaseActivity
 {

@@ -21,7 +21,7 @@ import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.NavDrawerAdataper;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.NavDrawerItem;
+import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 
 import java.util.ArrayList;
 import java.util.List;

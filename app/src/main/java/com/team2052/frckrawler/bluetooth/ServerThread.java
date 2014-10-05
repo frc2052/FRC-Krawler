@@ -12,11 +12,10 @@ import com.activeandroid.query.Select;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Metric;
-import com.team2052.frckrawler.database.models.MetricMatchData;
+import com.team2052.frckrawler.database.models.metric.Metric;
+import com.team2052.frckrawler.database.models.metric.MetricMatchData;
 import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.User;
-import com.team2052.frckrawler.util.LogHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +45,6 @@ public class ServerThread extends Thread
         hostedEvent = e;
         handler = h;
         serverSocket = null;
-
     }
 
     @Override
@@ -58,11 +56,8 @@ public class ServerThread extends Thread
         isOpen = true;
         while (isOpen) {
             try {
-                LogHelper.debug("Init ServerSocket");
                 serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
-                LogHelper.debug("ServerSocket OK");
             } catch (IOException io) {
-                LogHelper.debug("ServerSocket ERROR");
                 io.printStackTrace();
             }
 
@@ -99,9 +94,6 @@ public class ServerThread extends Thread
 
                     //Save all the data
                     for (MetricMatchData m : inMetricMatchData) {
-                        m.robot.save();
-                        m.metric.save();
-                        m.match.saveAll();
                         m.save();
                     }
 

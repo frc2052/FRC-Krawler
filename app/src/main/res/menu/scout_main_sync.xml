@@ -5,7 +5,7 @@
         android:id="@+id/menu_sync"
         android:icon="@drawable/ic_action_refresh"
         android:showAsAction="ifRoom"
-        android:title="Sync" />
+        android:title="Sync"/>
 
     <!--<item android:id="@+id/menu_user"
         android:title="User"

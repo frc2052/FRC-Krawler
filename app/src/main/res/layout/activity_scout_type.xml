@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -20,14 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Sync"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
         <Button
             android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
     </LinearLayout>
 
     <ImageView
@@ -35,6 +35,6 @@
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/splash_logo" />
+        android:src="@drawable/splash_logo"/>
 
 </RelativeLayout>

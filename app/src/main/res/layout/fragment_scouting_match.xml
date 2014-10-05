@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp">
 
     <Spinner
         android:id="@+id/match_number"
@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
-        android:prompt="@string/team_number" />
+        android:prompt="@string/team_number"/>
 
     <Spinner
         android:id="@+id/team"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/match_number"
         android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp" />
+        android:layout_marginTop="4dp"/>
 
     <ScrollView
         android:id="@+id/ScrollView1"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:orientation="vertical" />
+                android:orientation="vertical"/>
 
             <EditText
                 android:id="@+id/comments"
@@ -54,7 +54,7 @@
                 android:layout_marginTop="4dp"
                 android:ems="10"
                 android:hint="Comments"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"/>
         </LinearLayout>
     </ScrollView>
 

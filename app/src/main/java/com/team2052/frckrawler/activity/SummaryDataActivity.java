@@ -9,9 +9,9 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.CompiledMetricValue;
 import com.team2052.frckrawler.database.MetricCompiler;
 import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.metric.Metric;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.SimpleListElement;
+import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class SummaryDataActivity extends ListActivity
         @Override
         protected List<CompiledMetricValue> doInBackground(Void... params)
         {
-            return MetricCompiler.compileMetricDataInEvent(mEvent, mMetric);
+            return MetricCompiler.compileMetricMatchData(mEvent, mMetric);
         }
 
         @Override

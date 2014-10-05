@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.team2052.frckrawler.ListUpdateListener;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.R;
 
 /**

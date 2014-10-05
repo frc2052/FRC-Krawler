@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
 
     <TextView
         android:id="@+id/list_view_event_name"
@@ -13,7 +13,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="16dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
         android:id="@+id/list_view_event_location_default"
@@ -24,7 +24,7 @@
         android:layout_below="@+id/list_view_event_name"
         android:text="Location: "
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/list_view_event_location"
@@ -33,7 +33,7 @@
         android:layout_below="@+id/list_view_event_name"
         android:layout_marginLeft="4dp"
         android:layout_toRightOf="@+id/list_view_event_location_default"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     <TextView
         android:id="@+id/list_view_event_date_default"
@@ -44,7 +44,7 @@
         android:layout_below="@+id/list_view_event_location_default"
         android:text="Date:"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/list_view_event_date"
@@ -53,5 +53,5 @@
         android:layout_below="@+id/list_view_event_location"
         android:layout_marginLeft="4dp"
         android:layout_toRightOf="@+id/list_view_event_date_default"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 </RelativeLayout>

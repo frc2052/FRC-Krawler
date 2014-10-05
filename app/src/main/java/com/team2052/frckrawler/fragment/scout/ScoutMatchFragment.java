@@ -25,11 +25,11 @@ import com.team2052.frckrawler.database.models.Alliance;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.database.models.MatchComments;
-import com.team2052.frckrawler.database.models.Metric;
-import com.team2052.frckrawler.database.models.MetricMatchData;
+import com.team2052.frckrawler.database.models.metric.Metric;
+import com.team2052.frckrawler.database.models.metric.MetricMatchData;
 import com.team2052.frckrawler.database.models.Robot;
 import com.team2052.frckrawler.database.models.Team;
-import com.team2052.frckrawler.gui.MetricWidget;
+import com.team2052.frckrawler.view.metric.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.List;

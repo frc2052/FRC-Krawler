@@ -15,8 +15,9 @@ import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.database.models.Match;
-import com.team2052.frckrawler.database.models.Metric;
-import com.team2052.frckrawler.database.models.MetricMatchData;
+import com.team2052.frckrawler.database.models.metric.Metric;
+import com.team2052.frckrawler.database.models.metric.MetricMatchData;
+import com.team2052.frckrawler.database.models.metric.MetricPitData;
 import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.database.models.User;
@@ -83,6 +84,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
 
             //Get the data to send
             List<MetricMatchData> metricMatchData = DBManager.loadAllFromType(MetricMatchData.class);
+            List<MetricPitData> metricPitData = DBManager.loadAllFromType(MetricPitData.class);
 
             if (isCancelled())
                 return SYNC_CANCELLED;
@@ -90,6 +92,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             //Write the scout data
             ooStream.writeInt(BluetoothInfo.SCOUT);
             ooStream.writeObject(metricMatchData);
+            ooStream.writeObject(metricPitData);
             ooStream.flush();
 
             //Clear out the old data after it is sent
@@ -123,11 +126,11 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             ActiveAndroid.beginTransaction();
 
             for (RobotEvents robot : inRobots) {
-                robot.saveAll();
+                robot.save();
             }
 
             for (Match match : inSchedule.matches) {
-                match.saveAll();
+                match.save();
             }
 
             for (Metric metric1 : inMetric) {

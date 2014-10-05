@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/listName"
@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text=" "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
         android:id="@+id/listDescription"
@@ -19,7 +19,7 @@
         android:layout_below="@+id/listName"
         android:layout_centerHorizontal="true"
         android:text=" "
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     <RelativeLayout
         android:id="@+id/centerLayout"
@@ -55,14 +55,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="^"
-                android:textSize="25sp" />
+                android:textSize="25sp"/>
 
             <Button
                 android:id="@+id/moveDown"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="v"
-                android:textSize="19sp" />
+                android:textSize="19sp"/>
         </LinearLayout>
 
     </RelativeLayout>
@@ -78,13 +78,13 @@
             android:id="@+id/addRobotToList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Robot" />
+            android:text="Add Robot"/>
 
         <Button
             android:id="@+id/removeRobot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Remove Robot" />
+            android:text="Remove Robot"/>
 
     </LinearLayout>
 

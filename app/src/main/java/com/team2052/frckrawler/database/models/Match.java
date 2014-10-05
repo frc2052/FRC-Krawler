@@ -51,19 +51,6 @@ public class Match extends Model implements Serializable
         return remoteId;
     }
 
-    public Long saveAll()
-    {
-        alliance.blue1.save();
-        alliance.blue2.save();
-        alliance.blue3.save();
-        alliance.red1.save();
-        alliance.red2.save();
-        alliance.red3.save();
-        alliance.save();
-        event.save();
-        return save();
-    }
-
     @Override
     public String toString()
     {

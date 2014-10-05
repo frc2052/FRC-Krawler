@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp">
 
     <TextView
         android:id="@+id/scoutingType"
@@ -12,12 +12,12 @@
         android:layout_centerHorizontal="true"
         android:text=" "
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="24sp" />
+        android:textSize="24sp"/>
 
     <Spinner
         android:id="@+id/team"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
     <ScrollView
         android:id="@+id/ScrollView1"
@@ -35,7 +35,7 @@
                 android:id="@+id/metricWidgetList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical"/>
 
             <EditText
                 android:id="@+id/comments"
@@ -45,7 +45,7 @@
                 android:hint="Comments"
                 android:inputType="textMultiLine">
 
-                <requestFocus />
+                <requestFocus/>
             </EditText>
         </LinearLayout>
     </ScrollView>

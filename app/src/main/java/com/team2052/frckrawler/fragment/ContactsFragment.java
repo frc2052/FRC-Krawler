@@ -13,7 +13,7 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Contact;
 import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.fragment.dialog.AddContactDialogFragment;
-import com.team2052.frckrawler.listitems.ContactListElement;
+import com.team2052.frckrawler.listitems.elements.ContactListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 
 import java.util.ArrayList;

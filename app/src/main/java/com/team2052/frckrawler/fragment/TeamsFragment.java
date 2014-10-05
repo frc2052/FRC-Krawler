@@ -13,7 +13,7 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.TeamListItem;
+import com.team2052.frckrawler.listitems.elements.TeamListElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class TeamsFragment extends ListFragment
         {
             ArrayList<ListItem> teamItems = new ArrayList<>();
             for (Team team : teams) {
-                teamItems.add(new TeamListItem(team));
+                teamItems.add(new TeamListElement(team));
             }
             mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), teamItems));
         }

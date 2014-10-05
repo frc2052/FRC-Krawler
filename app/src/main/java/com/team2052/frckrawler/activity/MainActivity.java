@@ -20,7 +20,7 @@ import com.team2052.frckrawler.bluetooth.SyncAsScoutTask;
 import com.team2052.frckrawler.bluetooth.SyncCallbackHandler;
 import com.team2052.frckrawler.database.models.User;
 import com.team2052.frckrawler.fragment.dialog.AboutDialogFragment;
-import com.team2052.frckrawler.gui.ProgressSpinner;
+import com.team2052.frckrawler.view.ProgressSpinner;
 
 import java.util.List;
 

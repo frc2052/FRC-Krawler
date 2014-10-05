@@ -8,7 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.EditText;
 
-import com.team2052.frckrawler.ListUpdateListener;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.models.User;
 

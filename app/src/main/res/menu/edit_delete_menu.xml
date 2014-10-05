@@ -4,10 +4,10 @@
     <item
         android:id="@+id/menu_edit"
         android:icon="@android:drawable/ic_menu_edit"
-        android:title="Edit" />
+        android:title="Edit"/>
 
     <item
         android:id="@+id/menu_delete"
         android:icon="@android:drawable/ic_menu_delete"
-        android:title="Delete" />
+        android:title="Delete"/>
 </menu>

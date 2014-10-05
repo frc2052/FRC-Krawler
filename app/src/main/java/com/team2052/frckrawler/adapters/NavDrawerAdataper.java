@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.NavDrawerItem;
+import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 
 import java.util.List;
 

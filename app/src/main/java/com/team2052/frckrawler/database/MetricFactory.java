@@ -2,7 +2,7 @@ package com.team2052.frckrawler.database;
 
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.models.Game;
-import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.metric.Metric;
 
 /**
  * @author Adam

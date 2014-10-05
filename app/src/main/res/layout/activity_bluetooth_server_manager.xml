@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -18,7 +18,7 @@
         android:layout_centerHorizontal="true"
         android:text="Sharing"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="24sp" />
+        android:textSize="24sp"/>
 
     <Button
         android:id="@+id/dbBackups"
@@ -27,7 +27,7 @@
         android:layout_alignLeft="@+id/excel"
         android:layout_alignRight="@+id/excel"
         android:layout_below="@+id/excel"
-        android:text="Database Backups" />
+        android:text="Database Backups"/>
 
     <Button
         android:id="@+id/excel"
@@ -37,7 +37,7 @@
         android:layout_alignRight="@+id/contact_team_role"
         android:layout_below="@+id/matchCount"
         android:layout_marginTop="15dp"
-        android:text="Excel Exporting" />
+        android:text="Excel Exporting"/>
 
     <TextView
         android:id="@+id/contact_team_role"
@@ -48,7 +48,7 @@
         android:layout_marginTop="16dp"
         android:text="Bluetooth Server"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="24sp" />
+        android:textSize="24sp"/>
 
     <Spinner
         android:id="@+id/chooseEvent"
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/contact_team_role"
         android:layout_alignRight="@+id/contact_team_role"
-        android:layout_below="@+id/contact_team_role" />
+        android:layout_below="@+id/contact_team_role"/>
 
     <Switch
         android:id="@+id/hostToggle"
@@ -67,7 +67,7 @@
         android:layout_below="@+id/chooseEvent"
         android:layout_marginTop="36dp"
         android:checked="false"
-        android:textSize="18sp" />
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/contact_name"
@@ -77,6 +77,6 @@
         android:layout_alignRight="@+id/hostToggle"
         android:layout_below="@+id/chooseEvent"
         android:text="Toggle Server"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </RelativeLayout>

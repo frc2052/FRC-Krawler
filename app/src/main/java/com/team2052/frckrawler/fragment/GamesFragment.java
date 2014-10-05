@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.team2052.frckrawler.ListUpdateListener;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.EventsActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
@@ -21,7 +21,7 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.fragment.dialog.AddGameDialogFragment;
-import com.team2052.frckrawler.listitems.GameListItem;
+import com.team2052.frckrawler.listitems.elements.GameListElement;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 
@@ -181,7 +181,7 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
         {
             ArrayList<ListItem> element = new ArrayList<>();
             for (Game game : games)
-                element.add(new GameListItem(game));
+                element.add(new GameListElement(game));
             mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), element));
         }
     }

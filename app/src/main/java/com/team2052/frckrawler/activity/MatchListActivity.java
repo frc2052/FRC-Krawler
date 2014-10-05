@@ -10,7 +10,7 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.MatchListItem;
+import com.team2052.frckrawler.listitems.items.MatchListItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +34,9 @@ public class MatchListActivity extends ListActivity
     {
         mEvent = Event.load(Event.class, getIntent().getLongExtra(DatabaseActivity.PARENT_ID, 0));
         super.onCreate(savedInstanceState);
+        setActionBarTitle("Schedule");
+        setActionBarSubtitle(mEvent.name);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

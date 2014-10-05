@@ -16,7 +16,7 @@ import com.team2052.frckrawler.database.models.Robot;
 import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.SimpleListElement;
+import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 
 import java.util.ArrayList;
 import java.util.List;

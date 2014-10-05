@@ -7,7 +7,7 @@ import com.activeandroid.query.Select;
 import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.database.models.Match;
-import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.metric.Metric;
 import com.team2052.frckrawler.database.models.Robot;
 
 import java.util.List;

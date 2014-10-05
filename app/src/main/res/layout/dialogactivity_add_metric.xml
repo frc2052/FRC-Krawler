@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp">
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:entries="@array/metric_types" />
+                android:entries="@array/metric_types"/>
 
             <EditText
                 android:id="@+id/name"
@@ -33,7 +33,7 @@
                 android:layout_below="@+id/type"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:hint="Name" />
+                android:hint="Name"/>
 
             <EditText
                 android:id="@+id/description"
@@ -42,7 +42,7 @@
                 android:layout_below="@+id/name"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:hint="Description" />
+                android:hint="Description"/>
 
             <EditText
                 android:id="@+id/minimum"
@@ -52,7 +52,7 @@
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
                 android:hint="Minimum"
-                android:inputType="number" />
+                android:inputType="number"/>
 
             <EditText
                 android:id="@+id/maximum"
@@ -62,7 +62,7 @@
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
                 android:hint="Maximum"
-                android:inputType="number" />
+                android:inputType="number"/>
 
             <EditText
                 android:id="@+id/incrementation"
@@ -72,7 +72,7 @@
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
                 android:hint="Incrementation"
-                android:inputType="number" />
+                android:inputType="number"/>
 
             <TextView
                 android:id="@+id/textView"
@@ -86,20 +86,20 @@
                 android:textAllCaps="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/darker_gray"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_below="@+id/textView"
-                android:background="?android:attr/listDivider" />
+                android:background="?android:attr/listDivider"/>
 
             <FrameLayout
                 android:id="@+id/list_editor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/divider" />
+                android:layout_below="@+id/divider"/>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

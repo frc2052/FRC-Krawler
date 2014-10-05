@@ -34,13 +34,4 @@ public class RobotEvents extends Model implements Serializable
     public RobotEvents()
     {
     }
-
-    public void saveAll()
-    {
-        robot.team.save();
-        robot.game.save();
-        robot.save();
-        event.save();
-        save();
-    }
 }

@@ -10,7 +10,7 @@ import android.widget.FrameLayout;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.fragment.NavigationDrawerFragment;
-import com.team2052.frckrawler.listitems.NavDrawerItem;
+import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 
 /**
  * @author Adam

@@ -93,8 +93,7 @@ public class NoDefaultSpinner extends Spinner
         {
             this.obj = obj;
             try {
-                this.getView = SpinnerAdapter.class.getMethod(
-                        "getView", int.class, View.class, ViewGroup.class);
+                this.getView = SpinnerAdapter.class.getMethod("getView", int.class, View.class, ViewGroup.class);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -103,10 +102,7 @@ public class NoDefaultSpinner extends Spinner
         public Object invoke(Object proxy, Method m, Object[] args) throws Throwable
         {
             try {
-                return m.equals(getView) &&
-                        (Integer) (args[0]) < 0 ?
-                        getView((Integer) args[0], (View) args[1], (ViewGroup) args[2]) :
-                        m.invoke(obj, args);
+                return m.equals(getView) && (Integer) (args[0]) < 0 ? getView((Integer) args[0], (View) args[1], (ViewGroup) args[2]) : m.invoke(obj, args);
             } catch (InvocationTargetException e) {
                 throw e.getTargetException();
             } catch (Exception e) {

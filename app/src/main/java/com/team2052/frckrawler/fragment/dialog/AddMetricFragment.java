@@ -12,14 +12,14 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.ListUpdateListener;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.MetricFactory;
 import com.team2052.frckrawler.database.models.Game;
-import com.team2052.frckrawler.database.models.Metric;
-import com.team2052.frckrawler.gui.ListEditor;
-import com.team2052.frckrawler.gui.TextListEditor;
+import com.team2052.frckrawler.database.models.metric.Metric;
+import com.team2052.frckrawler.view.ListEditor;
+import com.team2052.frckrawler.view.TextListEditor;
 
 /**
  * @author Adam

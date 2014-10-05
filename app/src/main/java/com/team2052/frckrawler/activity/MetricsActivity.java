@@ -11,10 +11,10 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.models.Game;
-import com.team2052.frckrawler.database.models.Metric;
+import com.team2052.frckrawler.database.models.metric.Metric;
 import com.team2052.frckrawler.fragment.dialog.AddMetricFragment;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.MetricListElement;
+import com.team2052.frckrawler.listitems.elements.MetricListElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +41,11 @@ public class MetricsActivity extends ListActivity
         mGame = Game.load(Game.class, getIntent().getLongExtra(PARENT_ID, -1));
         metricCategory = getIntent().getIntExtra(METRIC_CATEGORY, -1);
         if (getActionBar() != null) {
-            getActionBar().setTitle(MetricType.VALID_TYPES[metricCategory].title);
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
         super.onCreate(savedInstanceState);
+        setActionBarTitle(MetricType.VALID_TYPES[metricCategory].title);
+        setActionBarSubtitle(mGame.name);
     }
 
 

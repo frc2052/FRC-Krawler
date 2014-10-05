@@ -8,20 +8,20 @@
         <menu>
             <item
                 android:id="@+id/menu_summary"
-                android:title="Summary" />
+                android:title="Summary"/>
 
             <item
                 android:id="@+id/menu_schedule"
-                android:title="Schedule" />
+                android:title="Schedule"/>
 
             <item
                 android:id="@+id/menu_robots"
-                android:title="Robots" />
+                android:title="Robots"/>
         </menu>
     </item>
 
     <item
         android:id="@+id/menu_delete"
         android:icon="@android:drawable/ic_menu_delete"
-        android:title="Delete" />
+        android:title="Delete"/>
 </menu>
