@@ -21,14 +21,14 @@ import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.metric.Metric;
-import com.team2052.frckrawler.database.models.metric.MetricPitData;
 import com.team2052.frckrawler.database.models.Robot;
 import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.database.models.Team;
-import com.team2052.frckrawler.view.metric.MetricWidget;
+import com.team2052.frckrawler.database.models.metric.Metric;
+import com.team2052.frckrawler.database.models.metric.MetricPitData;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
+import com.team2052.frckrawler.view.metric.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -158,7 +158,7 @@ public class ScoutPitFragment extends Fragment
             //Begin Saving
             ActiveAndroid.beginTransaction();
             for (MetricWidget widget : widgets) {
-                new MetricPitData(robot, widget.getMetric(), widget.getMetricValue()).save();
+                new MetricPitData(robot, mEvent, widget.getMetric(), widget.getMetricValue()).save();
             }
             robot.comments = ((EditText) getView().findViewById(R.id.comments)).getText().toString();
             robot.save();

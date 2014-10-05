@@ -4,8 +4,8 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.database.models.Robot;
-import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 
 import java.io.Serializable;
 
@@ -21,13 +21,17 @@ public class MetricPitData extends Model implements Serializable
     @Column(name = "Metric", onDelete = Column.ForeignKeyAction.CASCADE)
     public Metric metric;
 
+    @Column(name = "Event", onDelete = Column.ForeignKeyAction.CASCADE)
+    public Event event;
+
     @Column(name = "MetricValue")
     public String data;
 
 
-    public MetricPitData(Robot robot, Metric metric, MetricValue values)
+    public MetricPitData(Robot robot, Event event, Metric metric, MetricValue values)
     {
         this.robot = robot;
+        this.event = event;
         this.metric = metric;
         this.data = values.getValue();
     }

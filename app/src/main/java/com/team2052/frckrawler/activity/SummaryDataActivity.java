@@ -57,7 +57,7 @@ public class SummaryDataActivity extends ListActivity
         @Override
         protected List<CompiledMetricValue> doInBackground(Void... params)
         {
-            return MetricCompiler.compileMetricMatchData(mEvent, mMetric);
+            return MetricCompiler.getCompiledMetric(mEvent, mMetric);
         }
 
         @Override
