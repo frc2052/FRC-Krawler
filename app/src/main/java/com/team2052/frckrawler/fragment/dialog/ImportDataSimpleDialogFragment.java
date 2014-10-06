@@ -12,30 +12,26 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Select;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.GlobalValues;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Game;
-import com.team2052.frckrawler.database.models.Match;
-import com.team2052.frckrawler.database.models.Robot;
-import com.team2052.frckrawler.database.models.RobotEvents;
-import com.team2052.frckrawler.database.models.Team;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 import com.team2052.frckrawler.tba.HTTP;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.tba.TBA;
+import com.team2052.frckrawler.util.LogHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import frckrawler.*;
 
 /**
  * Used to import a event to a game in the most simple way for the user.
@@ -69,7 +65,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        this.mGame = Game.load(Game.class, getArguments().getLong(DatabaseActivity.PARENT_ID));
+        this.mGame = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         yearDropDownItems = new String[GlobalValues.MAX_COMP_YEAR - GlobalValues.FIRST_COMP_YEAR + 2];
         yearDropDownItems[0] = "Select Year";
         for (int i = 1; i < yearDropDownItems.length; i++) {
@@ -88,16 +84,8 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                if (new Select().from(Event.class).where("FMSid = ?", ((ListElement) eventSpinner.getSelectedItem()).getKey()).execute().size() == 0) {
-                    ProgressDialogFragment.showLoadingProgress(getFragmentManager());
-                    new LoadAllEventData(((ListElement) eventSpinner.getSelectedItem()).getKey()).execute();
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity() == null ? getParentFragment().getActivity() : getActivity());
-                    builder.setPositiveButton("Ok", null);
-                    builder.setTitle("Error Importing");
-                    builder.setMessage("Can't import event that has been already imported");
-                    builder.show();
-                }
+                ProgressDialogFragment.showLoadingProgress(getFragmentManager());
+                new LoadAllEventData(((ListElement) eventSpinner.getSelectedItem()).getKey()).execute();
             }
         });
         b.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
@@ -174,7 +162,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             //Create listitems so the UI can read it
             ArrayList<ListItem> listItems = new ArrayList<>();
             for (Event event : events) {
-                listItems.add(new SimpleListElement(event.name, event.fmsId));
+                listItems.add(new SimpleListElement(event.getName(), event.getFmsid()));
             }
             //Set the adapter for the events spinner
             ListViewAdapter adapter = new ListViewAdapter(getActivity(), listItems);
@@ -203,56 +191,52 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         @Override
         protected Void doInBackground(Void... params)
         {
+            DaoSession daoSession = ((FRCKrawler) getActivity().getApplication()).getDaoSession();
             //Get all data from TBA ready to parse
             JsonElement jEvent = JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url)));
             JsonArray jTeams = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/teams")));
             JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
 
-            ActiveAndroid.beginTransaction();
             //Save the event
             Event event = JSON.getGson().fromJson(jEvent, Event.class);
-            event.game = mGame;
-            event.save();
+            event.setGame(mGame);
+            daoSession.getEventDao().insert(event);
 
             //Save the teams
             for (JsonElement element : jTeams) {
                 //Convert json element to team
                 Team team = JSON.getGson().fromJson(element, Team.class);
-                team.save();
+                LogHelper.debug(String.valueOf(team.getNumber()));
+                daoSession.getTeamDao().insert(team);
                 //Create a robot and save that robot to the database as well with the team
                 Robot robot = null;
+                List<Robot> robots = daoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(mGame.getId())).list();
 
-                List<Robot> robots = new Select().from(Robot.class).where("Game = ?", mGame.getId()).execute();
+                //Check to see if the robot already exists
                 for (Robot robot1 : robots) {
-                    if (robot1.team.number == team.number) {
+                    if (robot1.getTeam().getNumber() == team.getNumber()) {
                         robot = robot1;
                         break;
                     }
                 }
 
                 if (robot == null) {
-                    robot = new Robot(team, null, -1, mGame);
-                    robot.setRemoteId();
+                    daoSession.getRobotEventDao().insert(new RobotEvent(daoSession.getRobotDao().insert(new Robot(null, team.getNumber(), mGame.getId(), "", 0.0)), event.getId()));
+                } /* else if (new Select().from(RobotEvents.class).where("Robot = ?", robot.getId()).and("Event = ?", event.getId()).execute().size() <= 0) {
                     RobotEvents robotEvents = new RobotEvents(robot, event);
                     robotEvents.robot.save();
                     robotEvents.save();
-                } else if (new Select().from(RobotEvents.class).where("Robot = ?", robot.getId()).and("Event = ?", event.getId()).execute().size() <= 0) {
-                    RobotEvents robotEvents = new RobotEvents(robot, event);
-                    robotEvents.robot.save();
-                    robotEvents.save();
-                }
+                }*/
             }
+            JSON.set_daoSession(daoSession);
             for (JsonElement element : jMatches) {
                 //Save all the matches and alliances
                 Match match = JSON.getGson().fromJson(element, Match.class);
                 //Only save Qualifications
-                if (match.matchType.contains("qm")) {
-                    match.alliance.save();
-                    match.save();
+                if (match.getType().contains("qm")) {
+                    daoSession.insert(match);
                 }
             }
-            ActiveAndroid.setTransactionSuccessful();
-            ActiveAndroid.endTransaction();
             return null;
         }
 

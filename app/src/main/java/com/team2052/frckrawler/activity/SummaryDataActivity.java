@@ -8,13 +8,14 @@ import android.os.Bundle;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.CompiledMetricValue;
 import com.team2052.frckrawler.database.MetricCompiler;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.metric.Metric;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import frckrawler.Event;
+import frckrawler.Metric;
 
 /**
  * @author Adam
@@ -36,10 +37,10 @@ public class SummaryDataActivity extends ListActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        mEvent = Event.load(Event.class, getIntent().getLongExtra(EVENT_ID, 0));
-        mMetric = Metric.load(Metric.class, getIntent().getLongExtra(PARENT_ID, 0));
+        mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(EVENT_ID, 0));
+        mMetric = mDaoSession.getMetricDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         if (getActionBar() != null) {
-            getActionBar().setTitle(mMetric.name + " - Summary");
+            getActionBar().setTitle(mMetric.getName() + " - Summary");
         }
         super.onCreate(savedInstanceState);
     }
@@ -57,7 +58,7 @@ public class SummaryDataActivity extends ListActivity
         @Override
         protected List<CompiledMetricValue> doInBackground(Void... params)
         {
-            return MetricCompiler.getCompiledMetric(mEvent, mMetric);
+            return MetricCompiler.getCompiledMetric(mEvent, mMetric, mDaoSession);
         }
 
         @Override
@@ -65,7 +66,7 @@ public class SummaryDataActivity extends ListActivity
         {
             List<ListItem> listItems = new ArrayList<>();
             for (CompiledMetricValue metricValue : compiledMetricValues) {
-                listItems.add(new SimpleListElement(metricValue.robot.team.number + " - " + metricValue.compiledValue, Integer.toString(metricValue.robot.team.number)));
+                listItems.add(new SimpleListElement(metricValue.robot.getTeam().getNumber() + " - " + metricValue.compiledValue, Long.toString(metricValue.robot.getTeam().getNumber())));
             }
             mListView.setAdapter(mAdapter = new ListViewAdapter(SummaryDataActivity.this, listItems));
         }

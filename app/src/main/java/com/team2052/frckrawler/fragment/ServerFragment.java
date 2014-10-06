@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +17,16 @@ import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.Server;
-import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.models.Event;
+import com.team2052.frckrawler.database.ExportUtil;
+import com.team2052.frckrawler.util.LogHelper;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
-public class ServerFragment extends Fragment implements View.OnClickListener
+import frckrawler.Event;
+
+public class ServerFragment extends BaseFragment implements View.OnClickListener
 {
     private static final int REQUEST_BT_ENABLED = 1;
     private Server server;
@@ -52,8 +57,40 @@ public class ServerFragment extends Fragment implements View.OnClickListener
             case R.id.hostToggle:
                 openServer();
                 break;
+            case R.id.excel:
+                new ExportToFileSystem().execute();
+                break;
         }
     }
+
+    public class ExportToFileSystem extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            File fileSystem = Environment.getExternalStorageDirectory();
+            Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
+            Event selectedEvent = (Event) eventChooser.getSelectedItem();
+            if (fileSystem.canWrite()) {
+                LogHelper.debug("Starting Export");
+                File file = null;
+                try {
+                    file = File.createTempFile(
+                            selectedEvent.getGame().getName() + "_" + selectedEvent.getName() + "_" + "Summary",  /* prefix */
+                            ".csv",         /* suffix */
+                            fileSystem      /* directory */
+                    );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (file != null) {
+                    ExportUtil.exportEventDataToCSV(selectedEvent, file, mDaoSession);
+                }
+            }
+            return null;
+        }
+    }
+
 
     private void openServer()
     {
@@ -100,7 +137,7 @@ public class ServerFragment extends Fragment implements View.OnClickListener
         @Override
         protected List<Event> doInBackground(Void... params)
         {
-            return DBManager.loadAllEvents();
+            return mDaoSession.getEventDao().loadAll();
         }
 
         @Override

@@ -13,12 +13,12 @@ import android.widget.EditText;
 import android.widget.ToggleButton;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.models.Game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import frckrawler.Game;
 
 public class OptionsFragment extends Fragment implements View.OnClickListener
 {
@@ -132,47 +132,6 @@ public class OptionsFragment extends Fragment implements View.OnClickListener
                     }
                 });
                 weightBuilder.show();
-                break;
-
-            case R.id.generateRobots:
-                final ToggleButton b = (ToggleButton) view;
-                if (b.isChecked()) {
-                    List<Game> games = DBManager.loadAllGames();
-                    final ArrayList<CharSequence> choices = new ArrayList<>();
-
-                    for (Game game : games) {
-                        choices.add(game.name);
-                    }
-
-                    AlertDialog.Builder generateBuilder = new AlertDialog.Builder(getActivity());
-                    generateBuilder.setTitle("Choose a game for new robots");
-                    generateBuilder.setItems(Arrays.copyOf(choices.toArray(), choices.size(), CharSequence[].class), new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            gameName = choices.get(which).toString();
-                            b.setText(choices.get(which));
-                            dialog.dismiss();
-                        }
-                    });
-
-                    AlertDialog gameDialog = generateBuilder.create();
-                    gameDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
-                    {
-
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            b.setChecked(false);
-                        }
-                    });
-                    gameDialog.show();
-
-                } else {
-                    gameName = "none";
-                }
-
                 break;
 
             case R.id.generateHelp:

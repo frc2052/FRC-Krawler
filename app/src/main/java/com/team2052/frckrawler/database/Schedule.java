@@ -1,10 +1,10 @@
 package com.team2052.frckrawler.database;
 
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Match;
-
 import java.io.Serializable;
 import java.util.List;
+
+import frckrawler.Event;
+import frckrawler.Match;
 
 /**
  * @author Adam

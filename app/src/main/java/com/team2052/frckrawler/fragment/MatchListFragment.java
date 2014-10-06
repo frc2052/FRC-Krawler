@@ -3,16 +3,17 @@ package com.team2052.frckrawler.fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.items.MatchListItem;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import frckrawler.Event;
+import frckrawler.Match;
+import frckrawler.MatchDao;
 
 /**
  * @author Adam
@@ -33,10 +34,9 @@ public class MatchListFragment extends ListFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
+    public void onPostCreate()
     {
-        mEvent = Event.load(Event.class, getArguments().getLong(DatabaseActivity.PARENT_ID));
-        super.onCreate(savedInstanceState);
+        mEvent = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class MatchListFragment extends ListFragment
         protected List<Match> doInBackground(Void... params)
         {
             //Get Matches ascending from the provided event id
-            return new Select().from(Match.class).orderBy("MatchNumber ASC").where("Event = ?", mEvent.getId()).execute();
+            return mDaoSession.getMatchDao().queryBuilder().orderAsc(MatchDao.Properties.Number).where(MatchDao.Properties.EventId.eq(mEvent.getId())).list();
         }
 
         @Override

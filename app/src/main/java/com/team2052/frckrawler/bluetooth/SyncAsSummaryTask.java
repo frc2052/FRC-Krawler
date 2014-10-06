@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.team2052.frckrawler.database.DBManager;
 
 public class SyncAsSummaryTask extends AsyncTask<BluetoothDevice, Void, Integer>
 {
@@ -15,7 +14,6 @@ public class SyncAsSummaryTask extends AsyncTask<BluetoothDevice, Void, Integer>
     private static int tasksRunning = 0;
     private volatile String deviceName;
     private Context context;
-    private DBManager dbManager;
     private SyncCallbackHandler handler;
 
     public SyncAsSummaryTask(Context _context, SyncCallbackHandler _handler)

@@ -5,10 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.RobotEvents;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 
@@ -17,8 +14,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import frckrawler.Event;
+import frckrawler.RobotEvent;
+import frckrawler.RobotEventDao;
+
 /**
- * Created by Adam on 10/3/2014.
+ * @author Adam
+ * @since 10/3/2014
  */
 public class RobotsActivity extends ListActivity
 {
@@ -35,8 +37,8 @@ public class RobotsActivity extends ListActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        mEvent = Event.load(Event.class, getIntent().getLongExtra(PARENT_ID, 0));
         super.onCreate(savedInstanceState);
+        mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
     }
 
     @Override
@@ -45,30 +47,30 @@ public class RobotsActivity extends ListActivity
         new GetRobots().execute();
     }
 
-    public class GetRobots extends AsyncTask<Void, Void, List<RobotEvents>>
+    public class GetRobots extends AsyncTask<Void, Void, List<RobotEvent>>
     {
 
         @Override
-        protected List<RobotEvents> doInBackground(Void... voids)
+        protected List<RobotEvent> doInBackground(Void... voids)
         {
-            return new Select().from(RobotEvents.class).where("Event = ?", mEvent.getId()).execute();
+            return mDaoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(mEvent.getId())).list();
         }
 
         @Override
-        protected void onPostExecute(List<RobotEvents> robotEventses)
+        protected void onPostExecute(List<RobotEvent> robotEventses)
         {
-            Collections.sort(robotEventses, new Comparator<RobotEvents>()
+            Collections.sort(robotEventses, new Comparator<RobotEvent>()
             {
                 @Override
-                public int compare(RobotEvents robotEvents, RobotEvents robotEvents2)
+                public int compare(RobotEvent robotEvent, RobotEvent robotEvent2)
                 {
-                    return Double.compare(robotEvents.robot.team.number, robotEvents2.robot.team.number);
+                    return Double.compare(robotEvent.getRobot().getTeam().getNumber(), robotEvent2.getRobot().getTeam().getNumber());
                 }
             });
 
             List<ListItem> listItems = new ArrayList<>();
-            for (RobotEvents robotEvent : robotEventses) {
-                listItems.add(new SimpleListElement(Integer.toString(robotEvent.robot.team.number), Long.toString(robotEvent.robot.getId())));
+            for (RobotEvent robotEvent : robotEventses) {
+                listItems.add(new SimpleListElement(Long.toString(robotEvent.getRobot().getTeam().getNumber()), Long.toString(robotEvent.getRobot().getId())));
             }
             mListView.setAdapter(mAdapter = new ListViewAdapter(RobotsActivity.this, listItems));
         }

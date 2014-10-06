@@ -19,7 +19,7 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
 
         super(context, m.getMetric(), m.getValue());
         inflater.inflate(R.layout.widget_metric_boolean, this);
-        ((TextView) findViewById(R.id.name)).setText(m.getMetric().name);
+        ((TextView) findViewById(R.id.name)).setText(m.getMetric().getName());
         findViewById(R.id.yes).setOnClickListener(this);
         findViewById(R.id.no).setOnClickListener(this);
 

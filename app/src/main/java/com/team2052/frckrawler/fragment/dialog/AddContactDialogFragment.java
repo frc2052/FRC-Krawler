@@ -8,11 +8,13 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.EditText;
 
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
-import com.team2052.frckrawler.database.models.Contact;
-import com.team2052.frckrawler.database.models.Team;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
+
+import frckrawler.Contact;
+import frckrawler.Team;
 
 /**
  * @author Adam
@@ -25,7 +27,7 @@ public class AddContactDialogFragment extends DialogFragment
     {
         AddContactDialogFragment fragment = new AddContactDialogFragment();
         Bundle b = new Bundle();
-        b.putLong(DatabaseActivity.PARENT_ID, team.getId());
+        b.putLong(DatabaseActivity.PARENT_ID, team.getNumber());
         fragment.setArguments(b);
         return fragment;
     }
@@ -34,7 +36,7 @@ public class AddContactDialogFragment extends DialogFragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mTeam = Team.load(Team.class, getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
+        mTeam = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getTeamDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
     }
 
     @Override
@@ -61,7 +63,7 @@ public class AddContactDialogFragment extends DialogFragment
                 String phone = ((EditText) view.findViewById(R.id.phone)).getText().toString();
                 String address = ((EditText) view.findViewById(R.id.address)).getText().toString();
                 String teamRole = ((EditText) view.findViewById(R.id.teamRole)).getText().toString();
-                new Contact(mTeam, name, email, address, teamRole, phone).save();
+                ((FRCKrawler) getActivity().getApplication()).getDaoSession().getContactDao().insert(new Contact(null, mTeam.getNumber(), name, email, address, phone, teamRole));
                 ((ListUpdateListener) getParentFragment()).updateList();
             }
         });

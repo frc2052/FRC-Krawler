@@ -6,8 +6,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.listitems.ListElement;
+
+import frckrawler.Team;
 
 /**
  * @author Adam
@@ -18,7 +19,7 @@ public class TeamListElement extends ListElement
 
     public TeamListElement(Team team)
     {
-        super(Integer.toString(team.number));
+        super(Long.toString(team.getNumber()));
         this.team = team;
     }
 
@@ -28,9 +29,9 @@ public class TeamListElement extends ListElement
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_team, null);
         }
-        ((TextView) convertView.findViewById(R.id.list_item_team_number)).setText(Integer.toString(team.number));
-        ((TextView) convertView.findViewById(R.id.list_item_team_name)).setText(team.name);
-        ((TextView) convertView.findViewById(R.id.list_item_team_location)).setText(team.location);
+        ((TextView) convertView.findViewById(R.id.list_item_team_number)).setText(Long.toString(team.getNumber()));
+        ((TextView) convertView.findViewById(R.id.list_item_team_name)).setText(team.getName());
+        ((TextView) convertView.findViewById(R.id.list_item_team_location)).setText(team.getLocation());
         return convertView;
     }
 }

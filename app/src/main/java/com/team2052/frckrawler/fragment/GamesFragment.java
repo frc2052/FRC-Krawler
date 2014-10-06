@@ -4,29 +4,24 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.EventsActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.fragment.dialog.AddGameDialogFragment;
-import com.team2052.frckrawler.listitems.elements.GameListElement;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
+import com.team2052.frckrawler.listitems.elements.GameListElement;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import frckrawler.Game;
 
 public class GamesFragment extends ListFragment implements ListUpdateListener
 {
@@ -39,8 +34,8 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
         public boolean onCreateActionMode(ActionMode mode, Menu menu)
         {
             long gameId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
-            Game game = Game.load(Game.class, gameId);
-            mode.setTitle(game.name);
+            Game game = mDaoSession.getGameDao().load(gameId);
+            mode.setTitle(game.getName());
             mode.getMenuInflater().inflate(R.menu.edit_delete_game_menu, menu);
             return true;
         }
@@ -55,7 +50,7 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
         public boolean onActionItemClicked(final ActionMode mode, MenuItem item)
         {
             long gameId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
-            final Game game = Game.load(Game.class, gameId);
+            final Game game = mDaoSession.getGameDao().load(gameId);
             switch (item.getItemId()) {
                 case R.id.menu_event:
                     getActivity().startActivity(EventsActivity.newInstance(getActivity(), game));
@@ -74,7 +69,7 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i)
                         {
-                            game.delete();
+                            FRCKrawler.getDaoSession(getActivity()).getGameDao().deleteByKey(game.getId());
                             dialogInterface.dismiss();
                             updateList();
                             mode.finish();
@@ -173,7 +168,7 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
         @Override
         protected List<Game> doInBackground(Void... params)
         {
-            return DBManager.loadAllGames();
+            return mDaoSession.getGameDao().queryBuilder().list();
         }
 
         @Override

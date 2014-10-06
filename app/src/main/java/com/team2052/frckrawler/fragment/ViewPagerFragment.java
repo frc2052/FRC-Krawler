@@ -14,7 +14,7 @@ import com.team2052.frckrawler.R;
 /**
  * @author Adam
  */
-public abstract class ViewPagerFragment extends Fragment
+public abstract class ViewPagerFragment extends BaseFragment
 {
     protected PagerSlidingTabStrip mTabs;
     protected ViewPager mViewPager;
@@ -22,6 +22,7 @@ public abstract class ViewPagerFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.pager, null);
         mTabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
         mViewPager = (ViewPager) view.findViewById(R.id.pager);

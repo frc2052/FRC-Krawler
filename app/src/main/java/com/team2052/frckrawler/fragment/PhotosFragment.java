@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,12 +17,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.RobotPhotoAdapter;
-import com.team2052.frckrawler.database.models.Robot;
-import com.team2052.frckrawler.database.models.RobotPhoto;
 import com.team2052.frckrawler.util.LogHelper;
 
 import java.io.File;
@@ -32,11 +28,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import frckrawler.Robot;
+import frckrawler.RobotPhoto;
+import frckrawler.RobotPhotoDao;
+
 /**
  * @author Adam
  * @since 10/4/2014
  */
-public class PhotosFragment extends Fragment
+public class PhotosFragment extends BaseFragment
 {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int RESULT_LOAD_IMAGE = 2;
@@ -56,11 +56,10 @@ public class PhotosFragment extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
+    public void onActivityCreated(Bundle savedInstanceState)
     {
-        mRobot = Robot.load(Robot.class, getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
         setHasOptionsMenu(true);
-        super.onCreate(savedInstanceState);
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -72,7 +71,9 @@ public class PhotosFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_grid_photots, null);
+        mRobot = mDaoSession.getRobotDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
         mGridview = (GridView) view.findViewById(R.id.gridview);
         new GetRobotPhotosTask().execute();
         return view;
@@ -110,7 +111,7 @@ public class PhotosFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            new RobotPhoto(mRobot, new File(mCurrentPhotoPath)).save();
+            mDaoSession.getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId()));
         } else if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -126,7 +127,7 @@ public class PhotosFragment extends Fragment
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            new RobotPhoto(mRobot, new File(mCurrentPhotoPath)).save();
+            mDaoSession.getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId()));
             cursor.close();
         }
     }
@@ -135,7 +136,7 @@ public class PhotosFragment extends Fragment
     {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_" + mRobot.game.name.toLowerCase() + "_" + mRobot.team.number;
+        String imageFileName = "JPEG_" + timeStamp + "_" + mRobot.getGame().getName().toLowerCase() + "_" + mRobot.getTeam().getNumber();
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -154,7 +155,7 @@ public class PhotosFragment extends Fragment
         @Override
         protected List<RobotPhoto> doInBackground(Void... voids)
         {
-            return new Select().from(RobotPhoto.class).where("Robot = ?", mRobot.getId()).execute();
+            return mDaoSession.getRobotPhotoDao().queryBuilder().where(RobotPhotoDao.Properties.RobotId.eq(mRobot.getId())).list();
         }
 
         @Override

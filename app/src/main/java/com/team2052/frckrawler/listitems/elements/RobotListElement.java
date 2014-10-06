@@ -4,8 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.team2052.frckrawler.database.models.Robot;
 import com.team2052.frckrawler.listitems.ListElement;
+
+import frckrawler.Robot;
 
 /**
  * @author Adam

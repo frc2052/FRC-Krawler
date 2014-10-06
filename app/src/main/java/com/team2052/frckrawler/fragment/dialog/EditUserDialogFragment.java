@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.EditText;
 
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
-import com.team2052.frckrawler.database.models.User;
+
+import frckrawler.User;
 
 /**
  * @author Adam
@@ -32,7 +34,7 @@ public class EditUserDialogFragment extends DialogFragment
     {
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
-        mUser = User.load(User.class, b.getLong(USER_ID));
+        mUser = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getUserDao().load(b.getLong(USER_ID));
     }
 
     @Override
@@ -41,15 +43,15 @@ public class EditUserDialogFragment extends DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final EditText editText = new EditText(getActivity());
         editText.setHint("User Name");
-        editText.setText(mUser.name);
+        editText.setText(mUser.getName());
         builder.setView(editText);
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                mUser.name = editText.getText().toString();
-                mUser.save();
+                mUser.setName(editText.getText().toString());
+                ((FRCKrawler) getActivity().getApplication()).getDaoSession().getUserDao().update(mUser);
                 ((ListUpdateListener) getParentFragment()).updateList();
                 dismiss();
             }

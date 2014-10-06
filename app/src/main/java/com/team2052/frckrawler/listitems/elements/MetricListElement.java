@@ -6,8 +6,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.models.metric.Metric;
+import com.team2052.frckrawler.database.MetricValues;
+import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 import com.team2052.frckrawler.listitems.ListElement;
+
+import frckrawler.Metric;
 
 /**
  * @author Adam
@@ -23,22 +26,22 @@ public class MetricListElement extends ListElement
     {
         super(Long.toString(metric.getId()));
         this.metric = metric;
-        Object[] rangeArr = metric.range;
-        if (metric.description.equals("")) {
+        String[] rangeArr = StringArrayDeserializer.deserialize(metric.getRange());
+        if (metric.getDescription().equals("")) {
             descriptionString = "No Description";
         } else {
-            descriptionString = metric.description;
+            descriptionString = metric.getDescription();
         }
-        switch (metric.type) {
-            case Metric.BOOLEAN:
+        switch (metric.getType()) {
+            case MetricValues.BOOLEAN:
                 typeString = "Boolean";
                 rangeString = "Not Applicable";
                 break;
-            case Metric.COUNTER:
+            case MetricValues.COUNTER:
                 typeString = "Counter";
                 rangeString = rangeArr[0] + " to " + rangeArr[1] + " Incrementing by " + rangeArr[2];
                 break;
-            case Metric.CHOOSER:
+            case MetricValues.CHOOSER:
                 boolean isFirst = true;
                 for (Object o : rangeArr) {
                     if (!isFirst) {
@@ -50,7 +53,7 @@ public class MetricListElement extends ListElement
                 }
                 typeString = "Chooser";
                 break;
-            case Metric.SLIDER:
+            case MetricValues.SLIDER:
                 rangeString = rangeArr[0] + " to " + rangeArr[1];
                 typeString = "Slider";
                 break;
@@ -61,7 +64,7 @@ public class MetricListElement extends ListElement
     public View getView(final Context c, LayoutInflater inflater, View convertView)
     {
         convertView = inflater.inflate(R.layout.list_item_metric, null);
-        ((TextView) convertView.findViewById(R.id.metric_list_name)).setText(metric.name);
+        ((TextView) convertView.findViewById(R.id.metric_list_name)).setText(metric.getName());
         ((TextView) convertView.findViewById(R.id.metric_list_description)).setText(descriptionString);
         ((TextView) convertView.findViewById(R.id.metric_list_range)).setText(rangeString);
         ((TextView) convertView.findViewById(R.id.metric_list_type)).setText(typeString);

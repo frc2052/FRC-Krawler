@@ -6,18 +6,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.Contact;
-import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.fragment.dialog.AddContactDialogFragment;
-import com.team2052.frckrawler.listitems.elements.ContactListElement;
 import com.team2052.frckrawler.listitems.ListItem;
+import com.team2052.frckrawler.listitems.elements.ContactListElement;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import frckrawler.Contact;
+import frckrawler.ContactDao;
+import frckrawler.Team;
 
 /**
  * @author Adam
@@ -30,7 +31,7 @@ public class ContactsFragment extends ListFragment
     {
         ContactsFragment fragment = new ContactsFragment();
         Bundle b = new Bundle();
-        b.putLong(DatabaseActivity.PARENT_ID, team.getId());
+        b.putLong(DatabaseActivity.PARENT_ID, team.getNumber());
         fragment.setArguments(b);
         return fragment;
     }
@@ -45,7 +46,7 @@ public class ContactsFragment extends ListFragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mTeam = Team.load(Team.class, getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
+        mTeam = mDaoSession.getTeamDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
         setHasOptionsMenu(true);
     }
 
@@ -72,7 +73,7 @@ public class ContactsFragment extends ListFragment
         @Override
         protected List<Contact> doInBackground(Void... params)
         {
-            return new Select().from(Contact.class).where("Team = ?", mTeam.getId()).execute();
+            return mDaoSession.getContactDao().queryBuilder().where(ContactDao.Properties.TeamId.eq(mTeam.getNumber())).list();
         }
 
         @Override

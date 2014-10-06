@@ -18,4 +18,6 @@ public class LogHelper
     {
         Log.d(TAG, text);
     }
+
+
 }

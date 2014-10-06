@@ -7,16 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.activity.TeamInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.TeamListElement;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import frckrawler.EventDao;
+import frckrawler.Team;
+import frckrawler.TeamDao;
 
 public class TeamsFragment extends ListFragment
 {
@@ -37,7 +39,7 @@ public class TeamsFragment extends ListFragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                Team team = new Select().from(Team.class).where("Number = ?", ((ListElement) parent.getAdapter().getItem(position)).getKey()).executeSingle();
+                Team team = mDaoSession.getTeamDao().load(Long.valueOf(((ListElement) parent.getAdapter().getItem(position)).getKey()));
                 startActivity(TeamInfoActivity.newInstance(getActivity(), team));
             }
         });
@@ -57,7 +59,7 @@ public class TeamsFragment extends ListFragment
         @Override
         protected List<Team> doInBackground(Void... params)
         {
-            return new Select().from(Team.class).orderBy("Number").execute();
+            return mDaoSession.getTeamDao().queryBuilder().orderAsc(TeamDao.Properties.Number).list();
         }
 
         @Override

@@ -22,9 +22,12 @@ public abstract class ViewPagerActivity extends DatabaseActivity
         setContentView(R.layout.pager);
         mPager = (ViewPager) findViewById(R.id.pager);
         mTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        onPreLoadViewPager();
         mPager.setAdapter(setAdapter());
         mTabs.setViewPager(mPager);
     }
+
+    public void onPreLoadViewPager(){}
 
     /**
      * @return The adapter that you want to attach to the ViewPager and the Tabs

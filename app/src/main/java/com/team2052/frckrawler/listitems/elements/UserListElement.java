@@ -6,8 +6,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.models.User;
 import com.team2052.frckrawler.listitems.ListElement;
+
+import frckrawler.User;
 
 /**
  * @author Adam
@@ -27,7 +28,7 @@ public class UserListElement extends ListElement
     public View getView(final Context c, LayoutInflater inflater, View convertView)
     {
         convertView = inflater.inflate(R.layout.list_item_user, null);
-        ((TextView) convertView.findViewById(R.id.list_item_user_name)).setText(user.name);
+        ((TextView) convertView.findViewById(R.id.list_item_user_name)).setText(user.getName());
         return convertView;
     }
 }

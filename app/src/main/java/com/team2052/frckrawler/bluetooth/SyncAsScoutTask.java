@@ -7,20 +7,9 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Delete;
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.GlobalValues;
-import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.Schedule;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Game;
-import com.team2052.frckrawler.database.models.Match;
-import com.team2052.frckrawler.database.models.metric.Metric;
-import com.team2052.frckrawler.database.models.metric.MetricMatchData;
-import com.team2052.frckrawler.database.models.metric.MetricPitData;
-import com.team2052.frckrawler.database.models.RobotEvents;
-import com.team2052.frckrawler.database.models.Team;
-import com.team2052.frckrawler.database.models.User;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +19,8 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.UUID;
 
+import frckrawler.*;
+
 public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
 {
     private static int SYNC_SUCCESS = 1;
@@ -37,6 +28,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
     private static int SYNC_CANCELLED = 3;
     private static int SYNC_ERROR = 4;
     private static int tasksRunning = 0;
+    private final DaoSession mDaoSession;
 
     private volatile String deviceName;
     private Context context;
@@ -47,6 +39,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
         deviceName = "device";
         context = c.getApplicationContext();
         handler = h;
+        mDaoSession = ((FRCKrawler) c.getApplicationContext()).getDaoSession();
     }
 
     public static boolean isTaskRunning()
@@ -83,8 +76,8 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             ObjectOutputStream ooStream = new ObjectOutputStream(outStream);
 
             //Get the data to send
-            List<MetricMatchData> metricMatchData = DBManager.loadAllFromType(MetricMatchData.class);
-            List<MetricPitData> metricPitData = DBManager.loadAllFromType(MetricPitData.class);
+            List<MatchData> metricMatchData = mDaoSession.getMatchDataDao().loadAll();
+            List<PitData> metricPitData = mDaoSession.getPitDataDao().loadAll();
 
             if (isCancelled())
                 return SYNC_CANCELLED;
@@ -92,14 +85,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             //Write the scout data
             ooStream.writeInt(BluetoothInfo.SCOUT);
             ooStream.writeObject(metricMatchData);
-            ooStream.writeObject(metricPitData);
             ooStream.flush();
-
-            //Clear out the old data after it is sent
-            //Cleaning out the parent tables clears the whole database
-            new Delete().from(Game.class).execute();
-            new Delete().from(Team.class).execute();
-            new Delete().from(User.class).execute();
 
             if (isCancelled())
                 return SYNC_CANCELLED;
@@ -107,8 +93,6 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             //Start fdthe reading thread
             //Set the current event id hosted by the server
             Event event1 = (Event) ioStream.readObject();
-            event1.game.save();
-            event1.save();
 
             SharedPreferences sharedPreferences = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -117,32 +101,36 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
 
             List<Metric> inMetric = (List<Metric>) ioStream.readObject();
             List<User> inUsers = (List<User>) ioStream.readObject();
-            List<RobotEvents> inRobots = (List<RobotEvents>) ioStream.readObject();
+            List<RobotEvent> inRobots = (List<RobotEvent>) ioStream.readObject();
+            List<Team> inTeams = (List<Team>) ioStream.readObject();
             Schedule inSchedule = (Schedule) ioStream.readObject();
 
             if (isCancelled())
                 return SYNC_CANCELLED;
 
-            ActiveAndroid.beginTransaction();
-
-            for (RobotEvents robot : inRobots) {
-                robot.save();
-            }
-
-            for (Match match : inSchedule.matches) {
-                match.save();
-            }
-
-            for (Metric metric1 : inMetric) {
-                metric1.save();
+            for (Metric metric : inMetric) {
+                mDaoSession.insertOrReplace(metric);
             }
 
             for (User user : inUsers) {
-                user.save();
+                mDaoSession.insertOrReplace(user);
             }
 
-            ActiveAndroid.setTransactionSuccessful();
-            ActiveAndroid.endTransaction();
+            for (RobotEvent robotEvent : inRobots) {
+                mDaoSession.insert(robotEvent);
+                mDaoSession.insertOrReplace(robotEvent.getRobot());
+            }
+
+            for (Team team : inTeams) {
+                mDaoSession.insertOrReplace(team);
+            }
+
+            for (Match match : inSchedule.matches) {
+                mDaoSession.insertOrReplace(match);
+            }
+
+            mDaoSession.insertOrReplace(event1);
+            mDaoSession.insertOrReplace(event1.getGame());
 
             //Close the streams
             ooStream.close();

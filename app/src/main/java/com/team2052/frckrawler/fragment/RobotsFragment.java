@@ -7,19 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.activity.RobotActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Robot;
-import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.dao.query.WhereCondition;
+import frckrawler.Event;
+import frckrawler.Robot;
+import frckrawler.RobotDao;
+import frckrawler.Team;
 
 /**
  * @author Adam
@@ -36,7 +38,7 @@ public class RobotsFragment extends ListFragment
         RobotsFragment fragment = new RobotsFragment();
         Bundle b = new Bundle();
         b.putInt(VIEW_TYPE, 0);
-        b.putLong(DatabaseActivity.PARENT_ID, team.getId());
+        b.putLong(DatabaseActivity.PARENT_ID, team.getNumber());
         fragment.setArguments(b);
         return fragment;
     }
@@ -88,8 +90,12 @@ public class RobotsFragment extends ListFragment
         @Override
         protected List<Robot> doInBackground(Void... params)
         {
+            WhereCondition condition = null;
+            if(mViewType == 0){
+                condition = RobotDao.Properties.TeamId.eq(mKey);
+            }
             //Load robots based on the view type
-            return new Select().from(Robot.class).where(mViewType == 0 ? "Team = ?" : "Event = ?", mKey).execute();
+            return mDaoSession.getRobotDao().queryBuilder().where(condition).list();
         }
 
         @Override
@@ -98,7 +104,7 @@ public class RobotsFragment extends ListFragment
             List<ListItem> listItems = new ArrayList<>();
             for (Robot robot : robots) {
                 //TODO List Item
-                listItems.add(new SimpleListElement(robot.team.toString() + " - " + robot.game.name, Long.toString(robot.getId())));
+                listItems.add(new SimpleListElement(robot.getTeam().getNumber() + " - " + robot.getGame().getName(), Long.toString(robot.getId())));
             }
             mListView.setAdapter(new ListViewAdapter(getActivity(), listItems));
         }

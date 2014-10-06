@@ -9,15 +9,18 @@ import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.models.Game;
-import com.team2052.frckrawler.database.models.metric.Metric;
 import com.team2052.frckrawler.fragment.dialog.AddMetricFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.MetricListElement;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.dao.query.QueryBuilder;
+import de.greenrobot.dao.query.WhereCondition;
+import frckrawler.Game;
+import frckrawler.Metric;
+import frckrawler.MetricDao;
 
 public class MetricsActivity extends ListActivity
 {
@@ -38,14 +41,14 @@ public class MetricsActivity extends ListActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        mGame = Game.load(Game.class, getIntent().getLongExtra(PARENT_ID, -1));
+        super.onCreate(savedInstanceState);
+        mGame = mDaoSession.getGameDao().load(getIntent().getLongExtra(PARENT_ID, -1));
         metricCategory = getIntent().getIntExtra(METRIC_CATEGORY, -1);
         if (getActionBar() != null) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        super.onCreate(savedInstanceState);
         setActionBarTitle(MetricType.VALID_TYPES[metricCategory].title);
-        setActionBarSubtitle(mGame.name);
+        setActionBarSubtitle(mGame.getName());
     }
 
 
@@ -92,7 +95,10 @@ public class MetricsActivity extends ListActivity
         @Override
         protected Void doInBackground(Void... v)
         {
-            List<Metric> metrics = DBManager.loadFromMetrics().where("Game = ?", mGame.getId()).and("Category = ?", metricCategory).execute();
+            WhereCondition eq = MetricDao.Properties.Category.eq(metricCategory);
+            QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
+            metricQueryBuilder.and(MetricDao.Properties.Category.eq(metricCategory), MetricDao.Properties.GameId.eq(mGame.getId()));
+            List<Metric> metrics = metricQueryBuilder.list();
             ArrayList<ListItem> listMetrics = new ArrayList<>();
             for (Metric metric : metrics) {
                 listMetrics.add(new MetricListElement(metric));

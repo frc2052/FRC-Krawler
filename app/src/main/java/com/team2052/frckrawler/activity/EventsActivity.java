@@ -10,18 +10,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.fragment.dialog.ImportDataSimpleDialogFragment;
-import com.team2052.frckrawler.listitems.elements.EventListElement;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
+import com.team2052.frckrawler.listitems.elements.EventListElement;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import frckrawler.Event;
+import frckrawler.EventDao;
+import frckrawler.Game;
 
 public class EventsActivity extends ListActivity
 {
@@ -33,9 +34,9 @@ public class EventsActivity extends ListActivity
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu)
         {
             long eventId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
-            Event event = Event.load(Event.class, eventId);
+            Event event = mDaoSession.getEventDao().load(eventId);
             actionMode.getMenuInflater().inflate(R.menu.edit_delete_event_menu, menu);
-            actionMode.setTitle(event.name);
+            actionMode.setTitle(event.getName());
             return true;
         }
 
@@ -49,7 +50,7 @@ public class EventsActivity extends ListActivity
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem)
         {
             long eventId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
-            Event event = Event.load(Event.class, eventId);
+            Event event = mDaoSession.getEventDao().load(eventId);
             switch (menuItem.getItemId()) {
                 case R.id.menu_delete:
                     event.delete();
@@ -87,13 +88,13 @@ public class EventsActivity extends ListActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        mGame = Game.load(Game.class, getIntent().getLongExtra(PARENT_ID, -1));
+        super.onCreate(savedInstanceState);
+        mGame = mDaoSession.getGameDao().load(getIntent().getLongExtra(PARENT_ID, -1));
         if (getActionBar() != null) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        super.onCreate(savedInstanceState);
         setActionBarTitle("Events");
-        setActionBarSubtitle(mGame.name);
+        setActionBarSubtitle(mGame.getName());
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
         {
             @Override
@@ -141,7 +142,7 @@ public class EventsActivity extends ListActivity
         protected List<Event> doInBackground(Void... params)
         {
             //Load events based on gameId
-            return new Select().from(Event.class).where("Game = ?", mGame.getId()).orderBy("Name ASC").execute();
+            return mDaoSession.getEventDao().queryBuilder().where(EventDao.Properties.GameId.eq(mGame.getId())).list();
         }
 
         @Override

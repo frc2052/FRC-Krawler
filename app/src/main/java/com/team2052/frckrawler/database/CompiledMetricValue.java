@@ -1,10 +1,13 @@
 package com.team2052.frckrawler.database;
 
-import com.team2052.frckrawler.database.models.metric.Metric;
-import com.team2052.frckrawler.database.models.Robot;
+import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
+import com.team2052.frckrawler.util.LogHelper;
 
 import java.text.DecimalFormat;
 import java.util.List;
+
+import frckrawler.Metric;
+import frckrawler.Robot;
 
 /**
  * @author Adam
@@ -33,7 +36,7 @@ public class CompiledMetricValue
     private void compileMetricValues()
     {
         switch (metricType) {
-            case Metric.BOOLEAN:
+            case MetricValues.BOOLEAN:
                 double yes = 0;
                 double no = 0;
 
@@ -46,6 +49,7 @@ public class CompiledMetricValue
                     } else {
                         no += compileWeight;
                     }
+                    LogHelper.debug(data + robot.getTeam().getNumber());
                 }
                 //Check to see if it is a NaN if it is then set the value to 0.0
                 //Return the amount of yes in the amount of yes and no's
@@ -56,8 +60,8 @@ public class CompiledMetricValue
                 }
                 break;
             //Do the same for slider and counter
-            case Metric.SLIDER:
-            case Metric.COUNTER:
+            case MetricValues.SLIDER:
+            case MetricValues.COUNTER:
                 double numerator = 0;
                 double denominator = 0;
 
@@ -74,8 +78,8 @@ public class CompiledMetricValue
                 }
 
                 break;
-            case Metric.CHOOSER:
-                Object[] range = metric.range;
+            case MetricValues.CHOOSER:
+                String[] range = StringArrayDeserializer.deserialize(metric.getRange());
                 double[] counts = new double[range.length];
 
                 for (MetricValue metricValue : metricData) {

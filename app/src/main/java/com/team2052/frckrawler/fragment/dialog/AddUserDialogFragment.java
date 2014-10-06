@@ -8,9 +8,11 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.EditText;
 
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.models.User;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
+
+import frckrawler.User;
 
 /**
  * @author Adam
@@ -30,7 +32,7 @@ public class AddUserDialogFragment extends DialogFragment
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                new User(((EditText) view.findViewById(R.id.name)).getText().toString().trim()).save();
+                ((FRCKrawler)getActivity().getApplication()).getDaoSession().getUserDao().insert(new User(null, ((EditText) view.findViewById(R.id.name)).getText().toString().trim()));
                 ((ListUpdateListener) getParentFragment()).updateList();
             }
         });

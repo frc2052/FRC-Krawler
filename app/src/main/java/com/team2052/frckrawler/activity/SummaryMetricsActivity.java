@@ -7,16 +7,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.metric.Metric;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.MetricListElement;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import frckrawler.Event;
+import frckrawler.Metric;
+import frckrawler.MetricDao;
 
 /**
  * @author Adam
@@ -35,19 +36,19 @@ public class SummaryMetricsActivity extends ListActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        mEvent = Event.load(Event.class, getIntent().getLongExtra(PARENT_ID, 0));
         super.onCreate(savedInstanceState);
+        mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                Metric metric = Metric.load(Metric.class, Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()));
+                Metric metric = mDaoSession.getMetricDao().load(Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()));
                 startActivity(SummaryDataActivity.newInstance(SummaryMetricsActivity.this, metric, mEvent));
             }
         });
         if (getActionBar() != null) {
-            getActionBar().setTitle("Summary - " + mEvent.name);
+            getActionBar().setTitle("Summary " + mEvent.getName());
         }
     }
 
@@ -63,7 +64,7 @@ public class SummaryMetricsActivity extends ListActivity
         @Override
         protected List<Metric> doInBackground(Void... params)
         {
-            return new Select().from(Metric.class).where("Game = ?", mEvent.game.getId()).execute();
+            return mDaoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId())).list();
         }
 
         @Override

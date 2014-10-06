@@ -16,28 +16,27 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
-import com.team2052.frckrawler.database.models.Alliance;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Match;
-import com.team2052.frckrawler.database.models.MatchComments;
-import com.team2052.frckrawler.database.models.metric.Metric;
-import com.team2052.frckrawler.database.models.metric.MetricMatchData;
-import com.team2052.frckrawler.database.models.Robot;
-import com.team2052.frckrawler.database.models.Team;
+import com.team2052.frckrawler.fragment.BaseFragment;
 import com.team2052.frckrawler.view.metric.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.dao.query.QueryBuilder;
+import frckrawler.Event;
+import frckrawler.EventDao;
+import frckrawler.Match;
+import frckrawler.MatchDao;
+import frckrawler.Metric;
+import frckrawler.MetricDao;
+
 /**
  * @author Adam
  */
-public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSelectedListener
+public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnItemSelectedListener
 {
     private Event mEvent;
     private Spinner mMatchSpinner;
@@ -85,7 +84,7 @@ public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSe
         View view = inflater.inflate(R.layout.fragment_scouting_match, null);
         mMatchSpinner = (Spinner) view.findViewById(R.id.match_number);
         mAllianceSpinner = (Spinner) view.findViewById(R.id.team);
-        mEvent = Event.load(Event.class, getArguments().getLong(DatabaseActivity.PARENT_ID));
+        mEvent = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         mMatchSpinner.setOnItemSelectedListener(this);
         new GetAllMetrics().execute();
         new GetAllMatches().execute();
@@ -95,15 +94,7 @@ public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSe
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
-        Alliance alliance = ((Match) mMatchSpinner.getSelectedItem()).alliance;
-        List<Team> teams = new ArrayList<>();
-        teams.add(alliance.blue1);
-        teams.add(alliance.blue2);
-        teams.add(alliance.blue3);
-        teams.add(alliance.red1);
-        teams.add(alliance.red2);
-        teams.add(alliance.red3);
-        mAllianceSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, teams));
+        mAllianceSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, new String[]{}));
     }
 
     @Override
@@ -117,7 +108,7 @@ public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSe
         @Override
         protected List<Match> doInBackground(Void... params)
         {
-            return new Select().from(Match.class).where("Event = ?", mEvent.getId()).orderBy("MatchNumber ASC").execute();
+            return mDaoSession.getMatchDao().queryBuilder().orderAsc(MatchDao.Properties.Number).where(MatchDao.Properties.EventId.eq(mEvent.getId())).list();
         }
 
         @Override
@@ -133,7 +124,10 @@ public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSe
         @Override
         protected List<Metric> doInBackground(Void... params)
         {
-            return new Select().from(Metric.class).where("Game = ?", mEvent.game.getId()).and("Category = ?", MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal()).execute();
+            QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
+            metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId()));
+            metricQueryBuilder.where(MetricDao.Properties.Category.eq(MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal()));
+            return metricQueryBuilder.list();
         }
 
         @Override
@@ -153,7 +147,7 @@ public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSe
         protected Integer doInBackground(Void... params)
         {
             //Get data from view
-            Team team = (Team) mAllianceSpinner.getSelectedItem();
+            /*Team team = (Team) mAllianceSpinner.getSelectedItem();
             Match match = (Match) mMatchSpinner.getSelectedItem();
             Robot robot = new Select().from(Robot.class).where("Team = ?", team.getId()).and("Game = ?", mEvent.game.getId()).executeSingle();
 
@@ -173,10 +167,10 @@ public class ScoutMatchFragment extends Fragment implements AdapterView.OnItemSe
             for (MetricWidget widget : widgets) {
                 new MetricMatchData(robot, widget.getMetric(), widget.getMetricValue(), match).save();
             }
-            new MatchComments(match, robot, ((EditText) getView().findViewById(R.id.comments)).getText().toString()).save();
+            new RobotMatchComment(((EditText) getView().findViewById(R.id.comments)).getText().toString(), robot, match).save();
             ActiveAndroid.setTransactionSuccessful();
             ActiveAndroid.endTransaction();
-
+*/
             return 0;
         }
 

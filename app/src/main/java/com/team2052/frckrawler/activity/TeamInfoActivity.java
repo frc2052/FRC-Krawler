@@ -8,10 +8,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
-import com.team2052.frckrawler.database.models.Team;
 import com.team2052.frckrawler.fragment.ContactsFragment;
 import com.team2052.frckrawler.fragment.NeedSyncFragment;
 import com.team2052.frckrawler.fragment.RobotsFragment;
+
+import frckrawler.Team;
 
 /**
  * @author Adam
@@ -23,7 +24,7 @@ public class TeamInfoActivity extends ViewPagerActivity
     public static Intent newInstance(Context context, Team team)
     {
         Intent intent = new Intent(context, TeamInfoActivity.class);
-        intent.putExtra(PARENT_ID, team.getId());
+        intent.putExtra(PARENT_ID, team.getNumber());
         return intent;
     }
 
@@ -31,8 +32,8 @@ public class TeamInfoActivity extends ViewPagerActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mTeam = Team.load(Team.class, getIntent().getLongExtra(PARENT_ID, 0));
-        getActionBar().setTitle("Team " + mTeam.number);
+        mTeam = mDaoSession.getTeamDao().load(getIntent().getLongExtra(PARENT_ID, 0));
+        getActionBar().setTitle("Team " + mTeam.getNumber());
     }
 
     @Override

@@ -6,7 +6,9 @@ import android.widget.FrameLayout;
 
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.database.MetricValue.MetricTypeMismatchException;
-import com.team2052.frckrawler.database.models.metric.Metric;
+import com.team2052.frckrawler.database.MetricValues;
+
+import frckrawler.Metric;
 
 public abstract class MetricWidget extends FrameLayout
 {
@@ -36,14 +38,14 @@ public abstract class MetricWidget extends FrameLayout
         if (m == null)
             return null;
 
-        switch (m.getMetric().type) {
-            case Metric.BOOLEAN:
+        switch (m.getMetric().getType()) {
+            case MetricValues.BOOLEAN:
                 return new BooleanMetricWidget(c, m);
-            case Metric.CHOOSER:
+            case MetricValues.CHOOSER:
                 return new ChooserMetricWidget(c, m);
-            case Metric.COUNTER:
+            case MetricValues.COUNTER:
                 return new CounterMetricWidget(c, m);
-            case Metric.SLIDER:
+            case MetricValues.SLIDER:
                 return new SliderMetricWidget(c, m);
             default:
                 return null;

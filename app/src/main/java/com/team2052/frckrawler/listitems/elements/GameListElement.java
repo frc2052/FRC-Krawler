@@ -6,8 +6,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.models.Game;
 import com.team2052.frckrawler.listitems.ListElement;
+
+import frckrawler.Game;
 
 /**
  * @author Adam
@@ -26,7 +27,7 @@ public class GameListElement extends ListElement
     public View getView(final Context c, LayoutInflater inflater, View convertView)
     {
         convertView = inflater.inflate(R.layout.list_item_game, null);
-        ((TextView) convertView.findViewById(R.id.text_game)).setText(game.name);
+        ((TextView) convertView.findViewById(R.id.text_game)).setText(game.getName());
         return convertView;
     }
 

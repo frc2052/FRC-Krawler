@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 
 public class CounterMetricWidget extends MetricWidget implements OnClickListener
 {
@@ -22,12 +23,12 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
         super(context, m.getMetric(), m.getValue());
         inflater.inflate(R.layout.widget_metric_counter, this);
 
-        ((TextView) findViewById(R.id.title)).setText(m.getMetric().name);
+        ((TextView) findViewById(R.id.title)).setText(m.getMetric().getName());
 
         findViewById(R.id.plus).setOnClickListener(this);
         findViewById(R.id.minus).setOnClickListener(this);
 
-        Object[] o = m.getMetric().range;
+        String[] o = StringArrayDeserializer.deserialize(m.getMetric().getRange());
 
         max = 10;
         min = 0;
@@ -40,7 +41,7 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
             increment = Integer.parseInt((String) o[2]);
         }
 
-        if (m.getValue() != null)
+        if (m.getValue() != null && !m.getValue().isEmpty())
             currentValue = Integer.parseInt(m.getValue());
         else
             currentValue = min;

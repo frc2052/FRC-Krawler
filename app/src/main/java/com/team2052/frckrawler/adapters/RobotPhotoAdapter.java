@@ -1,18 +1,17 @@
 package com.team2052.frckrawler.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
-import com.team2052.frckrawler.database.models.RobotPhoto;
 import com.team2052.frckrawler.view.SquareImageView;
 
 import java.util.List;
+
+import frckrawler.RobotPhoto;
 
 /**
  * @author Adam
@@ -55,7 +54,7 @@ public class RobotPhotoAdapter extends BaseAdapter
             convertView = new SquareImageView(mContext);
         }
 
-        Picasso.with(mContext).load(photos.get(position).file).centerCrop().fit().into((ImageView) convertView);
+        Picasso.with(mContext).load("file:" + photos.get(position).getLocation()).centerCrop().fit().into((ImageView) convertView);
         return convertView;
     }
 

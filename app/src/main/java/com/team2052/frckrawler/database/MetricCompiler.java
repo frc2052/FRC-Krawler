@@ -1,17 +1,13 @@
 package com.team2052.frckrawler.database;
 
-import com.activeandroid.Model;
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.activity.MetricsActivity;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Robot;
-import com.team2052.frckrawler.database.models.RobotEvents;
-import com.team2052.frckrawler.database.models.metric.Metric;
-import com.team2052.frckrawler.database.models.metric.MetricMatchData;
-import com.team2052.frckrawler.database.models.metric.MetricPitData;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.dao.query.QueryBuilder;
+import de.greenrobot.dao.query.WhereCondition;
+import frckrawler.*;
 
 /**
  * @author Adam
@@ -25,25 +21,36 @@ public class MetricCompiler
      * @param metric the metric that you want to compile
      * @return the compiled data from attending teams and metric
      */
-    public static List<CompiledMetricValue> getCompiledMetric(Event event, Metric metric)
+    public static List<CompiledMetricValue> getCompiledMetric(Event event, Metric metric, DaoSession daoSession)
     {
-        List<RobotEvents> robotEventses = new Select().from(RobotEvents.class).where("Event = ?", event.getId()).execute();
+        List<RobotEvent> robotEventses = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
         List<CompiledMetricValue> compiledMetricValues = new ArrayList<>();
-        for (RobotEvents robotEvents : robotEventses) {
-            List<MetricValue> metricData = new ArrayList<>();
-            if (metric.category == MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal()) {
-                for (Model matchData : new Select().from(MetricMatchData.class).where("Robot = ?", robotEvents.robot.getId()).and("Metric = ?", metric.getId()).execute()) {
-                    if (((MetricMatchData) matchData).match.event.getId().equals(event.getId())) {
-                        metricData.add(((MetricMatchData) matchData).getMetricValue());
+        for (RobotEvent robotEvents : robotEventses) {
+            try {
+                List<MetricValue> metricData = new ArrayList<>();
+                if (metric.getCategory() == MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal()) {
+
+                    QueryBuilder<MatchData> queryBuilder = daoSession.getMatchDataDao().queryBuilder();
+                    queryBuilder.and(MatchDataDao.Properties.MetricId.eq(metric.getId()), MatchDataDao.Properties.RobotId.eq(robotEvents.getRobotId()));
+
+                    for (MatchData matchData : queryBuilder.list()) {
+                        if (matchData.getMatch().getEvent().getId().equals(event.getId())) {
+                            metricData.add(new MetricValue(matchData));
+                        }
+                    }
+
+                } else if (metric.getCategory() == MetricsActivity.MetricType.ROBOT_METRICS.ordinal()) {
+                    QueryBuilder<PitData> queryBuilder = daoSession.getPitDataDao().queryBuilder();
+                    queryBuilder.where(PitDataDao.Properties.EventId.eq(event.getId()));
+                    queryBuilder.and(PitDataDao.Properties.MetricId.eq(metric.getId()), PitDataDao.Properties.RobotId.eq(robotEvents.getRobotId()));
+                    for (PitData matchData : queryBuilder.list()) {
+                        metricData.add(new MetricValue(matchData));
                     }
                 }
-
-            } else if (metric.category == MetricsActivity.MetricType.ROBOT_METRICS.ordinal()) {
-                for (Model matchData : new Select().from(MetricPitData.class).where("Robot = ?", robotEvents.robot.getId()).and("Metric = ?", metric.getId()).and("Event = ?", event.getId()).execute()) {
-                    metricData.add(((MetricPitData) matchData).getMetricValue());
-                }
+                compiledMetricValues.add(new CompiledMetricValue(robotEvents.getRobot(), metric, metricData, metric.getType(), 1.0F));
+            } catch (MetricValue.MetricTypeMismatchException e) {
+                e.printStackTrace();
             }
-            compiledMetricValues.add(new CompiledMetricValue(robotEvents.robot, metric, metricData, metric.category, 1.0F));
         }
         return compiledMetricValues;
     }
@@ -55,26 +62,37 @@ public class MetricCompiler
      * @param robot
      * @return
      */
-    public static List<CompiledMetricValue> getCompiledRobot(Event event, Robot robot)
+    public static List<CompiledMetricValue> getCompiledRobot(Event event, Robot robot, DaoSession daoSession)
     {
         //Load all the metrics
-        final List<Metric> metrics = new Select().from(Metric.class).where("Game = ?", event.game.getId()).execute();
+        final List<Metric> metrics = daoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(event.getGameId())).list();
         final List<CompiledMetricValue> compiledMetricValues = new ArrayList<>();
         for (Metric metric : metrics) {
-            List<MetricValue> metricData = new ArrayList<>();
-            if (metric.category == MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal()) {
-                for (Model matchData : new Select().from(MetricMatchData.class).where("Robot = ?", robot.getId()).and("Metric = ?", metric.getId()).execute()) {
-                    if (((MetricMatchData) matchData).match.event.getId().equals(event.getId())) {
-                        metricData.add(((MetricMatchData) matchData).getMetricValue());
+            try {
+                List<MetricValue> metricData = new ArrayList<>();
+                if (metric.getCategory() == MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal()) {
+
+                    QueryBuilder<MatchData> queryBuilder = daoSession.getMatchDataDao().queryBuilder();
+                    queryBuilder.and(MatchDataDao.Properties.MetricId.eq(metric.getId()), MatchDataDao.Properties.RobotId.eq(robot.getId()));
+
+                    for (MatchData matchData : queryBuilder.list()) {
+                        if (matchData.getMatch().getEvent().getId().equals(event.getId())) {
+                            metricData.add(new MetricValue(matchData));
+                        }
+                    }
+
+                } else if (metric.getCategory() == MetricsActivity.MetricType.ROBOT_METRICS.ordinal()) {
+                    QueryBuilder<PitData> queryBuilder = daoSession.getPitDataDao().queryBuilder();
+                    queryBuilder.where(PitDataDao.Properties.EventId.eq(event.getId()));
+                    queryBuilder.and(PitDataDao.Properties.MetricId.eq(metric.getId()), PitDataDao.Properties.RobotId.eq(robot.getId()));
+                    for (PitData matchData : queryBuilder.list()) {
+                        metricData.add(new MetricValue(matchData));
                     }
                 }
-
-            } else if (metric.category == MetricsActivity.MetricType.ROBOT_METRICS.ordinal()) {
-                for (Model matchData : new Select().from(MetricPitData.class).where("Robot = ?", robot.getId()).and("Metric = ?", metric.getId()).and("Event = ?", event.getId()).execute()) {
-                    metricData.add(((MetricPitData) matchData).getMetricValue());
-                }
+                compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, metric.getType(), 1.0F));
+            } catch (MetricValue.MetricTypeMismatchException e) {
+                e.printStackTrace();
             }
-            compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, metric.category, 1.0F));
         }
         return compiledMetricValues;
     }

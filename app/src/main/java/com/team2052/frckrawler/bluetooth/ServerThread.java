@@ -7,27 +7,24 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.util.Log;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Select;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.database.Schedule;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.metric.Metric;
-import com.team2052.frckrawler.database.models.metric.MetricMatchData;
-import com.team2052.frckrawler.database.models.RobotEvents;
-import com.team2052.frckrawler.database.models.User;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import frckrawler.*;
 
 public class ServerThread extends Thread
 {
 
+    private DaoSession mDaoSession = null;
     private boolean isOpen;
     private Context context;
     private Event hostedEvent;
@@ -45,6 +42,7 @@ public class ServerThread extends Thread
         hostedEvent = e;
         handler = h;
         serverSocket = null;
+        mDaoSession = ((FRCKrawler) c.getApplicationContext()).getDaoSession();
     }
 
     @Override
@@ -88,35 +86,28 @@ public class ServerThread extends Thread
 
                 if (connectionType == BluetoothInfo.SCOUT) {
                     //Get the data from the stream
-                    List<MetricMatchData> inMetricMatchData = (List<MetricMatchData>) inStream.readObject();
-
-                    ActiveAndroid.beginTransaction();
+                    List<MatchData> inMetricMatchData = (List<MatchData>) inStream.readObject();
 
                     //Save all the data
-                    for (MetricMatchData m : inMetricMatchData) {
-                        m.save();
+                    for (MatchData m : inMetricMatchData) {
+                        mDaoSession.getMatchDataDao().insertOrReplace(m);
                     }
 
-                    ActiveAndroid.setTransactionSuccessful();
-                    ActiveAndroid.endTransaction();
-
-
-                    ActiveAndroid.beginTransaction();
-
                     //Compile Data To Send
-                    List<User> usersArr = DBManager.loadAllFromType(User.class);
-                    List<Metric> metrics = new Select().from(Metric.class).where("Game = ?", hostedEvent.game.getId()).execute();
-                    List<RobotEvents> robots = new Select().from(RobotEvents.class).where("Event = ?", hostedEvent.getId()).and("Attending = ?", true).execute();
-                    Schedule schedule = DBManager.genenerateSchedule(hostedEvent);
-
-                    ActiveAndroid.setTransactionSuccessful();
-                    ActiveAndroid.endTransaction();
-
+                    List<User> usersArr = mDaoSession.getUserDao().loadAll();
+                    List<Metric> metrics = mDaoSession.getMetricDao().queryDeep("WHERE " + MetricDao.Properties.GameId.columnName + " = " + hostedEvent.getGame().getId());
+                    List<RobotEvent> robots = mDaoSession.getRobotEventDao().queryDeep("WHERE " + RobotEventDao.Properties.EventId.columnName + " = " + hostedEvent.getId());
+                    Schedule schedule = new Schedule(hostedEvent, mDaoSession.getMatchDao().queryDeep("WHERE " + MatchDao.Properties.EventId.columnName + " = " + hostedEvent.getId()));
+                    List<Team> teams = new ArrayList<>();
+                    for (RobotEvent robotEvent : robots) {
+                        teams.add(robotEvent.getRobot().getTeam());
+                    }
                     //Write the objects to
                     oStream.writeObject(hostedEvent);
                     oStream.writeObject(metrics);
                     oStream.writeObject(usersArr);
                     oStream.writeObject(robots);
+                    oStream.writeObject(teams);
                     oStream.writeObject(schedule);
                 }
 

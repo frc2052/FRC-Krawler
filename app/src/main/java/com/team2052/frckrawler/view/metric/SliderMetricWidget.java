@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 
 public class SliderMetricWidget extends MetricWidget implements
         SeekBar.OnSeekBarChangeListener
@@ -21,22 +22,23 @@ public class SliderMetricWidget extends MetricWidget implements
         super(context, m.getMetric(), m.getValue());
         inflater.inflate(R.layout.widget_metric_slider, this);
 
-        ((TextView) findViewById(R.id.name)).setText(m.getMetric().name);
+        ((TextView) findViewById(R.id.name)).setText(m.getMetric().getName());
 
         min = 0;
         max = 1;
 
         SeekBar s = (SeekBar) findViewById(R.id.sliderVal);
 
-        if (m.getMetric().range.length > 0)
-            min = Integer.parseInt((String) m.getMetric().range[0]);
+        String[] range = StringArrayDeserializer.deserialize(m.getMetric().getRange());
+        if (range.length > 0)
+            min = Integer.parseInt(range[0]);
 
-        if (m.getMetric().range.length > 1) {
-            max = Integer.parseInt((String) m.getMetric().range[1]);
+        if (range.length > 1) {
+            max = Integer.parseInt(range[1]);
             s.setMax(max - min);
         }
 
-        if (m.getValue() != null)
+        if (m.getValue() != null && !m.getValue().equals(""))
             value = Integer.parseInt(m.getValue());
         else
             value = min;

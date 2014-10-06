@@ -12,14 +12,17 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.MetricFactory;
-import com.team2052.frckrawler.database.models.Game;
-import com.team2052.frckrawler.database.models.metric.Metric;
+import com.team2052.frckrawler.database.MetricValues;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.view.ListEditor;
 import com.team2052.frckrawler.view.TextListEditor;
+
+import frckrawler.Game;
+import frckrawler.Metric;
 
 /**
  * @author Adam
@@ -53,7 +56,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         mMetricCategory = args.getInt(METRIC_CATEGORY, -1);
-        mGame = Game.load(Game.class, args.getLong(GAME_NAME_EXTRA));
+        mGame = ((FRCKrawler)getActivity().getApplication()).getDaoSession().getGameDao().load(args.getLong(GAME_NAME_EXTRA));
         list = new TextListEditor(getActivity());
     }
 
@@ -96,19 +99,19 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     {
         mCurrentSelectedMetricType = position;
         switch (position) {
-            case Metric.COUNTER:
+            case MetricValues.COUNTER:
                 mMinimum.setEnabled(true);
                 mMaximum.setEnabled(true);
                 mIncrementation.setEnabled(true);
                 mListEditor.removeAllViews();
                 break;
-            case Metric.SLIDER:
+            case MetricValues.SLIDER:
                 mMinimum.setEnabled(true);
                 mMaximum.setEnabled(true);
                 mIncrementation.setEnabled(false);
                 mListEditor.removeAllViews();
                 break;
-            case Metric.CHOOSER:
+            case MetricValues.CHOOSER:
                 mMinimum.setEnabled(false);
                 mMaximum.setEnabled(false);
                 mIncrementation.setEnabled(false);
@@ -145,7 +148,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     {
         Metric m = null;
         switch (mCurrentSelectedMetricType) {
-            case Metric.BOOLEAN:
+            case MetricValues.BOOLEAN:
                 m = MetricFactory.createBooleanMetric(
                         mGame,
                         MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
@@ -153,7 +156,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                         mDescription.getText().toString());
                 break;
 
-            case Metric.COUNTER:
+            case MetricValues.COUNTER:
                 try {
                     m = MetricFactory.createCounterMetric(
                             mGame,
@@ -169,7 +172,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 }
                 break;
 
-            case Metric.SLIDER:
+            case MetricValues.SLIDER:
                 try {
                     m = MetricFactory.createSliderMetric(
                             mGame,
@@ -184,7 +187,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 }
                 break;
 
-            case Metric.CHOOSER:
+            case MetricValues.CHOOSER:
                 m = MetricFactory.createChooserMetric(
                         mGame,
                         MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
@@ -196,7 +199,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
         }
 
         if (m != null) {
-            m.save();
+            ((FRCKrawler)getActivity().getApplication()).getDaoSession().getMetricDao().insert(m);
         }
         ((ListUpdateListener) getActivity()).updateList();
         dismiss();

@@ -5,8 +5,8 @@ import android.os.Parcelable;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 
 /**
  * @author Adam
@@ -23,12 +23,18 @@ public abstract class ListActivity extends DatabaseActivity implements ListUpdat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view);
         mListView = (ListView) findViewById(R.id.list_layout);
+    }
+
+    @Override
+    protected void onResume()
+    {
         if (mAdapter != null) {
             mListView.setAdapter(mAdapter);
             mListView.onRestoreInstanceState(mListState);
         } else {
             updateList();
         }
+        super.onResume();
     }
 
     @Override

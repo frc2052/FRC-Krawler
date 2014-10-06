@@ -5,15 +5,16 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Match;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.items.MatchListItem;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import frckrawler.Event;
+import frckrawler.Match;
+import frckrawler.MatchDao;
 
 /**
  * @author Adam
@@ -32,10 +33,10 @@ public class MatchListActivity extends ListActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        mEvent = Event.load(Event.class, getIntent().getLongExtra(DatabaseActivity.PARENT_ID, 0));
         super.onCreate(savedInstanceState);
+        mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         setActionBarTitle("Schedule");
-        setActionBarSubtitle(mEvent.name);
+        setActionBarSubtitle(mEvent.getName());
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -51,7 +52,7 @@ public class MatchListActivity extends ListActivity
         @Override
         protected Void doInBackground(Void... params)
         {
-            List<Match> matches = new Select().from(Match.class).orderBy("MatchNumber ASC").where("Event = ?", mEvent.getId()).execute();
+            List<Match> matches = mDaoSession.getMatchDao().queryBuilder().orderAsc(MatchDao.Properties.Number).where(MatchDao.Properties.EventId.eq(mEvent.getId())).list();
             List<ListItem> listItems = new ArrayList<>();
 
             for (Match match : matches) {

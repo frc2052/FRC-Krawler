@@ -8,8 +8,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.models.Alliance;
-import com.team2052.frckrawler.database.models.Match;
+
+import frckrawler.Match;
 
 /**
  * @author Adam
@@ -50,35 +50,33 @@ public class MatchView extends FrameLayout
         blue3 = (TextView) findViewById(R.id.blue3);
         blueScore = (TextView) findViewById(R.id.blue_score);
         redScore = (TextView) findViewById(R.id.red_score);
-
         redAlliance = findViewById(R.id.red_alliance);
         blueAlliance = findViewById(R.id.blue_alliance);
     }
 
     public void init(Match match)
     {
-        Alliance alliance = match.alliance;
-        matchTitle.setText(Integer.toString(match.matchNumber));
-        red1.setText(Integer.toString(alliance.red1.number));
-        red2.setText(Integer.toString(alliance.red2.number));
-        red3.setText(Integer.toString(alliance.red3.number));
-        blue1.setText(Integer.toString(alliance.blue1.number));
-        blue2.setText(Integer.toString(alliance.blue2.number));
-        blue3.setText(Integer.toString(alliance.blue3.number));
+        matchTitle.setText(Integer.toString(match.getNumber()));
+        red1.setText(Long.toString(match.getRed1Id()));
+        red2.setText(Long.toString(match.getRed2Id()));
+        red3.setText(Long.toString(match.getRed3Id()));
+        blue1.setText(Long.toString(match.getBlue1Id()));
+        blue2.setText(Long.toString(match.getBlue2Id()));
+        blue3.setText(Long.toString(match.getBlue1Id()));
         //Matches that aren't played yet have a score of -1
-        if (alliance.redScore < 0)
+        if (match.getRedscore() < 0)
             redScore.setText("?");
         else
-            redScore.setText(Integer.toString(alliance.redScore));
+            redScore.setText(Integer.toString(match.getRedscore()));
 
 
-        if (alliance.blueScore < 0)
+        if (match.getBluescore() < 0)
             blueScore.setText("?");
         else
-            blueScore.setText(Integer.toString(alliance.blueScore));
+            blueScore.setText(Integer.toString(match.getBluescore()));
 
 
-        if (alliance.redScore > alliance.blueScore) {
+        /*if (alliance.redScore > alliance.blueScore) {
             redAlliance.setBackgroundResource(R.drawable.alliance_border);
             blueAlliance.setBackgroundResource(R.drawable.no_border);
         } else if (alliance.blueScore > alliance.redScore) {
@@ -87,6 +85,6 @@ public class MatchView extends FrameLayout
         } else {
             redAlliance.setBackgroundResource(R.drawable.no_border);
             blueAlliance.setBackgroundResource(R.drawable.no_border);
-        }
+        }*/
     }
 }

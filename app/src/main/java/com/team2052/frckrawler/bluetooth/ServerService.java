@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.models.Event;
+
+import frckrawler.Event;
 
 public class ServerService extends Service
 {
@@ -41,7 +43,7 @@ public class ServerService extends Service
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         if (thread == null) {
-            Event e = Event.load(Event.class, intent.getLongExtra(EVENT_ID, -1));
+            Event e = ((FRCKrawler)getApplication()).getDaoSession().getEventDao().load(intent.getLongExtra(EVENT_ID, 0));
             NotificationCompat.Builder b = new NotificationCompat.Builder(this);
             b.setSmallIcon(R.drawable.ic_stat_knightkrawler);
             b.setContentTitle("Server open");

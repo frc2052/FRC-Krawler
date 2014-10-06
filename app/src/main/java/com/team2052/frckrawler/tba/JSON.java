@@ -6,20 +6,21 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.team2052.frckrawler.database.models.Alliance;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Match;
-import com.team2052.frckrawler.database.models.Team;
-import com.team2052.frckrawler.tba.types.AllianceDeserializer;
 import com.team2052.frckrawler.tba.types.EventDeserializer;
 import com.team2052.frckrawler.tba.types.MatchDeserializer;
 import com.team2052.frckrawler.tba.types.TeamDeserializer;
+
+import frckrawler.DaoSession;
+import frckrawler.Event;
+import frckrawler.Match;
+import frckrawler.Team;
 
 /**
  * @author Adam
  */
 public class JSON
 {
+    private static DaoSession _daoSession = null;
     private static Gson gson;
     private static JsonParser parser;
 
@@ -29,7 +30,6 @@ public class JSON
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(Event.class, new EventDeserializer());
             gsonBuilder.registerTypeAdapter(Team.class, new TeamDeserializer());
-            gsonBuilder.registerTypeAdapter(Alliance.class, new AllianceDeserializer());
             gsonBuilder.registerTypeAdapter(Match.class, new MatchDeserializer());
             gson = gsonBuilder.create();
         }
@@ -62,5 +62,15 @@ public class JSON
             parser = new JsonParser();
         }
         return parser;
+    }
+
+    public static DaoSession get_daoSession()
+    {
+        return _daoSession;
+    }
+
+    public static void set_daoSession(DaoSession _daoSession)
+    {
+        JSON._daoSession = _daoSession;
     }
 }

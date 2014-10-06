@@ -14,18 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.Event;
-import com.team2052.frckrawler.database.models.Robot;
-import com.team2052.frckrawler.database.models.RobotEvents;
-import com.team2052.frckrawler.database.models.Team;
-import com.team2052.frckrawler.database.models.metric.Metric;
-import com.team2052.frckrawler.database.models.metric.MetricPitData;
+import com.team2052.frckrawler.fragment.BaseFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 import com.team2052.frckrawler.view.metric.MetricWidget;
@@ -35,10 +28,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import de.greenrobot.dao.query.QueryBuilder;
+import frckrawler.Event;
+import frckrawler.Metric;
+import frckrawler.MetricDao;
+import frckrawler.RobotEvent;
+import frckrawler.RobotEventDao;
+
 /**
  * @author Adam
  */
-public class ScoutPitFragment extends Fragment
+public class ScoutPitFragment extends BaseFragment
 {
     private Event mEvent;
     private Spinner mTeamSpinner;
@@ -83,37 +83,37 @@ public class ScoutPitFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_scouting_pit, null);
         mTeamSpinner = (Spinner) view.findViewById(R.id.team);
-        mEvent = Event.load(Event.class, getArguments().getLong(DatabaseActivity.PARENT_ID));
+        mEvent = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         new GetAllMetrics().execute();
         new GetAllRobots().execute();
         return view;
     }
 
-    public class GetAllRobots extends AsyncTask<Void, Void, List<RobotEvents>>
+    public class GetAllRobots extends AsyncTask<Void, Void, List<RobotEvent>>
     {
         @Override
-        protected List<RobotEvents> doInBackground(Void... params)
+        protected List<RobotEvent> doInBackground(Void... params)
         {
-            return new Select().from(RobotEvents.class).where("Event = ?", mEvent.getId()).and("Attending = ?", true).execute();
+            return mDaoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(mEvent.getId())).list();
         }
 
         @Override
-        protected void onPostExecute(List<RobotEvents> robotEventses)
+        protected void onPostExecute(List<RobotEvent> robotEventses)
         {
             //Sort by Team number
-            Collections.sort(robotEventses, new Comparator<RobotEvents>()
+            Collections.sort(robotEventses, new Comparator<RobotEvent>()
             {
                 @Override
-                public int compare(RobotEvents lhs, RobotEvents rhs)
+                public int compare(RobotEvent lhs, RobotEvent rhs)
                 {
-                    return Double.compare(lhs.robot.team.number, rhs.robot.team.number);
+                    return Double.compare(lhs.getRobot().getTeam().getNumber(), rhs.getRobot().getTeam().getNumber());
                 }
             });
 
             List<ListItem> listItems = new ArrayList<>();
 
-            for (RobotEvents robotEvents : robotEventses) {
-                listItems.add(new SimpleListElement(Integer.toString(robotEvents.robot.team.number) + " - " + robotEvents.robot.team.name, robotEvents.robot.team.teamKey));
+            for (RobotEvent robotEvents : robotEventses) {
+                listItems.add(new SimpleListElement(Long.toString(robotEvents.getRobot().getTeam().getNumber()) + " - " + robotEvents.getRobot().getTeam().getName(), robotEvents.getRobot().getTeam().getTeamkey()));
             }
             mTeamSpinner.setAdapter(new ListViewAdapter(getActivity(), listItems));
         }
@@ -125,7 +125,10 @@ public class ScoutPitFragment extends Fragment
         @Override
         protected List<Metric> doInBackground(Void... params)
         {
-            return new Select().from(Metric.class).where("Game = ?", mEvent.game.getId()).and("Category = ?", MetricsActivity.MetricType.ROBOT_METRICS.ordinal()).execute();
+            QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
+            metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId()));
+            metricQueryBuilder.where(MetricDao.Properties.Category.eq(MetricsActivity.MetricType.ROBOT_METRICS.ordinal()));
+            return metricQueryBuilder.list();
         }
 
         @Override
@@ -144,7 +147,7 @@ public class ScoutPitFragment extends Fragment
         @Override
         protected Integer doInBackground(Void... params)
         {
-            //Get data from view
+            /*//Get data from view
             Team team = (Team) mTeamSpinner.getSelectedItem();
             Robot robot = new Select().from(Robot.class).where("Team = ?", team.getId()).and("Game = ?", mEvent.game.getId()).executeSingle();
 
@@ -163,7 +166,7 @@ public class ScoutPitFragment extends Fragment
             robot.comments = ((EditText) getView().findViewById(R.id.comments)).getText().toString();
             robot.save();
             ActiveAndroid.setTransactionSuccessful();
-            ActiveAndroid.endTransaction();
+            ActiveAndroid.endTransaction();*/
 
             return 0;
         }

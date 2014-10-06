@@ -8,9 +8,11 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.TextView;
 
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.models.Game;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
+
+import frckrawler.Game;
 
 /**
  * @author Adam
@@ -37,9 +39,9 @@ public class AddGameDialogFragment extends DialogFragment
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                Game game = new Game(((TextView) getDialog().getWindow().findViewById(R.id.nameVal)).getText().toString());
+                Game game = new Game(null, ((TextView) getDialog().getWindow().findViewById(R.id.nameVal)).getText().toString());
+                ((FRCKrawler)getActivity().getApplication()).getDaoSession().getGameDao().insert(game);
                 listener.updateList();
-                game.save();
                 dismiss();
             }
         });

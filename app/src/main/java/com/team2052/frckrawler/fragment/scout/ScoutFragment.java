@@ -20,10 +20,11 @@ import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.SyncAsScoutTask;
 import com.team2052.frckrawler.bluetooth.SyncCallbackHandler;
-import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.fragment.MatchListFragment;
 import com.team2052.frckrawler.fragment.NeedSyncFragment;
 import com.team2052.frckrawler.fragment.ViewPagerFragment;
+
+import frckrawler.Event;
 
 public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHandler, DialogInterface.OnClickListener
 {
@@ -45,7 +46,7 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
         mAddress = scoutPrefs.getString(GlobalValues.MAC_ADRESS_PREF, "null");
         if (scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
             //Suggest the scout to sync again anyway.
-            mEvent = Event.load(Event.class, scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
+            mEvent = mDaoSession.getEventDao().load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
             mNeedsSync = false;
         } else {
             mNeedsSync = true;
@@ -185,7 +186,7 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
         SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         mAddress = scoutPrefs.getString(GlobalValues.MAC_ADRESS_PREF, "null");
         if (scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
-            mEvent = Event.load(Event.class, scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
+            mEvent = mDaoSession.getEventDao().load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
             mNeedsSync = false;
         } else {
             mNeedsSync = true;

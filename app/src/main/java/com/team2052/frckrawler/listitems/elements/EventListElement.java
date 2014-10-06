@@ -6,13 +6,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.models.Event;
 import com.team2052.frckrawler.listitems.ListElement;
-import com.team2052.frckrawler.tba.types.EventDeserializer;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+
+import frckrawler.Event;
 
 public class EventListElement extends ListElement
 {
@@ -30,10 +28,9 @@ public class EventListElement extends ListElement
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_event, null);
         }
-        ((TextView) convertView.findViewById(R.id.list_view_event_date)).setText(event.date != null ? EventDeserializer.format.format(event.date) : "");
-        ((TextView) convertView.findViewById(R.id.list_view_event_location)).setText(event.location);
-        ((TextView) convertView.findViewById(R.id.list_view_event_name)).setText(event.name);
-        ((TextView)convertView.findViewById(R.id.list_view_event_date)).setText(DateFormat.getDateInstance().format(event.date));
+        ((TextView) convertView.findViewById(R.id.list_view_event_location)).setText(event.getLocation());
+        ((TextView) convertView.findViewById(R.id.list_view_event_name)).setText(event.getName());
+        ((TextView) convertView.findViewById(R.id.list_view_event_date)).setText(DateFormat.getDateInstance().format(event.getDate()));
         return convertView;
     }
 }

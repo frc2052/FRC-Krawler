@@ -7,10 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.models.Contact;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.listitems.ListElement;
+
+import frckrawler.Contact;
 
 /**
  * @author Adam
@@ -22,7 +23,7 @@ public class ContactListElement extends ListElement
 
     public ContactListElement(Contact contact, ListUpdateListener listener)
     {
-        super(Integer.toString(contact.remoteId));
+        super(Long.toString(contact.getId()));
         this.contact = contact;
         this.listener = listener;
     }
@@ -59,8 +60,8 @@ public class ContactListElement extends ListElement
                 builder.create().show();
             }
         });
-        ((TextView) convertView.findViewById(R.id.contact_name)).setText(contact.name);
-        ((TextView) convertView.findViewById(R.id.contact_team_role)).setText(contact.teamRole);
+        ((TextView) convertView.findViewById(R.id.contact_name)).setText(contact.getName());
+        ((TextView) convertView.findViewById(R.id.contact_team_role)).setText(contact.getTeamrole());
         return convertView;
     }
 }

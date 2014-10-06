@@ -2,19 +2,11 @@ package com.team2052.frckrawler.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 
-import com.activeandroid.query.Select;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.models.User;
 import com.team2052.frckrawler.fragment.dialog.AddUserDialogFragment;
 import com.team2052.frckrawler.fragment.dialog.EditUserDialogFragment;
 import com.team2052.frckrawler.listitems.ListElement;
@@ -23,6 +15,8 @@ import com.team2052.frckrawler.listitems.elements.UserListElement;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import frckrawler.User;
 
 /**
  * Created by Adam on 8/25/2014.
@@ -36,8 +30,8 @@ public class UsersFragment extends ListFragment
         public boolean onCreateActionMode(ActionMode mode, Menu menu)
         {
             long userId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
-            User user = User.load(User.class, userId);
-            mode.setTitle(user.name);
+            User user = mDaoSession.getUserDao().load(userId);
+            mode.setTitle(user.getName());
             mode.getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
             return true;
         }
@@ -52,7 +46,7 @@ public class UsersFragment extends ListFragment
         public boolean onActionItemClicked(ActionMode mode, MenuItem item)
         {
             long userId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
-            User user = User.load(User.class, userId);
+            User user = mDaoSession.getUserDao().load(userId);
             switch (item.getItemId()) {
                 case R.id.menu_edit:
                     EditUserDialogFragment fragment = EditUserDialogFragment.newInstance(user);
@@ -60,7 +54,7 @@ public class UsersFragment extends ListFragment
                     currentActionMode.finish();
                     return true;
                 case R.id.menu_delete:
-                    user.delete();
+                    mDaoSession.getUserDao().delete(user);
                     currentActionMode.finish();
                     updateList();
                     return true;
@@ -142,7 +136,7 @@ public class UsersFragment extends ListFragment
         @Override
         protected List<User> doInBackground(Void... params)
         {
-            return new Select().from(User.class).execute();
+            return mDaoSession.getUserDao().loadAll();
         }
 
         @Override
