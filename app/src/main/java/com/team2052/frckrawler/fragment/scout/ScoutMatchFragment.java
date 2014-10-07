@@ -2,7 +2,6 @@ package com.team2052.frckrawler.fragment.scout;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -23,15 +21,11 @@ import com.team2052.frckrawler.fragment.BaseFragment;
 import com.team2052.frckrawler.view.metric.MetricWidget;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
-import frckrawler.Event;
-import frckrawler.EventDao;
-import frckrawler.Match;
-import frckrawler.MatchDao;
-import frckrawler.Metric;
-import frckrawler.MetricDao;
+import frckrawler.*;
 
 /**
  * @author Adam
@@ -41,6 +35,8 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
     private Event mEvent;
     private Spinner mMatchSpinner;
     private Spinner mAllianceSpinner;
+    private List<Match> mMatches;
+    private List<Team> mTeams;
 
     public static ScoutMatchFragment newInstance(Event event)
     {
@@ -94,7 +90,23 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
-        mAllianceSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, new String[]{}));
+        Match match = mMatches.get(mMatchSpinner.getSelectedItemPosition());
+        List<Team> teams = new ArrayList<>();
+        teams.add(match.getBlue1());
+        teams.add(match.getBlue2());
+        teams.add(match.getBlue3());
+        teams.add(match.getRed1());
+        teams.add(match.getRed2());
+        teams.add(match.getRed3());
+
+        mTeams = teams;
+
+        List<String> teamNumbers = new ArrayList<>();
+        for (Team team : teams) {
+            teamNumbers.add(String.valueOf(team.getNumber()));
+        }
+
+        mAllianceSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, Arrays.copyOf(teamNumbers.toArray(), teamNumbers.size(), String[].class)));
     }
 
     @Override
@@ -114,6 +126,7 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         @Override
         protected void onPostExecute(List<Match> matches)
         {
+            mMatches = matches;
             mMatchSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, matches));
         }
     }
@@ -147,11 +160,12 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         protected Integer doInBackground(Void... params)
         {
             //Get data from view
-            /*Team team = (Team) mAllianceSpinner.getSelectedItem();
+            Team team = mTeams.get(mAllianceSpinner.getSelectedItemPosition());
             Match match = (Match) mMatchSpinner.getSelectedItem();
-            Robot robot = new Select().from(Robot.class).where("Team = ?", team.getId()).and("Game = ?", mEvent.game.getId()).executeSingle();
 
-            if (new Select().from(MetricMatchData.class).where("Robot = ?", robot.getId()).and("Match = ?", match.getId()).execute().size() > 0) {
+            Robot robot = mDaoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.TeamId.eq(team.getNumber())).where(RobotDao.Properties.GameId.eq(mEvent.getGameId())).unique();
+
+            if (mDaoSession.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.MatchId.eq(((Match) mMatchSpinner.getSelectedItem()).getId())).where(MatchDataDao.Properties.RobotId.eq(robot.getId())).list().size() > 0) {
                 return 1;
             }
 
@@ -162,15 +176,12 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
                 widgets.add((MetricWidget) linearLayout.getChildAt(i));
             }
 
-            //Begin Saving
-            ActiveAndroid.beginTransaction();
             for (MetricWidget widget : widgets) {
-                new MetricMatchData(robot, widget.getMetric(), widget.getMetricValue(), match).save();
+                mDaoSession.getMatchDataDao().insert(new MatchData(widget.getMetricValue().getValue(), robot.getId(), widget.getMetric().getId(), match.getId()));
             }
-            new RobotMatchComment(((EditText) getView().findViewById(R.id.comments)).getText().toString(), robot, match).save();
-            ActiveAndroid.setTransactionSuccessful();
-            ActiveAndroid.endTransaction();
-*/
+
+            //TODO
+            //new MatchComment(((EditText) getView().findViewById(R.id.comments)).getText().toString(), robot, match).save();
             return 0;
         }
 

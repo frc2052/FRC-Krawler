@@ -24,7 +24,11 @@ import com.team2052.frckrawler.fragment.MatchListFragment;
 import com.team2052.frckrawler.fragment.NeedSyncFragment;
 import com.team2052.frckrawler.fragment.ViewPagerFragment;
 
+import java.util.List;
+
 import frckrawler.Event;
+import frckrawler.Match;
+import frckrawler.Team;
 
 public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHandler, DialogInterface.OnClickListener
 {
@@ -197,7 +201,7 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
 
     public class ScoutPagerAdapter extends FragmentStatePagerAdapter
     {
-        public final String[] headers = {"Match Scouting"/*, "Pit Scouting"*/, "Schedule"};
+        public final String[] headers = {"Match Scouting", "Pit Scouting", "Schedule"};
 
         public ScoutPagerAdapter(FragmentManager fm)
         {
@@ -222,14 +226,14 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
                         fragment = new NeedSyncFragment();
                     }
                     break;
-                /*case 1:
+                case 1:
                     if (!mNeedsSync) {
                         fragment = ScoutPitFragment.newInstance(mEvent);
                     } else {
                         fragment = new NeedSyncFragment();
                     }
-                    break;*/
-                case 1:
+                    break;
+                case 2:
                     if (!mNeedsSync) {
                         fragment = MatchListFragment.newInstance(mEvent);
                     } else {

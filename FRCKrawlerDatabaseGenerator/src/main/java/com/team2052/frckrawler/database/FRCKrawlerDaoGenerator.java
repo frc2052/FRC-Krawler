@@ -1,4 +1,4 @@
-package pl.surecase.eu;
+package com.team2052.frckrawler.database;
 
 import java.util.Map;
 
@@ -112,6 +112,10 @@ public class FRCKrawlerDaoGenerator
         pitData.addToOne(metric, pitData.addLongProperty("metricId").getProperty());
         pitData.addToOne(event, pitData.addLongProperty("eventId").getProperty());
 
+        Entity matchComment = schema.addEntity("MatchComment");
+        matchComment.implementsSerializable();
+        matchComment.addToOne(match, matchComment.addLongProperty("matchId").getProperty());
+        matchComment.addStringProperty("comment");
 
         new DaoGenerator().generateAll(schema, args[0]);
     }

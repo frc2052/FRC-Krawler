@@ -86,12 +86,25 @@ public class ServerThread extends Thread
 
                 if (connectionType == BluetoothInfo.SCOUT) {
                     //Get the data from the stream
-                    List<MatchData> inMetricMatchData = (List<MatchData>) inStream.readObject();
+                    final List<MatchData> inMatchData = (List<MatchData>) inStream.readObject();
+                    final List<PitData> inPitData = (List<PitData>) inStream.readObject();
 
-                    //Save all the data
-                    for (MatchData m : inMetricMatchData) {
-                        mDaoSession.getMatchDataDao().insertOrReplace(m);
-                    }
+                    mDaoSession.runInTx(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            //Save all the data
+                            for (MatchData m : inMatchData) {
+                                mDaoSession.getMatchDataDao().insertOrReplace(m);
+                            }
+
+                            for (PitData m : inPitData) {
+                                mDaoSession.getPitDataDao().insertOrReplace(m);
+                            }
+
+                        }
+                    });
 
                     //Compile Data To Send
                     List<User> usersArr = mDaoSession.getUserDao().loadAll();
@@ -99,9 +112,11 @@ public class ServerThread extends Thread
                     List<RobotEvent> robots = mDaoSession.getRobotEventDao().queryDeep("WHERE " + RobotEventDao.Properties.EventId.columnName + " = " + hostedEvent.getId());
                     Schedule schedule = new Schedule(hostedEvent, mDaoSession.getMatchDao().queryDeep("WHERE " + MatchDao.Properties.EventId.columnName + " = " + hostedEvent.getId()));
                     List<Team> teams = new ArrayList<>();
+
                     for (RobotEvent robotEvent : robots) {
                         teams.add(robotEvent.getRobot().getTeam());
                     }
+
                     //Write the objects to
                     oStream.writeObject(hostedEvent);
                     oStream.writeObject(metrics);

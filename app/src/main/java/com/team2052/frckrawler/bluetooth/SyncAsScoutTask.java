@@ -85,6 +85,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             //Write the scout data
             ooStream.writeInt(BluetoothInfo.SCOUT);
             ooStream.writeObject(metricMatchData);
+            ooStream.writeObject(metricPitData);
             ooStream.flush();
 
             if (isCancelled())
@@ -92,45 +93,56 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
 
             //Start fdthe reading thread
             //Set the current event id hosted by the server
-            Event event1 = (Event) ioStream.readObject();
+            final Event event1 = (Event) ioStream.readObject();
 
             SharedPreferences sharedPreferences = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, event1.getId());
             editor.apply();
 
-            List<Metric> inMetric = (List<Metric>) ioStream.readObject();
-            List<User> inUsers = (List<User>) ioStream.readObject();
-            List<RobotEvent> inRobots = (List<RobotEvent>) ioStream.readObject();
-            List<Team> inTeams = (List<Team>) ioStream.readObject();
-            Schedule inSchedule = (Schedule) ioStream.readObject();
+            final List<Metric> inMetric = (List<Metric>) ioStream.readObject();
+            final List<User> inUsers = (List<User>) ioStream.readObject();
+            final List<RobotEvent> inRobots = (List<RobotEvent>) ioStream.readObject();
+            final List<Team> inTeams = (List<Team>) ioStream.readObject();
+            final Schedule inSchedule = (Schedule) ioStream.readObject();
 
             if (isCancelled())
                 return SYNC_CANCELLED;
 
-            for (Metric metric : inMetric) {
-                mDaoSession.insertOrReplace(metric);
-            }
+            //Bulk Insert
+            mDaoSession.runInTx(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    for (Metric metric : inMetric) {
+                        mDaoSession.insertOrReplace(metric);
+                    }
 
-            for (User user : inUsers) {
-                mDaoSession.insertOrReplace(user);
-            }
+                    for (User user : inUsers) {
+                        mDaoSession.insertOrReplace(user);
+                    }
 
-            for (RobotEvent robotEvent : inRobots) {
-                mDaoSession.insert(robotEvent);
-                mDaoSession.insertOrReplace(robotEvent.getRobot());
-            }
+                    for (RobotEvent robotEvent : inRobots) {
+                        mDaoSession.insert(robotEvent);
+                        mDaoSession.insertOrReplace(robotEvent.getRobot());
+                    }
 
-            for (Team team : inTeams) {
-                mDaoSession.insertOrReplace(team);
-            }
+                    for (Team team : inTeams) {
+                        mDaoSession.insertOrReplace(team);
+                    }
 
-            for (Match match : inSchedule.matches) {
-                mDaoSession.insertOrReplace(match);
-            }
+                    for (Match match : inSchedule.matches) {
+                        mDaoSession.insertOrReplace(match);
+                    }
 
-            mDaoSession.insertOrReplace(event1);
-            mDaoSession.insertOrReplace(event1.getGame());
+                    mDaoSession.insertOrReplace(event1);
+                    mDaoSession.insertOrReplace(event1.getGame());
+                }
+            });
+
+
+
 
             //Close the streams
             ooStream.close();

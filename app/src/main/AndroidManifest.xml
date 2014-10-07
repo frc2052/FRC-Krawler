@@ -37,7 +37,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.HomeActivity"/>
         </activity>
-        <activity android:name=".activity.MainActivity"></activity>
         <activity android:name=".ListTester"/>
         <activity android:name=".activity.MatchListActivity"/>
 

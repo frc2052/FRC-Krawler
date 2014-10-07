@@ -143,7 +143,7 @@ public class HomeActivity extends BaseActivity
         }
         assert fragment != null;
         fragment.setRetainInstance(true);
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_bottom).replace(R.id.content, fragment, "mainFragment").commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content, fragment, "mainFragment").commit();
         mCurrentSelectedNavigationItemId = id;
     }
 }

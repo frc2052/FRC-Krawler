@@ -1,8 +1,8 @@
-project(':MyDaoGenerator') {
+project(':FRCKrawlerDatabaseGenerator') {
     apply plugin: 'application'
     apply plugin: 'java'
 
-    mainClassName = "pl.surecase.eu.MyDaoGenerator"
+    mainClassName = "com.team2052.frckrawler.database.FRCKrawlerDaoGenerator"
     // edit output direction
     outputDir = "../app/src/main/java-gen"
 

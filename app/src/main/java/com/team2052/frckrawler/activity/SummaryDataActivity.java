@@ -37,12 +37,12 @@ public class SummaryDataActivity extends ListActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
         mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(EVENT_ID, 0));
         mMetric = mDaoSession.getMetricDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         if (getActionBar() != null) {
             getActionBar().setTitle(mMetric.getName() + " - Summary");
         }
-        super.onCreate(savedInstanceState);
     }
 
     @Override

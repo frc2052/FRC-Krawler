@@ -191,52 +191,60 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         @Override
         protected Void doInBackground(Void... params)
         {
-            DaoSession daoSession = ((FRCKrawler) getActivity().getApplication()).getDaoSession();
+            final long startTime = System.currentTimeMillis();
+            final DaoSession daoSession = ((FRCKrawler) getActivity().getApplication()).getDaoSession();
             //Get all data from TBA ready to parse
-            JsonElement jEvent = JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url)));
-            JsonArray jTeams = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/teams")));
-            JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
+            final JsonElement jEvent = JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url)));
+            final JsonArray jTeams = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/teams")));
+            final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
 
-            //Save the event
-            Event event = JSON.getGson().fromJson(jEvent, Event.class);
-            event.setGame(mGame);
-            daoSession.getEventDao().insert(event);
+            //Run in bulk transaction
+            daoSession.runInTx(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    //Save the event
+                    Event event = JSON.getGson().fromJson(jEvent, Event.class);
+                    event.setGame(mGame);
+                    daoSession.getEventDao().insert(event);
 
-            //Save the teams
-            for (JsonElement element : jTeams) {
-                //Convert json element to team
-                Team team = JSON.getGson().fromJson(element, Team.class);
-                LogHelper.debug(String.valueOf(team.getNumber()));
-                daoSession.getTeamDao().insert(team);
-                //Create a robot and save that robot to the database as well with the team
-                Robot robot = null;
-                List<Robot> robots = daoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(mGame.getId())).list();
+                    //Save the teams
+                    for (JsonElement element : jTeams) {
+                        //Convert json element to team
+                        Team team = JSON.getGson().fromJson(element, Team.class);
+                        daoSession.getTeamDao().insertOrReplace(team);
+                        //Create a robot and save that robot to the database as well with the team
+                        Robot robot = null;
+                        List<Robot> robots = daoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(mGame.getId())).list();
 
-                //Check to see if the robot already exists
-                for (Robot robot1 : robots) {
-                    if (robot1.getTeam().getNumber() == team.getNumber()) {
-                        robot = robot1;
-                        break;
+                        //Check to see if the robot already exists
+                        for (Robot robot1 : robots) {
+                            if (robot1.getTeam().getNumber() == team.getNumber()) {
+                                robot = robot1;
+                                break;
+                            }
+                        }
+
+                        if (robot == null) {
+                            daoSession.getRobotEventDao().insert(new RobotEvent(daoSession.getRobotDao().insert(new Robot(null, team.getNumber(), mGame.getId(), "", 0.0)), event.getId()));
+                        } else if (daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).where(RobotEventDao.Properties.EventId.eq(event.getId())).list().size() <= 0) {
+                            daoSession.getRobotEventDao().insert(new RobotEvent(robot.getId(), event.getId()));
+                        }
                     }
+                    JSON.set_daoSession(daoSession);
+                    for (JsonElement element : jMatches) {
+                        //Save all the matches and alliances
+                        Match match = JSON.getGson().fromJson(element, Match.class);
+                        //Only save Qualifications
+                        if (match.getType().contains("qm")) {
+                            daoSession.insert(match);
+                        }
+                    }
+                    LogHelper.debug("Saved " + event.getName() + " In " + (System.currentTimeMillis() - startTime) + "ms");
                 }
+            });
 
-                if (robot == null) {
-                    daoSession.getRobotEventDao().insert(new RobotEvent(daoSession.getRobotDao().insert(new Robot(null, team.getNumber(), mGame.getId(), "", 0.0)), event.getId()));
-                } /* else if (new Select().from(RobotEvents.class).where("Robot = ?", robot.getId()).and("Event = ?", event.getId()).execute().size() <= 0) {
-                    RobotEvents robotEvents = new RobotEvents(robot, event);
-                    robotEvents.robot.save();
-                    robotEvents.save();
-                }*/
-            }
-            JSON.set_daoSession(daoSession);
-            for (JsonElement element : jMatches) {
-                //Save all the matches and alliances
-                Match match = JSON.getGson().fromJson(element, Match.class);
-                //Only save Qualifications
-                if (match.getType().contains("qm")) {
-                    daoSession.insert(match);
-                }
-            }
             return null;
         }
 
