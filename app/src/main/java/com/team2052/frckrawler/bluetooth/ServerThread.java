@@ -96,11 +96,14 @@ public class ServerThread extends Thread
                         {
                             //Save all the data
                             for (MatchData m : inMatchData) {
-                                mDaoSession.getMatchDataDao().insertOrReplace(m);
+                                if (mDaoSession.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.RobotId.eq(m.getRobotId())).where(MatchDataDao.Properties.MetricId.eq(m.getMetricId())).where(MatchDataDao.Properties.MatchId.eq(m.getMatchId())).list().size() <= 0)
+                                    mDaoSession.getMatchDataDao().insertOrReplace(m);
                             }
 
                             for (PitData m : inPitData) {
-                                mDaoSession.getPitDataDao().insertOrReplace(m);
+                                if (mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(m.getRobotId())).where(PitDataDao.Properties.MetricId.eq(m.getMetricId())).list().size() <= 0)
+                                    mDaoSession.getPitDataDao().insertOrReplace(m);
+
                             }
 
                         }
@@ -117,7 +120,7 @@ public class ServerThread extends Thread
                         teams.add(robotEvent.getRobot().getTeam());
                     }
 
-                    //Write the objects to
+                    //Write the objects to OStream
                     oStream.writeObject(hostedEvent);
                     oStream.writeObject(metrics);
                     oStream.writeObject(usersArr);

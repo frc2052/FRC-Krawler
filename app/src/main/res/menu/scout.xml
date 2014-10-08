@@ -7,7 +7,4 @@
         android:orderInCategory="1"
         android:showAsAction="ifRoom"
         android:title="Save"/>
-
-    <!--<item android:id="@+id/action_schedule"
-        android:title="Summary"/>-->
 </menu>

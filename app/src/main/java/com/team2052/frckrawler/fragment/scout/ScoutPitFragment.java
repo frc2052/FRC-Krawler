@@ -29,11 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
-import frckrawler.Event;
-import frckrawler.Metric;
-import frckrawler.MetricDao;
-import frckrawler.RobotEvent;
-import frckrawler.RobotEventDao;
+import frckrawler.*;
 
 /**
  * @author Adam
@@ -42,6 +38,7 @@ public class ScoutPitFragment extends BaseFragment
 {
     private Event mEvent;
     private Spinner mTeamSpinner;
+    private List<RobotEvent> mRobots;
 
 
     public static ScoutPitFragment newInstance(Event event)
@@ -110,6 +107,8 @@ public class ScoutPitFragment extends BaseFragment
                 }
             });
 
+           mRobots = robotEventses;
+
             List<ListItem> listItems = new ArrayList<>();
 
             for (RobotEvent robotEvents : robotEventses) {
@@ -147,9 +146,8 @@ public class ScoutPitFragment extends BaseFragment
         @Override
         protected Integer doInBackground(Void... params)
         {
-            /*//Get data from view
-            Team team = (Team) mTeamSpinner.getSelectedItem();
-            Robot robot = new Select().from(Robot.class).where("Team = ?", team.getId()).and("Game = ?", mEvent.game.getId()).executeSingle();
+            //Get data from view
+            Robot robot = mRobots.get(mTeamSpinner.getSelectedItemPosition()).getRobot();
 
             LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.metricWidgetList);
             List<MetricWidget> widgets = new ArrayList<>();
@@ -159,15 +157,12 @@ public class ScoutPitFragment extends BaseFragment
             }
 
             //Begin Saving
-            ActiveAndroid.beginTransaction();
             for (MetricWidget widget : widgets) {
-                new MetricPitData(robot, mEvent, widget.getMetric(), widget.getMetricValue()).save();
+                mDaoSession.getPitDataDao().insert(new PitData(widget.getMetricValue().getValue(), robot.getId(), widget.getMetric().getId(), mEvent.getId()));
             }
-            robot.comments = ((EditText) getView().findViewById(R.id.comments)).getText().toString();
-            robot.save();
-            ActiveAndroid.setTransactionSuccessful();
-            ActiveAndroid.endTransaction();*/
 
+            robot.setComments(((EditText) getView().findViewById(R.id.comments)).getText().toString());
+            robot.update();
             return 0;
         }
 

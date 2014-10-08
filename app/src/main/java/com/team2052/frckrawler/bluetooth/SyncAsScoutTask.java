@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.Schedule;
 
 import java.io.IOException;
@@ -76,7 +77,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             ObjectOutputStream ooStream = new ObjectOutputStream(outStream);
 
             //Get the data to send
-            List<MatchData> metricMatchData = mDaoSession.getMatchDataDao().loadAll();
+            final List<MatchData> metricMatchData = mDaoSession.getMatchDataDao().loadAll();
             List<PitData> metricPitData = mDaoSession.getPitDataDao().loadAll();
 
             if (isCancelled())
@@ -88,6 +89,28 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             ooStream.writeObject(metricPitData);
             ooStream.flush();
 
+
+
+            mDaoSession.runInTx(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    //Delete everything
+                    mDaoSession.getGameDao().deleteAll();
+                    mDaoSession.getMatchDao().deleteAll();
+                    mDaoSession.getRobotDao().deleteAll();
+                    mDaoSession.getRobotEventDao().deleteAll();
+                    mDaoSession.getMatchDao().deleteAll();
+                    mDaoSession.getTeamDao().deleteAll();
+                    mDaoSession.getUserDao().deleteAll();
+                    mDaoSession.getMetricDao().deleteAll();
+                    mDaoSession.getPitDataDao().deleteAll();
+                    mDaoSession.getMatchDataDao().deleteAll();
+                    mDaoSession.getMatchCommentDao().deleteAll();
+                    mDaoSession.getRobotPhotoDao().deleteAll();
+                }
+            });
             if (isCancelled())
                 return SYNC_CANCELLED;
 

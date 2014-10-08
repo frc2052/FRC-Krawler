@@ -157,7 +157,8 @@ public class MetricsActivity extends ListActivity
         {
             WhereCondition eq = MetricDao.Properties.Category.eq(metricCategory);
             QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
-            metricQueryBuilder.and(MetricDao.Properties.Category.eq(metricCategory), MetricDao.Properties.GameId.eq(mGame.getId()));
+            metricQueryBuilder.where(MetricDao.Properties.Category.eq(metricCategory));
+            metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mGame.getId()));
             List<Metric> metrics = metricQueryBuilder.list();
             ArrayList<ListItem> listMetrics = new ArrayList<>();
             for (Metric metric : metrics) {

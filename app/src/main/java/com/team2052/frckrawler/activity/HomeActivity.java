@@ -23,7 +23,7 @@ public class HomeActivity extends BaseActivity
     private static final String REQUESTED_MODE = "requested_mode";
     private static final String STATE_SELECTED_NAV_ID = "selected_navigation_drawer_position";
     private int mCurrentSelectedNavigationItemId;
-    private boolean mFromSavedInstanceState;
+    private boolean mFromSavedInstanceState = false;
 
     public static Intent newInstance(Context context, int requestedMode)
     {

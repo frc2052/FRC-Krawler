@@ -127,7 +127,11 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         protected void onPostExecute(List<Match> matches)
         {
             mMatches = matches;
-            mMatchSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, matches));
+            List<Integer> matchNumbers = new ArrayList<>();
+            for (Match match : matches) {
+                matchNumbers.add(match.getNumber());
+            }
+            mMatchSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, matchNumbers));
         }
     }
 
