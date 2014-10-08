@@ -14,12 +14,6 @@ import android.widget.ToggleButton;
 
 import com.team2052.frckrawler.R;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import frckrawler.Game;
-
 public class OptionsFragment extends Fragment implements View.OnClickListener
 {
     public static final String PREFS_NAME = "userSettings";
@@ -47,7 +41,7 @@ public class OptionsFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View v = inflater.inflate(R.layout.activity_options, null);
+        View v = inflater.inflate(R.layout.fragment_options, null);
         preferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         ((EditText) v.findViewById(R.id.weightValue)).setText(Float.toString(preferences.getFloat(PREFS_COMPILE_WEIGHT, 1.0f)));
         boolean generate = preferences.getBoolean(PREFS_GENERATE_ROBOTS, false);

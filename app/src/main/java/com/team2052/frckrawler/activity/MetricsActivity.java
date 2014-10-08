@@ -155,7 +155,6 @@ public class MetricsActivity extends ListActivity
         @Override
         protected Void doInBackground(Void... v)
         {
-            WhereCondition eq = MetricDao.Properties.Category.eq(metricCategory);
             QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
             metricQueryBuilder.where(MetricDao.Properties.Category.eq(metricCategory));
             metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mGame.getId()));

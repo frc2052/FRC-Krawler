@@ -45,7 +45,6 @@ public class MetricListElement extends ListElement
                 boolean isFirst = true;
                 for (Object o : rangeArr) {
                     if (!isFirst) {
-                        isFirst = false;
                         rangeString += ", ";
                     }
                     isFirst = false;

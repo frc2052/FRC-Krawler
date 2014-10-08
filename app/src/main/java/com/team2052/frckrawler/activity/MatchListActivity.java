@@ -37,7 +37,9 @@ public class MatchListActivity extends ListActivity
         mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         setActionBarTitle("Schedule");
         setActionBarSubtitle(mEvent.getName());
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
