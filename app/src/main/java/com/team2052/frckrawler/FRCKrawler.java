@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.team2052.frckrawler.database.DatabaseHelper;
+
 import frckrawler.DaoMaster;
 import frckrawler.DaoSession;
 
@@ -24,7 +26,7 @@ public class FRCKrawler extends Application
 
     private void setupDB()
     {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "FRCKrawler-GreenDao", null);
+        DatabaseHelper helper = new DatabaseHelper(this, "FRCKrawler", null);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
