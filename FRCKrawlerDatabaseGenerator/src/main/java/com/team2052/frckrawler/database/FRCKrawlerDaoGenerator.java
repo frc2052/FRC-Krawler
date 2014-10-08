@@ -78,6 +78,7 @@ public class FRCKrawlerDaoGenerator
 
         Entity robotEvent = schema.addEntity("RobotEvent");
         robotEvent.implementsSerializable();
+        robotEvent.addIdProperty().unique().autoincrement();
         robotEvent.addToOne(robot, robotEvent.addLongProperty("robotId").getProperty());
         robotEvent.addToOne(event, robotEvent.addLongProperty("eventId").getProperty());
 

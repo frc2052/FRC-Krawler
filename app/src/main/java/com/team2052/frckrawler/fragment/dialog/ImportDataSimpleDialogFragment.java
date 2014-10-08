@@ -215,21 +215,15 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                         Team team = JSON.getGson().fromJson(element, Team.class);
                         daoSession.getTeamDao().insertOrReplace(team);
                         //Create a robot and save that robot to the database as well with the team
-                        Robot robot = null;
-                        List<Robot> robots = daoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(mGame.getId())).list();
-
-                        //Check to see if the robot already exists
-                        for (Robot robot1 : robots) {
-                            if (robot1.getTeam().getNumber() == team.getNumber()) {
-                                robot = robot1;
-                                break;
-                            }
-                        }
+                        Robot robot = daoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(mGame.getId())).where(RobotDao.Properties.TeamId.eq(team.getNumber())).unique();
 
                         if (robot == null) {
-                            daoSession.getRobotEventDao().insert(new RobotEvent(daoSession.getRobotDao().insert(new Robot(null, team.getNumber(), mGame.getId(), "", 0.0)), event.getId()));
-                        } else if (daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).where(RobotEventDao.Properties.EventId.eq(event.getId())).list().size() <= 0) {
-                            daoSession.getRobotEventDao().insert(new RobotEvent(robot.getId(), event.getId()));
+                            daoSession.getRobotEventDao().insert(new RobotEvent(null, daoSession.getRobotDao().insert(new Robot(null, team.getNumber(), mGame.getId(), "", 0.0)), event.getId()));
+                        } else {
+                            List<RobotEvent> robotEvents = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
+                            if (robotEvents.size() <= 0) {
+                                daoSession.getRobotEventDao().insert(new RobotEvent(null, robot.getId(), event.getId()));
+                            }
                         }
                     }
                     JSON.set_daoSession(daoSession);

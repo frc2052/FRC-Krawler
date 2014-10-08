@@ -12,6 +12,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.EventsActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.fragment.dialog.AddGameDialogFragment;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.listitems.ListElement;
@@ -69,7 +70,14 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i)
                         {
-                            FRCKrawler.getDaoSession(getActivity()).getGameDao().deleteByKey(game.getId());
+                            mDaoSession.runInTx(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    DBManager.deleteGame(((FRCKrawler)getActivity().getApplication()).getDaoSession(), game);
+                                }
+                            });
                             dialogInterface.dismiss();
                             updateList();
                             mode.finish();

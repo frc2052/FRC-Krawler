@@ -112,6 +112,7 @@ public class PhotosFragment extends BaseFragment
     {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             mDaoSession.getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId()));
+            new GetRobotPhotosTask().execute();
         } else if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -129,6 +130,7 @@ public class PhotosFragment extends BaseFragment
             }
             mDaoSession.getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId()));
             cursor.close();
+            new GetRobotPhotosTask().execute();
         }
     }
 

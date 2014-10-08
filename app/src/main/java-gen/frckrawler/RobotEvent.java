@@ -9,6 +9,7 @@ import de.greenrobot.dao.DaoException;
  */
 public class RobotEvent implements java.io.Serializable {
 
+    private Long id;
     private Long robotId;
     private Long eventId;
 
@@ -28,7 +29,12 @@ public class RobotEvent implements java.io.Serializable {
     public RobotEvent() {
     }
 
-    public RobotEvent(Long robotId, Long eventId) {
+    public RobotEvent(Long id) {
+        this.id = id;
+    }
+
+    public RobotEvent(Long id, Long robotId, Long eventId) {
+        this.id = id;
         this.robotId = robotId;
         this.eventId = eventId;
     }
@@ -37,6 +43,14 @@ public class RobotEvent implements java.io.Serializable {
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getRobotEventDao() : null;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getRobotId() {

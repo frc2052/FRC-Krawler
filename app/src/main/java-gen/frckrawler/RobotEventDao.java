@@ -17,7 +17,7 @@ import frckrawler.RobotEvent;
 /** 
  * DAO for table ROBOT_EVENT.
 */
-public class RobotEventDao extends AbstractDao<RobotEvent, Void> {
+public class RobotEventDao extends AbstractDao<RobotEvent, Long> {
 
     public static final String TABLENAME = "ROBOT_EVENT";
 
@@ -26,8 +26,9 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Void> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property RobotId = new Property(0, Long.class, "robotId", false, "ROBOT_ID");
-        public final static Property EventId = new Property(1, Long.class, "eventId", false, "EVENT_ID");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property RobotId = new Property(1, Long.class, "robotId", false, "ROBOT_ID");
+        public final static Property EventId = new Property(2, Long.class, "eventId", false, "EVENT_ID");
     };
 
     private DaoSession daoSession;
@@ -46,8 +47,9 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Void> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'ROBOT_EVENT' (" + //
-                "'ROBOT_ID' INTEGER," + // 0: robotId
-                "'EVENT_ID' INTEGER);"); // 1: eventId
+                "'_id' INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
+                "'ROBOT_ID' INTEGER," + // 1: robotId
+                "'EVENT_ID' INTEGER);"); // 2: eventId
     }
 
     /** Drops the underlying database table. */
@@ -61,14 +63,19 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Void> {
     protected void bindValues(SQLiteStatement stmt, RobotEvent entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         Long robotId = entity.getRobotId();
         if (robotId != null) {
-            stmt.bindLong(1, robotId);
+            stmt.bindLong(2, robotId);
         }
  
         Long eventId = entity.getEventId();
         if (eventId != null) {
-            stmt.bindLong(2, eventId);
+            stmt.bindLong(3, eventId);
         }
     }
 
@@ -80,16 +87,17 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Void> {
 
     /** @inheritdoc */
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     /** @inheritdoc */
     @Override
     public RobotEvent readEntity(Cursor cursor, int offset) {
         RobotEvent entity = new RobotEvent( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // robotId
-            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1) // eventId
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // robotId
+            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2) // eventId
         );
         return entity;
     }
@@ -97,21 +105,26 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Void> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, RobotEvent entity, int offset) {
-        entity.setRobotId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setEventId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setRobotId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
+        entity.setEventId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
      }
     
     /** @inheritdoc */
     @Override
-    protected Void updateKeyAfterInsert(RobotEvent entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected Long updateKeyAfterInsert(RobotEvent entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     /** @inheritdoc */
     @Override
-    public Void getKey(RobotEvent entity) {
-        return null;
+    public Long getKey(RobotEvent entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     /** @inheritdoc */

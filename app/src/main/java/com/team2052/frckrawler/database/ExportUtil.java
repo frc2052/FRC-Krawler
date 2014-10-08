@@ -28,12 +28,12 @@ public class ExportUtil
     public static void exportEventDataToCSV(Event event, File location, DaoSession daoSession)
     {
         final List<Metric> metrics = daoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(event.getGameId())).list();
-        List<RobotEvent> robotEventses = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
+        List<RobotEvent> robotEvents = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
 
         Map<Long, List<CompiledMetricValue>> robots = new TreeMap<>();
 
-        for (RobotEvent robotEvents : robotEventses) {
-            robots.put(robotEvents.getRobot().getTeam().getNumber(), MetricCompiler.getCompiledRobot(event, robotEvents.getRobot(), daoSession));
+        for (RobotEvent robotEvent : robotEvents) {
+            robots.put(robotEvent.getRobot().getTeam().getNumber(), MetricCompiler.getCompiledRobot(event, robotEvent.getRobot(), daoSession));
         }
 
         try {
@@ -42,14 +42,14 @@ public class ExportUtil
             List<String> header = new ArrayList<>();
 
             header.add("Team");
-            for (Metric metric : metrics) {
+            for (Metric metric : metrics)
+            {
                 header.add(metric.getName());
             }
             writer.writeNext(Arrays.copyOf(header.toArray(), header.size(), String[].class));
 
             for (Map.Entry<Long, List<CompiledMetricValue>> entry : robots.entrySet()) {
                 List<String> record = new ArrayList<>();
-                LogHelper.debug(String.valueOf(entry.getKey()));
                 record.add(String.valueOf(entry.getKey()));
 
                 for (CompiledMetricValue metricValue : entry.getValue()) {

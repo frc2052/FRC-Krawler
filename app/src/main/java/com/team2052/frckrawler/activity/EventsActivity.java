@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.fragment.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
@@ -50,10 +51,17 @@ public class EventsActivity extends ListActivity
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem)
         {
             long eventId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
-            Event event = mDaoSession.getEventDao().load(eventId);
+            final Event event = mDaoSession.getEventDao().load(eventId);
             switch (menuItem.getItemId()) {
                 case R.id.menu_delete:
-                    event.delete();
+                    mDaoSession.runInTx(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            DBManager.deleteEvent(mDaoSession, event);
+                        }
+                    });
                     updateList();
                     actionMode.finish();
                     break;
