@@ -158,7 +158,8 @@ public class ScoutPitFragment extends BaseFragment
 
             //Begin Saving
             for (MetricWidget widget : widgets) {
-                mDaoSession.getPitDataDao().insert(new PitData(widget.getMetricValue().getValue(), robot.getId(), widget.getMetric().getId(), mEvent.getId()));
+                if(mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).where(PitDataDao.Properties.MetricId.eq(widget.getMetric().getId())).list().size() <= 0)
+                    mDaoSession.getPitDataDao().insert(new PitData(widget.getMetricValue().getValue(), robot.getId(), widget.getMetric().getId(), mEvent.getId()));
             }
 
             robot.setComments(((EditText) getView().findViewById(R.id.comments)).getText().toString());

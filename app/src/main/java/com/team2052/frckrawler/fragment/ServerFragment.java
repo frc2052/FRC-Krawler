@@ -22,6 +22,7 @@ import com.team2052.frckrawler.util.LogHelper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import frckrawler.Event;
@@ -30,6 +31,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 {
     private static final int REQUEST_BT_ENABLED = 1;
     private Server server;
+    private List<Event> mEvents;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -96,7 +98,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     {
         Switch toggle = (Switch) getView().findViewById(R.id.hostToggle);
         Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
-        Event selectedEvent = (Event) eventChooser.getSelectedItem();
+        Event selectedEvent = mEvents.get(eventChooser.getSelectedItemPosition());
         if (null != selectedEvent) {
             if (toggle.isChecked()) {
                 if (BluetoothAdapter.getDefaultAdapter() == null) {
@@ -144,7 +146,12 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         protected void onPostExecute(List<Event> _events)
         {
             Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
-            ArrayAdapter<Event> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, _events);
+            mEvents = _events;
+            List<String> eventNames = new ArrayList<>();
+            for(Event event: _events){
+                eventNames.add(event.getGame().getName() + ", " + event.getName());
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);
             eventChooser.setAdapter(adapter);
         }
     }

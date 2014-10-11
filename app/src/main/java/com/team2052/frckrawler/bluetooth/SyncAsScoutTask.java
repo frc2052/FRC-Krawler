@@ -79,6 +79,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             //Get the data to send
             final List<MatchData> metricMatchData = mDaoSession.getMatchDataDao().loadAll();
             List<PitData> metricPitData = mDaoSession.getPitDataDao().loadAll();
+            List<MatchComment> matchComments = mDaoSession.getMatchCommentDao().loadAll();
 
             if (isCancelled())
                 return SYNC_CANCELLED;
@@ -87,6 +88,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             ooStream.writeInt(BluetoothInfo.SCOUT);
             ooStream.writeObject(metricMatchData);
             ooStream.writeObject(metricPitData);
+            ooStream.writeObject(matchComments);
             ooStream.flush();
 
 

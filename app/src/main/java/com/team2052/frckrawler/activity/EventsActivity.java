@@ -14,6 +14,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.fragment.dialog.ImportDataSimpleDialogFragment;
+import com.team2052.frckrawler.fragment.dialog.ImportManualDialogFragment;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.EventListElement;
@@ -74,6 +75,8 @@ public class EventsActivity extends ListActivity
                 case R.id.menu_robots:
                     EventsActivity.this.startActivity(RobotsActivity.newInstance(EventsActivity.this, event));
                     break;
+                case R.id.menu_import_manual:
+                    ImportManualDialogFragment.newInstance(event).show(getSupportFragmentManager(), "importManual");
             }
             return true;
         }

@@ -25,6 +25,7 @@ import com.team2052.frckrawler.fragment.NeedSyncFragment;
 import com.team2052.frckrawler.fragment.ViewPagerFragment;
 
 import java.util.List;
+import java.util.Set;
 
 import frckrawler.Event;
 import frckrawler.Match;
@@ -49,14 +50,12 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
         SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         mAddress = scoutPrefs.getString(GlobalValues.MAC_ADRESS_PREF, "null");
         if (scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
-            //Suggest the scout to sync again anyway.
             mEvent = mDaoSession.getEventDao().load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
             mNeedsSync = false;
         } else {
             mNeedsSync = true;
         }
         setHasOptionsMenu(true);
-
     }
 
     @Override
@@ -64,12 +63,14 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
     {
         switch (item.getItemId()) {
             case R.id.menu_sync:
+
                 if (!mAddress.contains("null")) {
                     scoutSyncTask = new SyncAsScoutTask(getActivity(), this);
                     scoutSyncTask.execute(BluetoothAdapter.getDefaultAdapter().getRemoteDevice(mAddress));
                 } else if (BluetoothAdapter.getDefaultAdapter() != null) {
                     AlertDialog.Builder builder;
-                    devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices().toArray(new BluetoothDevice[0]);
+                    Set<BluetoothDevice> bondedDevices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
+                    devices = bondedDevices.toArray(new BluetoothDevice[bondedDevices.size()]);
                     CharSequence[] deviceNames = new String[devices.length];
                     for (int k = 0; k < deviceNames.length; k++)
                         deviceNames[k] = devices[k].getName();
@@ -121,7 +122,6 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
     public void onSyncError(String deviceName)
     {
         mOptionsMenu.findItem(R.id.menu_sync).setActionView(null);
-        //releaseScreenOrientation();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Sync Error");
         builder.setMessage("There was an error in syncing with the server. Make sure " + "that the server device is turned on and is running the FRCKrawler server.");
@@ -201,7 +201,7 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
 
     public class ScoutPagerAdapter extends FragmentStatePagerAdapter
     {
-        public final String[] headers = {"Match Scouting", "Pit Scouting", "Schedule"};
+        public final String[] headers = {"Match Scouting", "Pit Scouting"};
 
         public ScoutPagerAdapter(FragmentManager fm)
         {
@@ -229,13 +229,6 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
                 case 1:
                     if (!mNeedsSync) {
                         fragment = ScoutPitFragment.newInstance(mEvent);
-                    } else {
-                        fragment = new NeedSyncFragment();
-                    }
-                    break;
-                case 2:
-                    if (!mNeedsSync) {
-                        fragment = MatchListFragment.newInstance(mEvent);
                     } else {
                         fragment = new NeedSyncFragment();
                     }

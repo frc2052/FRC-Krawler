@@ -9,6 +9,7 @@ import de.greenrobot.dao.DaoException;
  */
 public class MatchComment implements java.io.Serializable {
 
+    private Long robotId;
     private Long matchId;
     private String comment;
 
@@ -18,6 +19,9 @@ public class MatchComment implements java.io.Serializable {
     /** Used for active entity operations. */
     private transient MatchCommentDao myDao;
 
+    private Robot robot;
+    private Long robot__resolvedKey;
+
     private Match match;
     private Long match__resolvedKey;
 
@@ -25,7 +29,8 @@ public class MatchComment implements java.io.Serializable {
     public MatchComment() {
     }
 
-    public MatchComment(Long matchId, String comment) {
+    public MatchComment(Long robotId, Long matchId, String comment) {
+        this.robotId = robotId;
         this.matchId = matchId;
         this.comment = comment;
     }
@@ -34,6 +39,14 @@ public class MatchComment implements java.io.Serializable {
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getMatchCommentDao() : null;
+    }
+
+    public Long getRobotId() {
+        return robotId;
+    }
+
+    public void setRobotId(Long robotId) {
+        this.robotId = robotId;
     }
 
     public Long getMatchId() {
@@ -50,6 +63,31 @@ public class MatchComment implements java.io.Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    /** To-one relationship, resolved on first access. */
+    public Robot getRobot() {
+        Long __key = this.robotId;
+        if (robot__resolvedKey == null || !robot__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            RobotDao targetDao = daoSession.getRobotDao();
+            Robot robotNew = targetDao.load(__key);
+            synchronized (this) {
+                robot = robotNew;
+            	robot__resolvedKey = __key;
+            }
+        }
+        return robot;
+    }
+
+    public void setRobot(Robot robot) {
+        synchronized (this) {
+            this.robot = robot;
+            robotId = robot == null ? null : robot.getId();
+            robot__resolvedKey = robotId;
+        }
     }
 
     /** To-one relationship, resolved on first access. */

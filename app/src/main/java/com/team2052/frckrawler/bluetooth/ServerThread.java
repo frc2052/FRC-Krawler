@@ -88,6 +88,7 @@ public class ServerThread extends Thread
                     //Get the data from the stream
                     final List<MatchData> inMatchData = (List<MatchData>) inStream.readObject();
                     final List<PitData> inPitData = (List<PitData>) inStream.readObject();
+                    final List<MatchComment> inMatchComments = (List<MatchComment>) inStream.readObject();
 
                     mDaoSession.runInTx(new Runnable()
                     {
@@ -96,14 +97,21 @@ public class ServerThread extends Thread
                         {
                             //Save all the data
                             for (MatchData m : inMatchData) {
+                                //Don't Save data if it already exists.
                                 if (mDaoSession.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.RobotId.eq(m.getRobotId())).where(MatchDataDao.Properties.MetricId.eq(m.getMetricId())).where(MatchDataDao.Properties.MatchId.eq(m.getMatchId())).list().size() <= 0)
                                     mDaoSession.getMatchDataDao().insertOrReplace(m);
                             }
 
                             for (PitData m : inPitData) {
+                                //Don't Save data if it already exists.
                                 if (mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(m.getRobotId())).where(PitDataDao.Properties.MetricId.eq(m.getMetricId())).list().size() <= 0)
                                     mDaoSession.getPitDataDao().insertOrReplace(m);
+                            }
 
+                            for (MatchComment matchComment : inMatchComments) {
+                                //Don't Save data if it already exists.
+                                if (mDaoSession.getMatchCommentDao().queryBuilder().where(MatchCommentDao.Properties.MatchId.eq(matchComment.getMatchId())).where(MatchCommentDao.Properties.RobotId.eq(matchComment.getRobotId())).list().size() <= 0)
+                                    mDaoSession.getMatchCommentDao().insert(matchComment);
                             }
 
                         }

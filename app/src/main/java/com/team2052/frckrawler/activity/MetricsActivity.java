@@ -158,11 +158,12 @@ public class MetricsActivity extends ListActivity
             QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
             metricQueryBuilder.where(MetricDao.Properties.Category.eq(metricCategory));
             metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mGame.getId()));
-            List<Metric> metrics = metricQueryBuilder.list();
+
             ArrayList<ListItem> listMetrics = new ArrayList<>();
-            for (Metric metric : metrics) {
+            for (Metric metric : metricQueryBuilder.list()) {
                 listMetrics.add(new MetricListElement(metric));
             }
+
             mAdapter = new ListViewAdapter(MetricsActivity.this, listMetrics);
             return null;
         }
