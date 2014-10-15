@@ -75,7 +75,7 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
                                 @Override
                                 public void run()
                                 {
-                                    DBManager.deleteGame(((FRCKrawler)getActivity().getApplication()).getDaoSession(), game);
+                                    DBManager.deleteGame(((FRCKrawler) getActivity().getApplication()).getDaoSession(), game);
                                 }
                             });
                             dialogInterface.dismiss();

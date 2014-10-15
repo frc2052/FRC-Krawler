@@ -2,7 +2,6 @@ package com.team2052.frckrawler.fragment.scout;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -107,7 +106,7 @@ public class ScoutPitFragment extends BaseFragment
                 }
             });
 
-           mRobots = robotEventses;
+            mRobots = robotEventses;
 
             List<ListItem> listItems = new ArrayList<>();
 
@@ -158,8 +157,8 @@ public class ScoutPitFragment extends BaseFragment
 
             //Begin Saving
             for (MetricWidget widget : widgets) {
-                if(mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).where(PitDataDao.Properties.MetricId.eq(widget.getMetric().getId())).list().size() <= 0)
-                    mDaoSession.getPitDataDao().insert(new PitData(widget.getMetricValue().getValue(), robot.getId(), widget.getMetric().getId(), mEvent.getId()));
+                if (mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).where(PitDataDao.Properties.MetricId.eq(widget.getMetric().getId())).list().size() <= 0)
+                    mDaoSession.getPitDataDao().insert(new PitData(widget.getValues(), robot.getId(), widget.getMetric().getId(), mEvent.getId()));
             }
 
             robot.setComments(((EditText) getView().findViewById(R.id.comments)).getText().toString());

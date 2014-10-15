@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.view.metric;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
@@ -9,10 +10,14 @@ import android.widget.TextView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
 
+import icepick.Icepick;
+import icepick.Icicle;
+
 public class BooleanMetricWidget extends MetricWidget implements OnClickListener
 {
 
-    private boolean value;
+    @Icicle
+    boolean value;
 
     public BooleanMetricWidget(Context context, MetricValue m)
     {
@@ -58,5 +63,17 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
                 if (checked)
                     value = false;
         }
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState()
+    {
+        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state)
+    {
+        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
     }
 }

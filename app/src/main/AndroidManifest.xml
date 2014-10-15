@@ -48,6 +48,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+
+
         <activity android:name=".activity.TeamInfoActivity"/>
         <activity android:name=".activity.RobotActivity"/>
         <activity android:name=".activity.SummaryMetricsActivity"/>

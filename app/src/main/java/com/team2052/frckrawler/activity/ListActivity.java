@@ -6,14 +6,18 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * @author Adam
  */
 public abstract class ListActivity extends DatabaseActivity implements ListUpdateListener
 {
-    protected ListView mListView;
+    @InjectView(R.id.list_layout) protected ListView mListView;
     protected ListAdapter mAdapter;
     private Parcelable mListState;
 
@@ -22,7 +26,7 @@ public abstract class ListActivity extends DatabaseActivity implements ListUpdat
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view);
-        mListView = (ListView) findViewById(R.id.list_layout);
+        ButterKnife.inject(this);
     }
 
     @Override
@@ -48,5 +52,14 @@ public abstract class ListActivity extends DatabaseActivity implements ListUpdat
             }
             mListState = mListView.onSaveInstanceState();
         }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        if(mAdapter instanceof ListViewAdapter){
+            ((ListViewAdapter) mAdapter).closeLazyList();
+        }
+        super.onDestroy();
     }
 }

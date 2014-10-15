@@ -44,7 +44,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:orientation="vertical"/>
+                android:orientation="vertical"
+                style="?android:buttonBarStyle"
+                android:dividerPadding="15dp">
+                </LinearLayout>
 
             <EditText
                 android:id="@+id/comments"

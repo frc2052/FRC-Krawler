@@ -16,7 +16,6 @@ import com.team2052.frckrawler.listitems.elements.TeamListElement;
 import java.util.ArrayList;
 import java.util.List;
 
-import frckrawler.EventDao;
 import frckrawler.Team;
 import frckrawler.TeamDao;
 

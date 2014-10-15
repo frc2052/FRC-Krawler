@@ -54,7 +54,7 @@ public class MatchListActivity extends ListActivity
         @Override
         protected Void doInBackground(Void... params)
         {
-            List<Match> matches = mDaoSession.getMatchDao().queryBuilder().orderAsc(MatchDao.Properties.Number).where(MatchDao.Properties.EventId.eq(mEvent.getId())).list();
+            List<Match> matches = mDaoSession.getMatchDao().queryBuilder().orderAsc(MatchDao.Properties.Number).where(MatchDao.Properties.EventId.eq(mEvent.getId())).listLazy();
             List<ListItem> listItems = new ArrayList<>();
 
             for (Match match : matches) {

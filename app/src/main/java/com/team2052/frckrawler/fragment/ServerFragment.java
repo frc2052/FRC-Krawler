@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.Server;
 import com.team2052.frckrawler.database.ExportUtil;
@@ -23,6 +24,7 @@ import com.team2052.frckrawler.util.LogHelper;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import frckrawler.Event;
@@ -62,37 +64,15 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
             case R.id.excel:
                 new ExportToFileSystem().execute();
                 break;
-        }
-    }
-
-    public class ExportToFileSystem extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            File fileSystem = Environment.getExternalStorageDirectory();
-            Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
-            Event selectedEvent = (Event) eventChooser.getSelectedItem();
-            if (fileSystem.canWrite()) {
-                LogHelper.debug("Starting Export");
-                File file = null;
+            case R.id.dbBackups:
                 try {
-                    file = File.createTempFile(
-                            selectedEvent.getGame().getName() + "_" + selectedEvent.getName() + "_" + "Summary",  /* prefix */
-                            ".csv",         /* suffix */
-                            fileSystem      /* directory */
-                    );
-                } catch (IOException e) {
+                    ((FRCKrawler) getActivity().getApplication()).copyDB(new File(Environment.getExternalStorageDirectory(), "FRCKrawlerBackup-" + DateFormat.getDateFormat(getActivity()).format(new Date()) + ".db"));
+                    Toast.makeText(getActivity(), "Made a backup", Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (file != null) {
-                    ExportUtil.exportEventDataToCSV(selectedEvent, file, mDaoSession);
-                }
-            }
-            return null;
         }
     }
-
 
     private void openServer()
     {
@@ -133,6 +113,34 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         }
     }
 
+    public class ExportToFileSystem extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            File fileSystem = Environment.getExternalStorageDirectory();
+            Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
+            Event selectedEvent = (Event) eventChooser.getSelectedItem();
+            if (fileSystem.canWrite()) {
+                LogHelper.debug("Starting Export");
+                File file = null;
+                try {
+                    file = File.createTempFile(
+                            selectedEvent.getGame().getName() + "_" + selectedEvent.getName() + "_" + "Summary",  /* prefix */
+                            ".csv",         /* suffix */
+                            fileSystem      /* directory */
+                    );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (file != null) {
+                    ExportUtil.exportEventDataToCSV(selectedEvent, file, mDaoSession);
+                }
+            }
+            return null;
+        }
+    }
+
     private class GetEventsTask extends AsyncTask<Void, Void, List<Event>>
     {
 
@@ -148,7 +156,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
             Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
             mEvents = _events;
             List<String> eventNames = new ArrayList<>();
-            for(Event event: _events){
+            for (Event event : _events) {
                 eventNames.add(event.getGame().getName() + ", " + event.getName());
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);

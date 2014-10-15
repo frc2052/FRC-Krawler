@@ -19,11 +19,8 @@ import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.MetricListElement;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
-import de.greenrobot.dao.query.WhereCondition;
-import frckrawler.Event;
 import frckrawler.Game;
 import frckrawler.Metric;
 import frckrawler.MetricDao;
@@ -35,6 +32,8 @@ public class MetricsActivity extends ListActivity
     private int metricCategory;
 
     private int mCurrentSelectedItem;
+    private Game mGame;
+    private ActionMode mCurrentActionMode;
     private final ActionMode.Callback callback = new ActionMode.Callback()
     {
         @Override
@@ -76,9 +75,6 @@ public class MetricsActivity extends ListActivity
         }
     };
 
-    private Game mGame;
-    private ActionMode mCurrentActionMode;
-
     public static Intent newInstance(Context context, Game game, MetricType type)
     {
         Intent i = new Intent(context, MetricsActivity.class);
@@ -101,7 +97,9 @@ public class MetricsActivity extends ListActivity
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
             {
-                if(mCurrentActionMode != null){return false;}
+                if (mCurrentActionMode != null) {
+                    return false;
+                }
                 mCurrentSelectedItem = i;
                 mCurrentActionMode = startActionMode(callback);
                 return true;

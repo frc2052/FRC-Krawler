@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.view.metric;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -9,13 +10,16 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 
+import icepick.Icepick;
+import icepick.Icicle;
+
 public class CounterMetricWidget extends MetricWidget implements OnClickListener
 {
 
     private int max;
     private int min;
     private int increment;
-    private int currentValue;
+    @Icicle int currentValue;
 
     public CounterMetricWidget(Context context, MetricValue m)
     {
@@ -75,5 +79,17 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
         }
 
         ((TextView) findViewById(R.id.value)).setText(Integer.toString(currentValue));
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState()
+    {
+        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state)
+    {
+        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
     }
 }

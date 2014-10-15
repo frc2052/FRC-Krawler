@@ -91,7 +91,7 @@ public class RobotsFragment extends ListFragment
         protected List<Robot> doInBackground(Void... params)
         {
             WhereCondition condition = null;
-            if(mViewType == 0){
+            if (mViewType == 0) {
                 condition = RobotDao.Properties.TeamId.eq(mKey);
             }
             //Load robots based on the view type

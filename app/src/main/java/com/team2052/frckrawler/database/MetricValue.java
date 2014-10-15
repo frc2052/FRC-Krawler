@@ -10,18 +10,18 @@ public class MetricValue
     private Metric metric;
     private String value;
 
-    public MetricValue(Metric metric, String value) throws MetricTypeMismatchException
+    public MetricValue(Metric metric, String value)
     {
         this.metric = metric;
         this.value = value;
     }
 
-    public MetricValue(MatchData matchData) throws MetricTypeMismatchException
+    public MetricValue(MatchData matchData)
     {
         this(matchData.getMetric(), matchData.getData());
     }
 
-    public MetricValue(PitData matchData) throws MetricTypeMismatchException
+    public MetricValue(PitData matchData)
     {
         this(matchData.getMetric(), matchData.getData());
     }
@@ -36,7 +36,4 @@ public class MetricValue
         return value;
     }
 
-    public class MetricTypeMismatchException extends Exception
-    {
-    }
 }

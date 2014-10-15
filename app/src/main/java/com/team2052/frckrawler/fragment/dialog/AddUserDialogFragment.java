@@ -32,7 +32,7 @@ public class AddUserDialogFragment extends DialogFragment
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                ((FRCKrawler)getActivity().getApplication()).getDaoSession().getUserDao().insert(new User(null, ((EditText) view.findViewById(R.id.name)).getText().toString().trim()));
+                ((FRCKrawler) getActivity().getApplication()).getDaoSession().getUserDao().insert(new User(null, ((EditText) view.findViewById(R.id.name)).getText().toString().trim()));
                 ((ListUpdateListener) getParentFragment()).updateList();
             }
         });

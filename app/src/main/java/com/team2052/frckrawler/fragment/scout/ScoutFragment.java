@@ -24,12 +24,9 @@ import com.team2052.frckrawler.fragment.MatchListFragment;
 import com.team2052.frckrawler.fragment.NeedSyncFragment;
 import com.team2052.frckrawler.fragment.ViewPagerFragment;
 
-import java.util.List;
 import java.util.Set;
 
 import frckrawler.Event;
-import frckrawler.Match;
-import frckrawler.Team;
 
 public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHandler, DialogInterface.OnClickListener
 {

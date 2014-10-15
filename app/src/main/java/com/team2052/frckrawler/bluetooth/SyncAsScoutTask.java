@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.GlobalValues;
-import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.Schedule;
 
 import java.io.IOException;
@@ -92,7 +91,6 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             ooStream.flush();
 
 
-
             mDaoSession.runInTx(new Runnable()
             {
                 @Override
@@ -165,8 +163,6 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
                     mDaoSession.insertOrReplace(event1.getGame());
                 }
             });
-
-
 
 
             //Close the streams

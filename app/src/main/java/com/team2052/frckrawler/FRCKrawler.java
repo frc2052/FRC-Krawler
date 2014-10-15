@@ -6,6 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.team2052.frckrawler.database.DatabaseHelper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
+
 import frckrawler.DaoMaster;
 import frckrawler.DaoSession;
 
@@ -16,6 +21,12 @@ public class FRCKrawler extends Application
 {
 
     private DaoSession daoSession;
+    private DaoMaster daoMaster;
+
+    public static DaoSession getDaoSession(Context context)
+    {
+        return ((FRCKrawler) context.getApplicationContext()).getDaoSession();
+    }
 
     @Override
     public void onCreate()
@@ -28,7 +39,7 @@ public class FRCKrawler extends Application
     {
         DatabaseHelper helper = new DatabaseHelper(this, "FRCKrawler", null);
         SQLiteDatabase db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
+        daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
     }
 
@@ -37,9 +48,21 @@ public class FRCKrawler extends Application
         return daoSession;
     }
 
-    public static DaoSession getDaoSession(Context context)
+    public File copyDB(File newPath) throws Exception
     {
-        return ((FRCKrawler) context.getApplicationContext()).getDaoSession();
+        File currentDB = new File(daoMaster.getDatabase().getPath());
+        if (currentDB.exists()) {
+            FileOutputStream fileOutputStream = new FileOutputStream(newPath);
+            FileInputStream fileInputStream = new FileInputStream(currentDB);
+            FileChannel src = fileInputStream.getChannel();
+            FileChannel dst = fileOutputStream.getChannel();
+            dst.transferFrom(src, 0, src.size());
+            src.close();
+            dst.close();
+            fileOutputStream.close();
+            fileInputStream.close();
+        }
+        return newPath;
     }
 
 }

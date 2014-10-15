@@ -95,11 +95,11 @@ public class DBManager
             deleteRobotPhoto(daoSession, robotPhoto);
         }
 
-        for(PitData pitData : daoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).list()){
+        for (PitData pitData : daoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).list()) {
             deletePitData(daoSession, pitData);
         }
 
-        for(MatchData matchData: daoSession.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.RobotId.eq(robot.getId())).list()){
+        for (MatchData matchData : daoSession.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.RobotId.eq(robot.getId())).list()) {
             deleteMatchData(daoSession, matchData);
         }
 

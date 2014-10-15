@@ -115,9 +115,9 @@ public class FRCKrawlerDaoGenerator
 
         Entity matchComment = schema.addEntity("MatchComment");
         matchComment.implementsSerializable();
-        matchComment.addToOne(robot, matchComment.addLongProperty("robotId").getProperty());
         matchComment.addToOne(match, matchComment.addLongProperty("matchId").getProperty());
         matchComment.addStringProperty("comment");
+        matchComment.addToOne(robot, matchComment.addLongProperty("robotId").getProperty());
 
         new DaoGenerator().generateAll(schema, args[0]);
     }

@@ -9,14 +9,20 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * @author Adam
  */
 public abstract class ListFragment extends BaseFragment implements ListUpdateListener
 {
+    @InjectView(R.id.list_layout)
     protected ListView mListView;
+
     protected ListAdapter mAdapter;
     private Parcelable mListState;
 
@@ -25,7 +31,7 @@ public abstract class ListFragment extends BaseFragment implements ListUpdateLis
     {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.list_view, null);
-        mListView = (ListView) view.findViewById(R.id.list_layout);
+        ButterKnife.inject(this, view);
         if (mAdapter != null) {
             mListView.setAdapter(mAdapter);
             mListView.onRestoreInstanceState(mListState);
@@ -45,5 +51,14 @@ public abstract class ListFragment extends BaseFragment implements ListUpdateLis
             mListState = mListView.onSaveInstanceState();
         }
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        if(mAdapter instanceof ListViewAdapter){
+            ((ListViewAdapter) mAdapter).closeLazyList();
+        }
+        super.onDestroy();
     }
 }

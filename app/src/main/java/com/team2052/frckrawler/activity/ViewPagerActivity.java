@@ -27,7 +27,9 @@ public abstract class ViewPagerActivity extends DatabaseActivity
         mTabs.setViewPager(mPager);
     }
 
-    public void onPreLoadViewPager(){}
+    public void onPreLoadViewPager()
+    {
+    }
 
     /**
      * @return The adapter that you want to attach to the ViewPager and the Tabs

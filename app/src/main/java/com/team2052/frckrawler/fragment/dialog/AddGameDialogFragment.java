@@ -40,7 +40,7 @@ public class AddGameDialogFragment extends DialogFragment
             public void onClick(DialogInterface dialog, int which)
             {
                 Game game = new Game(null, ((TextView) getDialog().getWindow().findViewById(R.id.nameVal)).getText().toString());
-                ((FRCKrawler)getActivity().getApplication()).getDaoSession().getGameDao().insert(game);
+                ((FRCKrawler) getActivity().getApplication()).getDaoSession().getGameDao().insert(game);
                 listener.updateList();
                 dismiss();
             }

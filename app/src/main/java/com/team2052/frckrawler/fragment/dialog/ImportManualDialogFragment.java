@@ -85,6 +85,23 @@ public class ImportManualDialogFragment extends DialogFragment implements View.O
         }
     }
 
+    @Override
+    public void onClick(View view)
+    {
+        Intent intent = null;
+        switch (view.getId()) {
+            case R.id.import_matches:
+                new ImportRandomMatches().execute();
+                break;
+            case R.id.import_teams_manual:
+                intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("file/csv");
+                startActivityForResult(intent, REQUEST_FILE_TEAMS);
+                break;
+        }
+    }
+
     public class ImportTeamsTask extends AsyncTask<Void, Void, Void>
     {
 
@@ -109,23 +126,6 @@ public class ImportManualDialogFragment extends DialogFragment implements View.O
                 }
             });
             return null;
-        }
-    }
-
-    @Override
-    public void onClick(View view)
-    {
-        Intent intent = null;
-        switch (view.getId()) {
-            case R.id.import_matches:
-                new ImportRandomMatches().execute();
-                break;
-            case R.id.import_teams_manual:
-                intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("file/csv");
-                startActivityForResult(intent, REQUEST_FILE_TEAMS);
-                break;
         }
     }
 

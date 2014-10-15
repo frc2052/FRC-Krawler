@@ -29,6 +29,8 @@ import com.team2052.frckrawler.tba.TBA;
 import com.team2052.frckrawler.util.LogHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import frckrawler.*;
@@ -152,7 +154,15 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                 //Add the events to the list
                 events.add(JSON.getGson().fromJson(element, Event.class));
             }
-
+            //Sort the event by date
+            Collections.sort(events, new Comparator<Event>()
+            {
+                @Override
+                public int compare(Event event, Event event2)
+                {
+                    return Double.compare(event.getDate().getTime(), event2.getDate().getTime());
+                }
+            });
             return events;
         }
 

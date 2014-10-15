@@ -56,7 +56,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         mMetricCategory = args.getInt(METRIC_CATEGORY, -1);
-        mGame = ((FRCKrawler)getActivity().getApplication()).getDaoSession().getGameDao().load(args.getLong(GAME_NAME_EXTRA));
+        mGame = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getGameDao().load(args.getLong(GAME_NAME_EXTRA));
         list = new TextListEditor(getActivity());
     }
 
@@ -199,7 +199,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
         }
 
         if (m != null) {
-            ((FRCKrawler)getActivity().getApplication()).getDaoSession().getMetricDao().insert(m);
+            ((FRCKrawler) getActivity().getApplication()).getDaoSession().getMetricDao().insert(m);
         }
         ((ListUpdateListener) getActivity()).updateList();
         dismiss();
