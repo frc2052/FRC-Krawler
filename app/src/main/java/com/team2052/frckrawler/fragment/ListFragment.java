@@ -32,6 +32,7 @@ public abstract class ListFragment extends BaseFragment implements ListUpdateLis
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.list_view, null);
         ButterKnife.inject(this, view);
+        preUpdateList();
         if (mAdapter != null) {
             mListView.setAdapter(mAdapter);
             mListView.onRestoreInstanceState(mListState);
@@ -39,6 +40,11 @@ public abstract class ListFragment extends BaseFragment implements ListUpdateLis
             updateList();
         }
         return view;
+    }
+
+    public void preUpdateList()
+    {
+
     }
 
     @Override

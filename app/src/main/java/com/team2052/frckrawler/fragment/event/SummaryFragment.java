@@ -1,0 +1,83 @@
+package com.team2052.frckrawler.fragment.event;
+
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+
+import com.team2052.frckrawler.activity.DatabaseActivity;
+import com.team2052.frckrawler.activity.SummaryDataActivity;
+import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.fragment.ListFragment;
+import com.team2052.frckrawler.listitems.ListElement;
+import com.team2052.frckrawler.listitems.ListItem;
+import com.team2052.frckrawler.listitems.elements.MetricListElement;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import frckrawler.Event;
+import frckrawler.Metric;
+import frckrawler.MetricDao;
+
+/**
+ * @author Adam
+ * @since 10/16/2014
+ */
+public class SummaryFragment extends ListFragment
+{
+    private Event mEvent;
+
+    public static SummaryFragment newInstance(Event event)
+    {
+        SummaryFragment fragment = new SummaryFragment();
+        Bundle bundle = new Bundle();
+        bundle.putLong(DatabaseActivity.PARENT_ID, event.getId());
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void preUpdateList()
+    {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                Metric metric = mDaoSession.getMetricDao().load(Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()));
+                startActivity(SummaryDataActivity.newInstance(getActivity(), metric, mEvent));
+            }
+        });
+        mEvent = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+    }
+
+    @Override
+    public void updateList()
+    {
+        new LoadAllMetrics().execute();
+    }
+
+    public class LoadAllMetrics extends AsyncTask<Void, Void, List<Metric>>
+    {
+
+        @Override
+        protected List<Metric> doInBackground(Void... params)
+        {
+            return mDaoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(mEvent.getGameId())).list();
+        }
+
+        @Override
+        protected void onPostExecute(List<Metric> metrics)
+        {
+            List<ListItem> listItems = new ArrayList<>();
+
+            for (Metric metric : metrics) {
+                listItems.add(new MetricListElement(metric));
+            }
+
+            mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), listItems));
+        }
+    }
+}

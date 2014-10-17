@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment;
+package com.team2052.frckrawler.fragment.robot;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,17 +10,22 @@ import android.widget.AdapterView;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.activity.RobotActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.fragment.ListFragment;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.greenrobot.dao.query.WhereCondition;
 import frckrawler.Event;
 import frckrawler.Robot;
 import frckrawler.RobotDao;
+import frckrawler.RobotEvent;
+import frckrawler.RobotEventDao;
 import frckrawler.Team;
 
 /**
@@ -91,11 +96,28 @@ public class RobotsFragment extends ListFragment
         protected List<Robot> doInBackground(Void... params)
         {
             WhereCondition condition = null;
+            List<Robot> robots;
             if (mViewType == 0) {
                 condition = RobotDao.Properties.TeamId.eq(mKey);
+                robots = mDaoSession.getRobotDao().queryBuilder().where(condition).list();
+            } else {
+                condition = RobotEventDao.Properties.EventId.eq(mKey);
+                List<RobotEvent> robotEvents = mDaoSession.getRobotEventDao().queryBuilder().where(condition).list();
+                robots = new ArrayList<>();
+                for(RobotEvent robotEvent: robotEvents){
+                    robots.add(robotEvent.getRobot());
+                }
+                Collections.sort(robots, new Comparator<Robot>()
+                {
+                    @Override
+                    public int compare(Robot robot, Robot robot2)
+                    {
+                        return Double.compare(robot.getTeamId(), robot2.getTeamId());
+                    }
+                });
             }
             //Load robots based on the view type
-            return mDaoSession.getRobotDao().queryBuilder().where(condition).list();
+            return robots;
         }
 
         @Override

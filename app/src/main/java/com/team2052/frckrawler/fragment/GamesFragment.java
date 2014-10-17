@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.EventsActivity;
+import com.team2052.frckrawler.activity.GameInfoActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
@@ -29,81 +30,6 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
 
     public int currentSelectedListItem;
     private ActionMode currentActionMode;
-    ActionMode.Callback callback = new ActionMode.Callback()
-    {
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu)
-        {
-            long gameId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
-            Game game = mDaoSession.getGameDao().load(gameId);
-            mode.setTitle(game.getName());
-            mode.getMenuInflater().inflate(R.menu.edit_delete_game_menu, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu)
-        {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(final ActionMode mode, MenuItem item)
-        {
-            long gameId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
-            final Game game = mDaoSession.getGameDao().load(gameId);
-            switch (item.getItemId()) {
-                case R.id.menu_event:
-                    getActivity().startActivity(EventsActivity.newInstance(getActivity(), game));
-                    return true;
-                case R.id.menu_match_metrics:
-                    getActivity().startActivity(MetricsActivity.newInstance(getActivity(), game, MetricsActivity.MetricType.MATCH_PERF_METRICS));
-                    return true;
-                case R.id.menu_pit_metrics:
-                    getActivity().startActivity(MetricsActivity.newInstance(getActivity(), game, MetricsActivity.MetricType.ROBOT_METRICS));
-                    return true;
-                case R.id.menu_delete:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setMessage("Are you sure you want to remove this game and all its data?");
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
-                            mDaoSession.runInTx(new Runnable()
-                            {
-                                @Override
-                                public void run()
-                                {
-                                    DBManager.deleteGame(((FRCKrawler) getActivity().getApplication()).getDaoSession(), game);
-                                }
-                            });
-                            dialogInterface.dismiss();
-                            updateList();
-                            mode.finish();
-                        }
-                    });
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    builder.show();
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode)
-        {
-            currentActionMode = null;
-        }
-    };
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
@@ -131,17 +57,14 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
-                if (currentActionMode != null) {
-                    return false;
-                }
-                currentSelectedListItem = position;
-                currentActionMode = getActivity().startActionMode(callback);
-                return true;
+                long gameId = Long.parseLong(((ListElement) mAdapter.getItem(i)).getKey());
+                final Game game = mDaoSession.getGameDao().load(gameId);
+                startActivity(GameInfoActivity.newInstance(getActivity(), game));
             }
         });
         return view;

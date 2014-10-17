@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment;
+package com.team2052.frckrawler.fragment.robot;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import android.widget.GridView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.RobotPhotoAdapter;
+import com.team2052.frckrawler.fragment.BaseFragment;
 import com.team2052.frckrawler.util.LogHelper;
 
 import java.io.File;

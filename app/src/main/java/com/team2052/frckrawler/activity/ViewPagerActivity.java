@@ -12,8 +12,8 @@ import com.team2052.frckrawler.R;
  */
 public abstract class ViewPagerActivity extends DatabaseActivity
 {
-    private ViewPager mPager;
-    private PagerSlidingTabStrip mTabs;
+    protected ViewPager mPager;
+    protected PagerSlidingTabStrip mTabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

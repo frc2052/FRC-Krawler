@@ -1,10 +1,11 @@
-package com.team2052.frckrawler.fragment;
+package com.team2052.frckrawler.fragment.event;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.fragment.ListFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.items.MatchListItem;
 

@@ -9,8 +9,7 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        app:pstsIndicatorColor="#5b0000"
-        app:pstsShouldExpand="true"/>
+        app:pstsIndicatorColor="#5b0000"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"

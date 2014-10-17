@@ -120,7 +120,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         {
             File fileSystem = Environment.getExternalStorageDirectory();
             Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
-            Event selectedEvent = (Event) eventChooser.getSelectedItem();
+            Event selectedEvent = mEvents.get(eventChooser.getSelectedItemPosition());
             if (fileSystem.canWrite()) {
                 LogHelper.debug("Starting Export");
                 File file = null;

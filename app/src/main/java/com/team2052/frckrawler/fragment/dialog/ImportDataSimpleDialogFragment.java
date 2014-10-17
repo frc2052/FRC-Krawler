@@ -73,7 +73,6 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         for (int i = 1; i < yearDropDownItems.length; i++) {
             yearDropDownItems[i] = Integer.toString(GlobalValues.MAX_COMP_YEAR - i + 1);
         }
-        setRetainInstance(true);
     }
 
     @Override
@@ -125,7 +124,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     @Override
     public void onDismiss(DialogInterface dialog)
     {
-        ((ListUpdateListener) getActivity()).updateList();
+        ((ListUpdateListener) getParentFragment()).updateList();
         super.onDismiss(dialog);
     }
 

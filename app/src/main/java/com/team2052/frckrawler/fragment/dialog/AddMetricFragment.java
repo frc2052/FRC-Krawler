@@ -201,7 +201,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
         if (m != null) {
             ((FRCKrawler) getActivity().getApplication()).getDaoSession().getMetricDao().insert(m);
         }
-        ((ListUpdateListener) getActivity()).updateList();
+        ((ListUpdateListener) getParentFragment()).updateList();
         dismiss();
     }
 
