@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.view.metric;
 
 import android.content.Context;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
@@ -9,7 +8,6 @@ import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.database.MetricValues;
 
 import frckrawler.Metric;
-import icepick.Icepick;
 
 public abstract class MetricWidget extends FrameLayout
 {

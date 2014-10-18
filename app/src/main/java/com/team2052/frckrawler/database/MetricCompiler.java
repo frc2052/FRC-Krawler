@@ -68,31 +68,31 @@ public class MetricCompiler
         final List<Metric> metrics = daoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(event.getGameId())).list();
         final List<CompiledMetricValue> compiledMetricValues = new ArrayList<>();
         for (Metric metric : metrics) {
-                List<MetricValue> metricData = new ArrayList<>();
-                if (metric.getCategory() == MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal()) {
+            List<MetricValue> metricData = new ArrayList<>();
+            if (metric.getCategory() == MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal()) {
 
-                    QueryBuilder<MatchData> queryBuilder = daoSession.getMatchDataDao().queryBuilder();
-                    queryBuilder.where(MatchDataDao.Properties.MetricId.eq(metric.getId()));
-                    queryBuilder.where(MatchDataDao.Properties.RobotId.eq(robot.getId()));
+                QueryBuilder<MatchData> queryBuilder = daoSession.getMatchDataDao().queryBuilder();
+                queryBuilder.where(MatchDataDao.Properties.MetricId.eq(metric.getId()));
+                queryBuilder.where(MatchDataDao.Properties.RobotId.eq(robot.getId()));
 
-                    for (MatchData matchData : queryBuilder.list()) {
-                        if (matchData.getMatch().getEvent().getId().equals(event.getId())) {
-                            LogHelper.debug(matchData.getData() + matchData.getRobotId());
-                            metricData.add(new MetricValue(matchData));
-                        }
-                    }
-
-                } else if (metric.getCategory() == MetricsActivity.MetricType.ROBOT_METRICS.ordinal()) {
-                    QueryBuilder<PitData> queryBuilder = daoSession.getPitDataDao().queryBuilder();
-                    queryBuilder.where(PitDataDao.Properties.EventId.eq(event.getId()));
-                    queryBuilder.where(PitDataDao.Properties.MetricId.eq(metric.getId()));
-                    queryBuilder.where(PitDataDao.Properties.RobotId.eq(robot.getId()));
-
-                    for (PitData matchData : queryBuilder.list()) {
+                for (MatchData matchData : queryBuilder.list()) {
+                    if (matchData.getMatch().getEvent().getId().equals(event.getId())) {
+                        LogHelper.debug(matchData.getData() + matchData.getRobotId());
                         metricData.add(new MetricValue(matchData));
                     }
                 }
-                compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, metric.getType(), 1.0F));
+
+            } else if (metric.getCategory() == MetricsActivity.MetricType.ROBOT_METRICS.ordinal()) {
+                QueryBuilder<PitData> queryBuilder = daoSession.getPitDataDao().queryBuilder();
+                queryBuilder.where(PitDataDao.Properties.EventId.eq(event.getId()));
+                queryBuilder.where(PitDataDao.Properties.MetricId.eq(metric.getId()));
+                queryBuilder.where(PitDataDao.Properties.RobotId.eq(robot.getId()));
+
+                for (PitData matchData : queryBuilder.list()) {
+                    metricData.add(new MetricValue(matchData));
+                }
+            }
+            compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, metric.getType(), 1.0F));
         }
         return compiledMetricValues;
     }

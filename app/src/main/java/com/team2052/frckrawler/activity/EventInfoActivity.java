@@ -10,7 +10,6 @@ import android.support.v4.view.PagerAdapter;
 import com.team2052.frckrawler.fragment.event.MatchListFragment;
 import com.team2052.frckrawler.fragment.event.SummaryFragment;
 import com.team2052.frckrawler.fragment.robot.RobotsFragment;
-import com.team2052.frckrawler.fragment.scout.NeedSyncFragment;
 
 import frckrawler.Event;
 
@@ -47,6 +46,7 @@ public class EventInfoActivity extends ViewPagerActivity
     public class EventViewPagerAdapter extends FragmentPagerAdapter
     {
         public String[] headers = new String[]{"Summary", "Schedule", "Attending"};
+
         public EventViewPagerAdapter(FragmentManager fm)
         {
             super(fm);
@@ -55,7 +55,7 @@ public class EventInfoActivity extends ViewPagerActivity
         @Override
         public Fragment getItem(int position)
         {
-            switch (position){
+            switch (position) {
                 case 0:
                     return SummaryFragment.newInstance(mEvent);
                 case 1:

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:padding="16dp">
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -58,25 +59,23 @@
         android:layout_alignRight="@+id/contact_team_role"
         android:layout_below="@+id/contact_team_role"/>
 
-    <Switch
+    <android.support.v7.widget.SwitchCompat
         android:id="@+id/hostToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/matchCount"
-        android:layout_alignStart="@+id/matchCount"
-        android:layout_below="@+id/chooseEvent"
-        android:layout_marginTop="36dp"
+        android:layout_below="@+id/contact_name"
         android:checked="false"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:padding="8dp"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/contact_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/hostToggle"
-        android:layout_alignRight="@+id/hostToggle"
-        android:layout_below="@+id/chooseEvent"
         android:text="Toggle Server"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/chooseEvent"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

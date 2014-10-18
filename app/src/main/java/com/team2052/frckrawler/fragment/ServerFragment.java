@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.widget.SwitchCompat;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         v.findViewById(R.id.excel).setOnClickListener(this);
         v.findViewById(R.id.dbBackups).setOnClickListener(this);
         v.findViewById(R.id.hostToggle).setOnClickListener(this);
-        ((Switch) v.findViewById(R.id.hostToggle)).setChecked(server.isOpen());
+        ((SwitchCompat) v.findViewById(R.id.hostToggle)).setChecked(server.isOpen());
         return v;
     }
 
@@ -76,14 +77,14 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
     private void openServer()
     {
-        Switch toggle = (Switch) getView().findViewById(R.id.hostToggle);
+        SwitchCompat toggle = (SwitchCompat) getView().findViewById(R.id.hostToggle);
         Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
         Event selectedEvent = mEvents.get(eventChooser.getSelectedItemPosition());
         if (null != selectedEvent) {
             if (toggle.isChecked()) {
                 if (BluetoothAdapter.getDefaultAdapter() == null) {
                     Toast.makeText(getActivity(), "Sorry, your device does not " + "support Bluetooth. You will not be able to " + "open a server and receive data from scouts.", Toast.LENGTH_LONG).show();
-                    ((Switch) getView().findViewById(R.id.hostToggle)).setChecked(false);
+                    ((SwitchCompat) getView().findViewById(R.id.hostToggle)).setChecked(false);
                     return;
                 } else {
                     if (BluetoothAdapter.getDefaultAdapter().isEnabled())

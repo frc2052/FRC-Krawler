@@ -2,6 +2,7 @@ package com.team2052.frckrawler.fragment.event;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
@@ -38,6 +39,13 @@ public class MatchListFragment extends ListFragment
     public void onPostCreate()
     {
         mEvent = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        setShowAddAction(false);
+        super.onCreate(savedInstanceState);
     }
 
     @Override

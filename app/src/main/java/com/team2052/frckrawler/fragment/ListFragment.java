@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.fragment;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -25,13 +27,20 @@ public abstract class ListFragment extends BaseFragment implements ListUpdateLis
 
     protected ListAdapter mAdapter;
     private Parcelable mListState;
+    private boolean mShowAction = true;
 
+    protected void setShowAddAction(boolean state)
+    {
+        mShowAction = state;
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.list_view, null);
-        ButterKnife.inject(this, view);
+        View v = inflater.inflate(R.layout.list_view, null);
+        ButterKnife.inject(this, v);
         preUpdateList();
         if (mAdapter != null) {
             mListView.setAdapter(mAdapter);
@@ -39,7 +48,7 @@ public abstract class ListFragment extends BaseFragment implements ListUpdateLis
         } else {
             updateList();
         }
-        return view;
+        return v;
     }
 
     public void preUpdateList()
@@ -62,7 +71,7 @@ public abstract class ListFragment extends BaseFragment implements ListUpdateLis
     @Override
     public void onDestroy()
     {
-        if(mAdapter instanceof ListViewAdapter){
+        if (mAdapter instanceof ListViewAdapter) {
             ((ListViewAdapter) mAdapter).closeLazyList();
         }
         super.onDestroy();

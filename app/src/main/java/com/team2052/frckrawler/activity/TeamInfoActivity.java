@@ -8,9 +8,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
-import com.team2052.frckrawler.fragment.team.ContactsFragment;
-import com.team2052.frckrawler.fragment.scout.NeedSyncFragment;
 import com.team2052.frckrawler.fragment.robot.RobotsFragment;
+import com.team2052.frckrawler.fragment.scout.NeedSyncFragment;
+import com.team2052.frckrawler.fragment.team.ContactsFragment;
 
 import frckrawler.Team;
 
@@ -33,7 +33,8 @@ public class TeamInfoActivity extends ViewPagerActivity
     {
         super.onCreate(savedInstanceState);
         mTeam = mDaoSession.getTeamDao().load(getIntent().getLongExtra(PARENT_ID, 0));
-        getActionBar().setTitle("Team " + mTeam.getNumber());
+        setActionBarTitle("Team");
+        setActionBarSubtitle(mTeam.getName());
     }
 
     @Override

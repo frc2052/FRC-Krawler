@@ -62,6 +62,7 @@ public class RobotsFragment extends ListFragment
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        setShowAddAction(false);
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
         this.mViewType = b.getInt(VIEW_TYPE, 0);
@@ -104,7 +105,7 @@ public class RobotsFragment extends ListFragment
                 condition = RobotEventDao.Properties.EventId.eq(mKey);
                 List<RobotEvent> robotEvents = mDaoSession.getRobotEventDao().queryBuilder().where(condition).list();
                 robots = new ArrayList<>();
-                for(RobotEvent robotEvent: robotEvents){
+                for (RobotEvent robotEvent : robotEvents) {
                     robots.add(robotEvent.getRobot());
                 }
                 Collections.sort(robots, new Comparator<Robot>()

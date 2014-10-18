@@ -1,11 +1,15 @@
 package com.team2052.frckrawler.activity;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.Window;
 import android.widget.FrameLayout;
 
 import com.team2052.frckrawler.R;
@@ -15,7 +19,7 @@ import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 /**
  * @author Adam
  */
-public class NavigationDrawerActivity extends FragmentActivity implements NavigationDrawerFragment.NavigationDrawerListener
+public class NavigationDrawerActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerListener
 {
     private static final String IS_DRAWER_OPEN = "is_drawer_open";
     private NavigationDrawerFragment mNavDrawerFragment;
@@ -24,6 +28,7 @@ public class NavigationDrawerActivity extends FragmentActivity implements Naviga
     private String mActionBarTitle;
     private boolean mUseActionBarToggle = false;
     private boolean mEncourageLearning = false;
+    private String mActionBarSubTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -67,7 +72,8 @@ public class NavigationDrawerActivity extends FragmentActivity implements Naviga
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         if (isDrawerOpen()) {
-            getActionBar().setTitle(R.string.app_name);
+            getSupportActionBar().setTitle(R.string.app_name);
+            getSupportActionBar().setSubtitle(null);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -104,8 +110,8 @@ public class NavigationDrawerActivity extends FragmentActivity implements Naviga
     public void setActionBarTitle(String title)
     {
         mActionBarTitle = title;
-        if (!isDrawerOpen() && getActionBar() != null) {
-            getActionBar().setTitle(mActionBarTitle);
+        if (!isDrawerOpen() && getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(mActionBarTitle);
         }
     }
 
@@ -113,14 +119,15 @@ public class NavigationDrawerActivity extends FragmentActivity implements Naviga
     {
         mActionBarTitle = getResources().getString(resID);
         if (!isDrawerOpen()) {
-            getActionBar().setTitle(mActionBarTitle);
+            getSupportActionBar().setTitle(mActionBarTitle);
         }
     }
 
     public void setActionBarSubtitle(String subtitle)
     {
-        if (!isDrawerOpen() && getActionBar() != null) {
-            getActionBar().setSubtitle(subtitle);
+        mActionBarSubTitle = subtitle;
+        if (!isDrawerOpen() && getSupportActionBar() != null) {
+            getSupportActionBar().setSubtitle(subtitle);
         }
     }
 
@@ -128,7 +135,8 @@ public class NavigationDrawerActivity extends FragmentActivity implements Naviga
     public void onNavDrawerClosed()
     {
         if (mActionBarTitle != null) {
-            getActionBar().setTitle(mActionBarTitle);
+            getSupportActionBar().setTitle(mActionBarTitle);
+            getSupportActionBar().setSubtitle(mActionBarSubTitle);
         }
     }
 
@@ -140,7 +148,9 @@ public class NavigationDrawerActivity extends FragmentActivity implements Naviga
     @Override
     public void onNavDrawerOpened()
     {
-        getActionBar().setTitle(R.string.app_name);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setTitle(R.string.app_name);
+        }
     }
 
     public void encourageLearning(boolean encourage)

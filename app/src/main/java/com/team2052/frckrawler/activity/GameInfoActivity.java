@@ -72,6 +72,13 @@ public class GameInfoActivity extends ViewPagerActivity
         setActionBarSubtitle(mGame.getName());
     }
 
+    @Override
+    public void onActionModeStarted(ActionMode mode)
+    {
+        mCurrentActionMode = mode;
+        super.onActionModeStarted(mode);
+    }
+
     public class GameInfoPagerAdapter extends FragmentPagerAdapter
     {
         public String[] headers = new String[]{"Events", "Match Metrics", "Pit Metrics"};
@@ -106,12 +113,5 @@ public class GameInfoActivity extends ViewPagerActivity
         {
             return headers[position];
         }
-    }
-
-    @Override
-    public void onActionModeStarted(ActionMode mode)
-    {
-        mCurrentActionMode = mode;
-        super.onActionModeStarted(mode);
     }
 }

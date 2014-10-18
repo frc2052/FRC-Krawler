@@ -1,19 +1,14 @@
 package com.team2052.frckrawler.fragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.AdapterView;
 
-import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.EventsActivity;
 import com.team2052.frckrawler.activity.GameInfoActivity;
-import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.fragment.dialog.AddGameDialogFragment;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.listitems.ListElement;
@@ -34,8 +29,10 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
-        inflater.inflate(R.menu.addbutton, menu);
-        menu.findItem(R.id.add_action).setIcon(R.drawable.ic_action_new_event);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            inflater.inflate(R.menu.addbutton, menu);
+            menu.findItem(R.id.add_action).setIcon(R.drawable.ic_action_new_event);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 

@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-    android:padding="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp">
 
     <Button
+        android:id="@+id/import_teams_manual"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Import Teams"
-        android:id="@+id/import_teams_manual"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/import_matches"
         android:layout_alignEnd="@+id/import_matches"
         android:layout_alignLeft="@+id/import_matches"
-        android:layout_alignStart="@+id/import_matches"/>
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/import_matches"
+        android:layout_alignStart="@+id/import_matches"
+        android:text="Import Teams"/>
 
     <Button
+        android:id="@+id/import_matches"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Import Matches"
-        android:id="@+id/import_matches"
         android:layout_below="@+id/import_teams_manual"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:text="Import Matches"/>
 
     <EditText
+        android:id="@+id/num_matches"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/num_matches"
-        android:inputType="number"
         android:layout_alignTop="@+id/import_matches"
+        android:layout_toEndOf="@+id/import_matches"
         android:layout_toRightOf="@+id/import_matches"
-        android:layout_toEndOf="@+id/import_matches"/>
+        android:inputType="number"/>
 </RelativeLayout>

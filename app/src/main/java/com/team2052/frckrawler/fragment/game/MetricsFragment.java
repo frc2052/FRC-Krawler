@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.AdapterView;
 
-import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
@@ -32,7 +32,7 @@ import frckrawler.MetricDao;
  */
 public class MetricsFragment extends ListFragment
 {
-    private int mCurrentSelectedItem;
+    public static String CATEGORY = "CATEGORY";
     public ActionMode mCurrentActionMode;
     private final ActionMode.Callback callback = new ActionMode.Callback()
     {
@@ -101,8 +101,7 @@ public class MetricsFragment extends ListFragment
             mCurrentActionMode = null;
         }
     };
-
-    public static String CATEGORY = "CATEGORY";
+    private int mCurrentSelectedItem;
     private Game mGame;
     private int mCategory;
 
@@ -127,7 +126,9 @@ public class MetricsFragment extends ListFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
-        inflater.inflate(R.menu.addbutton, menu);
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+            inflater.inflate(R.menu.addbutton, menu);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -174,7 +175,6 @@ public class MetricsFragment extends ListFragment
     {
         new GetMetricsTask().execute();
     }
-
     private class GetMetricsTask extends AsyncTask<Void, Void, Void>
     {
         @Override

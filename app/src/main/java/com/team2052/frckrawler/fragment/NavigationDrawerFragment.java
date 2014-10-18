@@ -5,10 +5,11 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,6 +49,7 @@ public class NavigationDrawerFragment extends Fragment
         SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         //Deny the scout to access all the items
         NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, "Scout", R.drawable.icon_scout_selector));
+
         if (!scoutPrefs.getBoolean(GlobalValues.IS_SCOUT_PREF, false)) {
             NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, "Server", R.drawable.icon_bluetooth_selector));
             NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, "Teams", R.drawable.icon_team_selector));
@@ -117,13 +119,12 @@ public class NavigationDrawerFragment extends Fragment
         this.useActionBarToggle = useActionBarToggle;
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         if (this.useActionBarToggle) {
-            ActionBar actionBar = getActivity().getActionBar();
+            android.support.v7.app.ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
             drawerToggle = new ActionBarDrawerToggle(
                     getActivity(), /* host Activity */
                     this.drawerLayout, /* DrawerLayout object */
-                    R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
                     R.string.drawer_open, /* "open drawer" description for accessibility */
                     R.string.drawer_close /* "close drawer" description for accessibility */
             )
@@ -214,9 +215,8 @@ public class NavigationDrawerFragment extends Fragment
     public void onPrepareOptionsMenu(Menu menu)
     {
         if (drawerLayout != null && isDrawerOpen()) {
-            ActionBar actionBar = getActivity().getActionBar();
+            android.support.v7.app.ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
             actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
             actionBar.setTitle(R.string.app_name);
         }
         super.onPrepareOptionsMenu(menu);

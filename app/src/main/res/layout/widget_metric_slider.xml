@@ -7,55 +7,55 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Slider"
-        android:layout_centerVertical="true"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <SeekBar
         android:id="@+id/sliderVal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/name"
-        android:layout_toLeftOf="@+id/value"
-        android:padding="16dp"
+        android:layout_centerVertical="true"
         android:layout_margin="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_centerVertical="true"
-        android:indeterminate="false"/>
+        android:layout_toLeftOf="@+id/value"
+        android:layout_toRightOf="@+id/name"
+        android:indeterminate="false"
+        android:padding="16dp"/>
 
     <TextView
         android:id="@+id/value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Value"
-        android:textStyle="bold"
-        android:layout_marginRight="8dp"
-        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="false"
-        android:layout_alignParentEnd="true"/>
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:text="Value"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/min"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="false"
-        android:text="Min"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_alignLeft="@+id/sliderVal"
-        android:layout_below="@+id/sliderVal"/>
+        android:layout_alignParentLeft="false"
+        android:layout_below="@+id/sliderVal"
+        android:text="Min"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
         android:id="@+id/max"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Max"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_alignRight="@+id/sliderVal"
-        android:layout_below="@+id/sliderVal"/>
+        android:layout_below="@+id/sliderVal"
+        android:text="Max"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </RelativeLayout>

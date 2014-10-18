@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
-import com.team2052.frckrawler.fragment.scout.NeedSyncFragment;
 import com.team2052.frckrawler.fragment.robot.PhotosFragment;
+import com.team2052.frckrawler.fragment.scout.NeedSyncFragment;
 
 import frckrawler.Robot;
 

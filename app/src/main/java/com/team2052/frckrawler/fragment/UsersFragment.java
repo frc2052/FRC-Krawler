@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.fragment;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.AdapterView;
@@ -82,9 +83,11 @@ public class UsersFragment extends ListFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.addbutton, menu);
-        //Change the icon
-        menu.findItem(R.id.add_action).setIcon(R.drawable.ic_action_add_person);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            inflater.inflate(R.menu.addbutton, menu);
+            //Change the icon
+            menu.findItem(R.id.add_action).setIcon(R.drawable.ic_action_add_person);
+        }
     }
 
     @Override

@@ -16,10 +16,11 @@ import icepick.Icicle;
 public class CounterMetricWidget extends MetricWidget implements OnClickListener
 {
 
+    @Icicle
+    int currentValue;
     private int max;
     private int min;
     private int increment;
-    @Icicle int currentValue;
 
     public CounterMetricWidget(Context context, MetricValue m)
     {

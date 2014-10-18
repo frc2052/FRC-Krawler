@@ -1,11 +1,12 @@
 package com.team2052.frckrawler.activity;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 
 import com.team2052.frckrawler.GlobalValues;
@@ -43,6 +44,7 @@ public class HomeActivity extends BaseActivity
         int initNavId = mIsScout ? R.id.nav_item_scout : R.id.nav_item_server;
         //Used to switch to a different fragment if it came from a separate activity
         Bundle b = getIntent().getExtras();
+
         if (b != null) {
             if (b.containsKey(REQUESTED_MODE))
                 if (b.getInt(REQUESTED_MODE, -1) != -1) {
@@ -88,31 +90,29 @@ public class HomeActivity extends BaseActivity
     {
         if (!isDrawerOpen()) {
             //Reset the action bar
-            ActionBar bar = getActionBar();
+            ActionBar bar = getSupportActionBar();
             if (bar != null) {
-                bar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
                 bar.setDisplayShowCustomEnabled(false);
                 bar.setDisplayShowTitleEnabled(true);
             }
-            assert getActionBar() != null;
             switch (mCurrentSelectedNavigationItemId) {
                 case R.id.nav_item_scout:
-                    getActionBar().setTitle("Scout");
+                    getSupportActionBar().setTitle("Scout");
                     break;
                 case R.id.nav_item_server:
-                    getActionBar().setTitle("Server");
+                    getSupportActionBar().setTitle("Server");
                     break;
                 case R.id.nav_item_teams:
-                    getActionBar().setTitle("Teams");
+                    getSupportActionBar().setTitle("Teams");
                     break;
                 case R.id.nav_item_users:
-                    getActionBar().setTitle("Users");
+                    getSupportActionBar().setTitle("Users");
                     break;
                 case R.id.nav_item_games:
-                    getActionBar().setTitle("Games");
+                    getSupportActionBar().setTitle("Games");
                     break;
                 case R.id.nav_item_options:
-                    getActionBar().setTitle("Options");
+                    getSupportActionBar().setTitle("Options");
             }
         }
         return super.onPrepareOptionsMenu(menu);

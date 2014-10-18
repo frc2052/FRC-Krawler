@@ -42,9 +42,11 @@ public class ExportUtil
             List<String> header = new ArrayList<>();
 
             header.add("Team");
+            
             for (Metric metric : metrics) {
                 header.add(metric.getName());
             }
+
             writer.writeNext(Arrays.copyOf(header.toArray(), header.size(), String[].class));
 
             for (Map.Entry<Long, List<CompiledMetricValue>> entry : robots.entrySet()) {
@@ -54,8 +56,10 @@ public class ExportUtil
                 for (CompiledMetricValue metricValue : entry.getValue()) {
                     record.add(metricValue.compiledValue);
                 }
+
                 writer.writeNext(Arrays.copyOf(record.toArray(), record.size(), String[].class));
             }
+
             LogHelper.debug("Exported to " + location.getAbsolutePath());
             writer.close();
         } catch (IOException e) {

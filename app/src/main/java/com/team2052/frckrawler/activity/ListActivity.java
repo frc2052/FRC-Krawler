@@ -17,7 +17,8 @@ import butterknife.InjectView;
  */
 public abstract class ListActivity extends DatabaseActivity implements ListUpdateListener
 {
-    @InjectView(R.id.list_layout) protected ListView mListView;
+    @InjectView(R.id.list_layout)
+    protected ListView mListView;
     protected ListAdapter mAdapter;
     private Parcelable mListState;
 
@@ -57,7 +58,7 @@ public abstract class ListActivity extends DatabaseActivity implements ListUpdat
     @Override
     protected void onDestroy()
     {
-        if(mAdapter instanceof ListViewAdapter){
+        if (mAdapter instanceof ListViewAdapter) {
             ((ListViewAdapter) mAdapter).closeLazyList();
         }
         super.onDestroy();

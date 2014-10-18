@@ -29,6 +29,13 @@ public class TeamsFragment extends ListFragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        setShowAddAction(false);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = super.onCreateView(inflater, container, savedInstanceState);

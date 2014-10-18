@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.fragment.event;
 
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -57,6 +58,14 @@ public class SummaryFragment extends ListFragment
     public void updateList()
     {
         new LoadAllMetrics().execute();
+    }
+
+
+    @Override
+    public void onAttach(Activity activity)
+    {
+        setShowAddAction(false);
+        super.onAttach(activity);
     }
 
     public class LoadAllMetrics extends AsyncTask<Void, Void, List<Metric>>

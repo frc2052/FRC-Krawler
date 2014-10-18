@@ -36,15 +36,13 @@ import frckrawler.*;
  */
 public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnItemSelectedListener
 {
-    private Event mEvent;
-
     @InjectView(R.id.match_number)
     Spinner mMatchSpinner;
     @InjectView(R.id.team)
     Spinner mAllianceSpinner;
     @InjectView(R.id.metricWidgetList)
     LinearLayout mMetricList;
-
+    private Event mEvent;
     private List<Match> mMatches;
     private List<Team> mTeams;
 

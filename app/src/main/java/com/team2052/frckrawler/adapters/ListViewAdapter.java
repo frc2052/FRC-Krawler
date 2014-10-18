@@ -42,8 +42,9 @@ public class ListViewAdapter extends ArrayAdapter<ListItem>
         notifyDataSetChanged();
     }
 
-    public void closeLazyList(){
-        if(values instanceof LazyList){
+    public void closeLazyList()
+    {
+        if (values instanceof LazyList) {
             ((LazyList) values).close();
         }
     }

@@ -1,30 +1,5 @@
 <resources>
 
-    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
-    </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-
-    </style>
-
-    <style name="ActionBarStyle" parent="android:Widget.Holo.ActionBar">
-        <item name="android:background">#5B0000</item>
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:titleTextStyle">@style/ActionBarTitleStyle</item>
-        <item name="android:subtitleTextStyle">@style/ActionBarSubtitleStyle</item>
-    </style>
-
-    <style name="ActionBarTitleStyle" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">#FFFFFF</item>
-    </style>
-
-    <style name="ActionBarSubtitleStyle" parent="android:TextAppearance.Holo.Widget.ActionBar.Subtitle">
-        <item name="android:textColor">#FFFFFF</item>
-    </style>
-
-
-    <color name="Black">#000000</color>
 
 </resources>
