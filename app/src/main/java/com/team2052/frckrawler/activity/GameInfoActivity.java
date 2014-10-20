@@ -5,13 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.SparseArray;
 import android.view.ActionMode;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.fragment.game.EventsFragment;
 import com.team2052.frckrawler.fragment.game.MetricsFragment;
+import com.team2052.frckrawler.listeners.FABButtonListener;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 
 import frckrawler.Game;
 
@@ -19,11 +25,12 @@ import frckrawler.Game;
  * @author Adam
  * @since 10/15/2014
  */
-public class GameInfoActivity extends ViewPagerActivity
+public class GameInfoActivity extends ViewPagerFABActivity implements View.OnClickListener
 {
 
     private Game mGame;
     private ActionMode mCurrentActionMode;
+    private GameInfoPagerAdapter mAdapter;
 
     public static Intent newInstance(Context context, Game game)
     {
@@ -56,12 +63,13 @@ public class GameInfoActivity extends ViewPagerActivity
             {
             }
         });
+        mFab.setOnClickListener(this);
     }
 
     @Override
     public PagerAdapter setAdapter()
     {
-        return new GameInfoPagerAdapter(getSupportFragmentManager());
+        return mAdapter = new GameInfoPagerAdapter(getSupportFragmentManager());
     }
 
     @Override
@@ -79,8 +87,17 @@ public class GameInfoActivity extends ViewPagerActivity
         super.onActionModeStarted(mode);
     }
 
-    public class GameInfoPagerAdapter extends FragmentPagerAdapter
+    @Override
+    public void onClick(View v)
     {
+        if (v.getId() == R.id.fab) {
+            ((FABButtonListener) mAdapter.getRegisteredFragment(mPager.getCurrentItem())).onFABPressed();
+        }
+    }
+
+    public class GameInfoPagerAdapter extends FragmentStatePagerAdapter
+    {
+        SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
         public String[] headers = new String[]{"Events", "Match Metrics", "Pit Metrics"};
 
         public GameInfoPagerAdapter(FragmentManager fm)
@@ -113,5 +130,23 @@ public class GameInfoActivity extends ViewPagerActivity
         {
             return headers[position];
         }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            registeredFragments.put(position, fragment);
+            return fragment;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            registeredFragments.remove(position);
+            super.destroyItem(container, position, object);
+        }
+
+        public Fragment getRegisteredFragment(int position) {
+            return registeredFragments.get(position);
+        }
     }
+
 }

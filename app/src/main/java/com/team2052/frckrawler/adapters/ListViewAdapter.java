@@ -28,6 +28,7 @@ public class ListViewAdapter extends ArrayAdapter<ListItem>
     {
         if (index >= 0) {
             values.remove(index);
+            updateListData();
         }
     }
 
@@ -40,12 +41,5 @@ public class ListViewAdapter extends ArrayAdapter<ListItem>
     public void updateListData()
     {
         notifyDataSetChanged();
-    }
-
-    public void closeLazyList()
-    {
-        if (values instanceof LazyList) {
-            ((LazyList) values).close();
-        }
     }
 }

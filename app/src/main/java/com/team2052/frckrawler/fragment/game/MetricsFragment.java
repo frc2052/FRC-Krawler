@@ -15,6 +15,7 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.fragment.ListFragment;
 import com.team2052.frckrawler.fragment.dialog.AddMetricFragment;
+import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.MetricListElement;
@@ -30,7 +31,7 @@ import frckrawler.MetricDao;
  * @author Adam
  * @since 10/15/2014
  */
-public class MetricsFragment extends ListFragment
+public class MetricsFragment extends ListFragment implements FABButtonListener
 {
     public static String CATEGORY = "CATEGORY";
     public ActionMode mCurrentActionMode;
@@ -124,26 +125,6 @@ public class MetricsFragment extends ListFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
-            inflater.inflate(R.menu.addbutton, menu);
-        }
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == R.id.add_action) {
-            AddMetricFragment.newInstance(mCategory, mGame).show(getChildFragmentManager(), "addMetric");
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -175,6 +156,13 @@ public class MetricsFragment extends ListFragment
     {
         new GetMetricsTask().execute();
     }
+
+    @Override
+    public void onFABPressed()
+    {
+        AddMetricFragment.newInstance(mCategory, mGame).show(getChildFragmentManager(), "addMetric");
+    }
+
     private class GetMetricsTask extends AsyncTask<Void, Void, Void>
     {
         @Override

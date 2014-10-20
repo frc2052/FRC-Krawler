@@ -20,9 +20,11 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.fragment.ListFragment;
 import com.team2052.frckrawler.fragment.dialog.ImportDataSimpleDialogFragment;
+import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.EventListElement;
+import com.team2052.frckrawler.util.LogHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,7 @@ import frckrawler.Game;
  * @author Adam
  * @since 10/15/2014
  */
-public class EventsFragment extends ListFragment
+public class EventsFragment extends ListFragment implements FABButtonListener
 {
     private Game mGame;
 
@@ -150,27 +152,15 @@ public class EventsFragment extends ListFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            inflater.inflate(R.menu.addbutton, menu);
-        }
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == R.id.add_action) {
-            ImportDataSimpleDialogFragment.newInstance(mGame).show(getChildFragmentManager(), "importEvent");
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void updateList()
     {
         new GetEventsTask().execute();
+    }
+
+    @Override
+    public void onFABPressed()
+    {
+        ImportDataSimpleDialogFragment.newInstance(mGame).show(getChildFragmentManager(), "importEvent");
     }
 
     private class GetEventsTask extends AsyncTask<Void, Void, List<Event>>

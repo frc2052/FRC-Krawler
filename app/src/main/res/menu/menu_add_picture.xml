@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_import"
         android:icon="@drawable/ic_action_new_picture"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="Import from Gallery"/>
     <item
         android:id="@+id/menu_take_picture"
         android:icon="@drawable/ic_action_camera"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="Take Picture"/>
 </menu>

@@ -67,13 +67,4 @@ public abstract class ListFragment extends BaseFragment implements ListUpdateLis
         }
         super.onPause();
     }
-
-    @Override
-    public void onDestroy()
-    {
-        if (mAdapter instanceof ListViewAdapter) {
-            ((ListViewAdapter) mAdapter).closeLazyList();
-        }
-        super.onDestroy();
-    }
 }

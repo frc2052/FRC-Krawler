@@ -54,13 +54,4 @@ public abstract class ListActivity extends DatabaseActivity implements ListUpdat
             mListState = mListView.onSaveInstanceState();
         }
     }
-
-    @Override
-    protected void onDestroy()
-    {
-        if (mAdapter instanceof ListViewAdapter) {
-            ((ListViewAdapter) mAdapter).closeLazyList();
-        }
-        super.onDestroy();
-    }
 }

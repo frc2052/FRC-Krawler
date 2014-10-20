@@ -7,7 +7,7 @@ android {
     buildToolsVersion '20.0.0'
     defaultConfig {
         applicationId 'com.team2052.frckrawler'
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 21
         versionName "2.0"
     }

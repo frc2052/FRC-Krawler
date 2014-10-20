@@ -1,15 +1,14 @@
 package com.team2052.frckrawler.fragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -122,12 +121,7 @@ public class NavigationDrawerFragment extends Fragment
             android.support.v7.app.ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
-            drawerToggle = new ActionBarDrawerToggle(
-                    getActivity(), /* host Activity */
-                    this.drawerLayout, /* DrawerLayout object */
-                    R.string.drawer_open, /* "open drawer" description for accessibility */
-                    R.string.drawer_close /* "close drawer" description for accessibility */
-            )
+            drawerToggle = new ActionBarDrawerToggle(getActivity(), this.drawerLayout, R.string.drawer_open, R.string.drawer_close)
             {
                 @Override
                 public void onDrawerClosed(View drawerView)
