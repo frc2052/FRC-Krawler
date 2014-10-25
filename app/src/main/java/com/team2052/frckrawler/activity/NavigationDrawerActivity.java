@@ -1,15 +1,12 @@
 package com.team2052.frckrawler.activity;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.Window;
 import android.widget.FrameLayout;
 
 import com.team2052.frckrawler.R;
@@ -29,6 +26,7 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
     private boolean mUseActionBarToggle = false;
     private boolean mEncourageLearning = false;
     private String mActionBarSubTitle;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,7 +37,9 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
         // Call this so that subclasses can configure the navigation drawer before it is created
         onCreateNavigationDrawer();
         mNavDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_fragment);
-        mNavDrawerFragment.setUp(R.id.navigation_drawer_fragment, (DrawerLayout) findViewById(R.id.nav_drawer_layout), mEncourageLearning, mUseActionBarToggle);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        mNavDrawerFragment.setUp(R.id.navigation_drawer_fragment, (DrawerLayout) findViewById(R.id.nav_drawer_layout), mEncourageLearning, mUseActionBarToggle, mToolbar);
         mContentView = (FrameLayout) findViewById(R.id.content);
         // Restore the state of the navigation drawer on rotation changes
         if (savedInstanceState != null) {
@@ -148,7 +148,7 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
     @Override
     public void onNavDrawerOpened()
     {
-        if(getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.app_name);
         }
     }

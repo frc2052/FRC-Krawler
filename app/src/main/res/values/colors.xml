@@ -8,4 +8,8 @@
     <color name="red700">#801716</color>
     <color name="red900">#60120a</color>
     <color name="yellowA200">#801716</color>
+
+    <color name="item_default_color">#EEEEEE</color>
+    <color name="item_pressed_color">#CCCCCC</color>
+    <color name="item_activated_color">?attr/colorAccent</color>
 </resources>

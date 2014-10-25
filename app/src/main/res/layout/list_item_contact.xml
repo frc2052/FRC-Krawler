@@ -43,7 +43,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:padding="8dp"
-        android:src="@drawable/ic_action_discard"/>
+        android:src="@drawable/ic_action_error"/>
 
     <ImageView
         android:id="@+id/contact_edit"
@@ -52,5 +52,5 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/contact_discard"
         android:padding="8dp"
-        android:src="@drawable/ic_action_edit"/>
+        android:src="@drawable/ic_action_error"/>
 </RelativeLayout>

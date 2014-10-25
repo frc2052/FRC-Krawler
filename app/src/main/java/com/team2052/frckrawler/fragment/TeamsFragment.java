@@ -2,24 +2,22 @@ package com.team2052.frckrawler.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import com.team2052.frckrawler.activity.TeamInfoActivity;
-import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.listitems.ListElement;
-import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.elements.TeamListElement;
+import com.team2052.frckrawler.adapters.TeamRecyclerAdapter;
 
-import java.util.ArrayList;
+import org.lucasr.twowayview.ItemClickSupport;
+
 import java.util.List;
 
 import frckrawler.Team;
 import frckrawler.TeamDao;
 
-public class TeamsFragment extends ListFragment
+public class TeamsFragment extends RecyclerViewFragment
 {
     @Override
     public void onActivityCreated(Bundle savedInstanceState)
@@ -31,7 +29,6 @@ public class TeamsFragment extends ListFragment
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        setShowAddAction(false);
         super.onCreate(savedInstanceState);
     }
 
@@ -40,12 +37,12 @@ public class TeamsFragment extends ListFragment
     {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener()
         {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            public void onItemClick(RecyclerView recyclerView, View view, int i, long l)
             {
-                Team team = mDaoSession.getTeamDao().load(Long.valueOf(((ListElement) parent.getAdapter().getItem(position)).getKey()));
+                Team team = mDaoSession.getTeamDao().load(((TeamRecyclerAdapter) mAdapter).getItemAt(i).getNumber());
                 startActivity(TeamInfoActivity.newInstance(getActivity(), team));
             }
         });
@@ -54,7 +51,7 @@ public class TeamsFragment extends ListFragment
     }
 
     @Override
-    public void updateList()
+    public void loadList()
     {
         new GetTeamsTask().execute();
     }
@@ -71,11 +68,7 @@ public class TeamsFragment extends ListFragment
         @Override
         protected void onPostExecute(List<Team> teams)
         {
-            ArrayList<ListItem> teamItems = new ArrayList<>();
-            for (Team team : teams) {
-                teamItems.add(new TeamListElement(team));
-            }
-            mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), teamItems));
+            setAdapter(new TeamRecyclerAdapter(getActivity(), teams));
         }
     }
 }

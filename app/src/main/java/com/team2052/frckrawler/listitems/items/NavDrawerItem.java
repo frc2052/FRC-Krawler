@@ -3,11 +3,11 @@ package com.team2052.frckrawler.listitems.items;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.listitems.ListItem;
+import com.team2052.frckrawler.view.NavDrawerImageView;
 
 public class NavDrawerItem implements ListItem
 {
@@ -36,7 +36,7 @@ public class NavDrawerItem implements ListItem
             convertView = inflater.inflate(layout, null);
         }
         if (icon != -1) {
-            ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(icon);
+            ((NavDrawerImageView) convertView.findViewById(R.id.icon)).setImageResource(icon);
         }
         ((TextView) convertView.findViewById(R.id.title)).setText(title);
         return convertView;

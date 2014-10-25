@@ -4,8 +4,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
-import com.astuetz.PagerSlidingTabStrip;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.view.SlidingTabLayout;
 
@@ -24,13 +24,9 @@ public abstract class ViewPagerActivity extends DatabaseActivity
         setContentView(R.layout.pager);
         mPager = (ViewPager) findViewById(R.id.pager);
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        mTabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer()
-        {
-            @Override
-            public int getIndicatorColor(int position)            {
-                return position % 2 == 0 ? getResources().getColor(R.color.red900) : Color.YELLOW;
-            }
-        });
+        mTabs.setVisibility(View.VISIBLE);
+        mTabs.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
+        mTabs.setSelectedIndicatorColors(Color.WHITE);
         onPreLoadViewPager();
         mPager.setAdapter(setAdapter());
         mTabs.setViewPager(mPager);

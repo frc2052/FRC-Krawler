@@ -10,8 +10,6 @@ import com.team2052.frckrawler.listitems.ListItem;
 
 import java.util.List;
 
-import de.greenrobot.dao.query.LazyList;
-
 public class ListViewAdapter extends ArrayAdapter<ListItem>
 {
     private final List<ListItem> values;

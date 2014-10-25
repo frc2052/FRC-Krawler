@@ -17,7 +17,6 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.fragment.game.EventsFragment;
 import com.team2052.frckrawler.fragment.game.MetricsFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
 
 import frckrawler.Game;
 
@@ -97,8 +96,8 @@ public class GameInfoActivity extends ViewPagerFABActivity implements View.OnCli
 
     public class GameInfoPagerAdapter extends FragmentStatePagerAdapter
     {
-        SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
         public String[] headers = new String[]{"Events", "Match Metrics", "Pit Metrics"};
+        SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
 
         public GameInfoPagerAdapter(FragmentManager fm)
         {
@@ -132,19 +131,22 @@ public class GameInfoActivity extends ViewPagerFABActivity implements View.OnCli
         }
 
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(ViewGroup container, int position)
+        {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             registeredFragments.put(position, fragment);
             return fragment;
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(ViewGroup container, int position, Object object)
+        {
             registeredFragments.remove(position);
             super.destroyItem(container, position, object);
         }
 
-        public Fragment getRegisteredFragment(int position) {
+        public Fragment getRegisteredFragment(int position)
+        {
             return registeredFragments.get(position);
         }
     }

@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="horizontal"
-              android:padding="8dp">
+              android:padding="16dp">
 
     <RelativeLayout
         android:id="@+id/match_title_container"

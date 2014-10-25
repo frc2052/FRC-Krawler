@@ -2,7 +2,6 @@ package com.team2052.frckrawler.fragment.event;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
 
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;

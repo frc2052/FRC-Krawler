@@ -3,7 +3,6 @@ package com.team2052.frckrawler.fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -106,10 +105,8 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             inflater.inflate(R.menu.addbutton, menu);
             menu.findItem(R.id.add_action).setIcon(R.drawable.ic_action_new_event);
-        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -150,7 +147,7 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
                     return false;
                 }
                 currentSelectedListItem = position;
-                currentActionMode = ((ActionBarActivity)getActivity()).startSupportActionMode(callback);
+                currentActionMode = ((ActionBarActivity) getActivity()).startSupportActionMode(callback);
                 return true;
             }
         });

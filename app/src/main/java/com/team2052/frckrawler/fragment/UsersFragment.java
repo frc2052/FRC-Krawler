@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.AdapterView;
 
-import com.squareup.picasso.Picasso;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.fragment.dialog.AddUserDialogFragment;

@@ -7,8 +7,10 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,15 +49,16 @@ public class NavigationDrawerFragment extends Fragment
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         //Deny the scout to access all the items
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, "Scout", R.drawable.icon_scout_selector));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, "Scout", R.drawable.ic_assignment_black_24dp));
 
         if (!scoutPrefs.getBoolean(GlobalValues.IS_SCOUT_PREF, false)) {
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, "Server", R.drawable.icon_bluetooth_selector));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, "Teams", R.drawable.icon_team_selector));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, "Users", R.drawable.icon_user_selector));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, "Games", R.drawable.icon_game_selector));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, "Options", R.drawable.icon_settings_selector));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, "Server", R.drawable.ic_bluetooth_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, "Teams", R.drawable.ic_group_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, "Users", R.drawable.ic_person_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, "Games", R.drawable.ic_event_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, "Options", R.drawable.ic_settings_black_24dp));
         }
+        
         userLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
         fromSavedInstanceState = (savedInstanceState == null);
         navAdapter = new NavDrawerAdataper(getActivity(), NAV_ITEMS);
@@ -81,7 +84,6 @@ public class NavigationDrawerFragment extends Fragment
             }
         });
         drawerListView.setAdapter(navAdapter);
-
         return drawerListView;
     }
 
@@ -111,17 +113,17 @@ public class NavigationDrawerFragment extends Fragment
         return drawerLayout != null && drawerLayout.isDrawerOpen(fragmentContainerView);
     }
 
-    public void setUp(int fragmentId, DrawerLayout drawerLayout, boolean encourageLearning, boolean useActionBarToggle)
+    public void setUp(int fragmentId, DrawerLayout drawerLayout, boolean encourageLearning, boolean useActionBarToggle, Toolbar toolbar)
     {
         fragmentContainerView = getActivity().findViewById(fragmentId);
         this.drawerLayout = drawerLayout;
         this.useActionBarToggle = useActionBarToggle;
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         if (this.useActionBarToggle) {
-            android.support.v7.app.ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+            ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
-            drawerToggle = new ActionBarDrawerToggle(getActivity(), this.drawerLayout, R.string.drawer_open, R.string.drawer_close)
+            drawerToggle = new ActionBarDrawerToggle(getActivity(), this.drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
             {
                 @Override
                 public void onDrawerClosed(View drawerView)
@@ -170,8 +172,7 @@ public class NavigationDrawerFragment extends Fragment
                     }
                     if (!NavigationDrawerFragment.this.userLearnedDrawer) {
                         NavigationDrawerFragment.this.userLearnedDrawer = true;
-                        SharedPreferences sp = PreferenceManager
-                                .getDefaultSharedPreferences(getActivity());
+                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
                         sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                     }
                     NavigationDrawerFragment.this.listener.onNavDrawerOpened();
@@ -209,7 +210,7 @@ public class NavigationDrawerFragment extends Fragment
     public void onPrepareOptionsMenu(Menu menu)
     {
         if (drawerLayout != null && isDrawerOpen()) {
-            android.support.v7.app.ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+            android.support.v7.app.ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setTitle(R.string.app_name);
         }

@@ -1,8 +1,6 @@
 package com.team2052.frckrawler.activity;
 
-import android.graphics.Outline;
 import android.os.Bundle;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.team2052.frckrawler.FRCKrawler;
 

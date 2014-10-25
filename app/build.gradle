@@ -42,6 +42,7 @@ android {
 
 repositories {
     mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
@@ -66,4 +67,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:+'
     compile 'com.android.support:palette-v7:+'
     compile "com.android.support:appcompat-v7:+"
+
+    compile 'org.lucasr.twowayview:core:1.0.0-SNAPSHOT@aar'
+    compile 'org.lucasr.twowayview:layouts:1.0.0-SNAPSHOT@aar'
 }

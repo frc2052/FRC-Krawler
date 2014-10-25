@@ -4,11 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.ActionMode;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,7 +23,6 @@ import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.EventListElement;
-import com.team2052.frckrawler.util.LogHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,7 +135,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener
             {
                 if (mCurrentActionMode != null) return false;
                 mCurrentSelectedItem = i;
-                mCurrentActionMode = getActivity().startActionMode(callback);
+                mCurrentActionMode = ((ActionBarActivity) getActivity()).startSupportActionMode(callback);
                 return true;
             }
         });

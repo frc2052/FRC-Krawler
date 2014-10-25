@@ -6,7 +6,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 
 import butterknife.ButterKnife;

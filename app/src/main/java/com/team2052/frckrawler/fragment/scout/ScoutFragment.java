@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +21,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.SyncAsScoutTask;
 import com.team2052.frckrawler.bluetooth.SyncCallbackHandler;
 import com.team2052.frckrawler.fragment.ViewPagerFragment;
+import com.team2052.frckrawler.fragment.event.MatchListFragment;
 
 import java.util.Set;
 
@@ -194,9 +195,9 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
     }
 
 
-    public class ScoutPagerAdapter extends FragmentStatePagerAdapter
+    public class ScoutPagerAdapter extends FragmentPagerAdapter
     {
-        public final String[] headers = {"Match Scouting", "Pit Scouting"};
+        public final String[] headers = {"Match Scouting", "Pit Scouting", "Schedule"};
 
         public ScoutPagerAdapter(FragmentManager fm)
         {
@@ -228,6 +229,12 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
                         fragment = new NeedSyncFragment();
                     }
                     break;
+                case 2:
+                    if (!mNeedsSync) {
+                        fragment = MatchListFragment.newInstance(mEvent);
+                    } else {
+                        fragment = new NeedSyncFragment();
+                    }
             }
             return fragment;
         }

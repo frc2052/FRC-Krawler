@@ -3,21 +3,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:minHeight="48dp">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:src="@drawable/ic_action_event"/>
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_event_black_24dp"/>
 
     <TextView
         android:id="@+id/text_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/imageView"
+        android:layout_marginLeft="72dp"
         android:text="Aerial Assist"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
