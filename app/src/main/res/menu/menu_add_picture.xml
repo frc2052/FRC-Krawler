@@ -5,11 +5,11 @@
     <item
         android:id="@+id/menu_import"
         android:icon="@drawable/ic_action_new_picture"
-        app:showAsAction="ifRoom"
-        android:title="Import from Gallery"/>
+        android:title="Import from Gallery"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_take_picture"
         android:icon="@drawable/ic_action_camera"
-        app:showAsAction="ifRoom"
-        android:title="Take Picture"/>
+        android:title="Take Picture"
+        app:showAsAction="ifRoom"/>
 </menu>

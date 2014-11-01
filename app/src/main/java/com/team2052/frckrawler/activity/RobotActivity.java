@@ -30,6 +30,8 @@ public class RobotActivity extends ViewPagerActivity
     public void onPreLoadViewPager()
     {
         mRobot = mDaoSession.getRobotDao().load(getIntent().getLongExtra(PARENT_ID, 0));
+        setActionBarTitle("Robot");
+        setActionBarSubtitle("Team " + String.valueOf(mRobot.getTeamId()));
     }
 
     @Override

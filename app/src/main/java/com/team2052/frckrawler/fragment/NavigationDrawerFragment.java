@@ -58,7 +58,7 @@ public class NavigationDrawerFragment extends Fragment
             NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, "Games", R.drawable.ic_event_black_24dp));
             NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, "Options", R.drawable.ic_settings_black_24dp));
         }
-        
+
         userLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
         fromSavedInstanceState = (savedInstanceState == null);
         navAdapter = new NavDrawerAdataper(getActivity(), NAV_ITEMS);

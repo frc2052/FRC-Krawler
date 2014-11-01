@@ -215,7 +215,7 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
             }
 
             //Insert Match Comments5
-            mDaoSession.insert(new MatchComment(robot.getId(), match.getId(), ((EditText) getView().findViewById(R.id.comments)).getText().toString()));
+            mDaoSession.insert(new MatchComment(match.getId(), ((EditText) getView().findViewById(R.id.comments)).getText().toString(), robot.getId()));
 
             return 0;
         }

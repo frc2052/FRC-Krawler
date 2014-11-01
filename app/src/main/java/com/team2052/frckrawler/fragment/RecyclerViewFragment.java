@@ -9,9 +9,8 @@ import android.view.ViewGroup;
 import com.team2052.frckrawler.R;
 
 import org.lucasr.twowayview.TwoWayLayoutManager;
-import org.lucasr.twowayview.TwoWayView;
-import org.lucasr.twowayview.widget.DividerItemDecoration;
 import org.lucasr.twowayview.widget.ListLayoutManager;
+import org.lucasr.twowayview.widget.TwoWayView;
 
 /**
  * @author Adam
@@ -19,7 +18,7 @@ import org.lucasr.twowayview.widget.ListLayoutManager;
  */
 public abstract class RecyclerViewFragment extends BaseFragment
 {
-    TwoWayView mRecyclerView;
+    protected TwoWayView mRecyclerView;
     RecyclerView.Adapter mAdapter;
 
     @Override
@@ -43,11 +42,13 @@ public abstract class RecyclerViewFragment extends BaseFragment
         mRecyclerView.setAdapter(mAdapter = adapter);
     }
 
-    public void setDecor(){
+    public void setDecor()
+    {
         //mRecyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.divider)));
     }
 
-    public void setLayoutManager(){
+    public void setLayoutManager()
+    {
         mRecyclerView.setLayoutManager(new ListLayoutManager(getActivity(), TwoWayLayoutManager.Orientation.VERTICAL));
     }
 

@@ -22,11 +22,15 @@ public class DatabaseHelper extends DaoMaster.OpenHelper
     public void onUpgrade(SQLiteDatabase db, int oldSchemaVer, int newSchemaVer)
     {
         LogHelper.info("Upgrading Schema Version from " + oldSchemaVer + " to " + newSchemaVer);
+
         if (oldSchemaVer == 3 && newSchemaVer == 4) {
             db.execSQL("ALTER TABLE 'MATCH_COMMENT' ADD COLUMN ROBOT_ID INTEGER");
         }
-        //Where you update the schema
+        if (oldSchemaVer == 4 && newSchemaVer == 5) {
+            //Schema change add columns DATE INTEGER and TITLE TEXT
+            db.execSQL("ALTER TABLE 'ROBOT_PHOTO' ADD COLUMN DATE INTEGER");
+            db.execSQL("ALTER TABLE 'ROBOT_PHOTO' ADD COLUMN TITLE TEXT");
+        }
         //EX db.execSQL("ALTER TABLE ROBOT ADD COLUMN '_ID' INTEGER");
-
     }
 }

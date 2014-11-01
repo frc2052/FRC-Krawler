@@ -5,8 +5,8 @@
     <item
         android:id="@+id/menu_sync"
         android:icon="@drawable/ic_action_refresh"
-        app:showAsAction="ifRoom"
-        android:title="Sync"/>
+        android:title="Sync"
+        app:showAsAction="ifRoom"/>
 
     <!--<item android:id="@+id/menu_user"
         android:title="User"

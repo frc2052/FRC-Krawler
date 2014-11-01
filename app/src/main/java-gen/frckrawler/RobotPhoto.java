@@ -13,6 +13,8 @@ public class RobotPhoto implements java.io.Serializable
     private Long id;
     private String location;
     private Long robotId;
+    private String title;
+    private java.util.Date date;
 
     /**
      * Used to resolve relations
@@ -37,11 +39,13 @@ public class RobotPhoto implements java.io.Serializable
         this.id = id;
     }
 
-    public RobotPhoto(Long id, String location, Long robotId)
+    public RobotPhoto(Long id, String location, Long robotId, String title, java.util.Date date)
     {
         this.id = id;
         this.location = location;
         this.robotId = robotId;
+        this.title = title;
+        this.date = date;
     }
 
     /**
@@ -81,6 +85,26 @@ public class RobotPhoto implements java.io.Serializable
     public void setRobotId(Long robotId)
     {
         this.robotId = robotId;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    public java.util.Date getDate()
+    {
+        return date;
+    }
+
+    public void setDate(java.util.Date date)
+    {
+        this.date = date;
     }
 
     /**

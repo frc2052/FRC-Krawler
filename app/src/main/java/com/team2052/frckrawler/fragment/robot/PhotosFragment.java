@@ -1,6 +1,8 @@
 package com.team2052.frckrawler.fragment.robot;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
 
 import com.team2052.frckrawler.R;
@@ -112,8 +115,22 @@ public class PhotosFragment extends BaseFragment
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            mDaoSession.getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId()));
-            new GetRobotPhotosTask().execute();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Name Photo");
+            final EditText editText = new EditText(getActivity());
+            editText.setHint("Name");
+            builder.setView(editText);
+            builder.setNegativeButton("Cancel", null);
+            builder.setPositiveButton("Save", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    mDaoSession.getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId(), editText.getText().toString(), new Date()));
+                    new GetRobotPhotosTask().execute();
+                }
+            });
+            builder.show();
         } else if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -129,7 +146,22 @@ public class PhotosFragment extends BaseFragment
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            mDaoSession.getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId()));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Name Photo");
+            final EditText editText = new EditText(getActivity());
+            editText.setHint("Name");
+            builder.setView(editText);
+            builder.setNegativeButton("Cancel", null);
+            builder.setPositiveButton("Save", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    mDaoSession.getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId(), editText.getText().toString(), new Date()));
+                    new GetRobotPhotosTask().execute();
+                }
+            });
             cursor.close();
             new GetRobotPhotosTask().execute();
         }

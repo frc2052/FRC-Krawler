@@ -51,6 +51,11 @@ public class TeamRecyclerAdapter extends RecyclerView.Adapter<TeamRecyclerAdapte
         return mTeams.size();
     }
 
+    public Team getItemAt(int pos)
+    {
+        return mTeams.get(pos);
+    }
+
     public class TeamViewHolder extends RecyclerView.ViewHolder
     {
 
@@ -65,9 +70,5 @@ public class TeamRecyclerAdapter extends RecyclerView.Adapter<TeamRecyclerAdapte
             this.name = (TextView) itemView.findViewById(R.id.list_item_team_name);
             this.location = (TextView) itemView.findViewById(R.id.list_item_team_location);
         }
-    }
-
-    public Team getItemAt(int pos){
-        return mTeams.get(pos);
     }
 }

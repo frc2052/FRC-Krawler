@@ -64,18 +64,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/contact_name"
+        android:layout_centerHorizontal="true"
         android:checked="false"
-        android:textSize="18sp"
         android:padding="8dp"
-        android:layout_centerHorizontal="true"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/contact_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Toggle Server"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_below="@+id/chooseEvent"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:text="Toggle Server"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </RelativeLayout>

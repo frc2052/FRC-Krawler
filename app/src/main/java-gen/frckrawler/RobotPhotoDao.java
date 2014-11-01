@@ -47,7 +47,9 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
         db.execSQL("CREATE TABLE " + constraint + "'ROBOT_PHOTO' (" + //
                 "'_id' INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
                 "'LOCATION' TEXT," + // 1: location
-                "'ROBOT_ID' INTEGER);"); // 2: robotId
+                "'ROBOT_ID' INTEGER," + // 2: robotId
+                "'TITLE' TEXT," + // 3: title
+                "'DATE' INTEGER);"); // 4: date
     }
 
     /**
@@ -81,6 +83,16 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
         if (robotId != null) {
             stmt.bindLong(3, robotId);
         }
+
+        String title = entity.getTitle();
+        if (title != null) {
+            stmt.bindString(4, title);
+        }
+
+        java.util.Date date = entity.getDate();
+        if (date != null) {
+            stmt.bindLong(5, date.getTime());
+        }
     }
 
     @Override
@@ -108,7 +120,9 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
         RobotPhoto entity = new RobotPhoto( //
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
                 cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // location
-                cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2) // robotId
+                cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // robotId
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // title
+                cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)) // date
         );
         return entity;
     }
@@ -122,6 +136,8 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setLocation(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setRobotId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setTitle(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setDate(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
     }
 
     /**
@@ -263,6 +279,8 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Location = new Property(1, String.class, "location", false, "LOCATION");
         public final static Property RobotId = new Property(2, Long.class, "robotId", false, "ROBOT_ID");
+        public final static Property Title = new Property(3, String.class, "title", false, "TITLE");
+        public final static Property Date = new Property(4, java.util.Date.class, "date", false, "DATE");
     }
 
 }

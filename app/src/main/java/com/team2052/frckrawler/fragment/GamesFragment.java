@@ -105,8 +105,8 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
-            inflater.inflate(R.menu.addbutton, menu);
-            menu.findItem(R.id.add_action).setIcon(R.drawable.ic_action_new_event);
+        inflater.inflate(R.menu.addbutton, menu);
+        menu.findItem(R.id.add_action).setIcon(R.drawable.ic_action_new_event);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

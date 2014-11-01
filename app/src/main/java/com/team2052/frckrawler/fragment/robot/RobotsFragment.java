@@ -13,7 +13,7 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.fragment.ListFragment;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.elements.SimpleListElement;
+import com.team2052.frckrawler.listitems.elements.RobotListElement;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -126,8 +126,7 @@ public class RobotsFragment extends ListFragment
         {
             List<ListItem> listItems = new ArrayList<>();
             for (Robot robot : robots) {
-                //TODO List Item
-                listItems.add(new SimpleListElement(robot.getTeam().getNumber() + " - " + robot.getGame().getName(), Long.toString(robot.getId())));
+                listItems.add(new RobotListElement(robot));
             }
             mListView.setAdapter(new ListViewAdapter(getActivity(), listItems));
         }

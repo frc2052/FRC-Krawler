@@ -6,7 +6,6 @@
                 android:minHeight="48dp">
 
     <TextView
-        android:layout_marginTop="16dp"
         android:id="@+id/metric_list_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,6 +13,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
@@ -52,9 +52,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/metric_list_description"
-        android:text="Type:"
-        android:layout_marginLeft="16dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="Type:"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textStyle="bold"/>
 

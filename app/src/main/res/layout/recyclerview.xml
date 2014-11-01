@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.lucasr.twowayview.TwoWayView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.lucasr.twowayview.widget.TwoWayView
     android:id="@+id/recycler_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-</org.lucasr.twowayview.TwoWayView>
+</org.lucasr.twowayview.widget.TwoWayView>
