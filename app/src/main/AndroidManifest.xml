@@ -58,6 +58,7 @@
         <activity android:name=".activity.RobotsActivity"/>
         <activity android:name=".activity.GameInfoActivity"/>
         <activity android:name=".activity.EventInfoActivity"/>
+        <activity android:name="org.acra.CrashReportDialog"/>
     </application>
 
 </manifest>

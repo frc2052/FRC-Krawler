@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import frckrawler.Robot;
 import frckrawler.RobotPhoto;
 import frckrawler.RobotPhotoDao;
@@ -47,7 +49,7 @@ public class PhotosFragment extends BaseFragment
 
     private String mCurrentPhotoPath;
     private Robot mRobot;
-    private GridView mGridview;
+    @InjectView(R.id.gridview) GridView mGridview;
     private BaseAdapter mAdapter;
 
     public static PhotosFragment newInstance(Robot robot)
@@ -78,7 +80,7 @@ public class PhotosFragment extends BaseFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_grid_photots, null);
         mRobot = mDaoSession.getRobotDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
-        mGridview = (GridView) view.findViewById(R.id.gridview);
+        ButterKnife.inject(view);
         new GetRobotPhotosTask().execute();
         return view;
     }

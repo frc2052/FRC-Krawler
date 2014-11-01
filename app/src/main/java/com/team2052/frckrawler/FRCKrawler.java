@@ -6,6 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.team2052.frckrawler.database.DatabaseHelper;
 
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+import org.acra.sender.HttpSender;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,6 +22,19 @@ import frckrawler.DaoSession;
 /**
  * @author Adam
  */
+@ReportsCrashes(
+        formKey = "",
+        formUri = "http://adam8234.cloudant.com/acra-frc-krawler/_design/acra-storage/_update/report",
+        reportType = HttpSender.Type.JSON,
+        httpMethod = HttpSender.Method.PUT,
+        formUriBasicAuthLogin = "ffeadaystranceforickephi",
+        formUriBasicAuthPassword = "wcNwfC8R8wUeaX2Rf38DUxi3",
+        mode = ReportingInteractionMode.DIALOG,
+        resDialogText = R.string.dialog_error_report,
+        resDialogCommentPrompt = R.string.dialog_error_report_comment,
+        resDialogIcon = R.drawable.ic_launcher,
+        resDialogEmailPrompt = R.string.dialog_error_report_email,
+        resDialogTitle = R.string.dialog_error_report_title)
 public class FRCKrawler extends Application
 {
 
@@ -33,6 +51,7 @@ public class FRCKrawler extends Application
     {
         super.onCreate();
         setupDB();
+        ACRA.init(this);
     }
 
     private void setupDB()

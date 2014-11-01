@@ -12,13 +12,16 @@ import org.lucasr.twowayview.TwoWayLayoutManager;
 import org.lucasr.twowayview.widget.ListLayoutManager;
 import org.lucasr.twowayview.widget.TwoWayView;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * @author Adam
  * @since 10/25/2014
  */
 public abstract class RecyclerViewFragment extends BaseFragment
 {
-    protected TwoWayView mRecyclerView;
+    @InjectView(R.id.recycler_view) TwoWayView mRecyclerView;
     RecyclerView.Adapter mAdapter;
 
     @Override
@@ -26,12 +29,13 @@ public abstract class RecyclerViewFragment extends BaseFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.recyclerview, container, false);
-        mRecyclerView = (TwoWayView) view.findViewById(R.id.recycler_view);
+        ButterKnife.inject(this, view);
 
         if (mAdapter != null)
             setAdapter(mAdapter);
         else
             loadList();
+
         setLayoutManager();
         setDecor();
         return view;
