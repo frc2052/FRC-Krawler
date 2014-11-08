@@ -13,6 +13,9 @@ import android.widget.AdapterView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.EventDao;
+import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragment.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.fragment.dialog.ImportManualDialogFragment;
 import com.team2052.frckrawler.listitems.ListElement;
@@ -21,10 +24,6 @@ import com.team2052.frckrawler.listitems.elements.EventListElement;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import frckrawler.Event;
-import frckrawler.EventDao;
-import frckrawler.Game;
 
 public class EventsActivity extends ListActivity
 {

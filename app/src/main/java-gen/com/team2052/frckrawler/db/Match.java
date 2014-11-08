@@ -1,4 +1,4 @@
-package frckrawler;
+package com.team2052.frckrawler.db;
 
 import de.greenrobot.dao.DaoException;
 

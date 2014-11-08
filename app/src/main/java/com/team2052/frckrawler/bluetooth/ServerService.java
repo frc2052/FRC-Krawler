@@ -10,8 +10,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
-
-import frckrawler.Event;
+import com.team2052.frckrawler.db.Event;
 
 public class ServerService extends Service
 {

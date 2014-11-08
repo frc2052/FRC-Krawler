@@ -17,6 +17,9 @@ import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.activity.EventInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.EventDao;
+import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragment.ListFragment;
 import com.team2052.frckrawler.fragment.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
@@ -26,10 +29,6 @@ import com.team2052.frckrawler.listitems.elements.EventListElement;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import frckrawler.Event;
-import frckrawler.EventDao;
-import frckrawler.Game;
 
 /**
  * @author Adam

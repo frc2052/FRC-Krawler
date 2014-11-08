@@ -16,13 +16,12 @@ import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.database.ImportUtil;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.util.LogHelper;
 
 import java.io.File;
-
-import frckrawler.DaoSession;
-import frckrawler.Event;
-import frckrawler.Match;
 
 /**
  * For desperate measures

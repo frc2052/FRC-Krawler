@@ -11,10 +11,9 @@ import android.widget.EditText;
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
+import com.team2052.frckrawler.db.Contact;
+import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
-
-import frckrawler.Contact;
-import frckrawler.Team;
 
 /**
  * @author Adam

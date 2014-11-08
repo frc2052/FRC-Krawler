@@ -1,7 +1,5 @@
 package com.team2052.frckrawler.database;
 
-import java.util.Map;
-
 import de.greenrobot.daogenerator.DaoGenerator;
 import de.greenrobot.daogenerator.Entity;
 import de.greenrobot.daogenerator.Schema;
@@ -9,8 +7,9 @@ import de.greenrobot.daogenerator.Schema;
 public class FRCKrawlerDaoGenerator
 {
 
-    public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(5, "frckrawler");
+    public static void main(String args[]) throws Exception
+    {
+        Schema schema = new Schema(5, "com.team2052.frckrawler.db");
         //Games
         Entity game = schema.addEntity("Game");
         game.implementsSerializable();

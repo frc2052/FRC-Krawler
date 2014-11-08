@@ -4,7 +4,7 @@ project(':FRCKrawlerDatabaseGenerator') {
 
     mainClassName = "com.team2052.frckrawler.database.FRCKrawlerDaoGenerator"
     // edit output direction
-    outputDir = "../app/src/main/java-gen"
+    def outputDir = "../app/src/main/java-gen"
 
     dependencies {
         compile fileTree(dir: 'libs', include: ['*.jar'])

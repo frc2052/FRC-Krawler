@@ -75,7 +75,7 @@
                 android:inputType="number"/>
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/list_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/incrementation"
@@ -92,7 +92,7 @@
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:layout_below="@+id/textView"
+                android:layout_below="@+id/list_header"
                 android:background="?android:attr/listDivider"/>
 
             <FrameLayout

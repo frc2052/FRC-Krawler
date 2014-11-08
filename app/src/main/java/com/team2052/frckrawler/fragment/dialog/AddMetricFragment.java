@@ -17,12 +17,11 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.MetricFactory;
 import com.team2052.frckrawler.database.MetricValues;
+import com.team2052.frckrawler.db.Game;
+import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.view.ListEditor;
 import com.team2052.frckrawler.view.TextListEditor;
-
-import frckrawler.Game;
-import frckrawler.Metric;
 
 /**
  * @author Adam
@@ -39,6 +38,8 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     private Spinner mMetricTypeSpinner;
     private EditText mName, mDescription, mMinimum, mMaximum, mIncrementation;
     private FrameLayout mListEditor;
+    private View mDivider;
+    private View mListHeader;
 
     public static AddMetricFragment newInstance(int metricCategory, Game game)
     {
@@ -63,7 +64,6 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState)
     {
-
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
         b.setTitle("Add Metric");
         b.setView(initViews());
@@ -91,6 +91,8 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
         mMaximum = (EditText) view.findViewById(R.id.maximum);
         mIncrementation = (EditText) view.findViewById(R.id.incrementation);
         mListEditor = (FrameLayout) view.findViewById(R.id.list_editor);
+        mDivider = view.findViewById(R.id.divider);
+        mListHeader = view.findViewById(R.id.list_header);
         return view;
     }
 
@@ -104,12 +106,16 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 mMaximum.setEnabled(true);
                 mIncrementation.setEnabled(true);
                 mListEditor.removeAllViews();
+                mDivider.setVisibility(View.GONE);
+                mListHeader.setVisibility(View.GONE);
                 break;
             case MetricValues.SLIDER:
                 mMinimum.setEnabled(true);
                 mMaximum.setEnabled(true);
                 mIncrementation.setEnabled(false);
                 mListEditor.removeAllViews();
+                mDivider.setVisibility(View.GONE);
+                mListHeader.setVisibility(View.GONE);
                 break;
             case MetricValues.CHOOSER:
                 mMinimum.setEnabled(false);
@@ -118,12 +124,16 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 list = new TextListEditor(getActivity());
                 mListEditor.removeAllViews();
                 mListEditor.addView(list);
+                mDivider.setVisibility(View.VISIBLE);
+                mListHeader.setVisibility(View.VISIBLE);
                 break;
             default:
                 mMinimum.setEnabled(false);
                 mMaximum.setEnabled(false);
                 mIncrementation.setEnabled(false);
                 mListEditor.removeAllViews();
+                mDivider.setVisibility(View.GONE);
+                mListHeader.setVisibility(View.GONE);
                 break;
         }
     }
@@ -137,7 +147,6 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     public void onClick(View v)
     {
         if (v.getId() == 0) {
-
 
         } else if (v.getId() == R.id.cancel) {
             dismiss();

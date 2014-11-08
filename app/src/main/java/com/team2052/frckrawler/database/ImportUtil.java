@@ -1,6 +1,13 @@
 package com.team2052.frckrawler.database;
 
 import com.google.gson.JsonObject;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.RobotDao;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.RobotEventDao;
+import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.tba.HTTP;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.tba.TBA;
@@ -12,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import au.com.bytecode.opencsv.CSVReader;
-import frckrawler.*;
 
 /**
  * @author Adam

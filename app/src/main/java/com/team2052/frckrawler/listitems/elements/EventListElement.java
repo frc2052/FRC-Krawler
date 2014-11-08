@@ -6,11 +6,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.listitems.ListElement;
 
 import java.text.DateFormat;
-
-import frckrawler.Event;
 
 public class EventListElement extends ListElement
 {

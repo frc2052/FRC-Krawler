@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.team2052.frckrawler.database.DatabaseHelper;
+import com.team2052.frckrawler.db.DaoMaster;
+import com.team2052.frckrawler.db.DaoSession;
 
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
@@ -15,9 +17,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
-
-import frckrawler.DaoMaster;
-import frckrawler.DaoSession;
 
 /**
  * @author Adam

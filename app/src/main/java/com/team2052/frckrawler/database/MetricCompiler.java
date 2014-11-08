@@ -1,13 +1,23 @@
 package com.team2052.frckrawler.database;
 
 import com.team2052.frckrawler.activity.MetricsActivity;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDataDao;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
+import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.PitDataDao;
+import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.util.LogHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
-import frckrawler.*;
 
 /**
  * @author Adam

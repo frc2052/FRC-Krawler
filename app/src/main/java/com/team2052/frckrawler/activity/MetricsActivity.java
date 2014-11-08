@@ -13,6 +13,9 @@ import android.widget.AdapterView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.db.Game;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.fragment.dialog.AddMetricFragment;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
@@ -21,9 +24,6 @@ import com.team2052.frckrawler.listitems.elements.MetricListElement;
 import java.util.ArrayList;
 
 import de.greenrobot.dao.query.QueryBuilder;
-import frckrawler.Game;
-import frckrawler.Metric;
-import frckrawler.MetricDao;
 
 public class MetricsActivity extends ListActivity
 {

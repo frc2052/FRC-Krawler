@@ -19,6 +19,7 @@ import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.Server;
 import com.team2052.frckrawler.database.ExportUtil;
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.util.LogHelper;
 
 import java.io.File;
@@ -26,8 +27,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import frckrawler.Event;
 
 public class ServerFragment extends BaseFragment implements View.OnClickListener
 {

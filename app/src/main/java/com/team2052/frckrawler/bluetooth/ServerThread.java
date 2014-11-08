@@ -9,6 +9,21 @@ import android.util.Log;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.database.Schedule;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.MatchComment;
+import com.team2052.frckrawler.db.MatchCommentDao;
+import com.team2052.frckrawler.db.MatchDao;
+import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDataDao;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
+import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.PitDataDao;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.RobotEventDao;
+import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.db.User;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,8 +33,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import frckrawler.*;
 
 public class ServerThread extends Thread
 {

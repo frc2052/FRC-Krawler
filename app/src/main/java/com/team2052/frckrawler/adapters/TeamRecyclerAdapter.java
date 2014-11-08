@@ -8,10 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.db.Team;
 
 import java.util.List;
-
-import frckrawler.Team;
 
 /**
  * @author Adam

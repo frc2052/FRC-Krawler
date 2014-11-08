@@ -8,16 +8,15 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.MetricListElement;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import frckrawler.Event;
-import frckrawler.Metric;
-import frckrawler.MetricDao;
 
 /**
  * @author Adam

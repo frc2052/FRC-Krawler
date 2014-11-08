@@ -5,16 +5,15 @@ import android.os.Bundle;
 
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.db.MatchDao;
 import com.team2052.frckrawler.fragment.ListFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.items.MatchListItem;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import frckrawler.Event;
-import frckrawler.Match;
-import frckrawler.MatchDao;
 
 /**
  * @author Adam

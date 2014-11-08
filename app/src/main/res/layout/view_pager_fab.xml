@@ -18,6 +18,6 @@
         android:background="@drawable/ripple"
         android:elevation="2dp"
         android:src="@drawable/ic_action_new"
-        android:stateListAnimator="@anim/anim"/>
+        android:stateListAnimator="@anim/fab_pressed"/>
 
 </FrameLayout>

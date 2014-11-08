@@ -12,13 +12,12 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.db.RobotPhoto;
 import com.team2052.frckrawler.util.LogHelper;
 import com.team2052.frckrawler.view.SquareImageView;
 
 import java.util.Date;
 import java.util.List;
-
-import frckrawler.RobotPhoto;
 
 /**
  * @author Adam
@@ -57,13 +56,11 @@ public class RobotPhotoAdapter extends BaseAdapter
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
-        LogHelper.debug("pos" + String.valueOf(position));
-
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_image, parent, false);
         }
 
-        final SquareImageView imageView = (SquareImageView) convertView.findViewById(R.id.image);
+        final SquareImageView imageView = (SquareImageView) convertView.findViewById(R.id.robot_photo);
         final View view = convertView.findViewById(R.id.title_bar);
         final TextView title = (TextView) convertView.findViewById(R.id.title);
         final TextView secondary = (TextView) convertView.findViewById(R.id.secondary);

@@ -7,8 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.team2052.frckrawler.FRCKrawler;
-
-import frckrawler.DaoSession;
+import com.team2052.frckrawler.db.DaoSession;
 
 /**
  * @author Adam

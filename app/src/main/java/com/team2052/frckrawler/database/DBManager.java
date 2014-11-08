@@ -1,7 +1,28 @@
 package com.team2052.frckrawler.database;
 
+import com.team2052.frckrawler.db.Contact;
+import com.team2052.frckrawler.db.ContactDao;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.EventDao;
+import com.team2052.frckrawler.db.Game;
+import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.db.MatchDao;
+import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDataDao;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
+import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.PitDataDao;
+import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.RobotDao;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.RobotEventDao;
+import com.team2052.frckrawler.db.RobotPhoto;
+import com.team2052.frckrawler.db.RobotPhotoDao;
+import com.team2052.frckrawler.db.Team;
+
 import de.greenrobot.dao.query.QueryBuilder;
-import frckrawler.*;
 
 /**
  * Used to keep a clean database

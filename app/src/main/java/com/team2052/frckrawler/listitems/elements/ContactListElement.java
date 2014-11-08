@@ -8,10 +8,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.db.Contact;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.listitems.ListElement;
-
-import frckrawler.Contact;
 
 /**
  * @author Adam

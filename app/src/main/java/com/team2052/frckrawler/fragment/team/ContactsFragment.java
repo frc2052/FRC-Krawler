@@ -9,6 +9,9 @@ import android.view.MenuItem;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.db.Contact;
+import com.team2052.frckrawler.db.ContactDao;
+import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.fragment.ListFragment;
 import com.team2052.frckrawler.fragment.dialog.AddContactDialogFragment;
 import com.team2052.frckrawler.listitems.ListItem;
@@ -16,10 +19,6 @@ import com.team2052.frckrawler.listitems.elements.ContactListElement;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import frckrawler.Contact;
-import frckrawler.ContactDao;
-import frckrawler.Team;
 
 /**
  * @author Adam

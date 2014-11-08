@@ -1,9 +1,9 @@
 package com.team2052.frckrawler.database;
 
 
-import frckrawler.MatchData;
-import frckrawler.Metric;
-import frckrawler.PitData;
+import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.PitData;
 
 public class MetricValue
 {

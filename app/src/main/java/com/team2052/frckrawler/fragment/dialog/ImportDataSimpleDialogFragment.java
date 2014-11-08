@@ -19,6 +19,15 @@ import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Game;
+import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.RobotDao;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.RobotEventDao;
+import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
@@ -32,8 +41,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import frckrawler.*;
 
 /**
  * Used to import a event to a game in the most simple way for the user.

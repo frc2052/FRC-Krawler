@@ -1,4 +1,4 @@
-package frckrawler;
+package com.team2052.frckrawler.db;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,7 +22,6 @@ public class EventDao extends AbstractDao<Event, Long>
 
     public static final String TABLENAME = "EVENT";
     private DaoSession daoSession;
-
     ;
     private String selectDeep;
 

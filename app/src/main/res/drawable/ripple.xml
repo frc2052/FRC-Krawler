@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-       android:shape="oval">
-    <gradient
-        android:endColor="#D4D4D4"
-        android:gradientRadius="62"
-        android:startColor="#E9E9E9"
-        android:type="radial"/>
-    <solid android:color="@color/yellowA200"/>
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="oval">
+            <solid android:color="#ff5c1615"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/yellowA200"/>
+        </shape>
+    </item>
+
+</selector>

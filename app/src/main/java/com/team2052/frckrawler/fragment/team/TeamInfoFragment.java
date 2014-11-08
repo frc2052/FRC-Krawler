@@ -3,9 +3,8 @@ package com.team2052.frckrawler.fragment.team;
 import android.os.Bundle;
 
 import com.team2052.frckrawler.activity.DatabaseActivity;
+import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragment.BaseFragment;
-
-import frckrawler.Robot;
 
 /**
  * @author Adam

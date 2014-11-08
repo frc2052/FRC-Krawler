@@ -1,13 +1,12 @@
 package com.team2052.frckrawler.database;
 
 import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.util.LogHelper;
 
 import java.text.DecimalFormat;
 import java.util.List;
-
-import frckrawler.Metric;
-import frckrawler.Robot;
 
 /**
  * @author Adam

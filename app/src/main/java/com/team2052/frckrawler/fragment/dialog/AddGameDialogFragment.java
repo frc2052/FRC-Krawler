@@ -10,9 +10,8 @@ import android.widget.TextView;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
-
-import frckrawler.Game;
 
 /**
  * @author Adam

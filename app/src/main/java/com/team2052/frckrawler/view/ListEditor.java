@@ -41,7 +41,6 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
         addButton.setId(ADD_BUTTON_ID);
         addButton.setGravity(Gravity.CENTER);
         addButton.setOnClickListener(this);
-
         onValuesUpdated();
     }
 

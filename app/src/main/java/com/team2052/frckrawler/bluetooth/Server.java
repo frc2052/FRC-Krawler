@@ -5,7 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 
-import frckrawler.Event;
+import com.team2052.frckrawler.db.Event;
 
 
 public class Server

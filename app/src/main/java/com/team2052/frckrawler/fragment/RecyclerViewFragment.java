@@ -21,7 +21,8 @@ import butterknife.InjectView;
  */
 public abstract class RecyclerViewFragment extends BaseFragment
 {
-    @InjectView(R.id.recycler_view) TwoWayView mRecyclerView;
+    @InjectView(R.id.recycler_view)
+    TwoWayView mRecyclerView;
     RecyclerView.Adapter mAdapter;
 
     @Override

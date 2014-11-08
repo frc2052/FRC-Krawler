@@ -23,6 +23,9 @@ import android.widget.GridView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.adapters.RobotPhotoAdapter;
+import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.RobotPhoto;
+import com.team2052.frckrawler.db.RobotPhotoDao;
 import com.team2052.frckrawler.fragment.BaseFragment;
 import com.team2052.frckrawler.util.LogHelper;
 
@@ -34,9 +37,6 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import frckrawler.Robot;
-import frckrawler.RobotPhoto;
-import frckrawler.RobotPhotoDao;
 
 /**
  * @author Adam
@@ -46,10 +46,10 @@ public class PhotosFragment extends BaseFragment
 {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int RESULT_LOAD_IMAGE = 2;
-
+    @InjectView(R.id.gridview)
+    GridView mGridview;
     private String mCurrentPhotoPath;
     private Robot mRobot;
-    @InjectView(R.id.gridview) GridView mGridview;
     private BaseAdapter mAdapter;
 
     public static PhotosFragment newInstance(Robot robot)
@@ -79,8 +79,8 @@ public class PhotosFragment extends BaseFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_grid_photots, null);
+        ButterKnife.inject(this, view);
         mRobot = mDaoSession.getRobotDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
-        ButterKnife.inject(view);
         new GetRobotPhotosTask().execute();
         return view;
     }

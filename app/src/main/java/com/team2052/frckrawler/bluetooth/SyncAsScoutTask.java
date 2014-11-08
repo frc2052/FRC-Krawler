@@ -10,6 +10,16 @@ import android.util.Log;
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.database.Schedule;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.db.MatchComment;
+import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.db.User;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,8 +28,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.UUID;
-
-import frckrawler.*;
 
 public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
 {

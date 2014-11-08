@@ -1,5 +1,11 @@
 package com.team2052.frckrawler.database;
 
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.util.LogHelper;
 
 import java.io.File;
@@ -12,12 +18,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import frckrawler.DaoSession;
-import frckrawler.Event;
-import frckrawler.Metric;
-import frckrawler.MetricDao;
-import frckrawler.RobotEvent;
-import frckrawler.RobotEventDao;
 
 /**
  * @author Adam

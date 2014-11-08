@@ -1,4 +1,4 @@
-package frckrawler;
+package com.team2052.frckrawler.db;
 
 import android.database.sqlite.SQLiteDatabase;
 

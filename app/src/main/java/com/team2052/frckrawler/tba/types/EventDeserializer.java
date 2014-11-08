@@ -5,13 +5,12 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.team2052.frckrawler.db.Event;
 
 import java.lang.reflect.Type;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import frckrawler.Event;
 
 /**
  * @author Adam

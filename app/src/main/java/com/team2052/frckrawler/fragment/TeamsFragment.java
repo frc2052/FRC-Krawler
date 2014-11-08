@@ -9,13 +9,12 @@ import android.view.ViewGroup;
 
 import com.team2052.frckrawler.activity.TeamInfoActivity;
 import com.team2052.frckrawler.adapters.TeamRecyclerAdapter;
+import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.db.TeamDao;
 
 import org.lucasr.twowayview.ItemClickSupport;
 
 import java.util.List;
-
-import frckrawler.Team;
-import frckrawler.TeamDao;
 
 public class TeamsFragment extends RecyclerViewFragment
 {

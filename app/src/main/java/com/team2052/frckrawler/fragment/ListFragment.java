@@ -1,7 +1,5 @@
 package com.team2052.frckrawler.fragment;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -33,7 +31,6 @@ public abstract class ListFragment extends BaseFragment implements ListUpdateLis
         mShowAction = state;
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {

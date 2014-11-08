@@ -5,10 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.view.MatchView;
-
-import frckrawler.Match;
 
 /**
  * @author Adam

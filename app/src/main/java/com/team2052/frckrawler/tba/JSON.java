@@ -6,14 +6,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.tba.types.EventDeserializer;
 import com.team2052.frckrawler.tba.types.MatchDeserializer;
 import com.team2052.frckrawler.tba.types.TeamDeserializer;
-
-import frckrawler.DaoSession;
-import frckrawler.Event;
-import frckrawler.Match;
-import frckrawler.Team;
 
 /**
  * @author Adam

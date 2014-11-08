@@ -2,9 +2,8 @@ package com.team2052.frckrawler.database;
 
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
-
-import frckrawler.Game;
-import frckrawler.Metric;
+import com.team2052.frckrawler.db.Game;
+import com.team2052.frckrawler.db.Metric;
 
 /**
  * @author Adam

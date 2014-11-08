@@ -5,10 +5,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.team2052.frckrawler.db.Team;
 
 import java.lang.reflect.Type;
-
-import frckrawler.Team;
 
 /**
  * @author Adam

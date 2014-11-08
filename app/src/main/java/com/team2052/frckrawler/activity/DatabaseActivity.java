@@ -3,8 +3,7 @@ package com.team2052.frckrawler.activity;
 import android.os.Bundle;
 
 import com.team2052.frckrawler.FRCKrawler;
-
-import frckrawler.DaoSession;
+import com.team2052.frckrawler.db.DaoSession;
 
 /**
  * @author Adam

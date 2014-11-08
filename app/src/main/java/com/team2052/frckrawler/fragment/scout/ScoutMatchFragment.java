@@ -18,6 +18,17 @@ import android.widget.Toast;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.db.MatchComment;
+import com.team2052.frckrawler.db.MatchDao;
+import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDataDao;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
+import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.RobotDao;
+import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.fragment.BaseFragment;
 import com.team2052.frckrawler.util.LogHelper;
 import com.team2052.frckrawler.view.metric.MetricWidget;
@@ -29,7 +40,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import de.greenrobot.dao.query.QueryBuilder;
-import frckrawler.*;
 
 /**
  * @author Adam

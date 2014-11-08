@@ -18,6 +18,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.GameInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragment.dialog.AddGameDialogFragment;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.listitems.ListElement;
@@ -26,8 +27,6 @@ import com.team2052.frckrawler.listitems.elements.GameListElement;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import frckrawler.Game;
 
 public class GamesFragment extends ListFragment implements ListUpdateListener
 {

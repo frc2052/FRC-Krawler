@@ -1,4 +1,4 @@
-package frckrawler;
+package com.team2052.frckrawler.db;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,7 +22,6 @@ public class RobotDao extends AbstractDao<Robot, Long>
 
     public static final String TABLENAME = "ROBOT";
     private DaoSession daoSession;
-
     ;
     private String selectDeep;
 

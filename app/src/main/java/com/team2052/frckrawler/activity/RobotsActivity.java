@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 
@@ -13,10 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import frckrawler.Event;
-import frckrawler.RobotEvent;
-import frckrawler.RobotEventDao;
 
 /**
  * @author Adam

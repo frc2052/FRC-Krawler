@@ -10,6 +10,12 @@ import android.widget.AdapterView;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.activity.RobotActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.RobotDao;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.RobotEventDao;
+import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.fragment.ListFragment;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
@@ -21,12 +27,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.greenrobot.dao.query.WhereCondition;
-import frckrawler.Event;
-import frckrawler.Robot;
-import frckrawler.RobotDao;
-import frckrawler.RobotEvent;
-import frckrawler.RobotEventDao;
-import frckrawler.Team;
 
 /**
  * @author Adam

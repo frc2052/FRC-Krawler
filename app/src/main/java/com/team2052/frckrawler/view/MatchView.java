@@ -8,8 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-
-import frckrawler.Match;
+import com.team2052.frckrawler.db.Match;
 
 /**
  * @author Adam

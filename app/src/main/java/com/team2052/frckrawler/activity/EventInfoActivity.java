@@ -7,11 +7,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragment.event.MatchListFragment;
 import com.team2052.frckrawler.fragment.event.SummaryFragment;
 import com.team2052.frckrawler.fragment.robot.RobotsFragment;
-
-import frckrawler.Event;
 
 /**
  * @author Adam

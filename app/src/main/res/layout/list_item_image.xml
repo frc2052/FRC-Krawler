@@ -4,7 +4,7 @@
                 android:layout_height="wrap_content">
 
     <com.team2052.frckrawler.view.SquareImageView
-        android:id="@+id/image"
+        android:id="@+id/robot_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
