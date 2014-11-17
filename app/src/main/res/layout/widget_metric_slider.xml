@@ -13,6 +13,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:text="Slider"
+        android:textStyle="bold"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <SeekBar

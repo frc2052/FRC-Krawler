@@ -25,6 +25,7 @@ public class DatabaseHelper extends DaoMaster.OpenHelper
         if (oldSchemaVer == 3 && newSchemaVer == 4) {
             db.execSQL("ALTER TABLE 'MATCH_COMMENT' ADD COLUMN ROBOT_ID INTEGER");
         }
+
         if (oldSchemaVer == 4 && newSchemaVer == 5) {
             //Schema change add columns DATE INTEGER and TITLE TEXT
             db.execSQL("ALTER TABLE 'ROBOT_PHOTO' ADD COLUMN DATE INTEGER");

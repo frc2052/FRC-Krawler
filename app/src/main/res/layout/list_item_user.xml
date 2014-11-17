@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="72dp">
+                android:minHeight="48dp">
 
     <TextView
         android:id="@+id/list_item_user_name"

@@ -28,7 +28,7 @@ import com.team2052.frckrawler.listitems.elements.GameListElement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GamesFragment extends ListFragment implements ListUpdateListener
+public class GamesFragment extends ListFragmentFab implements ListUpdateListener
 {
 
     public int currentSelectedListItem;
@@ -102,21 +102,6 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
     };
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.addbutton, menu);
-        menu.findItem(R.id.add_action).setIcon(R.drawable.ic_action_new_event);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
@@ -150,17 +135,15 @@ public class GamesFragment extends ListFragment implements ListUpdateListener
                 return true;
             }
         });
+        mFab.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                new AddGameDialogFragment().show(getChildFragmentManager(), "addGame");
+            }
+        });
         return view;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == R.id.add_action) {
-            AddGameDialogFragment fragment = new AddGameDialogFragment();
-            fragment.show(getChildFragmentManager(), "addGame");
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

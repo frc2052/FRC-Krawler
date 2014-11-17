@@ -3,7 +3,8 @@ package com.team2052.frckrawler.fragment;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.ActionMode;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,9 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Adam on 8/25/2014.
+ * @author Adam
+ * @since 8/25/2014
  */
-public class UsersFragment extends ListFragment
+public class UsersFragment extends ListFragmentFab
 {
     private ActionMode currentActionMode;
     private final ActionMode.Callback callback = new ActionMode.Callback()
@@ -78,24 +80,6 @@ public class UsersFragment extends ListFragment
     private int currentSelectedListItem;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            inflater.inflate(R.menu.addbutton, menu);
-            //Change the icon
-            menu.findItem(R.id.add_action).setIcon(R.drawable.ic_action_add_person);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -108,20 +92,19 @@ public class UsersFragment extends ListFragment
                     return false;
                 }
                 currentSelectedListItem = position;
-                currentActionMode = getActivity().startActionMode(callback);
+                currentActionMode = ((ActionBarActivity) getActivity()).startSupportActionMode(callback);
                 return true;
             }
         });
+        mFab.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                new AddUserDialogFragment().show(getChildFragmentManager(), "addUser");
+            }
+        });
         return view;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == R.id.add_action) {
-            new AddUserDialogFragment().show(getChildFragmentManager(), "addUser");
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

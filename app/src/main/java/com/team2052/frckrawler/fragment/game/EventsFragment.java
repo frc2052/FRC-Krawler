@@ -37,16 +37,16 @@ import java.util.List;
 public class EventsFragment extends ListFragment implements FABButtonListener
 {
     private Game mGame;
-
     private int mCurrentSelectedItem;
     private ActionMode mCurrentActionMode;
     private final ActionMode.Callback callback = new ActionMode.Callback()
     {
+        Event event;
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu)
         {
             long eventId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
-            Event event = mDaoSession.getEventDao().load(eventId);
+            event = mDaoSession.getEventDao().load(eventId);
             actionMode.getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
             menu.removeItem(R.id.menu_edit);
             actionMode.setTitle(event.getName());
@@ -62,8 +62,6 @@ public class EventsFragment extends ListFragment implements FABButtonListener
         @Override
         public boolean onActionItemClicked(final ActionMode actionMode, MenuItem menuItem)
         {
-            long eventId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
-            final Event event = mDaoSession.getEventDao().load(eventId);
             switch (menuItem.getItemId()) {
                 case R.id.menu_delete:
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

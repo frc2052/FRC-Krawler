@@ -4,7 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:minHeight="48dp">
 
     <TextView
         android:id="@+id/name"
@@ -15,6 +16,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="18dp"
+        android:textStyle="bold"
         android:text="Chooser"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
@@ -26,6 +28,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:minHeight="48dp"
         android:layout_toRightOf="@+id/name"/>
 
 </RelativeLayout>
