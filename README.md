@@ -1,4 +1,6 @@
-### The Goal Of This Project ###
-This project is to work out kinks and struggles the scouting team had last year with FRCKrawler. Also, it is to improve the overall experience with FRCKrawler including the following. Functionality, ease of use, and a more pleasing design. Currenly for anybody wanting to know how to use FRCKrawler for version 1.8.1 has to read a manual. My goal is to make the app very intuitive so that the user doesn’t need a manual to even use the app.
+### FRC Krawler ###
+FRC Krawler is Team2052's scouting app. It's programmed in Java and is built for Android. It's currently maintained by Adam C, but the origional creator is Charlie Hofer made in 2013. 
 
+You can get the latest stable version at the [Google Play Store](https://play.google.com/store/apps/details?id=com.team2052.frckrawler&hl=en)
+If you want the bleeding edge builds you can go to [Adam C's Build Server](http://build.adam8234.com:8080)
 To view screenshots of current progress click [here](https://drive.google.com/folderview?id=0B560TT78WfD-UDM1VnRBaS1vU0U&usp=sharing)
