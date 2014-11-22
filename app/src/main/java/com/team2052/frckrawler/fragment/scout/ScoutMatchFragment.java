@@ -99,14 +99,14 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         mMatchSpinner.setOnItemSelectedListener(this);
         new GetAllMetrics().execute();
         new GetAllMatches().execute();
-        //new GetAllRobotsTask().execute();
+        new GetAllRobotsTask().execute();
         return view;
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
-        Match match = mMatches.get(mMatchSpinner.getSelectedItemPosition());
+        /*Match match = mMatches.get(mMatchSpinner.getSelectedItemPosition());
         List<Team> teams = new ArrayList<>();
         teams.add(match.getBlue1());
         teams.add(match.getBlue2());
@@ -122,10 +122,10 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
             teamNumbers.add(team.getNumber() + " - " + team.getName());
         }
 
-        mAllianceSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, Arrays.copyOf(teamNumbers.toArray(), teamNumbers.size(), String[].class)));
+        mAllianceSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, Arrays.copyOf(teamNumbers.toArray(), teamNumbers.size(), String[].class)));*/
     }
 
-    /*public class GetAllRobotsTask extends AsyncTask<Void, Void, Void>
+    public class GetAllRobotsTask extends AsyncTask<Void, Void, Void>
     {
 
         @Override
@@ -145,7 +145,7 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
             }
             mAllianceSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, Arrays.copyOf(teamNumbers.toArray(), teamNumbers.size(), String[].class)));
         }
-    }*/
+    }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent)
@@ -214,10 +214,15 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
                 widgets.add((MetricWidget) mMetricList.getChildAt(i));
             }
 
+            LogHelper.debug(String.valueOf(widgets.size()));
+
             //Insert Metric Data
             for (MetricWidget widget : widgets) {
                 QueryBuilder<MatchData> matchDataQueryBuilder = mDaoSession.getMatchDataDao().queryBuilder();
-                matchDataQueryBuilder.and(MatchDataDao.Properties.RobotId.eq(robot.getId()), MatchDataDao.Properties.MetricId.eq(widget.getMetric().getId()), MatchDataDao.Properties.MatchId.eq(match.getId()));
+                matchDataQueryBuilder.where(MatchDataDao.Properties.RobotId.eq(robot.getId()));
+                matchDataQueryBuilder.where(MatchDataDao.Properties.MetricId.eq(widget.getMetric().getId()));
+                matchDataQueryBuilder.where(MatchDataDao.Properties.MatchId.eq(match.getId()));
+
                 if (matchDataQueryBuilder.list().size() <= 0)
                     mDaoSession.getMatchDataDao().insert(new MatchData(widget.getValues(), robot.getId(), widget.getMetric().getId(), match.getId()));
                 else

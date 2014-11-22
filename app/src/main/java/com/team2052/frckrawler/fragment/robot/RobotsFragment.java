@@ -3,10 +3,14 @@ package com.team2052.frckrawler.fragment.robot;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.activity.RobotActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
@@ -17,6 +21,7 @@ import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.fragment.ListFragment;
+import com.team2052.frckrawler.fragment.dialog.ImportManualDialogFragment;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.RobotListElement;
@@ -66,6 +71,9 @@ public class RobotsFragment extends ListFragment
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
         this.mViewType = b.getInt(VIEW_TYPE, 0);
+        if (mViewType == 1) {
+            setHasOptionsMenu(true);
+        }
         mKey = b.getLong(DatabaseActivity.PARENT_ID);
     }
 
@@ -85,9 +93,27 @@ public class RobotsFragment extends ListFragment
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() == R.id.manual_import){
+            ImportManualDialogFragment.newInstance(mDaoSession.getEventDao().load(mKey)).show(getFragmentManager(), "import_manual");
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void updateList()
     {
         new GetAllRobotsBy().execute();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        if (mViewType == 1) {
+            inflater.inflate(R.menu.add_manual_menu, menu);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     public class GetAllRobotsBy extends AsyncTask<Void, Void, List<Robot>>

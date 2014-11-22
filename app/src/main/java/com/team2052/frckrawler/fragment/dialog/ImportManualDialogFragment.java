@@ -77,7 +77,6 @@ public class ImportManualDialogFragment extends DialogFragment implements View.O
             if (data != null) {
                 uri = data.getData();
             }
-
             if (uri != null) {
                 new ImportTeamsTask(new File(uri.getPath())).execute();
             }
@@ -108,6 +107,7 @@ public class ImportManualDialogFragment extends DialogFragment implements View.O
 
         public ImportTeamsTask(File file)
         {
+
             LogHelper.debug("Constructing");
             this.file = file;
         }
@@ -115,6 +115,7 @@ public class ImportManualDialogFragment extends DialogFragment implements View.O
         @Override
         protected Void doInBackground(Void... voids)
         {
+            ProgressDialogFragment.showLoadingProgress(getChildFragmentManager());
             mDaoSession.runInTx(new Runnable()
             {
                 @Override
@@ -126,6 +127,12 @@ public class ImportManualDialogFragment extends DialogFragment implements View.O
             });
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            ProgressDialogFragment.dismissLoadingProgress(getChildFragmentManager());
+        }
     }
 
     public class ImportRandomMatches extends AsyncTask<Void, Void, Void>
@@ -134,6 +141,7 @@ public class ImportManualDialogFragment extends DialogFragment implements View.O
         @Override
         protected Void doInBackground(Void... voids)
         {
+            ProgressDialogFragment.showLoadingProgress(getChildFragmentManager());
             final int number = Integer.parseInt(((EditText) mView.findViewById(R.id.num_matches)).getText().toString());
             mDaoSession.runInTx(new Runnable()
             {
@@ -147,6 +155,12 @@ public class ImportManualDialogFragment extends DialogFragment implements View.O
                 }
             });
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            ProgressDialogFragment.dismissLoadingProgress(getChildFragmentManager());
         }
     }
 

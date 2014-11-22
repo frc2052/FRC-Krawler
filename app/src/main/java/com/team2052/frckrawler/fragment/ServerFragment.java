@@ -1,11 +1,14 @@
 package com.team2052.frckrawler.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -28,11 +31,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class ServerFragment extends BaseFragment implements View.OnClickListener
 {
     private static final int REQUEST_BT_ENABLED = 1;
     private Server server;
     private List<Event> mEvents;
+
+    @InjectView(R.id.chooseEvent)
+    Spinner eventSpinner;
+
+    @InjectView(R.id.hostToggle)
+    SwitchCompat mHostToggle;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -46,10 +58,11 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View v = inflater.inflate(R.layout.activity_bluetooth_server_manager, null);
+        ButterKnife.inject(this, v);
         v.findViewById(R.id.excel).setOnClickListener(this);
         v.findViewById(R.id.dbBackups).setOnClickListener(this);
         v.findViewById(R.id.hostToggle).setOnClickListener(this);
-        ((SwitchCompat) v.findViewById(R.id.hostToggle)).setChecked(server.isOpen());
+        mHostToggle.setChecked(server.isOpen());
         return v;
     }
 
@@ -61,7 +74,18 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                 openServer();
                 break;
             case R.id.excel:
-                new ExportToFileSystem().execute();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Export to File System?");
+                builder.setNegativeButton("Cancel", null);
+                builder.setPositiveButton("Export", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        new ExportToFileSystem().execute();
+                    }
+                });
+                builder.create().show();
                 break;
             case R.id.dbBackups:
                 try {
@@ -75,28 +99,29 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
     private void openServer()
     {
-        SwitchCompat toggle = (SwitchCompat) getView().findViewById(R.id.hostToggle);
-        Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
-        Event selectedEvent = mEvents.get(eventChooser.getSelectedItemPosition());
+        Event selectedEvent = getSelectedEvent();
         if (null != selectedEvent) {
-            if (toggle.isChecked()) {
+
+            if (mHostToggle.isChecked()) {
                 if (BluetoothAdapter.getDefaultAdapter() == null) {
                     Toast.makeText(getActivity(), "Sorry, your device does not " + "support Bluetooth. You will not be able to " + "open a server and receive data from scouts.", Toast.LENGTH_LONG).show();
-                    ((SwitchCompat) getView().findViewById(R.id.hostToggle)).setChecked(false);
+                    mHostToggle.setChecked(false);
                     return;
-                } else {
-                    if (BluetoothAdapter.getDefaultAdapter().isEnabled())
-                        server.open(selectedEvent);
-                    else {
-                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        this.startActivityForResult(enableBtIntent, REQUEST_BT_ENABLED);
-                    }
                 }
-            } else
+
+                if (BluetoothAdapter.getDefaultAdapter().isEnabled())
+                    server.open(selectedEvent);
+                else {
+                    this.startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_BT_ENABLED);
+                }
+
+            } else {
                 server.close();
+            }
+
         } else {
             Toast.makeText(getActivity(), "Could not open server. No event selected.", Toast.LENGTH_LONG).show();
-            toggle.setChecked(false);
+            mHostToggle.setChecked(false);
         }
     }
 
@@ -104,9 +129,8 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (requestCode == REQUEST_BT_ENABLED && resultCode == Activity.RESULT_OK) {
-            Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
-            Event selectedEvent = (Event) eventChooser.getSelectedItem();
-            if (null != selectedEvent) {
+            Event selectedEvent = getSelectedEvent();
+            if (selectedEvent != null) {
                 server.open(selectedEvent);
             }
         }
@@ -114,29 +138,42 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
     public class ExportToFileSystem extends AsyncTask<Void, Void, Void>
     {
+        File file = null;
+
         @Override
         protected Void doInBackground(Void... voids)
         {
             File fileSystem = Environment.getExternalStorageDirectory();
-            Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
-            Event selectedEvent = mEvents.get(eventChooser.getSelectedItemPosition());
-            if (fileSystem.canWrite()) {
-                LogHelper.debug("Starting Export");
-                File file = null;
-                try {
-                    file = File.createTempFile(
-                            selectedEvent.getGame().getName() + "_" + selectedEvent.getName() + "_" + "Summary",  /* prefix */
-                            ".csv",         /* suffix */
-                            fileSystem      /* directory */
-                    );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (file != null) {
-                    ExportUtil.exportEventDataToCSV(selectedEvent, file, mDaoSession);
+            Event selectedEvent = getSelectedEvent();
+
+            if (selectedEvent != null) {
+                if (fileSystem.canWrite()) {
+                    LogHelper.debug("Starting Export");
+                    try {
+                        file = File.createTempFile(
+                                selectedEvent.getGame().getName() + "_" + selectedEvent.getName() + "_" + "Summary",  /* prefix */
+                                ".csv",         /* suffix */
+                                fileSystem      /* directory */
+                        );
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (file != null) {
+                        ExportUtil.exportEventDataToCSV(selectedEvent, file, mDaoSession);
+                    }
                 }
             }
+
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Export Finished");
+            builder.setMessage("Exported as " + file.getName());
+            builder.create().show();
         }
     }
 
@@ -161,5 +198,11 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);
             eventChooser.setAdapter(adapter);
         }
+    }
+
+    @Nullable
+    private Event getSelectedEvent()
+    {
+        return mEvents.get(eventSpinner.getSelectedItemPosition());
     }
 }
