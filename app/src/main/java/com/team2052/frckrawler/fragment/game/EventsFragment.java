@@ -42,6 +42,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener
     private final ActionMode.Callback callback = new ActionMode.Callback()
     {
         Event event;
+
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu)
         {

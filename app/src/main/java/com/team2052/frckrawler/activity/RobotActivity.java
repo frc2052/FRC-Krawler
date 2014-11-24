@@ -9,6 +9,7 @@ import android.support.v4.view.PagerAdapter;
 
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragment.robot.PhotosFragment;
+import com.team2052.frckrawler.fragment.robot.RobotAttendingEventsFragment;
 import com.team2052.frckrawler.fragment.scout.NeedSyncFragment;
 
 /**
@@ -61,7 +62,7 @@ public class RobotActivity extends ViewPagerActivity
                 case 0:
                     return new NeedSyncFragment();
                 case 1:
-                    return new NeedSyncFragment();
+                    return RobotAttendingEventsFragment.newInstance(mRobot);
                 case 2:
                     return PhotosFragment.newInstance(mRobot);
             }

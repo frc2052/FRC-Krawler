@@ -95,7 +95,7 @@ public class RobotsFragment extends ListFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() == R.id.manual_import){
+        if (item.getItemId() == R.id.manual_import) {
             ImportManualDialogFragment.newInstance(mDaoSession.getEventDao().load(mKey)).show(getFragmentManager(), "import_manual");
         }
         return super.onOptionsItemSelected(item);

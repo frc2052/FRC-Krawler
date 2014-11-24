@@ -56,24 +56,17 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
             case R.id.yes:
                 if (checked)
                     value = true;
-
                 break;
-
             case R.id.no:
                 if (checked)
                     value = false;
         }
     }
 
-    @Override
-    protected Parcelable onSaveInstanceState()
+    public void reset()
     {
-        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state)
-    {
-        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
+        ((RadioButton) findViewById(R.id.yes)).setChecked(false);
+        ((RadioButton) findViewById(R.id.no)).setChecked(true);
+        value = false;
     }
 }

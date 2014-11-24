@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-    <include layout="@layout/list_view" />
+    <include layout="@layout/list_view"/>
 
     <ImageButton
         android:id="@+id/fab"
@@ -17,5 +17,5 @@
         android:background="@drawable/ripple"
         android:elevation="2dp"
         android:src="@drawable/ic_content_add"
-        android:stateListAnimator="@anim/fab_pressed" />
+        android:stateListAnimator="@anim/fab_pressed"/>
 </FrameLayout>

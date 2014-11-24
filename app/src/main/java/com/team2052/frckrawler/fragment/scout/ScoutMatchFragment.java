@@ -214,8 +214,6 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
                 widgets.add((MetricWidget) mMetricList.getChildAt(i));
             }
 
-            LogHelper.debug(String.valueOf(widgets.size()));
-
             //Insert Metric Data
             for (MetricWidget widget : widgets) {
                 QueryBuilder<MatchData> matchDataQueryBuilder = mDaoSession.getMatchDataDao().queryBuilder();
@@ -225,12 +223,13 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
 
                 if (matchDataQueryBuilder.list().size() <= 0)
                     mDaoSession.getMatchDataDao().insert(new MatchData(widget.getValues(), robot.getId(), widget.getMetric().getId(), match.getId()));
-                else
-                    LogHelper.debug("Duplicate Data for " + robot.getTeamId() + " with metric id " + widget.getMetric().getId() + " on match number " + match.getNumber());
             }
 
-            //Insert Match Comments5
             mDaoSession.insert(new MatchComment(match.getId(), ((EditText) getView().findViewById(R.id.comments)).getText().toString(), robot.getId()));
+
+           /* for(MetricWidget widget: widgets){
+                widget.reset();
+            }*/
 
             return 0;
         }

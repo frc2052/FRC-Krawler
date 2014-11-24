@@ -76,7 +76,7 @@ public class MetricsFragment extends ListFragment implements FABButtonListener
                     return false;
                 }
                 mCurrentSelectedItem = i;
-                mCurrentActionMode = ((ActionBarActivity)getActivity()).startSupportActionMode(callback);
+                mCurrentActionMode = ((ActionBarActivity) getActivity()).startSupportActionMode(callback);
                 return true;
             }
         });
@@ -131,6 +131,7 @@ public class MetricsFragment extends ListFragment implements FABButtonListener
     {
 
         Metric metric = null;
+
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu)
         {
@@ -151,7 +152,7 @@ public class MetricsFragment extends ListFragment implements FABButtonListener
         @Override
         public boolean onActionItemClicked(final ActionMode actionMode, MenuItem menuItem)
         {
-            if(menuItem.getItemId() == R.id.menu_delete){
+            if (menuItem.getItemId() == R.id.menu_delete) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage("Are you sure you want to remove this metric and all its data?");
                 builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener()

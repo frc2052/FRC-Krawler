@@ -94,9 +94,9 @@ public class CompiledMetricValue
                         counts[rangeAddress]++;
                     }
                 }
-
+                compiledValue += "\n";
                 for (int choiceCount = 0; choiceCount < range.length; choiceCount++) {
-                    compiledValue += range[choiceCount] + " " + format.format(Double.isNaN((counts[choiceCount] / metricData.size()) * 100) ? 0.0D : (counts[choiceCount] / metricData.size()) * 100) + "% ";
+                    compiledValue += range[choiceCount] + " " + format.format(Double.isNaN((counts[choiceCount] / metricData.size()) * 100) ? 0.0D : (counts[choiceCount] / metricData.size()) * 100) + "% \n";
                 }
 
                 break;
