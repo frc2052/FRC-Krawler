@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * @author Adam
+ *         Compact way of a match list
  */
 public class Schedule implements Serializable
 {

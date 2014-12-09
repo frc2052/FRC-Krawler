@@ -4,8 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
+import com.team2052.frckrawler.database.MetricConstants;
 import com.team2052.frckrawler.database.MetricValue;
-import com.team2052.frckrawler.database.MetricValues;
 import com.team2052.frckrawler.db.Metric;
 
 public abstract class MetricWidget extends FrameLayout
@@ -33,13 +33,13 @@ public abstract class MetricWidget extends FrameLayout
             return null;
 
         switch (m.getMetric().getType()) {
-            case MetricValues.BOOLEAN:
+            case MetricConstants.BOOLEAN:
                 return new BooleanMetricWidget(c, m);
-            case MetricValues.CHOOSER:
+            case MetricConstants.CHOOSER:
                 return new ChooserMetricWidget(c, m);
-            case MetricValues.COUNTER:
+            case MetricConstants.COUNTER:
                 return new CounterMetricWidget(c, m);
-            case MetricValues.SLIDER:
+            case MetricConstants.SLIDER:
                 return new SliderMetricWidget(c, m);
             default:
                 return null;

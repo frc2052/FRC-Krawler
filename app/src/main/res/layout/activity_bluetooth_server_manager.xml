@@ -8,9 +8,9 @@
         android:id="@+id/dbBackups"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Database Backups"
+        android:layout_alignBottom="@+id/excel"
         android:layout_toRightOf="@+id/excel"
-        android:layout_alignBottom="@+id/excel"/>
+        android:text="Database Backups"/>
 
     <Button
         android:id="@+id/excel"
@@ -24,10 +24,10 @@
         android:id="@+id/chooseEvent"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/hostToggle"
         android:layout_alignLeft="@+id/contact_team_role"
         android:layout_alignRight="@+id/contact_team_role"
-        android:layout_below="@+id/contact_team_role"/>
+        android:layout_below="@+id/contact_team_role"
+        android:layout_toLeftOf="@+id/hostToggle"/>
 
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/hostToggle"

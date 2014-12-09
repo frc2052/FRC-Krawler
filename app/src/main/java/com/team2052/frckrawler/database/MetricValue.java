@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.database;
 
-
 import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.PitData;

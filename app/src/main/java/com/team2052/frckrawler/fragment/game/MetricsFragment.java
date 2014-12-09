@@ -40,7 +40,72 @@ public class MetricsFragment extends ListFragment implements FABButtonListener
 {
     public static String CATEGORY = "CATEGORY";
     public ActionMode mCurrentActionMode;
+    private final ActionMode.Callback callback = new ActionMode.Callback()
+    {
 
+        Metric metric = null;
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu)
+        {
+            long metricId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
+            metric = mDaoSession.getMetricDao().load(metricId);
+            actionMode.getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
+            menu.removeItem(R.id.menu_edit);
+            actionMode.setTitle(metric.getName());
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu)
+        {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(final ActionMode actionMode, MenuItem menuItem)
+        {
+            if (menuItem.getItemId() == R.id.menu_delete) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Are you sure you want to remove this metric and all its data?");
+                builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        mDaoSession.runInTx(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                DBManager.deleteMetric(mDaoSession, metric);
+                            }
+                        });
+                        dialogInterface.dismiss();
+                        updateList();
+                        actionMode.finish();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.show();
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode)
+        {
+            mCurrentActionMode = null;
+        }
+    };
     private int mCurrentSelectedItem;
     private Game mGame;
     private int mCategory;
@@ -126,72 +191,5 @@ public class MetricsFragment extends ListFragment implements FABButtonListener
             mListView.setAdapter(mAdapter);
         }
     }
-
-    private final ActionMode.Callback callback = new ActionMode.Callback()
-    {
-
-        Metric metric = null;
-
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu)
-        {
-            long metricId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
-            metric = mDaoSession.getMetricDao().load(metricId);
-            actionMode.getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
-            menu.removeItem(R.id.menu_edit);
-            actionMode.setTitle(metric.getName());
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu)
-        {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(final ActionMode actionMode, MenuItem menuItem)
-        {
-            if (menuItem.getItemId() == R.id.menu_delete) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("Are you sure you want to remove this metric and all its data?");
-                builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                        mDaoSession.runInTx(new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                DBManager.deleteMetric(mDaoSession, metric);
-                            }
-                        });
-                        dialogInterface.dismiss();
-                        updateList();
-                        actionMode.finish();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                        dialogInterface.dismiss();
-                    }
-                });
-                builder.show();
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode)
-        {
-            mCurrentActionMode = null;
-        }
-    };
 
 }

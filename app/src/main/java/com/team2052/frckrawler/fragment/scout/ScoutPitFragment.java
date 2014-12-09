@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.DatabaseActivity;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.db.Event;
@@ -25,6 +24,7 @@ import com.team2052.frckrawler.db.PitDataDao;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
+import com.team2052.frckrawler.events.scout.NotifyScoutEvent;
 import com.team2052.frckrawler.fragment.BaseFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
@@ -36,6 +36,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
+import de.greenrobot.event.EventBus;
 
 /**
  * @author Adam
@@ -46,21 +47,12 @@ public class ScoutPitFragment extends BaseFragment
     private Spinner mTeamSpinner;
     private List<RobotEvent> mRobots;
 
-
-    public static ScoutPitFragment newInstance(Event event)
-    {
-        ScoutPitFragment fragment = new ScoutPitFragment();
-        Bundle bundle = new Bundle();
-        bundle.putLong(DatabaseActivity.PARENT_ID, event.getId());
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -72,6 +64,21 @@ public class ScoutPitFragment extends BaseFragment
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onEvent(NotifyScoutEvent notifyScout)
+    {
+        loadAllData(notifyScout.getEvent());
+    }
+
+    private void loadAllData(Event event)
+    {
+        if (event == null) {
+            return;
+        }
+        mEvent = event;
+        new GetAllMetrics().execute();
+        new GetAllRobots().execute();
     }
 
     @Override
@@ -86,10 +93,14 @@ public class ScoutPitFragment extends BaseFragment
     {
         View view = inflater.inflate(R.layout.fragment_scouting_pit, null);
         mTeamSpinner = (Spinner) view.findViewById(R.id.team);
-        mEvent = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
-        new GetAllMetrics().execute();
-        new GetAllRobots().execute();
         return view;
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     public class GetAllRobots extends AsyncTask<Void, Void, List<RobotEvent>>

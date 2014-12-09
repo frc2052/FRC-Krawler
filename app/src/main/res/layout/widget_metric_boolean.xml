@@ -16,8 +16,8 @@
         android:layout_alignParentTop="false"
         android:layout_centerVertical="true"
         android:text="Boolean"
-        android:textStyle="bold"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"/>
 
     <RadioGroup
         android:id="@+id/valuesGroup"
@@ -26,8 +26,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/name"
-        android:minWidth="48dp"
         android:minHeight="48dp"
+        android:minWidth="48dp"
         android:padding="8dp">
 
         <RadioButton
@@ -35,9 +35,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false"
-            android:padding="8dp"
-            android:minWidth="48dp"
             android:minHeight="48dp"
+            android:minWidth="48dp"
+            android:padding="8dp"
             android:text="@string/yes"/>
 
         <RadioButton
@@ -45,8 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:minWidth="48dp"
             android:minHeight="48dp"
+            android:minWidth="48dp"
             android:padding="8dp"
             android:text="@string/no"/>
     </RadioGroup>

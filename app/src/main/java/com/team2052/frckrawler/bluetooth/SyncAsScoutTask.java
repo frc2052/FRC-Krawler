@@ -20,6 +20,10 @@ import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.db.User;
+import com.team2052.frckrawler.events.scout.ScoutSyncCancelledEvent;
+import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
+import com.team2052.frckrawler.events.scout.ScoutSyncStartEvent;
+import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +32,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.UUID;
+
+import de.greenrobot.event.EventBus;
 
 public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
 {
@@ -40,13 +46,11 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
 
     private volatile String deviceName;
     private Context context;
-    private SyncCallbackHandler handler;
 
-    public SyncAsScoutTask(Context c, SyncCallbackHandler h)
+    public SyncAsScoutTask(Context c)
     {
         deviceName = "device";
         context = c.getApplicationContext();
-        handler = h;
         mDaoSession = ((FRCKrawler) c.getApplicationContext()).getDaoSession();
     }
 
@@ -59,7 +63,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
     protected void onPreExecute()
     {
         tasksRunning++;
-        handler.onSyncStart("device");
+        EventBus.getDefault().post(new ScoutSyncStartEvent());
     }
 
     @Override
@@ -195,10 +199,10 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
     {
         tasksRunning--;
         if (i == SYNC_SUCCESS)
-            handler.onSyncSuccess(deviceName);
+            EventBus.getDefault().post(new ScoutSyncSuccessEvent());
         else if (i == SYNC_ERROR)
-            handler.onSyncError(deviceName);
+            EventBus.getDefault().post(new ScoutSyncErrorEvent());
         else if (i == SYNC_CANCELLED)
-            handler.onSyncCancel(deviceName);
+            EventBus.getDefault().post(new ScoutSyncCancelledEvent());
     }
 }

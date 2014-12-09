@@ -23,6 +23,8 @@ import com.team2052.frckrawler.db.RobotPhotoDao;
 import com.team2052.frckrawler.db.Team;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
 
@@ -219,6 +221,18 @@ public class DBManager
     public static void deleteMatchData(DaoSession daoSession, MatchData matchData)
     {
         daoSession.getMatchDataDao().delete(matchData);
+    }
+
+    public static List<Team> getTeamsForMatch(Match match)
+    {
+        List<Team> teams = new ArrayList<>();
+        teams.add(match.getBlue1());
+        teams.add(match.getBlue2());
+        teams.add(match.getBlue3());
+        teams.add(match.getRed1());
+        teams.add(match.getRed2());
+        teams.add(match.getRed3());
+        return teams;
     }
 
 }

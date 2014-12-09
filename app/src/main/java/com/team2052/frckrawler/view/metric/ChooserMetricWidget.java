@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.view.metric;
 
 import android.content.Context;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -13,13 +12,9 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 
-import icepick.Icepick;
-import icepick.Icicle;
-
 public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedListener
 {
 
-    @Icicle
     String value;
 
     public ChooserMetricWidget(Context context, MetricValue m)
@@ -65,17 +60,5 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
     public void onNothingSelected(AdapterView<?> a)
     {
         a.setSelection(0);
-    }
-
-    @Override
-    protected Parcelable onSaveInstanceState()
-    {
-        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state)
-    {
-        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
     }
 }

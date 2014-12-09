@@ -30,7 +30,7 @@ public class RobotListElement extends ListElement
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_robot, null);
         }
-        ((TextView) convertView.findViewById(R.id.number)).setText(String.valueOf(mRobot.getTeamId()));
+        ((TextView) convertView.findViewById(R.id.number)).setText("Team " + String.valueOf(mRobot.getTeamId()));
         ((TextView) convertView.findViewById(R.id.game)).setText(mRobot.getGame().getName());
         return convertView;
     }

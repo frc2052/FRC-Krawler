@@ -28,7 +28,6 @@ public class ImportUtil
 {
     public static void importTeamsFromCSV(DaoSession daoSession, File csv, Event event)
     {
-        LogHelper.debug("importTeamsFromCSV");
         try {
             CSVReader csvReader = new CSVReader(new FileReader(csv.getAbsolutePath()));
             List<String[]> strings = csvReader.readAll();

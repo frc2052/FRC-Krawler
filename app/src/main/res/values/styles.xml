@@ -7,6 +7,12 @@
         <item name="colorAccent">@color/yellowA200</item>
     </style>
 
+    <style name="AppBaseWhite" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimaryDark">@android:color/white</item>
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
     <!-- Body content -->
     <style name="TextHeader">
         <item name="android:textSize">@dimen/text_size_large</item>

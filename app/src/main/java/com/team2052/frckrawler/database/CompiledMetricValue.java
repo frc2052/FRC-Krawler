@@ -35,7 +35,7 @@ public class CompiledMetricValue
     private void compileMetricValues()
     {
         switch (metricType) {
-            case MetricValues.BOOLEAN:
+            case MetricConstants.BOOLEAN:
                 double yes = 0;
                 double no = 0;
 
@@ -59,8 +59,8 @@ public class CompiledMetricValue
                 }
                 break;
             //Do the same for slider and counter
-            case MetricValues.SLIDER:
-            case MetricValues.COUNTER:
+            case MetricConstants.SLIDER:
+            case MetricConstants.COUNTER:
                 double numerator = 0;
                 double denominator = 0;
 
@@ -77,7 +77,7 @@ public class CompiledMetricValue
                 }
 
                 break;
-            case MetricValues.CHOOSER:
+            case MetricConstants.CHOOSER:
                 String[] range = StringArrayDeserializer.deserialize(metric.getRange());
                 double[] counts = new double[range.length];
 

@@ -2,7 +2,6 @@ package com.team2052.frckrawler.fragment.scout;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,23 +18,26 @@ import android.widget.Toast;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.SyncAsScoutTask;
-import com.team2052.frckrawler.bluetooth.SyncCallbackHandler;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.events.scout.NotifyScoutEvent;
+import com.team2052.frckrawler.events.scout.ScoutSyncCancelledEvent;
+import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
+import com.team2052.frckrawler.events.scout.ScoutSyncStartEvent;
+import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.fragment.ViewPagerFragment;
-import com.team2052.frckrawler.fragment.event.MatchListFragment;
+import com.team2052.frckrawler.util.BluetoothUtil;
 
-import java.util.Set;
+import de.greenrobot.event.EventBus;
 
-public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHandler, DialogInterface.OnClickListener
+public class ScoutFragment extends ViewPagerFragment implements DialogInterface.OnClickListener
 {
 
+    public static final int REQUEST_BT_ENABLE = 1;
     private Event mEvent;
     private boolean mNeedsSync;
     private SyncAsScoutTask scoutSyncTask;
-    private BluetoothDevice[] devices;
-    private int selectedDeviceAddress;
+    private int selectedDevice;
     private String mAddress;
-    private int REQUEST_BT_ENABLE = 1;
     private Menu mOptionsMenu;
 
     @Override
@@ -44,12 +46,7 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
         super.onCreate(savedInstanceState);
         SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         mAddress = scoutPrefs.getString(GlobalValues.MAC_ADRESS_PREF, "null");
-        if (scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
-            mEvent = mDaoSession.getEventDao().load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
-            mNeedsSync = false;
-        } else {
-            mNeedsSync = true;
-        }
+        EventBus.getDefault().register(this);
         setHasOptionsMenu(true);
     }
 
@@ -58,26 +55,19 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
     {
         switch (item.getItemId()) {
             case R.id.menu_sync:
-
                 if (!mAddress.contains("null")) {
-                    scoutSyncTask = new SyncAsScoutTask(getActivity(), this);
+                    scoutSyncTask = new SyncAsScoutTask(getActivity());
                     scoutSyncTask.execute(BluetoothAdapter.getDefaultAdapter().getRemoteDevice(mAddress));
-                } else if (BluetoothAdapter.getDefaultAdapter() != null) {
+                } else if (BluetoothUtil.hasBluetoothAdapter()) {
                     AlertDialog.Builder builder;
-                    Set<BluetoothDevice> bondedDevices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
-                    devices = bondedDevices.toArray(new BluetoothDevice[bondedDevices.size()]);
-                    CharSequence[] deviceNames = new String[devices.length];
-                    for (int k = 0; k < deviceNames.length; k++)
-                        deviceNames[k] = devices[k].getName();
                     builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("Select Server Device");
-                    builder.setItems(deviceNames, this);
+                    builder.setItems(ScoutUtil.getDeviceNames(ScoutUtil.getAllBluetoothDevices()), this);
                     builder.show();
                 } else {
                     Toast.makeText(getActivity(), "Sorry, your device does not support Bluetooth. " + "You are unable to sync with a server.", Toast.LENGTH_LONG).show();
                 }
                 break;
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -101,20 +91,20 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
     {
         SharedPreferences prefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        scoutSyncTask = new SyncAsScoutTask(getActivity(), this);
-        scoutSyncTask.execute(devices[selectedDeviceAddress]);
-        prefsEditor.putString(GlobalValues.MAC_ADRESS_PREF, devices[selectedDeviceAddress].getAddress());
+        scoutSyncTask = new SyncAsScoutTask(getActivity());
+        scoutSyncTask.execute(ScoutUtil.getAllBluetoothDevicesArray()[selectedDevice]);
+        prefsEditor.putString(GlobalValues.MAC_ADRESS_PREF, ScoutUtil.getAllBluetoothDevicesArray()[selectedDevice].getAddress());
         prefsEditor.apply();
     }
 
-    @Override
-    public void onSyncCancel(String deviceName)
+    @SuppressWarnings("unused")
+    public void onEvent(ScoutSyncCancelledEvent event)
     {
         mOptionsMenu.findItem(R.id.menu_sync).setActionView(null);
     }
 
-    @Override
-    public void onSyncError(String deviceName)
+    @SuppressWarnings("unused")
+    public void onEvent(ScoutSyncErrorEvent event)
     {
         mOptionsMenu.findItem(R.id.menu_sync).setActionView(null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -131,32 +121,29 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
         builder.show();
     }
 
-    @Override
-    public void onSyncStart(String deviceName)
+    @SuppressWarnings("unused")
+    public void onEvent(ScoutSyncStartEvent event)
     {
         mOptionsMenu.findItem(R.id.menu_sync).setActionView(R.layout.actionbar_progress);
     }
 
-    @Override
-    public void onSyncSuccess(String deviceName)
+    @SuppressWarnings("unused")
+    public void onEvent(ScoutSyncSuccessEvent event)
     {
+        Toast.makeText(getActivity(), "Sync Successful", Toast.LENGTH_LONG).show();
         mOptionsMenu.findItem(R.id.menu_sync).setActionView(null);
         /*scoutLoginName = new EditText(getActivity());
         scoutLoginName.setHint("Name");*/
-
-        SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
-        //Used to tell deny access to edit any of the database besides putting match data.
-        SharedPreferences.Editor editor = scoutPrefs.edit();
-        editor.putBoolean(GlobalValues.IS_SCOUT_PREF, true);
-        editor.apply();
-
+        ScoutUtil.setDeviceAsScout(getActivity(), true);
         //TODO LOGIN
+
         /*AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Login");
         builder.setView(scoutLoginName);
         builder.setPositiveButton("Login", new UserDialogListener());
         builder.setNegativeButton("Cancel", new UserDialogListener());
         builder.show();*/
+
         reload();
     }
 
@@ -166,7 +153,7 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
         if (which == DialogInterface.BUTTON_NEUTRAL) {
             scoutSyncTask.cancel(true);
         } else {
-            selectedDeviceAddress = which;
+            selectedDevice = which;
             BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
             if (adapter == null) {
                 Toast.makeText(getActivity(), "Sorry, your device does not support " + "Bluetooth. You may not sync with another database.", Toast.LENGTH_LONG).show();
@@ -180,23 +167,26 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
         }
     }
 
+    @Override
+    public void onDestroy()
+    {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
     private void reload()
     {
         SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         mAddress = scoutPrefs.getString(GlobalValues.MAC_ADRESS_PREF, "null");
         if (scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
             mEvent = mDaoSession.getEventDao().load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
-            mNeedsSync = false;
-        } else {
-            mNeedsSync = true;
         }
-        mViewPager.setAdapter(setAdapter());
+        EventBus.getDefault().post(new NotifyScoutEvent(mEvent));
     }
-
 
     public class ScoutPagerAdapter extends FragmentPagerAdapter
     {
-        public final String[] headers = {"Match Scouting", "Pit Scouting", "Schedule"};
+        public final String[] headers = {"Match Scouting", "Pit Scouting"};
 
         public ScoutPagerAdapter(FragmentManager fm)
         {
@@ -215,25 +205,11 @@ public class ScoutFragment extends ViewPagerFragment implements SyncCallbackHand
             Fragment fragment = null;
             switch (position) {
                 case 0:
-                    if (!mNeedsSync) {
-                        fragment = ScoutMatchFragment.newInstance(mEvent);
-                    } else {
-                        fragment = new NeedSyncFragment();
-                    }
+                    fragment = new ScoutMatchFragment();
                     break;
                 case 1:
-                    if (!mNeedsSync) {
-                        fragment = ScoutPitFragment.newInstance(mEvent);
-                    } else {
-                        fragment = new NeedSyncFragment();
-                    }
+                    fragment = new ScoutPitFragment();
                     break;
-                case 2:
-                    if (!mNeedsSync) {
-                        fragment = MatchListFragment.newInstance(mEvent);
-                    } else {
-                        fragment = new NeedSyncFragment();
-                    }
             }
             return fragment;
         }

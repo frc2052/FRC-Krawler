@@ -37,14 +37,12 @@ import butterknife.InjectView;
 public class ServerFragment extends BaseFragment implements View.OnClickListener
 {
     private static final int REQUEST_BT_ENABLED = 1;
-    private Server server;
-    private List<Event> mEvents;
-
     @InjectView(R.id.chooseEvent)
     Spinner eventSpinner;
-
     @InjectView(R.id.hostToggle)
     SwitchCompat mHostToggle;
+    private Server server;
+    private List<Event> mEvents;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -136,6 +134,12 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         }
     }
 
+    @Nullable
+    private Event getSelectedEvent()
+    {
+        return mEvents.get(eventSpinner.getSelectedItemPosition());
+    }
+
     public class ExportToFileSystem extends AsyncTask<Void, Void, Void>
     {
         File file = null;
@@ -198,11 +202,5 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);
             eventChooser.setAdapter(adapter);
         }
-    }
-
-    @Nullable
-    private Event getSelectedEvent()
-    {
-        return mEvents.get(eventSpinner.getSelectedItemPosition());
     }
 }

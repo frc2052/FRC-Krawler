@@ -15,8 +15,8 @@ import android.widget.Toast;
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
+import com.team2052.frckrawler.database.MetricConstants;
 import com.team2052.frckrawler.database.MetricFactory;
-import com.team2052.frckrawler.database.MetricValues;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
@@ -101,7 +101,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     {
         mCurrentSelectedMetricType = position;
         switch (position) {
-            case MetricValues.COUNTER:
+            case MetricConstants.COUNTER:
                 mMinimum.setEnabled(true);
                 mMaximum.setEnabled(true);
                 mIncrementation.setEnabled(true);
@@ -109,7 +109,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 mDivider.setVisibility(View.GONE);
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case MetricValues.SLIDER:
+            case MetricConstants.SLIDER:
                 mMinimum.setEnabled(true);
                 mMaximum.setEnabled(true);
                 mIncrementation.setEnabled(false);
@@ -117,7 +117,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 mDivider.setVisibility(View.GONE);
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case MetricValues.CHOOSER:
+            case MetricConstants.CHOOSER:
                 mMinimum.setEnabled(false);
                 mMaximum.setEnabled(false);
                 mIncrementation.setEnabled(false);
@@ -157,7 +157,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     {
         Metric m = null;
         switch (mCurrentSelectedMetricType) {
-            case MetricValues.BOOLEAN:
+            case MetricConstants.BOOLEAN:
                 m = MetricFactory.createBooleanMetric(
                         mGame,
                         MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
@@ -165,7 +165,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                         mDescription.getText().toString());
                 break;
 
-            case MetricValues.COUNTER:
+            case MetricConstants.COUNTER:
                 try {
                     m = MetricFactory.createCounterMetric(
                             mGame,
@@ -181,7 +181,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 }
                 break;
 
-            case MetricValues.SLIDER:
+            case MetricConstants.SLIDER:
                 try {
                     m = MetricFactory.createSliderMetric(
                             mGame,
@@ -196,7 +196,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 }
                 break;
 
-            case MetricValues.CHOOSER:
+            case MetricConstants.CHOOSER:
                 m = MetricFactory.createChooserMetric(
                         mGame,
                         MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
