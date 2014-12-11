@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.util;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.support.annotation.Nullable;
 
 /**
@@ -19,6 +20,17 @@ public class BluetoothUtil
     public static boolean hasBluetoothAdapter()
     {
         return BluetoothAdapter.getDefaultAdapter() != null;
+    }
+
+    @Nullable
+    public static BluetoothDevice getDevice(String address){
+        if(!hasBluetoothAdapter())
+            return null;
+        return getBluetoothAdapter().getRemoteDevice(address);
+    }
+
+    public static boolean isBluetoothEnabled(){
+        return hasBluetoothAdapter() && getBluetoothAdapter().isEnabled();
     }
 
 

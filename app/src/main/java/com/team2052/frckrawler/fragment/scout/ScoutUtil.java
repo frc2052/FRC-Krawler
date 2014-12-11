@@ -20,7 +20,7 @@ public class ScoutUtil
     @Nullable
     public static Set<BluetoothDevice> getAllBluetoothDevices()
     {
-        if (BluetoothUtil.hasBluetoothAdapter()) {
+        if (!BluetoothUtil.hasBluetoothAdapter()) {
             return null;
         }
         return BluetoothUtil.getBluetoothAdapter().getBondedDevices();
@@ -30,7 +30,7 @@ public class ScoutUtil
     @Nullable
     public static BluetoothDevice[] getAllBluetoothDevicesArray()
     {
-        if (BluetoothUtil.hasBluetoothAdapter()) {
+        if (!BluetoothUtil.hasBluetoothAdapter()) {
             return null;
         }
         return BluetoothAdapter.getDefaultAdapter().getBondedDevices().toArray(new BluetoothDevice[BluetoothAdapter.getDefaultAdapter().getBondedDevices().size()]);
@@ -64,4 +64,21 @@ public class ScoutUtil
         SharedPreferences preferences = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         return preferences.getBoolean(GlobalValues.IS_SCOUT_PREF, false);
     }
+
+    public static void setSyncDevice(Context context, BluetoothDevice device){
+        SharedPreferences prefs = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        prefsEditor.putString(GlobalValues.MAC_ADRESS_PREF, device.getAddress());
+        prefsEditor.apply();
+    }
+
+    public static BluetoothDevice getSyncDevice(Context context){
+        SharedPreferences prefs = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        String address = prefs.getString(GlobalValues.MAC_ADRESS_PREF, "null");
+        if(address.equals("null")){
+            return null;
+        }
+        return BluetoothUtil.getDevice(address);
+    }
+
 }
