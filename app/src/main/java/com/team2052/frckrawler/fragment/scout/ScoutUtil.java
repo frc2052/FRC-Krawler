@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
 import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.util.BluetoothUtil;
 
 import java.util.Set;
@@ -79,6 +81,15 @@ public class ScoutUtil
             return null;
         }
         return BluetoothUtil.getDevice(address);
+    }
+
+    @Nullable
+    public static Event getScoutEvent(Context context, DaoSession session){
+        SharedPreferences scoutPrefs = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        if (scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
+           return session.getEventDao().load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
+        }
+        return null;
     }
 
 }

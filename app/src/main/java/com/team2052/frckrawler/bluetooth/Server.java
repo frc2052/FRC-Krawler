@@ -38,7 +38,7 @@ public class Server
     {
         if (adapter == null)
             return false;
-        if (SyncAsScoutTask.isTaskRunning())
+        if (SyncScoutTask.isTaskRunning())
             return false;
         Intent serverIntent = new Intent(context, ServerService.class);
         serverIntent.putExtra(ServerService.EVENT_ID, hostedEvent.getId());

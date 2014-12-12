@@ -24,6 +24,7 @@ import com.team2052.frckrawler.events.scout.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncStartEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
+import com.team2052.frckrawler.util.LogHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +36,7 @@ import java.util.UUID;
 
 import de.greenrobot.event.EventBus;
 
-public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
+public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
 {
     private static int SYNC_SUCCESS = 1;
     private static int SYNC_SERVER_OPEN = 2;
@@ -47,7 +48,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
     private volatile String deviceName;
     private Context context;
 
-    public SyncAsScoutTask(Context c)
+    public SyncScoutTask(Context c)
     {
         deviceName = "device";
         context = c.getApplicationContext();
@@ -73,13 +74,15 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
         if (Server.getInstance(context).isOpen())
             return SYNC_SERVER_OPEN;
         try {
-            Log.i("FRCKrawler", "Syncing With Server");
+            LogHelper.info("Syncing With Server");
+            LogHelper.info("Syncing with: " + dev[0].getName());
             long startTime = System.currentTimeMillis();
             BluetoothSocket serverSocket = dev[0].createRfcommSocketToServiceRecord(UUID.fromString(BluetoothInfo.UUID));
             serverSocket.connect();
 
             if (isCancelled())
                 return SYNC_CANCELLED;
+
 
             //Open the streams
             InputStream inStream = serverSocket.getInputStream();
@@ -96,13 +99,16 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
                 return SYNC_CANCELLED;
 
             //Write the scout data
+            LogHelper.info("Sending data to server to be compiled");
             ooStream.writeInt(BluetoothInfo.SCOUT);
             ooStream.writeObject(metricMatchData);
             ooStream.writeObject(metricPitData);
             ooStream.writeObject(matchComments);
             ooStream.flush();
+            LogHelper.info("Data Sent");
 
 
+            LogHelper.info("Deleting All Data");
             mDaoSession.runInTx(new Runnable()
             {
                 @Override
@@ -123,11 +129,12 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
                     mDaoSession.getRobotPhotoDao().deleteAll();
                 }
             });
+            LogHelper.info("Deleted All Data");
+
             if (isCancelled())
                 return SYNC_CANCELLED;
 
-            //Start fdthe reading thread
-            //Set the current event id hosted by the server
+            LogHelper.info("Reading data from server");
             final Event event1 = (Event) ioStream.readObject();
 
             SharedPreferences sharedPreferences = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
@@ -145,6 +152,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
                 return SYNC_CANCELLED;
 
             //Bulk Insert
+            LogHelper.info("Saving data from server");
             mDaoSession.runInTx(new Runnable()
             {
                 @Override
@@ -175,7 +183,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
                     mDaoSession.insertOrReplace(event1.getGame());
                 }
             });
-
+            LogHelper.info("Data saved");
 
             //Close the streams
             ooStream.close();
@@ -197,6 +205,7 @@ public class SyncAsScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
     @Override
     protected void onPostExecute(Integer i)
     {
+        LogHelper.info("Done Syncing. Ended with code " + i);
         tasksRunning--;
         if (i == SYNC_SUCCESS)
             EventBus.getDefault().post(new ScoutSyncSuccessEvent());

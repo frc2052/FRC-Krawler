@@ -29,7 +29,7 @@ import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotDao;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.events.scout.NotifyScoutEvent;
+import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.fragment.BaseFragment;
 import com.team2052.frckrawler.view.metric.MetricWidget;
 
@@ -65,11 +65,6 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         EventBus.getDefault().register(this);
     }
 
-    public void onEvent(NotifyScoutEvent notifyScout)
-    {
-        loadAllData(notifyScout.getEvent());
-    }
-
     private void loadAllData(Event event)
     {
         if (event == null)
@@ -103,6 +98,7 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
     {
         View view = inflater.inflate(R.layout.fragment_scouting_match, null);
         ButterKnife.inject(this, view);
+        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
         mMatchSpinner.setOnItemSelectedListener(this);
         return view;
     }
@@ -172,6 +168,11 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
             }
             mMatchSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, matchNumbers));
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(ScoutSyncSuccessEvent event){
+        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
     }
 
     public class GetAllMetrics extends AsyncTask<Void, Void, List<Metric>>

@@ -24,7 +24,7 @@ import com.team2052.frckrawler.db.PitDataDao;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
-import com.team2052.frckrawler.events.scout.NotifyScoutEvent;
+import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.fragment.BaseFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
@@ -66,11 +66,6 @@ public class ScoutPitFragment extends BaseFragment
         return super.onOptionsItemSelected(item);
     }
 
-    public void onEvent(NotifyScoutEvent notifyScout)
-    {
-        loadAllData(notifyScout.getEvent());
-    }
-
     private void loadAllData(Event event)
     {
         if (event == null) {
@@ -93,6 +88,7 @@ public class ScoutPitFragment extends BaseFragment
     {
         View view = inflater.inflate(R.layout.fragment_scouting_pit, null);
         mTeamSpinner = (Spinner) view.findViewById(R.id.team);
+        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
         return view;
     }
 
@@ -155,6 +151,12 @@ public class ScoutPitFragment extends BaseFragment
                 ((LinearLayout) getView().findViewById(R.id.metricWidgetList)).addView(MetricWidget.createWidget(getActivity(), metric));
             }
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(ScoutSyncSuccessEvent event)
+    {
+        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
     }
 
     public class SaveAllMetrics extends AsyncTask<Void, Void, Integer>

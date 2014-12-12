@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.fragment.scout;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,10 +9,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.events.scout.NotifyScoutEvent;
+import com.team2052.frckrawler.bluetooth.SyncHandler;
 import com.team2052.frckrawler.events.scout.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncStartEvent;
@@ -26,7 +23,6 @@ public class ScoutFragment extends ViewPagerFragment
 {
 
     public static final int REQUEST_BT_ENABLE = 1;
-    private Event mEvent;
     private Menu mOptionsMenu;
     private SyncHandler mSyncHandler;
 
@@ -96,7 +92,6 @@ public class ScoutFragment extends ViewPagerFragment
         builder.setPositiveButton("Login", new UserDialogListener());
         builder.setNegativeButton("Cancel", new UserDialogListener());
         builder.show();*/
-        reload();
     }
 
     private void setProgress(boolean toggle)
@@ -113,15 +108,6 @@ public class ScoutFragment extends ViewPagerFragment
     {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
-    }
-
-    private void reload()
-    {
-        SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
-        if (scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
-            mEvent = mDaoSession.getEventDao().load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
-        }
-        EventBus.getDefault().post(new NotifyScoutEvent(mEvent));
     }
 
     public class ScoutPagerAdapter extends FragmentPagerAdapter
