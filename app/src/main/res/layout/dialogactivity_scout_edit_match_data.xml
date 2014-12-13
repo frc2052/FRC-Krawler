@@ -109,8 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/matchNumber"
                         android:layout_alignParentRight="true"
-                        android:layout_below="@+id/matchNumber"
-                        android:entries="@array/match_types"/>
+                        android:layout_below="@+id/matchNumber"/>
 
                     <TextView
                         android:id="@+id/textView4"
