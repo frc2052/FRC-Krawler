@@ -27,7 +27,7 @@ public abstract class ViewPagerFragment extends BaseFragment
         mTabs = (SlidingTabLayout) getActivity().findViewById(R.id.tabs);
         mTabs.setVisibility(View.VISIBLE);
         mTabs.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
-        mTabs.setSelectedIndicatorColors(Color.WHITE);
+        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.yellowA200));
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
         mViewPager.setAdapter(setAdapter());
         mTabs.setViewPager(mViewPager);

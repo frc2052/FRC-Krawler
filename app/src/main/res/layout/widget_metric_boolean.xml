@@ -27,17 +27,13 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/name"
         android:minHeight="48dp"
-        android:minWidth="48dp"
-        android:padding="8dp">
+        android:minWidth="48dp">
 
         <RadioButton
             android:id="@+id/yes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false"
-            android:minHeight="48dp"
-            android:minWidth="48dp"
-            android:padding="8dp"
             android:text="@string/yes"/>
 
         <RadioButton
@@ -45,9 +41,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:minHeight="48dp"
-            android:minWidth="48dp"
-            android:padding="8dp"
             android:text="@string/no"/>
     </RadioGroup>
 

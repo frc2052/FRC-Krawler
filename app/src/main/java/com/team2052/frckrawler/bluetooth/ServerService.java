@@ -48,6 +48,7 @@ public class ServerService extends Service
             b.setContentTitle("Server open");
             b.setContentText("The FRCKrawler server is open for scouts to sync");
             b.setOngoing(true);
+            b.setColor(0x5b0000);
             NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             m.notify(SERVER_OPEN_ID, b.build());
             thread = new ServerThread(this, e, new ServerCallbackHandler(this));

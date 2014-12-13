@@ -5,9 +5,9 @@
     <color name="nav_drawer_background">#f7f7f7</color>
     <color name="red">#F00</color>
     <color name="blue">#00F</color>
-    <color name="red700">#801716</color>
-    <color name="red900">#60120a</color>
-    <color name="yellowA200">#801716</color>
+    <color name="red700">#720000</color>
+    <color name="red900">#5b0000</color>
+    <color name="yellowA200">#FFC400</color>
 
     <color name="item_default_color">#EEEEEE</color>
     <color name="item_pressed_color">#CCCCCC</color>
