@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.bluetooth;
+package com.team2052.frckrawler.bluetooth.scout;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.bluetooth.BluetoothInfo;
+import com.team2052.frckrawler.bluetooth.server.Server;
 import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;

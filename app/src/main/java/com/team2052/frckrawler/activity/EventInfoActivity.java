@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragment.event.MatchListFragment;
 import com.team2052.frckrawler.fragment.event.SummaryFragment;
@@ -31,7 +32,7 @@ public class EventInfoActivity extends ViewPagerActivity
     public void onPreLoadViewPager()
     {
         mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
-        setActionBarTitle("Event");
+        setActionBarTitle(getString(R.string.event));
         setActionBarSubtitle(mEvent.getName());
     }
 

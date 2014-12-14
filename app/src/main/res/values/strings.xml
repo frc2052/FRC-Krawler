@@ -2,41 +2,55 @@
 
 <resources>
 
-    <string name="select_file">Choose file from SD</string>
     <string name="app_name">FRC Krawler</string>
-    <string name="menu_settings">Settings</string>
-
     <string-array name="metric_types">
         <item>Boolean</item>
         <item>Counter</item>
         <item>Slider</item>
         <item>Chooser</item>
     </string-array>
-
     <string name="team_number">Team Number</string>
-
     <string name="name">FRC Krawler Scouting System</string>
     <string name="preference_key_avg_weight">avgWeight</string>
     <string name="preferences_key_robot_game">game</string>
     <string name="preference_key_autogenerate_robot">autoRobot</string>
-
-    <string-array name="empty_array"/>
-
-    <string name="title_activity_settings">SettingsActivity</string>
-
-    <string name="action_settings">Settings</string>
-    <string name="action_server">Server</string>
-    <string name="action_games">Games</string>
-    <string name="action_options">Options</string>
-
+    <string-array name="empty_array" />
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
-
     <string name="yes">Yes</string>
     <string name="no">No</string>
-
-    <string name="dialog_error_report">An error has occurred with FRCKrawler. Do you want to report it?</string>
+    <string name="dialog_error_report">An error has occurred with FRC Krawler</string>
     <string name="dialog_error_report_title">Report Issue</string>
     <string name="dialog_error_report_email">Email</string>
     <string name="dialog_error_report_comment">Comments</string>
+
+    <string name="bluetooth_not_available">Bluetooth not available</string>
+    <string name="team">Team</string>
+    <string name="name_text_hint">Name</string>
+    <string name="robot_text">Robot</string>
+    <string name="server">Server</string>
+    <string name="teams">Teams</string>
+    <string name="users">Users</string>
+    <string name="games">Games</string>
+    <string name="options">Options</string>
+    <string name="scout">Scout</string>
+    <string name="Summary">Summary</string>
+    <string name="event">Event</string>
+    <string name="welcome_message">Before you can you can use the app. The app needs to get setup.\nClick \"Next\" when you are ready.</string>
+
+    <string name="server_description">The Server is known as the \"Master Tablet\". All the data from the scouters get synced to this device. Data is compiled, shared, and viewed on this device.</string>
+    <string name="scouter_description">The Scouter receives data from matches and the pits. Data is synced from this device to the \"Master Tablet\". Data is saved until you sync, but then is deleted after it has synced to the \"Master Tablet\"</string>
+    <string name="enable_bluetooth_message">First, you need to enable your Bluetooth.</string>
+
+    <string-array name="robot_tab_titles">
+        <item>Info</item>
+        <item>Events</item>
+        <item>Photos</item>
+    </string-array>
+
+    <string-array name="team_tab_titles">
+        <item>Info</item>
+        <item>Robots</item>
+        <item>Contacts</item>
+    </string-array>
 </resources>

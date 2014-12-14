@@ -127,6 +127,12 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         super.onDestroy();
     }
 
+    @SuppressWarnings("unused")
+    public void onEvent(ScoutSyncSuccessEvent event)
+    {
+        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
+    }
+
     public class GetAllRobotsTask extends AsyncTask<Void, Void, Void>
     {
 
@@ -168,11 +174,6 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
             }
             mMatchSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, matchNumbers));
         }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEvent(ScoutSyncSuccessEvent event){
-        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
     }
 
     public class GetAllMetrics extends AsyncTask<Void, Void, List<Metric>>

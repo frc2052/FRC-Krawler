@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.bluetooth;
+package com.team2052.frckrawler.bluetooth.server;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.team2052.frckrawler.R;
 
-public class ServerCallbackHandler implements SyncCallbackHandler
+public class ServerCallbackHandler
 {
     public static final int SYNC_ONGOING_ID = 1;
     private Context context;
@@ -16,7 +16,6 @@ public class ServerCallbackHandler implements SyncCallbackHandler
         context = c.getApplicationContext();
     }
 
-    @Override
     public void onSyncStart(String deviceName)
     {
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
@@ -29,7 +28,6 @@ public class ServerCallbackHandler implements SyncCallbackHandler
         m.notify(SYNC_ONGOING_ID, b.build());
     }
 
-    @Override
     public void onSyncSuccess(String deviceName)
     {
         NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -41,13 +39,11 @@ public class ServerCallbackHandler implements SyncCallbackHandler
         m.notify(0, b.build());
     }
 
-    @Override
     public void onSyncCancel(String deviceName)
     {
         ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(ServerCallbackHandler.SYNC_ONGOING_ID);
     }
 
-    @Override
     public void onSyncError(String deviceName)
     {
         NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

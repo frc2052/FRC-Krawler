@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;

@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.bluetooth.Server;
+import com.team2052.frckrawler.bluetooth.server.Server;
 import com.team2052.frckrawler.database.ExportUtil;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.util.LogHelper;

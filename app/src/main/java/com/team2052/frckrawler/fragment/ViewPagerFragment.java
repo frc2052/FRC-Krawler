@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;

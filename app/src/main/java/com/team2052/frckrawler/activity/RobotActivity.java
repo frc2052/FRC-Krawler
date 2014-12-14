@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragment.robot.PhotosFragment;
 import com.team2052.frckrawler.fragment.robot.RobotAttendingEventsFragment;
@@ -30,8 +31,8 @@ public class RobotActivity extends ViewPagerActivity
     public void onPreLoadViewPager()
     {
         mRobot = mDaoSession.getRobotDao().load(getIntent().getLongExtra(PARENT_ID, 0));
-        setActionBarTitle("Robot");
-        setActionBarSubtitle("Team " + String.valueOf(mRobot.getTeamId()));
+        setActionBarTitle(getString(R.string.robot_text));
+        setActionBarSubtitle(String.valueOf(mRobot.getTeamId()));
     }
 
     @Override
@@ -42,7 +43,7 @@ public class RobotActivity extends ViewPagerActivity
 
     public class RobotViewPagerAdapter extends FragmentPagerAdapter
     {
-        private String[] HEADERS = new String[]{"Info", "Events", "Photos"};
+        private String[] HEADERS = getResources().getStringArray(R.array.robot_tab_titles);
 
         public RobotViewPagerAdapter(FragmentManager fm)
         {

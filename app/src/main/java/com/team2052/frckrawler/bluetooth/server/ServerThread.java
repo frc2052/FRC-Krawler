@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.bluetooth;
+package com.team2052.frckrawler.bluetooth.server;
 
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
@@ -8,6 +8,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.team2052.frckrawler.FRCKrawler;
+import com.team2052.frckrawler.bluetooth.BluetoothInfo;
 import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
@@ -24,6 +25,7 @@ import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.db.User;
+import com.team2052.frckrawler.util.BluetoothUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,25 +39,23 @@ import java.util.UUID;
 public class ServerThread extends Thread
 {
 
+    private final BluetoothAdapter mBluetoothAdapter;
+    private final Server server;
     private DaoSession mDaoSession = null;
     private boolean isOpen;
     private Context context;
     private Event hostedEvent;
-    private SyncCallbackHandler handler;
     private BluetoothServerSocket serverSocket;
 
-    private ServerThread()
-    {
-    }
-
-    public ServerThread(Context c, Event e, SyncCallbackHandler h)
+    public ServerThread(ServerService c, Event e)
     {
         isOpen = false;
         context = c.getApplicationContext();
         hostedEvent = e;
-        handler = h;
         serverSocket = null;
+        server = Server.getInstance(c);
         mDaoSession = ((FRCKrawler) c.getApplicationContext()).getDaoSession();
+        mBluetoothAdapter = BluetoothUtil.getBluetoothAdapter();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ServerThread extends Thread
         isOpen = true;
         while (isOpen) {
             try {
-                serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
+                serverSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
             } catch (IOException io) {
                 io.printStackTrace();
             }
@@ -83,7 +83,7 @@ public class ServerThread extends Thread
                 deviceName = clientSocket.getRemoteDevice().getName();
 
                 //Call the sync handler
-                handler.onSyncStart(deviceName);
+                //handler.onSyncStart(deviceName);
 
                 //Close the server socket
                 serverSocket.close();
@@ -152,13 +152,13 @@ public class ServerThread extends Thread
 
                 oStream.flush();
                 clientSocket.close();
-                handler.onSyncSuccess(deviceName);
+                //handler.onSyncSuccess(deviceName);
                 Log.d("FRCKrawler", "Synced in: " + (System.currentTimeMillis() - startTime) + "ms");
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("FRCKrawler", "IO error in server.");
                 if (!e.getMessage().trim().equals("Operation Canceled") && isOpen) {
-                    handler.onSyncError(deviceName);
+                    //handler.onSyncError(deviceName);
                 }
                 ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(ServerCallbackHandler.SYNC_ONGOING_ID);
             } catch (ClassNotFoundException e) {

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
@@ -47,7 +48,8 @@ public class SummaryMetricsActivity extends ListActivity
             }
         });
         if (getActionBar() != null) {
-            getActionBar().setTitle("Summary " + mEvent.getName());
+            setActionBarTitle(getString(R.string.Summary));
+            setActionBarSubtitle(mEvent.getName());
         }
     }
 

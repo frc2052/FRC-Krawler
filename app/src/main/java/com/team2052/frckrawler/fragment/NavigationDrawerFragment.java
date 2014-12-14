@@ -49,14 +49,14 @@ public class NavigationDrawerFragment extends Fragment
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         //Deny the scout to access all the items
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, "Scout", R.drawable.ic_assignment_black_24dp));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, getActivity().getString(R.string.scout), R.drawable.ic_assignment_black_24dp));
 
         if (!scoutPrefs.getBoolean(GlobalValues.IS_SCOUT_PREF, false)) {
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, "Server", R.drawable.ic_bluetooth_black_24dp));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, "Teams", R.drawable.ic_group_black_24dp));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, "Users", R.drawable.ic_person_black_24dp));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, "Games", R.drawable.ic_event_black_24dp));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, "Options", R.drawable.ic_settings_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, getActivity().getString(R.string.server), R.drawable.ic_bluetooth_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, getActivity().getString(R.string.teams), R.drawable.ic_group_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, getActivity().getString(R.string.users), R.drawable.ic_person_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, getActivity().getString(R.string.games), R.drawable.ic_event_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, getActivity().getString(R.string.options), R.drawable.ic_settings_black_24dp));
         }
 
         userLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);

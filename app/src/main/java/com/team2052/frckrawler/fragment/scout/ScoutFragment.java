@@ -1,5 +1,8 @@
 package com.team2052.frckrawler.fragment.scout;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,27 +13,28 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.bluetooth.SyncHandler;
+import com.team2052.frckrawler.bluetooth.scout.ScoutSyncHandler;
 import com.team2052.frckrawler.events.scout.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncStartEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.fragment.ViewPagerFragment;
+import com.team2052.frckrawler.util.BluetoothUtil;
 
 import de.greenrobot.event.EventBus;
 
 public class ScoutFragment extends ViewPagerFragment
 {
 
-    public static final int REQUEST_BT_ENABLE = 1;
+    private static final int REQUEST_ENABLE_BT = 1;
     private Menu mOptionsMenu;
-    private SyncHandler mSyncHandler;
+    private ScoutSyncHandler mSyncHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mSyncHandler = SyncHandler.getInstance(getActivity());
+        mSyncHandler = ScoutSyncHandler.getInstance(getActivity());
         EventBus.getDefault().register(this);
         setHasOptionsMenu(true);
     }
@@ -40,12 +44,28 @@ public class ScoutFragment extends ViewPagerFragment
     {
         switch (item.getItemId()) {
             case R.id.menu_sync:
-                mSyncHandler.startScoutSync();
+                if (BluetoothUtil.hasBluetoothAdapter()) {
+                    if (!BluetoothUtil.isBluetoothEnabled()) {
+                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                    } else {
+                        mSyncHandler.startScoutSync();
+                    }
+                }
+
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
+            mSyncHandler.startScoutSync();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)

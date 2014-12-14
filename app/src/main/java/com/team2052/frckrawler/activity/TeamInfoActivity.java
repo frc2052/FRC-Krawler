@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.fragment.robot.RobotsFragment;
 import com.team2052.frckrawler.fragment.scout.NeedSyncFragment;
@@ -32,7 +33,8 @@ public class TeamInfoActivity extends ViewPagerActivity
     {
         super.onCreate(savedInstanceState);
         mTeam = mDaoSession.getTeamDao().load(getIntent().getLongExtra(PARENT_ID, 0));
-        setActionBarTitle("Team " + String.valueOf(mTeam.getNumber()));
+        setActionBarTitle(getString(R.string.team));
+        setActionBarSubtitle(String.valueOf(mTeam.getNumber()));
     }
 
     @Override
@@ -43,7 +45,7 @@ public class TeamInfoActivity extends ViewPagerActivity
 
     public class ViewTeamPagerAdapter extends FragmentPagerAdapter
     {
-        public final String[] headers = {"Info", "Robots", "Contacts"};
+        public final String[] headers = getResources().getStringArray(R.array.team_tab_titles);
 
         public ViewTeamPagerAdapter(FragmentManager fm)
         {
@@ -66,7 +68,6 @@ public class TeamInfoActivity extends ViewPagerActivity
                     break;
                 case 1:
                     fragment = RobotsFragment.newInstance(mTeam);
-
                     break;
                 case 2:
                     fragment = ContactsFragment.newInstance(mTeam);

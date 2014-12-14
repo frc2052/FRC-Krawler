@@ -8,7 +8,8 @@ public class NotifyMainScoutEvent
 {
     private final String key;
 
-    public NotifyMainScoutEvent(String key){
+    public NotifyMainScoutEvent(String key)
+    {
         this.key = key;
     }
 

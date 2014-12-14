@@ -99,6 +99,12 @@ public class ScoutPitFragment extends BaseFragment
         super.onDestroy();
     }
 
+    @SuppressWarnings("unused")
+    public void onEvent(ScoutSyncSuccessEvent event)
+    {
+        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
+    }
+
     public class GetAllRobots extends AsyncTask<Void, Void, List<RobotEvent>>
     {
         @Override
@@ -151,12 +157,6 @@ public class ScoutPitFragment extends BaseFragment
                 ((LinearLayout) getView().findViewById(R.id.metricWidgetList)).addView(MetricWidget.createWidget(getActivity(), metric));
             }
         }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEvent(ScoutSyncSuccessEvent event)
-    {
-        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
     }
 
     public class SaveAllMetrics extends AsyncTask<Void, Void, Integer>

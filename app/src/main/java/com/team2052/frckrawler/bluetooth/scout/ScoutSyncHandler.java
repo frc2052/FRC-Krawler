@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.bluetooth;
+package com.team2052.frckrawler.bluetooth.scout;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
@@ -35,14 +35,11 @@ public class ScoutSyncHandler
     /**
      * To be used across the whole application*
      */
-    @SuppressWarnings("unused")
     public static ScoutSyncHandler getInstance(Context context)
     {
-        if (instance == null) {
-            synchronized (ScoutSyncHandler.class) {
-                if (instance == null)
-                    instance = new ScoutSyncHandler(context);
-            }
+        if (instance == null) synchronized (ScoutSyncHandler.class) {
+            if (instance == null)
+                instance = new ScoutSyncHandler(context);
         }
         return instance;
     }
@@ -104,11 +101,6 @@ public class ScoutSyncHandler
         if (!BluetoothUtil.hasBluetoothAdapter()) {
             Toast.makeText(context, "Sorry, your device does not support " + "Bluetooth. You may not sync with another database.", Toast.LENGTH_LONG).show();
             return;
-        }
-
-        if (!BluetoothUtil.isBluetoothEnabled()) {
-            //Yell at them to enable it.
-            Toast.makeText(context, "Enable your bluetooth and try again", Toast.LENGTH_LONG).show();
         }
 
         BluetoothDevice bluetoothDevice = ScoutUtil.getSyncDevice(context);

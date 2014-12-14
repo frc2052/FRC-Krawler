@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:elevation="2dp"
-                android:padding="16dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:elevation="2dp"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/list_item_team_number"
@@ -13,7 +13,7 @@
         android:layout_centerVertical="true"
         android:text="2052"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/list_item_team_name"
@@ -23,7 +23,7 @@
         android:layout_marginLeft="72dp"
         android:text="KnightKrawler"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/list_item_team_location"
@@ -33,5 +33,5 @@
         android:layout_alignStart="@+id/list_item_team_name"
         android:layout_below="@+id/list_item_team_name"
         android:text="Location"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 </RelativeLayout>

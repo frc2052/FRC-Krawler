@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.CompiledMetricValue;
 import com.team2052.frckrawler.database.MetricCompiler;
@@ -40,7 +41,8 @@ public class SummaryDataActivity extends ListActivity
         mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(EVENT_ID, 0));
         mMetric = mDaoSession.getMetricDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         if (getActionBar() != null) {
-            getActionBar().setTitle(mMetric.getName() + " - Summary");
+            setActionBarTitle(getString(R.string.Summary));
+            setActionBarSubtitle(mMetric.getName());
         }
     }
 

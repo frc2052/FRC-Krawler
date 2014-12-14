@@ -1,10 +1,11 @@
-package com.team2052.frckrawler.bluetooth;
+package com.team2052.frckrawler.bluetooth.server;
 
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 
+import com.team2052.frckrawler.bluetooth.scout.SyncScoutTask;
 import com.team2052.frckrawler.db.Event;
 
 
@@ -16,10 +17,6 @@ public class Server
     private Context context;
     private BluetoothAdapter adapter;
 
-    private Server()
-    {
-    }
-
     private Server(Context c)
     {
         isOpen = false;
@@ -29,8 +26,9 @@ public class Server
 
     public static Server getInstance(Context c)
     {
-        if (instance == null)
-            instance = new Server(c);
+        if (instance == null) synchronized (Server.class) {
+            if (instance == null) instance = new Server(c);
+        }
         return instance;
     }
 

@@ -8,20 +8,20 @@
         <menu>
             <item
                 android:id="@+id/menu_event"
-                android:title="Events"/>
+                android:title="Events" />
 
             <item
                 android:id="@+id/menu_pit_metrics"
-                android:title="Pit Metrics"/>
+                android:title="Pit Metrics" />
 
             <item
                 android:id="@+id/menu_match_metrics"
-                android:title="Match Metrics"/>
+                android:title="Match Metrics" />
         </menu>
     </item>
 
     <item
         android:id="@+id/menu_delete"
         android:icon="@android:drawable/ic_menu_delete"
-        android:title="Delete"/>
+        android:title="Delete" />
 </menu>

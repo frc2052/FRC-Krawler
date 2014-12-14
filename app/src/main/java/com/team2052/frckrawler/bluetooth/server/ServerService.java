@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.bluetooth;
+package com.team2052.frckrawler.bluetooth.server;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -48,10 +48,10 @@ public class ServerService extends Service
             b.setContentTitle("Server open");
             b.setContentText("The FRCKrawler server is open for scouts to sync");
             b.setOngoing(true);
-            b.setColor(0x5b0000);
+            b.setColor(0x5B0000);
             NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             m.notify(SERVER_OPEN_ID, b.build());
-            thread = new ServerThread(this, e, new ServerCallbackHandler(this));
+            thread = new ServerThread(this, e);
             new Thread(thread).start();
         }
         return START_REDELIVER_INTENT;

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/root"
+<RelativeLayout android:id="@+id/root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/name"
@@ -15,7 +14,7 @@
         android:layout_centerVertical="true"
         android:text="Chooser"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <Spinner
         android:id="@+id/choooserList"
@@ -24,6 +23,6 @@
         android:layout_below="@+id/name"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/name"
-        android:minHeight="48dp"/>
+        android:minHeight="48dp" />
 
 </RelativeLayout>
