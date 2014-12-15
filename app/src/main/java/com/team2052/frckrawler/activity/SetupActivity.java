@@ -29,13 +29,14 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
     @InjectView(R.id.view_pager)
     protected DisableSwipeViewPager pager;
     @InjectView(R.id.welcome_next_page)
-    protected Button welcomeNextButton;
+    protected View welcomeNextButton;
+    @InjectView(R.id.bluetooth_next_page)
+    protected View bluetoothNextButton;
+
     @InjectView(R.id.server_button)
-    protected Button serverButton;
+    protected View serverButton;
     @InjectView(R.id.scout_button)
-    protected Button scoutButton;
-    @InjectView(R.id.bluetooth_button)
-    protected Button bluetoothButton;
+    protected View scoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,7 +66,7 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
         scoutButton.setOnClickListener(this);
         serverButton.setOnClickListener(this);
         welcomeNextButton.setOnClickListener(this);
-        bluetoothButton.setOnClickListener(this);
+        bluetoothNextButton.setOnClickListener(this);
     }
 
     @Override
@@ -90,9 +91,11 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
                 //This is not finished, allow the tester to use the app after this screen
                 setupFinished();
                 break;
-            case R.id.bluetooth_button:
+            case R.id.bluetooth_next_page:
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                break;
+
         }
     }
 
@@ -107,6 +110,7 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
 
     public void setupFinished()
     {
+
         SharedPreferences preferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         SharedPreferences.Editor edit = preferences.edit();
         edit.putBoolean(PREF_SETUP, true);
