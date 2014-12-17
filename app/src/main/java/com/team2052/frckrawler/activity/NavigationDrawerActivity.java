@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.activity;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +13,10 @@ import android.widget.FrameLayout;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.fragment.NavigationDrawerFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
+import com.team2052.frckrawler.view.ScrimInsetsFrameLayout;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * @author Adam
@@ -20,8 +25,15 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
 {
     private static final String IS_DRAWER_OPEN = "is_drawer_open";
     private NavigationDrawerFragment mNavDrawerFragment;
-    private DrawerLayout mDrawerLayout;
-    private FrameLayout mContentView;
+
+    @InjectView(R.id.nav_drawer_layout)
+    protected DrawerLayout mDrawerLayout;
+    @InjectView(R.id.content)
+    protected FrameLayout mContentView;
+
+    @InjectView(R.id.navigation_drawer_fragment_container)
+    protected ScrimInsetsFrameLayout drawerContainer;
+
     private String mActionBarTitle;
     private boolean mUseActionBarToggle = false;
     private boolean mEncourageLearning = false;
@@ -33,14 +45,31 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
     {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_navigation_drawer);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer_layout);
+        ButterKnife.inject(this);
+        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.red900));
         // Call this so that subclasses can configure the navigation drawer before it is created
-        onCreateNavigationDrawer();
-        mNavDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_fragment);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mNavDrawerFragment.setUp(R.id.navigation_drawer_fragment, (DrawerLayout) findViewById(R.id.nav_drawer_layout), mEncourageLearning, mUseActionBarToggle, mToolbar);
-        mContentView = (FrameLayout) findViewById(R.id.content);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState)
+    {
+        super.onPostCreate(savedInstanceState);
+        onCreateNavigationDrawer();
+
+        mNavDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_fragment);
+
+        mNavDrawerFragment.setUp(R.id.navigation_drawer_fragment_container, (DrawerLayout) findViewById(R.id.nav_drawer_layout), mEncourageLearning, mUseActionBarToggle, mToolbar);
+
+        drawerContainer.setOnInsetsCallback(new ScrimInsetsFrameLayout.OnInsetsCallback()
+        {
+            @Override
+            public void onInsetsChanged(Rect insets)
+            {
+                mNavDrawerFragment.onInsetsChanged(insets);
+            }
+        });
         // Restore the state of the navigation drawer on rotation changes
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(IS_DRAWER_OPEN)) {
@@ -68,19 +97,9 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
         TaskStackBuilder.create(this).addNextIntent(HomeActivity.newInstance(this, id)).startActivities();
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        if (isDrawerOpen()) {
-            getSupportActionBar().setTitle(R.string.app_name);
-            getSupportActionBar().setSubtitle(null);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
     public boolean isDrawerOpen()
     {
-        return mNavDrawerFragment.isDrawerOpen();
+        return mDrawerLayout.isDrawerOpen(Gravity.LEFT);
     }
 
     @Override
@@ -134,10 +153,6 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
     @Override
     public void onNavDrawerClosed()
     {
-        if (mActionBarTitle != null) {
-            getSupportActionBar().setTitle(mActionBarTitle);
-            getSupportActionBar().setSubtitle(mActionBarSubTitle);
-        }
     }
 
     public void useActionBarToggle()
@@ -148,10 +163,8 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
     @Override
     public void onNavDrawerOpened()
     {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(R.string.app_name);
-        }
     }
+
 
     public void encourageLearning(boolean encourage)
     {

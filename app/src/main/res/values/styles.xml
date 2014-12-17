@@ -5,6 +5,12 @@
         <item name="colorPrimary">@color/red700</item>
         <item name="colorPrimaryDark">@color/red900</item>
         <item name="colorAccent">@color/yellowA200</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="AppThemeNoActionBarTranslucentStatus" parent="AppBase">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="AppBaseWhite" parent="Theme.AppCompat.Light.NoActionBar">

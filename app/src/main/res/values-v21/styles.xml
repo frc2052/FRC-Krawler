@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppBase" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/red700</item>
+        <item name="colorPrimaryDark">@color/red900</item>
+        <item name="colorAccent">@color/yellowA200</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+</resources>

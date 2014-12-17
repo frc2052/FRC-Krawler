@@ -87,32 +87,30 @@ public class HomeActivity extends BaseActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        if (!isDrawerOpen()) {
-            //Reset the action bar
-            ActionBar bar = getSupportActionBar();
-            if (bar != null) {
-                bar.setDisplayShowCustomEnabled(false);
-                bar.setDisplayShowTitleEnabled(true);
-            }
-            switch (mCurrentSelectedNavigationItemId) {
-                case R.id.nav_item_scout:
-                    getSupportActionBar().setTitle("Scout");
-                    break;
-                case R.id.nav_item_server:
-                    getSupportActionBar().setTitle("Server");
-                    break;
-                case R.id.nav_item_teams:
-                    getSupportActionBar().setTitle("Teams");
-                    break;
-                case R.id.nav_item_users:
-                    getSupportActionBar().setTitle("Users");
-                    break;
-                case R.id.nav_item_games:
-                    getSupportActionBar().setTitle("Games");
-                    break;
-                case R.id.nav_item_options:
-                    getSupportActionBar().setTitle("Options");
-            }
+
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayShowCustomEnabled(false);
+            bar.setDisplayShowTitleEnabled(true);
+        }
+        switch (mCurrentSelectedNavigationItemId) {
+            case R.id.nav_item_scout:
+                getSupportActionBar().setTitle("Scout");
+                break;
+            case R.id.nav_item_server:
+                getSupportActionBar().setTitle("Server");
+                break;
+            case R.id.nav_item_teams:
+                getSupportActionBar().setTitle("Teams");
+                break;
+            case R.id.nav_item_users:
+                getSupportActionBar().setTitle("Users");
+                break;
+            case R.id.nav_item_games:
+                getSupportActionBar().setTitle("Games");
+                break;
+            case R.id.nav_item_options:
+                getSupportActionBar().setTitle("Options");
         }
         return super.onPrepareOptionsMenu(menu);
     }
