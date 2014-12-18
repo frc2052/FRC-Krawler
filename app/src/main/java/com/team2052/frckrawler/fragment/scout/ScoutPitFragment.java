@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.MetricDao;
@@ -72,7 +73,6 @@ public class ScoutPitFragment extends BaseFragment
             return;
         }
         mEvent = event;
-        new GetAllMetrics().execute();
         new GetAllRobots().execute();
     }
 
@@ -134,28 +134,48 @@ public class ScoutPitFragment extends BaseFragment
                 listItems.add(new SimpleListElement(Long.toString(robotEvents.getRobot().getTeam().getNumber()) + " - " + robotEvents.getRobot().getTeam().getName(), robotEvents.getRobot().getTeam().getTeamkey()));
             }
             mTeamSpinner.setAdapter(new ListViewAdapter(getActivity(), listItems));
+            new GetAllMetrics().execute();
         }
     }
 
-    public class GetAllMetrics extends AsyncTask<Void, Void, List<Metric>>
+    public class GetAllMetrics extends AsyncTask<Void, Void, List<MetricValue>>
     {
 
         @Override
-        protected List<Metric> doInBackground(Void... params)
+        protected List<MetricValue> doInBackground(Void... params)
         {
-            QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
-            metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId()));
-            metricQueryBuilder.where(MetricDao.Properties.Category.eq(MetricsActivity.MetricType.ROBOT_METRICS.ordinal()));
-            return metricQueryBuilder.list();
+            QueryBuilder<PitData> pitDataQueryBuilder = mDaoSession.getPitDataDao().queryBuilder();
+
+            pitDataQueryBuilder.where(PitDataDao.Properties.RobotId.eq(mRobots.get(mTeamSpinner.getSelectedItemPosition()).getRobot().getId()));
+            List<PitData> list = pitDataQueryBuilder.list();
+            List<MetricValue> metricValues = new ArrayList<>();
+
+            for (PitData pitData : list) {
+                metricValues.add(new MetricValue(pitData));
+            }
+
+            if (metricValues.size() <= 0) {
+                QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
+                metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId()));
+                metricQueryBuilder.where(MetricDao.Properties.Category.eq(MetricsActivity.MetricType.ROBOT_METRICS.ordinal()));
+
+                for (Metric metric : metricQueryBuilder.list()) {
+                    metricValues.add(new MetricValue(metric, null));
+                }
+
+            }
+
+            return metricValues;
         }
 
         @Override
-        protected void onPostExecute(List<Metric> metrics)
+        protected void onPostExecute(List<MetricValue> metrics)
         {
             ((LinearLayout) getView().findViewById(R.id.metricWidgetList)).removeAllViews();
-            for (Metric metric : metrics) {
+            for (MetricValue metric : metrics) {
                 ((LinearLayout) getView().findViewById(R.id.metricWidgetList)).addView(MetricWidget.createWidget(getActivity(), metric));
             }
+            ((EditText) getView().findViewById(R.id.comments)).setText(mRobots.get(mTeamSpinner.getSelectedItemPosition()).getRobot().getComments());
         }
     }
 

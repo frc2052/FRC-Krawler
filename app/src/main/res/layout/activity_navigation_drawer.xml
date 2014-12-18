@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/red700"
+            android:background="?attr/colorPrimary"
             android:foreground="?android:windowContentOverlay"
             android:orientation="vertical">
 
@@ -24,23 +24,18 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/red700"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-            <com.team2052.frckrawler.view.SlidingTabLayout
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/red700"
-                android:visibility="gone" />
-
         </LinearLayout>
+
         <!-- Framelayout to display Fragments -->
         <FrameLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="fill_parent" />
 
     </LinearLayout>
 

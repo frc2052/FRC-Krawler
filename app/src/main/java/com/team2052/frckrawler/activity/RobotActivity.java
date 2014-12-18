@@ -60,11 +60,11 @@ public class RobotActivity extends ViewPagerActivity
         public Fragment getItem(int position)
         {
             switch (position) {
+                /*case 0:
+                    return new NeedSyncFragment();*/
                 case 0:
-                    return new NeedSyncFragment();
-                case 1:
                     return RobotAttendingEventsFragment.newInstance(mRobot);
-                case 2:
+                case 1:
                     return PhotosFragment.newInstance(mRobot);
             }
             return null;

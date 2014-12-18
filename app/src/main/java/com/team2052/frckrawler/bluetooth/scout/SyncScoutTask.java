@@ -38,12 +38,15 @@ import java.util.UUID;
 
 import de.greenrobot.event.EventBus;
 
+/**
+ * @author Adam, Charlie
+ */
 public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
 {
-    private static int SYNC_SUCCESS = 1;
-    private static int SYNC_SERVER_OPEN = 2;
-    private static int SYNC_CANCELLED = 3;
-    private static int SYNC_ERROR = 4;
+    private static final int SYNC_SUCCESS = 1;
+    private static final int SYNC_SERVER_OPEN = 2;
+    private static final int SYNC_CANCELLED = 3;
+    private static final int SYNC_ERROR = 4;
     private static int tasksRunning = 0;
     private final DaoSession mDaoSession;
 
@@ -77,7 +80,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             return SYNC_SERVER_OPEN;
         try {
             LogHelper.info("Syncing With Server");
-            LogHelper.info("Syncing with: " + dev[0].getName());
+            LogHelper.info("Syncing with: " + deviceName);
             long startTime = System.currentTimeMillis();
             BluetoothSocket serverSocket = dev[0].createRfcommSocketToServiceRecord(UUID.fromString(BluetoothInfo.UUID));
             serverSocket.connect();
@@ -111,26 +114,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
 
 
             LogHelper.info("Deleting All Data");
-            mDaoSession.runInTx(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    //Delete everything
-                    mDaoSession.getGameDao().deleteAll();
-                    mDaoSession.getMatchDao().deleteAll();
-                    mDaoSession.getRobotDao().deleteAll();
-                    mDaoSession.getRobotEventDao().deleteAll();
-                    mDaoSession.getMatchDao().deleteAll();
-                    mDaoSession.getTeamDao().deleteAll();
-                    mDaoSession.getUserDao().deleteAll();
-                    mDaoSession.getMetricDao().deleteAll();
-                    mDaoSession.getPitDataDao().deleteAll();
-                    mDaoSession.getMatchDataDao().deleteAll();
-                    mDaoSession.getMatchCommentDao().deleteAll();
-                    mDaoSession.getRobotPhotoDao().deleteAll();
-                }
-            });
+            deleteAllData();
             LogHelper.info("Deleted All Data");
 
             if (isCancelled())
@@ -138,53 +122,19 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
 
             LogHelper.info("Reading data from server");
             final Event event1 = (Event) ioStream.readObject();
-
-            SharedPreferences sharedPreferences = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, event1.getId());
-            editor.apply();
-
             final List<Metric> inMetric = (List<Metric>) ioStream.readObject();
             final List<User> inUsers = (List<User>) ioStream.readObject();
             final List<RobotEvent> inRobots = (List<RobotEvent>) ioStream.readObject();
             final List<Team> inTeams = (List<Team>) ioStream.readObject();
             final Schedule inSchedule = (Schedule) ioStream.readObject();
+            final List<PitData> inPitData = (List<PitData>) ioStream.readObject();
 
             if (isCancelled())
                 return SYNC_CANCELLED;
 
             //Bulk Insert
             LogHelper.info("Saving data from server");
-            mDaoSession.runInTx(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    for (Metric metric : inMetric) {
-                        mDaoSession.insertOrReplace(metric);
-                    }
-
-                    for (User user : inUsers) {
-                        mDaoSession.insertOrReplace(user);
-                    }
-
-                    for (RobotEvent robotEvent : inRobots) {
-                        mDaoSession.insert(robotEvent);
-                        mDaoSession.insertOrReplace(robotEvent.getRobot());
-                    }
-
-                    for (Team team : inTeams) {
-                        mDaoSession.insertOrReplace(team);
-                    }
-
-                    for (Match match : inSchedule.matches) {
-                        mDaoSession.insertOrReplace(match);
-                    }
-
-                    mDaoSession.insertOrReplace(event1);
-                    mDaoSession.insertOrReplace(event1.getGame());
-                }
-            });
+            insertIntoDatabase(inMetric, inUsers, inRobots, inTeams, inSchedule, event1, inPitData);
             LogHelper.info("Data saved");
 
             //Close the streams
@@ -215,5 +165,72 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             EventBus.getDefault().post(new ScoutSyncErrorEvent());
         else if (i == SYNC_CANCELLED)
             EventBus.getDefault().post(new ScoutSyncCancelledEvent());
+    }
+
+    public void deleteAllData()
+    {
+        mDaoSession.runInTx(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                //Delete everything
+                mDaoSession.getGameDao().deleteAll();
+                mDaoSession.getMatchDao().deleteAll();
+                mDaoSession.getRobotDao().deleteAll();
+                mDaoSession.getRobotEventDao().deleteAll();
+                mDaoSession.getMatchDao().deleteAll();
+                mDaoSession.getTeamDao().deleteAll();
+                mDaoSession.getUserDao().deleteAll();
+                mDaoSession.getMetricDao().deleteAll();
+                mDaoSession.getPitDataDao().deleteAll();
+                mDaoSession.getMatchDataDao().deleteAll();
+                mDaoSession.getMatchCommentDao().deleteAll();
+                mDaoSession.getRobotPhotoDao().deleteAll();
+            }
+        });
+    }
+
+    public void insertIntoDatabase(final List<Metric> metrics, final List<User> users, final List<RobotEvent> robots, final List<Team> teams, final Schedule schedule, final Event event, final List<PitData> pitData)
+    {
+        mDaoSession.runInTx(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                for (Metric metric : metrics) {
+                    mDaoSession.insertOrReplace(metric);
+                }
+
+                for (User user : users) {
+                    mDaoSession.insertOrReplace(user);
+                }
+
+                for (RobotEvent robotEvent : robots) {
+                    mDaoSession.insert(robotEvent);
+                    mDaoSession.insertOrReplace(robotEvent.getRobot());
+                }
+
+                for (Team team : teams) {
+                    mDaoSession.insertOrReplace(team);
+                }
+
+                for (Match match : schedule.matches) {
+                    mDaoSession.insertOrReplace(match);
+                }
+
+                for (PitData pitValues : pitData) {
+                    mDaoSession.insertOrReplace(pitValues);
+                }
+
+                mDaoSession.insertOrReplace(event);
+                mDaoSession.insertOrReplace(event.getGame());
+            }
+        });
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, event.getId());
+        editor.apply();
     }
 }

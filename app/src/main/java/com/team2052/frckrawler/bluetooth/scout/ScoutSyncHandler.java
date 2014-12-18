@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.fragment.scout.ScoutUtil;
@@ -74,7 +75,7 @@ public class ScoutSyncHandler
         //Reset task because it isn't running
         syncAsScoutTask = null;
         ScoutUtil.setDeviceAsScout(context, true);
-        Toast.makeText(context, "Sync Successful", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, context.getString(R.string.sync_successful_message), Toast.LENGTH_LONG).show();
         LogHelper.info("SyncHandler: Sync Successful!");
     }
 
@@ -83,8 +84,8 @@ public class ScoutSyncHandler
     {
         //Alert that there was an error
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Sync Error");
-        builder.setMessage("There was an error in syncing with the server. Make sure that the server device is turned on and is running the FRCKrawler server.");
+        builder.setTitle(context.getString(R.string.sync_error_title));
+        builder.setMessage(context.getString(R.string.sync_error_message));
         builder.setNeutralButton("Close", new DialogInterface.OnClickListener()
         {
             @Override
@@ -99,7 +100,7 @@ public class ScoutSyncHandler
     public void startScoutSync()
     {
         if (!BluetoothUtil.hasBluetoothAdapter()) {
-            Toast.makeText(context, "Sorry, your device does not support " + "Bluetooth. You may not sync with another database.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, context.getString(R.string.bluetooth_not_supported_message), Toast.LENGTH_LONG).show();
             return;
         }
 

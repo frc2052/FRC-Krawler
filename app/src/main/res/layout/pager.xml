@@ -4,8 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.team2052.frckrawler.view.SlidingTabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:background="?attr/colorPrimary"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"/>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
+        android:layout_below="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

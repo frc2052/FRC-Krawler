@@ -63,13 +63,13 @@ public class TeamInfoActivity extends ViewPagerActivity
         {
             Fragment fragment = null;
             switch (position) {
-                case 0:
+                /*case 0:
                     fragment = new NeedSyncFragment();
-                    break;
-                case 1:
+                    break;*/
+                case 0:
                     fragment = RobotsFragment.newInstance(mTeam);
                     break;
-                case 2:
+                case 1:
                     fragment = ContactsFragment.newInstance(mTeam);
                     break;
             }

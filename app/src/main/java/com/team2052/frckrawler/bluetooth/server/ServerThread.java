@@ -136,6 +136,7 @@ public class ServerThread extends Thread
                     List<RobotEvent> robots = mDaoSession.getRobotEventDao().queryDeep("WHERE " + RobotEventDao.Properties.EventId.columnName + " = " + hostedEvent.getId());
                     Schedule schedule = new Schedule(hostedEvent, mDaoSession.getMatchDao().queryDeep("WHERE " + MatchDao.Properties.EventId.columnName + " = " + hostedEvent.getId()));
                     List<Team> teams = new ArrayList<>();
+                    List<PitData> pitData = mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.EventId.eq(hostedEvent.getId())).list();
 
                     for (RobotEvent robotEvent : robots) {
                         teams.add(robotEvent.getRobot().getTeam());
@@ -148,6 +149,7 @@ public class ServerThread extends Thread
                     oStream.writeObject(robots);
                     oStream.writeObject(teams);
                     oStream.writeObject(schedule);
+                    oStream.writeObject(pitData);
                 }
 
                 oStream.flush();
