@@ -18,13 +18,23 @@ public class UserDao extends AbstractDao<User, Long>
 
     public static final String TABLENAME = "USER";
 
-    public UserDao(DaoConfig config)
+    /**
+     * Properties of entity User.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties
     {
-        super(config);
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
     }
 
     ;
 
+
+    public UserDao(DaoConfig config)
+    {
+        super(config);
+    }
 
     public UserDao(DaoConfig config, DaoSession daoSession)
     {
@@ -132,16 +142,6 @@ public class UserDao extends AbstractDao<User, Long>
     protected boolean isEntityUpdateable()
     {
         return true;
-    }
-
-    /**
-     * Properties of entity User.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
     }
 
 }

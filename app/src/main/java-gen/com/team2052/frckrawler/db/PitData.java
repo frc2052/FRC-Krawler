@@ -14,6 +14,7 @@ public class PitData implements java.io.Serializable
     private Long robotId;
     private Long metricId;
     private Long eventId;
+    private Long userId;
 
     /**
      * Used to resolve relations
@@ -34,17 +35,21 @@ public class PitData implements java.io.Serializable
     private Event event;
     private Long event__resolvedKey;
 
+    private User user;
+    private Long user__resolvedKey;
+
 
     public PitData()
     {
     }
 
-    public PitData(String data, Long robotId, Long metricId, Long eventId)
+    public PitData(String data, Long robotId, Long metricId, Long eventId, Long userId)
     {
         this.data = data;
         this.robotId = robotId;
         this.metricId = metricId;
         this.eventId = eventId;
+        this.userId = userId;
     }
 
     /**
@@ -94,6 +99,16 @@ public class PitData implements java.io.Serializable
     public void setEventId(Long eventId)
     {
         this.eventId = eventId;
+    }
+
+    public Long getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId(Long userId)
+    {
+        this.userId = userId;
     }
 
     /**
@@ -180,6 +195,35 @@ public class PitData implements java.io.Serializable
             this.event = event;
             eventId = event == null ? null : event.getId();
             event__resolvedKey = eventId;
+        }
+    }
+
+    /**
+     * To-one relationship, resolved on first access.
+     */
+    public User getUser()
+    {
+        Long __key = this.userId;
+        if (user__resolvedKey == null || !user__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            UserDao targetDao = daoSession.getUserDao();
+            User userNew = targetDao.load(__key);
+            synchronized (this) {
+                user = userNew;
+                user__resolvedKey = __key;
+            }
+        }
+        return user;
+    }
+
+    public void setUser(User user)
+    {
+        synchronized (this) {
+            this.user = user;
+            userId = user == null ? null : user.getId();
+            user__resolvedKey = userId;
         }
     }
 

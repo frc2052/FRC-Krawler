@@ -18,13 +18,23 @@ public class GameDao extends AbstractDao<Game, Long>
 
     public static final String TABLENAME = "GAME";
 
-    public GameDao(DaoConfig config)
+    /**
+     * Properties of entity Game.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties
     {
-        super(config);
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
     }
 
     ;
 
+
+    public GameDao(DaoConfig config)
+    {
+        super(config);
+    }
 
     public GameDao(DaoConfig config, DaoSession daoSession)
     {
@@ -132,16 +142,6 @@ public class GameDao extends AbstractDao<Game, Long>
     protected boolean isEntityUpdateable()
     {
         return true;
-    }
-
-    /**
-     * Properties of entity Game.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
     }
 
 }

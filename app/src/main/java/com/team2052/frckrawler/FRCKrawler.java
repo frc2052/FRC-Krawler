@@ -9,6 +9,9 @@ import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
 
 import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+import org.acra.sender.HttpSender;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +21,7 @@ import java.nio.channels.FileChannel;
 /**
  * @author Adam
  */
-/*@ReportsCrashes(
+@ReportsCrashes(
         formKey = "",
         formUri = "http://adam8234.cloudant.com/acra-frc-krawler/_design/acra-storage/_update/report",
         reportType = HttpSender.Type.JSON,
@@ -30,7 +33,7 @@ import java.nio.channels.FileChannel;
         resDialogCommentPrompt = R.string.dialog_error_report_comment,
         resDialogIcon = R.drawable.ic_launcher,
         resDialogEmailPrompt = R.string.dialog_error_report_email,
-        resDialogTitle = R.string.dialog_error_report_title)*/
+        resDialogTitle = R.string.dialog_error_report_title)
 public class FRCKrawler extends Application
 {
 

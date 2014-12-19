@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
+import com.team2052.frckrawler.bluetooth.scout.LoginHandler;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
@@ -204,6 +205,12 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         @Override
         protected Integer doInBackground(Void... params)
         {
+            LoginHandler loginHandler = LoginHandler.getInstance(getActivity(), mDaoSession);
+
+            if (!loginHandler.isLoggedOn() && !loginHandler.loggedOnUserStillExists()) {
+                loginHandler.login();
+            }
+
             //Get data from view
             Team team = mTeams.get(mAllianceSpinner.getSelectedItemPosition());
             Match match = mMatches.get(mMatchSpinner.getSelectedItemPosition());
@@ -222,9 +229,12 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
                 matchDataQueryBuilder.where(MatchDataDao.Properties.MetricId.eq(widget.getMetric().getId()));
                 matchDataQueryBuilder.where(MatchDataDao.Properties.MatchId.eq(match.getId()));
                 if (matchDataQueryBuilder.list().size() <= 0)
-                    mDaoSession.getMatchDataDao().insert(new MatchData(widget.getValues(), robot.getId(), widget.getMetric().getId(), match.getId()));
+                    mDaoSession.getMatchDataDao().insert(new MatchData(widget.getValues(), robot.getId(), widget.getMetric().getId(), match.getId(), loginHandler.getLoggedOnUser().getId()));
             }
-            mDaoSession.insert(new MatchComment(match.getId(), ((EditText) getView().findViewById(R.id.comments)).getText().toString(), robot.getId()));
+            //Only save if we have something.
+            if (((EditText) getView().findViewById(R.id.comments)).getText().toString().length() != 0) {
+                mDaoSession.insert(new MatchComment(match.getId(), ((EditText) getView().findViewById(R.id.comments)).getText().toString(), robot.getId()));
+            }
             return 0;
         }
 

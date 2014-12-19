@@ -9,7 +9,7 @@ public class FRCKrawlerDaoGenerator
 
     public static void main(String args[]) throws Exception
     {
-        Schema schema = new Schema(5, "com.team2052.frckrawler.db");
+        Schema schema = new Schema(6, "com.team2052.frckrawler.db");
         //Games
         Entity game = schema.addEntity("Game");
         game.implementsSerializable();
@@ -105,7 +105,7 @@ public class FRCKrawlerDaoGenerator
         matchData.addToOne(robot, matchData.addLongProperty("robotId").getProperty());
         matchData.addToOne(metric, matchData.addLongProperty("metricId").getProperty());
         matchData.addToOne(match, matchData.addLongProperty("matchId").getProperty());
-
+        matchData.addToOne(user, matchData.addLongProperty("userId").getProperty());
 
         Entity pitData = schema.addEntity("PitData");
         pitData.implementsSerializable();
@@ -113,12 +113,14 @@ public class FRCKrawlerDaoGenerator
         pitData.addToOne(robot, pitData.addLongProperty("robotId").getProperty());
         pitData.addToOne(metric, pitData.addLongProperty("metricId").getProperty());
         pitData.addToOne(event, pitData.addLongProperty("eventId").getProperty());
+        pitData.addToOne(user, pitData.addLongProperty("userId").getProperty());
 
         Entity matchComment = schema.addEntity("MatchComment");
         matchComment.implementsSerializable();
         matchComment.addToOne(match, matchComment.addLongProperty("matchId").getProperty());
         matchComment.addStringProperty("comment");
         matchComment.addToOne(robot, matchComment.addLongProperty("robotId").getProperty());
+
 
         new DaoGenerator().generateAll(schema, args[0]);
     }

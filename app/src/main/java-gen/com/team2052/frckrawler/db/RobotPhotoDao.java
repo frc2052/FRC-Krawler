@@ -21,9 +21,23 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
 {
 
     public static final String TABLENAME = "ROBOT_PHOTO";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity RobotPhoto.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties
+    {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Location = new Property(1, String.class, "location", false, "LOCATION");
+        public final static Property RobotId = new Property(2, Long.class, "robotId", false, "ROBOT_ID");
+        public final static Property Title = new Property(3, String.class, "title", false, "TITLE");
+        public final static Property Date = new Property(4, java.util.Date.class, "date", false, "DATE");
+    }
+
     ;
-    private String selectDeep;
+
+    private DaoSession daoSession;
 
 
     public RobotPhotoDao(DaoConfig config)
@@ -171,6 +185,8 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
         return true;
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep()
     {
         if (selectDeep == null) {
@@ -260,6 +276,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
@@ -267,19 +284,6 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
     {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity RobotPhoto.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Location = new Property(1, String.class, "location", false, "LOCATION");
-        public final static Property RobotId = new Property(2, Long.class, "robotId", false, "ROBOT_ID");
-        public final static Property Title = new Property(3, String.class, "title", false, "TITLE");
-        public final static Property Date = new Property(4, java.util.Date.class, "date", false, "DATE");
     }
 
 }

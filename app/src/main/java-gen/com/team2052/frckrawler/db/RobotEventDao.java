@@ -21,9 +21,21 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long>
 {
 
     public static final String TABLENAME = "ROBOT_EVENT";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity RobotEvent.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties
+    {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property RobotId = new Property(1, Long.class, "robotId", false, "ROBOT_ID");
+        public final static Property EventId = new Property(2, Long.class, "eventId", false, "EVENT_ID");
+    }
+
     ;
-    private String selectDeep;
+
+    private DaoSession daoSession;
 
 
     public RobotEventDao(DaoConfig config)
@@ -155,6 +167,8 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long>
         return true;
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep()
     {
         if (selectDeep == null) {
@@ -251,6 +265,7 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long>
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
@@ -258,17 +273,6 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long>
     {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity RobotEvent.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property RobotId = new Property(1, Long.class, "robotId", false, "ROBOT_ID");
-        public final static Property EventId = new Property(2, Long.class, "eventId", false, "EVENT_ID");
     }
 
 }

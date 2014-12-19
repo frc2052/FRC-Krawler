@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.bluetooth.scout.LoginHandler;
 import com.team2052.frckrawler.bluetooth.scout.ScoutSyncHandler;
 import com.team2052.frckrawler.events.scout.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
@@ -103,24 +104,19 @@ public class ScoutFragment extends ViewPagerFragment
     public void onEvent(ScoutSyncSuccessEvent event)
     {
         setProgress(false);
-        //TODO LOGIN
-        /*scoutLoginName = new EditText(getActivity());
-        scoutLoginName.setHint("Name");*/
-        /*AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Login");
-        builder.setView(scoutLoginName);
-        builder.setPositiveButton("Login", new UserDialogListener());
-        builder.setNegativeButton("Cancel", new UserDialogListener());
-        builder.show();*/
+        LoginHandler loginHandler = LoginHandler.getInstance(getActivity(), mDaoSession);
+        if (!loginHandler.isLoggedOn()) {
+            loginHandler.login();
+        } else if (!loginHandler.loggedOnUserStillExists()) {
+            loginHandler.login();
+        }
     }
 
     private void setProgress(boolean toggle)
     {
-        if (toggle) {
+        if (toggle)
             mOptionsMenu.findItem(R.id.menu_sync).setActionView(R.layout.actionbar_progress);
-        } else {
-            mOptionsMenu.findItem(R.id.menu_sync).setActionView(null);
-        }
+        else mOptionsMenu.findItem(R.id.menu_sync).setActionView(null);
     }
 
     @Override

@@ -21,9 +21,31 @@ public class MatchDao extends AbstractDao<Match, Long>
 {
 
     public static final String TABLENAME = "MATCH";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity Match.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties
+    {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property EventId = new Property(1, Long.class, "eventId", false, "EVENT_ID");
+        public final static Property Key = new Property(2, String.class, "key", false, "KEY");
+        public final static Property Number = new Property(3, Integer.class, "number", false, "NUMBER");
+        public final static Property Type = new Property(4, String.class, "type", false, "TYPE");
+        public final static Property Blue1Id = new Property(5, Long.class, "blue1Id", false, "BLUE1_ID");
+        public final static Property Blue2Id = new Property(6, Long.class, "blue2Id", false, "BLUE2_ID");
+        public final static Property Blue3Id = new Property(7, Long.class, "blue3Id", false, "BLUE3_ID");
+        public final static Property Red1Id = new Property(8, Long.class, "red1Id", false, "RED1_ID");
+        public final static Property Red2Id = new Property(9, Long.class, "red2Id", false, "RED2_ID");
+        public final static Property Red3Id = new Property(10, Long.class, "red3Id", false, "RED3_ID");
+        public final static Property Redscore = new Property(11, Integer.class, "redscore", false, "REDSCORE");
+        public final static Property Bluescore = new Property(12, Integer.class, "bluescore", false, "BLUESCORE");
+    }
+
     ;
-    private String selectDeep;
+
+    private DaoSession daoSession;
 
 
     public MatchDao(DaoConfig config)
@@ -235,6 +257,8 @@ public class MatchDao extends AbstractDao<Match, Long>
         return true;
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep()
     {
         if (selectDeep == null) {
@@ -366,6 +390,7 @@ public class MatchDao extends AbstractDao<Match, Long>
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
@@ -373,27 +398,6 @@ public class MatchDao extends AbstractDao<Match, Long>
     {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity Match.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property EventId = new Property(1, Long.class, "eventId", false, "EVENT_ID");
-        public final static Property Key = new Property(2, String.class, "key", false, "KEY");
-        public final static Property Number = new Property(3, Integer.class, "number", false, "NUMBER");
-        public final static Property Type = new Property(4, String.class, "type", false, "TYPE");
-        public final static Property Blue1Id = new Property(5, Long.class, "blue1Id", false, "BLUE1_ID");
-        public final static Property Blue2Id = new Property(6, Long.class, "blue2Id", false, "BLUE2_ID");
-        public final static Property Blue3Id = new Property(7, Long.class, "blue3Id", false, "BLUE3_ID");
-        public final static Property Red1Id = new Property(8, Long.class, "red1Id", false, "RED1_ID");
-        public final static Property Red2Id = new Property(9, Long.class, "red2Id", false, "RED2_ID");
-        public final static Property Red3Id = new Property(10, Long.class, "red3Id", false, "RED3_ID");
-        public final static Property Redscore = new Property(11, Integer.class, "redscore", false, "REDSCORE");
-        public final static Property Bluescore = new Property(12, Integer.class, "bluescore", false, "BLUESCORE");
     }
 
 }

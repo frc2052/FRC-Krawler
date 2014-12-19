@@ -14,6 +14,7 @@ public class MatchData implements java.io.Serializable
     private Long robotId;
     private Long metricId;
     private Long matchId;
+    private Long userId;
 
     /**
      * Used to resolve relations
@@ -34,17 +35,21 @@ public class MatchData implements java.io.Serializable
     private Match match;
     private Long match__resolvedKey;
 
+    private User user;
+    private Long user__resolvedKey;
+
 
     public MatchData()
     {
     }
 
-    public MatchData(String data, Long robotId, Long metricId, Long matchId)
+    public MatchData(String data, Long robotId, Long metricId, Long matchId, Long userId)
     {
         this.data = data;
         this.robotId = robotId;
         this.metricId = metricId;
         this.matchId = matchId;
+        this.userId = userId;
     }
 
     /**
@@ -94,6 +99,16 @@ public class MatchData implements java.io.Serializable
     public void setMatchId(Long matchId)
     {
         this.matchId = matchId;
+    }
+
+    public Long getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId(Long userId)
+    {
+        this.userId = userId;
     }
 
     /**
@@ -180,6 +195,35 @@ public class MatchData implements java.io.Serializable
             this.match = match;
             matchId = match == null ? null : match.getId();
             match__resolvedKey = matchId;
+        }
+    }
+
+    /**
+     * To-one relationship, resolved on first access.
+     */
+    public User getUser()
+    {
+        Long __key = this.userId;
+        if (user__resolvedKey == null || !user__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            UserDao targetDao = daoSession.getUserDao();
+            User userNew = targetDao.load(__key);
+            synchronized (this) {
+                user = userNew;
+                user__resolvedKey = __key;
+            }
+        }
+        return user;
+    }
+
+    public void setUser(User user)
+    {
+        synchronized (this) {
+            this.user = user;
+            userId = user == null ? null : user.getId();
+            user__resolvedKey = userId;
         }
     }
 

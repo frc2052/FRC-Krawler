@@ -31,6 +31,12 @@ public class DatabaseHelper extends DaoMaster.OpenHelper
             db.execSQL("ALTER TABLE 'ROBOT_PHOTO' ADD COLUMN DATE INTEGER");
             db.execSQL("ALTER TABLE 'ROBOT_PHOTO' ADD COLUMN TITLE TEXT");
         }
+
+        if (oldSchemaVer == 5 && newSchemaVer == 6) {
+            //Added user logging in schema version 6
+            db.execSQL("ALTER TABLE 'PIT_DATA' ADD COLUMN USER_ID INTEGER");
+            db.execSQL("ALTER TABLE 'MATCH_DATA' ADD COLUMN USER_ID INTEGER");
+        }
         //EX db.execSQL("ALTER TABLE ROBOT ADD COLUMN '_ID' INTEGER");
     }
 }

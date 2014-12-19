@@ -21,9 +21,23 @@ public class PitDataDao extends AbstractDao<PitData, Void>
 {
 
     public static final String TABLENAME = "PIT_DATA";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity PitData.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties
+    {
+        public final static Property Data = new Property(0, String.class, "data", false, "DATA");
+        public final static Property RobotId = new Property(1, Long.class, "robotId", false, "ROBOT_ID");
+        public final static Property MetricId = new Property(2, Long.class, "metricId", false, "METRIC_ID");
+        public final static Property EventId = new Property(3, Long.class, "eventId", false, "EVENT_ID");
+        public final static Property UserId = new Property(4, Long.class, "userId", false, "USER_ID");
+    }
+
     ;
-    private String selectDeep;
+
+    private DaoSession daoSession;
 
 
     public PitDataDao(DaoConfig config)
@@ -47,7 +61,8 @@ public class PitDataDao extends AbstractDao<PitData, Void>
                 "'DATA' TEXT," + // 0: data
                 "'ROBOT_ID' INTEGER," + // 1: robotId
                 "'METRIC_ID' INTEGER," + // 2: metricId
-                "'EVENT_ID' INTEGER);"); // 3: eventId
+                "'EVENT_ID' INTEGER," + // 3: eventId
+                "'USER_ID' INTEGER);"); // 4: userId
     }
 
     /**
@@ -86,6 +101,11 @@ public class PitDataDao extends AbstractDao<PitData, Void>
         if (eventId != null) {
             stmt.bindLong(4, eventId);
         }
+
+        Long userId = entity.getUserId();
+        if (userId != null) {
+            stmt.bindLong(5, userId);
+        }
     }
 
     @Override
@@ -114,7 +134,8 @@ public class PitDataDao extends AbstractDao<PitData, Void>
                 cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // data
                 cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // robotId
                 cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // metricId
-                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // eventId
+                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // eventId
+                cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // userId
         );
         return entity;
     }
@@ -129,6 +150,7 @@ public class PitDataDao extends AbstractDao<PitData, Void>
         entity.setRobotId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
         entity.setMetricId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
         entity.setEventId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setUserId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
     }
 
     /**
@@ -159,6 +181,8 @@ public class PitDataDao extends AbstractDao<PitData, Void>
         return true;
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep()
     {
         if (selectDeep == null) {
@@ -170,10 +194,13 @@ public class PitDataDao extends AbstractDao<PitData, Void>
             SqlUtils.appendColumns(builder, "T1", daoSession.getMetricDao().getAllColumns());
             builder.append(',');
             SqlUtils.appendColumns(builder, "T2", daoSession.getEventDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T3", daoSession.getUserDao().getAllColumns());
             builder.append(" FROM PIT_DATA T");
             builder.append(" LEFT JOIN ROBOT T0 ON T.'ROBOT_ID'=T0.'_id'");
             builder.append(" LEFT JOIN METRIC T1 ON T.'METRIC_ID'=T1.'_id'");
             builder.append(" LEFT JOIN EVENT T2 ON T.'EVENT_ID'=T2.'_id'");
+            builder.append(" LEFT JOIN USER T3 ON T.'USER_ID'=T3.'_id'");
             builder.append(' ');
             selectDeep = builder.toString();
         }
@@ -195,6 +222,10 @@ public class PitDataDao extends AbstractDao<PitData, Void>
 
         Event event = loadCurrentOther(daoSession.getEventDao(), cursor, offset);
         entity.setEvent(event);
+        offset += daoSession.getEventDao().getAllColumns().length;
+
+        User user = loadCurrentOther(daoSession.getUserDao(), cursor, offset);
+        entity.setUser(user);
 
         return entity;
     }
@@ -262,6 +293,7 @@ public class PitDataDao extends AbstractDao<PitData, Void>
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
@@ -269,18 +301,6 @@ public class PitDataDao extends AbstractDao<PitData, Void>
     {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity PitData.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Data = new Property(0, String.class, "data", false, "DATA");
-        public final static Property RobotId = new Property(1, Long.class, "robotId", false, "ROBOT_ID");
-        public final static Property MetricId = new Property(2, Long.class, "metricId", false, "METRIC_ID");
-        public final static Property EventId = new Property(3, Long.class, "eventId", false, "EVENT_ID");
     }
 
 }

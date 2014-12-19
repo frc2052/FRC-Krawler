@@ -21,9 +21,25 @@ public class MetricDao extends AbstractDao<Metric, Long>
 {
 
     public static final String TABLENAME = "METRIC";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity Metric.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties
+    {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
+        public final static Property Category = new Property(2, Integer.class, "category", false, "CATEGORY");
+        public final static Property Description = new Property(3, String.class, "description", false, "DESCRIPTION");
+        public final static Property Type = new Property(4, Integer.class, "type", false, "TYPE");
+        public final static Property Range = new Property(5, String.class, "range", false, "RANGE");
+        public final static Property GameId = new Property(6, Long.class, "gameId", false, "GAME_ID");
+    }
+
     ;
-    private String selectDeep;
+
+    private DaoSession daoSession;
 
 
     public MetricDao(DaoConfig config)
@@ -187,6 +203,8 @@ public class MetricDao extends AbstractDao<Metric, Long>
         return true;
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep()
     {
         if (selectDeep == null) {
@@ -276,6 +294,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
@@ -283,21 +302,6 @@ public class MetricDao extends AbstractDao<Metric, Long>
     {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity Metric.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Category = new Property(2, Integer.class, "category", false, "CATEGORY");
-        public final static Property Description = new Property(3, String.class, "description", false, "DESCRIPTION");
-        public final static Property Type = new Property(4, Integer.class, "type", false, "TYPE");
-        public final static Property Range = new Property(5, String.class, "range", false, "RANGE");
-        public final static Property GameId = new Property(6, Long.class, "gameId", false, "GAME_ID");
     }
 
 }

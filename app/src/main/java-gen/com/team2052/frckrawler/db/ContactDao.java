@@ -21,9 +21,25 @@ public class ContactDao extends AbstractDao<Contact, Long>
 {
 
     public static final String TABLENAME = "CONTACT";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity Contact.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties
+    {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property TeamId = new Property(1, Long.class, "teamId", false, "TEAM_ID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Email = new Property(3, String.class, "email", false, "EMAIL");
+        public final static Property Address = new Property(4, String.class, "address", false, "ADDRESS");
+        public final static Property Phonenumber = new Property(5, String.class, "phonenumber", false, "PHONENUMBER");
+        public final static Property Teamrole = new Property(6, String.class, "teamrole", false, "TEAMROLE");
+    }
+
     ;
-    private String selectDeep;
+
+    private DaoSession daoSession;
 
 
     public ContactDao(DaoConfig config)
@@ -187,6 +203,8 @@ public class ContactDao extends AbstractDao<Contact, Long>
         return true;
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep()
     {
         if (selectDeep == null) {
@@ -276,6 +294,7 @@ public class ContactDao extends AbstractDao<Contact, Long>
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
@@ -283,21 +302,6 @@ public class ContactDao extends AbstractDao<Contact, Long>
     {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity Contact.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property TeamId = new Property(1, Long.class, "teamId", false, "TEAM_ID");
-        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
-        public final static Property Email = new Property(3, String.class, "email", false, "EMAIL");
-        public final static Property Address = new Property(4, String.class, "address", false, "ADDRESS");
-        public final static Property Phonenumber = new Property(5, String.class, "phonenumber", false, "PHONENUMBER");
-        public final static Property Teamrole = new Property(6, String.class, "teamrole", false, "TEAMROLE");
     }
 
 }

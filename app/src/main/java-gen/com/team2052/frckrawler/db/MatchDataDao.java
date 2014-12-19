@@ -21,9 +21,23 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
 {
 
     public static final String TABLENAME = "MATCH_DATA";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity MatchData.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties
+    {
+        public final static Property Data = new Property(0, String.class, "data", false, "DATA");
+        public final static Property RobotId = new Property(1, Long.class, "robotId", false, "ROBOT_ID");
+        public final static Property MetricId = new Property(2, Long.class, "metricId", false, "METRIC_ID");
+        public final static Property MatchId = new Property(3, Long.class, "matchId", false, "MATCH_ID");
+        public final static Property UserId = new Property(4, Long.class, "userId", false, "USER_ID");
+    }
+
     ;
-    private String selectDeep;
+
+    private DaoSession daoSession;
 
 
     public MatchDataDao(DaoConfig config)
@@ -47,7 +61,8 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
                 "'DATA' TEXT," + // 0: data
                 "'ROBOT_ID' INTEGER," + // 1: robotId
                 "'METRIC_ID' INTEGER," + // 2: metricId
-                "'MATCH_ID' INTEGER);"); // 3: matchId
+                "'MATCH_ID' INTEGER," + // 3: matchId
+                "'USER_ID' INTEGER);"); // 4: userId
     }
 
     /**
@@ -86,6 +101,11 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
         if (matchId != null) {
             stmt.bindLong(4, matchId);
         }
+
+        Long userId = entity.getUserId();
+        if (userId != null) {
+            stmt.bindLong(5, userId);
+        }
     }
 
     @Override
@@ -114,7 +134,8 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
                 cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // data
                 cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // robotId
                 cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // metricId
-                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // matchId
+                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // matchId
+                cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // userId
         );
         return entity;
     }
@@ -129,6 +150,7 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
         entity.setRobotId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
         entity.setMetricId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
         entity.setMatchId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setUserId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
     }
 
     /**
@@ -159,6 +181,8 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
         return true;
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep()
     {
         if (selectDeep == null) {
@@ -170,10 +194,13 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
             SqlUtils.appendColumns(builder, "T1", daoSession.getMetricDao().getAllColumns());
             builder.append(',');
             SqlUtils.appendColumns(builder, "T2", daoSession.getMatchDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T3", daoSession.getUserDao().getAllColumns());
             builder.append(" FROM MATCH_DATA T");
             builder.append(" LEFT JOIN ROBOT T0 ON T.'ROBOT_ID'=T0.'_id'");
             builder.append(" LEFT JOIN METRIC T1 ON T.'METRIC_ID'=T1.'_id'");
             builder.append(" LEFT JOIN MATCH T2 ON T.'MATCH_ID'=T2.'_id'");
+            builder.append(" LEFT JOIN USER T3 ON T.'USER_ID'=T3.'_id'");
             builder.append(' ');
             selectDeep = builder.toString();
         }
@@ -195,6 +222,10 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
 
         Match match = loadCurrentOther(daoSession.getMatchDao(), cursor, offset);
         entity.setMatch(match);
+        offset += daoSession.getMatchDao().getAllColumns().length;
+
+        User user = loadCurrentOther(daoSession.getUserDao(), cursor, offset);
+        entity.setUser(user);
 
         return entity;
     }
@@ -262,6 +293,7 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
@@ -269,18 +301,6 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
     {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity MatchData.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Data = new Property(0, String.class, "data", false, "DATA");
-        public final static Property RobotId = new Property(1, Long.class, "robotId", false, "ROBOT_ID");
-        public final static Property MetricId = new Property(2, Long.class, "metricId", false, "METRIC_ID");
-        public final static Property MatchId = new Property(3, Long.class, "matchId", false, "MATCH_ID");
     }
 
 }

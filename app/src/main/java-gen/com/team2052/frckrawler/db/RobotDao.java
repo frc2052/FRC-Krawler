@@ -21,9 +21,23 @@ public class RobotDao extends AbstractDao<Robot, Long>
 {
 
     public static final String TABLENAME = "ROBOT";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity Robot.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties
+    {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property TeamId = new Property(1, Long.class, "teamId", false, "TEAM_ID");
+        public final static Property GameId = new Property(2, Long.class, "gameId", false, "GAME_ID");
+        public final static Property Comments = new Property(3, String.class, "comments", false, "COMMENTS");
+        public final static Property Opr = new Property(4, Double.class, "opr", false, "OPR");
+    }
+
     ;
-    private String selectDeep;
+
+    private DaoSession daoSession;
 
 
     public RobotDao(DaoConfig config)
@@ -171,6 +185,8 @@ public class RobotDao extends AbstractDao<Robot, Long>
         return true;
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep()
     {
         if (selectDeep == null) {
@@ -267,6 +283,7 @@ public class RobotDao extends AbstractDao<Robot, Long>
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
@@ -274,19 +291,6 @@ public class RobotDao extends AbstractDao<Robot, Long>
     {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity Robot.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property TeamId = new Property(1, Long.class, "teamId", false, "TEAM_ID");
-        public final static Property GameId = new Property(2, Long.class, "gameId", false, "GAME_ID");
-        public final static Property Comments = new Property(3, String.class, "comments", false, "COMMENTS");
-        public final static Property Opr = new Property(4, Double.class, "opr", false, "OPR");
     }
 
 }

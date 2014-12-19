@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.bluetooth.scout.LoginHandler;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
@@ -87,7 +88,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_scouting_pit, null);
+        View view = inflater.inflate(R.layout.fragment_scouting_pit, container, false);
         mTeamSpinner = (Spinner) view.findViewById(R.id.team);
         mTeamSpinner.setOnItemSelectedListener(this);
         loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
@@ -202,6 +203,12 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
             //Get data from view
             Robot robot = mRobots.get(mTeamSpinner.getSelectedItemPosition()).getRobot();
 
+            LoginHandler loginHandler = LoginHandler.getInstance(getActivity(), mDaoSession);
+
+            if (!loginHandler.isLoggedOn() && !loginHandler.loggedOnUserStillExists()) {
+                loginHandler.login();
+            }
+
             LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.metricWidgetList);
             List<MetricWidget> widgets = new ArrayList<>();
 
@@ -212,7 +219,14 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
             //Begin Saving
             for (MetricWidget widget : widgets) {
                 if (mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).where(PitDataDao.Properties.MetricId.eq(widget.getMetric().getId())).list().size() <= 0)
-                    mDaoSession.getPitDataDao().insert(new PitData(widget.getValues(), robot.getId(), widget.getMetric().getId(), mEvent.getId()));
+                    mDaoSession.getPitDataDao().insert(new PitData(widget.getValues(), robot.getId(), widget.getMetric().getId(), mEvent.getId(), loginHandler.getLoggedOnUser().getId()));
+                else {
+                    List<PitData> pitdata = mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).where(PitDataDao.Properties.MetricId.eq(widget.getMetric().getId())).list();
+                    for (PitData data : pitdata) {
+                        data.delete();
+                    }
+                    mDaoSession.getPitDataDao().insert(new PitData(widget.getValues(), robot.getId(), widget.getMetric().getId(), mEvent.getId(), loginHandler.getLoggedOnUser().getId()));
+                }
             }
 
             robot.setComments(((EditText) getView().findViewById(R.id.comments)).getText().toString());

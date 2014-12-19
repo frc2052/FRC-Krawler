@@ -21,9 +21,21 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
 {
 
     public static final String TABLENAME = "MATCH_COMMENT";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity MatchComment.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties
+    {
+        public final static Property MatchId = new Property(0, Long.class, "matchId", false, "MATCH_ID");
+        public final static Property Comment = new Property(1, String.class, "comment", false, "COMMENT");
+        public final static Property RobotId = new Property(2, Long.class, "robotId", false, "ROBOT_ID");
+    }
+
     ;
-    private String selectDeep;
+
+    private DaoSession daoSession;
 
 
     public MatchCommentDao(DaoConfig config)
@@ -151,6 +163,8 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
         return true;
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep()
     {
         if (selectDeep == null) {
@@ -247,6 +261,7 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
@@ -254,17 +269,6 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
     {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity MatchComment.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property MatchId = new Property(0, Long.class, "matchId", false, "MATCH_ID");
-        public final static Property Comment = new Property(1, String.class, "comment", false, "COMMENT");
-        public final static Property RobotId = new Property(2, Long.class, "robotId", false, "ROBOT_ID");
     }
 
 }
