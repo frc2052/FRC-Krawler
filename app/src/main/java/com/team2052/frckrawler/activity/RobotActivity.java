@@ -11,7 +11,6 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragment.robot.PhotosFragment;
 import com.team2052.frckrawler.fragment.robot.RobotAttendingEventsFragment;
-import com.team2052.frckrawler.fragment.scout.NeedSyncFragment;
 
 /**
  * @author Adam

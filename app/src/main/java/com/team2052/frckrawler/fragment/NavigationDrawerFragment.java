@@ -13,7 +13,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -211,7 +210,6 @@ public class NavigationDrawerFragment extends Fragment
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -237,7 +235,7 @@ public class NavigationDrawerFragment extends Fragment
     {
 
         RelativeLayout accountDetailsContainer = (RelativeLayout) getView().findViewById(R.id.banner_details_container);
-        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)accountDetailsContainer.getLayoutParams();
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) accountDetailsContainer.getLayoutParams();
         lp.topMargin = insets.top;
         accountDetailsContainer.setLayoutParams(lp);
     }

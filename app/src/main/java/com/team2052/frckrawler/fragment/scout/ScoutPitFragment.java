@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -42,7 +43,7 @@ import de.greenrobot.event.EventBus;
 /**
  * @author Adam
  */
-public class ScoutPitFragment extends BaseFragment
+public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItemSelectedListener
 {
     private Event mEvent;
     private Spinner mTeamSpinner;
@@ -88,6 +89,7 @@ public class ScoutPitFragment extends BaseFragment
     {
         View view = inflater.inflate(R.layout.fragment_scouting_pit, null);
         mTeamSpinner = (Spinner) view.findViewById(R.id.team);
+        mTeamSpinner.setOnItemSelectedListener(this);
         loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
         return view;
     }
@@ -103,6 +105,18 @@ public class ScoutPitFragment extends BaseFragment
     public void onEvent(ScoutSyncSuccessEvent event)
     {
         loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    {
+        new GetAllMetrics().execute();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent)
+    {
+
     }
 
     public class GetAllRobots extends AsyncTask<Void, Void, List<RobotEvent>>

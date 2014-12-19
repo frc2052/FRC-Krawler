@@ -11,7 +11,6 @@ import android.support.v4.view.PagerAdapter;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.fragment.robot.RobotsFragment;
-import com.team2052.frckrawler.fragment.scout.NeedSyncFragment;
 import com.team2052.frckrawler.fragment.team.ContactsFragment;
 
 /**
