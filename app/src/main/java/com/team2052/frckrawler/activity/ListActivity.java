@@ -16,7 +16,6 @@ import butterknife.InjectView;
  */
 public abstract class ListActivity extends DatabaseActivity implements ListUpdateListener
 {
-    @InjectView(R.id.list_layout)
     protected ListView mListView;
     protected ListAdapter mAdapter;
     private Parcelable mListState;
@@ -26,7 +25,7 @@ public abstract class ListActivity extends DatabaseActivity implements ListUpdat
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view);
-        ButterKnife.inject(this);
+        mListView = (ListView) findViewById(R.id.list_layout);
     }
 
     @Override

@@ -119,7 +119,7 @@ public class ScoutSyncHandler
                     startSync(ScoutUtil.getAllBluetoothDevicesArray()[which]);
                 }
             });
-            builder.show();
+            builder.create().show();
         }
     }
 
