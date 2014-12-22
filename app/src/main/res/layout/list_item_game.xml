@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="72dp"
-        android:text="Aerial Assist"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        style="@style/TextTitle"/>
 
 </RelativeLayout>

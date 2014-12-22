@@ -137,6 +137,9 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     @Nullable
     private Event getSelectedEvent()
     {
+        if(mEvents.size() <= 0){
+            return null;
+        }
         return mEvents.get(eventSpinner.getSelectedItemPosition());
     }
 

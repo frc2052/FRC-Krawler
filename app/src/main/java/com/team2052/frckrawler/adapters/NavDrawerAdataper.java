@@ -29,13 +29,7 @@ public class NavDrawerAdataper extends ListViewAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View v = super.getView(position, convertView, parent);
-        boolean isSelectedItem = (position == mSelectedItemPosition);
-        TextView text = (TextView) v.findViewById(R.id.title);
-        if (text != null) {
-            text.setTypeface(null, isSelectedItem ? Typeface.BOLD : Typeface.NORMAL);
-        }
-        return v;
+        return super.getView(position, convertView, parent);
     }
 
     @Override

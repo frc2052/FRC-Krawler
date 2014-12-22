@@ -24,7 +24,7 @@ public abstract class ViewPagerFABActivity extends ViewPagerActivity
         mPager = (ViewPager) findViewById(R.id.pager);
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         mTabs.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
-        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.yellowA200));
+        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.color_accent));
         mTabs.setVisibility(View.VISIBLE);
         mFab = (ImageButton) findViewById(R.id.fab);
         onPreLoadViewPager();

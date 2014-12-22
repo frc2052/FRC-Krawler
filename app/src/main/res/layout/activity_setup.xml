@@ -17,6 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/body_text_1"
             android:text="Welcome to\n FRC Krawler"
             android:textSize="35sp" />
 
@@ -35,9 +37,9 @@
             android:layout_below="@id/welcome_logo"
             android:gravity="center_horizontal"
             android:paddingLeft="10dp"
+            style="@style/TextBody"
             android:paddingRight="10dp"
-            android:text="@string/welcome_message"
-            android:textSize="20sp" />
+            android:text="@string/welcome_message" />
 
 
         <RelativeLayout
@@ -101,6 +103,8 @@
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="16dp"
                     android:gravity="center_horizontal"
+                    android:textColor="@color/body_text_1"
+                    android:fontFamily="sans-serif-light"
                     android:text="@string/enable_bluetooth_message"
                     android:textSize="35sp" />
 
@@ -176,6 +180,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
             android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/body_text_1"
             android:text="What is the role of this device?"
             android:textSize="35sp" />
 

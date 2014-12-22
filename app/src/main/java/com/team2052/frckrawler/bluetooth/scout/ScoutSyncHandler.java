@@ -9,7 +9,7 @@ import android.widget.Toast;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
-import com.team2052.frckrawler.fragment.scout.ScoutUtil;
+import com.team2052.frckrawler.util.ScoutUtil;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.LogHelper;
 

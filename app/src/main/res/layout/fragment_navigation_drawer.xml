@@ -7,7 +7,7 @@
         android:id="@+id/banner_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/yellowA200">
+        android:background="@color/color_accent">
 
         <RelativeLayout
             android:id="@+id/banner_details_container"

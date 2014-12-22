@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.DatabaseActivity;
-import com.team2052.frckrawler.activity.RobotActivity;
+import com.team2052.frckrawler.activity.robot.RobotActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;

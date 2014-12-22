@@ -2,9 +2,9 @@
 <resources>
 
     <style name="AppBase" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/red700</item>
-        <item name="colorPrimaryDark">@color/red900</item>
-        <item name="colorAccent">@color/yellowA200</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
@@ -36,6 +36,22 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/body_text_2</item>
         <item name="android:textAlignment">viewStart</item>
+    </style>
+
+    <style name="TextTitle">
+        <item name="android:textSize">@dimen/text_size_xlarge</item>
+        <item name="android:textColor">@color/body_text_1</item>
+        <item name="android:textStyle">@integer/font_textStyle_medium</item>
+        <item name="android:fontFamily">@string/font_fontFamily_medium</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextBody">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/body_text_1</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:textAlignment">textStart</item>
     </style>
 
 </resources>

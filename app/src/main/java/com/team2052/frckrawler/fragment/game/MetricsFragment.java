@@ -78,7 +78,7 @@ public class MetricsFragment extends ListFragment implements FABButtonListener
                             @Override
                             public void run()
                             {
-                                DBManager.deleteMetric(mDaoSession, metric);
+                                DBManager.getInstance(getActivity(), mDaoSession).deleteMetric(metric);
                             }
                         });
                         dialogInterface.dismiss();

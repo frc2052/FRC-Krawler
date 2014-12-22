@@ -5,16 +5,16 @@
     <color name="nav_drawer_background">#f7f7f7</color>
     <color name="red">#F00</color>
     <color name="blue">#00F</color>
-    <color name="red700">#720000</color>
-    <color name="red900">#5b0000</color>
-    <color name="yellowA200">#FFC400</color>
-
     <color name="item_default_color">#EEEEEE</color>
     <color name="item_pressed_color">#CCCCCC</color>
     <color name="item_activated_color">?attr/colorAccent</color>
-
     <color name="body_text_1">#de000000</color>
     <color name="body_text_2">#8a000000</color>
     <color name="body_text_3">#60000000</color>
     <color name="body_text_disabled">#44000000</color>
+
+    <!--Material Colors-->
+    <color name="primary">#720000</color>
+    <color name="primary_dark">#5b0000</color>
+    <color name="color_accent">#FFC400</color>
 </resources>

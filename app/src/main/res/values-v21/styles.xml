@@ -2,9 +2,9 @@
 <resources>
 
     <style name="AppBase" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/red700</item>
-        <item name="colorPrimaryDark">@color/red900</item>
-        <item name="colorAccent">@color/yellowA200</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>

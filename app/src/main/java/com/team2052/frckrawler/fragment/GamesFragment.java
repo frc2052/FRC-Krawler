@@ -4,15 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.GameInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
@@ -70,7 +68,7 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
                                 @Override
                                 public void run()
                                 {
-                                    DBManager.deleteGame(((FRCKrawler) getActivity().getApplication()).getDaoSession(), game);
+                                    DBManager.getInstance(getActivity(), mDaoSession).deleteGame(game);
                                 }
                             });
                             dialogInterface.dismiss();
@@ -108,9 +106,9 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
@@ -142,7 +140,6 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
                 new AddGameDialogFragment().show(getChildFragmentManager(), "addGame");
             }
         });
-        return view;
     }
 
     @Override

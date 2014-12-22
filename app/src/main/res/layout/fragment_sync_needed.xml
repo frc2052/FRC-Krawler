@@ -5,17 +5,19 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@android:id/text1"
+        android:id="@+id/error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="You need to sync with the master tab" />
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="There seems to be something wrong. Try syncing with the Master Tablet." />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@android:id/text1"
+        android:layout_above="@+id/error_message"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_action_error" />
+        android:src="@drawable/ic_alert_error" />
 
 </RelativeLayout>

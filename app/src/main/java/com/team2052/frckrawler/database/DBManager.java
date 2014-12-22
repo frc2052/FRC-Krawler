@@ -1,26 +1,8 @@
 package com.team2052.frckrawler.database;
 
-import com.team2052.frckrawler.db.Contact;
-import com.team2052.frckrawler.db.ContactDao;
-import com.team2052.frckrawler.db.DaoSession;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.EventDao;
-import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.db.MatchDao;
-import com.team2052.frckrawler.db.MatchData;
-import com.team2052.frckrawler.db.MatchDataDao;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.MetricDao;
-import com.team2052.frckrawler.db.PitData;
-import com.team2052.frckrawler.db.PitDataDao;
-import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.db.RobotDao;
-import com.team2052.frckrawler.db.RobotEvent;
-import com.team2052.frckrawler.db.RobotEventDao;
-import com.team2052.frckrawler.db.RobotPhoto;
-import com.team2052.frckrawler.db.RobotPhotoDao;
-import com.team2052.frckrawler.db.Team;
+import android.content.Context;
+
+import com.team2052.frckrawler.db.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,24 +19,47 @@ import de.greenrobot.dao.query.QueryBuilder;
  */
 public class DBManager
 {
+
+    private static DBManager instance;
+    private Context context;
+    private DaoSession daoSession;
+
+    private DBManager(Context context, DaoSession daoSession)
+    {
+
+        this.context = context;
+        this.daoSession = daoSession;
+    }
+
+    public static DBManager getInstance(Context context, DaoSession daoSession)
+    {
+        if (instance == null) {
+            synchronized (DBManager.class) {
+                if (instance == null) {
+                    instance = new DBManager(context, daoSession);
+                }
+            }
+        }
+        return instance;
+    }
+
     /**
      * Used to delete a game deletes all other references
      *
-     * @param daoSession
      * @param game
      */
-    public static void deleteGame(DaoSession daoSession, Game game)
+    public void deleteGame(Game game)
     {
         for (Event event : daoSession.getEventDao().queryBuilder().where(EventDao.Properties.GameId.eq(game.getId())).list()) {
-            deleteEvent(daoSession, event);
+            deleteEvent(event);
         }
 
         for (Robot robot : daoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(game.getId())).list()) {
-            deleteRobot(daoSession, robot);
+            deleteRobot(robot);
         }
 
         for (Metric metric : daoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(game.getId())).list()) {
-            deleteMetric(daoSession, metric);
+            deleteMetric(metric);
         }
         daoSession.getGameDao().delete(game);
     }
@@ -62,21 +67,20 @@ public class DBManager
     /**
      * Used to delete an event deletes all other references
      *
-     * @param daoSession
      * @param event
      */
-    public static void deleteEvent(DaoSession daoSession, Event event)
+    public void deleteEvent(Event event)
     {
         for (Match match : daoSession.getMatchDao().queryBuilder().where(MatchDao.Properties.EventId.eq(event.getId())).list()) {
-            deleteMatch(daoSession, match);
+            deleteMatch(match);
         }
 
         for (RobotEvent robotEvent : daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(event.getId())).list()) {
-            deleteRobotEvent(daoSession, robotEvent);
+            deleteRobotEvent(robotEvent);
         }
 
         for (PitData pitData : daoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.EventId.eq(event.getId())).list()) {
-            deletePitData(daoSession, pitData);
+            deletePitData(pitData);
         }
 
         daoSession.getEventDao().delete(event);
@@ -85,10 +89,9 @@ public class DBManager
     /**
      * Used to delete a robotEvent deletes all other references
      *
-     * @param daoSession
      * @param robotEvent
      */
-    public static void deleteRobotEvent(DaoSession daoSession, RobotEvent robotEvent)
+    public void deleteRobotEvent(RobotEvent robotEvent)
     {
         daoSession.getRobotEventDao().delete(robotEvent);
     }
@@ -97,13 +100,12 @@ public class DBManager
     /**
      * Used to delete a team deletes all other references
      *
-     * @param daoSession
      * @param team
      */
-    public static void deleteTeam(DaoSession daoSession, Team team)
+    public void deleteTeam(Team team)
     {
         for (Contact contact : daoSession.getContactDao().queryBuilder().where(ContactDao.Properties.TeamId.eq(team.getNumber())).list()) {
-            deleteContact(daoSession, contact);
+            deleteContact(contact);
         }
 
         QueryBuilder<Match> matchQueryBuilder = daoSession.getMatchDao().queryBuilder();
@@ -115,11 +117,11 @@ public class DBManager
         matchQueryBuilder.where(MatchDao.Properties.Red3Id.eq(team.getNumber()));
 
         for (Match match : matchQueryBuilder.list()) {
-            deleteMatch(daoSession, match);
+            deleteMatch(match);
         }
 
         for (Robot robot : daoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.TeamId.eq(team.getNumber())).list()) {
-            deleteRobot(daoSession, robot);
+            deleteRobot(robot);
         }
 
         daoSession.getTeamDao().delete(team);
@@ -128,10 +130,9 @@ public class DBManager
     /**
      * Used to delete a contact deletes all other references
      *
-     * @param daoSession
      * @param contact
      */
-    public static void deleteContact(DaoSession daoSession, Contact contact)
+    public void deleteContact(Contact contact)
     {
         daoSession.getContactDao().delete(contact);
     }
@@ -139,10 +140,9 @@ public class DBManager
     /**
      * Used to delete a match deletes all other references
      *
-     * @param daoSession
      * @param match
      */
-    public static void deleteMatch(DaoSession daoSession, Match match)
+    public void deleteMatch(Match match)
     {
         daoSession.getMatchDao().delete(match);
     }
@@ -151,25 +151,24 @@ public class DBManager
     /**
      * Used to delete a robot deletes all other references
      *
-     * @param daoSession
      * @param robot
      */
-    public static void deleteRobot(DaoSession daoSession, Robot robot)
+    public void deleteRobot(Robot robot)
     {
         for (RobotEvent robotEvent : daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).list()) {
-            deleteRobotEvent(daoSession, robotEvent);
+            deleteRobotEvent(robotEvent);
         }
 
         for (RobotPhoto robotPhoto : daoSession.getRobotPhotoDao().queryBuilder().where(RobotPhotoDao.Properties.RobotId.eq(robot.getId())).list()) {
-            deleteRobotPhoto(daoSession, robotPhoto);
+            deleteRobotPhoto(robotPhoto);
         }
 
         for (PitData pitData : daoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).list()) {
-            deletePitData(daoSession, pitData);
+            deletePitData(pitData);
         }
 
         for (MatchData matchData : daoSession.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.RobotId.eq(robot.getId())).list()) {
-            deleteMatchData(daoSession, matchData);
+            deleteMatchData(matchData);
         }
 
         daoSession.getRobotDao().delete(robot);
@@ -178,10 +177,9 @@ public class DBManager
     /**
      * Used to delete a metric deletes all other references
      *
-     * @param daoSession
      * @param metric
      */
-    public static void deleteMetric(DaoSession daoSession, Metric metric)
+    public void deleteMetric(Metric metric)
     {
         daoSession.getMetricDao().delete(metric);
     }
@@ -190,10 +188,9 @@ public class DBManager
      * Used to delete a robotPhoto deletes all other references
      * It also deletes the file
      *
-     * @param daoSession
      * @param robotPhoto
      */
-    public static void deleteRobotPhoto(DaoSession daoSession, RobotPhoto robotPhoto)
+    public void deleteRobotPhoto(RobotPhoto robotPhoto)
     {
         //Delete the file
         new File(robotPhoto.getLocation()).delete();
@@ -203,10 +200,9 @@ public class DBManager
     /**
      * Used to delete pitData metric deletes all other references
      *
-     * @param daoSession
      * @param pitData
      */
-    public static void deletePitData(DaoSession daoSession, PitData pitData)
+    public void deletePitData(PitData pitData)
     {
         daoSession.getPitDataDao().delete(pitData);
     }
@@ -215,15 +211,14 @@ public class DBManager
     /**
      * Used to delete matchData metric deletes all other references
      *
-     * @param daoSession
      * @param matchData
      */
-    public static void deleteMatchData(DaoSession daoSession, MatchData matchData)
+    public void deleteMatchData(MatchData matchData)
     {
         daoSession.getMatchDataDao().delete(matchData);
     }
 
-    public static List<Team> getTeamsForMatch(Match match)
+    public List<Team> getTeamsForMatch(Match match)
     {
         List<Team> teams = new ArrayList<>();
         teams.add(match.getBlue1());

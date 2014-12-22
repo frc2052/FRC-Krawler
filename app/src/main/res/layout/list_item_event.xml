@@ -7,33 +7,31 @@
 
     <TextView
         android:id="@+id/list_view_event_name"
+        style="@style/TextTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_marginTop="16dp" />
 
     <TextView
+        style="@style/TextHeaderSub"
         android:id="@+id/list_view_event_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/list_view_event_name"
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_marginTop="8dp"/>
 
     <TextView
+        style="@style/TextHeaderSub"
         android:id="@+id/list_view_event_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/list_view_event_name"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_marginRight="16dp" />
 </RelativeLayout>

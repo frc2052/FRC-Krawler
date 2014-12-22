@@ -3,6 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/error"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/fragment_sync_needed" />
+    </RelativeLayout>
+    
     <!-- Dummy item to prevent EditText from receiving focus -->
     <LinearLayout
         android:layout_width="0px"
@@ -12,7 +21,7 @@
 
 
     <ScrollView
-        android:id="@+id/ScrollView1"
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

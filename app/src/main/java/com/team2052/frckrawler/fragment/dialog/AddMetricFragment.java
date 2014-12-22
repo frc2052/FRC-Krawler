@@ -14,9 +14,7 @@ import android.widget.Toast;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.MetricsActivity;
-import com.team2052.frckrawler.database.MetricConstants;
-import com.team2052.frckrawler.database.MetricFactory;
+import com.team2052.frckrawler.util.MetricUtil;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
@@ -101,7 +99,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     {
         mCurrentSelectedMetricType = position;
         switch (position) {
-            case MetricConstants.COUNTER:
+            case MetricUtil.COUNTER:
                 mMinimum.setEnabled(true);
                 mMaximum.setEnabled(true);
                 mIncrementation.setEnabled(true);
@@ -109,7 +107,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 mDivider.setVisibility(View.GONE);
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case MetricConstants.SLIDER:
+            case MetricUtil.SLIDER:
                 mMinimum.setEnabled(true);
                 mMaximum.setEnabled(true);
                 mIncrementation.setEnabled(false);
@@ -117,7 +115,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 mDivider.setVisibility(View.GONE);
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case MetricConstants.CHOOSER:
+            case MetricUtil.CHOOSER:
                 mMinimum.setEnabled(false);
                 mMaximum.setEnabled(false);
                 mIncrementation.setEnabled(false);
@@ -157,19 +155,19 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     {
         Metric m = null;
         switch (mCurrentSelectedMetricType) {
-            case MetricConstants.BOOLEAN:
-                m = MetricFactory.createBooleanMetric(
+            case MetricUtil.BOOLEAN:
+                m = MetricUtil.createBooleanMetric(
                         mGame,
-                        MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
+                        MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
                         mName.getText().toString(),
                         mDescription.getText().toString());
                 break;
 
-            case MetricConstants.COUNTER:
+            case MetricUtil.COUNTER:
                 try {
-                    m = MetricFactory.createCounterMetric(
+                    m = MetricUtil.createCounterMetric(
                             mGame,
-                            MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
+                            MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
                             mName.getText().toString(),
                             mDescription.getText().toString(),
                             Integer.parseInt(mMinimum.getText().toString()),
@@ -181,11 +179,11 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 }
                 break;
 
-            case MetricConstants.SLIDER:
+            case MetricUtil.SLIDER:
                 try {
-                    m = MetricFactory.createSliderMetric(
+                    m = MetricUtil.createSliderMetric(
                             mGame,
-                            MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
+                            MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
                             mName.getText().toString(),
                             mDescription.getText().toString(),
                             Integer.parseInt(mMinimum.getText().toString()),
@@ -196,10 +194,10 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 }
                 break;
 
-            case MetricConstants.CHOOSER:
-                m = MetricFactory.createChooserMetric(
+            case MetricUtil.CHOOSER:
+                m = MetricUtil.createChooserMetric(
                         mGame,
-                        MetricsActivity.MetricType.VALID_TYPES[mMetricCategory],
+                        MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
                         mName.getText().toString(),
                         mDescription.getText().toString(),
                         list.getValues());

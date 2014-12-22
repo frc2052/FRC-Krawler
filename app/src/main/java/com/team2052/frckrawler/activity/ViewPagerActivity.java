@@ -25,7 +25,7 @@ public abstract class ViewPagerActivity extends DatabaseActivity
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         mTabs.setVisibility(View.VISIBLE);
         mTabs.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
-        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.yellowA200));
+        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.color_accent));
         onPreLoadViewPager();
         mPager.setAdapter(setAdapter());
         mTabs.setViewPager(mPager);

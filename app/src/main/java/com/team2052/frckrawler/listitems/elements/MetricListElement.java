@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.MetricConstants;
 import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListElement;
+import com.team2052.frckrawler.util.MetricUtil;
 
 /**
  * @author Adam
@@ -32,15 +32,15 @@ public class MetricListElement extends ListElement
             descriptionString = metric.getDescription();
         }
         switch (metric.getType()) {
-            case MetricConstants.BOOLEAN:
+            case MetricUtil.BOOLEAN:
                 typeString = "Boolean";
                 rangeString = "Not Applicable";
                 break;
-            case MetricConstants.COUNTER:
+            case MetricUtil.COUNTER:
                 typeString = "Counter";
                 rangeString = rangeArr[0] + " to " + rangeArr[1] + " Incrementing by " + rangeArr[2];
                 break;
-            case MetricConstants.CHOOSER:
+            case MetricUtil.CHOOSER:
                 boolean isFirst = true;
                 for (Object o : rangeArr) {
                     if (!isFirst) {
@@ -51,7 +51,7 @@ public class MetricListElement extends ListElement
                 }
                 typeString = "Chooser";
                 break;
-            case MetricConstants.SLIDER:
+            case MetricUtil.SLIDER:
                 rangeString = rangeArr[0] + " to " + rangeArr[1];
                 typeString = "Slider";
                 break;

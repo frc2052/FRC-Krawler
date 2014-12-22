@@ -45,7 +45,7 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_navigation_drawer);
         ButterKnife.inject(this);
-        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.red900));
+        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
         // Call this so that subclasses can configure the navigation drawer before it is created
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

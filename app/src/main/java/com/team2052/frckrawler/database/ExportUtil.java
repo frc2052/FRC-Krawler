@@ -7,6 +7,7 @@ import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.util.LogHelper;
+import com.team2052.frckrawler.util.MetricUtil;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -33,7 +34,7 @@ public class ExportUtil
         Map<Long, List<CompiledMetricValue>> robots = new TreeMap<>();
 
         for (RobotEvent robotEvent : robotEvents) {
-            robots.put(robotEvent.getRobot().getTeam().getNumber(), MetricCompiler.getCompiledRobot(event, robotEvent.getRobot(), daoSession));
+            robots.put(robotEvent.getRobot().getTeam().getNumber(), MetricUtil.MetricCompiler.getCompiledRobot(event, robotEvent.getRobot(), daoSession));
         }
 
         try {
@@ -41,7 +42,7 @@ public class ExportUtil
 
             List<String> header = new ArrayList<>();
 
-            header.add("Team");
+            header.add("Team Number");
 
             for (Metric metric : metrics) {
                 header.add(metric.getName());

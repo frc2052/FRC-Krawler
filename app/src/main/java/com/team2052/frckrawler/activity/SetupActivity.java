@@ -3,9 +3,11 @@ package com.team2052.frckrawler.activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.view.Window;
 
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
@@ -50,6 +52,11 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
         setContentView(R.layout.activity_setup);
         ButterKnife.inject(this);
         setupViews();
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+        }
+
         super.onCreate(savedInstanceState);
     }
 
@@ -110,10 +117,10 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
     public void setupFinished()
     {
 
-        SharedPreferences preferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        /*SharedPreferences preferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         SharedPreferences.Editor edit = preferences.edit();
         edit.putBoolean(PREF_SETUP, true);
-        edit.apply();
+        edit.apply();*/
         startActivity(new Intent(this, HomeActivity.class));
         finish();
     }

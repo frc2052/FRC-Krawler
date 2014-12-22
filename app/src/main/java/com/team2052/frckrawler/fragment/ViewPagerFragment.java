@@ -36,7 +36,7 @@ public abstract class ViewPagerFragment extends BaseFragment
     {
         ButterKnife.inject(this, view);
         mTabs.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
-        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.yellowA200));
+        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.color_accent));
         mViewPager.setAdapter(setAdapter());
         mTabs.setViewPager(mViewPager);
         super.onViewCreated(view, savedInstanceState);

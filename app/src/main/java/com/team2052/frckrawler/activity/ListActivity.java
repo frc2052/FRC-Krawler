@@ -8,9 +8,6 @@ import android.widget.ListView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-
 /**
  * @author Adam
  */

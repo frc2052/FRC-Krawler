@@ -67,7 +67,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener
                 case R.id.menu_delete:
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage("Are you sure you want to remove this event and all its data?");
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                    builder.setPositiveButton("Delete", new DialogInterface.OnClickListener()
                     {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i)
@@ -77,7 +77,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener
                                 @Override
                                 public void run()
                                 {
-                                    DBManager.deleteEvent(mDaoSession, event);
+                                    DBManager.getInstance(getActivity(), mDaoSession).deleteEvent(event);
                                 }
                             });
                             dialogInterface.dismiss();
@@ -85,7 +85,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener
                             actionMode.finish();
                         }
                     });
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener()
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
                     {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i)

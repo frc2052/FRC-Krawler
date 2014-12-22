@@ -4,6 +4,7 @@ import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.util.LogHelper;
+import com.team2052.frckrawler.util.MetricUtil;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -35,7 +36,7 @@ public class CompiledMetricValue
     private void compileMetricValues()
     {
         switch (metricType) {
-            case MetricConstants.BOOLEAN:
+            case MetricUtil.BOOLEAN:
                 double yes = 0;
                 double no = 0;
 
@@ -59,8 +60,8 @@ public class CompiledMetricValue
                 }
                 break;
             //Do the same for slider and counter
-            case MetricConstants.SLIDER:
-            case MetricConstants.COUNTER:
+            case MetricUtil.SLIDER:
+            case MetricUtil.COUNTER:
                 double numerator = 0;
                 double denominator = 0;
 
@@ -77,7 +78,7 @@ public class CompiledMetricValue
                 }
 
                 break;
-            case MetricConstants.CHOOSER:
+            case MetricUtil.CHOOSER:
                 String[] range = StringArrayDeserializer.deserialize(metric.getRange());
                 double[] counts = new double[range.length];
 

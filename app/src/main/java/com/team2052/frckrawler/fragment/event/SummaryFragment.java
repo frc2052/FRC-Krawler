@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.team2052.frckrawler.activity.DatabaseActivity;
-import com.team2052.frckrawler.activity.SummaryDataActivity;
+import com.team2052.frckrawler.activity.data.SummaryDataActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.util.MetricUtil;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragment.game.EventsFragment;
 import com.team2052.frckrawler.fragment.game.MetricsFragment;
@@ -110,9 +111,9 @@ public class GameInfoActivity extends ViewPagerFABActivity implements View.OnCli
                 case 0:
                     return EventsFragment.newInstance(mGame);
                 case 1:
-                    return MetricsFragment.newInstance(MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal(), mGame);
+                    return MetricsFragment.newInstance(MetricUtil.MetricType.MATCH_PERF_METRICS.ordinal(), mGame);
                 case 2:
-                    return MetricsFragment.newInstance(MetricsActivity.MetricType.ROBOT_METRICS.ordinal(), mGame);
+                    return MetricsFragment.newInstance(MetricUtil.MetricType.ROBOT_METRICS.ordinal(), mGame);
             }
             return null;
         }

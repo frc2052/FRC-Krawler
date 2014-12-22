@@ -26,10 +26,10 @@
         <activity android:name=".ListTester" />
         <activity android:name=".activity.MatchListActivity" />
         <activity android:name=".activity.TeamInfoActivity" />
-        <activity android:name=".activity.RobotActivity" />
-        <activity android:name=".activity.SummaryMetricsActivity" />
-        <activity android:name=".activity.SummaryDataActivity" />
-        <activity android:name=".activity.RobotsActivity" />
+        <activity android:name=".activity.robot.RobotActivity" />
+        <activity android:name=".activity.data.SummaryMetricsActivity" />
+        <activity android:name=".activity.data.SummaryDataActivity" />
+        <activity android:name=".activity.robot.RobotsActivity" />
         <activity android:name=".activity.GameInfoActivity" />
         <activity android:name=".activity.EventInfoActivity" />
         <activity android:name="org.acra.CrashReportDialog" />

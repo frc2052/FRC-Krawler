@@ -2,6 +2,7 @@ package com.team2052.frckrawler.fragment.scout;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,9 +16,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.bluetooth.scout.LoginHandler;
+import com.team2052.frckrawler.util.MetricUtil;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
@@ -31,6 +32,7 @@ import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.fragment.BaseFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
+import com.team2052.frckrawler.util.ScoutUtil;
 import com.team2052.frckrawler.view.metric.MetricWidget;
 
 import java.util.ArrayList;
@@ -72,10 +74,23 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     private void loadAllData(Event event)
     {
         if (event == null) {
+            setErrorVisible(true);
             return;
         }
+
         mEvent = event;
         new GetAllRobots().execute();
+    }
+
+    private void setErrorVisible(boolean visible)
+    {
+        if (visible) {
+            getView().findViewById(R.id.error_message).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.scroll_view).setVisibility(View.GONE);
+        } else {
+            getView().findViewById(R.id.error_message).setVisibility(View.GONE);
+            getView().findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -88,11 +103,16 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_scouting_pit, container, false);
+        return inflater.inflate(R.layout.fragment_scouting_pit, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
         mTeamSpinner = (Spinner) view.findViewById(R.id.team);
         mTeamSpinner.setOnItemSelectedListener(this);
         loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
-        return view;
     }
 
     @Override
@@ -172,7 +192,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
             if (metricValues.size() <= 0) {
                 QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
                 metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId()));
-                metricQueryBuilder.where(MetricDao.Properties.Category.eq(MetricsActivity.MetricType.ROBOT_METRICS.ordinal()));
+                metricQueryBuilder.where(MetricDao.Properties.Category.eq(MetricUtil.MetricType.ROBOT_METRICS.ordinal()));
 
                 for (Metric metric : metricQueryBuilder.list()) {
                     metricValues.add(new MetricValue(metric, null));
@@ -191,6 +211,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
                 ((LinearLayout) getView().findViewById(R.id.metricWidgetList)).addView(MetricWidget.createWidget(getActivity(), metric));
             }
             ((EditText) getView().findViewById(R.id.comments)).setText(mRobots.get(mTeamSpinner.getSelectedItemPosition()).getRobot().getComments());
+            setErrorVisible(false);
         }
     }
 

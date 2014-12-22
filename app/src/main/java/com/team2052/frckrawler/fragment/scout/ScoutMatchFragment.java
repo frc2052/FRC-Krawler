@@ -2,6 +2,7 @@ package com.team2052.frckrawler.fragment.scout;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,22 +17,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.MetricsActivity;
 import com.team2052.frckrawler.bluetooth.scout.LoginHandler;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.db.MatchComment;
-import com.team2052.frckrawler.db.MatchDao;
-import com.team2052.frckrawler.db.MatchData;
-import com.team2052.frckrawler.db.MatchDataDao;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.MetricDao;
-import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.db.RobotDao;
-import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.db.*;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.fragment.BaseFragment;
+import com.team2052.frckrawler.util.ScoutUtil;
 import com.team2052.frckrawler.view.metric.MetricWidget;
 
 import java.util.ArrayList;
@@ -68,12 +60,25 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
 
     private void loadAllData(Event event)
     {
-        if (event == null)
+        if (event == null) {
+            setErrorVisible(true);
             return;
+        }
         mEvent = event;
-        new GetAllMetrics().execute();
+
         new GetAllMatches().execute();
         //new GetAllRobotsTask().execute();
+    }
+
+    private void setErrorVisible(boolean visible)
+    {
+        if (visible) {
+            getView().findViewById(R.id.error).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.scroll_view).setVisibility(View.GONE);
+        } else {
+            getView().findViewById(R.id.error).setVisibility(View.GONE);
+            getView().findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -97,18 +102,23 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_scouting_match, null);
+        return inflater.inflate(R.layout.fragment_scouting_match, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
         ButterKnife.inject(this, view);
-        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
         mMatchSpinner.setOnItemSelectedListener(this);
-        return view;
+        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
         Match match = mMatches.get(mMatchSpinner.getSelectedItemPosition());
-        mTeams = DBManager.getTeamsForMatch(match);
+        mTeams = DBManager.getInstance(getActivity(), mDaoSession).getTeamsForMatch(match);
         List<String> teamNumbers = new ArrayList<>();
         for (Team team : mTeams) {
             teamNumbers.add(team.getName() + ", " + team.getNumber());
@@ -174,6 +184,7 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
                 matchNumbers.add("Match #" + match.getNumber());
             }
             mMatchSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, matchNumbers));
+            new GetAllMetrics().execute();
         }
     }
 
@@ -185,7 +196,7 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         {
             QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
             metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId()));
-            metricQueryBuilder.where(MetricDao.Properties.Category.eq(MetricsActivity.MetricType.MATCH_PERF_METRICS.ordinal()));
+            metricQueryBuilder.where(MetricDao.Properties.Category.eq(MetricUtil.MetricType.MATCH_PERF_METRICS.ordinal()));
             return metricQueryBuilder.list();
         }
 
@@ -196,6 +207,7 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
             for (Metric metric : metrics) {
                 mMetricList.addView(MetricWidget.createWidget(getActivity(), metric));
             }
+            setErrorVisible(false);
         }
     }
 
