@@ -117,10 +117,10 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
     public void setupFinished()
     {
 
-        /*SharedPreferences preferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        SharedPreferences preferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         SharedPreferences.Editor edit = preferences.edit();
         edit.putBoolean(PREF_SETUP, true);
-        edit.apply();*/
+        edit.apply();
         startActivity(new Intent(this, HomeActivity.class));
         finish();
     }

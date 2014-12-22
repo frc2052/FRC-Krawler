@@ -55,7 +55,7 @@ public class MatchView extends FrameLayout
 
     public void init(Match match)
     {
-        matchTitle.setText(Integer.toString(match.getNumber()));
+        matchTitle.setText("Match " + Integer.toString(match.getNumber()));
         red1.setText(Long.toString(match.getRed1Id()));
         red2.setText(Long.toString(match.getRed2Id()));
         red3.setText(Long.toString(match.getRed3Id()));
@@ -75,15 +75,15 @@ public class MatchView extends FrameLayout
             blueScore.setText(Integer.toString(match.getBluescore()));
 
 
-        /*if (alliance.redScore > alliance.blueScore) {
+        if (match.getRedscore() > match.getBluescore()) {
             redAlliance.setBackgroundResource(R.drawable.alliance_border);
             blueAlliance.setBackgroundResource(R.drawable.no_border);
-        } else if (alliance.blueScore > alliance.redScore) {
+        } else if (match.getBluescore() > match.getRedscore()) {
             blueAlliance.setBackgroundResource(R.drawable.alliance_border);
             redAlliance.setBackgroundResource(R.drawable.no_border);
         } else {
             redAlliance.setBackgroundResource(R.drawable.no_border);
             blueAlliance.setBackgroundResource(R.drawable.no_border);
-        }*/
+        }
     }
 }
