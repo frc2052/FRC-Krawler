@@ -23,7 +23,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppBase">
 
-        <activity android:name=".ListTester" />
+        <activity android:name=".activity.ListTester" />
         <activity android:name=".activity.MatchListActivity" />
         <activity android:name=".activity.TeamInfoActivity" />
         <activity android:name=".activity.robot.RobotActivity" />

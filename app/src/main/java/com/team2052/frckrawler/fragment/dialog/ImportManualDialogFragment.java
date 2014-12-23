@@ -59,7 +59,7 @@ public class ImportManualDialogFragment extends DialogFragment implements View.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_import_manual, null);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_import_manual, null);
         getDialog().setTitle("Import Manual");
         importMatches = (Button) view.findViewById(R.id.import_matches);
         importTeams = (Button) view.findViewById(R.id.import_teams_manual);

@@ -81,7 +81,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
 
     private View initViews()
     {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialogactivity_add_metric, null);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_metric, null);
         mMetricTypeSpinner = (Spinner) view.findViewById(R.id.type);
         mName = (EditText) view.findViewById(R.id.name);
         mDescription = (EditText) view.findViewById(R.id.description);
@@ -144,11 +144,6 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == 0) {
-
-        } else if (v.getId() == R.id.cancel) {
-            dismiss();
-        }
     }
 
     private void saveMetric()
