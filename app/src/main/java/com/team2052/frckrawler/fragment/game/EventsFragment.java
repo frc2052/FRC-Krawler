@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +22,7 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.EventDao;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragment.ListFragment;
+import com.team2052.frckrawler.fragment.dialog.AddEventDialogFragment;
 import com.team2052.frckrawler.fragment.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.ListElement;
@@ -157,6 +159,21 @@ public class EventsFragment extends ListFragment implements FABButtonListener
     public void onFABPressed()
     {
         ImportDataSimpleDialogFragment.newInstance(mGame).show(getChildFragmentManager(), "importEvent");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() == R.id.add_event){
+            AddEventDialogFragment.newInstance(mGame).show(getChildFragmentManager(), "addEventDialog");
+        }
+        return false;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.event_menu, menu);
     }
 
     private class GetEventsTask extends AsyncTask<Void, Void, List<Event>>

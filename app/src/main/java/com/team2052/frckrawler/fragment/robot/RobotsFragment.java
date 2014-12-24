@@ -71,9 +71,6 @@ public class RobotsFragment extends ListFragment
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
         this.mViewType = b.getInt(VIEW_TYPE, 0);
-        if (mViewType == 1) {
-            setHasOptionsMenu(true);
-        }
         mKey = b.getLong(DatabaseActivity.PARENT_ID);
     }
 
@@ -93,28 +90,11 @@ public class RobotsFragment extends ListFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == R.id.manual_import) {
-            ImportManualDialogFragment.newInstance(mDaoSession.getEventDao().load(mKey)).show(getFragmentManager(), "import_manual");
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void updateList()
     {
         new GetAllRobotsBy().execute();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        if (mViewType == 1) {
-            inflater.inflate(R.menu.add_manual_menu, menu);
-        }
-        super.onCreateOptionsMenu(menu, inflater);
-    }
 
     public class GetAllRobotsBy extends AsyncTask<Void, Void, List<Robot>>
     {

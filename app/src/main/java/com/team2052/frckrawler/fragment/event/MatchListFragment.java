@@ -58,7 +58,7 @@ public class MatchListFragment extends ListFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() == R.id.update_scores){
+        if (item.getItemId() == R.id.update_scores) {
             new GetMatchScores().execute();
         }
         return super.onOptionsItemSelected(item);
@@ -107,17 +107,20 @@ public class MatchListFragment extends ListFragment
         @Override
         protected Void doInBackground(Void... params)
         {
-            String url = TBA.BASE_TBA_URL + String.format(TBA.EVENT_REQUEST, mEvent.getFmsid());
-            final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
-            JSON.set_daoSession(mDaoSession);
-            for (JsonElement element : jMatches) {
-                Match match = JSON.getGson().fromJson(element, Match.class);
-                if (match.getType().contains("qm")) {
-                    Match unique = mDaoSession.getMatchDao().queryBuilder().where(MatchDao.Properties.Key.eq(match.getKey())).unique();
-                    unique.setRedscore(match.getRedscore());
-                    unique.setBluescore(match.getBluescore());
-                    unique.update();
-                    match = null;
+            //Check if the event is hosted by TBA if not don't update
+            if (mEvent.getFmsid() != null) {
+                String url = TBA.BASE_TBA_URL + String.format(TBA.EVENT_REQUEST, mEvent.getFmsid());
+                final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
+                JSON.set_daoSession(mDaoSession);
+                for (JsonElement element : jMatches) {
+                    Match match = JSON.getGson().fromJson(element, Match.class);
+                    if (match.getType().contains("qm")) {
+                        Match unique = mDaoSession.getMatchDao().queryBuilder().where(MatchDao.Properties.Key.eq(match.getKey())).unique();
+                        unique.setRedscore(match.getRedscore());
+                        unique.setBluescore(match.getBluescore());
+                        unique.update();
+                        match = null;
+                    }
                 }
             }
             return null;

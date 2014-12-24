@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_sync"
-        android:icon="@drawable/ic_navigation_refresh"
-        android:title="Sync"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/add_event"
+        android:title="Add Event Manual" />
 </menu>

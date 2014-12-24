@@ -110,8 +110,8 @@ public class OptionsFragment extends Fragment implements View.OnClickListener
                         "all matches equal. This " +
                         "applies to math, counter, slider, boolean, and numeric chooser " +
                         "metrics that track match data. For example, " +
-                        "a robot receives a score of 10 in a given addbutton for match #1, and " +
-                        "a score of 20 for the same addbutton in match #5. If the weight " +
+                        "a robot receives a score of 10 in a given add_button for match #1, and " +
+                        "a score of 20 for the same add_button in match #5. If the weight " +
                         "is 1.5, the average shown for compiled data will be 17.5. Match #5 " +
                         "counts more towards the average. Likewise, if the weight is set " +
                         "to 0.5, the average shown will be 12.5. Match #1 is more 'valuable' " +

@@ -169,7 +169,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                             Integer.parseInt(mMaximum.getText().toString()),
                             Integer.parseInt(mIncrementation.getText().toString()));
                 } catch (NumberFormatException e) {
-                    Toast.makeText(getActivity(), "Could not create addbutton. Make sure you " + "have filled out all of the necessary fields.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Could not create add_button. Make sure you " + "have filled out all of the necessary fields.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 break;
@@ -184,7 +184,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                             Integer.parseInt(mMinimum.getText().toString()),
                             Integer.parseInt(mMaximum.getText().toString()));
                 } catch (NumberFormatException e) {
-                    Toast.makeText(getActivity(), "Could not create addbutton. Make sure you " + "have filled out all of the necessary fields.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Could not create add_button. Make sure you " + "have filled out all of the necessary fields.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 break;

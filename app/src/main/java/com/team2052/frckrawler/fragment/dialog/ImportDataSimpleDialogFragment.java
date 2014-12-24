@@ -75,10 +75,9 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     {
         super.onCreate(savedInstanceState);
         this.mGame = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
-        yearDropDownItems = new String[GlobalValues.MAX_COMP_YEAR - GlobalValues.FIRST_COMP_YEAR + 2];
-        yearDropDownItems[0] = "Select Year";
-        for (int i = 1; i < yearDropDownItems.length; i++) {
-            yearDropDownItems[i] = Integer.toString(GlobalValues.MAX_COMP_YEAR - i + 1);
+        yearDropDownItems = new String[GlobalValues.MAX_COMP_YEAR - GlobalValues.FIRST_COMP_YEAR + 1];
+        for (int i = 0; i < yearDropDownItems.length; i++) {
+            yearDropDownItems[i] = Integer.toString(GlobalValues.MAX_COMP_YEAR - i);
         }
     }
 
@@ -116,7 +115,6 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
-        if (position == 0) return;
         LoadAllEventsByYear eventsByYear = new LoadAllEventsByYear(Integer.parseInt((String) yearSpinner.getSelectedItem()));
         eventSpinner.setVisibility(View.GONE);
         getDialog().findViewById(R.id.progress).setVisibility(View.VISIBLE);
@@ -131,7 +129,9 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     @Override
     public void onDismiss(DialogInterface dialog)
     {
-        ((ListUpdateListener) getParentFragment()).updateList();
+        if (getParentFragment() != null && getParentFragment() instanceof ListUpdateListener) {
+            ((ListUpdateListener) getParentFragment()).updateList();
+        }
         super.onDismiss(dialog);
     }
 
@@ -140,7 +140,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
      *
      * @author Adam
      */
-    public class LoadAllEventsByYear extends AsyncTask<Void, Void, List<Event>>
+    private class LoadAllEventsByYear extends AsyncTask<Void, Void, List<Event>>
     {
         private final String url;
 
@@ -193,7 +193,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
      *
      * @author Adam
      */
-    public class LoadAllEventData extends AsyncTask<Void, Void, Void>
+    private class LoadAllEventData extends AsyncTask<Void, Void, Void>
     {
         final FragmentManager fragman = getFragmentManager();
         private final String url;
