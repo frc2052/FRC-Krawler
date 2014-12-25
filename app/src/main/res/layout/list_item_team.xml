@@ -31,5 +31,5 @@
         android:text="Location"
 
         android:layout_below="@+id/list_item_team_name"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true" />
 </RelativeLayout>

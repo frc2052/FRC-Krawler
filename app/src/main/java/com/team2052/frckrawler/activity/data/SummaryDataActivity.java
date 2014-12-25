@@ -9,11 +9,11 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activity.ListActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.CompiledMetricValue;
-import com.team2052.frckrawler.util.MetricUtil;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
+import com.team2052.frckrawler.util.MetricUtil;
 
 import java.util.ArrayList;
 import java.util.List;

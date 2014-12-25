@@ -25,9 +25,10 @@ import java.io.File;
 
 /**
  * For desperate measures
- * @deprecated
+ *
  * @author Adam
  * @since 10/9/2014
+ * @deprecated
  */
 @Deprecated
 public class ImportManualDialogFragment extends DialogFragment implements View.OnClickListener

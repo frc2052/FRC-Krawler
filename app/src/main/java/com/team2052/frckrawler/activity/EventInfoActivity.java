@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
+import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Event;
@@ -32,6 +34,7 @@ public class EventInfoActivity extends ViewPagerActivity
     public void onPreLoadViewPager()
     {
         mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setActionBarTitle(getString(R.string.event));
         setActionBarSubtitle(mEvent.getName());
     }
@@ -42,10 +45,18 @@ public class EventInfoActivity extends ViewPagerActivity
         return new EventViewPagerAdapter(getSupportFragmentManager());
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+        }
+        return false;
+    }
 
     public class EventViewPagerAdapter extends FragmentPagerAdapter
     {
-        public String[] headers = new String[]{"Summary", "Schedule", "Attending"};
+        public String[] headers = new String[]{"Metric Summary", "Schedule", "Attending"};
 
         public EventViewPagerAdapter(FragmentManager fm)
         {

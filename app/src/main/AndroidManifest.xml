@@ -27,31 +27,17 @@
         <activity android:name=".activity.MatchListActivity" />
         <activity android:name=".activity.TeamInfoActivity" />
         <activity android:name=".activity.robot.RobotActivity" />
-        <activity android:name=".activity.data.SummaryMetricsActivity" />
         <activity android:name=".activity.data.SummaryDataActivity" />
         <activity android:name=".activity.robot.RobotsActivity" />
-        <activity android:name=".activity.GameInfoActivity" />
-        <activity android:name=".activity.EventInfoActivity" />
-        <activity android:name="org.acra.CrashReportDialog" />
-        <activity android:name=".activity.HomeActivity">
-            <!-- <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
-                 <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>-->
-        </activity>
-        <activity
-            android:name=".activity.MetricsActivity"
-            android:windowSoftInputMode="adjustNothing">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeActivity" />
-        </activity>
-        <activity
-            android:name=".activity.EventsActivity"
-            android:windowSoftInputMode="adjustNothing">
+        <activity android:name=".activity.GameInfoActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.team2052.frckrawler.activity.HomeActivity" />
+        </activity>
+        <activity android:name="org.acra.CrashReportDialog" />
+        <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.EventInfoActivity">
+
         </activity>
         <activity android:name=".activity.SetupActivity">
             <intent-filter>

@@ -12,7 +12,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="4dp"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true" />
 
     <Spinner
         android:id="@+id/import_event_spinner"

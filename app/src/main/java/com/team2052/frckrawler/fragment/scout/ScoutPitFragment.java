@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.bluetooth.scout.LoginHandler;
-import com.team2052.frckrawler.util.MetricUtil;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
@@ -32,6 +31,7 @@ import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.fragment.BaseFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
+import com.team2052.frckrawler.util.MetricUtil;
 import com.team2052.frckrawler.util.ScoutUtil;
 import com.team2052.frckrawler.view.metric.MetricWidget;
 

@@ -1,12 +1,9 @@
 package com.team2052.frckrawler.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 

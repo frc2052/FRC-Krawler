@@ -43,6 +43,7 @@ public class ExportUtil
             List<String> header = new ArrayList<>();
 
             header.add("Team Number");
+            header.add("Comments");
 
             for (Metric metric : metrics) {
                 header.add(metric.getName());

@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
-import android.view.Window;
 
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
@@ -53,7 +52,7 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
         ButterKnife.inject(this);
         setupViews();
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
         }
 

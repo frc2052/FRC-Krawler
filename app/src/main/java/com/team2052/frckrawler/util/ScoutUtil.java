@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.util.BluetoothUtil;
 
 import java.util.Set;
 

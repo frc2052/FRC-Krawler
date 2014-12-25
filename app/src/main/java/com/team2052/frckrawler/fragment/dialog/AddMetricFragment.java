@@ -14,10 +14,10 @@ import android.widget.Toast;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.util.MetricUtil;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.util.MetricUtil;
 import com.team2052.frckrawler.view.ListEditor;
 import com.team2052.frckrawler.view.TextListEditor;
 

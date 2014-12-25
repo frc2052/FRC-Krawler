@@ -13,6 +13,8 @@ public class MatchComment implements java.io.Serializable
     private Long matchId;
     private String comment;
     private Long robotId;
+    private Long eventId;
+    private Long teamId;
 
     /**
      * Used to resolve relations
@@ -30,16 +32,24 @@ public class MatchComment implements java.io.Serializable
     private Robot robot;
     private Long robot__resolvedKey;
 
+    private Event event;
+    private Long event__resolvedKey;
+
+    private Team team;
+    private Long team__resolvedKey;
+
 
     public MatchComment()
     {
     }
 
-    public MatchComment(Long matchId, String comment, Long robotId)
+    public MatchComment(Long matchId, String comment, Long robotId, Long eventId, Long teamId)
     {
         this.matchId = matchId;
         this.comment = comment;
         this.robotId = robotId;
+        this.eventId = eventId;
+        this.teamId = teamId;
     }
 
     /**
@@ -79,6 +89,26 @@ public class MatchComment implements java.io.Serializable
     public void setRobotId(Long robotId)
     {
         this.robotId = robotId;
+    }
+
+    public Long getEventId()
+    {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId)
+    {
+        this.eventId = eventId;
+    }
+
+    public Long getTeamId()
+    {
+        return teamId;
+    }
+
+    public void setTeamId(Long teamId)
+    {
+        this.teamId = teamId;
     }
 
     /**
@@ -136,6 +166,64 @@ public class MatchComment implements java.io.Serializable
             this.robot = robot;
             robotId = robot == null ? null : robot.getId();
             robot__resolvedKey = robotId;
+        }
+    }
+
+    /**
+     * To-one relationship, resolved on first access.
+     */
+    public Event getEvent()
+    {
+        Long __key = this.eventId;
+        if (event__resolvedKey == null || !event__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            EventDao targetDao = daoSession.getEventDao();
+            Event eventNew = targetDao.load(__key);
+            synchronized (this) {
+                event = eventNew;
+                event__resolvedKey = __key;
+            }
+        }
+        return event;
+    }
+
+    public void setEvent(Event event)
+    {
+        synchronized (this) {
+            this.event = event;
+            eventId = event == null ? null : event.getId();
+            event__resolvedKey = eventId;
+        }
+    }
+
+    /**
+     * To-one relationship, resolved on first access.
+     */
+    public Team getTeam()
+    {
+        Long __key = this.teamId;
+        if (team__resolvedKey == null || !team__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            TeamDao targetDao = daoSession.getTeamDao();
+            Team teamNew = targetDao.load(__key);
+            synchronized (this) {
+                team = teamNew;
+                team__resolvedKey = __key;
+            }
+        }
+        return team;
+    }
+
+    public void setTeam(Team team)
+    {
+        synchronized (this) {
+            this.team = team;
+            teamId = team == null ? null : team.getNumber();
+            team__resolvedKey = teamId;
         }
     }
 

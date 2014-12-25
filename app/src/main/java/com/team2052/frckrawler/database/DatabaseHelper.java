@@ -37,6 +37,11 @@ public class DatabaseHelper extends DaoMaster.OpenHelper
             db.execSQL("ALTER TABLE 'PIT_DATA' ADD COLUMN USER_ID INTEGER");
             db.execSQL("ALTER TABLE 'MATCH_DATA' ADD COLUMN USER_ID INTEGER");
         }
+
+        if (oldSchemaVer == 6 && newSchemaVer == 7) {
+            db.execSQL("ALTER TABLE 'MATCH_COMMENT' ADD COLUMN EVENT_ID INTEGER");
+            db.execSQL("ALTER TABLE 'MATCH_COMMENT' ADD COLUMN TEAM_ID INTEGER");
+        }
         //EX db.execSQL("ALTER TABLE ROBOT ADD COLUMN '_ID' INTEGER");
     }
 }

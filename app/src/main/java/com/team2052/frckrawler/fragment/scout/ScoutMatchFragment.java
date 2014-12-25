@@ -19,10 +19,10 @@ import android.widget.Toast;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.scout.LoginHandler;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.util.MetricUtil;
 import com.team2052.frckrawler.db.*;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.fragment.BaseFragment;
+import com.team2052.frckrawler.util.MetricUtil;
 import com.team2052.frckrawler.util.ScoutUtil;
 import com.team2052.frckrawler.view.metric.MetricWidget;
 
@@ -245,7 +245,7 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
             }
             //Only save if we have something.
             if (((EditText) getView().findViewById(R.id.comments)).getText().toString().length() != 0) {
-                mDaoSession.insert(new MatchComment(match.getId(), ((EditText) getView().findViewById(R.id.comments)).getText().toString(), robot.getId()));
+                mDaoSession.insert(new MatchComment(match.getId(), ((EditText) getView().findViewById(R.id.comments)).getText().toString(), robot.getId(), mEvent.getId(), team.getNumber()));
             }
             return 0;
         }

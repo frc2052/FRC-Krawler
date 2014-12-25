@@ -9,7 +9,7 @@ public class FRCKrawlerDaoGenerator
 
     public static void main(String args[]) throws Exception
     {
-        Schema schema = new Schema(6, "com.team2052.frckrawler.db");
+        Schema schema = new Schema(7, "com.team2052.frckrawler.db");
         //Games
         Entity game = schema.addEntity("Game");
         game.implementsSerializable();
@@ -120,6 +120,8 @@ public class FRCKrawlerDaoGenerator
         matchComment.addToOne(match, matchComment.addLongProperty("matchId").getProperty());
         matchComment.addStringProperty("comment");
         matchComment.addToOne(robot, matchComment.addLongProperty("robotId").getProperty());
+        matchComment.addToOne(event, matchComment.addLongProperty("eventId").getProperty());
+        matchComment.addToOne(team, matchComment.addLongProperty("teamId").getProperty());
 
 
         new DaoGenerator().generateAll(schema, args[0]);

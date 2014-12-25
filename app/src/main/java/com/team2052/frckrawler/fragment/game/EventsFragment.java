@@ -164,7 +164,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() == R.id.add_event){
+        if (item.getItemId() == R.id.add_event) {
             AddEventDialogFragment.newInstance(mGame).show(getChildFragmentManager(), "addEventDialog");
         }
         return false;

@@ -6,7 +6,6 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.BaseActivity;
 import com.team2052.frckrawler.view.ListEditor;
 import com.team2052.frckrawler.view.TextListEditor;
 

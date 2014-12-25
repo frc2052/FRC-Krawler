@@ -31,6 +31,8 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
         public final static Property MatchId = new Property(0, Long.class, "matchId", false, "MATCH_ID");
         public final static Property Comment = new Property(1, String.class, "comment", false, "COMMENT");
         public final static Property RobotId = new Property(2, Long.class, "robotId", false, "ROBOT_ID");
+        public final static Property EventId = new Property(3, Long.class, "eventId", false, "EVENT_ID");
+        public final static Property TeamId = new Property(4, Long.class, "teamId", false, "TEAM_ID");
     }
 
     ;
@@ -58,7 +60,9 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
         db.execSQL("CREATE TABLE " + constraint + "'MATCH_COMMENT' (" + //
                 "'MATCH_ID' INTEGER," + // 0: matchId
                 "'COMMENT' TEXT," + // 1: comment
-                "'ROBOT_ID' INTEGER);"); // 2: robotId
+                "'ROBOT_ID' INTEGER," + // 2: robotId
+                "'EVENT_ID' INTEGER," + // 3: eventId
+                "'TEAM_ID' INTEGER);"); // 4: teamId
     }
 
     /**
@@ -92,6 +96,16 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
         if (robotId != null) {
             stmt.bindLong(3, robotId);
         }
+
+        Long eventId = entity.getEventId();
+        if (eventId != null) {
+            stmt.bindLong(4, eventId);
+        }
+
+        Long teamId = entity.getTeamId();
+        if (teamId != null) {
+            stmt.bindLong(5, teamId);
+        }
     }
 
     @Override
@@ -119,7 +133,9 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
         MatchComment entity = new MatchComment( //
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // matchId
                 cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // comment
-                cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2) // robotId
+                cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // robotId
+                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // eventId
+                cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // teamId
         );
         return entity;
     }
@@ -133,6 +149,8 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
         entity.setMatchId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setComment(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setRobotId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setEventId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setTeamId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
     }
 
     /**
@@ -174,9 +192,15 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
             SqlUtils.appendColumns(builder, "T0", daoSession.getMatchDao().getAllColumns());
             builder.append(',');
             SqlUtils.appendColumns(builder, "T1", daoSession.getRobotDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T2", daoSession.getEventDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T3", daoSession.getTeamDao().getAllColumns());
             builder.append(" FROM MATCH_COMMENT T");
             builder.append(" LEFT JOIN MATCH T0 ON T.'MATCH_ID'=T0.'_id'");
             builder.append(" LEFT JOIN ROBOT T1 ON T.'ROBOT_ID'=T1.'_id'");
+            builder.append(" LEFT JOIN EVENT T2 ON T.'EVENT_ID'=T2.'_id'");
+            builder.append(" LEFT JOIN TEAM T3 ON T.'TEAM_ID'=T3.'NUMBER'");
             builder.append(' ');
             selectDeep = builder.toString();
         }
@@ -194,6 +218,14 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
 
         Robot robot = loadCurrentOther(daoSession.getRobotDao(), cursor, offset);
         entity.setRobot(robot);
+        offset += daoSession.getRobotDao().getAllColumns().length;
+
+        Event event = loadCurrentOther(daoSession.getEventDao(), cursor, offset);
+        entity.setEvent(event);
+        offset += daoSession.getEventDao().getAllColumns().length;
+
+        Team team = loadCurrentOther(daoSession.getTeamDao(), cursor, offset);
+        entity.setTeam(team);
 
         return entity;
     }
