@@ -11,9 +11,9 @@ import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.fragment.event.MatchListFragment;
-import com.team2052.frckrawler.fragment.event.SummaryFragment;
-import com.team2052.frckrawler.fragment.robot.RobotsFragment;
+import com.team2052.frckrawler.fragment.MatchListFragment;
+import com.team2052.frckrawler.fragment.SummaryFragment;
+import com.team2052.frckrawler.fragment.RobotsFragment;
 
 /**
  * @author Adam

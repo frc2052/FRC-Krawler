@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment.event;
+package com.team2052.frckrawler.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.MatchDao;
-import com.team2052.frckrawler.fragment.ListFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.items.MatchListItem;
 import com.team2052.frckrawler.tba.HTTP;

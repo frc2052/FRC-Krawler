@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.bluetooth.BluetoothInfo;
+import com.team2052.frckrawler.bluetooth.ScoutPackage;
+import com.team2052.frckrawler.bluetooth.ServerPackage;
 import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.db.*;
 import com.team2052.frckrawler.util.BluetoothUtil;
@@ -59,21 +61,12 @@ public class ServerThread extends Thread
             }
 
             try {
-                //Set current time
                 long startTime = System.currentTimeMillis();
-
-                //Accept the client socket
                 BluetoothSocket clientSocket = serverSocket.accept();
-
-                //Get the device name
                 deviceName = clientSocket.getRemoteDevice().getName();
-
-                //Call the sync handler
                 //handler.onSyncStart(deviceName);
-
                 //Close the server socket
                 serverSocket.close();
-
                 //Create the streams
                 OutputStream outputStream = clientSocket.getOutputStream();
                 ObjectOutputStream oStream = new ObjectOutputStream(outputStream);
@@ -85,57 +78,8 @@ public class ServerThread extends Thread
 
                 if (connectionType == BluetoothInfo.SCOUT) {
                     //Get the data from the stream
-                    final List<MatchData> inMatchData = (List<MatchData>) inStream.readObject();
-                    final List<PitData> inPitData = (List<PitData>) inStream.readObject();
-                    final List<MatchComment> inMatchComments = (List<MatchComment>) inStream.readObject();
-
-                    mDaoSession.runInTx(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            //Save all the data
-                            for (MatchData m : inMatchData) {
-                                //Don't Save data if it already exists.
-                                if (mDaoSession.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.RobotId.eq(m.getRobotId())).where(MatchDataDao.Properties.MetricId.eq(m.getMetricId())).where(MatchDataDao.Properties.MatchId.eq(m.getMatchId())).list().size() <= 0)
-                                    mDaoSession.getMatchDataDao().insertOrReplace(m);
-                            }
-
-                            for (PitData m : inPitData) {
-                                //Don't Save data if it already exists.
-                                if (mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(m.getRobotId())).where(PitDataDao.Properties.MetricId.eq(m.getMetricId())).list().size() <= 0)
-                                    mDaoSession.getPitDataDao().insertOrReplace(m);
-                            }
-
-                            for (MatchComment matchComment : inMatchComments) {
-                                //Don't Save data if it already exists.
-                                if (mDaoSession.getMatchCommentDao().queryBuilder().where(MatchCommentDao.Properties.MatchId.eq(matchComment.getMatchId())).where(MatchCommentDao.Properties.RobotId.eq(matchComment.getRobotId())).list().size() <= 0)
-                                    mDaoSession.getMatchCommentDao().insert(matchComment);
-                            }
-
-                        }
-                    });
-
-                    //Compile Data To Send
-                    List<User> usersArr = mDaoSession.getUserDao().loadAll();
-                    List<Metric> metrics = mDaoSession.getMetricDao().queryDeep("WHERE " + MetricDao.Properties.GameId.columnName + " = " + hostedEvent.getGame().getId());
-                    List<RobotEvent> robots = mDaoSession.getRobotEventDao().queryDeep("WHERE " + RobotEventDao.Properties.EventId.columnName + " = " + hostedEvent.getId());
-                    Schedule schedule = new Schedule(hostedEvent, mDaoSession.getMatchDao().queryDeep("WHERE " + MatchDao.Properties.EventId.columnName + " = " + hostedEvent.getId()));
-                    List<Team> teams = new ArrayList<>();
-                    List<PitData> pitData = mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.EventId.eq(hostedEvent.getId())).list();
-
-                    for (RobotEvent robotEvent : robots) {
-                        teams.add(robotEvent.getRobot().getTeam());
-                    }
-
-                    //Write the objects to OStream
-                    oStream.writeObject(hostedEvent);
-                    oStream.writeObject(metrics);
-                    oStream.writeObject(usersArr);
-                    oStream.writeObject(robots);
-                    oStream.writeObject(teams);
-                    oStream.writeObject(schedule);
-                    oStream.writeObject(pitData);
+                    ((ServerPackage) inStream.readObject()).save(mDaoSession);
+                    oStream.writeObject(new ScoutPackage(mDaoSession, hostedEvent));
                 }
 
                 oStream.flush();

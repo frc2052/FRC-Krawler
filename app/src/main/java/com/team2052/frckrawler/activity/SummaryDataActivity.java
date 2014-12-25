@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.activity.data;
+package com.team2052.frckrawler.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.ListActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.CompiledMetricValue;
 import com.team2052.frckrawler.db.Event;

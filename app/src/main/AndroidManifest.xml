@@ -26,9 +26,9 @@
         <activity android:name=".activity.ListTester" />
         <activity android:name=".activity.MatchListActivity" />
         <activity android:name=".activity.TeamInfoActivity" />
-        <activity android:name=".activity.robot.RobotActivity" />
-        <activity android:name=".activity.data.SummaryDataActivity" />
-        <activity android:name=".activity.robot.RobotsActivity" />
+        <activity android:name=".activity.RobotActivity" />
+        <activity android:name=".activity.SummaryDataActivity" />
+        <activity android:name=".activity.RobotsActivity" />
         <activity android:name=".activity.GameInfoActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

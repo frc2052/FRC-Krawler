@@ -10,6 +10,8 @@ import android.util.Log;
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.bluetooth.BluetoothInfo;
+import com.team2052.frckrawler.bluetooth.ScoutPackage;
+import com.team2052.frckrawler.bluetooth.ServerPackage;
 import com.team2052.frckrawler.bluetooth.server.Server;
 import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.db.*;
@@ -79,55 +81,27 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
             if (isCancelled())
                 return SYNC_CANCELLED;
 
-
             //Open the streams
             InputStream inStream = serverSocket.getInputStream();
             ObjectInputStream ioStream = new ObjectInputStream(inStream);
             OutputStream outStream = serverSocket.getOutputStream();
             ObjectOutputStream ooStream = new ObjectOutputStream(outStream);
 
-            //Get the data to send
-            final List<MatchData> metricMatchData = mDaoSession.getMatchDataDao().loadAll();
-            List<PitData> metricPitData = mDaoSession.getPitDataDao().loadAll();
-            List<MatchComment> matchComments = mDaoSession.getMatchCommentDao().loadAll();
-
             if (isCancelled())
                 return SYNC_CANCELLED;
 
             //Write the scout data
-            LogHelper.info("Sending data to server to be compiled");
             ooStream.writeInt(BluetoothInfo.SCOUT);
-            ooStream.writeObject(metricMatchData);
-            ooStream.writeObject(metricPitData);
-            ooStream.writeObject(matchComments);
+            ooStream.writeObject(new ServerPackage(mDaoSession));
             ooStream.flush();
-            LogHelper.info("Data Sent");
 
-
-            LogHelper.info("Deleting All Data");
             deleteAllData();
-            LogHelper.info("Deleted All Data");
-
-            if (isCancelled())
-                return SYNC_CANCELLED;
-
-            LogHelper.info("Reading data from server");
-            final Event event1 = (Event) ioStream.readObject();
-            final List<Metric> inMetric = (List<Metric>) ioStream.readObject();
-            final List<User> inUsers = (List<User>) ioStream.readObject();
-            final List<RobotEvent> inRobots = (List<RobotEvent>) ioStream.readObject();
-            final List<Team> inTeams = (List<Team>) ioStream.readObject();
-            final Schedule inSchedule = (Schedule) ioStream.readObject();
-            final List<PitData> inPitData = (List<PitData>) ioStream.readObject();
 
             if (isCancelled())
                 return SYNC_CANCELLED;
 
             //Bulk Insert
-            LogHelper.info("Saving data from server");
-            insertIntoDatabase(inMetric, inUsers, inRobots, inTeams, inSchedule, event1, inPitData);
-            LogHelper.info("Data saved");
-
+            ((ScoutPackage) ioStream.readObject()).save(mDaoSession, context);
             //Close the streams
             ooStream.close();
             outStream.close();
@@ -180,48 +154,5 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer>
                 mDaoSession.getRobotPhotoDao().deleteAll();
             }
         });
-    }
-
-    public void insertIntoDatabase(final List<Metric> metrics, final List<User> users, final List<RobotEvent> robots, final List<Team> teams, final Schedule schedule, final Event event, final List<PitData> pitData)
-    {
-        mDaoSession.runInTx(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                for (Metric metric : metrics) {
-                    mDaoSession.insertOrReplace(metric);
-                }
-
-                for (User user : users) {
-                    mDaoSession.insertOrReplace(user);
-                }
-
-                for (RobotEvent robotEvent : robots) {
-                    mDaoSession.insert(robotEvent);
-                    mDaoSession.insertOrReplace(robotEvent.getRobot());
-                }
-
-                for (Team team : teams) {
-                    mDaoSession.insertOrReplace(team);
-                }
-
-                for (Match match : schedule.matches) {
-                    mDaoSession.insertOrReplace(match);
-                }
-
-                for (PitData pitValues : pitData) {
-                    mDaoSession.insertOrReplace(pitValues);
-                }
-
-                mDaoSession.insertOrReplace(event);
-                mDaoSession.insertOrReplace(event.getGame());
-            }
-        });
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, event.getId());
-        editor.apply();
     }
 }

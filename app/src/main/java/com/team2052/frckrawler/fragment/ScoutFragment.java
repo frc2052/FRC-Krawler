@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment.scout;
+package com.team2052.frckrawler.fragment;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -19,7 +19,6 @@ import com.team2052.frckrawler.events.scout.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncStartEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
-import com.team2052.frckrawler.fragment.ViewPagerFragment;
 import com.team2052.frckrawler.util.BluetoothUtil;
 
 import de.greenrobot.event.EventBus;

@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment.team;
+package com.team2052.frckrawler.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,7 +11,6 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.db.Contact;
 import com.team2052.frckrawler.db.ContactDao;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.fragment.ListFragmentFab;
 import com.team2052.frckrawler.fragment.dialog.AddContactDialogFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.ContactListElement;

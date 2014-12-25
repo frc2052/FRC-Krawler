@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment.robot;
+package com.team2052.frckrawler.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
-import com.team2052.frckrawler.fragment.ListFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.EventListElement;
 

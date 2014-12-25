@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragment.game;
+package com.team2052.frckrawler.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,7 +21,6 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.EventDao;
 import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.fragment.ListFragment;
 import com.team2052.frckrawler.fragment.dialog.AddEventDialogFragment;
 import com.team2052.frckrawler.fragment.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;

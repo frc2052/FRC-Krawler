@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.activity.robot;
+package com.team2052.frckrawler.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,10 +8,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activity.ViewPagerActivity;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.fragment.robot.PhotosFragment;
-import com.team2052.frckrawler.fragment.robot.RobotAttendingEventsFragment;
+import com.team2052.frckrawler.fragment.PhotosFragment;
+import com.team2052.frckrawler.fragment.RobotAttendingEventsFragment;
 
 /**
  * @author Adam
