@@ -2,6 +2,8 @@ package com.team2052.frckrawler.database;
 
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.MatchComment;
+import com.team2052.frckrawler.db.MatchCommentDao;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.RobotEvent;
@@ -19,6 +21,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * @author Adam
@@ -55,6 +58,19 @@ public class ExportUtil
                 List<String> record = new ArrayList<>();
                 record.add(String.valueOf(entry.getKey()));
 
+                //Comments
+                QueryBuilder<MatchComment> matchCommentQueryBuilder = daoSession.getMatchCommentDao().queryBuilder();
+                matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(event.getId()));
+                matchCommentQueryBuilder.where(MatchCommentDao.Properties.TeamId.eq(entry.getKey()));
+                String comments = "";
+
+                for (MatchComment matchComment : matchCommentQueryBuilder.list()) {
+                   comments += "Match:" + matchComment.getMatch().getNumber() + ": " + matchComment.getComment() + ", ";
+                }
+
+                record.add(comments);
+
+                //Compiled values
                 for (CompiledMetricValue metricValue : entry.getValue()) {
                     record.add(metricValue.compiledValue);
                 }
