@@ -15,7 +15,6 @@ import com.team2052.frckrawler.fragment.OptionsFragment;
 import com.team2052.frckrawler.fragment.ServerFragment;
 import com.team2052.frckrawler.fragment.TeamsFragment;
 import com.team2052.frckrawler.fragment.UsersFragment;
-import com.team2052.frckrawler.fragment.ScoutFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 
 public class HomeActivity extends BaseActivity
@@ -120,8 +119,9 @@ public class HomeActivity extends BaseActivity
         Fragment fragment = null;
         switch (id) {
             case R.id.nav_item_scout:
-                fragment = new ScoutFragment();
-                break;
+                mCurrentSelectedNavigationItemId = id;
+                startActivity(new Intent(this, ScoutActivity.class));
+                return;
             case R.id.nav_item_server:
                 fragment = new ServerFragment();
                 break;

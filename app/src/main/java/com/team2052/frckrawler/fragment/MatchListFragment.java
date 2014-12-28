@@ -26,14 +26,12 @@ import java.util.List;
 /**
  * @author Adam
  */
-public class MatchListFragment extends ListFragment
-{
+public class MatchListFragment extends ListFragment {
 
     private Event mEvent;
     private List<Match> mMatches;
 
-    public static MatchListFragment newInstance(Event event)
-    {
+    public static MatchListFragment newInstance(Event event) {
         MatchListFragment fragment = new MatchListFragment();
         Bundle b = new Bundle();
         b.putLong(DatabaseActivity.PARENT_ID, event.getId());
@@ -42,21 +40,18 @@ public class MatchListFragment extends ListFragment
     }
 
     @Override
-    public void onPostCreate()
-    {
+    public void onPostCreate() {
         mEvent = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.match_list, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.update_scores) {
             new GetMatchScores().execute();
         }
@@ -64,33 +59,33 @@ public class MatchListFragment extends ListFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         setShowAddAction(false);
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    public void updateList()
-    {
+    public void updateList() {
         new GetMatches().execute();
     }
 
-    public class GetMatches extends AsyncTask<Void, Void, List<Match>>
-    {
+    public class GetMatches extends AsyncTask<Void, Void, List<Match>> {
 
         @Override
-        protected List<Match> doInBackground(Void... params)
-        {
+        protected List<Match> doInBackground(Void... params) {
             //Get Matches ascending from the provided event id
             return mDaoSession.getMatchDao().queryBuilder().orderAsc(MatchDao.Properties.Number).where(MatchDao.Properties.EventId.eq(mEvent.getId())).list();
         }
 
         @Override
-        protected void onPostExecute(List<Match> matches)
-        {
+        protected void onPostExecute(List<Match> matches) {
             mMatches = matches;
+            if (matches.size() == 0) {
+                showError(true);
+                return;
+            }
+            showError(false);
             List<ListItem> listItems = new ArrayList<>();
 
             for (Match match : matches) {
@@ -100,12 +95,10 @@ public class MatchListFragment extends ListFragment
         }
     }
 
-    public class GetMatchScores extends AsyncTask<Void, Void, Void>
-    {
+    public class GetMatchScores extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected Void doInBackground(Void... params)
-        {
+        protected Void doInBackground(Void... params) {
             //Check if the event is hosted by TBA if not don't update
             if (mEvent.getFmsid() != null) {
                 String url = TBA.BASE_TBA_URL + String.format(TBA.EVENT_REQUEST, mEvent.getFmsid());
@@ -118,7 +111,6 @@ public class MatchListFragment extends ListFragment
                         unique.setRedscore(match.getRedscore());
                         unique.setBluescore(match.getBluescore());
                         unique.update();
-                        match = null;
                     }
                 }
             }
@@ -126,8 +118,7 @@ public class MatchListFragment extends ListFragment
         }
 
         @Override
-        protected void onPostExecute(Void aVoid)
-        {
+        protected void onPostExecute(Void aVoid) {
             updateList();
         }
     }

@@ -22,8 +22,7 @@ import butterknife.InjectView;
  * @author Adam
  * @since 12/13/2014.
  */
-public class SetupActivity extends ActionBarActivity implements View.OnClickListener
-{
+public class SetupActivity extends ActionBarActivity implements View.OnClickListener {
     public static final String PREF_SETUP = "PREF_LOADED";
     private static final int REQUEST_ENABLE_BT = 1;
     @InjectView(R.id.view_pager)
@@ -32,15 +31,13 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
     protected View welcomeNextButton;
     @InjectView(R.id.bluetooth_next_page)
     protected View bluetoothNextButton;
-
     @InjectView(R.id.server_button)
     protected View serverButton;
     @InjectView(R.id.scout_button)
     protected View scoutButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sharedPreferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
 
         if (sharedPreferences.getBoolean(PREF_SETUP, false)) {
@@ -59,8 +56,7 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
     }
 
-    private void setupViews()
-    {
+    private void setupViews() {
         //Setup pager
         pager.setSwipeEnabled(false);
         pager.setOffscreenPageLimit(2);
@@ -75,8 +71,7 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
     }
 
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         switch (v.getId()) {
             case R.id.welcome_next_page:
                 LogHelper.info(String.valueOf(BluetoothUtil.isBluetoothEnabled()));
@@ -105,16 +100,14 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BT && resultCode == RESULT_OK) {
             pager.advanceToNextPage();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void setupFinished()
-    {
+    public void setupFinished() {
 
         SharedPreferences preferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         SharedPreferences.Editor edit = preferences.edit();

@@ -11,8 +11,8 @@ import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.bluetooth.BluetoothInfo;
 import com.team2052.frckrawler.bluetooth.ScoutPackage;
 import com.team2052.frckrawler.bluetooth.ServerPackage;
-import com.team2052.frckrawler.database.Schedule;
-import com.team2052.frckrawler.db.*;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.util.BluetoothUtil;
 
 import java.io.IOException;
@@ -20,12 +20,9 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-public class ServerThread extends Thread
-{
+public class ServerThread extends Thread {
 
     private final BluetoothAdapter mBluetoothAdapter;
     private final Server server;
@@ -35,8 +32,7 @@ public class ServerThread extends Thread
     private Event hostedEvent;
     private BluetoothServerSocket serverSocket;
 
-    public ServerThread(ServerService c, Event e)
-    {
+    public ServerThread(ServerService c, Event e) {
         isOpen = false;
         context = c.getApplicationContext();
         hostedEvent = e;
@@ -47,8 +43,7 @@ public class ServerThread extends Thread
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         //Init the socket
         String deviceName = "device";
 
@@ -88,7 +83,7 @@ public class ServerThread extends Thread
                 Log.d("FRCKrawler", "Synced in: " + (System.currentTimeMillis() - startTime) + "ms");
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e("FRCKrawler", "IO error in server.");
+                Log.e("FRCKrawler", "IO mErrorView in server.");
                 if (!e.getMessage().trim().equals("Operation Canceled") && isOpen) {
                     //handler.onSyncError(deviceName);
                 }
@@ -99,8 +94,7 @@ public class ServerThread extends Thread
         }
     }
 
-    public void closeServer()
-    {
+    public void closeServer() {
         isOpen = false;
         if (serverSocket != null)
             try {

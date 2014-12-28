@@ -23,39 +23,33 @@ import java.util.List;
  * @author Adam
  * @since 10/4/2014
  */
-public class RobotPhotoAdapter extends BaseAdapter
-{
+public class RobotPhotoAdapter extends BaseAdapter {
 
     private final List<RobotPhoto> photos;
     private final Context mContext;
 
-    public RobotPhotoAdapter(Context context, List<RobotPhoto> photos)
-    {
+    public RobotPhotoAdapter(Context context, List<RobotPhoto> photos) {
         this.mContext = context;
         this.photos = photos;
     }
 
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return photos.size();
     }
 
     @Override
-    public Object getItem(int i)
-    {
+    public Object getItem(int i) {
         return photos.get(i);
     }
 
     @Override
-    public long getItemId(int i)
-    {
+    public long getItemId(int i) {
         return photos.get(i).getId();
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent)
-    {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_image, parent, false);
         }
@@ -78,11 +72,9 @@ public class RobotPhotoAdapter extends BaseAdapter
         }
         LogHelper.debug(photos.get(position).getLocation());
         Uri uri = Uri.parse("file://" + photos.get(position).getLocation());
-        Picasso.with(mContext).load(uri).centerCrop().fit().into(imageView, new Callback()
-        {
+        Picasso.with(mContext).load(uri).centerCrop().fit().into(imageView, new Callback() {
             @Override
-            public void onSuccess()
-            {
+            public void onSuccess() {
 
                 /*Palette.generateAsync(((BitmapDrawable) imageView.getDrawable()).getBitmap(), new Palette.PaletteAsyncListener()
                 {
@@ -100,8 +92,7 @@ public class RobotPhotoAdapter extends BaseAdapter
             }
 
             @Override
-            public void onError()
-            {
+            public void onError() {
             }
         });
 

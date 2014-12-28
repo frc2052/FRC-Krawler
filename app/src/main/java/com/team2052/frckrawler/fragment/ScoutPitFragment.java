@@ -28,7 +28,6 @@ import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
-import com.team2052.frckrawler.fragment.BaseFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 import com.team2052.frckrawler.util.MetricUtil;
@@ -40,6 +39,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import de.greenrobot.dao.query.QueryBuilder;
 import de.greenrobot.event.EventBus;
 
@@ -48,15 +49,19 @@ import de.greenrobot.event.EventBus;
  */
 public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItemSelectedListener
 {
+    @InjectView(R.id.metricWidgetList)
+    protected LinearLayout mLinearLayout;
     private Event mEvent;
     private Spinner mTeamSpinner;
     private List<RobotEvent> mRobots;
+    private List<MetricWidget> mWidgets;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
         EventBus.getDefault().register(this);
     }
 
@@ -97,7 +102,6 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         inflater.inflate(R.menu.scout, menu);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -110,9 +114,18 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        ButterKnife.inject(this, view);
         mTeamSpinner = (Spinner) view.findViewById(R.id.team);
         mTeamSpinner.setOnItemSelectedListener(this);
-        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
+        if (mWidgets != null) {
+            mLinearLayout.removeAllViews();
+            for (MetricWidget widget : mWidgets) {
+                mLinearLayout.addView(widget);
+            }
+            mWidgets = null;
+        } else {
+            loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
+        }
     }
 
     @Override
@@ -129,6 +142,18 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     @Override
+    public void onDetach() {
+        List<MetricWidget> widgets = new ArrayList<>();
+
+        for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
+            widgets.add((MetricWidget) mLinearLayout.getChildAt(i));
+        }
+
+        mWidgets = widgets;
+        super.onDetach();
+    }
+
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
         new GetAllMetrics().execute();
@@ -137,7 +162,6 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public void onNothingSelected(AdapterView<?> parent)
     {
-
     }
 
     public class GetAllRobots extends AsyncTask<Void, Void, List<RobotEvent>>
@@ -147,6 +171,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
         {
             return mDaoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(mEvent.getId())).list();
         }
+
 
         @Override
         protected void onPostExecute(List<RobotEvent> robotEventses)
@@ -168,6 +193,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
             for (RobotEvent robotEvents : robotEventses) {
                 listItems.add(new SimpleListElement(Long.toString(robotEvents.getRobot().getTeam().getNumber()) + " - " + robotEvents.getRobot().getTeam().getName(), robotEvents.getRobot().getTeam().getTeamkey()));
             }
+
             mTeamSpinner.setAdapter(new ListViewAdapter(getActivity(), listItems));
             new GetAllMetrics().execute();
         }

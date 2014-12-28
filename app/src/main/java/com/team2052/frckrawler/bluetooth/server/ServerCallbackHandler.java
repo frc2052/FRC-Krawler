@@ -6,18 +6,15 @@ import android.support.v4.app.NotificationCompat;
 
 import com.team2052.frckrawler.R;
 
-public class ServerCallbackHandler
-{
+public class ServerCallbackHandler {
     public static final int SYNC_ONGOING_ID = 1;
     private Context context;
 
-    public ServerCallbackHandler(Context c)
-    {
+    public ServerCallbackHandler(Context c) {
         context = c.getApplicationContext();
     }
 
-    public void onSyncStart(String deviceName)
-    {
+    public void onSyncStart(String deviceName) {
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
         b.setSmallIcon(android.R.drawable.ic_popup_sync);
         b.setContentTitle("Syncing");
@@ -28,8 +25,7 @@ public class ServerCallbackHandler
         m.notify(SYNC_ONGOING_ID, b.build());
     }
 
-    public void onSyncSuccess(String deviceName)
-    {
+    public void onSyncSuccess(String deviceName) {
         NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         m.cancel(SYNC_ONGOING_ID);
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
@@ -39,19 +35,17 @@ public class ServerCallbackHandler
         m.notify(0, b.build());
     }
 
-    public void onSyncCancel(String deviceName)
-    {
+    public void onSyncCancel(String deviceName) {
         ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(ServerCallbackHandler.SYNC_ONGOING_ID);
     }
 
-    public void onSyncError(String deviceName)
-    {
+    public void onSyncError(String deviceName) {
         NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         m.cancel(SYNC_ONGOING_ID);
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
         b.setSmallIcon(android.R.drawable.ic_dialog_alert);
-        b.setContentTitle("Sync error");
-        b.setContentText("The FRCKrawler server encountered an error when " + "syncing with " + deviceName);
+        b.setContentTitle("Sync mErrorView");
+        b.setContentText("The FRCKrawler server encountered an mErrorView when " + "syncing with " + deviceName);
         m.notify(0, b.build());
     }
 }

@@ -14,8 +14,7 @@ import android.widget.ToggleButton;
 
 import com.team2052.frckrawler.R;
 
-public class OptionsFragment extends Fragment implements View.OnClickListener
-{
+public class OptionsFragment extends Fragment implements View.OnClickListener {
     public static final String PREFS_NAME = "userSettings";
     public static final String PREFS_IS_WRITTEN = "isWritten";
     public static final String PREFS_COMPILE_WEIGHT = "compileWeight";
@@ -24,8 +23,7 @@ public class OptionsFragment extends Fragment implements View.OnClickListener
     private SharedPreferences preferences;
     private String gameName;
 
-    public static void restoreDefaultOptions(Context context)
-    {
+    public static void restoreDefaultOptions(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
         if (!prefs.getBoolean(PREFS_IS_WRITTEN, false) || true) {
@@ -39,8 +37,7 @@ public class OptionsFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_options, null);
         preferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         ((EditText) v.findViewById(R.id.weightValue)).setText(Float.toString(preferences.getFloat(PREFS_COMPILE_WEIGHT, 1.0f)));
@@ -62,8 +59,7 @@ public class OptionsFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void onClick(View view)
-    {
+    public void onClick(View view) {
         switch (view.getId()) {
             case R.id.saveOptions:
                 SharedPreferences.Editor editor = preferences.edit();
@@ -79,12 +75,10 @@ public class OptionsFragment extends Fragment implements View.OnClickListener
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("Options Not Saved");
                     builder.setMessage("You must enter a number for the weight when " + "compiling data.");
-                    builder.setNeutralButton("Close", new DialogInterface.OnClickListener()
-                    {
+                    builder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
 
                         @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
+                        public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
@@ -108,7 +102,7 @@ public class OptionsFragment extends Fragment implements View.OnClickListener
                         " greater than 1 make later matches more valuable, and values " +
                         "less than 1 make earlier matches more valuable. A value of 1 makes" +
                         "all matches equal. This " +
-                        "applies to math, counter, slider, boolean, and numeric chooser " +
+                        "applies to math,counter, slider, boolean, and numeric chooser " +
                         "metrics that track match data. For example, " +
                         "a robot receives a score of 10 in a given add_button for match #1, and " +
                         "a score of 20 for the same add_button in match #5. If the weight " +
@@ -117,33 +111,13 @@ public class OptionsFragment extends Fragment implements View.OnClickListener
                         "to 0.5, the average shown will be 12.5. Match #1 is more 'valuable' " +
                         "in the averaging process. Be careful, values larger than 2 or 3 will" +
                         " seriously skew data towards later matches. The default setting is 1.");
-                weightBuilder.setNeutralButton("Close", new DialogInterface.OnClickListener()
-                {
+                weightBuilder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
                 weightBuilder.show();
-                break;
-
-            case R.id.generateHelp:
-                AlertDialog.Builder generateBuilder = new AlertDialog.Builder(getActivity());
-                generateBuilder.setTitle("About Generating Robots");
-                generateBuilder.setMessage("Setting this option to 'On' generates a robot with " +
-                        "the specified Game every time a new Team is added to the database. " +
-                        "This is extremely useful for adding new Teams to the database for " +
-                        "this first time, or for the next competition season.");
-                generateBuilder.setNeutralButton("Close", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-                    }
-                });
-                generateBuilder.show();
                 break;
         }
     }

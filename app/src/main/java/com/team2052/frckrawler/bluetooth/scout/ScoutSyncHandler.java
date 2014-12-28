@@ -20,15 +20,13 @@ import de.greenrobot.event.EventBus;
  * @since 12/11/2014.
  */
 @SuppressWarnings("unused")
-public class ScoutSyncHandler
-{
+public class ScoutSyncHandler {
     static volatile ScoutSyncHandler instance;
     private final Context context;
 
     private SyncScoutTask syncAsScoutTask = null;
 
-    public ScoutSyncHandler(Context context)
-    {
+    public ScoutSyncHandler(Context context) {
         this.context = context;
         EventBus.getDefault().register(this);
     }
@@ -36,8 +34,7 @@ public class ScoutSyncHandler
     /**
      * To be used across the whole application*
      */
-    public static ScoutSyncHandler getInstance(Context context)
-    {
+    public static ScoutSyncHandler getInstance(Context context) {
         if (instance == null) synchronized (ScoutSyncHandler.class) {
             if (instance == null)
                 instance = new ScoutSyncHandler(context);
@@ -45,33 +42,28 @@ public class ScoutSyncHandler
         return instance;
     }
 
-    public void startSync(BluetoothDevice device)
-    {
+    public void startSync(BluetoothDevice device) {
         cancelAllRunningSyncs();
         ScoutUtil.setSyncDevice(context, device);
         syncAsScoutTask = new SyncScoutTask(context);
         syncAsScoutTask.execute(device);
     }
 
-    public void startSync(String address)
-    {
+    public void startSync(String address) {
         startSync(BluetoothUtil.getDevice(address));
     }
 
-    public void cancelAllRunningSyncs()
-    {
+    public void cancelAllRunningSyncs() {
         if (syncAsScoutTask != null)
             syncAsScoutTask.cancel(true);
     }
 
-    public boolean isSyncRunning()
-    {
+    public boolean isSyncRunning() {
         return syncAsScoutTask != null;
     }
 
     @SuppressWarnings("unused")
-    public void onEvent(ScoutSyncSuccessEvent event)
-    {
+    public void onEvent(ScoutSyncSuccessEvent event) {
         //Reset task because it isn't running
         syncAsScoutTask = null;
         ScoutUtil.setDeviceAsScout(context, true);
@@ -80,25 +72,21 @@ public class ScoutSyncHandler
     }
 
     @SuppressWarnings("unused")
-    public void onEvent(ScoutSyncErrorEvent errorEvent)
-    {
-        //Alert that there was an error
+    public void onEvent(ScoutSyncErrorEvent errorEvent) {
+        //Alert that there was an mErrorView
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(context.getString(R.string.sync_error_title));
         builder.setMessage(context.getString(R.string.sync_error_message));
-        builder.setNeutralButton("Close", new DialogInterface.OnClickListener()
-        {
+        builder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
         builder.show();
     }
 
-    public void startScoutSync()
-    {
+    public void startScoutSync() {
         if (!BluetoothUtil.hasBluetoothAdapter()) {
             Toast.makeText(context, context.getString(R.string.bluetooth_not_supported_message), Toast.LENGTH_LONG).show();
             return;
@@ -111,11 +99,9 @@ public class ScoutSyncHandler
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(context);
             builder.setTitle("Select Server Device");
-            builder.setItems(ScoutUtil.getDeviceNames(ScoutUtil.getAllBluetoothDevices()), new DialogInterface.OnClickListener()
-            {
+            builder.setItems(ScoutUtil.getDeviceNames(ScoutUtil.getAllBluetoothDevices()), new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
+                public void onClick(DialogInterface dialog, int which) {
                     startSync(ScoutUtil.getAllBluetoothDevicesArray()[which]);
                 }
             });

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.team2052.frckrawler"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.team2052.frckrawler">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -37,7 +36,9 @@
         <activity android:name="org.acra.CrashReportDialog" />
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.EventInfoActivity">
-
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.team2052.frckrawler.activity.GameInfoActivity" />
         </activity>
         <activity android:name=".activity.SetupActivity">
             <intent-filter>
@@ -45,6 +46,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.ScoutActivity"></activity>
 
         <service android:name=".bluetooth.server.ServerService" />
     </application>

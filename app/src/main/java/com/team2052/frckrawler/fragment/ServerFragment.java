@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -33,9 +34,9 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
-public class ServerFragment extends BaseFragment implements View.OnClickListener
-{
+public class ServerFragment extends BaseFragment implements View.OnClickListener {
     private static final int REQUEST_BT_ENABLED = 1;
     @InjectView(R.id.chooseEvent)
     Spinner eventSpinner;
@@ -45,16 +46,14 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     private List<Event> mEvents;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.server = Server.getInstance(getActivity());
         new GetEventsTask().execute();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_bluetooth_server_manager, null);
         ButterKnife.inject(this, v);
         v.findViewById(R.id.excel).setOnClickListener(this);
@@ -65,8 +64,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     }
 
     @Override
-    public void onClick(View view)
-    {
+    public void onClick(View view) {
         switch (view.getId()) {
             case R.id.hostToggle:
                 openServer();
@@ -75,11 +73,9 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Export to File System?");
                 builder.setNegativeButton("Cancel", null);
-                builder.setPositiveButton("Export", new DialogInterface.OnClickListener()
-                {
+                builder.setPositiveButton("Export", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
+                    public void onClick(DialogInterface dialogInterface, int i) {
                         new ExportToFileSystem().execute();
                     }
                 });
@@ -95,8 +91,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         }
     }
 
-    private void openServer()
-    {
+    private void openServer() {
         Event selectedEvent = getSelectedEvent();
         if (null != selectedEvent) {
 
@@ -124,8 +119,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_BT_ENABLED && resultCode == Activity.RESULT_OK) {
             Event selectedEvent = getSelectedEvent();
             if (selectedEvent != null) {
@@ -135,21 +129,28 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     }
 
     @Nullable
-    private Event getSelectedEvent()
-    {
+    private Event getSelectedEvent() {
         if (mEvents.size() <= 0) {
             return null;
         }
         return mEvents.get(eventSpinner.getSelectedItemPosition());
     }
 
-    public class ExportToFileSystem extends AsyncTask<Void, Void, Void>
-    {
+    @OnClick(R.id.server_settings_restore_defaults)
+    public void onRestoreButtonClicked(Button button) {
+
+    }
+
+    @OnClick(R.id.server_settings_save)
+    public void onServerSettingSaveButtonClicked(Button button) {
+
+    }
+
+    public class ExportToFileSystem extends AsyncTask<Void, Void, Void> {
         File file = null;
 
         @Override
-        protected Void doInBackground(Void... voids)
-        {
+        protected Void doInBackground(Void... voids) {
             File fileSystem = Environment.getExternalStorageDirectory();
             Event selectedEvent = getSelectedEvent();
 
@@ -175,27 +176,23 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         }
 
         @Override
-        protected void onPostExecute(Void aVoid)
-        {
+        protected void onPostExecute(Void aVoid) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Export Finished");
-            builder.setMessage("Exported as " + file.getName());
+            builder.setMessage("Exported as " + file.getName() + "\n" + "We will get file sharing working soon!");
             builder.create().show();
         }
     }
 
-    private class GetEventsTask extends AsyncTask<Void, Void, List<Event>>
-    {
+    private class GetEventsTask extends AsyncTask<Void, Void, List<Event>> {
 
         @Override
-        protected List<Event> doInBackground(Void... params)
-        {
+        protected List<Event> doInBackground(Void... params) {
             return mDaoSession.getEventDao().loadAll();
         }
 
         @Override
-        protected void onPostExecute(List<Event> _events)
-        {
+        protected void onPostExecute(List<Event> _events) {
             Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
             mEvents = _events;
             List<String> eventNames = new ArrayList<>();

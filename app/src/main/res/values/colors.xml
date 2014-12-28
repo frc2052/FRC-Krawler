@@ -17,4 +17,6 @@
     <color name="primary">#720000</color>
     <color name="primary_dark">#5b0000</color>
     <color name="color_accent">#FFC400</color>
+    <color name="color_accent_darker">#ffeab200</color>
+    <color name="color_accent_ripple">#ffffd500</color>
 </resources>

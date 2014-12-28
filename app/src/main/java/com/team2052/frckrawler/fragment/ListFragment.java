@@ -17,23 +17,23 @@ import butterknife.InjectView;
 /**
  * @author Adam
  */
-public abstract class ListFragment extends BaseFragment implements ListUpdateListener
-{
+public abstract class ListFragment extends BaseFragment implements ListUpdateListener {
     @InjectView(R.id.list_layout)
     protected ListView mListView;
+
+    @InjectView(R.id.error)
+    protected View mErrorView;
 
     protected ListAdapter mAdapter;
     private Parcelable mListState;
     private boolean mShowAction = true;
 
-    protected void setShowAddAction(boolean state)
-    {
+    protected void setShowAddAction(boolean state) {
         mShowAction = state;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.list_view, null);
         ButterKnife.inject(this, v);
@@ -47,14 +47,12 @@ public abstract class ListFragment extends BaseFragment implements ListUpdateLis
         return v;
     }
 
-    public void preUpdateList()
-    {
+    public void preUpdateList() {
 
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         if (mListView != null) {
             if (mAdapter == null) {
                 mAdapter = mListView.getAdapter();
@@ -62,5 +60,15 @@ public abstract class ListFragment extends BaseFragment implements ListUpdateLis
             mListState = mListView.onSaveInstanceState();
         }
         super.onPause();
+    }
+
+    protected void showError(boolean shown) {
+        if (shown) {
+            mListView.setVisibility(View.GONE);
+            mErrorView.setVisibility(View.VISIBLE);
+        } else {
+            mListView.setVisibility(View.VISIBLE);
+            mErrorView.setVisibility(View.GONE);
+        }
     }
 }

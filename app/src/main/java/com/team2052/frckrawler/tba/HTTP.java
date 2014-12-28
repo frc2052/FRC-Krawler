@@ -13,14 +13,14 @@ import java.io.InputStreamReader;
 /**
  * @author Adam
  */
-public class HTTP
-{
-    public static HttpResponse getResponse(String url)
-    {
+public class HTTP {
+    public static final String TBA_APP_HEADER = "frc2052:frckrawler-scouting-system:v2";
+
+    public static HttpResponse getResponse(String url) {
         try {
             HttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
-            httpGet.addHeader("X-TBA-App_Id", "frc2052:frckrawler-scouting-system:v2");
+            httpGet.addHeader("X-TBA-App_Id", TBA_APP_HEADER);
             return httpClient.execute(httpGet);
         } catch (Exception e) {
             e.printStackTrace();
@@ -28,8 +28,7 @@ public class HTTP
         }
     }
 
-    public static String dataFromResponse(HttpResponse response)
-    {
+    public static String dataFromResponse(HttpResponse response) {
         InputStream is;
         String result;
         // Read response to string

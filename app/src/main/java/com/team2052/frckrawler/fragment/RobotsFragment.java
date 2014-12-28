@@ -30,15 +30,13 @@ import de.greenrobot.dao.query.WhereCondition;
 /**
  * @author Adam
  */
-public class RobotsFragment extends ListFragment
-{
+public class RobotsFragment extends ListFragment {
     public static final String VIEW_TYPE = "VIEW_TYPE";
     private int mViewType;
     private long mKey;
 
     //To create a valid instance view by team or by game
-    public static RobotsFragment newInstance(Team team)
-    {
+    public static RobotsFragment newInstance(Team team) {
         RobotsFragment fragment = new RobotsFragment();
         Bundle b = new Bundle();
         b.putInt(VIEW_TYPE, 0);
@@ -47,8 +45,7 @@ public class RobotsFragment extends ListFragment
         return fragment;
     }
 
-    public static RobotsFragment newInstance(Event event)
-    {
+    public static RobotsFragment newInstance(Event event) {
         RobotsFragment fragment = new RobotsFragment();
         Bundle b = new Bundle();
         b.putInt(VIEW_TYPE, 1);
@@ -59,8 +56,7 @@ public class RobotsFragment extends ListFragment
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         setShowAddAction(false);
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
@@ -69,14 +65,11 @@ public class RobotsFragment extends ListFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 getActivity().startActivity(RobotActivity.newInstance(getActivity(), Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey())));
             }
         });
@@ -84,18 +77,15 @@ public class RobotsFragment extends ListFragment
     }
 
     @Override
-    public void updateList()
-    {
+    public void updateList() {
         new GetAllRobotsBy().execute();
     }
 
 
-    public class GetAllRobotsBy extends AsyncTask<Void, Void, List<Robot>>
-    {
+    public class GetAllRobotsBy extends AsyncTask<Void, Void, List<Robot>> {
 
         @Override
-        protected List<Robot> doInBackground(Void... params)
-        {
+        protected List<Robot> doInBackground(Void... params) {
             WhereCondition condition = null;
             List<Robot> robots;
             if (mViewType == 0) {
@@ -108,11 +98,9 @@ public class RobotsFragment extends ListFragment
                 for (RobotEvent robotEvent : robotEvents) {
                     robots.add(robotEvent.getRobot());
                 }
-                Collections.sort(robots, new Comparator<Robot>()
-                {
+                Collections.sort(robots, new Comparator<Robot>() {
                     @Override
-                    public int compare(Robot robot, Robot robot2)
-                    {
+                    public int compare(Robot robot, Robot robot2) {
                         return Double.compare(robot.getTeamId(), robot2.getTeamId());
                     }
                 });
@@ -122,8 +110,12 @@ public class RobotsFragment extends ListFragment
         }
 
         @Override
-        protected void onPostExecute(List<Robot> robots)
-        {
+        protected void onPostExecute(List<Robot> robots) {
+            if (robots.size() == 0) {
+                showError(true);
+                return;
+            }
+            showError(false);
             List<ListItem> listItems = new ArrayList<>();
             for (Robot robot : robots) {
                 listItems.add(new RobotListElement(robot));
