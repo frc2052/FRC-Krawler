@@ -35,7 +35,7 @@ public class ExportUtil {
         Map<Long, List<CompiledMetricValue>> robots = new TreeMap<>();
 
         for (RobotEvent robotEvent : robotEvents) {
-            robots.put(robotEvent.getRobot().getTeam().getNumber(), Utilities.MetricUtil.MetricCompiler.getCompiledRobot(event, robotEvent.getRobot(), daoSession));
+            robots.put(robotEvent.getRobot().getTeam().getNumber(), Utilities.MetricCompiler.getCompiledRobot(event, robotEvent.getRobot(), daoSession));
         }
 
         try {

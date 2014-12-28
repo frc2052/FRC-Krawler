@@ -53,7 +53,7 @@ public class SummaryDataActivity extends ListActivity {
 
         @Override
         protected List<CompiledMetricValue> doInBackground(Void... params) {
-            return Utilities.MetricUtil.MetricCompiler.getCompiledMetric(mEvent, mMetric, mDaoSession);
+            return Utilities.MetricCompiler.getCompiledMetric(mEvent, mMetric, mDaoSession);
         }
 
         @Override

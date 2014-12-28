@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -9,38 +8,48 @@
 
     <TextView
         android:id="@+id/title"
+        style="@style/TextHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:text="Counter"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold" />
+        android:text="Counter" />
 
-    <Button
-        android:id="@+id/plus"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignRight="@+id/value"
-        android:text="+" />
-
-    <TextView
-        android:id="@+id/value"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/plus"
-        android:text="Value"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_alignParentRight="true">
 
-    <Button
-        android:id="@+id/minus"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignLeft="@+id/plus"
-        android:layout_below="@+id/value"
-        android:text="-" />
+        <Button
+            android:id="@+id/minus"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="?attr/selectableItemBackground"
+            android:text="-"
+            android:textColor="@color/color_accent"
+            android:textSize="@dimen/text_size_xlarge" />
+
+        <TextView
+            android:id="@+id/value"
+            style="@style/TextHeader"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Value"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+        <Button
+            android:id="@+id/plus"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="?attr/selectableItemBackground"
+            android:text="+"
+            android:textColor="@color/color_accent"
+            android:textSize="@dimen/text_size_xlarge" />
+    </LinearLayout>
+
 
 </RelativeLayout>

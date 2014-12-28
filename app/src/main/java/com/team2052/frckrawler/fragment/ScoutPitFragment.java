@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.fragment;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,34 +11,23 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.bluetooth.scout.LoginHandler;
+import com.team2052.frckrawler.background.PopulatePitScoutTask;
+import com.team2052.frckrawler.background.SavePitMetricsTask;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.MetricDao;
-import com.team2052.frckrawler.db.PitData;
-import com.team2052.frckrawler.db.PitDataDao;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
-import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
-import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 import com.team2052.frckrawler.util.Utilities;
 import com.team2052.frckrawler.view.metric.MetricWidget;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import de.greenrobot.dao.query.QueryBuilder;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -47,10 +35,15 @@ import de.greenrobot.event.EventBus;
  */
 public class ScoutPitFragment extends BaseFragment {
     @InjectView(R.id.metricWidgetList)
-    protected LinearLayout mLinearLayout;
-    private Event mEvent;
-    private Spinner mTeamSpinner;
-    private List<RobotEvent> mRobots;
+    public
+    LinearLayout mLinearLayout;
+    public Event mEvent;
+    public Spinner mTeamSpinner;
+    public List<RobotEvent> mRobots;
+    @InjectView(R.id.comments)
+    EditText mComments;
+    SavePitMetricsTask mSaveTask;
+    private PopulatePitScoutTask mTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,10 +57,23 @@ public class ScoutPitFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
             if (mTeamSpinner.getSelectedItem() != null) {
-                new SaveAllMetrics().execute();
+                save();
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void save() {
+        //Get data from view
+        Robot robot = mRobots.get(mTeamSpinner.getSelectedItemPosition()).getRobot();
+        List<MetricValue> widgets = new ArrayList<>();
+
+        for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
+            widgets.add(((MetricWidget) mLinearLayout.getChildAt(i)).getMetricValue());
+        }
+
+        mSaveTask = new SavePitMetricsTask(getActivity(), mEvent, robot, widgets, mComments.getText().toString());
+        mSaveTask.execute();
     }
 
     private void loadAllData(Event event) {
@@ -77,8 +83,8 @@ public class ScoutPitFragment extends BaseFragment {
         }
 
         mEvent = event;
-        new GetAllRobots().execute();
-        new GetAllMetrics().execute();
+        mTask = new PopulatePitScoutTask(this, mEvent);
+        mTask.execute();
     }
 
     private void setErrorVisible(boolean visible) {
@@ -118,102 +124,5 @@ public class ScoutPitFragment extends BaseFragment {
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncSuccessEvent event) {
         loadAllData(Utilities.ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
-    }
-
-    public class GetAllRobots extends AsyncTask<Void, Void, List<RobotEvent>> {
-        @Override
-        protected List<RobotEvent> doInBackground(Void... params) {
-            return mDaoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(mEvent.getId())).list();
-        }
-
-
-        @Override
-        protected void onPostExecute(List<RobotEvent> robotEventses) {
-            //Sort by Team number
-            Collections.sort(robotEventses, new Comparator<RobotEvent>() {
-                @Override
-                public int compare(RobotEvent lhs, RobotEvent rhs) {
-                    return Double.compare(lhs.getRobot().getTeam().getNumber(), rhs.getRobot().getTeam().getNumber());
-                }
-            });
-
-            mRobots = robotEventses;
-
-            List<ListItem> listItems = new ArrayList<>();
-
-            for (RobotEvent robotEvents : robotEventses) {
-                listItems.add(new SimpleListElement(Long.toString(robotEvents.getRobot().getTeam().getNumber()) + " - " + robotEvents.getRobot().getTeam().getName(), robotEvents.getRobot().getTeam().getTeamkey()));
-            }
-
-            mTeamSpinner.setAdapter(new ListViewAdapter(getActivity(), listItems));
-        }
-    }
-
-    public class GetAllMetrics extends AsyncTask<Void, Void, List<MetricValue>> {
-
-        @Override
-        protected List<MetricValue> doInBackground(Void... params) {
-            List<MetricValue> metricValues = new ArrayList<>();
-            QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
-            metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId()));
-            metricQueryBuilder.where(MetricDao.Properties.Category.eq(Utilities.MetricUtil.MetricType.ROBOT_METRICS.ordinal()));
-
-            for (Metric metric : metricQueryBuilder.list()) {
-                metricValues.add(new MetricValue(metric, null));
-            }
-            return metricValues;
-        }
-
-        @Override
-        protected void onPostExecute(List<MetricValue> metrics) {
-            mLinearLayout.removeAllViews();
-            for (MetricValue metric : metrics) {
-                mLinearLayout.addView(MetricWidget.createWidget(getActivity(), metric));
-            }
-            setErrorVisible(false);
-        }
-    }
-
-    public class SaveAllMetrics extends AsyncTask<Void, Void, Integer> {
-
-        @Override
-        protected Integer doInBackground(Void... params) {
-            //Get data from view
-            Robot robot = mRobots.get(mTeamSpinner.getSelectedItemPosition()).getRobot();
-
-            LoginHandler loginHandler = LoginHandler.getInstance(getActivity(), mDaoSession);
-
-            if (!loginHandler.isLoggedOn() && !loginHandler.loggedOnUserStillExists()) {
-                loginHandler.login();
-            }
-
-            List<MetricWidget> widgets = new ArrayList<>();
-
-            for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
-                widgets.add((MetricWidget) mLinearLayout.getChildAt(i));
-            }
-
-            //Begin Saving
-            for (MetricWidget widget : widgets) {
-                if (mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).where(PitDataDao.Properties.MetricId.eq(widget.getMetric().getId())).list().size() <= 0)
-                    mDaoSession.getPitDataDao().insert(new PitData(widget.getValues(), robot.getId(), widget.getMetric().getId(), mEvent.getId(), loginHandler.getLoggedOnUser().getId()));
-                else {
-                    List<PitData> pitdata = mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).where(PitDataDao.Properties.MetricId.eq(widget.getMetric().getId())).list();
-                    for (PitData data : pitdata) {
-                        data.delete();
-                    }
-                    mDaoSession.getPitDataDao().insert(new PitData(widget.getValues(), robot.getId(), widget.getMetric().getId(), mEvent.getId(), loginHandler.getLoggedOnUser().getId()));
-                }
-            }
-
-            robot.setComments(((EditText) getView().findViewById(R.id.comments)).getText().toString());
-            robot.update();
-            return 0;
-        }
-
-        @Override
-        protected void onPostExecute(Integer aVoid) {
-            Toast.makeText(getActivity(), aVoid == 0 ? "Save Complete!" : "Cannot Save Match Data. Match Is Already Saved", Toast.LENGTH_LONG).show();
-        }
     }
 }

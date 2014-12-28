@@ -11,12 +11,14 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ScoutPagerAdapter;
 import com.team2052.frckrawler.bluetooth.scout.LoginHandler;
 import com.team2052.frckrawler.bluetooth.scout.ScoutSyncHandler;
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.events.scout.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncStartEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 import com.team2052.frckrawler.util.BluetoothUtil;
+import com.team2052.frckrawler.util.Utilities;
 
 import de.greenrobot.event.EventBus;
 
@@ -34,9 +36,13 @@ public class ScoutActivity extends ViewPagerActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mSyncHandler = ScoutSyncHandler.getInstance(this);
-
         EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle("Scout");
+        Event event = Utilities.ScoutUtil.getScoutEvent(this, mDaoSession);
+        if (event != null) {
+            getSupportActionBar().setSubtitle(event.getName());
+        }
     }
 
     @Override
@@ -101,7 +107,6 @@ public class ScoutActivity extends ViewPagerActivity {
         }
     }
 
-
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncSuccessEvent event) {
         setProgress(false);
@@ -111,6 +116,7 @@ public class ScoutActivity extends ViewPagerActivity {
         } else if (!loginHandler.loggedOnUserStillExists()) {
             loginHandler.login();
         }
+        getSupportActionBar().setSubtitle(Utilities.ScoutUtil.getScoutEvent(this, mDaoSession).getName());
     }
 
     private void setProgress(boolean toggle) {
