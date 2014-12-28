@@ -4,7 +4,7 @@ import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.util.LogHelper;
-import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.util.Utilities;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -12,8 +12,7 @@ import java.util.List;
 /**
  * @author Adam
  */
-public class CompiledMetricValue
-{
+public class CompiledMetricValue {
     public static DecimalFormat format = new DecimalFormat("0.0");
     private final List<MetricValue> metricData;
     public Robot robot;
@@ -22,8 +21,7 @@ public class CompiledMetricValue
     private Metric metric;
     private double compileWeight;
 
-    public CompiledMetricValue(Robot robot, Metric metric, List<MetricValue> metricData, int metricType, float compileWeight)
-    {
+    public CompiledMetricValue(Robot robot, Metric metric, List<MetricValue> metricData, int metricType, float compileWeight) {
         this.robot = robot;
         this.metric = metric;
         this.metricData = metricData;
@@ -33,10 +31,9 @@ public class CompiledMetricValue
         compileMetricValues();
     }
 
-    private void compileMetricValues()
-    {
+    private void compileMetricValues() {
         switch (metricType) {
-            case MetricUtil.BOOLEAN:
+            case Utilities.MetricUtil.BOOLEAN:
                 double yes = 0;
                 double no = 0;
 
@@ -60,8 +57,8 @@ public class CompiledMetricValue
                 }
                 break;
             //Do the same for slider and counter
-            case MetricUtil.SLIDER:
-            case MetricUtil.COUNTER:
+            case Utilities.MetricUtil.SLIDER:
+            case Utilities.MetricUtil.COUNTER:
                 double numerator = 0;
                 double denominator = 0;
 
@@ -78,7 +75,7 @@ public class CompiledMetricValue
                 }
 
                 break;
-            case MetricUtil.CHOOSER:
+            case Utilities.MetricUtil.CHOOSER:
                 String[] range = StringArrayDeserializer.deserialize(metric.getRange());
                 double[] counts = new double[range.length];
 

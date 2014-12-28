@@ -24,6 +24,7 @@ import de.greenrobot.event.EventBus;
  * @author adam
  * @since 12/27/14.
  */
+//TODO save current state of the fragments -- Ask Bryan
 public class ScoutActivity extends ViewPagerActivity {
 
     private final int REQUEST_ENABLE_BT = 0;
@@ -76,25 +77,28 @@ public class ScoutActivity extends ViewPagerActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        setNavigationDrawerItemSelected(0);
+        setNavigationDrawerItemSelected(R.id.nav_item_scout);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_sync:
-                if (BluetoothUtil.hasBluetoothAdapter()) {
-                    if (!BluetoothUtil.isBluetoothEnabled()) {
-                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-                    } else {
-                        mSyncHandler.startScoutSync();
-                    }
-                }
-
+                handleSyncButton();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void handleSyncButton() {
+        if (BluetoothUtil.hasBluetoothAdapter()) {
+            if (!BluetoothUtil.isBluetoothEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            } else {
+                mSyncHandler.startScoutSync();
+            }
+        }
     }
 
 

@@ -12,7 +12,7 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
-import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.util.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +20,12 @@ import java.util.List;
 /**
  * @author Adam
  */
-public class SummaryDataActivity extends ListActivity
-{
+public class SummaryDataActivity extends ListActivity {
     public static String EVENT_ID = "EVENT_ID";
     private Event mEvent;
     private Metric mMetric;
 
-    public static Intent newInstance(Context context, Metric metric, Event event)
-    {
+    public static Intent newInstance(Context context, Metric metric, Event event) {
         Intent intent = new Intent(context, SummaryDataActivity.class);
         intent.putExtra(PARENT_ID, metric.getId());
         intent.putExtra(EVENT_ID, event.getId());
@@ -35,8 +33,7 @@ public class SummaryDataActivity extends ListActivity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(EVENT_ID, 0));
         mMetric = mDaoSession.getMetricDao().load(getIntent().getLongExtra(PARENT_ID, 0));
@@ -47,24 +44,20 @@ public class SummaryDataActivity extends ListActivity
     }
 
     @Override
-    public void updateList()
-    {
+    public void updateList() {
         new GetCompiledData().execute();
     }
 
 
-    public class GetCompiledData extends AsyncTask<Void, Void, List<CompiledMetricValue>>
-    {
+    public class GetCompiledData extends AsyncTask<Void, Void, List<CompiledMetricValue>> {
 
         @Override
-        protected List<CompiledMetricValue> doInBackground(Void... params)
-        {
-            return MetricUtil.MetricCompiler.getCompiledMetric(mEvent, mMetric, mDaoSession);
+        protected List<CompiledMetricValue> doInBackground(Void... params) {
+            return Utilities.MetricUtil.MetricCompiler.getCompiledMetric(mEvent, mMetric, mDaoSession);
         }
 
         @Override
-        protected void onPostExecute(List<CompiledMetricValue> compiledMetricValues)
-        {
+        protected void onPostExecute(List<CompiledMetricValue> compiledMetricValues) {
             List<ListItem> listItems = new ArrayList<>();
             for (CompiledMetricValue metricValue : compiledMetricValues) {
                 listItems.add(new SimpleListElement(metricValue.robot.getTeam().getNumber() + " - " + metricValue.compiledValue, Long.toString(metricValue.robot.getTeam().getNumber())));

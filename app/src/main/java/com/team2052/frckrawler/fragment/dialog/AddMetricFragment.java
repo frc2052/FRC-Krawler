@@ -17,15 +17,14 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
-import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.util.Utilities;
 import com.team2052.frckrawler.view.ListEditor;
 import com.team2052.frckrawler.view.TextListEditor;
 
 /**
  * @author Adam
  */
-public class AddMetricFragment extends DialogFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener
-{
+public class AddMetricFragment extends DialogFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     public static final String GAME_NAME_EXTRA = "GAME_NAME";
     public static final String METRIC_CATEGORY = "METRIC_CATEGORY";
@@ -39,8 +38,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     private View mDivider;
     private View mListHeader;
 
-    public static AddMetricFragment newInstance(int metricCategory, Game game)
-    {
+    public static AddMetricFragment newInstance(int metricCategory, Game game) {
         AddMetricFragment f = new AddMetricFragment();
         Bundle args = new Bundle();
         args.putInt(METRIC_CATEGORY, metricCategory);
@@ -50,8 +48,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         mMetricCategory = args.getInt(METRIC_CATEGORY, -1);
@@ -60,16 +57,13 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     }
 
     @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
         b.setTitle("Add Metric");
         b.setView(initViews());
-        b.setPositiveButton("Add", new DialogInterface.OnClickListener()
-        {
+        b.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 saveMetric();
             }
         });
@@ -79,8 +73,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
         return b.create();
     }
 
-    private View initViews()
-    {
+    private View initViews() {
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_metric, null);
         mMetricTypeSpinner = (Spinner) view.findViewById(R.id.type);
         mName = (EditText) view.findViewById(R.id.name);
@@ -95,11 +88,10 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-    {
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mCurrentSelectedMetricType = position;
         switch (position) {
-            case MetricUtil.COUNTER:
+            case Utilities.MetricUtil.COUNTER:
                 mMinimum.setEnabled(true);
                 mMaximum.setEnabled(true);
                 mIncrementation.setEnabled(true);
@@ -107,7 +99,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 mDivider.setVisibility(View.GONE);
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case MetricUtil.SLIDER:
+            case Utilities.MetricUtil.SLIDER:
                 mMinimum.setEnabled(true);
                 mMaximum.setEnabled(true);
                 mIncrementation.setEnabled(false);
@@ -115,7 +107,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 mDivider.setVisibility(View.GONE);
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case MetricUtil.CHOOSER:
+            case Utilities.MetricUtil.CHOOSER:
                 mMinimum.setEnabled(false);
                 mMaximum.setEnabled(false);
                 mIncrementation.setEnabled(false);
@@ -137,32 +129,28 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent)
-    {
+    public void onNothingSelected(AdapterView<?> parent) {
     }
 
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
     }
 
-    private void saveMetric()
-    {
+    private void saveMetric() {
         Metric m = null;
         switch (mCurrentSelectedMetricType) {
-            case MetricUtil.BOOLEAN:
-                m = MetricUtil.createBooleanMetric(
+            case Utilities.MetricUtil.BOOLEAN:
+                m = Utilities.MetricUtil.createBooleanMetric(
                         mGame,
-                        MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
+                        Utilities.MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
                         mName.getText().toString(),
                         mDescription.getText().toString());
                 break;
 
-            case MetricUtil.COUNTER:
+            case Utilities.MetricUtil.COUNTER:
                 try {
-                    m = MetricUtil.createCounterMetric(
-                            mGame,
-                            MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
+                    m = Utilities.MetricUtil.createCounterMetric(mGame,
+                            Utilities.MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
                             mName.getText().toString(),
                             mDescription.getText().toString(),
                             Integer.parseInt(mMinimum.getText().toString()),
@@ -174,11 +162,11 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 }
                 break;
 
-            case MetricUtil.SLIDER:
+            case Utilities.MetricUtil.SLIDER:
                 try {
-                    m = MetricUtil.createSliderMetric(
+                    m = Utilities.MetricUtil.createSliderMetric(
                             mGame,
-                            MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
+                            Utilities.MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
                             mName.getText().toString(),
                             mDescription.getText().toString(),
                             Integer.parseInt(mMinimum.getText().toString()),
@@ -189,10 +177,10 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 }
                 break;
 
-            case MetricUtil.CHOOSER:
-                m = MetricUtil.createChooserMetric(
+            case Utilities.MetricUtil.CHOOSER:
+                m = Utilities.MetricUtil.createChooserMetric(
                         mGame,
-                        MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
+                        Utilities.MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
                         mName.getText().toString(),
                         mDescription.getText().toString(),
                         list.getValues());

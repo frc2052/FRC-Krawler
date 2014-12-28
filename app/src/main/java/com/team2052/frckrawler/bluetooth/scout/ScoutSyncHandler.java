@@ -11,7 +11,7 @@ import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.LogHelper;
-import com.team2052.frckrawler.util.ScoutUtil;
+import com.team2052.frckrawler.util.Utilities;
 
 import de.greenrobot.event.EventBus;
 
@@ -44,7 +44,7 @@ public class ScoutSyncHandler {
 
     public void startSync(BluetoothDevice device) {
         cancelAllRunningSyncs();
-        ScoutUtil.setSyncDevice(context, device);
+        Utilities.ScoutUtil.setSyncDevice(context, device);
         syncAsScoutTask = new SyncScoutTask(context);
         syncAsScoutTask.execute(device);
     }
@@ -66,7 +66,7 @@ public class ScoutSyncHandler {
     public void onEvent(ScoutSyncSuccessEvent event) {
         //Reset task because it isn't running
         syncAsScoutTask = null;
-        ScoutUtil.setDeviceAsScout(context, true);
+        Utilities.ScoutUtil.setDeviceAsScout(context, true);
         Toast.makeText(context, context.getString(R.string.sync_successful_message), Toast.LENGTH_LONG).show();
         LogHelper.info("SyncHandler: Sync Successful!");
     }
@@ -92,17 +92,17 @@ public class ScoutSyncHandler {
             return;
         }
 
-        BluetoothDevice bluetoothDevice = ScoutUtil.getSyncDevice(context);
+        BluetoothDevice bluetoothDevice = Utilities.ScoutUtil.getSyncDevice(context);
         if (bluetoothDevice != null) {
             startSync(bluetoothDevice);
         } else {
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(context);
             builder.setTitle("Select Server Device");
-            builder.setItems(ScoutUtil.getDeviceNames(ScoutUtil.getAllBluetoothDevices()), new DialogInterface.OnClickListener() {
+            builder.setItems(Utilities.ScoutUtil.getDeviceNames(Utilities.ScoutUtil.getAllBluetoothDevices()), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    startSync(ScoutUtil.getAllBluetoothDevicesArray()[which]);
+                    startSync(Utilities.ScoutUtil.getAllBluetoothDevicesArray()[which]);
                 }
             });
             builder.create().show();

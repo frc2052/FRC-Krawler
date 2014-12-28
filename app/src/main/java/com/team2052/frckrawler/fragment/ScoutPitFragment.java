@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -30,8 +29,7 @@ import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
-import com.team2052.frckrawler.util.MetricUtil;
-import com.team2052.frckrawler.util.ScoutUtil;
+import com.team2052.frckrawler.util.Utilities;
 import com.team2052.frckrawler.view.metric.MetricWidget;
 
 import java.util.ArrayList;
@@ -47,18 +45,15 @@ import de.greenrobot.event.EventBus;
 /**
  * @author Adam
  */
-public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItemSelectedListener
-{
+public class ScoutPitFragment extends BaseFragment {
     @InjectView(R.id.metricWidgetList)
     protected LinearLayout mLinearLayout;
     private Event mEvent;
     private Spinner mTeamSpinner;
     private List<RobotEvent> mRobots;
-    private List<MetricWidget> mWidgets;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
@@ -66,8 +61,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
             if (mTeamSpinner.getSelectedItem() != null) {
                 new SaveAllMetrics().execute();
@@ -76,8 +70,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadAllData(Event event)
-    {
+    private void loadAllData(Event event) {
         if (event == null) {
             setErrorVisible(true);
             return;
@@ -85,10 +78,10 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
 
         mEvent = event;
         new GetAllRobots().execute();
+        new GetAllMetrics().execute();
     }
 
-    private void setErrorVisible(boolean visible)
-    {
+    private void setErrorVisible(boolean visible) {
         if (visible) {
             getView().findViewById(R.id.error_message).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.scroll_view).setVisibility(View.GONE);
@@ -99,89 +92,47 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.scout, menu);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_scouting_pit, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.inject(this, view);
         mTeamSpinner = (Spinner) view.findViewById(R.id.team);
-        mTeamSpinner.setOnItemSelectedListener(this);
-        if (mWidgets != null) {
-            mLinearLayout.removeAllViews();
-            for (MetricWidget widget : mWidgets) {
-                mLinearLayout.addView(widget);
-            }
-            mWidgets = null;
-        } else {
-            loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
-        }
+        loadAllData(Utilities.ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
     @SuppressWarnings("unused")
-    public void onEvent(ScoutSyncSuccessEvent event)
-    {
-        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
+    public void onEvent(ScoutSyncSuccessEvent event) {
+        loadAllData(Utilities.ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
     }
 
-    @Override
-    public void onDetach() {
-        List<MetricWidget> widgets = new ArrayList<>();
-
-        for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
-            widgets.add((MetricWidget) mLinearLayout.getChildAt(i));
-        }
-
-        mWidgets = widgets;
-        super.onDetach();
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-    {
-        new GetAllMetrics().execute();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent)
-    {
-    }
-
-    public class GetAllRobots extends AsyncTask<Void, Void, List<RobotEvent>>
-    {
+    public class GetAllRobots extends AsyncTask<Void, Void, List<RobotEvent>> {
         @Override
-        protected List<RobotEvent> doInBackground(Void... params)
-        {
+        protected List<RobotEvent> doInBackground(Void... params) {
             return mDaoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(mEvent.getId())).list();
         }
 
 
         @Override
-        protected void onPostExecute(List<RobotEvent> robotEventses)
-        {
+        protected void onPostExecute(List<RobotEvent> robotEventses) {
             //Sort by Team number
-            Collections.sort(robotEventses, new Comparator<RobotEvent>()
-            {
+            Collections.sort(robotEventses, new Comparator<RobotEvent>() {
                 @Override
-                public int compare(RobotEvent lhs, RobotEvent rhs)
-                {
+                public int compare(RobotEvent lhs, RobotEvent rhs) {
                     return Double.compare(lhs.getRobot().getTeam().getNumber(), rhs.getRobot().getTeam().getNumber());
                 }
             });
@@ -195,58 +146,38 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
             }
 
             mTeamSpinner.setAdapter(new ListViewAdapter(getActivity(), listItems));
-            new GetAllMetrics().execute();
         }
     }
 
-    public class GetAllMetrics extends AsyncTask<Void, Void, List<MetricValue>>
-    {
+    public class GetAllMetrics extends AsyncTask<Void, Void, List<MetricValue>> {
 
         @Override
-        protected List<MetricValue> doInBackground(Void... params)
-        {
-            QueryBuilder<PitData> pitDataQueryBuilder = mDaoSession.getPitDataDao().queryBuilder();
-
-            pitDataQueryBuilder.where(PitDataDao.Properties.RobotId.eq(mRobots.get(mTeamSpinner.getSelectedItemPosition()).getRobot().getId()));
-            List<PitData> list = pitDataQueryBuilder.list();
+        protected List<MetricValue> doInBackground(Void... params) {
             List<MetricValue> metricValues = new ArrayList<>();
+            QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
+            metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId()));
+            metricQueryBuilder.where(MetricDao.Properties.Category.eq(Utilities.MetricUtil.MetricType.ROBOT_METRICS.ordinal()));
 
-            for (PitData pitData : list) {
-                metricValues.add(new MetricValue(pitData));
+            for (Metric metric : metricQueryBuilder.list()) {
+                metricValues.add(new MetricValue(metric, null));
             }
-
-            if (metricValues.size() <= 0) {
-                QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
-                metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId()));
-                metricQueryBuilder.where(MetricDao.Properties.Category.eq(MetricUtil.MetricType.ROBOT_METRICS.ordinal()));
-
-                for (Metric metric : metricQueryBuilder.list()) {
-                    metricValues.add(new MetricValue(metric, null));
-                }
-
-            }
-
             return metricValues;
         }
 
         @Override
-        protected void onPostExecute(List<MetricValue> metrics)
-        {
-            ((LinearLayout) getView().findViewById(R.id.metricWidgetList)).removeAllViews();
+        protected void onPostExecute(List<MetricValue> metrics) {
+            mLinearLayout.removeAllViews();
             for (MetricValue metric : metrics) {
-                ((LinearLayout) getView().findViewById(R.id.metricWidgetList)).addView(MetricWidget.createWidget(getActivity(), metric));
+                mLinearLayout.addView(MetricWidget.createWidget(getActivity(), metric));
             }
-            ((EditText) getView().findViewById(R.id.comments)).setText(mRobots.get(mTeamSpinner.getSelectedItemPosition()).getRobot().getComments());
             setErrorVisible(false);
         }
     }
 
-    public class SaveAllMetrics extends AsyncTask<Void, Void, Integer>
-    {
+    public class SaveAllMetrics extends AsyncTask<Void, Void, Integer> {
 
         @Override
-        protected Integer doInBackground(Void... params)
-        {
+        protected Integer doInBackground(Void... params) {
             //Get data from view
             Robot robot = mRobots.get(mTeamSpinner.getSelectedItemPosition()).getRobot();
 
@@ -256,11 +187,10 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
                 loginHandler.login();
             }
 
-            LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.metricWidgetList);
             List<MetricWidget> widgets = new ArrayList<>();
 
-            for (int i = 0; i < linearLayout.getChildCount(); i++) {
-                widgets.add((MetricWidget) linearLayout.getChildAt(i));
+            for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
+                widgets.add((MetricWidget) mLinearLayout.getChildAt(i));
             }
 
             //Begin Saving
@@ -282,8 +212,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
         }
 
         @Override
-        protected void onPostExecute(Integer aVoid)
-        {
+        protected void onPostExecute(Integer aVoid) {
             Toast.makeText(getActivity(), aVoid == 0 ? "Save Complete!" : "Cannot Save Match Data. Match Is Already Saved", Toast.LENGTH_LONG).show();
         }
     }

@@ -9,12 +9,10 @@ import android.widget.TextView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
 
-public class BooleanMetricWidget extends MetricWidget implements OnClickListener
-{
-    boolean value;
+public class BooleanMetricWidget extends MetricWidget implements OnClickListener {
+    boolean value = false;
 
-    public BooleanMetricWidget(Context context, MetricValue m)
-    {
+    public BooleanMetricWidget(Context context, MetricValue m) {
 
         super(context, m.getMetric(), m.getValue());
         inflater.inflate(R.layout.widget_metric_boolean, this);
@@ -35,14 +33,12 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
     }
 
     @Override
-    public String getValues()
-    {
+    public String getValues() {
         return Boolean.toString(value);
     }
 
     @Override
-    public void onClick(View view)
-    {
+    public void onClick(View view) {
 
         boolean checked = ((RadioButton) view).isChecked();
 
@@ -57,10 +53,4 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
         }
     }
 
-    public void reset()
-    {
-        ((RadioButton) findViewById(R.id.yes)).setChecked(false);
-        ((RadioButton) findViewById(R.id.no)).setChecked(true);
-        value = false;
-    }
 }

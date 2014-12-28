@@ -9,7 +9,7 @@ import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.util.LogHelper;
-import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.util.Utilities;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -27,17 +27,15 @@ import de.greenrobot.dao.query.QueryBuilder;
  * @author Adam
  * @since 10/4/2014
  */
-public class ExportUtil
-{
-    public static void exportEventDataToCSV(Event event, File location, DaoSession daoSession)
-    {
+public class ExportUtil {
+    public static void exportEventDataToCSV(Event event, File location, DaoSession daoSession) {
         final List<Metric> metrics = daoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(event.getGameId())).list();
         List<RobotEvent> robotEvents = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
 
         Map<Long, List<CompiledMetricValue>> robots = new TreeMap<>();
 
         for (RobotEvent robotEvent : robotEvents) {
-            robots.put(robotEvent.getRobot().getTeam().getNumber(), MetricUtil.MetricCompiler.getCompiledRobot(event, robotEvent.getRobot(), daoSession));
+            robots.put(robotEvent.getRobot().getTeam().getNumber(), Utilities.MetricUtil.MetricCompiler.getCompiledRobot(event, robotEvent.getRobot(), daoSession));
         }
 
         try {
@@ -65,7 +63,7 @@ public class ExportUtil
                 String comments = "";
 
                 for (MatchComment matchComment : matchCommentQueryBuilder.list()) {
-                   comments += "Match:" + matchComment.getMatch().getNumber() + ": " + matchComment.getComment() + ", ";
+                    comments += "Match:" + matchComment.getMatch().getNumber() + ": " + matchComment.getComment() + ", ";
                 }
 
                 record.add(comments);

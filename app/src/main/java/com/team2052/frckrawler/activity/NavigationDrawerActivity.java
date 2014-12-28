@@ -20,19 +20,15 @@ import butterknife.InjectView;
 /**
  * @author Adam
  */
-public class NavigationDrawerActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerListener
-{
+public class NavigationDrawerActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerListener {
     private static final String IS_DRAWER_OPEN = "is_drawer_open";
-    private NavigationDrawerFragment mNavDrawerFragment;
-
     @InjectView(R.id.nav_drawer_layout)
     protected DrawerLayout mDrawerLayout;
     @InjectView(R.id.content)
     protected FrameLayout mContentView;
-
     @InjectView(R.id.navigation_drawer_fragment_container)
     protected ScrimInsetsFrameLayout drawerContainer;
-
+    private NavigationDrawerFragment mNavDrawerFragment;
     private String mActionBarTitle;
     private boolean mUseActionBarToggle = false;
     private boolean mEncourageLearning = false;
@@ -40,8 +36,7 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
     private Toolbar mToolbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_navigation_drawer);
         ButterKnife.inject(this);
@@ -52,8 +47,7 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState)
-    {
+    protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         onCreateNavigationDrawer();
 
@@ -61,11 +55,9 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
 
         mNavDrawerFragment.setUp(R.id.navigation_drawer_fragment_container, (DrawerLayout) findViewById(R.id.nav_drawer_layout), mEncourageLearning, mUseActionBarToggle, mToolbar);
 
-        drawerContainer.setOnInsetsCallback(new ScrimInsetsFrameLayout.OnInsetsCallback()
-        {
+        drawerContainer.setOnInsetsCallback(new ScrimInsetsFrameLayout.OnInsetsCallback() {
             @Override
-            public void onInsetsChanged(Rect insets)
-            {
+            public void onInsetsChanged(Rect insets) {
                 mNavDrawerFragment.onInsetsChanged(insets);
             }
         });
@@ -79,70 +71,59 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
         }
     }
 
-    public void setNavigationDrawerItemSelected(int position)
-    {
-        mNavDrawerFragment.setItemSelected(position);
+    public void setNavigationDrawerItemSelected(int itemId) {
+        mNavDrawerFragment.setItemSelected(itemId);
     }
 
-    public void onCreateNavigationDrawer()
-    {
+    public void onCreateNavigationDrawer() {
 
     }
 
     @Override
-    public void onNavDrawerItemClicked(NavDrawerItem item)
-    {
+    public void onNavDrawerItemClicked(NavDrawerItem item) {
         int id = item.getId();
         TaskStackBuilder.create(this).addNextIntent(HomeActivity.newInstance(this, id)).startActivities();
     }
 
-    public boolean isDrawerOpen()
-    {
+    public boolean isDrawerOpen() {
         return mDrawerLayout.isDrawerOpen(Gravity.LEFT);
     }
 
     @Override
-    public void setContentView(int layoutResID)
-    {
+    public void setContentView(int layoutResID) {
         mContentView.removeAllViews();
         getLayoutInflater().inflate(layoutResID, mContentView);
     }
 
-    public DrawerLayout getDrawerLayout()
-    {
+    public DrawerLayout getDrawerLayout() {
         return mDrawerLayout;
     }
 
-    public NavigationDrawerFragment getDrawerFragment()
-    {
+    public NavigationDrawerFragment getDrawerFragment() {
         return mNavDrawerFragment;
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IS_DRAWER_OPEN, isDrawerOpen());
     }
 
-    public void setActionBarTitle(String title)
-    {
+    public void setActionBarTitle(String title) {
         mActionBarTitle = title;
         if (!isDrawerOpen() && getSupportActionBar() != null) {
             getSupportActionBar().setTitle(mActionBarTitle);
         }
     }
 
-    public void setActionBarTitle(int resID)
-    {
+    public void setActionBarTitle(int resID) {
         mActionBarTitle = getResources().getString(resID);
         if (!isDrawerOpen()) {
             getSupportActionBar().setTitle(mActionBarTitle);
         }
     }
 
-    public void setActionBarSubtitle(String subtitle)
-    {
+    public void setActionBarSubtitle(String subtitle) {
         mActionBarSubTitle = subtitle;
         if (!isDrawerOpen() && getSupportActionBar() != null) {
             getSupportActionBar().setSubtitle(subtitle);
@@ -150,23 +131,19 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
     }
 
     @Override
-    public void onNavDrawerClosed()
-    {
+    public void onNavDrawerClosed() {
     }
 
-    public void useActionBarToggle()
-    {
+    public void useActionBarToggle() {
         mUseActionBarToggle = true;
     }
 
     @Override
-    public void onNavDrawerOpened()
-    {
+    public void onNavDrawerOpened() {
     }
 
 
-    public void encourageLearning(boolean encourage)
-    {
+    public void encourageLearning(boolean encourage) {
         mEncourageLearning = encourage;
     }
 }
