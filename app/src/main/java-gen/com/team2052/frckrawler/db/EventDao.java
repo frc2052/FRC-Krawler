@@ -17,37 +17,19 @@ import de.greenrobot.dao.internal.SqlUtils;
 /**
  * DAO for table EVENT.
  */
-public class EventDao extends AbstractDao<Event, Long>
-{
+public class EventDao extends AbstractDao<Event, Long> {
 
     public static final String TABLENAME = "EVENT";
-
-    /**
-     * Properties of entity Event.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property GameId = new Property(2, Long.class, "gameId", false, "GAME_ID");
-        public final static Property Location = new Property(3, String.class, "location", false, "LOCATION");
-        public final static Property Date = new Property(4, java.util.Date.class, "date", false, "DATE");
-        public final static Property Fmsid = new Property(5, String.class, "fmsid", false, "FMSID");
-    }
-
-    ;
-
     private DaoSession daoSession;
+    ;
+    private String selectDeep;
 
 
-    public EventDao(DaoConfig config)
-    {
+    public EventDao(DaoConfig config) {
         super(config);
     }
 
-    public EventDao(DaoConfig config, DaoSession daoSession)
-    {
+    public EventDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
         this.daoSession = daoSession;
     }
@@ -55,8 +37,7 @@ public class EventDao extends AbstractDao<Event, Long>
     /**
      * Creates the underlying database table.
      */
-    public static void createTable(SQLiteDatabase db, boolean ifNotExists)
-    {
+    public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'EVENT' (" + //
                 "'_id' INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
@@ -70,8 +51,7 @@ public class EventDao extends AbstractDao<Event, Long>
     /**
      * Drops the underlying database table.
      */
-    public static void dropTable(SQLiteDatabase db, boolean ifExists)
-    {
+    public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'EVENT'";
         db.execSQL(sql);
     }
@@ -80,8 +60,7 @@ public class EventDao extends AbstractDao<Event, Long>
      * @inheritdoc
      */
     @Override
-    protected void bindValues(SQLiteStatement stmt, Event entity)
-    {
+    protected void bindValues(SQLiteStatement stmt, Event entity) {
         stmt.clearBindings();
 
         Long id = entity.getId();
@@ -116,8 +95,7 @@ public class EventDao extends AbstractDao<Event, Long>
     }
 
     @Override
-    protected void attachEntity(Event entity)
-    {
+    protected void attachEntity(Event entity) {
         super.attachEntity(entity);
         entity.__setDaoSession(daoSession);
     }
@@ -126,8 +104,7 @@ public class EventDao extends AbstractDao<Event, Long>
      * @inheritdoc
      */
     @Override
-    public Long readKey(Cursor cursor, int offset)
-    {
+    public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
@@ -135,8 +112,7 @@ public class EventDao extends AbstractDao<Event, Long>
      * @inheritdoc
      */
     @Override
-    public Event readEntity(Cursor cursor, int offset)
-    {
+    public Event readEntity(Cursor cursor, int offset) {
         Event entity = new Event( //
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
                 cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
@@ -152,8 +128,7 @@ public class EventDao extends AbstractDao<Event, Long>
      * @inheritdoc
      */
     @Override
-    public void readEntity(Cursor cursor, Event entity, int offset)
-    {
+    public void readEntity(Cursor cursor, Event entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setGameId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
@@ -166,8 +141,7 @@ public class EventDao extends AbstractDao<Event, Long>
      * @inheritdoc
      */
     @Override
-    protected Long updateKeyAfterInsert(Event entity, long rowId)
-    {
+    protected Long updateKeyAfterInsert(Event entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
@@ -176,8 +150,7 @@ public class EventDao extends AbstractDao<Event, Long>
      * @inheritdoc
      */
     @Override
-    public Long getKey(Event entity)
-    {
+    public Long getKey(Event entity) {
         if (entity != null) {
             return entity.getId();
         } else {
@@ -189,15 +162,11 @@ public class EventDao extends AbstractDao<Event, Long>
      * @inheritdoc
      */
     @Override
-    protected boolean isEntityUpdateable()
-    {
+    protected boolean isEntityUpdateable() {
         return true;
     }
 
-    private String selectDeep;
-
-    protected String getSelectDeep()
-    {
+    protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
@@ -211,8 +180,7 @@ public class EventDao extends AbstractDao<Event, Long>
         return selectDeep;
     }
 
-    protected Event loadCurrentDeep(Cursor cursor, boolean lock)
-    {
+    protected Event loadCurrentDeep(Cursor cursor, boolean lock) {
         Event entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
@@ -222,8 +190,7 @@ public class EventDao extends AbstractDao<Event, Long>
         return entity;
     }
 
-    public Event loadDeep(Long key)
-    {
+    public Event loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
             return null;
@@ -253,8 +220,7 @@ public class EventDao extends AbstractDao<Event, Long>
     /**
      * Reads all available rows from the given cursor and returns a list of new ImageTO objects.
      */
-    public List<Event> loadAllDeepFromCursor(Cursor cursor)
-    {
+    public List<Event> loadAllDeepFromCursor(Cursor cursor) {
         int count = cursor.getCount();
         List<Event> list = new ArrayList<Event>(count);
 
@@ -276,8 +242,7 @@ public class EventDao extends AbstractDao<Event, Long>
         return list;
     }
 
-    protected List<Event> loadDeepAllAndCloseCursor(Cursor cursor)
-    {
+    protected List<Event> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
         } finally {
@@ -285,14 +250,25 @@ public class EventDao extends AbstractDao<Event, Long>
         }
     }
 
-
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
-    public List<Event> queryDeep(String where, String... selectionArg)
-    {
+    public List<Event> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
+    }
+
+    /**
+     * Properties of entity Event.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
+        public final static Property GameId = new Property(2, Long.class, "gameId", false, "GAME_ID");
+        public final static Property Location = new Property(3, String.class, "location", false, "LOCATION");
+        public final static Property Date = new Property(4, java.util.Date.class, "date", false, "DATE");
+        public final static Property Fmsid = new Property(5, String.class, "fmsid", false, "FMSID");
     }
 
 }

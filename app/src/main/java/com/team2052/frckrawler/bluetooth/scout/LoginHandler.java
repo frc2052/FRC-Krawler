@@ -14,21 +14,18 @@ import java.util.List;
  * @author Adam
  * @since 12/18/2014.
  */
-public class LoginHandler
-{
+public class LoginHandler {
     public static volatile LoginHandler instance;
     private final Context context;
     private DaoSession daoSession;
     private User loggedOnUser = null;
 
-    private LoginHandler(Context context, DaoSession daoSession)
-    {
+    private LoginHandler(Context context, DaoSession daoSession) {
         this.context = context;
         this.daoSession = daoSession;
     }
 
-    public static LoginHandler getInstance(Context context, DaoSession daoSession)
-    {
+    public static LoginHandler getInstance(Context context, DaoSession daoSession) {
         if (instance == null) synchronized (LoginHandler.class) {
             if (instance == null) instance = new LoginHandler(context, daoSession);
         }
@@ -36,13 +33,11 @@ public class LoginHandler
     }
 
 
-    public boolean isLoggedOn()
-    {
+    public boolean isLoggedOn() {
         return loggedOnUser != null;
     }
 
-    public void login()
-    {
+    public void login(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final List<User> users = daoSession.getUserDao().loadAll();
         String[] userNames = new String[users.size()];
@@ -53,32 +48,27 @@ public class LoginHandler
         builder.setCancelable(false);
         builder.setTitle("Login");
         builder.setIcon(R.drawable.ic_person_black_24dp);
-        builder.setItems(userNames, new DialogInterface.OnClickListener()
-        {
+        builder.setItems(userNames, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 loggedOnUser = users.get(which);
             }
         });
         builder.create().show();
     }
 
-    public boolean loggedOnUserStillExists()
-    {
+    public boolean loggedOnUserStillExists() {
         if (loggedOnUser == null) {
             return false;
         }
         return daoSession.getUserDao().load(loggedOnUser.getId()) != null;
     }
 
-    public User getLoggedOnUser()
-    {
+    public User getLoggedOnUser() {
         return loggedOnUser;
     }
 
-    public void loggOff()
-    {
+    public void loggOff() {
         loggedOnUser = null;
     }
 }

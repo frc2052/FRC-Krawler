@@ -5,7 +5,20 @@ import android.content.SharedPreferences;
 
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.database.Schedule;
-import com.team2052.frckrawler.db.*;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.db.MatchDao;
+import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDataDao;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
+import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.PitDataDao;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.RobotEventDao;
+import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.db.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,8 +31,7 @@ import java.util.List;
  * @author Adam
  * @since 12/24/2014.
  */
-public class ScoutPackage implements Serializable
-{
+public class ScoutPackage implements Serializable {
     private final ArrayList<Team> teams = new ArrayList<>();
     private final List<PitData> pitData;
     private final Schedule schedule;
@@ -27,28 +39,25 @@ public class ScoutPackage implements Serializable
     private final List<User> users;
     private final List<RobotEvent> robots;
     private final Event event;
+    private final List<MatchData> matchData;
 
-    public ScoutPackage(DaoSession session, Event event)
-    {
+    public ScoutPackage(DaoSession session, Event event) {
         this.event = event;
         users = session.getUserDao().loadAll();
         metrics = session.getMetricDao().queryDeep("WHERE " + MetricDao.Properties.GameId.columnName + " = " + event.getGame().getId());
         robots = session.getRobotEventDao().queryDeep("WHERE " + RobotEventDao.Properties.EventId.columnName + " = " + event.getId());
         schedule = new Schedule(event, session.getMatchDao().queryDeep("WHERE " + MatchDao.Properties.EventId.columnName + " = " + event.getId()));
         pitData = session.getPitDataDao().queryBuilder().where(PitDataDao.Properties.EventId.eq(event.getId())).list();
-
+        matchData = session.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.EventId.eq(event.getId())).list();
         for (RobotEvent robotEvent : robots) {
             teams.add(robotEvent.getRobot().getTeam());
         }
     }
 
-    public void save(final DaoSession session, Context context)
-    {
-        session.runInTx(new Runnable()
-        {
+    public void save(final DaoSession session, Context context) {
+        session.runInTx(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 for (Metric metric : metrics) {
                     session.insertOrReplace(metric);
                 }
@@ -74,6 +83,10 @@ public class ScoutPackage implements Serializable
                     session.insertOrReplace(pitValues);
                 }
 
+                for (MatchData matchValues : matchData) {
+                    session.insertOrReplace(matchValues);
+                }
+
                 session.insertOrReplace(event);
                 session.insertOrReplace(event.getGame());
             }
@@ -85,7 +98,7 @@ public class ScoutPackage implements Serializable
         editor.apply();
     }
 
-    public Event getEvent(){
+    public Event getEvent() {
         return event;
     }
 }

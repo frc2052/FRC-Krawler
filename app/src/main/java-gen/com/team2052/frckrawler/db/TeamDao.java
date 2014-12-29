@@ -13,43 +13,25 @@ import de.greenrobot.dao.internal.DaoConfig;
 /**
  * DAO for table TEAM.
  */
-public class TeamDao extends AbstractDao<Team, Long>
-{
+public class TeamDao extends AbstractDao<Team, Long> {
 
     public static final String TABLENAME = "TEAM";
 
-    /**
-     * Properties of entity Team.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Number = new Property(0, Long.class, "number", true, "NUMBER");
-        public final static Property Teamkey = new Property(1, String.class, "teamkey", false, "TEAMKEY");
-        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
-        public final static Property Location = new Property(3, String.class, "location", false, "LOCATION");
-        public final static Property RookieYear = new Property(4, Integer.class, "rookieYear", false, "ROOKIE_YEAR");
-        public final static Property Website = new Property(5, String.class, "website", false, "WEBSITE");
+    public TeamDao(DaoConfig config) {
+        super(config);
     }
 
     ;
 
 
-    public TeamDao(DaoConfig config)
-    {
-        super(config);
-    }
-
-    public TeamDao(DaoConfig config, DaoSession daoSession)
-    {
+    public TeamDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
     }
 
     /**
      * Creates the underlying database table.
      */
-    public static void createTable(SQLiteDatabase db, boolean ifNotExists)
-    {
+    public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'TEAM' (" + //
                 "'NUMBER' INTEGER PRIMARY KEY UNIQUE ," + // 0: number
@@ -63,8 +45,7 @@ public class TeamDao extends AbstractDao<Team, Long>
     /**
      * Drops the underlying database table.
      */
-    public static void dropTable(SQLiteDatabase db, boolean ifExists)
-    {
+    public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'TEAM'";
         db.execSQL(sql);
     }
@@ -73,8 +54,7 @@ public class TeamDao extends AbstractDao<Team, Long>
      * @inheritdoc
      */
     @Override
-    protected void bindValues(SQLiteStatement stmt, Team entity)
-    {
+    protected void bindValues(SQLiteStatement stmt, Team entity) {
         stmt.clearBindings();
 
         Long number = entity.getNumber();
@@ -112,8 +92,7 @@ public class TeamDao extends AbstractDao<Team, Long>
      * @inheritdoc
      */
     @Override
-    public Long readKey(Cursor cursor, int offset)
-    {
+    public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
@@ -121,8 +100,7 @@ public class TeamDao extends AbstractDao<Team, Long>
      * @inheritdoc
      */
     @Override
-    public Team readEntity(Cursor cursor, int offset)
-    {
+    public Team readEntity(Cursor cursor, int offset) {
         Team entity = new Team( //
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // number
                 cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // teamkey
@@ -138,8 +116,7 @@ public class TeamDao extends AbstractDao<Team, Long>
      * @inheritdoc
      */
     @Override
-    public void readEntity(Cursor cursor, Team entity, int offset)
-    {
+    public void readEntity(Cursor cursor, Team entity, int offset) {
         entity.setNumber(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setTeamkey(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
@@ -152,8 +129,7 @@ public class TeamDao extends AbstractDao<Team, Long>
      * @inheritdoc
      */
     @Override
-    protected Long updateKeyAfterInsert(Team entity, long rowId)
-    {
+    protected Long updateKeyAfterInsert(Team entity, long rowId) {
         entity.setNumber(rowId);
         return rowId;
     }
@@ -162,8 +138,7 @@ public class TeamDao extends AbstractDao<Team, Long>
      * @inheritdoc
      */
     @Override
-    public Long getKey(Team entity)
-    {
+    public Long getKey(Team entity) {
         if (entity != null) {
             return entity.getNumber();
         } else {
@@ -175,9 +150,21 @@ public class TeamDao extends AbstractDao<Team, Long>
      * @inheritdoc
      */
     @Override
-    protected boolean isEntityUpdateable()
-    {
+    protected boolean isEntityUpdateable() {
         return true;
+    }
+
+    /**
+     * Properties of entity Team.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Number = new Property(0, Long.class, "number", true, "NUMBER");
+        public final static Property Teamkey = new Property(1, String.class, "teamkey", false, "TEAMKEY");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Location = new Property(3, String.class, "location", false, "LOCATION");
+        public final static Property RookieYear = new Property(4, Integer.class, "rookieYear", false, "ROOKIE_YEAR");
+        public final static Property Website = new Property(5, String.class, "website", false, "WEBSITE");
     }
 
 }

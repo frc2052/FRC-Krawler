@@ -17,36 +17,19 @@ import de.greenrobot.dao.internal.SqlUtils;
 /**
  * DAO for table PIT_DATA.
  */
-public class PitDataDao extends AbstractDao<PitData, Void>
-{
+public class PitDataDao extends AbstractDao<PitData, Long> {
 
     public static final String TABLENAME = "PIT_DATA";
-
-    /**
-     * Properties of entity PitData.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Data = new Property(0, String.class, "data", false, "DATA");
-        public final static Property RobotId = new Property(1, Long.class, "robotId", false, "ROBOT_ID");
-        public final static Property MetricId = new Property(2, Long.class, "metricId", false, "METRIC_ID");
-        public final static Property EventId = new Property(3, Long.class, "eventId", false, "EVENT_ID");
-        public final static Property UserId = new Property(4, Long.class, "userId", false, "USER_ID");
-    }
-
-    ;
-
     private DaoSession daoSession;
+    ;
+    private String selectDeep;
 
 
-    public PitDataDao(DaoConfig config)
-    {
+    public PitDataDao(DaoConfig config) {
         super(config);
     }
 
-    public PitDataDao(DaoConfig config, DaoSession daoSession)
-    {
+    public PitDataDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
         this.daoSession = daoSession;
     }
@@ -54,22 +37,21 @@ public class PitDataDao extends AbstractDao<PitData, Void>
     /**
      * Creates the underlying database table.
      */
-    public static void createTable(SQLiteDatabase db, boolean ifNotExists)
-    {
+    public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'PIT_DATA' (" + //
-                "'DATA' TEXT," + // 0: data
-                "'ROBOT_ID' INTEGER," + // 1: robotId
-                "'METRIC_ID' INTEGER," + // 2: metricId
-                "'EVENT_ID' INTEGER," + // 3: eventId
-                "'USER_ID' INTEGER);"); // 4: userId
+                "'_id' INTEGER PRIMARY KEY ," + // 0: id
+                "'DATA' TEXT," + // 1: data
+                "'ROBOT_ID' INTEGER," + // 2: robotId
+                "'METRIC_ID' INTEGER," + // 3: metricId
+                "'EVENT_ID' INTEGER," + // 4: eventId
+                "'USER_ID' INTEGER);"); // 5: userId
     }
 
     /**
      * Drops the underlying database table.
      */
-    public static void dropTable(SQLiteDatabase db, boolean ifExists)
-    {
+    public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'PIT_DATA'";
         db.execSQL(sql);
     }
@@ -78,39 +60,42 @@ public class PitDataDao extends AbstractDao<PitData, Void>
      * @inheritdoc
      */
     @Override
-    protected void bindValues(SQLiteStatement stmt, PitData entity)
-    {
+    protected void bindValues(SQLiteStatement stmt, PitData entity) {
         stmt.clearBindings();
+
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
 
         String data = entity.getData();
         if (data != null) {
-            stmt.bindString(1, data);
+            stmt.bindString(2, data);
         }
 
         Long robotId = entity.getRobotId();
         if (robotId != null) {
-            stmt.bindLong(2, robotId);
+            stmt.bindLong(3, robotId);
         }
 
         Long metricId = entity.getMetricId();
         if (metricId != null) {
-            stmt.bindLong(3, metricId);
+            stmt.bindLong(4, metricId);
         }
 
         Long eventId = entity.getEventId();
         if (eventId != null) {
-            stmt.bindLong(4, eventId);
+            stmt.bindLong(5, eventId);
         }
 
         Long userId = entity.getUserId();
         if (userId != null) {
-            stmt.bindLong(5, userId);
+            stmt.bindLong(6, userId);
         }
     }
 
     @Override
-    protected void attachEntity(PitData entity)
-    {
+    protected void attachEntity(PitData entity) {
         super.attachEntity(entity);
         entity.__setDaoSession(daoSession);
     }
@@ -119,23 +104,22 @@ public class PitDataDao extends AbstractDao<PitData, Void>
      * @inheritdoc
      */
     @Override
-    public Void readKey(Cursor cursor, int offset)
-    {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
     /**
      * @inheritdoc
      */
     @Override
-    public PitData readEntity(Cursor cursor, int offset)
-    {
+    public PitData readEntity(Cursor cursor, int offset) {
         PitData entity = new PitData( //
-                cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // data
-                cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // robotId
-                cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // metricId
-                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // eventId
-                cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // userId
+                cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+                cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // data
+                cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // robotId
+                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // metricId
+                cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4), // eventId
+                cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5) // userId
         );
         return entity;
     }
@@ -144,47 +128,45 @@ public class PitDataDao extends AbstractDao<PitData, Void>
      * @inheritdoc
      */
     @Override
-    public void readEntity(Cursor cursor, PitData entity, int offset)
-    {
-        entity.setData(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setRobotId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
-        entity.setMetricId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
-        entity.setEventId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
-        entity.setUserId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
+    public void readEntity(Cursor cursor, PitData entity, int offset) {
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setData(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setRobotId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setMetricId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setEventId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
+        entity.setUserId(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
     }
 
     /**
      * @inheritdoc
      */
     @Override
-    protected Void updateKeyAfterInsert(PitData entity, long rowId)
-    {
-        // Unsupported or missing PK type
-        return null;
+    protected Long updateKeyAfterInsert(PitData entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
 
     /**
      * @inheritdoc
      */
     @Override
-    public Void getKey(PitData entity)
-    {
-        return null;
+    public Long getKey(PitData entity) {
+        if (entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     /**
      * @inheritdoc
      */
     @Override
-    protected boolean isEntityUpdateable()
-    {
+    protected boolean isEntityUpdateable() {
         return true;
     }
 
-    private String selectDeep;
-
-    protected String getSelectDeep()
-    {
+    protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
@@ -207,8 +189,7 @@ public class PitDataDao extends AbstractDao<PitData, Void>
         return selectDeep;
     }
 
-    protected PitData loadCurrentDeep(Cursor cursor, boolean lock)
-    {
+    protected PitData loadCurrentDeep(Cursor cursor, boolean lock) {
         PitData entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
@@ -230,8 +211,7 @@ public class PitDataDao extends AbstractDao<PitData, Void>
         return entity;
     }
 
-    public PitData loadDeep(Long key)
-    {
+    public PitData loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
             return null;
@@ -261,8 +241,7 @@ public class PitDataDao extends AbstractDao<PitData, Void>
     /**
      * Reads all available rows from the given cursor and returns a list of new ImageTO objects.
      */
-    public List<PitData> loadAllDeepFromCursor(Cursor cursor)
-    {
+    public List<PitData> loadAllDeepFromCursor(Cursor cursor) {
         int count = cursor.getCount();
         List<PitData> list = new ArrayList<PitData>(count);
 
@@ -284,8 +263,7 @@ public class PitDataDao extends AbstractDao<PitData, Void>
         return list;
     }
 
-    protected List<PitData> loadDeepAllAndCloseCursor(Cursor cursor)
-    {
+    protected List<PitData> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
         } finally {
@@ -293,14 +271,25 @@ public class PitDataDao extends AbstractDao<PitData, Void>
         }
     }
 
-
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
-    public List<PitData> queryDeep(String where, String... selectionArg)
-    {
+    public List<PitData> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
+    }
+
+    /**
+     * Properties of entity PitData.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Data = new Property(1, String.class, "data", false, "DATA");
+        public final static Property RobotId = new Property(2, Long.class, "robotId", false, "ROBOT_ID");
+        public final static Property MetricId = new Property(3, Long.class, "metricId", false, "METRIC_ID");
+        public final static Property EventId = new Property(4, Long.class, "eventId", false, "EVENT_ID");
+        public final static Property UserId = new Property(5, Long.class, "userId", false, "USER_ID");
     }
 
 }

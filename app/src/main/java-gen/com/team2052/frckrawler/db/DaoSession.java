@@ -16,8 +16,7 @@ import de.greenrobot.dao.internal.DaoConfig;
  *
  * @see de.greenrobot.dao.AbstractDaoSession
  */
-public class DaoSession extends AbstractDaoSession
-{
+public class DaoSession extends AbstractDaoSession {
 
     private final DaoConfig gameDaoConfig;
     private final DaoConfig eventDaoConfig;
@@ -48,8 +47,7 @@ public class DaoSession extends AbstractDaoSession
     private final MatchCommentDao matchCommentDao;
 
     public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
-            daoConfigMap)
-    {
+            daoConfigMap) {
         super(db);
 
         gameDaoConfig = daoConfigMap.get(GameDao.class).clone();
@@ -120,8 +118,7 @@ public class DaoSession extends AbstractDaoSession
         registerDao(MatchComment.class, matchCommentDao);
     }
 
-    public void clear()
-    {
+    public void clear() {
         gameDaoConfig.getIdentityScope().clear();
         eventDaoConfig.getIdentityScope().clear();
         teamDaoConfig.getIdentityScope().clear();
@@ -137,68 +134,55 @@ public class DaoSession extends AbstractDaoSession
         matchCommentDaoConfig.getIdentityScope().clear();
     }
 
-    public GameDao getGameDao()
-    {
+    public GameDao getGameDao() {
         return gameDao;
     }
 
-    public EventDao getEventDao()
-    {
+    public EventDao getEventDao() {
         return eventDao;
     }
 
-    public TeamDao getTeamDao()
-    {
+    public TeamDao getTeamDao() {
         return teamDao;
     }
 
-    public UserDao getUserDao()
-    {
+    public UserDao getUserDao() {
         return userDao;
     }
 
-    public ContactDao getContactDao()
-    {
+    public ContactDao getContactDao() {
         return contactDao;
     }
 
-    public MatchDao getMatchDao()
-    {
+    public MatchDao getMatchDao() {
         return matchDao;
     }
 
-    public RobotDao getRobotDao()
-    {
+    public RobotDao getRobotDao() {
         return robotDao;
     }
 
-    public RobotEventDao getRobotEventDao()
-    {
+    public RobotEventDao getRobotEventDao() {
         return robotEventDao;
     }
 
-    public MetricDao getMetricDao()
-    {
+    public MetricDao getMetricDao() {
         return metricDao;
     }
 
-    public RobotPhotoDao getRobotPhotoDao()
-    {
+    public RobotPhotoDao getRobotPhotoDao() {
         return robotPhotoDao;
     }
 
-    public MatchDataDao getMatchDataDao()
-    {
+    public MatchDataDao getMatchDataDao() {
         return matchDataDao;
     }
 
-    public PitDataDao getPitDataDao()
-    {
+    public PitDataDao getPitDataDao() {
         return pitDataDao;
     }
 
-    public MatchCommentDao getMatchCommentDao()
-    {
+    public MatchCommentDao getMatchCommentDao() {
         return matchCommentDao;
     }
 

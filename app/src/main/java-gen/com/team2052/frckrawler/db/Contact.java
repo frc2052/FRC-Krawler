@@ -7,8 +7,7 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table CONTACT.
  */
-public class Contact implements java.io.Serializable
-{
+public class Contact implements java.io.Serializable {
 
     private Long id;
     private Long teamId;
@@ -32,17 +31,14 @@ public class Contact implements java.io.Serializable
     private Long team__resolvedKey;
 
 
-    public Contact()
-    {
+    public Contact() {
     }
 
-    public Contact(Long id)
-    {
+    public Contact(Long id) {
         this.id = id;
     }
 
-    public Contact(Long id, Long teamId, String name, String email, String address, String phonenumber, String teamrole)
-    {
+    public Contact(Long id, Long teamId, String name, String email, String address, String phonenumber, String teamrole) {
         this.id = id;
         this.teamId = teamId;
         this.name = name;
@@ -55,87 +51,71 @@ public class Contact implements java.io.Serializable
     /**
      * called by internal mechanisms, do not call yourself.
      */
-    public void __setDaoSession(DaoSession daoSession)
-    {
+    public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getContactDao() : null;
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getTeamId()
-    {
+    public Long getTeamId() {
         return teamId;
     }
 
-    public void setTeamId(Long teamId)
-    {
+    public void setTeamId(Long teamId) {
         this.teamId = teamId;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email)
-    {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getAddress()
-    {
+    public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address)
-    {
+    public void setAddress(String address) {
         this.address = address;
     }
 
-    public String getPhonenumber()
-    {
+    public String getPhonenumber() {
         return phonenumber;
     }
 
-    public void setPhonenumber(String phonenumber)
-    {
+    public void setPhonenumber(String phonenumber) {
         this.phonenumber = phonenumber;
     }
 
-    public String getTeamrole()
-    {
+    public String getTeamrole() {
         return teamrole;
     }
 
-    public void setTeamrole(String teamrole)
-    {
+    public void setTeamrole(String teamrole) {
         this.teamrole = teamrole;
     }
 
     /**
      * To-one relationship, resolved on first access.
      */
-    public Team getTeam()
-    {
+    public Team getTeam() {
         Long __key = this.teamId;
         if (team__resolvedKey == null || !team__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -151,8 +131,7 @@ public class Contact implements java.io.Serializable
         return team;
     }
 
-    public void setTeam(Team team)
-    {
+    public void setTeam(Team team) {
         synchronized (this) {
             this.team = team;
             teamId = team == null ? null : team.getNumber();
@@ -163,8 +142,7 @@ public class Contact implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context.
      */
-    public void delete()
-    {
+    public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -174,8 +152,7 @@ public class Contact implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#update(Object)}. Entity must attached to an entity context.
      */
-    public void update()
-    {
+    public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -185,8 +162,7 @@ public class Contact implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#refresh(Object)}. Entity must attached to an entity context.
      */
-    public void refresh()
-    {
+    public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }

@@ -7,8 +7,7 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table ROBOT.
  */
-public class Robot implements java.io.Serializable
-{
+public class Robot implements java.io.Serializable {
 
     private Long id;
     private Long teamId;
@@ -33,17 +32,14 @@ public class Robot implements java.io.Serializable
     private Long game__resolvedKey;
 
 
-    public Robot()
-    {
+    public Robot() {
     }
 
-    public Robot(Long id)
-    {
+    public Robot(Long id) {
         this.id = id;
     }
 
-    public Robot(Long id, Long teamId, Long gameId, String comments, Double opr)
-    {
+    public Robot(Long id, Long teamId, Long gameId, String comments, Double opr) {
         this.id = id;
         this.teamId = teamId;
         this.gameId = gameId;
@@ -54,67 +50,55 @@ public class Robot implements java.io.Serializable
     /**
      * called by internal mechanisms, do not call yourself.
      */
-    public void __setDaoSession(DaoSession daoSession)
-    {
+    public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getRobotDao() : null;
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getTeamId()
-    {
+    public Long getTeamId() {
         return teamId;
     }
 
-    public void setTeamId(Long teamId)
-    {
+    public void setTeamId(Long teamId) {
         this.teamId = teamId;
     }
 
-    public Long getGameId()
-    {
+    public Long getGameId() {
         return gameId;
     }
 
-    public void setGameId(Long gameId)
-    {
+    public void setGameId(Long gameId) {
         this.gameId = gameId;
     }
 
-    public String getComments()
-    {
+    public String getComments() {
         return comments;
     }
 
-    public void setComments(String comments)
-    {
+    public void setComments(String comments) {
         this.comments = comments;
     }
 
-    public Double getOpr()
-    {
+    public Double getOpr() {
         return opr;
     }
 
-    public void setOpr(Double opr)
-    {
+    public void setOpr(Double opr) {
         this.opr = opr;
     }
 
     /**
      * To-one relationship, resolved on first access.
      */
-    public Team getTeam()
-    {
+    public Team getTeam() {
         Long __key = this.teamId;
         if (team__resolvedKey == null || !team__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -130,8 +114,7 @@ public class Robot implements java.io.Serializable
         return team;
     }
 
-    public void setTeam(Team team)
-    {
+    public void setTeam(Team team) {
         synchronized (this) {
             this.team = team;
             teamId = team == null ? null : team.getNumber();
@@ -142,8 +125,7 @@ public class Robot implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public Game getGame()
-    {
+    public Game getGame() {
         Long __key = this.gameId;
         if (game__resolvedKey == null || !game__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -159,8 +141,7 @@ public class Robot implements java.io.Serializable
         return game;
     }
 
-    public void setGame(Game game)
-    {
+    public void setGame(Game game) {
         synchronized (this) {
             this.game = game;
             gameId = game == null ? null : game.getId();
@@ -171,8 +152,7 @@ public class Robot implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context.
      */
-    public void delete()
-    {
+    public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -182,8 +162,7 @@ public class Robot implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#update(Object)}. Entity must attached to an entity context.
      */
-    public void update()
-    {
+    public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -193,8 +172,7 @@ public class Robot implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#refresh(Object)}. Entity must attached to an entity context.
      */
-    public void refresh()
-    {
+    public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }

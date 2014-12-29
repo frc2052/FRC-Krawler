@@ -7,8 +7,7 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table METRIC.
  */
-public class Metric implements java.io.Serializable
-{
+public class Metric implements java.io.Serializable {
 
     private Long id;
     private String name;
@@ -32,17 +31,14 @@ public class Metric implements java.io.Serializable
     private Long game__resolvedKey;
 
 
-    public Metric()
-    {
+    public Metric() {
     }
 
-    public Metric(Long id)
-    {
+    public Metric(Long id) {
         this.id = id;
     }
 
-    public Metric(Long id, String name, Integer category, String description, Integer type, String range, Long gameId)
-    {
+    public Metric(Long id, String name, Integer category, String description, Integer type, String range, Long gameId) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -55,87 +51,71 @@ public class Metric implements java.io.Serializable
     /**
      * called by internal mechanisms, do not call yourself.
      */
-    public void __setDaoSession(DaoSession daoSession)
-    {
+    public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getMetricDao() : null;
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public Integer getCategory()
-    {
+    public Integer getCategory() {
         return category;
     }
 
-    public void setCategory(Integer category)
-    {
+    public void setCategory(Integer category) {
         this.category = category;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public Integer getType()
-    {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(Integer type)
-    {
+    public void setType(Integer type) {
         this.type = type;
     }
 
-    public String getRange()
-    {
+    public String getRange() {
         return range;
     }
 
-    public void setRange(String range)
-    {
+    public void setRange(String range) {
         this.range = range;
     }
 
-    public Long getGameId()
-    {
+    public Long getGameId() {
         return gameId;
     }
 
-    public void setGameId(Long gameId)
-    {
+    public void setGameId(Long gameId) {
         this.gameId = gameId;
     }
 
     /**
      * To-one relationship, resolved on first access.
      */
-    public Game getGame()
-    {
+    public Game getGame() {
         Long __key = this.gameId;
         if (game__resolvedKey == null || !game__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -151,8 +131,7 @@ public class Metric implements java.io.Serializable
         return game;
     }
 
-    public void setGame(Game game)
-    {
+    public void setGame(Game game) {
         synchronized (this) {
             this.game = game;
             gameId = game == null ? null : game.getId();
@@ -163,8 +142,7 @@ public class Metric implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context.
      */
-    public void delete()
-    {
+    public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -174,8 +152,7 @@ public class Metric implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#update(Object)}. Entity must attached to an entity context.
      */
-    public void update()
-    {
+    public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -185,8 +162,7 @@ public class Metric implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#refresh(Object)}. Entity must attached to an entity context.
      */
-    public void refresh()
-    {
+    public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }

@@ -112,9 +112,9 @@ public class ScoutActivity extends ViewPagerActivity {
         setProgress(false);
         LoginHandler loginHandler = LoginHandler.getInstance(this, mDaoSession);
         if (!loginHandler.isLoggedOn()) {
-            loginHandler.login();
+            loginHandler.login(this);
         } else if (!loginHandler.loggedOnUserStillExists()) {
-            loginHandler.login();
+            loginHandler.login(this);
         }
         getSupportActionBar().setSubtitle(Utilities.ScoutUtil.getScoutEvent(this, mDaoSession).getName());
     }

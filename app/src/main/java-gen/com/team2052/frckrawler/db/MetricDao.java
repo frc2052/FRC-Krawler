@@ -17,38 +17,19 @@ import de.greenrobot.dao.internal.SqlUtils;
 /**
  * DAO for table METRIC.
  */
-public class MetricDao extends AbstractDao<Metric, Long>
-{
+public class MetricDao extends AbstractDao<Metric, Long> {
 
     public static final String TABLENAME = "METRIC";
-
-    /**
-     * Properties of entity Metric.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Category = new Property(2, Integer.class, "category", false, "CATEGORY");
-        public final static Property Description = new Property(3, String.class, "description", false, "DESCRIPTION");
-        public final static Property Type = new Property(4, Integer.class, "type", false, "TYPE");
-        public final static Property Range = new Property(5, String.class, "range", false, "RANGE");
-        public final static Property GameId = new Property(6, Long.class, "gameId", false, "GAME_ID");
-    }
-
-    ;
-
     private DaoSession daoSession;
+    ;
+    private String selectDeep;
 
 
-    public MetricDao(DaoConfig config)
-    {
+    public MetricDao(DaoConfig config) {
         super(config);
     }
 
-    public MetricDao(DaoConfig config, DaoSession daoSession)
-    {
+    public MetricDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
         this.daoSession = daoSession;
     }
@@ -56,8 +37,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
     /**
      * Creates the underlying database table.
      */
-    public static void createTable(SQLiteDatabase db, boolean ifNotExists)
-    {
+    public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'METRIC' (" + //
                 "'_id' INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
@@ -72,8 +52,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
     /**
      * Drops the underlying database table.
      */
-    public static void dropTable(SQLiteDatabase db, boolean ifExists)
-    {
+    public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'METRIC'";
         db.execSQL(sql);
     }
@@ -82,8 +61,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
      * @inheritdoc
      */
     @Override
-    protected void bindValues(SQLiteStatement stmt, Metric entity)
-    {
+    protected void bindValues(SQLiteStatement stmt, Metric entity) {
         stmt.clearBindings();
 
         Long id = entity.getId();
@@ -123,8 +101,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
     }
 
     @Override
-    protected void attachEntity(Metric entity)
-    {
+    protected void attachEntity(Metric entity) {
         super.attachEntity(entity);
         entity.__setDaoSession(daoSession);
     }
@@ -133,8 +110,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
      * @inheritdoc
      */
     @Override
-    public Long readKey(Cursor cursor, int offset)
-    {
+    public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
@@ -142,8 +118,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
      * @inheritdoc
      */
     @Override
-    public Metric readEntity(Cursor cursor, int offset)
-    {
+    public Metric readEntity(Cursor cursor, int offset) {
         Metric entity = new Metric( //
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
                 cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
@@ -160,8 +135,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
      * @inheritdoc
      */
     @Override
-    public void readEntity(Cursor cursor, Metric entity, int offset)
-    {
+    public void readEntity(Cursor cursor, Metric entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setCategory(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
@@ -175,8 +149,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
      * @inheritdoc
      */
     @Override
-    protected Long updateKeyAfterInsert(Metric entity, long rowId)
-    {
+    protected Long updateKeyAfterInsert(Metric entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
@@ -185,8 +158,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
      * @inheritdoc
      */
     @Override
-    public Long getKey(Metric entity)
-    {
+    public Long getKey(Metric entity) {
         if (entity != null) {
             return entity.getId();
         } else {
@@ -198,15 +170,11 @@ public class MetricDao extends AbstractDao<Metric, Long>
      * @inheritdoc
      */
     @Override
-    protected boolean isEntityUpdateable()
-    {
+    protected boolean isEntityUpdateable() {
         return true;
     }
 
-    private String selectDeep;
-
-    protected String getSelectDeep()
-    {
+    protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
@@ -220,8 +188,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
         return selectDeep;
     }
 
-    protected Metric loadCurrentDeep(Cursor cursor, boolean lock)
-    {
+    protected Metric loadCurrentDeep(Cursor cursor, boolean lock) {
         Metric entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
@@ -231,8 +198,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
         return entity;
     }
 
-    public Metric loadDeep(Long key)
-    {
+    public Metric loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
             return null;
@@ -262,8 +228,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
     /**
      * Reads all available rows from the given cursor and returns a list of new ImageTO objects.
      */
-    public List<Metric> loadAllDeepFromCursor(Cursor cursor)
-    {
+    public List<Metric> loadAllDeepFromCursor(Cursor cursor) {
         int count = cursor.getCount();
         List<Metric> list = new ArrayList<Metric>(count);
 
@@ -285,8 +250,7 @@ public class MetricDao extends AbstractDao<Metric, Long>
         return list;
     }
 
-    protected List<Metric> loadDeepAllAndCloseCursor(Cursor cursor)
-    {
+    protected List<Metric> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
         } finally {
@@ -294,14 +258,26 @@ public class MetricDao extends AbstractDao<Metric, Long>
         }
     }
 
-
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
-    public List<Metric> queryDeep(String where, String... selectionArg)
-    {
+    public List<Metric> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
+    }
+
+    /**
+     * Properties of entity Metric.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
+        public final static Property Category = new Property(2, Integer.class, "category", false, "CATEGORY");
+        public final static Property Description = new Property(3, String.class, "description", false, "DESCRIPTION");
+        public final static Property Type = new Property(4, Integer.class, "type", false, "TYPE");
+        public final static Property Range = new Property(5, String.class, "range", false, "RANGE");
+        public final static Property GameId = new Property(6, Long.class, "gameId", false, "GAME_ID");
     }
 
 }

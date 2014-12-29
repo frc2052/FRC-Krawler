@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.view.metric;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -8,15 +9,13 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 
-public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBarChangeListener
-{
+public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBarChangeListener {
 
     int value;
     private int min;
     private int max;
 
-    public SliderMetricWidget(Context context, MetricValue m)
-    {
+    public SliderMetricWidget(Context context, MetricValue m) {
 
         super(context, m.getMetric(), m.getValue());
         inflater.inflate(R.layout.widget_metric_slider, this);
@@ -54,32 +53,40 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
     }
 
     @Override
-    public String getValues()
-    {
+    public String getValues() {
         return Integer.toString(value);
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
-    {
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
         value = seekBar.getProgress() + min;
         ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar)
-    {
+    public void onStartTrackingTouch(SeekBar seekBar) {
 
         value = seekBar.getProgress() + min;
         ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));
     }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar)
-    {
+    public void onStopTrackingTouch(SeekBar seekBar) {
         value = seekBar.getProgress() + min;
         ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));
     }
 
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof MetricWidgetSavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+
+        MetricWidgetSavedState ss = (MetricWidgetSavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+
+        value = Integer.parseInt(ss.value);
+    }
 }

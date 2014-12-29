@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.view.metric;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
@@ -53,4 +54,17 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
         }
     }
 
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof MetricWidgetSavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+
+        MetricWidgetSavedState ss = (MetricWidgetSavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+
+        value = Boolean.parseBoolean(ss.value);
+    }
 }

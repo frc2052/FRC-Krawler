@@ -17,23 +17,20 @@ import com.team2052.frckrawler.fragment.TeamsFragment;
 import com.team2052.frckrawler.fragment.UsersFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 
-public class HomeActivity extends BaseActivity
-{
+public class HomeActivity extends BaseActivity {
     private static final String REQUESTED_MODE = "requested_mode";
     private static final String STATE_SELECTED_NAV_ID = "selected_navigation_drawer_position";
     private int mCurrentSelectedNavigationItemId;
     private boolean mFromSavedInstanceState = false;
 
-    public static Intent newInstance(Context context, int requestedMode)
-    {
+    public static Intent newInstance(Context context, int requestedMode) {
         Intent i = new Intent(context, HomeActivity.class);
         i.putExtra(REQUESTED_MODE, requestedMode);
         return i;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         boolean mIsScout = sharedPreferences.getBoolean(GlobalValues.IS_SCOUT_PREF, false);
@@ -61,15 +58,13 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
-    public void onCreateNavigationDrawer()
-    {
+    public void onCreateNavigationDrawer() {
         useActionBarToggle();
         encourageLearning(!mFromSavedInstanceState);
     }
 
     @Override
-    public void onNavDrawerItemClicked(NavDrawerItem item)
-    {
+    public void onNavDrawerItemClicked(NavDrawerItem item) {
         int id = item.getId();
         if (id != mCurrentSelectedNavigationItemId) {
             switchToModeForId(id);
@@ -77,15 +72,13 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         setNavigationDrawerItemSelected(mCurrentSelectedNavigationItemId);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
+    public boolean onPrepareOptionsMenu(Menu menu) {
 
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
@@ -114,13 +107,13 @@ public class HomeActivity extends BaseActivity
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private void switchToModeForId(int id)
-    {
+    private void switchToModeForId(int id) {
         Fragment fragment = null;
         switch (id) {
             case R.id.nav_item_scout:
                 mCurrentSelectedNavigationItemId = id;
                 startActivity(new Intent(this, ScoutActivity.class));
+                finish();
                 return;
             case R.id.nav_item_server:
                 fragment = new ServerFragment();

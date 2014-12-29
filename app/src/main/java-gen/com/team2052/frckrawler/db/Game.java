@@ -5,44 +5,36 @@ package com.team2052.frckrawler.db;
 /**
  * Entity mapped to table GAME.
  */
-public class Game implements java.io.Serializable
-{
+public class Game implements java.io.Serializable {
 
     private Long id;
     private String name;
 
-    public Game()
-    {
+    public Game() {
     }
 
-    public Game(Long id)
-    {
+    public Game(Long id) {
         this.id = id;
     }
 
-    public Game(Long id, String name)
-    {
+    public Game(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 

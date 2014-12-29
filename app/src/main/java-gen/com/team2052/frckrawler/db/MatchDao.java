@@ -17,44 +17,19 @@ import de.greenrobot.dao.internal.SqlUtils;
 /**
  * DAO for table MATCH.
  */
-public class MatchDao extends AbstractDao<Match, Long>
-{
+public class MatchDao extends AbstractDao<Match, Long> {
 
     public static final String TABLENAME = "MATCH";
-
-    /**
-     * Properties of entity Match.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property EventId = new Property(1, Long.class, "eventId", false, "EVENT_ID");
-        public final static Property Key = new Property(2, String.class, "key", false, "KEY");
-        public final static Property Number = new Property(3, Integer.class, "number", false, "NUMBER");
-        public final static Property Type = new Property(4, String.class, "type", false, "TYPE");
-        public final static Property Blue1Id = new Property(5, Long.class, "blue1Id", false, "BLUE1_ID");
-        public final static Property Blue2Id = new Property(6, Long.class, "blue2Id", false, "BLUE2_ID");
-        public final static Property Blue3Id = new Property(7, Long.class, "blue3Id", false, "BLUE3_ID");
-        public final static Property Red1Id = new Property(8, Long.class, "red1Id", false, "RED1_ID");
-        public final static Property Red2Id = new Property(9, Long.class, "red2Id", false, "RED2_ID");
-        public final static Property Red3Id = new Property(10, Long.class, "red3Id", false, "RED3_ID");
-        public final static Property Redscore = new Property(11, Integer.class, "redscore", false, "REDSCORE");
-        public final static Property Bluescore = new Property(12, Integer.class, "bluescore", false, "BLUESCORE");
-    }
-
-    ;
-
     private DaoSession daoSession;
+    ;
+    private String selectDeep;
 
 
-    public MatchDao(DaoConfig config)
-    {
+    public MatchDao(DaoConfig config) {
         super(config);
     }
 
-    public MatchDao(DaoConfig config, DaoSession daoSession)
-    {
+    public MatchDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
         this.daoSession = daoSession;
     }
@@ -62,8 +37,7 @@ public class MatchDao extends AbstractDao<Match, Long>
     /**
      * Creates the underlying database table.
      */
-    public static void createTable(SQLiteDatabase db, boolean ifNotExists)
-    {
+    public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'MATCH' (" + //
                 "'_id' INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
@@ -84,8 +58,7 @@ public class MatchDao extends AbstractDao<Match, Long>
     /**
      * Drops the underlying database table.
      */
-    public static void dropTable(SQLiteDatabase db, boolean ifExists)
-    {
+    public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'MATCH'";
         db.execSQL(sql);
     }
@@ -94,8 +67,7 @@ public class MatchDao extends AbstractDao<Match, Long>
      * @inheritdoc
      */
     @Override
-    protected void bindValues(SQLiteStatement stmt, Match entity)
-    {
+    protected void bindValues(SQLiteStatement stmt, Match entity) {
         stmt.clearBindings();
 
         Long id = entity.getId();
@@ -165,8 +137,7 @@ public class MatchDao extends AbstractDao<Match, Long>
     }
 
     @Override
-    protected void attachEntity(Match entity)
-    {
+    protected void attachEntity(Match entity) {
         super.attachEntity(entity);
         entity.__setDaoSession(daoSession);
     }
@@ -175,8 +146,7 @@ public class MatchDao extends AbstractDao<Match, Long>
      * @inheritdoc
      */
     @Override
-    public Long readKey(Cursor cursor, int offset)
-    {
+    public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
@@ -184,8 +154,7 @@ public class MatchDao extends AbstractDao<Match, Long>
      * @inheritdoc
      */
     @Override
-    public Match readEntity(Cursor cursor, int offset)
-    {
+    public Match readEntity(Cursor cursor, int offset) {
         Match entity = new Match( //
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
                 cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // eventId
@@ -208,8 +177,7 @@ public class MatchDao extends AbstractDao<Match, Long>
      * @inheritdoc
      */
     @Override
-    public void readEntity(Cursor cursor, Match entity, int offset)
-    {
+    public void readEntity(Cursor cursor, Match entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setEventId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
         entity.setKey(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
@@ -229,8 +197,7 @@ public class MatchDao extends AbstractDao<Match, Long>
      * @inheritdoc
      */
     @Override
-    protected Long updateKeyAfterInsert(Match entity, long rowId)
-    {
+    protected Long updateKeyAfterInsert(Match entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
@@ -239,8 +206,7 @@ public class MatchDao extends AbstractDao<Match, Long>
      * @inheritdoc
      */
     @Override
-    public Long getKey(Match entity)
-    {
+    public Long getKey(Match entity) {
         if (entity != null) {
             return entity.getId();
         } else {
@@ -252,15 +218,11 @@ public class MatchDao extends AbstractDao<Match, Long>
      * @inheritdoc
      */
     @Override
-    protected boolean isEntityUpdateable()
-    {
+    protected boolean isEntityUpdateable() {
         return true;
     }
 
-    private String selectDeep;
-
-    protected String getSelectDeep()
-    {
+    protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
@@ -292,8 +254,7 @@ public class MatchDao extends AbstractDao<Match, Long>
         return selectDeep;
     }
 
-    protected Match loadCurrentDeep(Cursor cursor, boolean lock)
-    {
+    protected Match loadCurrentDeep(Cursor cursor, boolean lock) {
         Match entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
@@ -327,8 +288,7 @@ public class MatchDao extends AbstractDao<Match, Long>
         return entity;
     }
 
-    public Match loadDeep(Long key)
-    {
+    public Match loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
             return null;
@@ -358,8 +318,7 @@ public class MatchDao extends AbstractDao<Match, Long>
     /**
      * Reads all available rows from the given cursor and returns a list of new ImageTO objects.
      */
-    public List<Match> loadAllDeepFromCursor(Cursor cursor)
-    {
+    public List<Match> loadAllDeepFromCursor(Cursor cursor) {
         int count = cursor.getCount();
         List<Match> list = new ArrayList<Match>(count);
 
@@ -381,8 +340,7 @@ public class MatchDao extends AbstractDao<Match, Long>
         return list;
     }
 
-    protected List<Match> loadDeepAllAndCloseCursor(Cursor cursor)
-    {
+    protected List<Match> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
         } finally {
@@ -390,14 +348,32 @@ public class MatchDao extends AbstractDao<Match, Long>
         }
     }
 
-
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
-    public List<Match> queryDeep(String where, String... selectionArg)
-    {
+    public List<Match> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
+    }
+
+    /**
+     * Properties of entity Match.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property EventId = new Property(1, Long.class, "eventId", false, "EVENT_ID");
+        public final static Property Key = new Property(2, String.class, "key", false, "KEY");
+        public final static Property Number = new Property(3, Integer.class, "number", false, "NUMBER");
+        public final static Property Type = new Property(4, String.class, "type", false, "TYPE");
+        public final static Property Blue1Id = new Property(5, Long.class, "blue1Id", false, "BLUE1_ID");
+        public final static Property Blue2Id = new Property(6, Long.class, "blue2Id", false, "BLUE2_ID");
+        public final static Property Blue3Id = new Property(7, Long.class, "blue3Id", false, "BLUE3_ID");
+        public final static Property Red1Id = new Property(8, Long.class, "red1Id", false, "RED1_ID");
+        public final static Property Red2Id = new Property(9, Long.class, "red2Id", false, "RED2_ID");
+        public final static Property Red3Id = new Property(10, Long.class, "red3Id", false, "RED3_ID");
+        public final static Property Redscore = new Property(11, Integer.class, "redscore", false, "REDSCORE");
+        public final static Property Bluescore = new Property(12, Integer.class, "bluescore", false, "BLUESCORE");
     }
 
 }

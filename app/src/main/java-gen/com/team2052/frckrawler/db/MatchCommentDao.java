@@ -17,36 +17,19 @@ import de.greenrobot.dao.internal.SqlUtils;
 /**
  * DAO for table MATCH_COMMENT.
  */
-public class MatchCommentDao extends AbstractDao<MatchComment, Void>
-{
+public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
 
     public static final String TABLENAME = "MATCH_COMMENT";
-
-    /**
-     * Properties of entity MatchComment.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property MatchId = new Property(0, Long.class, "matchId", false, "MATCH_ID");
-        public final static Property Comment = new Property(1, String.class, "comment", false, "COMMENT");
-        public final static Property RobotId = new Property(2, Long.class, "robotId", false, "ROBOT_ID");
-        public final static Property EventId = new Property(3, Long.class, "eventId", false, "EVENT_ID");
-        public final static Property TeamId = new Property(4, Long.class, "teamId", false, "TEAM_ID");
-    }
-
-    ;
-
     private DaoSession daoSession;
+    ;
+    private String selectDeep;
 
 
-    public MatchCommentDao(DaoConfig config)
-    {
+    public MatchCommentDao(DaoConfig config) {
         super(config);
     }
 
-    public MatchCommentDao(DaoConfig config, DaoSession daoSession)
-    {
+    public MatchCommentDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
         this.daoSession = daoSession;
     }
@@ -54,22 +37,21 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
     /**
      * Creates the underlying database table.
      */
-    public static void createTable(SQLiteDatabase db, boolean ifNotExists)
-    {
+    public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'MATCH_COMMENT' (" + //
-                "'MATCH_ID' INTEGER," + // 0: matchId
-                "'COMMENT' TEXT," + // 1: comment
-                "'ROBOT_ID' INTEGER," + // 2: robotId
-                "'EVENT_ID' INTEGER," + // 3: eventId
-                "'TEAM_ID' INTEGER);"); // 4: teamId
+                "'_id' INTEGER PRIMARY KEY ," + // 0: id
+                "'MATCH_ID' INTEGER," + // 1: matchId
+                "'COMMENT' TEXT," + // 2: comment
+                "'ROBOT_ID' INTEGER," + // 3: robotId
+                "'EVENT_ID' INTEGER," + // 4: eventId
+                "'TEAM_ID' INTEGER);"); // 5: teamId
     }
 
     /**
      * Drops the underlying database table.
      */
-    public static void dropTable(SQLiteDatabase db, boolean ifExists)
-    {
+    public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'MATCH_COMMENT'";
         db.execSQL(sql);
     }
@@ -78,39 +60,42 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
      * @inheritdoc
      */
     @Override
-    protected void bindValues(SQLiteStatement stmt, MatchComment entity)
-    {
+    protected void bindValues(SQLiteStatement stmt, MatchComment entity) {
         stmt.clearBindings();
+
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
 
         Long matchId = entity.getMatchId();
         if (matchId != null) {
-            stmt.bindLong(1, matchId);
+            stmt.bindLong(2, matchId);
         }
 
         String comment = entity.getComment();
         if (comment != null) {
-            stmt.bindString(2, comment);
+            stmt.bindString(3, comment);
         }
 
         Long robotId = entity.getRobotId();
         if (robotId != null) {
-            stmt.bindLong(3, robotId);
+            stmt.bindLong(4, robotId);
         }
 
         Long eventId = entity.getEventId();
         if (eventId != null) {
-            stmt.bindLong(4, eventId);
+            stmt.bindLong(5, eventId);
         }
 
         Long teamId = entity.getTeamId();
         if (teamId != null) {
-            stmt.bindLong(5, teamId);
+            stmt.bindLong(6, teamId);
         }
     }
 
     @Override
-    protected void attachEntity(MatchComment entity)
-    {
+    protected void attachEntity(MatchComment entity) {
         super.attachEntity(entity);
         entity.__setDaoSession(daoSession);
     }
@@ -119,23 +104,22 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
      * @inheritdoc
      */
     @Override
-    public Void readKey(Cursor cursor, int offset)
-    {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
     /**
      * @inheritdoc
      */
     @Override
-    public MatchComment readEntity(Cursor cursor, int offset)
-    {
+    public MatchComment readEntity(Cursor cursor, int offset) {
         MatchComment entity = new MatchComment( //
-                cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // matchId
-                cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // comment
-                cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // robotId
-                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // eventId
-                cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // teamId
+                cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+                cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // matchId
+                cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // comment
+                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // robotId
+                cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4), // eventId
+                cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5) // teamId
         );
         return entity;
     }
@@ -144,47 +128,45 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
      * @inheritdoc
      */
     @Override
-    public void readEntity(Cursor cursor, MatchComment entity, int offset)
-    {
-        entity.setMatchId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setComment(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setRobotId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
-        entity.setEventId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
-        entity.setTeamId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
+    public void readEntity(Cursor cursor, MatchComment entity, int offset) {
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setMatchId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
+        entity.setComment(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setRobotId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setEventId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
+        entity.setTeamId(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
     }
 
     /**
      * @inheritdoc
      */
     @Override
-    protected Void updateKeyAfterInsert(MatchComment entity, long rowId)
-    {
-        // Unsupported or missing PK type
-        return null;
+    protected Long updateKeyAfterInsert(MatchComment entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
 
     /**
      * @inheritdoc
      */
     @Override
-    public Void getKey(MatchComment entity)
-    {
-        return null;
+    public Long getKey(MatchComment entity) {
+        if (entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     /**
      * @inheritdoc
      */
     @Override
-    protected boolean isEntityUpdateable()
-    {
+    protected boolean isEntityUpdateable() {
         return true;
     }
 
-    private String selectDeep;
-
-    protected String getSelectDeep()
-    {
+    protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
@@ -207,8 +189,7 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
         return selectDeep;
     }
 
-    protected MatchComment loadCurrentDeep(Cursor cursor, boolean lock)
-    {
+    protected MatchComment loadCurrentDeep(Cursor cursor, boolean lock) {
         MatchComment entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
@@ -230,8 +211,7 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
         return entity;
     }
 
-    public MatchComment loadDeep(Long key)
-    {
+    public MatchComment loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
             return null;
@@ -261,8 +241,7 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
     /**
      * Reads all available rows from the given cursor and returns a list of new ImageTO objects.
      */
-    public List<MatchComment> loadAllDeepFromCursor(Cursor cursor)
-    {
+    public List<MatchComment> loadAllDeepFromCursor(Cursor cursor) {
         int count = cursor.getCount();
         List<MatchComment> list = new ArrayList<MatchComment>(count);
 
@@ -284,8 +263,7 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
         return list;
     }
 
-    protected List<MatchComment> loadDeepAllAndCloseCursor(Cursor cursor)
-    {
+    protected List<MatchComment> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
         } finally {
@@ -293,14 +271,25 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Void>
         }
     }
 
-
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
-    public List<MatchComment> queryDeep(String where, String... selectionArg)
-    {
+    public List<MatchComment> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
+    }
+
+    /**
+     * Properties of entity MatchComment.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property MatchId = new Property(1, Long.class, "matchId", false, "MATCH_ID");
+        public final static Property Comment = new Property(2, String.class, "comment", false, "COMMENT");
+        public final static Property RobotId = new Property(3, Long.class, "robotId", false, "ROBOT_ID");
+        public final static Property EventId = new Property(4, Long.class, "eventId", false, "EVENT_ID");
+        public final static Property TeamId = new Property(5, Long.class, "teamId", false, "TEAM_ID");
     }
 
 }

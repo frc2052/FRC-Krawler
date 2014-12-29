@@ -13,39 +13,25 @@ import de.greenrobot.dao.internal.DaoConfig;
 /**
  * DAO for table GAME.
  */
-public class GameDao extends AbstractDao<Game, Long>
-{
+public class GameDao extends AbstractDao<Game, Long> {
 
     public static final String TABLENAME = "GAME";
 
-    /**
-     * Properties of entity Game.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
+    public GameDao(DaoConfig config) {
+        super(config);
     }
 
     ;
 
 
-    public GameDao(DaoConfig config)
-    {
-        super(config);
-    }
-
-    public GameDao(DaoConfig config, DaoSession daoSession)
-    {
+    public GameDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
     }
 
     /**
      * Creates the underlying database table.
      */
-    public static void createTable(SQLiteDatabase db, boolean ifNotExists)
-    {
+    public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'GAME' (" + //
                 "'_id' INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
@@ -55,8 +41,7 @@ public class GameDao extends AbstractDao<Game, Long>
     /**
      * Drops the underlying database table.
      */
-    public static void dropTable(SQLiteDatabase db, boolean ifExists)
-    {
+    public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'GAME'";
         db.execSQL(sql);
     }
@@ -65,8 +50,7 @@ public class GameDao extends AbstractDao<Game, Long>
      * @inheritdoc
      */
     @Override
-    protected void bindValues(SQLiteStatement stmt, Game entity)
-    {
+    protected void bindValues(SQLiteStatement stmt, Game entity) {
         stmt.clearBindings();
 
         Long id = entity.getId();
@@ -84,8 +68,7 @@ public class GameDao extends AbstractDao<Game, Long>
      * @inheritdoc
      */
     @Override
-    public Long readKey(Cursor cursor, int offset)
-    {
+    public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
@@ -93,8 +76,7 @@ public class GameDao extends AbstractDao<Game, Long>
      * @inheritdoc
      */
     @Override
-    public Game readEntity(Cursor cursor, int offset)
-    {
+    public Game readEntity(Cursor cursor, int offset) {
         Game entity = new Game( //
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
                 cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // name
@@ -106,8 +88,7 @@ public class GameDao extends AbstractDao<Game, Long>
      * @inheritdoc
      */
     @Override
-    public void readEntity(Cursor cursor, Game entity, int offset)
-    {
+    public void readEntity(Cursor cursor, Game entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
     }
@@ -116,8 +97,7 @@ public class GameDao extends AbstractDao<Game, Long>
      * @inheritdoc
      */
     @Override
-    protected Long updateKeyAfterInsert(Game entity, long rowId)
-    {
+    protected Long updateKeyAfterInsert(Game entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
@@ -126,8 +106,7 @@ public class GameDao extends AbstractDao<Game, Long>
      * @inheritdoc
      */
     @Override
-    public Long getKey(Game entity)
-    {
+    public Long getKey(Game entity) {
         if (entity != null) {
             return entity.getId();
         } else {
@@ -139,9 +118,17 @@ public class GameDao extends AbstractDao<Game, Long>
      * @inheritdoc
      */
     @Override
-    protected boolean isEntityUpdateable()
-    {
+    protected boolean isEntityUpdateable() {
         return true;
+    }
+
+    /**
+     * Properties of entity Game.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
     }
 
 }

@@ -7,8 +7,7 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table ROBOT_PHOTO.
  */
-public class RobotPhoto implements java.io.Serializable
-{
+public class RobotPhoto implements java.io.Serializable {
 
     private Long id;
     private String location;
@@ -30,17 +29,14 @@ public class RobotPhoto implements java.io.Serializable
     private Long robot__resolvedKey;
 
 
-    public RobotPhoto()
-    {
+    public RobotPhoto() {
     }
 
-    public RobotPhoto(Long id)
-    {
+    public RobotPhoto(Long id) {
         this.id = id;
     }
 
-    public RobotPhoto(Long id, String location, Long robotId, String title, java.util.Date date)
-    {
+    public RobotPhoto(Long id, String location, Long robotId, String title, java.util.Date date) {
         this.id = id;
         this.location = location;
         this.robotId = robotId;
@@ -51,67 +47,55 @@ public class RobotPhoto implements java.io.Serializable
     /**
      * called by internal mechanisms, do not call yourself.
      */
-    public void __setDaoSession(DaoSession daoSession)
-    {
+    public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getRobotPhotoDao() : null;
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getLocation()
-    {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation(String location)
-    {
+    public void setLocation(String location) {
         this.location = location;
     }
 
-    public Long getRobotId()
-    {
+    public Long getRobotId() {
         return robotId;
     }
 
-    public void setRobotId(Long robotId)
-    {
+    public void setRobotId(Long robotId) {
         this.robotId = robotId;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title)
-    {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public java.util.Date getDate()
-    {
+    public java.util.Date getDate() {
         return date;
     }
 
-    public void setDate(java.util.Date date)
-    {
+    public void setDate(java.util.Date date) {
         this.date = date;
     }
 
     /**
      * To-one relationship, resolved on first access.
      */
-    public Robot getRobot()
-    {
+    public Robot getRobot() {
         Long __key = this.robotId;
         if (robot__resolvedKey == null || !robot__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -127,8 +111,7 @@ public class RobotPhoto implements java.io.Serializable
         return robot;
     }
 
-    public void setRobot(Robot robot)
-    {
+    public void setRobot(Robot robot) {
         synchronized (this) {
             this.robot = robot;
             robotId = robot == null ? null : robot.getId();
@@ -139,8 +122,7 @@ public class RobotPhoto implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context.
      */
-    public void delete()
-    {
+    public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -150,8 +132,7 @@ public class RobotPhoto implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#update(Object)}. Entity must attached to an entity context.
      */
-    public void update()
-    {
+    public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -161,8 +142,7 @@ public class RobotPhoto implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#refresh(Object)}. Entity must attached to an entity context.
      */
-    public void refresh()
-    {
+    public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }

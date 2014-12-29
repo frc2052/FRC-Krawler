@@ -7,8 +7,7 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table EVENT.
  */
-public class Event implements java.io.Serializable
-{
+public class Event implements java.io.Serializable {
 
     private Long id;
     private String name;
@@ -31,17 +30,14 @@ public class Event implements java.io.Serializable
     private Long game__resolvedKey;
 
 
-    public Event()
-    {
+    public Event() {
     }
 
-    public Event(Long id)
-    {
+    public Event(Long id) {
         this.id = id;
     }
 
-    public Event(Long id, String name, Long gameId, String location, java.util.Date date, String fmsid)
-    {
+    public Event(Long id, String name, Long gameId, String location, java.util.Date date, String fmsid) {
         this.id = id;
         this.name = name;
         this.gameId = gameId;
@@ -53,77 +49,63 @@ public class Event implements java.io.Serializable
     /**
      * called by internal mechanisms, do not call yourself.
      */
-    public void __setDaoSession(DaoSession daoSession)
-    {
+    public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getEventDao() : null;
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public Long getGameId()
-    {
+    public Long getGameId() {
         return gameId;
     }
 
-    public void setGameId(Long gameId)
-    {
+    public void setGameId(Long gameId) {
         this.gameId = gameId;
     }
 
-    public String getLocation()
-    {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation(String location)
-    {
+    public void setLocation(String location) {
         this.location = location;
     }
 
-    public java.util.Date getDate()
-    {
+    public java.util.Date getDate() {
         return date;
     }
 
-    public void setDate(java.util.Date date)
-    {
+    public void setDate(java.util.Date date) {
         this.date = date;
     }
 
-    public String getFmsid()
-    {
+    public String getFmsid() {
         return fmsid;
     }
 
-    public void setFmsid(String fmsid)
-    {
+    public void setFmsid(String fmsid) {
         this.fmsid = fmsid;
     }
 
     /**
      * To-one relationship, resolved on first access.
      */
-    public Game getGame()
-    {
+    public Game getGame() {
         Long __key = this.gameId;
         if (game__resolvedKey == null || !game__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -139,8 +121,7 @@ public class Event implements java.io.Serializable
         return game;
     }
 
-    public void setGame(Game game)
-    {
+    public void setGame(Game game) {
         synchronized (this) {
             this.game = game;
             gameId = game == null ? null : game.getId();
@@ -151,8 +132,7 @@ public class Event implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context.
      */
-    public void delete()
-    {
+    public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -162,8 +142,7 @@ public class Event implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#update(Object)}. Entity must attached to an entity context.
      */
-    public void update()
-    {
+    public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -173,8 +152,7 @@ public class Event implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#refresh(Object)}. Entity must attached to an entity context.
      */
-    public void refresh()
-    {
+    public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }

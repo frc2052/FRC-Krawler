@@ -2,6 +2,7 @@ package com.team2052.frckrawler.background;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.bluetooth.scout.LoginHandler;
@@ -38,27 +39,26 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        LoginHandler loginHandler = LoginHandler.getInstance(context, mDaoSession);
-
-        if (!loginHandler.isLoggedOn() && !loginHandler.loggedOnUserStillExists()) {
-            loginHandler.login();
-        }
-
         for (MetricValue widget : metricValues) {
-            List<PitData> currentData = mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).where(PitDataDao.Properties.MetricId.eq(widget.getMetric().getId())).list();
-            PitData pitData = new PitData(widget.getValue(), robot.getId(), widget.getMetric().getId(), mEvent.getId(), loginHandler.getLoggedOnUser().getId());
+            PitData currentData = mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).where(PitDataDao.Properties.MetricId.eq(widget.getMetric().getId())).where(PitDataDao.Properties.EventId.eq(mEvent.getId())).unique();
+            PitData pitData = new PitData(null, widget.getValue(), robot.getId(), widget.getMetric().getId(), mEvent.getId(), LoginHandler.getInstance(context, mDaoSession).getLoggedOnUser().getId());
 
-            if (currentData.size() > 0) {
-                for (PitData data : currentData) {
-                    data.delete();
-                }
+            if (currentData != null) {
+                currentData.setData(pitData.getData());
+                currentData.update();
+            } else {
+                mDaoSession.getPitDataDao().insert(pitData);
             }
 
-            mDaoSession.getPitDataDao().insert(pitData);
         }
 
         robot.setComments(comment);
         robot.update();
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        Toast.makeText(context, "Save Complete", Toast.LENGTH_LONG).show();
     }
 }

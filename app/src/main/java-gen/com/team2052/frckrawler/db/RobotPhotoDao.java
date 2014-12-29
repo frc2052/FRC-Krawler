@@ -17,36 +17,19 @@ import de.greenrobot.dao.internal.SqlUtils;
 /**
  * DAO for table ROBOT_PHOTO.
  */
-public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
-{
+public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long> {
 
     public static final String TABLENAME = "ROBOT_PHOTO";
-
-    /**
-     * Properties of entity RobotPhoto.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Location = new Property(1, String.class, "location", false, "LOCATION");
-        public final static Property RobotId = new Property(2, Long.class, "robotId", false, "ROBOT_ID");
-        public final static Property Title = new Property(3, String.class, "title", false, "TITLE");
-        public final static Property Date = new Property(4, java.util.Date.class, "date", false, "DATE");
-    }
-
-    ;
-
     private DaoSession daoSession;
+    ;
+    private String selectDeep;
 
 
-    public RobotPhotoDao(DaoConfig config)
-    {
+    public RobotPhotoDao(DaoConfig config) {
         super(config);
     }
 
-    public RobotPhotoDao(DaoConfig config, DaoSession daoSession)
-    {
+    public RobotPhotoDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
         this.daoSession = daoSession;
     }
@@ -54,8 +37,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
     /**
      * Creates the underlying database table.
      */
-    public static void createTable(SQLiteDatabase db, boolean ifNotExists)
-    {
+    public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'ROBOT_PHOTO' (" + //
                 "'_id' INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
@@ -68,8 +50,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
     /**
      * Drops the underlying database table.
      */
-    public static void dropTable(SQLiteDatabase db, boolean ifExists)
-    {
+    public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'ROBOT_PHOTO'";
         db.execSQL(sql);
     }
@@ -78,8 +59,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
      * @inheritdoc
      */
     @Override
-    protected void bindValues(SQLiteStatement stmt, RobotPhoto entity)
-    {
+    protected void bindValues(SQLiteStatement stmt, RobotPhoto entity) {
         stmt.clearBindings();
 
         Long id = entity.getId();
@@ -109,8 +89,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
     }
 
     @Override
-    protected void attachEntity(RobotPhoto entity)
-    {
+    protected void attachEntity(RobotPhoto entity) {
         super.attachEntity(entity);
         entity.__setDaoSession(daoSession);
     }
@@ -119,8 +98,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
      * @inheritdoc
      */
     @Override
-    public Long readKey(Cursor cursor, int offset)
-    {
+    public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
@@ -128,8 +106,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
      * @inheritdoc
      */
     @Override
-    public RobotPhoto readEntity(Cursor cursor, int offset)
-    {
+    public RobotPhoto readEntity(Cursor cursor, int offset) {
         RobotPhoto entity = new RobotPhoto( //
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
                 cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // location
@@ -144,8 +121,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
      * @inheritdoc
      */
     @Override
-    public void readEntity(Cursor cursor, RobotPhoto entity, int offset)
-    {
+    public void readEntity(Cursor cursor, RobotPhoto entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setLocation(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setRobotId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
@@ -157,8 +133,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
      * @inheritdoc
      */
     @Override
-    protected Long updateKeyAfterInsert(RobotPhoto entity, long rowId)
-    {
+    protected Long updateKeyAfterInsert(RobotPhoto entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
@@ -167,8 +142,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
      * @inheritdoc
      */
     @Override
-    public Long getKey(RobotPhoto entity)
-    {
+    public Long getKey(RobotPhoto entity) {
         if (entity != null) {
             return entity.getId();
         } else {
@@ -180,15 +154,11 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
      * @inheritdoc
      */
     @Override
-    protected boolean isEntityUpdateable()
-    {
+    protected boolean isEntityUpdateable() {
         return true;
     }
 
-    private String selectDeep;
-
-    protected String getSelectDeep()
-    {
+    protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
@@ -202,8 +172,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
         return selectDeep;
     }
 
-    protected RobotPhoto loadCurrentDeep(Cursor cursor, boolean lock)
-    {
+    protected RobotPhoto loadCurrentDeep(Cursor cursor, boolean lock) {
         RobotPhoto entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
@@ -213,8 +182,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
         return entity;
     }
 
-    public RobotPhoto loadDeep(Long key)
-    {
+    public RobotPhoto loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
             return null;
@@ -244,8 +212,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
     /**
      * Reads all available rows from the given cursor and returns a list of new ImageTO objects.
      */
-    public List<RobotPhoto> loadAllDeepFromCursor(Cursor cursor)
-    {
+    public List<RobotPhoto> loadAllDeepFromCursor(Cursor cursor) {
         int count = cursor.getCount();
         List<RobotPhoto> list = new ArrayList<RobotPhoto>(count);
 
@@ -267,8 +234,7 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
         return list;
     }
 
-    protected List<RobotPhoto> loadDeepAllAndCloseCursor(Cursor cursor)
-    {
+    protected List<RobotPhoto> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
         } finally {
@@ -276,14 +242,24 @@ public class RobotPhotoDao extends AbstractDao<RobotPhoto, Long>
         }
     }
 
-
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
-    public List<RobotPhoto> queryDeep(String where, String... selectionArg)
-    {
+    public List<RobotPhoto> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
+    }
+
+    /**
+     * Properties of entity RobotPhoto.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Location = new Property(1, String.class, "location", false, "LOCATION");
+        public final static Property RobotId = new Property(2, Long.class, "robotId", false, "ROBOT_ID");
+        public final static Property Title = new Property(3, String.class, "title", false, "TITLE");
+        public final static Property Date = new Property(4, java.util.Date.class, "date", false, "DATE");
     }
 
 }

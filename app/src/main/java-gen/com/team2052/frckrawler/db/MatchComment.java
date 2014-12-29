@@ -7,9 +7,9 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table MATCH_COMMENT.
  */
-public class MatchComment implements java.io.Serializable
-{
+public class MatchComment implements java.io.Serializable {
 
+    private Long id;
     private Long matchId;
     private String comment;
     private Long robotId;
@@ -39,12 +39,15 @@ public class MatchComment implements java.io.Serializable
     private Long team__resolvedKey;
 
 
-    public MatchComment()
-    {
+    public MatchComment() {
     }
 
-    public MatchComment(Long matchId, String comment, Long robotId, Long eventId, Long teamId)
-    {
+    public MatchComment(Long id) {
+        this.id = id;
+    }
+
+    public MatchComment(Long id, Long matchId, String comment, Long robotId, Long eventId, Long teamId) {
+        this.id = id;
         this.matchId = matchId;
         this.comment = comment;
         this.robotId = robotId;
@@ -55,67 +58,63 @@ public class MatchComment implements java.io.Serializable
     /**
      * called by internal mechanisms, do not call yourself.
      */
-    public void __setDaoSession(DaoSession daoSession)
-    {
+    public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getMatchCommentDao() : null;
     }
 
-    public Long getMatchId()
-    {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getMatchId() {
         return matchId;
     }
 
-    public void setMatchId(Long matchId)
-    {
+    public void setMatchId(Long matchId) {
         this.matchId = matchId;
     }
 
-    public String getComment()
-    {
+    public String getComment() {
         return comment;
     }
 
-    public void setComment(String comment)
-    {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
-    public Long getRobotId()
-    {
+    public Long getRobotId() {
         return robotId;
     }
 
-    public void setRobotId(Long robotId)
-    {
+    public void setRobotId(Long robotId) {
         this.robotId = robotId;
     }
 
-    public Long getEventId()
-    {
+    public Long getEventId() {
         return eventId;
     }
 
-    public void setEventId(Long eventId)
-    {
+    public void setEventId(Long eventId) {
         this.eventId = eventId;
     }
 
-    public Long getTeamId()
-    {
+    public Long getTeamId() {
         return teamId;
     }
 
-    public void setTeamId(Long teamId)
-    {
+    public void setTeamId(Long teamId) {
         this.teamId = teamId;
     }
 
     /**
      * To-one relationship, resolved on first access.
      */
-    public Match getMatch()
-    {
+    public Match getMatch() {
         Long __key = this.matchId;
         if (match__resolvedKey == null || !match__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -131,8 +130,7 @@ public class MatchComment implements java.io.Serializable
         return match;
     }
 
-    public void setMatch(Match match)
-    {
+    public void setMatch(Match match) {
         synchronized (this) {
             this.match = match;
             matchId = match == null ? null : match.getId();
@@ -143,8 +141,7 @@ public class MatchComment implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public Robot getRobot()
-    {
+    public Robot getRobot() {
         Long __key = this.robotId;
         if (robot__resolvedKey == null || !robot__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -160,8 +157,7 @@ public class MatchComment implements java.io.Serializable
         return robot;
     }
 
-    public void setRobot(Robot robot)
-    {
+    public void setRobot(Robot robot) {
         synchronized (this) {
             this.robot = robot;
             robotId = robot == null ? null : robot.getId();
@@ -172,8 +168,7 @@ public class MatchComment implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public Event getEvent()
-    {
+    public Event getEvent() {
         Long __key = this.eventId;
         if (event__resolvedKey == null || !event__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -189,8 +184,7 @@ public class MatchComment implements java.io.Serializable
         return event;
     }
 
-    public void setEvent(Event event)
-    {
+    public void setEvent(Event event) {
         synchronized (this) {
             this.event = event;
             eventId = event == null ? null : event.getId();
@@ -201,8 +195,7 @@ public class MatchComment implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public Team getTeam()
-    {
+    public Team getTeam() {
         Long __key = this.teamId;
         if (team__resolvedKey == null || !team__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -218,8 +211,7 @@ public class MatchComment implements java.io.Serializable
         return team;
     }
 
-    public void setTeam(Team team)
-    {
+    public void setTeam(Team team) {
         synchronized (this) {
             this.team = team;
             teamId = team == null ? null : team.getNumber();
@@ -230,8 +222,7 @@ public class MatchComment implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context.
      */
-    public void delete()
-    {
+    public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -241,8 +232,7 @@ public class MatchComment implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#update(Object)}. Entity must attached to an entity context.
      */
-    public void update()
-    {
+    public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -252,8 +242,7 @@ public class MatchComment implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#refresh(Object)}. Entity must attached to an entity context.
      */
-    public void refresh()
-    {
+    public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }

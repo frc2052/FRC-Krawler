@@ -7,8 +7,7 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table MATCH.
  */
-public class Match implements java.io.Serializable
-{
+public class Match implements java.io.Serializable {
 
     private Long id;
     private Long eventId;
@@ -56,17 +55,14 @@ public class Match implements java.io.Serializable
     private Long red3__resolvedKey;
 
 
-    public Match()
-    {
+    public Match() {
     }
 
-    public Match(Long id)
-    {
+    public Match(Long id) {
         this.id = id;
     }
 
-    public Match(Long id, Long eventId, String key, Integer number, String type, Long blue1Id, Long blue2Id, Long blue3Id, Long red1Id, Long red2Id, Long red3Id, Integer redscore, Integer bluescore)
-    {
+    public Match(Long id, Long eventId, String key, Integer number, String type, Long blue1Id, Long blue2Id, Long blue3Id, Long red1Id, Long red2Id, Long red3Id, Integer redscore, Integer bluescore) {
         this.id = id;
         this.eventId = eventId;
         this.key = key;
@@ -85,147 +81,119 @@ public class Match implements java.io.Serializable
     /**
      * called by internal mechanisms, do not call yourself.
      */
-    public void __setDaoSession(DaoSession daoSession)
-    {
+    public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getMatchDao() : null;
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getEventId()
-    {
+    public Long getEventId() {
         return eventId;
     }
 
-    public void setEventId(Long eventId)
-    {
+    public void setEventId(Long eventId) {
         this.eventId = eventId;
     }
 
-    public String getKey()
-    {
+    public String getKey() {
         return key;
     }
 
-    public void setKey(String key)
-    {
+    public void setKey(String key) {
         this.key = key;
     }
 
-    public Integer getNumber()
-    {
+    public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number)
-    {
+    public void setNumber(Integer number) {
         this.number = number;
     }
 
-    public String getType()
-    {
+    public String getType() {
         return type;
     }
 
-    public void setType(String type)
-    {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public Long getBlue1Id()
-    {
+    public Long getBlue1Id() {
         return blue1Id;
     }
 
-    public void setBlue1Id(Long blue1Id)
-    {
+    public void setBlue1Id(Long blue1Id) {
         this.blue1Id = blue1Id;
     }
 
-    public Long getBlue2Id()
-    {
+    public Long getBlue2Id() {
         return blue2Id;
     }
 
-    public void setBlue2Id(Long blue2Id)
-    {
+    public void setBlue2Id(Long blue2Id) {
         this.blue2Id = blue2Id;
     }
 
-    public Long getBlue3Id()
-    {
+    public Long getBlue3Id() {
         return blue3Id;
     }
 
-    public void setBlue3Id(Long blue3Id)
-    {
+    public void setBlue3Id(Long blue3Id) {
         this.blue3Id = blue3Id;
     }
 
-    public Long getRed1Id()
-    {
+    public Long getRed1Id() {
         return red1Id;
     }
 
-    public void setRed1Id(Long red1Id)
-    {
+    public void setRed1Id(Long red1Id) {
         this.red1Id = red1Id;
     }
 
-    public Long getRed2Id()
-    {
+    public Long getRed2Id() {
         return red2Id;
     }
 
-    public void setRed2Id(Long red2Id)
-    {
+    public void setRed2Id(Long red2Id) {
         this.red2Id = red2Id;
     }
 
-    public Long getRed3Id()
-    {
+    public Long getRed3Id() {
         return red3Id;
     }
 
-    public void setRed3Id(Long red3Id)
-    {
+    public void setRed3Id(Long red3Id) {
         this.red3Id = red3Id;
     }
 
-    public Integer getRedscore()
-    {
+    public Integer getRedscore() {
         return redscore;
     }
 
-    public void setRedscore(Integer redscore)
-    {
+    public void setRedscore(Integer redscore) {
         this.redscore = redscore;
     }
 
-    public Integer getBluescore()
-    {
+    public Integer getBluescore() {
         return bluescore;
     }
 
-    public void setBluescore(Integer bluescore)
-    {
+    public void setBluescore(Integer bluescore) {
         this.bluescore = bluescore;
     }
 
     /**
      * To-one relationship, resolved on first access.
      */
-    public Event getEvent()
-    {
+    public Event getEvent() {
         Long __key = this.eventId;
         if (event__resolvedKey == null || !event__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -241,8 +209,7 @@ public class Match implements java.io.Serializable
         return event;
     }
 
-    public void setEvent(Event event)
-    {
+    public void setEvent(Event event) {
         synchronized (this) {
             this.event = event;
             eventId = event == null ? null : event.getId();
@@ -253,8 +220,7 @@ public class Match implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public Team getBlue1()
-    {
+    public Team getBlue1() {
         Long __key = this.blue1Id;
         if (blue1__resolvedKey == null || !blue1__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -270,8 +236,7 @@ public class Match implements java.io.Serializable
         return blue1;
     }
 
-    public void setBlue1(Team blue1)
-    {
+    public void setBlue1(Team blue1) {
         synchronized (this) {
             this.blue1 = blue1;
             blue1Id = blue1 == null ? null : blue1.getNumber();
@@ -282,8 +247,7 @@ public class Match implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public Team getBlue2()
-    {
+    public Team getBlue2() {
         Long __key = this.blue2Id;
         if (blue2__resolvedKey == null || !blue2__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -299,8 +263,7 @@ public class Match implements java.io.Serializable
         return blue2;
     }
 
-    public void setBlue2(Team blue2)
-    {
+    public void setBlue2(Team blue2) {
         synchronized (this) {
             this.blue2 = blue2;
             blue2Id = blue2 == null ? null : blue2.getNumber();
@@ -311,8 +274,7 @@ public class Match implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public Team getBlue3()
-    {
+    public Team getBlue3() {
         Long __key = this.blue3Id;
         if (blue3__resolvedKey == null || !blue3__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -328,8 +290,7 @@ public class Match implements java.io.Serializable
         return blue3;
     }
 
-    public void setBlue3(Team blue3)
-    {
+    public void setBlue3(Team blue3) {
         synchronized (this) {
             this.blue3 = blue3;
             blue3Id = blue3 == null ? null : blue3.getNumber();
@@ -340,8 +301,7 @@ public class Match implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public Team getRed1()
-    {
+    public Team getRed1() {
         Long __key = this.red1Id;
         if (red1__resolvedKey == null || !red1__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -357,8 +317,7 @@ public class Match implements java.io.Serializable
         return red1;
     }
 
-    public void setRed1(Team red1)
-    {
+    public void setRed1(Team red1) {
         synchronized (this) {
             this.red1 = red1;
             red1Id = red1 == null ? null : red1.getNumber();
@@ -369,8 +328,7 @@ public class Match implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public Team getRed2()
-    {
+    public Team getRed2() {
         Long __key = this.red2Id;
         if (red2__resolvedKey == null || !red2__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -386,8 +344,7 @@ public class Match implements java.io.Serializable
         return red2;
     }
 
-    public void setRed2(Team red2)
-    {
+    public void setRed2(Team red2) {
         synchronized (this) {
             this.red2 = red2;
             red2Id = red2 == null ? null : red2.getNumber();
@@ -398,8 +355,7 @@ public class Match implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public Team getRed3()
-    {
+    public Team getRed3() {
         Long __key = this.red3Id;
         if (red3__resolvedKey == null || !red3__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -415,8 +371,7 @@ public class Match implements java.io.Serializable
         return red3;
     }
 
-    public void setRed3(Team red3)
-    {
+    public void setRed3(Team red3) {
         synchronized (this) {
             this.red3 = red3;
             red3Id = red3 == null ? null : red3.getNumber();
@@ -427,8 +382,7 @@ public class Match implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context.
      */
-    public void delete()
-    {
+    public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -438,8 +392,7 @@ public class Match implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#update(Object)}. Entity must attached to an entity context.
      */
-    public void update()
-    {
+    public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -449,8 +402,7 @@ public class Match implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#refresh(Object)}. Entity must attached to an entity context.
      */
-    public void refresh()
-    {
+    public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }

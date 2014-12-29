@@ -17,36 +17,19 @@ import de.greenrobot.dao.internal.SqlUtils;
 /**
  * DAO for table MATCH_DATA.
  */
-public class MatchDataDao extends AbstractDao<MatchData, Void>
-{
+public class MatchDataDao extends AbstractDao<MatchData, Long> {
 
     public static final String TABLENAME = "MATCH_DATA";
-
-    /**
-     * Properties of entity MatchData.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties
-    {
-        public final static Property Data = new Property(0, String.class, "data", false, "DATA");
-        public final static Property RobotId = new Property(1, Long.class, "robotId", false, "ROBOT_ID");
-        public final static Property MetricId = new Property(2, Long.class, "metricId", false, "METRIC_ID");
-        public final static Property MatchId = new Property(3, Long.class, "matchId", false, "MATCH_ID");
-        public final static Property UserId = new Property(4, Long.class, "userId", false, "USER_ID");
-    }
-
-    ;
-
     private DaoSession daoSession;
+    ;
+    private String selectDeep;
 
 
-    public MatchDataDao(DaoConfig config)
-    {
+    public MatchDataDao(DaoConfig config) {
         super(config);
     }
 
-    public MatchDataDao(DaoConfig config, DaoSession daoSession)
-    {
+    public MatchDataDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
         this.daoSession = daoSession;
     }
@@ -54,22 +37,22 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
     /**
      * Creates the underlying database table.
      */
-    public static void createTable(SQLiteDatabase db, boolean ifNotExists)
-    {
+    public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'MATCH_DATA' (" + //
-                "'DATA' TEXT," + // 0: data
-                "'ROBOT_ID' INTEGER," + // 1: robotId
-                "'METRIC_ID' INTEGER," + // 2: metricId
-                "'MATCH_ID' INTEGER," + // 3: matchId
-                "'USER_ID' INTEGER);"); // 4: userId
+                "'_id' INTEGER PRIMARY KEY ," + // 0: id
+                "'DATA' TEXT," + // 1: data
+                "'ROBOT_ID' INTEGER," + // 2: robotId
+                "'METRIC_ID' INTEGER," + // 3: metricId
+                "'MATCH_ID' INTEGER," + // 4: matchId
+                "'EVENT_ID' INTEGER," + // 5: eventId
+                "'USER_ID' INTEGER);"); // 6: userId
     }
 
     /**
      * Drops the underlying database table.
      */
-    public static void dropTable(SQLiteDatabase db, boolean ifExists)
-    {
+    public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'MATCH_DATA'";
         db.execSQL(sql);
     }
@@ -78,39 +61,47 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
      * @inheritdoc
      */
     @Override
-    protected void bindValues(SQLiteStatement stmt, MatchData entity)
-    {
+    protected void bindValues(SQLiteStatement stmt, MatchData entity) {
         stmt.clearBindings();
+
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
 
         String data = entity.getData();
         if (data != null) {
-            stmt.bindString(1, data);
+            stmt.bindString(2, data);
         }
 
         Long robotId = entity.getRobotId();
         if (robotId != null) {
-            stmt.bindLong(2, robotId);
+            stmt.bindLong(3, robotId);
         }
 
         Long metricId = entity.getMetricId();
         if (metricId != null) {
-            stmt.bindLong(3, metricId);
+            stmt.bindLong(4, metricId);
         }
 
         Long matchId = entity.getMatchId();
         if (matchId != null) {
-            stmt.bindLong(4, matchId);
+            stmt.bindLong(5, matchId);
+        }
+
+        Long eventId = entity.getEventId();
+        if (eventId != null) {
+            stmt.bindLong(6, eventId);
         }
 
         Long userId = entity.getUserId();
         if (userId != null) {
-            stmt.bindLong(5, userId);
+            stmt.bindLong(7, userId);
         }
     }
 
     @Override
-    protected void attachEntity(MatchData entity)
-    {
+    protected void attachEntity(MatchData entity) {
         super.attachEntity(entity);
         entity.__setDaoSession(daoSession);
     }
@@ -119,23 +110,23 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
      * @inheritdoc
      */
     @Override
-    public Void readKey(Cursor cursor, int offset)
-    {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
     /**
      * @inheritdoc
      */
     @Override
-    public MatchData readEntity(Cursor cursor, int offset)
-    {
+    public MatchData readEntity(Cursor cursor, int offset) {
         MatchData entity = new MatchData( //
-                cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // data
-                cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // robotId
-                cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // metricId
-                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // matchId
-                cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // userId
+                cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+                cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // data
+                cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // robotId
+                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // metricId
+                cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4), // matchId
+                cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5), // eventId
+                cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6) // userId
         );
         return entity;
     }
@@ -144,47 +135,46 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
      * @inheritdoc
      */
     @Override
-    public void readEntity(Cursor cursor, MatchData entity, int offset)
-    {
-        entity.setData(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setRobotId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
-        entity.setMetricId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
-        entity.setMatchId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
-        entity.setUserId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
+    public void readEntity(Cursor cursor, MatchData entity, int offset) {
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setData(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setRobotId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setMetricId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setMatchId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
+        entity.setEventId(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
+        entity.setUserId(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
     }
 
     /**
      * @inheritdoc
      */
     @Override
-    protected Void updateKeyAfterInsert(MatchData entity, long rowId)
-    {
-        // Unsupported or missing PK type
-        return null;
+    protected Long updateKeyAfterInsert(MatchData entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
 
     /**
      * @inheritdoc
      */
     @Override
-    public Void getKey(MatchData entity)
-    {
-        return null;
+    public Long getKey(MatchData entity) {
+        if (entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     /**
      * @inheritdoc
      */
     @Override
-    protected boolean isEntityUpdateable()
-    {
+    protected boolean isEntityUpdateable() {
         return true;
     }
 
-    private String selectDeep;
-
-    protected String getSelectDeep()
-    {
+    protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
@@ -195,20 +185,22 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
             builder.append(',');
             SqlUtils.appendColumns(builder, "T2", daoSession.getMatchDao().getAllColumns());
             builder.append(',');
-            SqlUtils.appendColumns(builder, "T3", daoSession.getUserDao().getAllColumns());
+            SqlUtils.appendColumns(builder, "T3", daoSession.getEventDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T4", daoSession.getUserDao().getAllColumns());
             builder.append(" FROM MATCH_DATA T");
             builder.append(" LEFT JOIN ROBOT T0 ON T.'ROBOT_ID'=T0.'_id'");
             builder.append(" LEFT JOIN METRIC T1 ON T.'METRIC_ID'=T1.'_id'");
             builder.append(" LEFT JOIN MATCH T2 ON T.'MATCH_ID'=T2.'_id'");
-            builder.append(" LEFT JOIN USER T3 ON T.'USER_ID'=T3.'_id'");
+            builder.append(" LEFT JOIN EVENT T3 ON T.'EVENT_ID'=T3.'_id'");
+            builder.append(" LEFT JOIN USER T4 ON T.'USER_ID'=T4.'_id'");
             builder.append(' ');
             selectDeep = builder.toString();
         }
         return selectDeep;
     }
 
-    protected MatchData loadCurrentDeep(Cursor cursor, boolean lock)
-    {
+    protected MatchData loadCurrentDeep(Cursor cursor, boolean lock) {
         MatchData entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
@@ -224,14 +216,17 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
         entity.setMatch(match);
         offset += daoSession.getMatchDao().getAllColumns().length;
 
+        Event event = loadCurrentOther(daoSession.getEventDao(), cursor, offset);
+        entity.setEvent(event);
+        offset += daoSession.getEventDao().getAllColumns().length;
+
         User user = loadCurrentOther(daoSession.getUserDao(), cursor, offset);
         entity.setUser(user);
 
         return entity;
     }
 
-    public MatchData loadDeep(Long key)
-    {
+    public MatchData loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
             return null;
@@ -261,8 +256,7 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
     /**
      * Reads all available rows from the given cursor and returns a list of new ImageTO objects.
      */
-    public List<MatchData> loadAllDeepFromCursor(Cursor cursor)
-    {
+    public List<MatchData> loadAllDeepFromCursor(Cursor cursor) {
         int count = cursor.getCount();
         List<MatchData> list = new ArrayList<MatchData>(count);
 
@@ -284,8 +278,7 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
         return list;
     }
 
-    protected List<MatchData> loadDeepAllAndCloseCursor(Cursor cursor)
-    {
+    protected List<MatchData> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
         } finally {
@@ -293,14 +286,26 @@ public class MatchDataDao extends AbstractDao<MatchData, Void>
         }
     }
 
-
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
-    public List<MatchData> queryDeep(String where, String... selectionArg)
-    {
+    public List<MatchData> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
+    }
+
+    /**
+     * Properties of entity MatchData.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Data = new Property(1, String.class, "data", false, "DATA");
+        public final static Property RobotId = new Property(2, Long.class, "robotId", false, "ROBOT_ID");
+        public final static Property MetricId = new Property(3, Long.class, "metricId", false, "METRIC_ID");
+        public final static Property MatchId = new Property(4, Long.class, "matchId", false, "MATCH_ID");
+        public final static Property EventId = new Property(5, Long.class, "eventId", false, "EVENT_ID");
+        public final static Property UserId = new Property(6, Long.class, "userId", false, "USER_ID");
     }
 
 }

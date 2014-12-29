@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.view.metric;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
@@ -51,5 +52,14 @@ public abstract class MetricWidget extends FrameLayout {
     }
 
     public abstract String getValues();
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        MetricWidgetSavedState ss = new MetricWidgetSavedState(superState);
+        ss.value = getValues();
+        return ss;
+    }
+
 
 }

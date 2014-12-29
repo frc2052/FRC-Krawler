@@ -7,13 +7,14 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table MATCH_DATA.
  */
-public class MatchData implements java.io.Serializable
-{
+public class MatchData implements java.io.Serializable {
 
+    private Long id;
     private String data;
     private Long robotId;
     private Long metricId;
     private Long matchId;
+    private Long eventId;
     private Long userId;
 
     /**
@@ -35,87 +36,98 @@ public class MatchData implements java.io.Serializable
     private Match match;
     private Long match__resolvedKey;
 
+    private Event event;
+    private Long event__resolvedKey;
+
     private User user;
     private Long user__resolvedKey;
 
 
-    public MatchData()
-    {
+    public MatchData() {
     }
 
-    public MatchData(String data, Long robotId, Long metricId, Long matchId, Long userId)
-    {
+    public MatchData(Long id) {
+        this.id = id;
+    }
+
+    public MatchData(Long id, String data, Long robotId, Long metricId, Long matchId, Long eventId, Long userId) {
+        this.id = id;
         this.data = data;
         this.robotId = robotId;
         this.metricId = metricId;
         this.matchId = matchId;
+        this.eventId = eventId;
         this.userId = userId;
     }
 
     /**
      * called by internal mechanisms, do not call yourself.
      */
-    public void __setDaoSession(DaoSession daoSession)
-    {
+    public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getMatchDataDao() : null;
     }
 
-    public String getData()
-    {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getData() {
         return data;
     }
 
-    public void setData(String data)
-    {
+    public void setData(String data) {
         this.data = data;
     }
 
-    public Long getRobotId()
-    {
+    public Long getRobotId() {
         return robotId;
     }
 
-    public void setRobotId(Long robotId)
-    {
+    public void setRobotId(Long robotId) {
         this.robotId = robotId;
     }
 
-    public Long getMetricId()
-    {
+    public Long getMetricId() {
         return metricId;
     }
 
-    public void setMetricId(Long metricId)
-    {
+    public void setMetricId(Long metricId) {
         this.metricId = metricId;
     }
 
-    public Long getMatchId()
-    {
+    public Long getMatchId() {
         return matchId;
     }
 
-    public void setMatchId(Long matchId)
-    {
+    public void setMatchId(Long matchId) {
         this.matchId = matchId;
     }
 
-    public Long getUserId()
-    {
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
+    }
+
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId)
-    {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
     /**
      * To-one relationship, resolved on first access.
      */
-    public Robot getRobot()
-    {
+    public Robot getRobot() {
         Long __key = this.robotId;
         if (robot__resolvedKey == null || !robot__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -131,8 +143,7 @@ public class MatchData implements java.io.Serializable
         return robot;
     }
 
-    public void setRobot(Robot robot)
-    {
+    public void setRobot(Robot robot) {
         synchronized (this) {
             this.robot = robot;
             robotId = robot == null ? null : robot.getId();
@@ -143,8 +154,7 @@ public class MatchData implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public Metric getMetric()
-    {
+    public Metric getMetric() {
         Long __key = this.metricId;
         if (metric__resolvedKey == null || !metric__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -160,8 +170,7 @@ public class MatchData implements java.io.Serializable
         return metric;
     }
 
-    public void setMetric(Metric metric)
-    {
+    public void setMetric(Metric metric) {
         synchronized (this) {
             this.metric = metric;
             metricId = metric == null ? null : metric.getId();
@@ -172,8 +181,7 @@ public class MatchData implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public Match getMatch()
-    {
+    public Match getMatch() {
         Long __key = this.matchId;
         if (match__resolvedKey == null || !match__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -189,8 +197,7 @@ public class MatchData implements java.io.Serializable
         return match;
     }
 
-    public void setMatch(Match match)
-    {
+    public void setMatch(Match match) {
         synchronized (this) {
             this.match = match;
             matchId = match == null ? null : match.getId();
@@ -201,8 +208,34 @@ public class MatchData implements java.io.Serializable
     /**
      * To-one relationship, resolved on first access.
      */
-    public User getUser()
-    {
+    public Event getEvent() {
+        Long __key = this.eventId;
+        if (event__resolvedKey == null || !event__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            EventDao targetDao = daoSession.getEventDao();
+            Event eventNew = targetDao.load(__key);
+            synchronized (this) {
+                event = eventNew;
+                event__resolvedKey = __key;
+            }
+        }
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        synchronized (this) {
+            this.event = event;
+            eventId = event == null ? null : event.getId();
+            event__resolvedKey = eventId;
+        }
+    }
+
+    /**
+     * To-one relationship, resolved on first access.
+     */
+    public User getUser() {
         Long __key = this.userId;
         if (user__resolvedKey == null || !user__resolvedKey.equals(__key)) {
             if (daoSession == null) {
@@ -218,8 +251,7 @@ public class MatchData implements java.io.Serializable
         return user;
     }
 
-    public void setUser(User user)
-    {
+    public void setUser(User user) {
         synchronized (this) {
             this.user = user;
             userId = user == null ? null : user.getId();
@@ -230,8 +262,7 @@ public class MatchData implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context.
      */
-    public void delete()
-    {
+    public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -241,8 +272,7 @@ public class MatchData implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#update(Object)}. Entity must attached to an entity context.
      */
-    public void update()
-    {
+    public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
@@ -252,8 +282,7 @@ public class MatchData implements java.io.Serializable
     /**
      * Convenient call for {@link AbstractDao#refresh(Object)}. Entity must attached to an entity context.
      */
-    public void refresh()
-    {
+    public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
