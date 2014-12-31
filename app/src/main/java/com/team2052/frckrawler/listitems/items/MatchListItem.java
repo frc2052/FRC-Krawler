@@ -12,18 +12,15 @@ import com.team2052.frckrawler.view.MatchView;
 /**
  * @author Adam
  */
-public class MatchListItem implements ListItem
-{
+public class MatchListItem implements ListItem {
     private final Match match;
 
-    public MatchListItem(Match match)
-    {
+    public MatchListItem(Match match) {
         this.match = match;
     }
 
     @Override
-    public View getView(Context c, LayoutInflater inflater, View convertView)
-    {
+    public View getView(Context c, LayoutInflater inflater, View convertView) {
         if (convertView == null || !(convertView instanceof MatchView)) {
             convertView = inflater.inflate(R.layout.match_view, null);
         }

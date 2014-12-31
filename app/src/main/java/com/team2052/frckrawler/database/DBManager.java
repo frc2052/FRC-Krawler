@@ -2,7 +2,27 @@ package com.team2052.frckrawler.database;
 
 import android.content.Context;
 
-import com.team2052.frckrawler.db.*;
+import com.team2052.frckrawler.db.Contact;
+import com.team2052.frckrawler.db.ContactDao;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.EventDao;
+import com.team2052.frckrawler.db.Game;
+import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.db.MatchDao;
+import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDataDao;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
+import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.PitDataDao;
+import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.RobotDao;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.RobotEventDao;
+import com.team2052.frckrawler.db.RobotPhoto;
+import com.team2052.frckrawler.db.RobotPhotoDao;
+import com.team2052.frckrawler.db.Team;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,22 +37,19 @@ import de.greenrobot.dao.query.QueryBuilder;
  * @author Adam
  * @since 10/7/2014
  */
-public class DBManager
-{
+public class DBManager {
 
     private static DBManager instance;
     private Context context;
     private DaoSession daoSession;
 
-    private DBManager(Context context, DaoSession daoSession)
-    {
+    private DBManager(Context context, DaoSession daoSession) {
 
         this.context = context;
         this.daoSession = daoSession;
     }
 
-    public static DBManager getInstance(Context context, DaoSession daoSession)
-    {
+    public static DBManager getInstance(Context context, DaoSession daoSession) {
         if (instance == null) {
             synchronized (DBManager.class) {
                 if (instance == null) {
@@ -48,8 +65,7 @@ public class DBManager
      *
      * @param game
      */
-    public void deleteGame(Game game)
-    {
+    public void deleteGame(Game game) {
         for (Event event : daoSession.getEventDao().queryBuilder().where(EventDao.Properties.GameId.eq(game.getId())).list()) {
             deleteEvent(event);
         }
@@ -69,8 +85,7 @@ public class DBManager
      *
      * @param event
      */
-    public void deleteEvent(Event event)
-    {
+    public void deleteEvent(Event event) {
         for (Match match : daoSession.getMatchDao().queryBuilder().where(MatchDao.Properties.EventId.eq(event.getId())).list()) {
             deleteMatch(match);
         }
@@ -91,8 +106,7 @@ public class DBManager
      *
      * @param robotEvent
      */
-    public void deleteRobotEvent(RobotEvent robotEvent)
-    {
+    public void deleteRobotEvent(RobotEvent robotEvent) {
         daoSession.getRobotEventDao().delete(robotEvent);
     }
 
@@ -102,8 +116,7 @@ public class DBManager
      *
      * @param team
      */
-    public void deleteTeam(Team team)
-    {
+    public void deleteTeam(Team team) {
         for (Contact contact : daoSession.getContactDao().queryBuilder().where(ContactDao.Properties.TeamId.eq(team.getNumber())).list()) {
             deleteContact(contact);
         }
@@ -132,8 +145,7 @@ public class DBManager
      *
      * @param contact
      */
-    public void deleteContact(Contact contact)
-    {
+    public void deleteContact(Contact contact) {
         daoSession.getContactDao().delete(contact);
     }
 
@@ -142,8 +154,7 @@ public class DBManager
      *
      * @param match
      */
-    public void deleteMatch(Match match)
-    {
+    public void deleteMatch(Match match) {
         daoSession.getMatchDao().delete(match);
     }
 
@@ -153,8 +164,7 @@ public class DBManager
      *
      * @param robot
      */
-    public void deleteRobot(Robot robot)
-    {
+    public void deleteRobot(Robot robot) {
         for (RobotEvent robotEvent : daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).list()) {
             deleteRobotEvent(robotEvent);
         }
@@ -179,8 +189,7 @@ public class DBManager
      *
      * @param metric
      */
-    public void deleteMetric(Metric metric)
-    {
+    public void deleteMetric(Metric metric) {
         daoSession.getMetricDao().delete(metric);
     }
 
@@ -190,8 +199,7 @@ public class DBManager
      *
      * @param robotPhoto
      */
-    public void deleteRobotPhoto(RobotPhoto robotPhoto)
-    {
+    public void deleteRobotPhoto(RobotPhoto robotPhoto) {
         //Delete the file
         new File(robotPhoto.getLocation()).delete();
         daoSession.getRobotPhotoDao().delete(robotPhoto);
@@ -202,8 +210,7 @@ public class DBManager
      *
      * @param pitData
      */
-    public void deletePitData(PitData pitData)
-    {
+    public void deletePitData(PitData pitData) {
         daoSession.getPitDataDao().delete(pitData);
     }
 
@@ -213,13 +220,11 @@ public class DBManager
      *
      * @param matchData
      */
-    public void deleteMatchData(MatchData matchData)
-    {
+    public void deleteMatchData(MatchData matchData) {
         daoSession.getMatchDataDao().delete(matchData);
     }
 
-    public List<Team> getTeamsForMatch(Match match)
-    {
+    public List<Team> getTeamsForMatch(Match match) {
         List<Team> teams = new ArrayList<>();
         teams.add(match.getBlue1());
         teams.add(match.getBlue2());

@@ -12,13 +12,11 @@ import com.team2052.frckrawler.view.SlidingTabLayout;
  * @author Adam
  * @since 10/18/2014
  */
-public abstract class ViewPagerFABActivity extends ViewPagerActivity
-{
+public abstract class ViewPagerFABActivity extends ViewPagerActivity {
     protected ImageButton mFab;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_pager_fab);
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -32,8 +30,7 @@ public abstract class ViewPagerFABActivity extends ViewPagerActivity
         mTabs.setViewPager(mPager);
     }
 
-    protected void setFabIcon(int resId)
-    {
+    protected void setFabIcon(int resId) {
         mFab.setImageResource(resId);
     }
 }

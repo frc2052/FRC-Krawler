@@ -6,5 +6,4 @@
     <item name="nav_item_teams" type="id" />
     <item name="nav_item_users" type="id" />
     <item name="nav_item_games" type="id" />
-    <item name="nav_item_options" type="id" />
 </resources>

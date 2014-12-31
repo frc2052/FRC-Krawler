@@ -21,48 +21,39 @@ import java.util.List;
  * @author Adam
  * @since 10/3/2014
  */
-public class RobotsActivity extends ListActivity
-{
+public class RobotsActivity extends ListActivity {
 
     private Event mEvent;
 
-    public static Intent newInstance(Context context, Event event)
-    {
+    public static Intent newInstance(Context context, Event event) {
         Intent intent = new Intent(context, RobotsActivity.class);
         intent.putExtra(PARENT_ID, event.getId());
         return intent;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
     }
 
     @Override
-    public void updateList()
-    {
+    public void updateList() {
         new GetRobots().execute();
     }
 
-    public class GetRobots extends AsyncTask<Void, Void, List<RobotEvent>>
-    {
+    public class GetRobots extends AsyncTask<Void, Void, List<RobotEvent>> {
 
         @Override
-        protected List<RobotEvent> doInBackground(Void... voids)
-        {
+        protected List<RobotEvent> doInBackground(Void... voids) {
             return mDaoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(mEvent.getId())).list();
         }
 
         @Override
-        protected void onPostExecute(List<RobotEvent> robotEventses)
-        {
-            Collections.sort(robotEventses, new Comparator<RobotEvent>()
-            {
+        protected void onPostExecute(List<RobotEvent> robotEventses) {
+            Collections.sort(robotEventses, new Comparator<RobotEvent>() {
                 @Override
-                public int compare(RobotEvent robotEvent, RobotEvent robotEvent2)
-                {
+                public int compare(RobotEvent robotEvent, RobotEvent robotEvent2) {
                     return Double.compare(robotEvent.getRobot().getTeam().getNumber(), robotEvent2.getRobot().getTeam().getNumber());
                 }
             });

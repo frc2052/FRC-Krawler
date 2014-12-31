@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.FRCKrawler;
+import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.server.Server;
 import com.team2052.frckrawler.database.ExportUtil;
@@ -42,6 +45,8 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     Spinner eventSpinner;
     @InjectView(R.id.hostToggle)
     SwitchCompat mHostToggle;
+    @InjectView(R.id.server_setting_compile_weight)
+    EditText compileWeight;
     private Server server;
     private List<Event> mEvents;
 
@@ -54,11 +59,13 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.activity_bluetooth_server_manager, null);
+        View v = inflater.inflate(R.layout.fragment_server, null);
         ButterKnife.inject(this, v);
         v.findViewById(R.id.excel).setOnClickListener(this);
         v.findViewById(R.id.dbBackups).setOnClickListener(this);
         v.findViewById(R.id.hostToggle).setOnClickListener(this);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        compileWeight.setText(Float.toString(sharedPreferences.getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f)));
         mHostToggle.setChecked(server.isOpen());
         return v;
     }
@@ -138,16 +145,24 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
     @OnClick(R.id.server_settings_restore_defaults)
     public void onRestoreButtonClicked(Button button) {
-
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f).apply();
+        compileWeight.setText("1.0");
     }
 
     @OnClick(R.id.server_settings_save)
     public void onServerSettingSaveButtonClicked(Button button) {
-
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, Float.parseFloat(compileWeight.getText().toString())).apply();
     }
 
     public class ExportToFileSystem extends AsyncTask<Void, Void, Void> {
+        final float compileWeight;
         File file = null;
+
+        public ExportToFileSystem(){
+            this.compileWeight = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0).getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
+        }
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -167,7 +182,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                         e.printStackTrace();
                     }
                     if (file != null) {
-                        ExportUtil.exportEventDataToCSV(selectedEvent, file, mDaoSession);
+                        ExportUtil.exportEventDataToCSV(selectedEvent, file, mDaoSession, compileWeight);
                     }
                 }
             }

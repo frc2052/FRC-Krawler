@@ -15,13 +15,11 @@ import java.text.SimpleDateFormat;
 /**
  * @author Adam
  */
-public class EventDeserializer implements JsonDeserializer<Event>
-{
+public class EventDeserializer implements JsonDeserializer<Event> {
     public static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
-    public Event deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
-    {
+    public Event deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         final JsonObject object = json.getAsJsonObject();
         final Event event = new Event();
         if (object.has("key")) {

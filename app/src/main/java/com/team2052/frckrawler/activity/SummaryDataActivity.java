@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.CompiledMetricValue;
@@ -51,9 +52,15 @@ public class SummaryDataActivity extends ListActivity {
 
     public class GetCompiledData extends AsyncTask<Void, Void, List<CompiledMetricValue>> {
 
+        final float compileWeight;
+
+        public GetCompiledData(){
+            this.compileWeight = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0).getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
+
+        }
         @Override
         protected List<CompiledMetricValue> doInBackground(Void... params) {
-            return Utilities.MetricCompiler.getCompiledMetric(mEvent, mMetric, mDaoSession);
+            return Utilities.MetricCompiler.getCompiledMetric(mEvent, mMetric, mDaoSession, compileWeight);
         }
 
         @Override

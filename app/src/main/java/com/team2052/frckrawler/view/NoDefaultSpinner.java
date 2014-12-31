@@ -23,37 +23,30 @@ import java.lang.reflect.Method;
  *
  * @author Adam
  */
-public class NoDefaultSpinner extends Spinner
-{
+public class NoDefaultSpinner extends Spinner {
 
-    public NoDefaultSpinner(Context context)
-    {
+    public NoDefaultSpinner(Context context) {
         super(context);
     }
 
-    public NoDefaultSpinner(Context context, int mode)
-    {
+    public NoDefaultSpinner(Context context, int mode) {
         super(context, mode);
     }
 
-    public NoDefaultSpinner(Context context, AttributeSet attrs)
-    {
+    public NoDefaultSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public NoDefaultSpinner(Context context, AttributeSet attrs, int defStyle)
-    {
+    public NoDefaultSpinner(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public NoDefaultSpinner(Context context, AttributeSet attrs, int defStyle, int mode)
-    {
+    public NoDefaultSpinner(Context context, AttributeSet attrs, int defStyle, int mode) {
         super(context, attrs, defStyle, mode);
     }
 
     @Override
-    public void setAdapter(SpinnerAdapter orig)
-    {
+    public void setAdapter(SpinnerAdapter orig) {
         final SpinnerAdapter adapter = newProxy(orig);
 
         super.setAdapter(adapter);
@@ -71,8 +64,7 @@ public class NoDefaultSpinner extends Spinner
         }
     }
 
-    protected SpinnerAdapter newProxy(SpinnerAdapter obj)
-    {
+    protected SpinnerAdapter newProxy(SpinnerAdapter obj) {
         return (SpinnerAdapter) java.lang.reflect.Proxy.newProxyInstance(
                 obj.getClass().getClassLoader(),
                 new Class[]{SpinnerAdapter.class},
@@ -82,15 +74,13 @@ public class NoDefaultSpinner extends Spinner
     /**
      * Intercepts getView() to display the prompt if position < 0
      */
-    protected class SpinnerAdapterProxy implements InvocationHandler
-    {
+    protected class SpinnerAdapterProxy implements InvocationHandler {
 
         protected SpinnerAdapter obj;
         protected Method getView;
 
 
-        protected SpinnerAdapterProxy(SpinnerAdapter obj)
-        {
+        protected SpinnerAdapterProxy(SpinnerAdapter obj) {
             this.obj = obj;
             try {
                 this.getView = SpinnerAdapter.class.getMethod("getView", int.class, View.class, ViewGroup.class);
@@ -99,8 +89,7 @@ public class NoDefaultSpinner extends Spinner
             }
         }
 
-        public Object invoke(Object proxy, Method m, Object[] args) throws Throwable
-        {
+        public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
             try {
                 return m.equals(getView) && (Integer) (args[0]) < 0 ? getView((Integer) args[0], (View) args[1], (ViewGroup) args[2]) : m.invoke(obj, args);
             } catch (InvocationTargetException e) {
@@ -111,8 +100,7 @@ public class NoDefaultSpinner extends Spinner
         }
 
         protected View getView(int position, View convertView, ViewGroup parent)
-                throws IllegalAccessException
-        {
+                throws IllegalAccessException {
 
             if (position < 0) {
                 final TextView v =

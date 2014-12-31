@@ -5,19 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.EditText;
 
-public class TextListEditor extends ListEditor implements DialogInterface.OnClickListener
-{
+public class TextListEditor extends ListEditor implements DialogInterface.OnClickListener {
 
     private EditText t;
 
-    public TextListEditor(Context context)
-    {
+    public TextListEditor(Context context) {
         super(context);
     }
 
     @Override
-    protected void onAddButtonClicked()
-    {
+    protected void onAddButtonClicked() {
         t = new EditText(getContext());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -29,8 +26,7 @@ public class TextListEditor extends ListEditor implements DialogInterface.OnClic
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which)
-    {
+    public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
             addValue(t.getText().toString(), t.getText().toString());
             dialog.dismiss();

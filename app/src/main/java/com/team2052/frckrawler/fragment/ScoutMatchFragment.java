@@ -61,6 +61,11 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         EventBus.getDefault().register(this);
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_scouting_match, container, false);
+    }
+
     private void loadAllData(Event event) {
         if (event == null) {
             setErrorVisible(true);
@@ -80,27 +85,6 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.scout, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            if (mAllianceSpinner.getSelectedItem() != null && mMatchSpinner.getSelectedItem() != null) {
-                LoginHandler loginHandler = LoginHandler.getInstance(getActivity(), mDaoSession);
-                if (!loginHandler.isLoggedOn() && !loginHandler.loggedOnUserStillExists()) {
-                    loginHandler.login(getActivity());
-                } else {
-                    save();
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void save() {
         if (mSaveTask != null) {
             mSaveTask.cancel(false);
@@ -116,11 +100,6 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         }
         mSaveTask = new SaveMatchMetricsTask(getActivity(), mEvent, team, match, metricValues, comment);
         mSaveTask.execute();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_scouting_match, container, false);
     }
 
     @Override
@@ -145,6 +124,31 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.scout, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_save) {
+            if (mAllianceSpinner.getSelectedItem() != null && mMatchSpinner.getSelectedItem() != null) {
+                LoginHandler loginHandler = LoginHandler.getInstance(getActivity(), mDaoSession);
+                if (!loginHandler.isLoggedOn() && !loginHandler.loggedOnUserStillExists()) {
+                    loginHandler.login(getActivity());
+                } else {
+                    save();
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Match match = mMatches.get(mMatchSpinner.getSelectedItemPosition());
         mTeams = DBManager.getInstance(getActivity(), mDaoSession).getTeamsForMatch(match);
@@ -155,18 +159,14 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         mAllianceSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, Arrays.copyOf(teamNumbers.toArray(), teamNumbers.size(), String[].class)));
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-    }
-
-    @Override
-    public void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
-
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncSuccessEvent event) {
         loadAllData(Utilities.ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
+    }    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
     }
+
+
+
+
 }

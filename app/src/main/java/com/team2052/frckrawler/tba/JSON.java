@@ -17,14 +17,12 @@ import com.team2052.frckrawler.tba.types.TeamDeserializer;
 /**
  * @author Adam
  */
-public class JSON
-{
+public class JSON {
     private static DaoSession _daoSession = null;
     private static Gson gson;
     private static JsonParser parser;
 
-    public static Gson getGson()
-    {
+    public static Gson getGson() {
         if (gson == null) {
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(Event.class, new EventDeserializer());
@@ -35,8 +33,7 @@ public class JSON
         return gson;
     }
 
-    public static JsonObject getAsJsonObject(String in)
-    {
+    public static JsonObject getAsJsonObject(String in) {
         if (in == null || in.equals("")) {
             return new JsonObject();
         }
@@ -47,29 +44,25 @@ public class JSON
         return e.getAsJsonObject();
     }
 
-    public static JsonArray getAsJsonArray(String in)
-    {
+    public static JsonArray getAsJsonArray(String in) {
         if (in == null || in.equals("")) {
             return new JsonArray();
         }
         return getParser().parse(in).getAsJsonArray();
     }
 
-    public static JsonParser getParser()
-    {
+    public static JsonParser getParser() {
         if (parser == null) {
             parser = new JsonParser();
         }
         return parser;
     }
 
-    public static DaoSession get_daoSession()
-    {
+    public static DaoSession get_daoSession() {
         return _daoSession;
     }
 
-    public static void set_daoSession(DaoSession _daoSession)
-    {
+    public static void set_daoSession(DaoSession _daoSession) {
         JSON._daoSession = _daoSession;
     }
 }

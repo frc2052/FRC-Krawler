@@ -6,9 +6,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
-import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
+import com.team2052.frckrawler.tba.JSON;
 
 
 public class CounterMetricWidget extends MetricWidget implements OnClickListener {
@@ -28,18 +29,11 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
         findViewById(R.id.plus).setOnClickListener(this);
         findViewById(R.id.minus).setOnClickListener(this);
 
-        String[] o = StringArrayDeserializer.deserialize(m.getMetric().getRange());
+        JsonObject o = JSON.getAsJsonObject(m.getMetric().getRange());
 
-        max = 10;
-        min = 0;
-        increment = 1;
-
-        if (o.length > 2) {
-
-            min = Integer.parseInt((String) o[0]);
-            max = Integer.parseInt((String) o[1]);
-            increment = Integer.parseInt((String) o[2]);
-        }
+        max = o.get("max").getAsInt();
+        min = o.get("min").getAsInt();
+        increment = o.get("inc").getAsInt();
 
         if (m.getValue() != null && !m.getValue().isEmpty())
             currentValue = Integer.parseInt(m.getValue());

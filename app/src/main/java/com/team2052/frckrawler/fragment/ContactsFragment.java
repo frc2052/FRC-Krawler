@@ -21,12 +21,10 @@ import java.util.List;
 /**
  * @author Adam
  */
-public class ContactsFragment extends ListFragmentFab
-{
+public class ContactsFragment extends ListFragmentFab {
     private Team mTeam;
 
-    public static ContactsFragment newInstance(Team team)
-    {
+    public static ContactsFragment newInstance(Team team) {
         ContactsFragment fragment = new ContactsFragment();
         Bundle b = new Bundle();
         b.putLong(DatabaseActivity.PARENT_ID, team.getNumber());
@@ -35,46 +33,38 @@ public class ContactsFragment extends ListFragmentFab
     }
 
     @Override
-    public void updateList()
-    {
+    public void updateList() {
         new GetContactsTask().execute();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTeam = mDaoSession.getTeamDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
         setHasOptionsMenu(true);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mFab.setOnClickListener(new View.OnClickListener()
-        {
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 AddContactDialogFragment.newInstance(mTeam).show(getChildFragmentManager(), "addContact");
             }
         });
         return v;
     }
 
-    public class GetContactsTask extends AsyncTask<Void, Void, List<Contact>>
-    {
+    public class GetContactsTask extends AsyncTask<Void, Void, List<Contact>> {
 
         @Override
-        protected List<Contact> doInBackground(Void... params)
-        {
+        protected List<Contact> doInBackground(Void... params) {
             return mDaoSession.getContactDao().queryBuilder().where(ContactDao.Properties.TeamId.eq(mTeam.getNumber())).list();
         }
 
         @Override
-        protected void onPostExecute(List<Contact> contacts)
-        {
+        protected void onPostExecute(List<Contact> contacts) {
             List<ListItem> listItems = new ArrayList<>();
 
             for (Contact contact : contacts) {

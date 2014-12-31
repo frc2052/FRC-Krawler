@@ -24,10 +24,8 @@ import au.com.bytecode.opencsv.CSVReader;
  * @author Adam
  * @since 10/9/2014
  */
-public class ImportUtil
-{
-    public static void importTeamsFromCSV(DaoSession daoSession, File csv, Event event)
-    {
+public class ImportUtil {
+    public static void importTeamsFromCSV(DaoSession daoSession, File csv, Event event) {
         try {
             CSVReader csvReader = new CSVReader(new FileReader(csv.getAbsolutePath()));
             List<String[]> strings = csvReader.readAll();

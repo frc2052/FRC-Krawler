@@ -19,8 +19,7 @@ import butterknife.InjectView;
  * @author Adam
  * @since 11/16/2014
  */
-public abstract class ListFragmentFab extends BaseFragment implements ListUpdateListener
-{
+public abstract class ListFragmentFab extends BaseFragment implements ListUpdateListener {
     @InjectView(R.id.list_layout)
     protected ListView mListView;
 
@@ -31,14 +30,12 @@ public abstract class ListFragmentFab extends BaseFragment implements ListUpdate
     private Parcelable mListState;
     private boolean mShowAction = true;
 
-    protected void setShowAddAction(boolean state)
-    {
+    protected void setShowAddAction(boolean state) {
         mShowAction = state;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.list_view_fab, null);
         ButterKnife.inject(this, v);
@@ -52,14 +49,12 @@ public abstract class ListFragmentFab extends BaseFragment implements ListUpdate
         return v;
     }
 
-    public void preUpdateList()
-    {
+    public void preUpdateList() {
 
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         if (mListView != null) {
             if (mAdapter == null) {
                 mAdapter = mListView.getAdapter();

@@ -15,49 +15,36 @@ import com.team2052.frckrawler.fragment.RobotAttendingEventsFragment;
 /**
  * @author Adam
  */
-public class RobotActivity extends ViewPagerActivity
-{
+public class RobotActivity extends ViewPagerActivity {
     private Robot mRobot;
 
-    public static Intent newInstance(Context context, long rKey)
-    {
+    public static Intent newInstance(Context context, long rKey) {
         Intent intent = new Intent(context, RobotActivity.class);
         intent.putExtra(PARENT_ID, rKey);
         return intent;
     }
 
     @Override
-    public void onPreLoadViewPager()
-    {
+    public void onPreLoadViewPager() {
         mRobot = mDaoSession.getRobotDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         setActionBarTitle(getString(R.string.robot_text));
         setActionBarSubtitle(String.valueOf(mRobot.getTeamId()));
     }
 
     @Override
-    public PagerAdapter setAdapter()
-    {
+    public PagerAdapter setAdapter() {
         return new RobotViewPagerAdapter(getSupportFragmentManager());
     }
 
-    public class RobotViewPagerAdapter extends FragmentPagerAdapter
-    {
+    public class RobotViewPagerAdapter extends FragmentPagerAdapter {
         private String[] HEADERS = getResources().getStringArray(R.array.robot_tab_titles);
 
-        public RobotViewPagerAdapter(FragmentManager fm)
-        {
+        public RobotViewPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
-        public CharSequence getPageTitle(int position)
-        {
-            return HEADERS[position];
-        }
-
-        @Override
-        public Fragment getItem(int position)
-        {
+        public Fragment getItem(int position) {
             switch (position) {
                 /*case 0:
                     return new NeedSyncFragment();*/
@@ -70,9 +57,13 @@ public class RobotActivity extends ViewPagerActivity
         }
 
         @Override
-        public int getCount()
-        {
+        public int getCount() {
             return HEADERS.length;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return HEADERS[position];
         }
     }
 }

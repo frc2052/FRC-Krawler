@@ -16,12 +16,10 @@ import java.lang.reflect.Type;
 /**
  * @author Adam
  */
-public class MatchDeserializer implements JsonDeserializer<Match>
-{
+public class MatchDeserializer implements JsonDeserializer<Match> {
 
     @Override
-    public Match deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
-    {
+    public Match deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         final Match match = new Match();
         final JsonObject object = json.getAsJsonObject();
         if (object.has("key") && !object.get("key").isJsonNull()) {

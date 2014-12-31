@@ -5,9 +5,10 @@ import android.os.Parcelable;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
-import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
+import com.team2052.frckrawler.tba.JSON;
 
 public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBarChangeListener {
 
@@ -27,14 +28,9 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
 
         SeekBar s = (SeekBar) findViewById(R.id.sliderVal);
 
-        String[] range = StringArrayDeserializer.deserialize(m.getMetric().getRange());
-        if (range.length > 0)
-            min = Integer.parseInt(range[0]);
-
-        if (range.length > 1) {
-            max = Integer.parseInt(range[1]);
-            s.setMax(max - min);
-        }
+        JsonObject range = JSON.getAsJsonObject(m.getMetric().getRange());
+        min = range.get("min").getAsInt();
+        max = range.get("max").getAsInt();
 
         if (m.getValue() != null && !m.getValue().equals(""))
             value = Integer.parseInt(m.getValue());
@@ -44,6 +40,7 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
         if (value < min || value > max)
             value = min;
 
+        s.setMax(max - min);
         s.setProgress(value - min);
         s.setOnSeekBarChangeListener(this);
 
@@ -59,14 +56,12 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
         value = seekBar.getProgress() + min;
         ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-
         value = seekBar.getProgress() + min;
         ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));
     }

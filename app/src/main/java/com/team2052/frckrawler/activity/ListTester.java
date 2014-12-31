@@ -9,14 +9,12 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.view.ListEditor;
 import com.team2052.frckrawler.view.TextListEditor;
 
-public class ListTester extends BaseActivity implements OnClickListener
-{
+public class ListTester extends BaseActivity implements OnClickListener {
 
     ListEditor list;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_tester);
         list = new TextListEditor(this);
@@ -25,8 +23,7 @@ public class ListTester extends BaseActivity implements OnClickListener
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         list = new TextListEditor(this);
         ((FrameLayout) findViewById(R.id.listContainer)).removeAllViews();
@@ -34,8 +31,7 @@ public class ListTester extends BaseActivity implements OnClickListener
     }
 
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         String[] s = list.getValues();
 
         for (String g : s)

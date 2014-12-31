@@ -9,31 +9,27 @@ import com.team2052.frckrawler.bluetooth.scout.SyncScoutTask;
 import com.team2052.frckrawler.db.Event;
 
 
-public class Server
-{
+public class Server {
     private static volatile Server instance = null;
     private boolean isOpen;
     private Event event;
     private Context context;
     private BluetoothAdapter adapter;
 
-    private Server(Context c)
-    {
+    private Server(Context c) {
         isOpen = false;
         context = c.getApplicationContext();
         adapter = BluetoothAdapter.getDefaultAdapter();
     }
 
-    public static Server getInstance(Context c)
-    {
+    public static Server getInstance(Context c) {
         if (instance == null) synchronized (Server.class) {
             if (instance == null) instance = new Server(c);
         }
         return instance;
     }
 
-    public boolean open(Event hostedEvent)
-    {
+    public boolean open(Event hostedEvent) {
         if (adapter == null)
             return false;
         if (SyncScoutTask.isTaskRunning())
@@ -46,20 +42,17 @@ public class Server
         return true;
     }
 
-    public boolean close()
-    {
+    public boolean close() {
         context.stopService(new Intent(context, ServerService.class));
         isOpen = false;
         return true;
     }
 
-    public boolean isOpen()
-    {
+    public boolean isOpen() {
         return isOpen;
     }
 
-    public Event getHostedEvent()
-    {
+    public Event getHostedEvent() {
         return event;
     }
 }

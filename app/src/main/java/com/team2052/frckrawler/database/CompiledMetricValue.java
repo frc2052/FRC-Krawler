@@ -1,12 +1,16 @@
 package com.team2052.frckrawler.database;
 
-import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.LogHelper;
 import com.team2052.frckrawler.util.Utilities;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,6 +50,7 @@ public class CompiledMetricValue {
                     } else {
                         no += compileWeight;
                     }
+
                     LogHelper.debug(data + robot.getTeam().getNumber());
                 }
                 //Check to see if it is a NaN if it is then set the value to 0.0
@@ -68,6 +73,9 @@ public class CompiledMetricValue {
                     denominator += compileWeight;
                 }
 
+                if(denominator == 0)
+                    denominator = 1;
+
                 if (!Double.isNaN(numerator / denominator)) {
                     compiledValue = format.format(numerator / denominator);
                 } else {
@@ -76,25 +84,30 @@ public class CompiledMetricValue {
 
                 break;
             case Utilities.MetricUtil.CHOOSER:
-                String[] range = StringArrayDeserializer.deserialize(metric.getRange());
-                double[] counts = new double[range.length];
+                JsonArray range = JSON.getAsJsonArray(metric.getRange());
+                int rangeCnt = range.size();
+                List<String> rangeValues = new ArrayList<>();
+
+                for (JsonElement jsonElement : range) {
+                    JsonObject object = jsonElement.getAsJsonObject();
+                    rangeValues.add(object.get("value").getAsString());
+                }
+
+
+                double[] counts = new double[rangeValues.size()];
 
                 for (MetricValue metricValue : metricData) {
                     String value = metricValue.getValue();
-                    int rangeAddress = -1;
-
-                    for (int choiceCount = 0; choiceCount < range.length; choiceCount++) {
-                        if (value.equals(range[choiceCount]))
-                            rangeAddress = choiceCount;
-                    }
-
-                    if (rangeAddress != -1) {
-                        counts[rangeAddress]++;
+                    for(int i = 0; i < rangeCnt; i++){
+                        if(value.equals(rangeValues.get(i))){
+                            counts[i]++;
+                            break;
+                        }
                     }
                 }
                 compiledValue += "\n";
-                for (int choiceCount = 0; choiceCount < range.length; choiceCount++) {
-                    compiledValue += range[choiceCount] + " " + format.format(Double.isNaN((counts[choiceCount] / metricData.size()) * 100) ? 0.0D : (counts[choiceCount] / metricData.size()) * 100) + "% \n";
+                for (int choiceCount = 0; choiceCount < rangeCnt; choiceCount++) {
+                    compiledValue += rangeValues.get(choiceCount) + " " + format.format(Double.isNaN((counts[choiceCount] / metricData.size()) * 100) ? 0.0D : (counts[choiceCount] / metricData.size()) * 100) + "% \n";
                 }
 
                 break;

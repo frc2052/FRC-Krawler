@@ -20,34 +20,29 @@ import com.team2052.frckrawler.R;
  * https://github.com/google/iosched/blob/master/android/src/main/java/com/google/samples/apps/iosched/ui/widget/ScrimInsetsFrameLayout.java
  * Used under the Apace License, Version 2.0, a copy of which is available at http://www.apache.org/licenses/LICENSE-2.0
  */
-public class ScrimInsetsFrameLayout extends FrameLayout
-{
+public class ScrimInsetsFrameLayout extends FrameLayout {
     private Drawable mInsetForeground;
 
     private Rect mInsets;
     private Rect mTempRect = new Rect();
     private OnInsetsCallback mOnInsetsCallback;
 
-    public ScrimInsetsFrameLayout(Context context)
-    {
+    public ScrimInsetsFrameLayout(Context context) {
         super(context);
         init(context, null, 0);
     }
 
-    public ScrimInsetsFrameLayout(Context context, AttributeSet attrs)
-    {
+    public ScrimInsetsFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs, 0);
     }
 
-    public ScrimInsetsFrameLayout(Context context, AttributeSet attrs, int defStyle)
-    {
+    public ScrimInsetsFrameLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs, defStyle);
     }
 
-    private void init(Context context, AttributeSet attrs, int defStyle)
-    {
+    private void init(Context context, AttributeSet attrs, int defStyle) {
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScrimInsetsView, defStyle, 0);
         if (a == null) {
             return;
@@ -59,8 +54,7 @@ public class ScrimInsetsFrameLayout extends FrameLayout
     }
 
     @Override
-    protected boolean fitSystemWindows(Rect insets)
-    {
+    protected boolean fitSystemWindows(Rect insets) {
         mInsets = new Rect(insets);
         setWillNotDraw(mInsetForeground == null);
         ViewCompat.postInvalidateOnAnimation(this);
@@ -71,8 +65,7 @@ public class ScrimInsetsFrameLayout extends FrameLayout
     }
 
     @Override
-    public void draw(Canvas canvas)
-    {
+    public void draw(Canvas canvas) {
         super.draw(canvas);
 
         int width = getWidth();
@@ -106,8 +99,7 @@ public class ScrimInsetsFrameLayout extends FrameLayout
     }
 
     @Override
-    protected void onAttachedToWindow()
-    {
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (mInsetForeground != null) {
             mInsetForeground.setCallback(this);
@@ -115,8 +107,7 @@ public class ScrimInsetsFrameLayout extends FrameLayout
     }
 
     @Override
-    protected void onDetachedFromWindow()
-    {
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (mInsetForeground != null) {
             mInsetForeground.setCallback(null);
@@ -129,13 +120,11 @@ public class ScrimInsetsFrameLayout extends FrameLayout
      * UI chrome insets (e.g. a Google Map or a ListView). When using with ListView or GridView, remember to set
      * clipToPadding to false.
      */
-    public void setOnInsetsCallback(OnInsetsCallback onInsetsCallback)
-    {
+    public void setOnInsetsCallback(OnInsetsCallback onInsetsCallback) {
         mOnInsetsCallback = onInsetsCallback;
     }
 
-    public static interface OnInsetsCallback
-    {
+    public static interface OnInsetsCallback {
         public void onInsetsChanged(Rect insets);
     }
 }

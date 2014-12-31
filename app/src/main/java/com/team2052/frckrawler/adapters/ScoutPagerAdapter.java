@@ -19,11 +19,6 @@ public class ScoutPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public CharSequence getPageTitle(int position) {
-        return headers[position];
-    }
-
-    @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
@@ -37,6 +32,11 @@ public class ScoutPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return headers.length;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return headers[position];
     }
 }
 

@@ -52,12 +52,6 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     }
 
     @Override
-    protected void onPreExecute() {
-        tasksRunning++;
-        EventBus.getDefault().post(new ScoutSyncStartEvent());
-    }
-
-    @Override
     protected Integer doInBackground(BluetoothDevice... dev) {
         deviceName = dev[0].getName();
         if (Server.getInstance(context).isOpen())
@@ -108,6 +102,12 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             return SYNC_ERROR;
         }
         return SYNC_SUCCESS;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        tasksRunning++;
+        EventBus.getDefault().post(new ScoutSyncStartEvent());
     }
 
     @Override

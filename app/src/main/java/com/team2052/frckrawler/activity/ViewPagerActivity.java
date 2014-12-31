@@ -11,16 +11,14 @@ import com.team2052.frckrawler.view.SlidingTabLayout;
 /**
  * @author Adam
  */
-public abstract class ViewPagerActivity extends DatabaseActivity
-{
+public abstract class ViewPagerActivity extends DatabaseActivity {
     protected ViewPager mPager;
     protected SlidingTabLayout mTabs;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pager);
+        setContentView(R.layout.view_pager);
         mPager = (ViewPager) findViewById(R.id.pager);
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         mTabs.setVisibility(View.VISIBLE);
@@ -31,8 +29,7 @@ public abstract class ViewPagerActivity extends DatabaseActivity
         mTabs.setViewPager(mPager);
     }
 
-    public void onPreLoadViewPager()
-    {
+    public void onPreLoadViewPager() {
     }
 
     /**

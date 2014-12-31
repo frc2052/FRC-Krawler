@@ -12,35 +12,25 @@ import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Event;
 
-public class ServerService extends Service
-{
+public class ServerService extends Service {
     public static int SERVER_OPEN_ID = 10;
     public static String EVENT_ID = "EVENT_ID";
     private ServerThread thread;
     private PendingIntent openServerIntent;
 
-    public Intent newInstance(Context context, Event hostedEvent)
-    {
+    public Intent newInstance(Context context, Event hostedEvent) {
         Intent i = new Intent(context, ServerService.class);
         i.putExtra(EVENT_ID, hostedEvent.getId());
         return i;
     }
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         thread = null;
     }
 
     @Override
-    public IBinder onBind(Intent arg0)
-    {
-        return null;    //Do not allow binding
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId)
-    {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         if (thread == null) {
             Event e = ((FRCKrawler) getApplication()).getDaoSession().getEventDao().load(intent.getLongExtra(EVENT_ID, 0));
             NotificationCompat.Builder b = new NotificationCompat.Builder(this);
@@ -58,8 +48,12 @@ public class ServerService extends Service
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         thread.closeServer();
+    }
+
+    @Override
+    public IBinder onBind(Intent arg0) {
+        return null;    //Do not allow binding
     }
 }

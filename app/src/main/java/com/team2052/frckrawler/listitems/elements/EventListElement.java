@@ -11,19 +11,16 @@ import com.team2052.frckrawler.listitems.ListElement;
 
 import java.text.DateFormat;
 
-public class EventListElement extends ListElement
-{
+public class EventListElement extends ListElement {
     private final Event event;
 
-    public EventListElement(Event event)
-    {
+    public EventListElement(Event event) {
         super(Long.toString(event.getId()));
         this.event = event;
     }
 
     @Override
-    public View getView(final Context c, LayoutInflater inflater, View convertView)
-    {
+    public View getView(final Context c, LayoutInflater inflater, View convertView) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_event, null);
         }

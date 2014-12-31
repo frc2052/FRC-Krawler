@@ -40,11 +40,6 @@ public class MatchListFragment extends ListFragment {
     }
 
     @Override
-    public void onPostCreate() {
-        mEvent = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.match_list, menu);
         super.onCreateOptionsMenu(menu, inflater);
@@ -63,6 +58,11 @@ public class MatchListFragment extends ListFragment {
         setShowAddAction(false);
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onPostCreate() {
+        mEvent = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override

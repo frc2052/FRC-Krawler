@@ -41,8 +41,7 @@ import butterknife.InjectView;
  * @author Adam
  * @since 10/4/2014
  */
-public class PhotosFragment extends BaseFragment
-{
+public class PhotosFragment extends BaseFragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int RESULT_LOAD_IMAGE = 2;
     @InjectView(R.id.gridview)
@@ -51,8 +50,7 @@ public class PhotosFragment extends BaseFragment
     private Robot mRobot;
     private BaseAdapter mAdapter;
 
-    public static PhotosFragment newInstance(Robot robot)
-    {
+    public static PhotosFragment newInstance(Robot robot) {
         PhotosFragment fragment = new PhotosFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(DatabaseActivity.PARENT_ID, robot.getId());
@@ -61,23 +59,9 @@ public class PhotosFragment extends BaseFragment
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState)
-    {
-        setHasOptionsMenu(true);
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.menu_add_picture, menu);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_grid_photots, null);
+        View view = inflater.inflate(R.layout.fragment_grid_photos, null);
         ButterKnife.inject(this, view);
         mRobot = mDaoSession.getRobotDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
         new GetRobotPhotosTask().execute();
@@ -85,36 +69,7 @@ public class PhotosFragment extends BaseFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == R.id.menu_take_picture) {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-
-                File photoFile = null;
-                //Create the file template
-                try {
-                    photoFile = createImageFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                if (photoFile != null) {
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
-            }
-            return true;
-        } else if (item.getItemId() == R.id.menu_import) {
-            Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(i, RESULT_LOAD_IMAGE);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Name Photo");
@@ -122,11 +77,9 @@ public class PhotosFragment extends BaseFragment
             editText.setHint("Name");
             builder.setView(editText);
             builder.setNegativeButton("Cancel", null);
-            builder.setPositiveButton("Save", new DialogInterface.OnClickListener()
-            {
+            builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
+                public void onClick(DialogInterface dialog, int which) {
                     mDaoSession.getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId(), editText.getText().toString(), new Date()));
                     new GetRobotPhotosTask().execute();
                 }
@@ -154,11 +107,9 @@ public class PhotosFragment extends BaseFragment
             editText.setHint("Name");
             builder.setView(editText);
             builder.setNegativeButton("Cancel", null);
-            builder.setPositiveButton("Save", new DialogInterface.OnClickListener()
-            {
+            builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
+                public void onClick(DialogInterface dialog, int which) {
                     mDaoSession.getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId(), editText.getText().toString(), new Date()));
                     new GetRobotPhotosTask().execute();
                 }
@@ -168,8 +119,45 @@ public class PhotosFragment extends BaseFragment
         }
     }
 
-    private File createImageFile() throws IOException
-    {
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_add_picture, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_take_picture) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+
+                File photoFile = null;
+                //Create the file template
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (photoFile != null) {
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            }
+            return true;
+        } else if (item.getItemId() == R.id.menu_import) {
+            Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, RESULT_LOAD_IMAGE);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_" + mRobot.getGame().getName().toLowerCase() + "_" + mRobot.getTeam().getNumber();
@@ -185,18 +173,15 @@ public class PhotosFragment extends BaseFragment
         return image;
     }
 
-    public class GetRobotPhotosTask extends AsyncTask<Void, Void, List<RobotPhoto>>
-    {
+    public class GetRobotPhotosTask extends AsyncTask<Void, Void, List<RobotPhoto>> {
 
         @Override
-        protected List<RobotPhoto> doInBackground(Void... voids)
-        {
+        protected List<RobotPhoto> doInBackground(Void... voids) {
             return mDaoSession.getRobotPhotoDao().queryBuilder().where(RobotPhotoDao.Properties.RobotId.eq(mRobot.getId())).list();
         }
 
         @Override
-        protected void onPostExecute(List<RobotPhoto> photos)
-        {
+        protected void onPostExecute(List<RobotPhoto> photos) {
             LogHelper.debug(String.valueOf(photos.size()));
             mGridview.setAdapter(mAdapter = new RobotPhotoAdapter(getActivity(), photos));
         }

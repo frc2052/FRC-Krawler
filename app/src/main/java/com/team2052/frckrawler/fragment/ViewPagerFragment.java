@@ -17,23 +17,20 @@ import butterknife.InjectView;
 /**
  * @author Adam
  */
-public abstract class ViewPagerFragment extends BaseFragment
-{
+public abstract class ViewPagerFragment extends BaseFragment {
     @InjectView(R.id.tabs)
     protected SlidingTabLayout mTabs;
     @InjectView(R.id.pager)
     protected ViewPager mViewPager;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.pager, container, false);
+        return inflater.inflate(R.layout.view_pager, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.inject(this, view);
         mTabs.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
         mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.color_accent));
@@ -42,12 +39,11 @@ public abstract class ViewPagerFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public abstract PagerAdapter setAdapter();
-
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         mTabs.setVisibility(View.GONE);
         super.onDestroy();
     }
+
+    public abstract PagerAdapter setAdapter();
 }

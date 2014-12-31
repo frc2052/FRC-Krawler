@@ -57,7 +57,7 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
     }
 
     private void setupViews() {
-        //Setup pager
+        //Setup view_pager
         pager.setSwipeEnabled(false);
         pager.setOffscreenPageLimit(2);
         pager.setAdapter(new SetupFragmentAdapter(this));

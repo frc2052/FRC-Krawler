@@ -35,18 +35,15 @@ import java.util.List;
  * @author Adam
  * @since 10/15/2014
  */
-public class EventsFragment extends ListFragment implements FABButtonListener
-{
+public class EventsFragment extends ListFragment implements FABButtonListener {
     private Game mGame;
     private int mCurrentSelectedItem;
     private ActionMode mCurrentActionMode;
-    private final ActionMode.Callback callback = new ActionMode.Callback()
-    {
+    private final ActionMode.Callback callback = new ActionMode.Callback() {
         Event event;
 
         @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu)
-        {
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             long eventId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
             event = mDaoSession.getEventDao().load(eventId);
             actionMode.getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
@@ -56,28 +53,22 @@ public class EventsFragment extends ListFragment implements FABButtonListener
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu)
-        {
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
             return false;
         }
 
         @Override
-        public boolean onActionItemClicked(final ActionMode actionMode, MenuItem menuItem)
-        {
+        public boolean onActionItemClicked(final ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menu_delete:
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage("Are you sure you want to remove this event and all its data?");
-                    builder.setPositiveButton("Delete", new DialogInterface.OnClickListener()
-                    {
+                    builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
-                            mDaoSession.runInTx(new Runnable()
-                            {
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mDaoSession.runInTx(new Runnable() {
                                 @Override
-                                public void run()
-                                {
+                                public void run() {
                                     DBManager.getInstance(getActivity(), mDaoSession).deleteEvent(event);
                                 }
                             });
@@ -86,11 +77,9 @@ public class EventsFragment extends ListFragment implements FABButtonListener
                             actionMode.finish();
                         }
                     });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                    {
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
+                        public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
                         }
                     });
@@ -101,14 +90,12 @@ public class EventsFragment extends ListFragment implements FABButtonListener
         }
 
         @Override
-        public void onDestroyActionMode(ActionMode actionMode)
-        {
+        public void onDestroyActionMode(ActionMode actionMode) {
             mCurrentActionMode = null;
         }
     };
 
-    public static EventsFragment newInstance(Game game)
-    {
+    public static EventsFragment newInstance(Game game) {
         EventsFragment fragment = new EventsFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(DatabaseActivity.PARENT_ID, game.getId());
@@ -117,21 +104,16 @@ public class EventsFragment extends ListFragment implements FABButtonListener
     }
 
     @Override
-    public void preUpdateList()
-    {
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+    public void preUpdateList() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-            {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 startActivity(EventInfoActivity.newInstance(getActivity(), mDaoSession.getEventDao().load(Long.valueOf(((ListElement) mAdapter.getItem(i)).getKey()))));
             }
         });
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
-        {
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
-            {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (mCurrentActionMode != null) return false;
                 mCurrentSelectedItem = i;
                 mCurrentActionMode = ((ActionBarActivity) getActivity()).startSupportActionMode(callback);
@@ -142,27 +124,18 @@ public class EventsFragment extends ListFragment implements FABButtonListener
     }
 
     @Override
-    public void onAttach(Activity activity)
-    {
+    public void onAttach(Activity activity) {
         setHasOptionsMenu(true);
         super.onAttach(activity);
     }
 
     @Override
-    public void updateList()
-    {
-        new GetEventsTask().execute();
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.event_menu, menu);
     }
 
     @Override
-    public void onFABPressed()
-    {
-        ImportDataSimpleDialogFragment.newInstance(mGame).show(getChildFragmentManager(), "importEvent");
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_event) {
             AddEventDialogFragment.newInstance(mGame).show(getChildFragmentManager(), "addEventDialog");
         }
@@ -170,23 +143,24 @@ public class EventsFragment extends ListFragment implements FABButtonListener
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.event_menu, menu);
+    public void updateList() {
+        new GetEventsTask().execute();
     }
 
-    private class GetEventsTask extends AsyncTask<Void, Void, List<Event>>
-    {
+    @Override
+    public void onFABPressed() {
+        ImportDataSimpleDialogFragment.newInstance(mGame).show(getChildFragmentManager(), "importEvent");
+    }
+
+    private class GetEventsTask extends AsyncTask<Void, Void, List<Event>> {
 
         @Override
-        protected List<Event> doInBackground(Void... params)
-        {
+        protected List<Event> doInBackground(Void... params) {
             return mDaoSession.getEventDao().queryBuilder().where(EventDao.Properties.GameId.eq(mGame.getId())).list();
         }
 
         @Override
-        protected void onPostExecute(List<Event> events)
-        {
+        protected void onPostExecute(List<Event> events) {
             ArrayList<ListItem> eventList = new ArrayList<>();
             for (Event event : events) {
                 eventList.add(new EventListElement(event));

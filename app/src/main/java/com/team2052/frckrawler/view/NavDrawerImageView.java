@@ -12,27 +12,22 @@ import com.team2052.frckrawler.R;
  * @author Adam
  * @since 10/25/2014
  */
-public class NavDrawerImageView extends ImageView
-{
+public class NavDrawerImageView extends ImageView {
 
-    public NavDrawerImageView(Context context)
-    {
+    public NavDrawerImageView(Context context) {
         super(context);
     }
 
-    public NavDrawerImageView(Context context, AttributeSet attrs)
-    {
+    public NavDrawerImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public NavDrawerImageView(Context context, AttributeSet attrs, int defStyleAttr)
-    {
+    public NavDrawerImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
-    protected void drawableStateChanged()
-    {
+    protected void drawableStateChanged() {
         super.drawableStateChanged();
         ColorStateList list = getResources().getColorStateList(R.color.nav_selected_image_color);
         int color = list.getColorForState(getDrawableState(), Color.TRANSPARENT);

@@ -59,15 +59,15 @@ public class GameInfoActivity extends ViewPagerFABActivity implements View.OnCli
     }
 
     @Override
-    public PagerAdapter setAdapter() {
-        return mAdapter = new GameInfoPagerAdapter(getSupportFragmentManager());
-    }
-
-    @Override
     public void onPreLoadViewPager() {
         mGame = mDaoSession.getGameDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         setActionBarTitle("Game");
         setActionBarSubtitle(mGame.getName());
+    }
+
+    @Override
+    public PagerAdapter setAdapter() {
+        return mAdapter = new GameInfoPagerAdapter(getSupportFragmentManager());
     }
 
     @Override
@@ -105,16 +105,6 @@ public class GameInfoActivity extends ViewPagerFABActivity implements View.OnCli
         }
 
         @Override
-        public int getCount() {
-            return headers.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return headers[position];
-        }
-
-        @Override
         public Object instantiateItem(ViewGroup container, int position) {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             registeredFragments.put(position, fragment);
@@ -125,6 +115,16 @@ public class GameInfoActivity extends ViewPagerFABActivity implements View.OnCli
         public void destroyItem(ViewGroup container, int position, Object object) {
             registeredFragments.remove(position);
             super.destroyItem(container, position, object);
+        }
+
+        @Override
+        public int getCount() {
+            return headers.length;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return headers[position];
         }
 
         public Fragment getRegisteredFragment(int position) {

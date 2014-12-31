@@ -28,14 +28,14 @@ import de.greenrobot.dao.query.QueryBuilder;
  * @since 10/4/2014
  */
 public class ExportUtil {
-    public static void exportEventDataToCSV(Event event, File location, DaoSession daoSession) {
+    public static void exportEventDataToCSV(Event event, File location, DaoSession daoSession, float compileWeight) {
         final List<Metric> metrics = daoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(event.getGameId())).list();
         List<RobotEvent> robotEvents = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
 
         Map<Long, List<CompiledMetricValue>> robots = new TreeMap<>();
 
         for (RobotEvent robotEvent : robotEvents) {
-            robots.put(robotEvent.getRobot().getTeam().getNumber(), Utilities.MetricCompiler.getCompiledRobot(event, robotEvent.getRobot(), daoSession));
+            robots.put(robotEvent.getRobot().getTeam().getNumber(), Utilities.MetricCompiler.getCompiledRobot(event, robotEvent.getRobot(), daoSession, compileWeight));
         }
 
         try {

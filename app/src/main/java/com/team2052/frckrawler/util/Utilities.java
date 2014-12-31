@@ -8,10 +8,11 @@ import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.util.TypedValue;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.database.CompiledMetricValue;
 import com.team2052.frckrawler.database.MetricValue;
-import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
@@ -24,6 +25,7 @@ import com.team2052.frckrawler.db.PitDataDao;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
+import com.team2052.frckrawler.tba.JSON;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,19 +125,37 @@ public class Utilities {
         public static final int CHOOSER = 3;
 
         public static Metric createBooleanMetric(Game game, MetricType metricCategory, String name, String description) {
-            return new Metric(null, name, metricCategory.ordinal(), description, BOOLEAN, "", game.getId());
+
+            return new Metric(null, name, metricCategory.ordinal(), description, BOOLEAN, null, game.getId());
         }
 
         public static Metric createCounterMetric(Game game, MetricType metricCategory, String name, String description, int min, int max, int incrementation) {
-            return new Metric(null, name, metricCategory.ordinal(), description, COUNTER, StringArrayDeserializer.deserialize(new String[]{Integer.toString(min), Integer.toString(max), Integer.toString(incrementation)}), game.getId());
+            JsonObject range = new JsonObject();
+            range.addProperty("min", min);
+            range.addProperty("max", max);
+            range.addProperty("inc", incrementation);
+
+            return new Metric(null, name, metricCategory.ordinal(), description, COUNTER, JSON.getGson().toJson(range), game.getId());
         }
 
         public static Metric createSliderMetric(Game game, MetricType metricCategory, String name, String description, int min, int max) {
-            return new Metric(null, name, metricCategory.ordinal(), description, SLIDER, StringArrayDeserializer.deserialize(new String[]{Integer.toString(min), Integer.toString(max)}), game.getId());
+            JsonObject range = new JsonObject();
+            range.addProperty("min", min);
+            range.addProperty("max", max);
+
+            return new Metric(null, name, metricCategory.ordinal(), description, SLIDER, JSON.getGson().toJson(range), game.getId());
         }
 
         public static Metric createChooserMetric(Game game, MetricType metricCategory, String name, String description, String[] choices) {
-            return new Metric(null, name, metricCategory.ordinal(), description, CHOOSER, StringArrayDeserializer.deserialize(choices), game.getId());
+            JsonArray range = new JsonArray();
+
+            for (String choice : choices) {
+                JsonObject choiceObj = new JsonObject();
+                choiceObj.addProperty("value", choice);
+                range.add(choiceObj);
+            }
+
+            return new Metric(null, name, metricCategory.ordinal(), description, CHOOSER, JSON.getGson().toJson(range), game.getId());
         }
 
         public static enum MetricType {
@@ -153,7 +173,7 @@ public class Utilities {
          * @param metric the metric that you want to compile
          * @return the compiled data from attending teams and metric
          */
-        public static List<CompiledMetricValue> getCompiledMetric(Event event, Metric metric, DaoSession daoSession) {
+        public static List<CompiledMetricValue> getCompiledMetric(Event event, Metric metric, DaoSession daoSession, float compileWeight) {
             List<RobotEvent> robotEventses = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
             List<CompiledMetricValue> compiledMetricValues = new ArrayList<>();
             for (RobotEvent robotEvents : robotEventses) {
@@ -181,7 +201,7 @@ public class Utilities {
                         metricData.add(new MetricValue(matchData));
                     }
                 }
-                compiledMetricValues.add(new CompiledMetricValue(robotEvents.getRobot(), metric, metricData, metric.getType(), 1.0F));
+                compiledMetricValues.add(new CompiledMetricValue(robotEvents.getRobot(), metric, metricData, metric.getType(), compileWeight));
             }
             return compiledMetricValues;
         }
@@ -193,7 +213,7 @@ public class Utilities {
          * @param robot
          * @return
          */
-        public static List<CompiledMetricValue> getCompiledRobot(Event event, Robot robot, DaoSession daoSession) {
+        public static List<CompiledMetricValue> getCompiledRobot(Event event, Robot robot, DaoSession daoSession, float compileWeight) {
             //Load all the metrics
             final List<Metric> metrics = daoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(event.getGameId())).list();
             final List<CompiledMetricValue> compiledMetricValues = new ArrayList<>();
@@ -222,7 +242,7 @@ public class Utilities {
                         metricData.add(new MetricValue(matchData));
                     }
                 }
-                compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, metric.getType(), 1.0F));
+                compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, metric.getType(), compileWeight));
             }
             return compiledMetricValues;
         }

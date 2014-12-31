@@ -29,8 +29,7 @@ import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NavigationDrawerFragment extends Fragment
-{
+public class NavigationDrawerFragment extends Fragment {
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     public final List<ListItem> NAV_ITEMS = new ArrayList<>();
     private NavDrawerAdataper navAdapter;
@@ -44,54 +43,7 @@ public class NavigationDrawerFragment extends Fragment
     private boolean fromSavedInstanceState;
     private RelativeLayout mDrawerContainer;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
-        //Deny the scout to access all the items
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, getActivity().getString(R.string.scout), R.drawable.ic_assignment_black_24dp));
-
-        if (!scoutPrefs.getBoolean(GlobalValues.IS_SCOUT_PREF, false)) {
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, getActivity().getString(R.string.server), R.drawable.ic_bluetooth_black_24dp));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, getActivity().getString(R.string.teams), R.drawable.ic_group_black_24dp));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, getActivity().getString(R.string.users), R.drawable.ic_person_black_24dp));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, getActivity().getString(R.string.games), R.drawable.ic_event_black_24dp));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_options, getActivity().getString(R.string.options), R.drawable.ic_settings_black_24dp));
-        }
-
-        mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
-        fromSavedInstanceState = (savedInstanceState == null);
-        navAdapter = new NavDrawerAdataper(getActivity(), NAV_ITEMS);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        mDrawerContainer = (RelativeLayout) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView = (ListView) mDrawerContainer.findViewById(R.id.left_drawer);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                selectItem(position);
-            }
-        });
-        mDrawerListView.setAdapter(navAdapter);
-        return mDrawerContainer;
-    }
-
-    private void selectItem(int position)
-    {
+    private void selectItem(int position) {
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
             navAdapter.setItemSelected(position);
@@ -103,21 +55,18 @@ public class NavigationDrawerFragment extends Fragment
         }
     }
 
-    public void setItemSelected(int itemId)
-    {
+    public void setItemSelected(int itemId) {
         if (mDrawerListView != null) {
             int position = navAdapter.getPositionForId(itemId);
             mDrawerListView.setItemChecked(position, true);
         }
     }
 
-    public boolean isDrawerOpen()
-    {
+    public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
     }
 
-    public void setUp(int fragmentId, DrawerLayout drawerLayout, boolean encourageLearning, boolean useActionBarToggle, Toolbar toolbar)
-    {
+    public void setUp(int fragmentId, DrawerLayout drawerLayout, boolean encourageLearning, boolean useActionBarToggle, Toolbar toolbar) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         this.mDrawerLayout = drawerLayout;
         this.mUseActionBarToggle = useActionBarToggle;
@@ -126,11 +75,9 @@ public class NavigationDrawerFragment extends Fragment
             ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
-            mDrawerToggle = new ActionBarDrawerToggle(getActivity(), this.mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
-            {
+            mDrawerToggle = new ActionBarDrawerToggle(getActivity(), this.mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
                 @Override
-                public void onDrawerClosed(View drawerView)
-                {
+                public void onDrawerClosed(View drawerView) {
                     super.onDrawerClosed(drawerView);
                     if (!isAdded()) {
                         return;
@@ -140,8 +87,7 @@ public class NavigationDrawerFragment extends Fragment
                 }
 
                 @Override
-                public void onDrawerOpened(View drawerView)
-                {
+                public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
                     if (!isAdded()) {
                         return;
@@ -156,20 +102,16 @@ public class NavigationDrawerFragment extends Fragment
                 }
             };
             this.mDrawerLayout.setDrawerListener(this.mDrawerToggle);
-            this.mDrawerLayout.post(new Runnable()
-            {
+            this.mDrawerLayout.post(new Runnable() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     NavigationDrawerFragment.this.mDrawerToggle.syncState();
                 }
             });
         } else {
-            drawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener()
-            {
+            drawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
                 @Override
-                public void onDrawerOpened(View drawerView)
-                {
+                public void onDrawerOpened(View drawerView) {
                     if (!isAdded()) {
                         return;
                     }
@@ -183,8 +125,7 @@ public class NavigationDrawerFragment extends Fragment
                 }
 
                 @Override
-                public void onDrawerClosed(View drawerView)
-                {
+                public void onDrawerClosed(View drawerView) {
                     if (!isAdded()) {
                         return;
                     }
@@ -199,8 +140,7 @@ public class NavigationDrawerFragment extends Fragment
     }
 
     @Override
-    public void onAttach(Activity activity)
-    {
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (activity instanceof NavigationDrawerListener) {
             this.mListener = (NavigationDrawerListener) activity;
@@ -209,30 +149,65 @@ public class NavigationDrawerFragment extends Fragment
         }
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        //Deny the scout to access all the items
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, getActivity().getString(R.string.scout), R.drawable.ic_assignment_black_24dp));
+
+        if (!scoutPrefs.getBoolean(GlobalValues.IS_SCOUT_PREF, false)) {
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, getActivity().getString(R.string.server), R.drawable.ic_bluetooth_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, getActivity().getString(R.string.teams), R.drawable.ic_group_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, getActivity().getString(R.string.users), R.drawable.ic_person_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, getActivity().getString(R.string.games), R.drawable.ic_event_black_24dp));
+        }
+
+        mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
+        fromSavedInstanceState = (savedInstanceState == null);
+        navAdapter = new NavDrawerAdataper(getActivity(), NAV_ITEMS);
+    }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mDrawerContainer = (RelativeLayout) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        mDrawerListView = (ListView) mDrawerContainer.findViewById(R.id.left_drawer);
+        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectItem(position);
+            }
+        });
+        mDrawerListView.setAdapter(navAdapter);
+        return mDrawerContainer;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (mUseActionBarToggle && mDrawerToggle != null) {
             return mDrawerToggle.onOptionsItemSelected(item);
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    public void onDetach()
-    {
-        super.onDetach();
-        mListener = null;
-    }
-
     /**
      * Called when the insets of the nav drawer are changed. This allows us to properly place the contents so
      * that they don't flow under the status bar.
      */
-    public void onInsetsChanged(Rect insets)
-    {
+    public void onInsetsChanged(Rect insets) {
 
         RelativeLayout accountDetailsContainer = (RelativeLayout) getView().findViewById(R.id.banner_details_container);
         ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) accountDetailsContainer.getLayoutParams();
@@ -240,8 +215,7 @@ public class NavigationDrawerFragment extends Fragment
         accountDetailsContainer.setLayoutParams(lp);
     }
 
-    public interface NavigationDrawerListener
-    {
+    public interface NavigationDrawerListener {
         /**
          * Called when a NavDrawerItem in the navigation drawer is clicked
          *

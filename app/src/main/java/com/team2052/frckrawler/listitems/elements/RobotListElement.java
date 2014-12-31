@@ -13,20 +13,17 @@ import com.team2052.frckrawler.listitems.ListElement;
  * @author Adam
  * @since 10/3/2014
  */
-public class RobotListElement extends ListElement
-{
+public class RobotListElement extends ListElement {
 
     private final Robot mRobot;
 
-    public RobotListElement(Robot robot)
-    {
+    public RobotListElement(Robot robot) {
         super(Long.toString(robot.getId()));
         this.mRobot = robot;
     }
 
     @Override
-    public View getView(Context c, LayoutInflater inflater, View convertView)
-    {
+    public View getView(Context c, LayoutInflater inflater, View convertView) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_robot, null);
         }

@@ -14,31 +14,26 @@ import com.team2052.frckrawler.db.Match;
  * @author Adam
  *         Costom view just for matches
  */
-public class MatchView extends FrameLayout
-{
+public class MatchView extends FrameLayout {
     private TextView matchTitle, red1, red2, red3, redScore, blue1, blue2, blue3, blueScore;
     private View redAlliance, blueAlliance;
 
-    public MatchView(Context context)
-    {
+    public MatchView(Context context) {
         super(context);
         init();
     }
 
-    public MatchView(Context context, AttributeSet attrs)
-    {
+    public MatchView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MatchView(Context context, AttributeSet attrs, int defStyleAttr)
-    {
+    public MatchView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.list_item_match, this, true);
         matchTitle = (TextView) findViewById(R.id.match_title);
         red1 = (TextView) findViewById(R.id.red1);
@@ -53,8 +48,7 @@ public class MatchView extends FrameLayout
         blueAlliance = findViewById(R.id.blue_alliance);
     }
 
-    public void init(Match match)
-    {
+    public void init(Match match) {
         matchTitle.setText("Match " + Integer.toString(match.getNumber()));
         red1.setText(Long.toString(match.getRed1Id()));
         red2.setText(Long.toString(match.getRed2Id()));

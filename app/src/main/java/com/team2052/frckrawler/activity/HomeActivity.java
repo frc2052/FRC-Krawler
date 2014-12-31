@@ -11,7 +11,6 @@ import android.view.Menu;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.fragment.GamesFragment;
-import com.team2052.frckrawler.fragment.OptionsFragment;
 import com.team2052.frckrawler.fragment.ServerFragment;
 import com.team2052.frckrawler.fragment.TeamsFragment;
 import com.team2052.frckrawler.fragment.UsersFragment;
@@ -27,6 +26,20 @@ public class HomeActivity extends BaseActivity {
         Intent i = new Intent(context, HomeActivity.class);
         i.putExtra(REQUESTED_MODE, requestedMode);
         return i;
+    }
+
+    @Override
+    public void onCreateNavigationDrawer() {
+        useActionBarToggle();
+        encourageLearning(!mFromSavedInstanceState);
+    }
+
+    @Override
+    public void onNavDrawerItemClicked(NavDrawerItem item) {
+        int id = item.getId();
+        if (id != mCurrentSelectedNavigationItemId) {
+            switchToModeForId(id);
+        }
     }
 
     @Override
@@ -54,20 +67,6 @@ public class HomeActivity extends BaseActivity {
             }
         } else {
             switchToModeForId(initNavId);
-        }
-    }
-
-    @Override
-    public void onCreateNavigationDrawer() {
-        useActionBarToggle();
-        encourageLearning(!mFromSavedInstanceState);
-    }
-
-    @Override
-    public void onNavDrawerItemClicked(NavDrawerItem item) {
-        int id = item.getId();
-        if (id != mCurrentSelectedNavigationItemId) {
-            switchToModeForId(id);
         }
     }
 
@@ -101,8 +100,6 @@ public class HomeActivity extends BaseActivity {
             case R.id.nav_item_games:
                 getSupportActionBar().setTitle("Games");
                 break;
-            case R.id.nav_item_options:
-                getSupportActionBar().setTitle("Options");
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -126,9 +123,6 @@ public class HomeActivity extends BaseActivity {
                 break;
             case R.id.nav_item_games:
                 fragment = new GamesFragment();
-                break;
-            case R.id.nav_item_options:
-                fragment = new OptionsFragment();
                 break;
         }
         assert fragment != null;

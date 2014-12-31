@@ -71,25 +71,24 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         }
 
 
-        if (mComment.length() > 0) {
-            QueryBuilder<MatchComment> matchCommentQueryBuilder = mDaoSession.getMatchCommentDao().queryBuilder();
-            matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(mEvent.getId()));
-            matchCommentQueryBuilder.where(MatchCommentDao.Properties.TeamId.eq(mTeam.getNumber()));
-            matchCommentQueryBuilder.where(MatchCommentDao.Properties.RobotId.eq(robot.getId()));
+        QueryBuilder<MatchComment> matchCommentQueryBuilder = mDaoSession.getMatchCommentDao().queryBuilder();
+        matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(mEvent.getId()));
+        matchCommentQueryBuilder.where(MatchCommentDao.Properties.TeamId.eq(mTeam.getNumber()));
+        matchCommentQueryBuilder.where(MatchCommentDao.Properties.RobotId.eq(robot.getId()));
 
-            MatchComment currentData = matchCommentQueryBuilder.unique();
-            MatchComment matchComment = new MatchComment(null, mMatch.getId(), mComment, robot.getId(), mEvent.getId(), mTeam.getNumber());
+        MatchComment currentData = matchCommentQueryBuilder.unique();
+        MatchComment matchComment = new MatchComment(null, mMatch.getId(), mComment, robot.getId(), mEvent.getId(), mTeam.getNumber());
 
-            if (currentData != null) {
-                currentData.setComment(matchComment.getComment());
-                currentData.update();
-            } else {
-                mDaoSession.insert(matchComment);
-            }
+        if (currentData != null) {
+            currentData.setComment(matchComment.getComment());
+            currentData.update();
+        } else {
+            mDaoSession.insert(matchComment);
         }
 
         return null;
     }
+
 
     @Override
     protected void onPostExecute(Void aVoid) {

@@ -25,17 +25,14 @@ import com.team2052.frckrawler.listitems.elements.GameListElement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GamesFragment extends ListFragmentFab implements ListUpdateListener
-{
+public class GamesFragment extends ListFragmentFab implements ListUpdateListener {
 
     public int currentSelectedListItem;
     private android.support.v7.view.ActionMode currentActionMode;
 
-    android.support.v7.view.ActionMode.Callback callback = new android.support.v7.view.ActionMode.Callback()
-    {
+    android.support.v7.view.ActionMode.Callback callback = new android.support.v7.view.ActionMode.Callback() {
         @Override
-        public boolean onCreateActionMode(android.support.v7.view.ActionMode mode, Menu menu)
-        {
+        public boolean onCreateActionMode(android.support.v7.view.ActionMode mode, Menu menu) {
             long gameId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
             Game game = mDaoSession.getGameDao().load(gameId);
             mode.setTitle(game.getName());
@@ -44,30 +41,24 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
         }
 
         @Override
-        public boolean onPrepareActionMode(android.support.v7.view.ActionMode mode, Menu menu)
-        {
+        public boolean onPrepareActionMode(android.support.v7.view.ActionMode mode, Menu menu) {
             return false;
         }
 
         @Override
-        public boolean onActionItemClicked(final android.support.v7.view.ActionMode mode, MenuItem item)
-        {
+        public boolean onActionItemClicked(final android.support.v7.view.ActionMode mode, MenuItem item) {
             long gameId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
             final Game game = mDaoSession.getGameDao().load(gameId);
             switch (item.getItemId()) {
                 case R.id.menu_delete:
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage("Are you sure you want to remove this game and all its data?");
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                    {
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
-                            mDaoSession.runInTx(new Runnable()
-                            {
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mDaoSession.runInTx(new Runnable() {
                                 @Override
-                                public void run()
-                                {
+                                public void run() {
                                     DBManager.getInstance(getActivity(), mDaoSession).deleteGame(game);
                                 }
                             });
@@ -76,11 +67,9 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
                             mode.finish();
                         }
                     });
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener()
-                    {
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
+                        public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
                         }
                     });
@@ -92,38 +81,25 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
         }
 
         @Override
-        public void onDestroyActionMode(android.support.v7.view.ActionMode mode)
-        {
+        public void onDestroyActionMode(android.support.v7.view.ActionMode mode) {
             currentActionMode = null;
         }
     };
 
     @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-        currentActionMode = null;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-            {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 long gameId = Long.parseLong(((ListElement) mAdapter.getItem(i)).getKey());
                 final Game game = mDaoSession.getGameDao().load(gameId);
                 startActivity(GameInfoActivity.newInstance(getActivity(), game));
             }
         });
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
-        {
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
-            {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (currentActionMode != null) {
                     return false;
                 }
@@ -132,41 +108,40 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
                 return true;
             }
         });
-        mFab.setOnClickListener(new View.OnClickListener()
-        {
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 new AddGameDialogFragment().show(getChildFragmentManager(), "addGame");
             }
         });
     }
 
     @Override
-    public void updateList()
-    {
-        new GetGamesTask().execute();
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        currentActionMode = null;
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         if (currentActionMode != null)
             currentActionMode.finish();
         super.onDestroy();
     }
 
-    private class GetGamesTask extends AsyncTask<Void, Void, List<Game>>
-    {
+    @Override
+    public void updateList() {
+        new GetGamesTask().execute();
+    }
+
+    private class GetGamesTask extends AsyncTask<Void, Void, List<Game>> {
         @Override
-        protected List<Game> doInBackground(Void... params)
-        {
+        protected List<Game> doInBackground(Void... params) {
             return mDaoSession.getGameDao().queryBuilder().list();
         }
 
         @Override
-        protected void onPostExecute(List<Game> games)
-        {
+        protected void onPostExecute(List<Game> games) {
             ArrayList<ListItem> element = new ArrayList<>();
             for (Game game : games)
                 element.add(new GameListElement(game));

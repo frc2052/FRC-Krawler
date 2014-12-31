@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.background.PopulatePitMetricsTask;
@@ -57,24 +58,11 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            if (mTeamSpinner.getSelectedItem() != null) {
-                //Get data from view
-                LoginHandler loginHandler = LoginHandler.getInstance(getActivity(), mDaoSession);
-                if (!loginHandler.isLoggedOn() && !loginHandler.loggedOnUserStillExists()) {
-                    loginHandler.login(getActivity());
-                } else {
-                    save();
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_scouting_pit, container, false);
     }
 
     public void save() {
-
-
         Robot robot = mRobots.get(mTeamSpinner.getSelectedItemPosition()).getRobot();
         List<MetricValue> widgets = new ArrayList<>();
 
@@ -108,16 +96,6 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.scout, menu);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_scouting_pit, container, false);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.inject(this, view);
@@ -130,6 +108,29 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.scout, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_save) {
+            if (mTeamSpinner.getSelectedItem() != null) {
+                //Get data from view
+                LoginHandler loginHandler = LoginHandler.getInstance(getActivity(), mDaoSession);
+                if (!loginHandler.isLoggedOn() && !loginHandler.loggedOnUserStillExists()) {
+                    loginHandler.login(getActivity());
+                    //TODO AUTO AFTER RELOG
+                    Toast.makeText(getActivity(), "Try to save again", Toast.LENGTH_LONG).show();
+                } else {
+                    save();
+                }
+            }
+        }
+        return false;
     }
 
     @SuppressWarnings("unused")

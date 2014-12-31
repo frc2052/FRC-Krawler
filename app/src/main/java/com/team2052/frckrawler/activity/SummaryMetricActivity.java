@@ -22,27 +22,22 @@ import java.util.List;
 /**
  * @author Adam
  */
-public class SummaryMetricActivity extends ListActivity
-{
+public class SummaryMetricActivity extends ListActivity {
     private Event mEvent;
 
-    public static Intent newInstance(Context context, Event event)
-    {
+    public static Intent newInstance(Context context, Event event) {
         Intent intent = new Intent(context, SummaryMetricActivity.class);
         intent.putExtra(PARENT_ID, event.getId());
         return intent;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Metric metric = mDaoSession.getMetricDao().load(Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()));
                 startActivity(SummaryDataActivity.newInstance(SummaryMetricActivity.this, metric, mEvent));
             }
@@ -54,23 +49,19 @@ public class SummaryMetricActivity extends ListActivity
     }
 
     @Override
-    public void updateList()
-    {
+    public void updateList() {
         new LoadAllMetrics().execute();
     }
 
-    public class LoadAllMetrics extends AsyncTask<Void, Void, List<Metric>>
-    {
+    public class LoadAllMetrics extends AsyncTask<Void, Void, List<Metric>> {
 
         @Override
-        protected List<Metric> doInBackground(Void... params)
-        {
+        protected List<Metric> doInBackground(Void... params) {
             return mDaoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId())).list();
         }
 
         @Override
-        protected void onPostExecute(List<Metric> metrics)
-        {
+        protected void onPostExecute(List<Metric> metrics) {
             List<ListItem> listItems = new ArrayList<>();
 
             for (Metric metric : metrics) {

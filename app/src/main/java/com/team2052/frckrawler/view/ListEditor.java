@@ -10,8 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public abstract class ListEditor extends LinearLayout implements OnClickListener
-{
+public abstract class ListEditor extends LinearLayout implements OnClickListener {
 
     private static final int ADD_BUTTON_ID = 1;
     private static final int REMOVE_BUTTON_ID = 2;
@@ -21,13 +20,11 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
 
     private Button addButton;
 
-    public ListEditor(Context context)
-    {
+    public ListEditor(Context context) {
         this(context, new String[0]);
     }
 
-    public ListEditor(Context context, String[] list)
-    {
+    public ListEditor(Context context, String[] list) {
         super(context);
         setOrientation(VERTICAL);
 
@@ -47,8 +44,7 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
     protected abstract void onAddButtonClicked();
 
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         if (isEnabled()) {
             if (v.getId() == ADD_BUTTON_ID) {
                 onAddButtonClicked();
@@ -67,8 +63,7 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
      * values that the user doesn't see.
      * ***
      */
-    public String[] getShownValues()
-    {
+    public String[] getShownValues() {
         return shownValues.toArray(new String[0]);
     }
 
@@ -79,18 +74,15 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
      * @return Summary: Gets the "real" values of this ListEditor, not the shown values
      * ***
      */
-    public String[] getValues()
-    {
+    public String[] getValues() {
         return values.toArray(new String[0]);
     }
 
-    public int getValueCount()
-    {
+    public int getValueCount() {
         return values.size();
     }
 
-    public void addValue(String val, String shownVal)
-    {
+    public void addValue(String val, String shownVal) {
         shownValues.add(shownVal);
         values.add(val);
         onValuesUpdated();
@@ -100,22 +92,19 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
         }
     }
 
-    public void removeValue(String val)
-    {
+    public void removeValue(String val) {
         shownValues.remove(values.indexOf(val));
         values.remove(val);
         onValuesUpdated();
     }
 
-    public void removeValue(int position)
-    {
+    public void removeValue(int position) {
         shownValues.remove(position);
         values.remove(position);
         onValuesUpdated();
     }
 
-    public void onValuesUpdated()
-    {
+    public void onValuesUpdated() {
         removeAllViews();
 
         for (int i = 0; i < shownValues.size(); i++) {
@@ -141,8 +130,7 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
         addView(addButton);
     }
 
-    public ArrayList<String> getValuesList()
-    {
+    public ArrayList<String> getValuesList() {
         return values;
     }
 }

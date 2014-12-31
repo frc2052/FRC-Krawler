@@ -12,19 +12,16 @@ import com.team2052.frckrawler.listitems.ListElement;
 /**
  * @author Adam
  */
-public class GameListElement extends ListElement
-{
+public class GameListElement extends ListElement {
     private final Game game;
 
-    public GameListElement(Game game)
-    {
+    public GameListElement(Game game) {
         super(Long.toString(game.getId()));
         this.game = game;
     }
 
     @Override
-    public View getView(final Context c, LayoutInflater inflater, View convertView)
-    {
+    public View getView(final Context c, LayoutInflater inflater, View convertView) {
         convertView = inflater.inflate(R.layout.list_item_game, null);
         ((TextView) convertView.findViewById(R.id.text_game)).setText(game.getName());
         return convertView;

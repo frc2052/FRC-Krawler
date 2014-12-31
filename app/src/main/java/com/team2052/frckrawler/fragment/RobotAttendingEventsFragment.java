@@ -18,13 +18,11 @@ import java.util.List;
  * @author Adam
  * @since 11/24/2014
  */
-public class RobotAttendingEventsFragment extends ListFragment
-{
+public class RobotAttendingEventsFragment extends ListFragment {
 
     private Robot mRobot;
 
-    public static RobotAttendingEventsFragment newInstance(Robot robot)
-    {
+    public static RobotAttendingEventsFragment newInstance(Robot robot) {
         RobotAttendingEventsFragment fragment = new RobotAttendingEventsFragment();
         Bundle args = new Bundle();
         args.putLong(DatabaseActivity.PARENT_ID, robot.getId());
@@ -33,25 +31,20 @@ public class RobotAttendingEventsFragment extends ListFragment
     }
 
     @Override
-    public void updateList()
-    {
+    public void updateList() {
         mRobot = mDaoSession.getRobotDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         new LoadAllEvents().execute();
     }
 
-    private class LoadAllEvents extends AsyncTask<Void, Void, List<ListItem>>
-    {
+    private class LoadAllEvents extends AsyncTask<Void, Void, List<ListItem>> {
 
         List<ListItem> elements = new ArrayList<>();
 
         @Override
-        protected List<ListItem> doInBackground(Void... voids)
-        {
-            mDaoSession.runInTx(new Runnable()
-            {
+        protected List<ListItem> doInBackground(Void... voids) {
+            mDaoSession.runInTx(new Runnable() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     List<RobotEvent> robotEvents = mDaoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(mRobot.getId())).list();
                     for (RobotEvent eveRobot : robotEvents) {
                         elements.add(new EventListElement(eveRobot.getEvent()));
@@ -62,8 +55,7 @@ public class RobotAttendingEventsFragment extends ListFragment
         }
 
         @Override
-        protected void onPostExecute(List<ListItem> listItems)
-        {
+        protected void onPostExecute(List<ListItem> listItems) {
             mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), listItems));
         }
     }

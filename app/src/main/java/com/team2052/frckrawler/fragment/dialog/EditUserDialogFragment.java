@@ -14,13 +14,11 @@ import com.team2052.frckrawler.listeners.ListUpdateListener;
 /**
  * @author Adam
  */
-public class EditUserDialogFragment extends DialogFragment
-{
+public class EditUserDialogFragment extends DialogFragment {
     public static final String USER_ID = "USER_ID";
     private User mUser;
 
-    public static EditUserDialogFragment newInstance(User user)
-    {
+    public static EditUserDialogFragment newInstance(User user) {
         EditUserDialogFragment fragment = new EditUserDialogFragment();
         Bundle b = new Bundle();
         b.putLong(USER_ID, user.getId());
@@ -29,26 +27,22 @@ public class EditUserDialogFragment extends DialogFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
         mUser = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getUserDao().load(b.getLong(USER_ID));
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final EditText editText = new EditText(getActivity());
         editText.setHint("User Name");
         editText.setText(mUser.getName());
         builder.setView(editText);
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener()
-        {
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 mUser.setName(editText.getText().toString());
                 ((FRCKrawler) getActivity().getApplication()).getDaoSession().getUserDao().update(mUser);
                 ((ListUpdateListener) getParentFragment()).updateList();

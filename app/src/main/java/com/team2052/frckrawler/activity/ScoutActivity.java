@@ -57,17 +57,19 @@ public class ScoutActivity extends ViewPagerActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_sync:
+                handleSyncButton();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncCancelledEvent event) {
         setProgress(false);
-    }
-
-    @Override
-    public void onNavDrawerItemClicked(NavDrawerItem item) {
-        int id = item.getId();
-        if (id != R.id.nav_item_scout) {
-            HomeActivity.newInstance(this, id);
-        }
     }
 
     @SuppressWarnings("unused")
@@ -87,13 +89,11 @@ public class ScoutActivity extends ViewPagerActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_sync:
-                handleSyncButton();
-                break;
+    public void onNavDrawerItemClicked(NavDrawerItem item) {
+        int id = item.getId();
+        if (id != R.id.nav_item_scout) {
+            HomeActivity.newInstance(this, id);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private void handleSyncButton() {

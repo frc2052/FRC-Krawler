@@ -18,12 +18,10 @@ import com.team2052.frckrawler.listeners.ListUpdateListener;
 /**
  * @author Adam
  */
-public class AddContactDialogFragment extends DialogFragment
-{
+public class AddContactDialogFragment extends DialogFragment {
     private Team mTeam;
 
-    public static AddContactDialogFragment newInstance(Team team)
-    {
+    public static AddContactDialogFragment newInstance(Team team) {
         AddContactDialogFragment fragment = new AddContactDialogFragment();
         Bundle b = new Bundle();
         b.putLong(DatabaseActivity.PARENT_ID, team.getNumber());
@@ -32,31 +30,25 @@ public class AddContactDialogFragment extends DialogFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTeam = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getTeamDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         final View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_add_contact, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-        {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 dismiss();
             }
         });
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener()
-        {
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 String name = ((EditText) view.findViewById(R.id.nameVal)).getText().toString();
                 String email = ((EditText) view.findViewById(R.id.email)).getText().toString();
                 String phone = ((EditText) view.findViewById(R.id.phone)).getText().toString();

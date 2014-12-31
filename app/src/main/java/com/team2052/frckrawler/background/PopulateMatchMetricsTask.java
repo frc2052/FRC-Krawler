@@ -29,6 +29,7 @@ import de.greenrobot.dao.query.QueryBuilder;
 /**
  * @author Adam
  * @since 12/28/2014.
+ * Used to auto fill the metrics so the scout can update the metric data
  */
 public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
@@ -52,8 +53,13 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        Robot robot = mDaoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(event.getGameId())).where(RobotDao.Properties.TeamId.eq(team.getNumber())).unique();
+        //Get the robot
+        QueryBuilder<Robot> robotQueryBuilder = mDaoSession.getRobotDao().queryBuilder();
+        robotQueryBuilder.where(RobotDao.Properties.GameId.eq(event.getGameId()));
+        robotQueryBuilder.where(RobotDao.Properties.TeamId.eq(team.getNumber())).unique();
+        Robot robot = robotQueryBuilder.unique();
 
+        //Build the queries
         QueryBuilder<MatchData> matchDataQueryBuilder = mDaoSession.getMatchDataDao().queryBuilder();
         matchDataQueryBuilder.where(MatchDataDao.Properties.EventId.eq(event.getId()));
         matchDataQueryBuilder.where(MatchDataDao.Properties.MatchId.eq(match.getId()));
@@ -72,13 +78,15 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         mMatchComment = matchCommentQueryBuilder.unique();
 
 
+        //Get the metrics and the current data
         List<Metric> metrics = metricQueryBuilder.list();
-        List<MatchData> matchDatas = matchDataQueryBuilder.list();
+        List<MatchData> currentData = matchDataQueryBuilder.list();
         mMetricValues = new ArrayList<>();
 
 
-        if (matchDatas.size() == metrics.size()) {
-            for (MatchData matchData : matchDatas) {
+        //Use the current data if it's equal to the size of metrics
+        if (currentData.size() == metrics.size()) {
+            for (MatchData matchData : currentData) {
                 mMetricValues.add(new MetricValue(matchData));
             }
         } else {
@@ -91,12 +99,13 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        //Display the views to the user
         mFragment.mMetricList.removeAllViews();
-
         for (MetricValue metricValue : mMetricValues) {
             mFragment.mMetricList.addView(MetricWidget.createWidget(context, metricValue));
         }
 
+        //Set the comment if there is one
         if (mMatchComment != null) {
             mFragment.mComments.setText(mMatchComment.getComment());
         } else {

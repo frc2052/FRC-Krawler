@@ -5,8 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.JsonElement;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.util.Utilities;
@@ -23,12 +23,14 @@ public class MetricListElement extends ListElement {
     public MetricListElement(Metric metric) {
         super(Long.toString(metric.getId()));
         this.metric = metric;
-        String[] rangeArr = StringArrayDeserializer.deserialize(metric.getRange());
-        if (metric.getDescription().equals("")) {
+
+        if (metric.getDescription().isEmpty()) {
             descriptionString = "No Description";
         } else {
             descriptionString = metric.getDescription();
         }
+
+        //TODO
         switch (metric.getType()) {
             case Utilities.MetricUtil.BOOLEAN:
                 typeString = "Boolean";
@@ -36,21 +38,21 @@ public class MetricListElement extends ListElement {
                 break;
             case Utilities.MetricUtil.COUNTER:
                 typeString = "Counter";
-                rangeString = rangeArr[0] + " to " + rangeArr[1] + " Incrementing by " + rangeArr[2];
+                //rangeString = rangeArr[0] + " to " + rangeArr[1] + " Incrementing by " + rangeArr[2];
                 break;
             case Utilities.MetricUtil.CHOOSER:
                 boolean isFirst = true;
-                for (Object o : rangeArr) {
+                /*for (Object o : rangeArr) {
                     if (!isFirst) {
                         rangeString += ", ";
                     }
                     isFirst = false;
                     rangeString += o;
-                }
+                }*/
                 typeString = "Chooser";
                 break;
             case Utilities.MetricUtil.SLIDER:
-                rangeString = rangeArr[0] + " to " + rangeArr[1];
+                //rangeString = rangeArr[0] + " to " + rangeArr[1];
                 typeString = "Slider";
                 break;
         }

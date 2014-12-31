@@ -5,41 +5,35 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-public class DisableSwipeViewPager extends ViewPager
-{
+public class DisableSwipeViewPager extends ViewPager {
 
     private boolean mSwipeEnabled = true;
 
-    public DisableSwipeViewPager(Context context)
-    {
+    public DisableSwipeViewPager(Context context) {
         super(context);
     }
 
-    public DisableSwipeViewPager(Context context, AttributeSet attrs)
-    {
+    public DisableSwipeViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
-        if (!mSwipeEnabled) {
-            return false;
-        }
-        return super.onTouchEvent(event);
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event)
-    {
+    public boolean onInterceptTouchEvent(MotionEvent event) {
         if (!mSwipeEnabled) {
             return false;
         }
         return super.onInterceptTouchEvent(event);
     }
 
-    public void setSwipeEnabled(boolean enabled)
-    {
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (!mSwipeEnabled) {
+            return false;
+        }
+        return super.onTouchEvent(event);
+    }
+
+    public void setSwipeEnabled(boolean enabled) {
         mSwipeEnabled = enabled;
     }
 
@@ -49,8 +43,7 @@ public class DisableSwipeViewPager extends ViewPager
      *
      * @return true if the ViewPager was able to advance to the next page, false if otherwise.
      */
-    public boolean advanceToNextPage()
-    {
+    public boolean advanceToNextPage() {
         if (getCurrentItem() < getAdapter().getCount() - 1) {
             setCurrentItem(getCurrentItem() + 1);
             return true;
@@ -64,8 +57,7 @@ public class DisableSwipeViewPager extends ViewPager
      *
      * @return true if the ViewPager was able to return the the previous page, false if otherwise.
      */
-    public boolean returnToPreviousPage()
-    {
+    public boolean returnToPreviousPage() {
         if (getCurrentItem() > 0) {
             setCurrentItem(getCurrentItem() - 1);
             return true;

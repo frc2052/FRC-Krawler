@@ -13,26 +13,21 @@ import com.team2052.frckrawler.db.DaoSession;
  * @author Adam
  * @since 10/5/2014
  */
-public class BaseFragment extends Fragment
-{
+public class BaseFragment extends Fragment {
     protected DaoSession mDaoSession;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         mDaoSession = ((FRCKrawler) getActivity().getApplication()).getDaoSession();
         onPostCreate();
         super.onCreate(savedInstanceState);
     }
 
-
-    public void onPostCreate()
-    {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        return super.onCreateView(inflater, container, savedInstanceState);
+    public void onPostCreate() {
     }
 }

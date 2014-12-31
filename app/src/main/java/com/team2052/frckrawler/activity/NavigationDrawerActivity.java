@@ -36,17 +36,6 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
     private Toolbar mToolbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        super.setContentView(R.layout.activity_navigation_drawer);
-        ButterKnife.inject(this);
-        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
-        // Call this so that subclasses can configure the navigation drawer before it is created
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-    }
-
-    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         onCreateNavigationDrawer();
@@ -85,6 +74,14 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
         TaskStackBuilder.create(this).addNextIntent(HomeActivity.newInstance(this, id)).startActivities();
     }
 
+    @Override
+    public void onNavDrawerOpened() {
+    }
+
+    @Override
+    public void onNavDrawerClosed() {
+    }
+
     public boolean isDrawerOpen() {
         return mDrawerLayout.isDrawerOpen(Gravity.LEFT);
     }
@@ -93,6 +90,17 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
     public void setContentView(int layoutResID) {
         mContentView.removeAllViews();
         getLayoutInflater().inflate(layoutResID, mContentView);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        super.setContentView(R.layout.activity_navigation_drawer);
+        ButterKnife.inject(this);
+        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
+        // Call this so that subclasses can configure the navigation drawer before it is created
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
     }
 
     public DrawerLayout getDrawerLayout() {
@@ -130,18 +138,9 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
         }
     }
 
-    @Override
-    public void onNavDrawerClosed() {
-    }
-
     public void useActionBarToggle() {
         mUseActionBarToggle = true;
     }
-
-    @Override
-    public void onNavDrawerOpened() {
-    }
-
 
     public void encourageLearning(boolean encourage) {
         mEncourageLearning = encourage;

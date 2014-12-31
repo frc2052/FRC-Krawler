@@ -47,8 +47,7 @@ import java.util.List;
  *
  * @author Adam
  */
-public class ImportDataSimpleDialogFragment extends DialogFragment implements AdapterView.OnItemSelectedListener
-{
+public class ImportDataSimpleDialogFragment extends DialogFragment implements AdapterView.OnItemSelectedListener {
 
     private String[] yearDropDownItems;
     private Spinner yearSpinner;
@@ -61,8 +60,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
      * @param game the game that the event will eventually be imported to.
      * @return The fragment with the specific arguments to run the dialog
      */
-    public static ImportDataSimpleDialogFragment newInstance(Game game)
-    {
+    public static ImportDataSimpleDialogFragment newInstance(Game game) {
         ImportDataSimpleDialogFragment fragment = new ImportDataSimpleDialogFragment();
         Bundle b = new Bundle();
         b.putLong(DatabaseActivity.PARENT_ID, game.getId());
@@ -71,8 +69,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mGame = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         yearDropDownItems = new String[GlobalValues.MAX_COMP_YEAR - GlobalValues.FIRST_COMP_YEAR + 1];
@@ -82,24 +79,19 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_import_simple, null);
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
-        b.setPositiveButton("Import", new DialogInterface.OnClickListener()
-        {
+        b.setPositiveButton("Import", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 ProgressDialogFragment.showLoadingProgress(getFragmentManager());
                 new LoadAllEventData(((ListElement) eventSpinner.getSelectedItem()).getKey()).execute();
             }
         });
-        b.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-        {
+        b.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 dismiss();
             }
         });
@@ -113,8 +105,15 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-    {
+    public void onDismiss(DialogInterface dialog) {
+        if (getParentFragment() != null && getParentFragment() instanceof ListUpdateListener) {
+            ((ListUpdateListener) getParentFragment()).updateList();
+        }
+        super.onDismiss(dialog);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         LoadAllEventsByYear eventsByYear = new LoadAllEventsByYear(Integer.parseInt((String) yearSpinner.getSelectedItem()));
         eventSpinner.setVisibility(View.GONE);
         getDialog().findViewById(R.id.progress).setVisibility(View.VISIBLE);
@@ -122,17 +121,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent)
-    {
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog)
-    {
-        if (getParentFragment() != null && getParentFragment() instanceof ListUpdateListener) {
-            ((ListUpdateListener) getParentFragment()).updateList();
-        }
-        super.onDismiss(dialog);
+    public void onNothingSelected(AdapterView<?> parent) {
     }
 
     /**
@@ -140,18 +129,15 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
      *
      * @author Adam
      */
-    private class LoadAllEventsByYear extends AsyncTask<Void, Void, List<Event>>
-    {
+    private class LoadAllEventsByYear extends AsyncTask<Void, Void, List<Event>> {
         private final String url;
 
-        public LoadAllEventsByYear(int year)
-        {
+        public LoadAllEventsByYear(int year) {
             this.url = TBA.BASE_TBA_URL + String.format(TBA.EVENT_BY_YEAR_REQUEST, year);
         }
 
         @Override
-        protected List<Event> doInBackground(Void... params)
-        {
+        protected List<Event> doInBackground(Void... params) {
             //Get the response for the events by year
             JsonArray jsonArray = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url)));
             //Create an array for events
@@ -161,11 +147,9 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                 events.add(JSON.getGson().fromJson(element, Event.class));
             }
             //Sort the event by date
-            Collections.sort(events, new Comparator<Event>()
-            {
+            Collections.sort(events, new Comparator<Event>() {
                 @Override
-                public int compare(Event event, Event event2)
-                {
+                public int compare(Event event, Event event2) {
                     return Double.compare(event.getDate().getTime(), event2.getDate().getTime());
                 }
             });
@@ -173,8 +157,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         }
 
         @Override
-        protected void onPostExecute(List<Event> events)
-        {
+        protected void onPostExecute(List<Event> events) {
             //Create listitems so the UI can read it
             ArrayList<ListItem> listItems = new ArrayList<>();
             for (Event event : events) {
@@ -193,20 +176,17 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
      *
      * @author Adam
      */
-    private class LoadAllEventData extends AsyncTask<Void, Void, Void>
-    {
+    private class LoadAllEventData extends AsyncTask<Void, Void, Void> {
         final FragmentManager fragman = getFragmentManager();
         private final String url;
 
-        public LoadAllEventData(String eventKey)
-        {
+        public LoadAllEventData(String eventKey) {
             //Get the main event url based on the key
             this.url = TBA.BASE_TBA_URL + String.format(TBA.EVENT_REQUEST, eventKey);
         }
 
         @Override
-        protected Void doInBackground(Void... params)
-        {
+        protected Void doInBackground(Void... params) {
             final long startTime = System.currentTimeMillis();
             final DaoSession daoSession = ((FRCKrawler) getActivity().getApplication()).getDaoSession();
             //Get all data from TBA ready to parse
@@ -215,11 +195,9 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
 
             //Run in bulk transaction
-            daoSession.runInTx(new Runnable()
-            {
+            daoSession.runInTx(new Runnable() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     //Save the event
                     Event event = JSON.getGson().fromJson(jEvent, Event.class);
                     event.setGame(mGame);
@@ -259,8 +237,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         }
 
         @Override
-        protected void onPostExecute(Void aVoid)
-        {
+        protected void onPostExecute(Void aVoid) {
             ProgressDialogFragment.dismissLoadingProgress(fragman);
         }
     }

@@ -12,19 +12,16 @@ import com.team2052.frckrawler.listitems.ListElement;
 /**
  * @author Adam
  */
-public class TeamListElement extends ListElement
-{
+public class TeamListElement extends ListElement {
     private final Team team;
 
-    public TeamListElement(Team team)
-    {
+    public TeamListElement(Team team) {
         super(Long.toString(team.getNumber()));
         this.team = team;
     }
 
     @Override
-    public View getView(Context c, LayoutInflater inflater, View convertView)
-    {
+    public View getView(Context c, LayoutInflater inflater, View convertView) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_team, null);
         }

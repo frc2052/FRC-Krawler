@@ -43,6 +43,7 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
             PitData currentData = mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).where(PitDataDao.Properties.MetricId.eq(widget.getMetric().getId())).where(PitDataDao.Properties.EventId.eq(mEvent.getId())).unique();
             PitData pitData = new PitData(null, widget.getValue(), robot.getId(), widget.getMetric().getId(), mEvent.getId(), LoginHandler.getInstance(context, mDaoSession).getLoggedOnUser().getId());
 
+            //If data already exists update it. If not, insert as a new entry.
             if (currentData != null) {
                 currentData.setData(pitData.getData());
                 currentData.update();

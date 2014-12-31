@@ -11,35 +11,20 @@ import com.team2052.frckrawler.listeners.ListUpdateListener;
 /**
  * @author Adam
  */
-public abstract class ListActivity extends DatabaseActivity implements ListUpdateListener
-{
+public abstract class ListActivity extends DatabaseActivity implements ListUpdateListener {
     protected ListView mListView;
     protected ListAdapter mAdapter;
     private Parcelable mListState;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view);
         mListView = (ListView) findViewById(R.id.list_layout);
     }
 
     @Override
-    protected void onResume()
-    {
-        if (mAdapter != null) {
-            mListView.setAdapter(mAdapter);
-            mListView.onRestoreInstanceState(mListState);
-        } else {
-            updateList();
-        }
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         super.onPause();
         if (mListView != null) {
             //Set the adapter if we are too lazy to set the variable
@@ -48,5 +33,16 @@ public abstract class ListActivity extends DatabaseActivity implements ListUpdat
             }
             mListState = mListView.onSaveInstanceState();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        if (mAdapter != null) {
+            mListView.setAdapter(mAdapter);
+            mListView.onRestoreInstanceState(mListState);
+        } else {
+            updateList();
+        }
+        super.onResume();
     }
 }

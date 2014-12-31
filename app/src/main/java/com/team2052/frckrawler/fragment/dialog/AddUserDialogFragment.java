@@ -16,21 +16,17 @@ import com.team2052.frckrawler.listeners.ListUpdateListener;
 /**
  * @author Adam
  */
-public class AddUserDialogFragment extends DialogFragment
-{
+public class AddUserDialogFragment extends DialogFragment {
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         final View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_add_user, null);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add User");
         builder.setView(view);
-        builder.setPositiveButton("Add", new DialogInterface.OnClickListener()
-        {
+        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 ((FRCKrawler) getActivity().getApplication()).getDaoSession().getUserDao().insert(new User(null, ((EditText) view.findViewById(R.id.name)).getText().toString().trim()));
                 ((ListUpdateListener) getParentFragment()).updateList();
             }

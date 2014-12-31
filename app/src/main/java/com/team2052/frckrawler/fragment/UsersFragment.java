@@ -27,14 +27,11 @@ import java.util.List;
  * @author Adam
  * @since 8/25/2014
  */
-public class UsersFragment extends ListFragmentFab
-{
+public class UsersFragment extends ListFragmentFab {
     private ActionMode currentActionMode;
-    private final ActionMode.Callback callback = new ActionMode.Callback()
-    {
+    private final ActionMode.Callback callback = new ActionMode.Callback() {
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu)
-        {
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             long userId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
             User user = mDaoSession.getUserDao().load(userId);
             mode.setTitle(user.getName());
@@ -43,14 +40,12 @@ public class UsersFragment extends ListFragmentFab
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu)
-        {
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false;
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item)
-        {
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             long userId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
             User user = mDaoSession.getUserDao().load(userId);
             switch (item.getItemId()) {
@@ -70,22 +65,18 @@ public class UsersFragment extends ListFragmentFab
         }
 
         @Override
-        public void onDestroyActionMode(ActionMode mode)
-        {
+        public void onDestroyActionMode(ActionMode mode) {
             currentActionMode = null;
         }
     };
     private int currentSelectedListItem;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
-        {
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
-            {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (currentActionMode != null) {
                     return false;
                 }
@@ -94,11 +85,9 @@ public class UsersFragment extends ListFragmentFab
                 return true;
             }
         });
-        mFab.setOnClickListener(new View.OnClickListener()
-        {
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 new AddUserDialogFragment().show(getChildFragmentManager(), "addUser");
             }
         });
@@ -106,31 +95,26 @@ public class UsersFragment extends ListFragmentFab
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         if (currentActionMode != null)
             currentActionMode.finish();
         super.onDestroy();
     }
 
     @Override
-    public void updateList()
-    {
+    public void updateList() {
         new GetUsersTask().execute();
     }
 
-    private class GetUsersTask extends AsyncTask<Void, Void, List<User>>
-    {
+    private class GetUsersTask extends AsyncTask<Void, Void, List<User>> {
 
         @Override
-        protected List<User> doInBackground(Void... params)
-        {
+        protected List<User> doInBackground(Void... params) {
             return mDaoSession.getUserDao().loadAll();
         }
 
         @Override
-        protected void onPostExecute(List<User> users)
-        {
+        protected void onPostExecute(List<User> users) {
             List<ListItem> userList = new ArrayList<>();
             for (User user : users) {
                 userList.add(new UserListElement(user));

@@ -9,14 +9,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
-import com.team2052.frckrawler.database.serializers.StringArrayDeserializer;
+import com.team2052.frckrawler.tba.JSON;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedListener {
 
     private final Spinner chooserSpinner;
-    private final String[] range;
+    private final List<String> range;
     private final ArrayAdapter<Object> adapter;
     String value;
 
@@ -29,12 +35,22 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
             value = m.getValue();
 
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1);
-        range = StringArrayDeserializer.deserialize(m.getMetric().getRange());
+
+        JsonArray range = JSON.getAsJsonArray(m.getMetric().getRange());
+        List<String> rangeValues = new ArrayList<>();
+
+        for (JsonElement jsonElement : range) {
+            JsonObject object = jsonElement.getAsJsonObject();
+            rangeValues.add(object.get("value").getAsString());
+        }
+
+        this.range = rangeValues;
+
         int selectedPos = 0;
 
-        for (int i = 0; i < range.length; i++) {
-            adapter.add(range[i]);
-            if (value != null && value.toString().equals(range[i]))
+        for (int i = 0; i < range.size(); i++) {
+            adapter.add(rangeValues.get(i));
+            if (value != null && value.equals(rangeValues.get(i)))
                 selectedPos = i;
         }
 
@@ -52,8 +68,7 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> a, View arg1, int arg2,
-                               long arg3) {
+    public void onItemSelected(AdapterView<?> a, View arg1, int arg2, long arg3) {
         value = (String) a.getSelectedItem();
     }
 
@@ -74,9 +89,9 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
 
         int selectedPos = 0;
 
-        for (int i = 0; i < range.length; i++) {
-            adapter.add(range[i]);
-            if (value != null && value.toString().equals(range[i]))
+        for (int i = 0; i < range.size(); i++) {
+            adapter.add(range.get(i));
+            if (value != null && value.equals(range.get(i)))
                 selectedPos = i;
         }
 
