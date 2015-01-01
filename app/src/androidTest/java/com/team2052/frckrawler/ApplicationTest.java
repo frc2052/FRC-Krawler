@@ -2,6 +2,8 @@ package com.team2052.frckrawler;
 
 import android.test.ApplicationTestCase;
 
+import com.team2052.frckrawler.core.FRCKrawler;
+
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
  */

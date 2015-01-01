@@ -39,7 +39,7 @@
 
     </LinearLayout>
 
-    <com.team2052.frckrawler.view.ScrimInsetsFrameLayout
+    <com.team2052.frckrawler.core.ui.ScrimInsetsFrameLayout
         android:id="@+id/navigation_drawer_fragment_container"
         android:layout_width="300dp"
         android:background="@android:color/white"
@@ -50,11 +50,11 @@
 
         <fragment
             android:id="@+id/navigation_drawer_fragment"
-            android:name="com.team2052.frckrawler.fragment.NavigationDrawerFragment"
+            android:name="com.team2052.frckrawler.core.fragments.NavigationDrawerFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_navigation_drawer" />
-    </com.team2052.frckrawler.view.ScrimInsetsFrameLayout>
+    </com.team2052.frckrawler.core.ui.ScrimInsetsFrameLayout>
 
 
 </android.support.v4.widget.DrawerLayout>

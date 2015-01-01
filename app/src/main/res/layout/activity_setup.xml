@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.team2052.frckrawler.view.DisableSwipeViewPager
+<com.team2052.frckrawler.core.ui.DisableSwipeViewPager
     android:id="@+id/view_pager"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -300,4 +300,4 @@
 
     </RelativeLayout>
 
-</com.team2052.frckrawler.view.DisableSwipeViewPager>
+</com.team2052.frckrawler.core.ui.DisableSwipeViewPager>

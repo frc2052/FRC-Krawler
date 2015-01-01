@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:minHeight="48dp">
 
-    <com.team2052.frckrawler.view.NavDrawerImageView
+    <com.team2052.frckrawler.core.ui.NavDrawerImageView
         android:id="@+id/icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
