@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.database;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,6 +37,7 @@ public class CompiledMetricValue {
     }
 
     private void compileMetricValues() {
+        final Gson gson = JSON.getGson();
         switch (metricType) {
             case Utilities.MetricUtil.BOOLEAN:
                 double yes = 0;
@@ -43,15 +45,13 @@ public class CompiledMetricValue {
 
                 for (MetricValue matchData : metricData) {
                     //Get the value
-                    String data = matchData.getValue();
+                    Boolean data = JSON.getAsJsonObject(matchData.getValue()).get("value").getAsBoolean();
                     //Parse the value and weight it
-                    if (Boolean.parseBoolean(data)) {
+                    if (data) {
                         yes += compileWeight;
                     } else {
                         no += compileWeight;
                     }
-
-                    LogHelper.debug(data + robot.getTeam().getNumber());
                 }
                 //Check to see if it is a NaN if it is then set the value to 0.0
                 //Return the amount of yes in the amount of yes and no's
@@ -68,7 +68,7 @@ public class CompiledMetricValue {
                 double denominator = 0;
 
                 for (MetricValue metricValue : metricData) {
-                    int value = Integer.parseInt(metricValue.getValue());
+                    int value = JSON.getAsJsonObject(metricValue.getValue()).getAsInt();
                     numerator += value * compileWeight;
                     denominator += compileWeight;
                 }
@@ -97,7 +97,8 @@ public class CompiledMetricValue {
                 double[] counts = new double[rangeValues.size()];
 
                 for (MetricValue metricValue : metricData) {
-                    String value = metricValue.getValue();
+                    String value = JSON.getAsJsonObject(metricValue.getValue()).get("value").getAsString();
+
                     for(int i = 0; i < rangeCnt; i++){
                         if(value.equals(rangeValues.get(i))){
                             counts[i]++;

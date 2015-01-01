@@ -7,8 +7,10 @@ import android.view.View.OnClickListener;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.tba.JSON;
 
 public class BooleanMetricWidget extends MetricWidget implements OnClickListener {
     boolean value = false;
@@ -22,7 +24,7 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
         findViewById(R.id.no).setOnClickListener(this);
 
         if (m.getValue() != null)
-            value = Boolean.parseBoolean(m.getValue());
+            value = JSON.getAsJsonObject(m.getValue()).get("value").getAsBoolean();
 
         if (value) {
             ((RadioButton) findViewById(R.id.yes)).setChecked(true);
@@ -31,11 +33,6 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
             ((RadioButton) findViewById(R.id.yes)).setChecked(false);
             ((RadioButton) findViewById(R.id.no)).setChecked(true);
         }
-    }
-
-    @Override
-    public String getValues() {
-        return Boolean.toString(value);
     }
 
     @Override
@@ -66,5 +63,12 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
         super.onRestoreInstanceState(ss.getSuperState());
 
         value = Boolean.parseBoolean(ss.value);
+    }
+
+    @Override
+    public MetricValue getMetricValue() {
+        JsonObject jsonObject =new JsonObject();
+        jsonObject.addProperty("value", value);
+        return new MetricValue(getMetric(), JSON.getGson().toJson(jsonObject));
     }
 }

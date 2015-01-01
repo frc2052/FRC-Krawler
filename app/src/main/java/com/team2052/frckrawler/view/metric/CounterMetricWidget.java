@@ -14,7 +14,7 @@ import com.team2052.frckrawler.tba.JSON;
 
 public class CounterMetricWidget extends MetricWidget implements OnClickListener {
 
-    int currentValue;
+    int value;
     private int max;
     private int min;
     private int increment;
@@ -35,38 +35,34 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
         min = o.get("min").getAsInt();
         increment = o.get("inc").getAsInt();
 
-        if (m.getValue() != null && !m.getValue().isEmpty())
-            currentValue = Integer.parseInt(m.getValue());
+        if (m.getValue() != null)
+            value = JSON.getAsJsonObject(m.getValue()).get("value").getAsInt();
         else
-            currentValue = min;
+            value = min;
 
-        ((TextView) findViewById(R.id.value)).setText(Integer.toString(currentValue));
+        ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));
     }
 
-    @Override
-    public String getValues() {
-        return Integer.toString(currentValue);
-    }
 
     @Override
     public void onClick(View v) {
 
         if (v.getId() == R.id.plus) {
 
-            currentValue += increment;
+            value += increment;
 
-            if (currentValue > max)
-                currentValue = max;
+            if (value > max)
+                value = max;
 
         } else if (v.getId() == R.id.minus) {
 
-            currentValue -= increment;
+            value -= increment;
 
-            if (currentValue < min)
-                currentValue = min;
+            if (value < min)
+                value = min;
         }
 
-        ((TextView) findViewById(R.id.value)).setText(Integer.toString(currentValue));
+        ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));
     }
 
     @Override
@@ -79,6 +75,13 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
         MetricWidgetSavedState ss = (MetricWidgetSavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
 
-        currentValue = Integer.parseInt(ss.value);
+        value = Integer.parseInt(ss.value);
+    }
+
+    @Override
+    public MetricValue getMetricValue() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("value", value);
+        return new MetricValue(getMetric(), JSON.getGson().toJson(jsonObject));
     }
 }

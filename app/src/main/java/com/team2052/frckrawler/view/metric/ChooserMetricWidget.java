@@ -32,7 +32,7 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
         inflater.inflate(R.layout.widget_metric_chooser, this);
 
         if (m.getValue() != null)
-            value = m.getValue();
+            value = JSON.getAsJsonObject(m.getValue()).get("value").getAsString();
 
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1);
 
@@ -60,11 +60,6 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
         if (!adapter.isEmpty())
             chooserSpinner.setSelection(selectedPos);
         ((TextView) findViewById(R.id.name)).setText(m.getMetric().getName());
-    }
-
-    @Override
-    public String getValues() {
-        return value;
     }
 
     @Override
@@ -96,5 +91,12 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
         }
 
         chooserSpinner.setSelection(selectedPos);
+    }
+
+    @Override
+    public MetricValue getMetricValue() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("value", value);
+        return new MetricValue(getMetric(), JSON.getGson().toJson(jsonObject));
     }
 }

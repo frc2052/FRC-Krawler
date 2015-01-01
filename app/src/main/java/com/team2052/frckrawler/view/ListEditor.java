@@ -69,7 +69,7 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
 
     /**
      * **
-     * Method: getValues
+     * Method: getValue
      *
      * @return Summary: Gets the "real" values of this ListEditor, not the shown values
      * ***

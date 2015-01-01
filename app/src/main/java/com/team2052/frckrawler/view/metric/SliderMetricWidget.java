@@ -33,7 +33,7 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
         max = range.get("max").getAsInt();
 
         if (m.getValue() != null && !m.getValue().equals(""))
-            value = Integer.parseInt(m.getValue());
+            value = JSON.getAsJsonObject(m.getValue()).get("value").getAsInt();
         else
             value = min;
 
@@ -47,11 +47,6 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
         ((TextView) findViewById(R.id.min)).setText(Integer.toString(min));
         ((TextView) findViewById(R.id.max)).setText(Integer.toString(max));
         ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));
-    }
-
-    @Override
-    public String getValues() {
-        return Integer.toString(value);
     }
 
     @Override
@@ -83,5 +78,12 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
         super.onRestoreInstanceState(ss.getSuperState());
 
         value = Integer.parseInt(ss.value);
+    }
+
+    @Override
+    public MetricValue getMetricValue() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("value", value);
+        return new MetricValue(getMetric(), JSON.getGson().toJson(jsonObject));
     }
 }

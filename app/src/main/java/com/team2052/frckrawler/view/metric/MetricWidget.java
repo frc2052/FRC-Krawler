@@ -47,17 +47,16 @@ public abstract class MetricWidget extends FrameLayout {
         return metric;
     }
 
-    public MetricValue getMetricValue() {
-        return new MetricValue(metric, getValues());
-    }
-
-    public abstract String getValues();
+    /**
+     * @return the database ready value for the database
+     */
+    public abstract MetricValue getMetricValue();
 
     @Override
     protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         MetricWidgetSavedState ss = new MetricWidgetSavedState(superState);
-        ss.value = getValues();
+        ss.value = getMetricValue().getValue();
         return ss;
     }
 
