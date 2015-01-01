@@ -160,7 +160,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         final float compileWeight;
         File file = null;
 
-        public ExportToFileSystem(){
+        public ExportToFileSystem() {
             this.compileWeight = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0).getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
         }
 

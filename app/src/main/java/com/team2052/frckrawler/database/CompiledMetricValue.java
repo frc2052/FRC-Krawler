@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.LogHelper;
 import com.team2052.frckrawler.util.Utilities;
 
 import java.text.DecimalFormat;
@@ -18,11 +17,11 @@ import java.util.List;
  * @author Adam
  */
 public class CompiledMetricValue {
-    public static DecimalFormat format = new DecimalFormat("0.0");
+    public static final DecimalFormat format = new DecimalFormat("0.0");
     private final List<MetricValue> metricData;
-    public Robot robot;
-    public int metricType;
-    public String compiledValue = "";
+    private Robot robot;
+    private int metricType;
+    private String compiledValue = "";
     private Metric metric;
     private double compileWeight;
 
@@ -68,12 +67,12 @@ public class CompiledMetricValue {
                 double denominator = 0;
 
                 for (MetricValue metricValue : metricData) {
-                    int value = JSON.getAsJsonObject(metricValue.getValue()).getAsInt();
+                    int value = JSON.getAsJsonObject(metricValue.getValue()).get("value").getAsInt();
                     numerator += value * compileWeight;
                     denominator += compileWeight;
                 }
 
-                if(denominator == 0)
+                if (denominator == 0)
                     denominator = 1;
 
                 if (!Double.isNaN(numerator / denominator)) {
@@ -98,14 +97,14 @@ public class CompiledMetricValue {
 
                 for (MetricValue metricValue : metricData) {
                     String value = JSON.getAsJsonObject(metricValue.getValue()).get("value").getAsString();
-
-                    for(int i = 0; i < rangeCnt; i++){
-                        if(value.equals(rangeValues.get(i))){
+                    for (int i = 0; i < rangeCnt; i++) {
+                        if (value.equals(rangeValues.get(i))) {
                             counts[i]++;
                             break;
                         }
                     }
                 }
+
                 compiledValue += "\n";
                 for (int choiceCount = 0; choiceCount < rangeCnt; choiceCount++) {
                     compiledValue += rangeValues.get(choiceCount) + " " + format.format(Double.isNaN((counts[choiceCount] / metricData.size()) * 100) ? 0.0D : (counts[choiceCount] / metricData.size()) * 100) + "% \n";
@@ -113,5 +112,17 @@ public class CompiledMetricValue {
 
                 break;
         }
+    }
+
+    public String getCompiledValue() {
+        return compiledValue;
+    }
+
+    public Metric getMetric() {
+        return metric;
+    }
+
+    public Robot getRobot() {
+        return robot;
     }
 }

@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
-import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.LogHelper;
 import com.team2052.frckrawler.util.Utilities;
 
@@ -50,7 +49,7 @@ public class ScoutSyncHandler {
     }
 
     public void startSync(String address) {
-        startSync(BluetoothUtil.getDevice(address));
+        startSync(Utilities.BluetoothUtil.getDevice(address));
     }
 
     public void cancelAllRunningSyncs() {
@@ -87,7 +86,7 @@ public class ScoutSyncHandler {
     }
 
     public void startScoutSync() {
-        if (!BluetoothUtil.hasBluetoothAdapter()) {
+        if (!Utilities.BluetoothUtil.hasBluetoothAdapter()) {
             Toast.makeText(context, context.getString(R.string.bluetooth_not_supported_message), Toast.LENGTH_LONG).show();
             return;
         }

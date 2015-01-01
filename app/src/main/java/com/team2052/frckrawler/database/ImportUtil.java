@@ -42,7 +42,7 @@ public class ImportUtil {
                 if (teamJSONObject.has("team_number")) {
                     team = JSON.getGson().fromJson(teamJSONObject, Team.class);
                 } else {
-                    team = new Team((long) number, "frc" + number, "Unknown", "Unknown", 0, "");
+                    team = new Team((long) number, "frc" + number, "Unknown", "Unknown", null);
                 }
 
                 daoSession.insertOrReplace(team);

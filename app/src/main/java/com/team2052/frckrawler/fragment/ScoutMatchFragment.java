@@ -148,6 +148,11 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(ScoutSyncSuccessEvent event) {
+        loadAllData(Utilities.ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
     }    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Match match = mMatches.get(mMatchSpinner.getSelectedItemPosition());
@@ -159,14 +164,11 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         mAllianceSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, Arrays.copyOf(teamNumbers.toArray(), teamNumbers.size(), String[].class)));
     }
 
-    @SuppressWarnings("unused")
-    public void onEvent(ScoutSyncSuccessEvent event) {
-        loadAllData(Utilities.ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
-    }    @Override
+
+
+    @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
-
-
 
 
 }

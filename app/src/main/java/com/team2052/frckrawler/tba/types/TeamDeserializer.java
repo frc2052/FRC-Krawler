@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.tba.JSON;
 
 import java.lang.reflect.Type;
 
@@ -33,13 +34,21 @@ public class TeamDeserializer implements JsonDeserializer<Team> {
             team.setLocation(object.get("location").getAsString());
         }
 
+        JsonObject data = new JsonObject();
+
         if (object.has("website") && !object.get("website").isJsonNull()) {
-            team.setWebsite(object.get("website").getAsString());
+            data.addProperty("website", object.get("website").getAsString());
         }
 
         if (object.has("rookie_year") && !object.get("rookie_year").isJsonNull()) {
-            team.setRookieYear(object.get("rookie_year").getAsInt());
+            data.addProperty("rookie_year", object.get("rookie_year").getAsInt());
         }
+
+        if (object.has("name") && !object.get("name").isJsonNull()) {
+            data.addProperty("long_name", object.get("name").getAsString());
+        }
+
+        team.setData(JSON.getGson().toJson(data));
 
         return team;
     }

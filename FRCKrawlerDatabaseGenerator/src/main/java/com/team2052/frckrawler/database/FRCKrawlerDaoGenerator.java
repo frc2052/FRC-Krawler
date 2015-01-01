@@ -30,8 +30,7 @@ public class FRCKrawlerDaoGenerator {
         team.addStringProperty("teamkey").unique();
         team.addStringProperty("name");
         team.addStringProperty("location");
-        team.addIntProperty("rookieYear");
-        team.addStringProperty("website");
+        team.addStringProperty("data");
 
         Entity user = schema.addEntity("User");
         user.implementsSerializable();

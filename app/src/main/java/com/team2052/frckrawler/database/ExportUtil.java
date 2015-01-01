@@ -70,7 +70,7 @@ public class ExportUtil {
 
                 //Compiled values
                 for (CompiledMetricValue metricValue : entry.getValue()) {
-                    record.add(metricValue.compiledValue);
+                    record.add(metricValue.getCompiledValue());
                 }
 
                 writer.writeNext(Arrays.copyOf(record.toArray(), record.size(), String[].class));

@@ -11,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.fragment.ContactsFragment;
+import com.team2052.frckrawler.fragment.NeedSyncFragment;
 import com.team2052.frckrawler.fragment.RobotsFragment;
 
 /**
@@ -49,13 +50,13 @@ public class TeamInfoActivity extends ViewPagerActivity {
         public Fragment getItem(int position) {
             Fragment fragment = null;
             switch (position) {
-                /*case 0:
-                    fragment = new NeedSyncFragment();
-                    break;*/
                 case 0:
-                    fragment = RobotsFragment.newInstance(mTeam);
+                    fragment = new NeedSyncFragment();
                     break;
                 case 1:
+                    fragment = RobotsFragment.newInstance(mTeam);
+                    break;
+                case 2:
                     fragment = ContactsFragment.newInstance(mTeam);
                     break;
             }

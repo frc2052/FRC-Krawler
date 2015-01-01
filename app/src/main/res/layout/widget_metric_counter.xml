@@ -36,7 +36,7 @@
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Value"
+            android:text="0"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
 

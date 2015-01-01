@@ -17,7 +17,6 @@ import com.team2052.frckrawler.events.scout.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncStartEvent;
 import com.team2052.frckrawler.events.scout.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
-import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.Utilities;
 
 import de.greenrobot.event.EventBus;
@@ -97,8 +96,8 @@ public class ScoutActivity extends ViewPagerActivity {
     }
 
     private void handleSyncButton() {
-        if (BluetoothUtil.hasBluetoothAdapter()) {
-            if (!BluetoothUtil.isBluetoothEnabled()) {
+        if (Utilities.BluetoothUtil.hasBluetoothAdapter()) {
+            if (!Utilities.BluetoothUtil.isBluetoothEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             } else {

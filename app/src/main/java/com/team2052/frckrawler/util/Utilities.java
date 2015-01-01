@@ -247,4 +247,33 @@ public class Utilities {
             return compiledMetricValues;
         }
     }
+
+    /**
+     * @author Adam
+     * @since 12/9/2014.
+     */
+    public static class BluetoothUtil {
+
+        @Nullable
+        public static BluetoothAdapter getBluetoothAdapter() {
+            return BluetoothAdapter.getDefaultAdapter();
+        }
+
+        public static boolean hasBluetoothAdapter() {
+            return BluetoothAdapter.getDefaultAdapter() != null;
+        }
+
+        @Nullable
+        public static BluetoothDevice getDevice(String address) {
+            if (!hasBluetoothAdapter())
+                return null;
+            return getBluetoothAdapter().getRemoteDevice(address);
+        }
+
+        public static boolean isBluetoothEnabled() {
+            return hasBluetoothAdapter() && getBluetoothAdapter().isEnabled();
+        }
+
+
+    }
 }

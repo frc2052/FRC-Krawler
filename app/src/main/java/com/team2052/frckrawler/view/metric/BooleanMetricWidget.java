@@ -67,7 +67,7 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
 
     @Override
     public MetricValue getMetricValue() {
-        JsonObject jsonObject =new JsonObject();
+        JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("value", value);
         return new MetricValue(getMetric(), JSON.getGson().toJson(jsonObject));
     }

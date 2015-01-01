@@ -11,8 +11,8 @@ import android.view.View;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.SetupFragmentAdapter;
-import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.LogHelper;
+import com.team2052.frckrawler.util.Utilities;
 import com.team2052.frckrawler.view.DisableSwipeViewPager;
 
 import butterknife.ButterKnife;
@@ -74,8 +74,8 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.welcome_next_page:
-                LogHelper.info(String.valueOf(BluetoothUtil.isBluetoothEnabled()));
-                if (BluetoothUtil.isBluetoothEnabled()) {
+                LogHelper.info(String.valueOf(Utilities.BluetoothUtil.isBluetoothEnabled()));
+                if (Utilities.BluetoothUtil.isBluetoothEnabled()) {
                     pager.setCurrentItem(2);
                 } else {
                     pager.advanceToNextPage();

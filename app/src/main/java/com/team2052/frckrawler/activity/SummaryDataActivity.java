@@ -12,7 +12,7 @@ import com.team2052.frckrawler.database.CompiledMetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.elements.SimpleListElement;
+import com.team2052.frckrawler.listitems.elements.CompiledMetricListElement;
 import com.team2052.frckrawler.util.Utilities;
 
 import java.util.ArrayList;
@@ -54,10 +54,11 @@ public class SummaryDataActivity extends ListActivity {
 
         final float compileWeight;
 
-        public GetCompiledData(){
+        public GetCompiledData() {
             this.compileWeight = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0).getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
 
         }
+
         @Override
         protected List<CompiledMetricValue> doInBackground(Void... params) {
             return Utilities.MetricCompiler.getCompiledMetric(mEvent, mMetric, mDaoSession, compileWeight);
@@ -67,7 +68,7 @@ public class SummaryDataActivity extends ListActivity {
         protected void onPostExecute(List<CompiledMetricValue> compiledMetricValues) {
             List<ListItem> listItems = new ArrayList<>();
             for (CompiledMetricValue metricValue : compiledMetricValues) {
-                listItems.add(new SimpleListElement(metricValue.robot.getTeam().getNumber() + " - " + metricValue.compiledValue, Long.toString(metricValue.robot.getTeam().getNumber())));
+                listItems.add(new CompiledMetricListElement(metricValue));
             }
             mListView.setAdapter(mAdapter = new ListViewAdapter(SummaryDataActivity.this, listItems));
         }

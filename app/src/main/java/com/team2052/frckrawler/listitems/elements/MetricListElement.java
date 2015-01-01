@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.gson.JsonElement;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListElement;

@@ -35,17 +35,17 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="false"
         android:layout_centerVertical="true"
-        android:text="Value" />
+        android:text="10" />
 
     <TextView
         android:id="@+id/min"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/sliderVal"
-        android:layout_alignParentLeft="false"
         android:layout_below="@+id/sliderVal"
-        android:text="Min"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:text="0"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginLeft="8dp"/>
 
     <TextView
         android:id="@+id/max"
@@ -53,7 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/sliderVal"
         android:layout_below="@+id/sliderVal"
-        android:text="Max"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:text="10"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginRight="8dp"/>
 
 </RelativeLayout>

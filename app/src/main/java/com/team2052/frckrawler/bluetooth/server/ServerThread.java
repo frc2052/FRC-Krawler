@@ -13,7 +13,7 @@ import com.team2052.frckrawler.bluetooth.ScoutPackage;
 import com.team2052.frckrawler.bluetooth.ServerPackage;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.util.BluetoothUtil;
+import com.team2052.frckrawler.util.Utilities;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +39,7 @@ public class ServerThread extends Thread {
         serverSocket = null;
         server = Server.getInstance(c);
         mDaoSession = ((FRCKrawler) c.getApplicationContext()).getDaoSession();
-        mBluetoothAdapter = BluetoothUtil.getBluetoothAdapter();
+        mBluetoothAdapter = Utilities.BluetoothUtil.getBluetoothAdapter();
     }
 
     @Override
