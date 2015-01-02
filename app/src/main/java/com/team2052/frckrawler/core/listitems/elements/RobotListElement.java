@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.core.listitems.ListElement;
+import com.team2052.frckrawler.db.Robot;
 
 /**
  * @author Adam

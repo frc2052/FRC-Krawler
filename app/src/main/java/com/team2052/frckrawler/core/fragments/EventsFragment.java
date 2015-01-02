@@ -18,15 +18,15 @@ import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.activities.EventInfoActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
 import com.team2052.frckrawler.core.database.DBManager;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.EventDao;
-import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.core.fragments.dialog.AddEventDialogFragment;
 import com.team2052.frckrawler.core.fragments.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.core.listeners.FABButtonListener;
 import com.team2052.frckrawler.core.listitems.ListElement;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.elements.EventListElement;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.EventDao;
+import com.team2052.frckrawler.db.Game;
 
 import java.util.ArrayList;
 import java.util.List;

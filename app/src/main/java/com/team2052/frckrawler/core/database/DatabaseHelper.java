@@ -3,8 +3,8 @@ package com.team2052.frckrawler.core.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.core.util.LogHelper;
+import com.team2052.frckrawler.db.DaoMaster;
 
 /**
  * @author Adam

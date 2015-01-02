@@ -15,17 +15,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.client.LoginHandler;
 import com.team2052.frckrawler.client.background.PopulatePitMetricsTask;
 import com.team2052.frckrawler.client.background.PopulatePitRobotsTask;
 import com.team2052.frckrawler.client.background.SavePitMetricsTask;
-import com.team2052.frckrawler.client.LoginHandler;
+import com.team2052.frckrawler.client.events.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.core.database.MetricValue;
+import com.team2052.frckrawler.core.ui.metric.MetricWidget;
+import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
-import com.team2052.frckrawler.client.events.ScoutSyncSuccessEvent;
-import com.team2052.frckrawler.core.util.Utilities;
-import com.team2052.frckrawler.core.ui.metric.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,13 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
+import com.team2052.frckrawler.core.listeners.ListUpdateListener;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.core.listeners.ListUpdateListener;
 
 import java.util.Date;
 

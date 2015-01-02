@@ -8,8 +8,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
-import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.db.Event;
 
 public class ServerService extends Service {

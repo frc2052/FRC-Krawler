@@ -8,10 +8,10 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.TextView;
 
-import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.db.Game;
+import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.listeners.ListUpdateListener;
+import com.team2052.frckrawler.db.Game;
 
 /**
  * @author Adam

@@ -12,9 +12,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.db.RobotPhoto;
-import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.core.ui.SquareImageView;
+import com.team2052.frckrawler.core.util.LogHelper;
+import com.team2052.frckrawler.db.RobotPhoto;
 
 import java.util.Date;
 import java.util.List;

@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
 import com.team2052.frckrawler.core.database.MetricValue;
-import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.core.util.Utilities;
+import com.team2052.frckrawler.db.Metric;
 
 public abstract class MetricWidget extends FrameLayout {
 

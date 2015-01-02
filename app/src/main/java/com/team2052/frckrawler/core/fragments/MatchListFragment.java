@@ -11,14 +11,14 @@ import com.google.gson.JsonElement;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.db.MatchDao;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.items.MatchListItem;
 import com.team2052.frckrawler.core.tba.HTTP;
 import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.core.tba.TBA;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.db.MatchDao;
 
 import java.util.ArrayList;
 import java.util.List;

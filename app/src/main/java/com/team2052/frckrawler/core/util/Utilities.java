@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.core.database.CompiledMetricValue;
 import com.team2052.frckrawler.core.database.MetricValue;
+import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
@@ -25,7 +26,6 @@ import com.team2052.frckrawler.db.PitDataDao;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
-import com.team2052.frckrawler.core.tba.JSON;
 
 import java.util.ArrayList;
 import java.util.List;

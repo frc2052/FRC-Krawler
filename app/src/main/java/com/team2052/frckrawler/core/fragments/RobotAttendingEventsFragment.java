@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
+import com.team2052.frckrawler.core.listitems.ListItem;
+import com.team2052.frckrawler.core.listitems.elements.EventListElement;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
-import com.team2052.frckrawler.core.listitems.ListItem;
-import com.team2052.frckrawler.core.listitems.elements.EventListElement;
 
 import java.util.ArrayList;
 import java.util.List;

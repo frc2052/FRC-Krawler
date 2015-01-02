@@ -10,15 +10,15 @@ import android.widget.AdapterView;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.activities.RobotActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
+import com.team2052.frckrawler.core.listitems.ListElement;
+import com.team2052.frckrawler.core.listitems.ListItem;
+import com.team2052.frckrawler.core.listitems.elements.RobotListElement;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotDao;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.core.listitems.ListElement;
-import com.team2052.frckrawler.core.listitems.ListItem;
-import com.team2052.frckrawler.core.listitems.elements.RobotListElement;
 
 import java.util.ArrayList;
 import java.util.Collections;

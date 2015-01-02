@@ -15,18 +15,18 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.client.LoginHandler;
 import com.team2052.frckrawler.client.background.PopulateMatchMetricsTask;
 import com.team2052.frckrawler.client.background.PopulateMatchScoutTask;
 import com.team2052.frckrawler.client.background.SaveMatchMetricsTask;
-import com.team2052.frckrawler.client.LoginHandler;
+import com.team2052.frckrawler.client.events.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.MetricValue;
+import com.team2052.frckrawler.core.ui.metric.MetricWidget;
+import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.client.events.ScoutSyncSuccessEvent;
-import com.team2052.frckrawler.core.util.Utilities;
-import com.team2052.frckrawler.core.ui.metric.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -153,7 +153,9 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncSuccessEvent event) {
         loadAllData(Utilities.ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
-    }    @Override
+    }
+
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Match match = mMatches.get(mMatchSpinner.getSelectedItemPosition());
         mTeams = DBManager.getInstance(getActivity(), mDaoSession).getTeamsForMatch(match);
@@ -163,7 +165,6 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         }
         mAllianceSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, Arrays.copyOf(teamNumbers.toArray(), teamNumbers.size(), String[].class)));
     }
-
 
 
     @Override

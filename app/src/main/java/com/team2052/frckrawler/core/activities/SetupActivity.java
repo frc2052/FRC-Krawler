@@ -8,12 +8,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
-import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.core.adapters.SetupFragmentAdapter;
+import com.team2052.frckrawler.core.ui.DisableSwipeViewPager;
 import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.core.util.Utilities;
-import com.team2052.frckrawler.core.ui.DisableSwipeViewPager;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

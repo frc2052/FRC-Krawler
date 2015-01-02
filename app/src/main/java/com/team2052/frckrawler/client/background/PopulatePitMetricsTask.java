@@ -5,6 +5,9 @@ import android.support.v4.app.FragmentActivity;
 
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.MetricValue;
+import com.team2052.frckrawler.core.fragments.ScoutPitFragment;
+import com.team2052.frckrawler.core.ui.metric.MetricWidget;
+import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
@@ -12,9 +15,6 @@ import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.PitDataDao;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.core.fragments.ScoutPitFragment;
-import com.team2052.frckrawler.core.util.Utilities;
-import com.team2052.frckrawler.core.ui.metric.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.List;

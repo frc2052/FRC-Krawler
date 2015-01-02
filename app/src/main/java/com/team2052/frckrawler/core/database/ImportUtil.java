@@ -1,6 +1,10 @@
 package com.team2052.frckrawler.core.database;
 
 import com.google.gson.JsonObject;
+import com.team2052.frckrawler.core.tba.HTTP;
+import com.team2052.frckrawler.core.tba.JSON;
+import com.team2052.frckrawler.core.tba.TBA;
+import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
@@ -8,10 +12,6 @@ import com.team2052.frckrawler.db.RobotDao;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.core.tba.HTTP;
-import com.team2052.frckrawler.core.tba.JSON;
-import com.team2052.frckrawler.core.tba.TBA;
-import com.team2052.frckrawler.core.util.LogHelper;
 
 import java.io.File;
 import java.io.FileReader;

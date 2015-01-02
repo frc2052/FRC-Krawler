@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
-import com.team2052.frckrawler.db.Contact;
-import com.team2052.frckrawler.db.ContactDao;
-import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.core.fragments.dialog.AddContactDialogFragment;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.elements.ContactListElement;
+import com.team2052.frckrawler.db.Contact;
+import com.team2052.frckrawler.db.ContactDao;
+import com.team2052.frckrawler.db.Team;
 
 import java.util.ArrayList;
 import java.util.List;

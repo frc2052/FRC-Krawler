@@ -5,15 +5,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
 import com.team2052.frckrawler.core.database.CompiledMetricValue;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.elements.CompiledMetricListElement;
 import com.team2052.frckrawler.core.util.Utilities;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Metric;
 
 import java.util.ArrayList;
 import java.util.List;

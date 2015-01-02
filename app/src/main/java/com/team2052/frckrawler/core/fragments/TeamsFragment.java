@@ -9,11 +9,11 @@ import android.widget.AdapterView;
 
 import com.team2052.frckrawler.core.activities.TeamInfoActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
-import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.db.TeamDao;
 import com.team2052.frckrawler.core.listitems.ListElement;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.elements.TeamListElement;
+import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.db.TeamDao;
 
 import java.util.ArrayList;
 import java.util.List;

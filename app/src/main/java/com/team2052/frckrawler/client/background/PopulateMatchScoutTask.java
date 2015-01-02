@@ -5,11 +5,11 @@ import android.os.AsyncTask;
 import android.widget.ArrayAdapter;
 
 import com.team2052.frckrawler.core.FRCKrawler;
+import com.team2052.frckrawler.core.fragments.ScoutMatchFragment;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.MatchDao;
-import com.team2052.frckrawler.core.fragments.ScoutMatchFragment;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -10,13 +10,13 @@ import android.widget.AdapterView;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.activities.SummaryDataActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.core.listitems.ListElement;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.elements.MetricListElement;
 import com.team2052.frckrawler.core.util.LogHelper;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
 
 import java.util.ArrayList;
 import java.util.List;

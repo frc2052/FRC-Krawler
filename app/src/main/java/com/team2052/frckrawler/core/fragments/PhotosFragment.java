@@ -23,10 +23,10 @@ import android.widget.GridView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.adapters.RobotPhotoAdapter;
+import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotPhoto;
 import com.team2052.frckrawler.db.RobotPhotoDao;
-import com.team2052.frckrawler.core.util.LogHelper;
 
 import java.io.File;
 import java.io.IOException;

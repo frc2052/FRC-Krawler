@@ -8,16 +8,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.core.adapters.ScoutPagerAdapter;
 import com.team2052.frckrawler.client.LoginHandler;
 import com.team2052.frckrawler.client.ScoutSyncHandler;
-import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.client.events.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.client.events.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.client.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.client.events.ScoutSyncSuccessEvent;
+import com.team2052.frckrawler.core.adapters.ScoutPagerAdapter;
 import com.team2052.frckrawler.core.listitems.items.NavDrawerItem;
 import com.team2052.frckrawler.core.util.Utilities;
+import com.team2052.frckrawler.db.Event;
 
 import de.greenrobot.event.EventBus;
 

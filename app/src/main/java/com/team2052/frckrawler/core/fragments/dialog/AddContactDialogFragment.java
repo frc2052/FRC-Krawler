@@ -8,12 +8,12 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.EditText;
 
-import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
+import com.team2052.frckrawler.core.listeners.ListUpdateListener;
 import com.team2052.frckrawler.db.Contact;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.core.listeners.ListUpdateListener;
 
 /**
  * @author Adam

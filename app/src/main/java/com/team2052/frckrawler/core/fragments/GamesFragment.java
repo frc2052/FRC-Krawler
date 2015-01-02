@@ -15,12 +15,12 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.activities.GameInfoActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
 import com.team2052.frckrawler.core.database.DBManager;
-import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.core.fragments.dialog.AddGameDialogFragment;
 import com.team2052.frckrawler.core.listeners.ListUpdateListener;
 import com.team2052.frckrawler.core.listitems.ListElement;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.elements.GameListElement;
+import com.team2052.frckrawler.db.Game;
 
 import java.util.ArrayList;
 import java.util.List;

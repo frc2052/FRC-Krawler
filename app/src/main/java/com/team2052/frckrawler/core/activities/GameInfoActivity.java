@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.core.fragments.EventsFragment;
 import com.team2052.frckrawler.core.fragments.MetricsFragment;
 import com.team2052.frckrawler.core.listeners.FABButtonListener;
 import com.team2052.frckrawler.core.util.Utilities;
+import com.team2052.frckrawler.db.Game;
 
 /**
  * @author Adam

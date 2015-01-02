@@ -21,13 +21,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.GlobalValues;
-import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.server.Server;
 import com.team2052.frckrawler.core.database.ExportUtil;
-import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.core.util.LogHelper;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.server.Server;
 
 import java.io.File;
 import java.io.IOException;

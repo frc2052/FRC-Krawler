@@ -6,22 +6,20 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.team2052.frckrawler.core.FRCKrawler;
-import com.team2052.frckrawler.core.BluetoothInfo;
-import com.team2052.frckrawler.server.ServerPackage;
-import com.team2052.frckrawler.server.Server;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.client.events.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.client.events.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.client.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.client.events.ScoutSyncSuccessEvent;
+import com.team2052.frckrawler.core.BluetoothInfo;
+import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.util.LogHelper;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.server.Server;
+import com.team2052.frckrawler.server.ServerPackage;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.UUID;
 
 import de.greenrobot.event.EventBus;
@@ -66,16 +64,14 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
                 return SYNC_CANCELLED;
 
             //Open the streams
-            InputStream inStream = serverSocket.getInputStream();
-            ObjectInputStream ioStream = new ObjectInputStream(inStream);
-            OutputStream outStream = serverSocket.getOutputStream();
-            ObjectOutputStream ooStream = new ObjectOutputStream(outStream);
+            ObjectInputStream ioStream = new ObjectInputStream(serverSocket.getInputStream());
+            ObjectOutputStream ooStream = new ObjectOutputStream(serverSocket.getOutputStream());
 
             if (isCancelled())
                 return SYNC_CANCELLED;
 
             //Write the scout data
-            ooStream.writeInt(BluetoothInfo.SCOUT);
+            ooStream.writeInt(BluetoothInfo.ConnectionType.SCOUT_SYNC.ordinal());
             ooStream.writeObject(new ServerPackage(mDaoSession));
             ooStream.flush();
 
@@ -88,7 +84,6 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             ((ScoutPackage) ioStream.readObject()).save(mDaoSession, context);
             //Close the streams
             ooStream.close();
-            outStream.close();
             serverSocket.close();
             Log.d("FRCKrawler", "Time: " + (System.currentTimeMillis() - startTime));
         } catch (IOException e) {

@@ -6,12 +6,12 @@ import android.widget.ArrayAdapter;
 
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.MetricValue;
+import com.team2052.frckrawler.core.fragments.ScoutPitFragment;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.core.fragments.ScoutPitFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.core.util.Utilities;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.Robot;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

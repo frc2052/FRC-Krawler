@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.client.LoginHandler;
+import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;

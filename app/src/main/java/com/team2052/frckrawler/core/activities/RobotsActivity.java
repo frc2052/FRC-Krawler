@@ -6,11 +6,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
+import com.team2052.frckrawler.core.listitems.ListItem;
+import com.team2052.frckrawler.core.listitems.elements.SimpleListElement;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
-import com.team2052.frckrawler.core.listitems.ListItem;
-import com.team2052.frckrawler.core.listitems.elements.SimpleListElement;
 
 import java.util.ArrayList;
 import java.util.Collections;

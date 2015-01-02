@@ -5,6 +5,9 @@ import android.os.AsyncTask;
 
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.MetricValue;
+import com.team2052.frckrawler.core.fragments.ScoutMatchFragment;
+import com.team2052.frckrawler.core.ui.metric.MetricWidget;
+import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
@@ -17,9 +20,6 @@ import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotDao;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.core.fragments.ScoutMatchFragment;
-import com.team2052.frckrawler.core.util.Utilities;
-import com.team2052.frckrawler.core.ui.metric.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.List;

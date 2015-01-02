@@ -18,14 +18,14 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
 import com.team2052.frckrawler.core.database.DBManager;
-import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.core.fragments.dialog.AddMetricFragment;
 import com.team2052.frckrawler.core.listeners.FABButtonListener;
 import com.team2052.frckrawler.core.listitems.ListElement;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.elements.MetricListElement;
+import com.team2052.frckrawler.db.Game;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
 
 import java.util.ArrayList;
 import java.util.List;

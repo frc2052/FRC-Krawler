@@ -8,8 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 
-import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.core.fragments.GamesFragment;
 import com.team2052.frckrawler.core.fragments.ServerFragment;
 import com.team2052.frckrawler.core.fragments.TeamsFragment;

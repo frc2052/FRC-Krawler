@@ -13,12 +13,12 @@ import android.widget.AdapterView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
-import com.team2052.frckrawler.db.User;
 import com.team2052.frckrawler.core.fragments.dialog.AddUserDialogFragment;
 import com.team2052.frckrawler.core.fragments.dialog.EditUserDialogFragment;
 import com.team2052.frckrawler.core.listitems.ListElement;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.elements.UserListElement;
+import com.team2052.frckrawler.db.User;
 
 import java.util.ArrayList;
 import java.util.List;

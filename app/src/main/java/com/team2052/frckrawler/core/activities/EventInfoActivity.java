@@ -10,10 +10,10 @@ import android.support.v4.view.PagerAdapter;
 import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.core.fragments.MatchListFragment;
 import com.team2052.frckrawler.core.fragments.RobotsFragment;
 import com.team2052.frckrawler.core.fragments.SummaryFragment;
+import com.team2052.frckrawler.db.Event;
 
 /**
  * @author Adam

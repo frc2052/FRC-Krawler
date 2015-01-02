@@ -8,9 +8,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.core.fragments.PhotosFragment;
 import com.team2052.frckrawler.core.fragments.RobotAttendingEventsFragment;
+import com.team2052.frckrawler.db.Robot;
 
 /**
  * @author Adam

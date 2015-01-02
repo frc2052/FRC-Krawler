@@ -20,8 +20,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.core.adapters.NavDrawerAdataper;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.items.NavDrawerItem;

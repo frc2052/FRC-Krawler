@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.core.database;
 
+import com.team2052.frckrawler.core.util.LogHelper;
+import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchComment;
@@ -8,8 +10,6 @@ import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
-import com.team2052.frckrawler.core.util.LogHelper;
-import com.team2052.frckrawler.core.util.Utilities;
 
 import java.io.File;
 import java.io.FileWriter;

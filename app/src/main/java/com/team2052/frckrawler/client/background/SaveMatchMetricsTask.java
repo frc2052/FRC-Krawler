@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.client.LoginHandler;
+import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
@@ -61,6 +61,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
             MatchData currentData = matchDataQueryBuilder.unique();
             MatchData matchData = new MatchData(null, metricValue.getValue(), robot.getId(), metricValue.getMetric().getId(), mMatch.getId(), LoginHandler.getInstance(context, mDaoSession).getLoggedOnUser().getId(), mEvent.getId());
+
 
             if (currentData != null) {
                 currentData.setData(matchData.getData());

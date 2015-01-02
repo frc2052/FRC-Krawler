@@ -6,10 +6,10 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.db.EventDao;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.TeamDao;
-import com.team2052.frckrawler.core.tba.JSON;
 
 import java.lang.reflect.Type;
 
