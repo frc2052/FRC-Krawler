@@ -36,7 +36,6 @@ public class CompiledMetricValue {
     }
 
     private void compileMetricValues() {
-        final Gson gson = JSON.getGson();
         switch (metricType) {
             case Utilities.MetricUtil.BOOLEAN:
                 double yes = 0;

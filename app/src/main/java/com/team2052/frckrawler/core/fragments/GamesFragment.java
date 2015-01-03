@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,9 +29,10 @@ import java.util.List;
 public class GamesFragment extends ListFragmentFab implements ListUpdateListener {
 
     public int currentSelectedListItem;
-    private android.support.v7.view.ActionMode currentActionMode;
+    ActionMode currentActionMode;
 
-    android.support.v7.view.ActionMode.Callback callback = new android.support.v7.view.ActionMode.Callback() {
+    ActionMode.Callback callback = new ActionMode.Callback() {
+
         @Override
         public boolean onCreateActionMode(android.support.v7.view.ActionMode mode, Menu menu) {
             long gameId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());

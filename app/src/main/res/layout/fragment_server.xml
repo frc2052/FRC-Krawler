@@ -83,14 +83,14 @@
                     android:layout_below="@+id/share_title"
                     android:orientation="horizontal">
 
-                    <Button
+                    <!--<Button
                         android:id="@+id/dbBackups"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="?attr/selectableItemBackground"
                         android:text="Database Backup"
-                        android:textColor="@color/primary" />
+                        android:textColor="@color/primary" />-->
 
                     <Button
                         android:id="@+id/excel"
@@ -98,7 +98,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="?attr/selectableItemBackground"
-                        android:text="Excel Exporting"
+                        android:text="Excel Export"
                         android:textColor="@color/primary" />
 
                 </LinearLayout>

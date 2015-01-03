@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.core.database;
 
+import android.util.Log;
+
 import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.DaoSession;
@@ -28,7 +30,7 @@ import de.greenrobot.dao.query.QueryBuilder;
  * @since 10/4/2014
  */
 public class ExportUtil {
-    public static void exportEventDataToCSV(Event event, File location, DaoSession daoSession, float compileWeight) {
+    public static File exportEventDataToCSV(Event event, File location, DaoSession daoSession, float compileWeight) {
         final List<Metric> metrics = daoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(event.getGameId())).list();
         List<RobotEvent> robotEvents = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
 
@@ -56,6 +58,7 @@ public class ExportUtil {
                 List<String> record = new ArrayList<>();
                 record.add(String.valueOf(entry.getKey()));
 
+
                 //Comments
                 QueryBuilder<MatchComment> matchCommentQueryBuilder = daoSession.getMatchCommentDao().queryBuilder();
                 matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(event.getId()));
@@ -63,7 +66,7 @@ public class ExportUtil {
                 String comments = "";
 
                 for (MatchComment matchComment : matchCommentQueryBuilder.list()) {
-                    comments += "Match:" + matchComment.getMatch().getNumber() + ": " + matchComment.getComment() + ", ";
+                    comments += "Match " + matchComment.getMatch().getNumber() + ": " + matchComment.getComment() + ", ";
                 }
 
                 record.add(comments);
@@ -76,10 +79,10 @@ public class ExportUtil {
                 writer.writeNext(Arrays.copyOf(record.toArray(), record.size(), String[].class));
             }
 
-            LogHelper.debug("Exported to " + location.getAbsolutePath());
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return location;
     }
 }

@@ -1,17 +1,15 @@
 package com.team2052.frckrawler.core.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.core.database.ExportUtil;
 import com.team2052.frckrawler.core.util.LogHelper;
@@ -32,7 +29,6 @@ import com.team2052.frckrawler.server.Server;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -62,7 +58,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         View v = inflater.inflate(R.layout.fragment_server, null);
         ButterKnife.inject(this, v);
         v.findViewById(R.id.excel).setOnClickListener(this);
-        v.findViewById(R.id.dbBackups).setOnClickListener(this);
+        //v.findViewById(R.id.dbBackups).setOnClickListener(this);
         v.findViewById(R.id.hostToggle).setOnClickListener(this);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         compileWeight.setText(Float.toString(sharedPreferences.getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f)));
@@ -77,24 +73,17 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                 openServer();
                 break;
             case R.id.excel:
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Export to File System?");
-                builder.setNegativeButton("Cancel", null);
-                builder.setPositiveButton("Export", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        new ExportToFileSystem().execute();
-                    }
-                });
-                builder.create().show();
+                if (getSelectedEvent() != null) {
+                    new ExportToFileSystem().execute();
+                }
                 break;
-            case R.id.dbBackups:
+            /*case R.id.dbBackups:
                 try {
                     ((FRCKrawler) getActivity().getApplication()).copyDB(new File(Environment.getExternalStorageDirectory(), "FRCKrawlerBackup-" + DateFormat.getDateFormat(getActivity()).format(new Date()) + ".db"));
                     Toast.makeText(getActivity(), "Made a backup", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
         }
     }
 
@@ -156,7 +145,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, Float.parseFloat(compileWeight.getText().toString())).apply();
     }
 
-    public class ExportToFileSystem extends AsyncTask<Void, Void, Void> {
+    public class ExportToFileSystem extends AsyncTask<Void, Void, File> {
         final float compileWeight;
         File file = null;
 
@@ -165,7 +154,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected File doInBackground(Void... voids) {
             File fileSystem = Environment.getExternalStorageDirectory();
             Event selectedEvent = getSelectedEvent();
 
@@ -182,7 +171,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                         e.printStackTrace();
                     }
                     if (file != null) {
-                        ExportUtil.exportEventDataToCSV(selectedEvent, file, mDaoSession, compileWeight);
+                        return ExportUtil.exportEventDataToCSV(selectedEvent, file, mDaoSession, compileWeight);
                     }
                 }
             }
@@ -191,11 +180,15 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Export Finished");
-            builder.setMessage("Exported as " + file.getName() + "\n" + "We will get file sharing working soon!");
-            builder.create().show();
+        protected void onPostExecute(File file) {
+            if (file != null) {
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                shareIntent.setType("file/csv");
+                startActivity(Intent.createChooser(shareIntent, "Send To"));
+
+            }
         }
     }
 

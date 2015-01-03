@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.listitems.ListElement;
+import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.Metric;
 
@@ -29,7 +31,6 @@ public class MetricListElement extends ListElement {
             descriptionString = metric.getDescription();
         }
 
-        //TODO
         switch (metric.getType()) {
             case Utilities.MetricUtil.BOOLEAN:
                 typeString = "Boolean";
@@ -37,7 +38,8 @@ public class MetricListElement extends ListElement {
                 break;
             case Utilities.MetricUtil.COUNTER:
                 typeString = "Counter";
-                //rangeString = rangeArr[0] + " to " + rangeArr[1] + " Incrementing by " + rangeArr[2];
+                JsonObject jsonObject = JSON.getAsJsonObject(metric.getRange());
+                rangeString = jsonObject.get("min").getAsString() + " to " + jsonObject.get("max").getAsString() + " Incrementing by " + jsonObject.get("inc").getAsString();
                 break;
             case Utilities.MetricUtil.CHOOSER:
                 boolean isFirst = true;

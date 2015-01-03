@@ -68,7 +68,7 @@ public class ContactsFragment extends ListFragmentFab {
             List<ListItem> listItems = new ArrayList<>();
 
             for (Contact contact : contacts) {
-                //TODO List Item
+                //TODO FIX List Item
                 listItems.add(new ContactListElement(contact, ContactsFragment.this));
             }
             mAdapter = new ListViewAdapter(getActivity(), listItems);

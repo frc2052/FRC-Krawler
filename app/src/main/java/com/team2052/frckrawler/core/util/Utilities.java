@@ -186,7 +186,6 @@ public class Utilities {
 
                     for (MatchData matchData : queryBuilder.list()) {
                         if (matchData.getMatch().getEvent().getId().equals(event.getId())) {
-                            LogHelper.debug(matchData.getData() + matchData.getRobotId());
                             metricData.add(new MetricValue(matchData));
                         }
                     }
@@ -227,7 +226,6 @@ public class Utilities {
 
                     for (MatchData matchData : queryBuilder.list()) {
                         if (matchData.getMatch().getEvent().getId().equals(event.getId())) {
-                            LogHelper.debug(matchData.getData() + matchData.getRobotId());
                             metricData.add(new MetricValue(matchData));
                         }
                     }

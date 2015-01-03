@@ -16,6 +16,8 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -67,6 +69,12 @@ public class SummaryDataActivity extends ListActivity {
         @Override
         protected void onPostExecute(List<CompiledMetricValue> compiledMetricValues) {
             List<ListItem> listItems = new ArrayList<>();
+            Collections.sort(compiledMetricValues, new Comparator<CompiledMetricValue>() {
+                @Override
+                public int compare(CompiledMetricValue cmv, CompiledMetricValue cmv1) {
+                    return Double.compare(cmv.getRobot().getTeamId(), cmv1.getRobot().getTeamId());
+                }
+            });
             for (CompiledMetricValue metricValue : compiledMetricValues) {
                 listItems.add(new CompiledMetricListElement(metricValue));
             }

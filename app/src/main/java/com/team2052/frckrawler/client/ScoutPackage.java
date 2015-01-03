@@ -8,6 +8,8 @@ import com.team2052.frckrawler.core.database.Schedule;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.db.MatchComment;
+import com.team2052.frckrawler.db.MatchCommentDao;
 import com.team2052.frckrawler.db.MatchDao;
 import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.MatchDataDao;
@@ -40,6 +42,7 @@ public class ScoutPackage implements Serializable {
     private final List<RobotEvent> robots;
     private final Event event;
     private final List<MatchData> matchData;
+    private final List<MatchComment> matchComments;
 
     public ScoutPackage(DaoSession session, Event event) {
         this.event = event;
@@ -49,6 +52,7 @@ public class ScoutPackage implements Serializable {
         schedule = new Schedule(event, session.getMatchDao().queryDeep("WHERE " + MatchDao.Properties.EventId.columnName + " = " + event.getId()));
         pitData = session.getPitDataDao().queryBuilder().where(PitDataDao.Properties.EventId.eq(event.getId())).list();
         matchData = session.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.EventId.eq(event.getId())).list();
+        matchComments = session.getMatchCommentDao().queryBuilder().where(MatchCommentDao.Properties.EventId.eq(event.getId())).list();
         for (RobotEvent robotEvent : robots) {
             teams.add(robotEvent.getRobot().getTeam());
         }
@@ -85,6 +89,10 @@ public class ScoutPackage implements Serializable {
 
                 for (MatchData matchValues : matchData) {
                     session.insertOrReplace(matchValues);
+                }
+
+                for (MatchComment matchComment : matchComments) {
+                    session.insertOrReplace(matchComment);
                 }
 
                 session.insertOrReplace(event);

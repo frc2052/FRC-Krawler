@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.FRCKrawler;
+import com.team2052.frckrawler.core.activities.HomeActivity;
 import com.team2052.frckrawler.db.Event;
 
 public class ServerService extends Service {
@@ -39,8 +41,17 @@ public class ServerService extends Service {
             b.setContentText("The FRCKrawler server is open for scouts to sync");
             b.setOngoing(true);
             b.setColor(0x5B0000);
+
+            Intent resultIntent = HomeActivity.newInstance(this, R.id.nav_item_server);
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(HomeActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            b.setContentIntent(resultPendingIntent);
+
             NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             m.notify(SERVER_OPEN_ID, b.build());
+
             thread = new ServerThread(this, e);
             new Thread(thread).start();
         }

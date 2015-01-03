@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.client.LoginHandler;
@@ -18,6 +19,7 @@ import com.team2052.frckrawler.core.adapters.ScoutPagerAdapter;
 import com.team2052.frckrawler.core.listitems.items.NavDrawerItem;
 import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.server.Server;
 
 import de.greenrobot.event.EventBus;
 
@@ -91,11 +93,15 @@ public class ScoutActivity extends ViewPagerActivity {
     public void onNavDrawerItemClicked(NavDrawerItem item) {
         int id = item.getId();
         if (id != R.id.nav_item_scout) {
-            HomeActivity.newInstance(this, id);
+            startActivity(HomeActivity.newInstance(this, id));
         }
     }
 
     private void handleSyncButton() {
+        if (Server.getInstance(this).isOpen()) {
+            Toast.makeText(this, "You cannot sync with a server if you are running a server", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (Utilities.BluetoothUtil.hasBluetoothAdapter()) {
             if (!Utilities.BluetoothUtil.isBluetoothEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);

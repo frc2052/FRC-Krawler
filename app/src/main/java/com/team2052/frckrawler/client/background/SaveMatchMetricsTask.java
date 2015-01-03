@@ -83,7 +83,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         if (currentData != null) {
             currentData.setComment(matchComment.getComment());
             currentData.update();
-        } else {
+        } else if (!mComment.isEmpty()) {
             mDaoSession.insert(matchComment);
         }
 

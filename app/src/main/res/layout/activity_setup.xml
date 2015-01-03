@@ -17,15 +17,15 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
-            android:fontFamily="sans-serif-light"
+            style="@style/TextHeader"
             android:textColor="@color/body_text_1"
             android:text="Welcome to\n FRC Krawler"
-            android:textSize="35sp" />
+            android:textSize="40sp" />
 
         <ImageView
             android:id="@+id/welcome_logo"
             android:layout_width="match_parent"
-            android:layout_height="225dp"
+            android:layout_height="300dp"
             android:layout_below="@+id/textView"
             android:layout_centerHorizontal="true"
             android:src="@drawable/splash_logo" />
@@ -37,7 +37,8 @@
             android:layout_below="@id/welcome_logo"
             android:gravity="center_horizontal"
             android:paddingLeft="10dp"
-            style="@style/TextBody"
+            style="@style/TextHeader"
+            android:textSize="14sp"
             android:paddingRight="10dp"
             android:text="@string/welcome_message" />
 

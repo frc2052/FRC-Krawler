@@ -33,18 +33,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".core.activities.HomeActivity" />
         </activity>
-        <activity android:name="org.acra.CrashReportDialog" />
-        <activity android:name=".core.activities.HomeActivity" />
+        <activity android:name=".core.activities.HomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".core.activities.EventInfoActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".core.activities.GameInfoActivity" />
         </activity>
         <activity android:name=".core.activities.SetupActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--TODO FINISH SETUP UTILITY-->
         </activity>
         <activity android:name=".core.activities.ScoutActivity"></activity>
 
