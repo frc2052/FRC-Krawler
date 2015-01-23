@@ -14,6 +14,8 @@ import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 
+import org.acra.ACRA;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -73,8 +75,10 @@ public class ServerThread extends Thread {
                     Log.d("FRCKrawler", "Synced in: " + (System.currentTimeMillis() - startTime) + "ms");
                 } catch (IOException e) {
                     e.printStackTrace();
+                    ACRA.getErrorReporter().handleException(e);
                     ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(ServerCallbackHandler.SYNC_ONGOING_ID);
                 } catch (ClassNotFoundException e) {
+                    ACRA.getErrorReporter().handleException(e);
                     e.printStackTrace();
                 }
             }

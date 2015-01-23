@@ -96,7 +96,7 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         List<MetricValue> metricValues = new ArrayList<>();
         //Get Widgets
         for (int i = 0; i < mMetricList.getChildCount(); i++) {
-            metricValues.add(((MetricWidget) mMetricList.getChildAt(i)).getMetricValue());
+            metricValues.add(((MetricWidget) mMetricList.getChildAt(i)).getValue());
         }
         mSaveTask = new SaveMatchMetricsTask(getActivity(), mEvent, team, match, metricValues, comment);
         mSaveTask.execute();

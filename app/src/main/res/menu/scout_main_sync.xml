@@ -7,4 +7,7 @@
         android:icon="@drawable/ic_navigation_refresh"
         android:title="Sync"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/reset_server_device"
+        android:title="Reset server device"/>
 </menu>

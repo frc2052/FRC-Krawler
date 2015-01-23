@@ -1,12 +1,12 @@
 package com.team2052.frckrawler.core.ui.metric;
 
 import android.content.Context;
-import android.os.Parcelable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.database.MetricValue;
@@ -51,24 +51,10 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
         }
     }
 
-
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof MetricWidgetSavedState)) {
-            super.onRestoreInstanceState(state);
-            return;
-        }
-
-        MetricWidgetSavedState ss = (MetricWidgetSavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
-
-        value = Boolean.parseBoolean(ss.value);
-    }
-
-    @Override
-    public MetricValue getMetricValue() {
+    public JsonElement getData() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("value", value);
-        return new MetricValue(getMetric(), JSON.getGson().toJson(jsonObject));
+        return jsonObject;
     }
 }

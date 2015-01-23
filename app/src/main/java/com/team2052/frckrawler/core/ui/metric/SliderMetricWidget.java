@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.database.MetricValue;
@@ -68,22 +69,11 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof MetricWidgetSavedState)) {
-            super.onRestoreInstanceState(state);
-            return;
-        }
-
-        MetricWidgetSavedState ss = (MetricWidgetSavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
-
-        value = Integer.parseInt(ss.value);
-    }
-
-    @Override
-    public MetricValue getMetricValue() {
+    public JsonElement getData() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("value", value);
-        return new MetricValue(getMetric(), JSON.getGson().toJson(jsonObject));
+        return jsonObject;
     }
+
+
 }

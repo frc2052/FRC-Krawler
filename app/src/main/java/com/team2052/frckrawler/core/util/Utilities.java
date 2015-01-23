@@ -11,6 +11,7 @@ import android.util.TypedValue;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.core.GlobalValues;
+import com.team2052.frckrawler.core.activities.ScoutActivity;
 import com.team2052.frckrawler.core.database.CompiledMetricValue;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.tba.JSON;
@@ -112,6 +113,12 @@ public class Utilities {
             return null;
         }
 
+        public static void resetSyncDevice(Context context) {
+            SharedPreferences prefs = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+            SharedPreferences.Editor prefsEditor = prefs.edit();
+            prefsEditor.putString(GlobalValues.MAC_ADRESS_PREF, "null");
+            prefsEditor.apply();
+        }
     }
 
     /**
@@ -123,6 +130,7 @@ public class Utilities {
         public static final int COUNTER = 1;
         public static final int SLIDER = 2;
         public static final int CHOOSER = 3;
+        public static final int TIMER = 4;
 
         public static Metric createBooleanMetric(Game game, MetricType metricCategory, String name, String description) {
 
@@ -156,6 +164,10 @@ public class Utilities {
             }
 
             return new Metric(null, name, metricCategory.ordinal(), description, CHOOSER, JSON.getGson().toJson(range), game.getId());
+        }
+
+        public static Metric createTimerMetric(Game game, MetricType metricCategory, String name, String description){
+            return new Metric(null, name, metricCategory.ordinal(), description, TIMER, null, game.getId());
         }
 
         public static enum MetricType {

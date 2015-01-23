@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.core.ui.metric;
 
 import android.content.Context;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -73,30 +72,9 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof MetricWidgetSavedState)) {
-            super.onRestoreInstanceState(state);
-            return;
-        }
-
-        MetricWidgetSavedState ss = (MetricWidgetSavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
-
-        int selectedPos = 0;
-
-        for (int i = 0; i < range.size(); i++) {
-            adapter.add(range.get(i));
-            if (value != null && value.equals(range.get(i)))
-                selectedPos = i;
-        }
-
-        chooserSpinner.setSelection(selectedPos);
-    }
-
-    @Override
-    public MetricValue getMetricValue() {
+    public JsonElement getData() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("value", value);
-        return new MetricValue(getMetric(), JSON.getGson().toJson(jsonObject));
+        return jsonObject;
     }
 }

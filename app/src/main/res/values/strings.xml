@@ -8,6 +8,7 @@
         <item>Counter</item>
         <item>Slider</item>
         <item>Chooser</item>
+        <item>Timer</item>
     </string-array>
     <string name="team_number">Team Number</string>
     <string name="name">FRC Krawler Scouting System</string>
@@ -50,12 +51,12 @@
     <string-array name="robot_tab_titles">
         <!--<item>Info</item>-->
         <item>Events</item>
-        <item>Photos</item>
+        <!--<item>Photos</item>-->
     </string-array>
 
     <string-array name="team_tab_titles">
-        <item>Info</item>
+       <!-- <item>Info</item>-->
         <item>Robots</item>
-        <item>Contacts</item>
+        <!--<item>Contacts</item>-->
     </string-array>
 </resources>

@@ -17,6 +17,8 @@ import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.server.Server;
 import com.team2052.frckrawler.server.ServerPackage;
 
+import org.acra.ACRA;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -59,40 +61,30 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             long startTime = System.currentTimeMillis();
             BluetoothSocket serverSocket = dev[0].createRfcommSocketToServiceRecord(UUID.fromString(BluetoothInfo.UUID));
             serverSocket.connect();
-
             if (isCancelled())
                 return SYNC_CANCELLED;
-
             //Open the streams
             ObjectInputStream ioStream = new ObjectInputStream(serverSocket.getInputStream());
             ObjectOutputStream ooStream = new ObjectOutputStream(serverSocket.getOutputStream());
-
             if (isCancelled())
                 return SYNC_CANCELLED;
-
             //Write the scout data
             ooStream.writeInt(BluetoothInfo.ConnectionType.SCOUT_SYNC.ordinal());
             ooStream.writeObject(new ServerPackage(mDaoSession));
             ooStream.flush();
-
             deleteAllData();
-
             if (isCancelled())
                 return SYNC_CANCELLED;
-
-            //Bulk Insert
             ((ScoutPackage) ioStream.readObject()).save(mDaoSession, context);
-            //Close the streams
             ooStream.close();
             serverSocket.close();
-            Log.d("FRCKrawler", "Time: " + (System.currentTimeMillis() - startTime));
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("FRCKrawler", "Scout not synced, I/O mErrorView.");
+            ACRA.getErrorReporter().handleException(e);
             return SYNC_ERROR;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            Log.e("FRCKrawler", "Scout not synced, class not found.");
+            ACRA.getErrorReporter().handleException(e);
             return SYNC_ERROR;
         }
         return SYNC_SUCCESS;

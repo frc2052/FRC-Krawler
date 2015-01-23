@@ -92,35 +92,43 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
         mCurrentSelectedMetricType = position;
         switch (position) {
             case Utilities.MetricUtil.COUNTER:
-                mMinimum.setEnabled(true);
-                mMaximum.setEnabled(true);
-                mIncrementation.setEnabled(true);
+                mMinimum.setVisibility(View.VISIBLE);
+                mMaximum.setVisibility(View.VISIBLE);
+                mIncrementation.setVisibility(View.VISIBLE);
                 mListEditor.removeAllViews();
                 mDivider.setVisibility(View.GONE);
                 mListHeader.setVisibility(View.GONE);
                 break;
             case Utilities.MetricUtil.SLIDER:
-                mMinimum.setEnabled(true);
-                mMaximum.setEnabled(true);
-                mIncrementation.setEnabled(false);
+                mMinimum.setVisibility(View.VISIBLE);
+                mMaximum.setVisibility(View.VISIBLE);
+                mIncrementation.setVisibility(View.GONE);
                 mListEditor.removeAllViews();
                 mDivider.setVisibility(View.GONE);
                 mListHeader.setVisibility(View.GONE);
                 break;
             case Utilities.MetricUtil.CHOOSER:
-                mMinimum.setEnabled(false);
-                mMaximum.setEnabled(false);
-                mIncrementation.setEnabled(false);
+                mMinimum.setVisibility(View.GONE);
+                mMaximum.setVisibility(View.INVISIBLE);
+                mIncrementation.setVisibility(View.GONE);
                 list = new TextListEditor(getActivity());
                 mListEditor.removeAllViews();
                 mListEditor.addView(list);
                 mDivider.setVisibility(View.VISIBLE);
                 mListHeader.setVisibility(View.VISIBLE);
                 break;
+            case Utilities.MetricUtil.TIMER:
+                mMinimum.setVisibility(View.GONE);
+                mMaximum.setVisibility(View.INVISIBLE);
+                mIncrementation.setVisibility(View.GONE);
+                mListEditor.removeAllViews();
+                mDivider.setVisibility(View.GONE);
+                mListHeader.setVisibility(View.GONE);
+                break;
             default:
-                mMinimum.setEnabled(false);
-                mMaximum.setEnabled(false);
-                mIncrementation.setEnabled(false);
+                mMinimum.setVisibility(View.GONE);
+                mMaximum.setVisibility(View.GONE);
+                mIncrementation.setVisibility(View.GONE);
                 mListEditor.removeAllViews();
                 mDivider.setVisibility(View.GONE);
                 mListHeader.setVisibility(View.GONE);
@@ -138,21 +146,24 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
 
     private void saveMetric() {
         Metric m = null;
+        String name = mName.getText().toString();
+        String description = mDescription.getText().toString();
+        
         switch (mCurrentSelectedMetricType) {
             case Utilities.MetricUtil.BOOLEAN:
                 m = Utilities.MetricUtil.createBooleanMetric(
                         mGame,
                         Utilities.MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
-                        mName.getText().toString(),
-                        mDescription.getText().toString());
+                        name,
+                        description);
                 break;
 
             case Utilities.MetricUtil.COUNTER:
                 try {
                     m = Utilities.MetricUtil.createCounterMetric(mGame,
                             Utilities.MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
-                            mName.getText().toString(),
-                            mDescription.getText().toString(),
+                            name,
+                            description,
                             Integer.parseInt(mMinimum.getText().toString()),
                             Integer.parseInt(mMaximum.getText().toString()),
                             Integer.parseInt(mIncrementation.getText().toString()));
@@ -167,8 +178,8 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                     m = Utilities.MetricUtil.createSliderMetric(
                             mGame,
                             Utilities.MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
-                            mName.getText().toString(),
-                            mDescription.getText().toString(),
+                            name,
+                            description,
                             Integer.parseInt(mMinimum.getText().toString()),
                             Integer.parseInt(mMaximum.getText().toString()));
                 } catch (NumberFormatException e) {
@@ -181,11 +192,13 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 m = Utilities.MetricUtil.createChooserMetric(
                         mGame,
                         Utilities.MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
-                        mName.getText().toString(),
-                        mDescription.getText().toString(),
+                        name,
+                        description,
                         list.getValues());
                 break;
-
+            case Utilities.MetricUtil.TIMER:
+                m = Utilities.MetricUtil.createTimerMetric(mGame, Utilities.MetricUtil.MetricType.VALID_TYPES[mMetricCategory], name, description);
+                break;
         }
 
         if (m != null) {

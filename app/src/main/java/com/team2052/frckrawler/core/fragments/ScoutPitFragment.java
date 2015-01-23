@@ -67,7 +67,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
         List<MetricValue> widgets = new ArrayList<>();
 
         for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
-            widgets.add(((MetricWidget) mLinearLayout.getChildAt(i)).getMetricValue());
+            widgets.add(((MetricWidget) mLinearLayout.getChildAt(i)).getValue());
         }
 
         mSaveTask = new SavePitMetricsTask(getActivity(), mEvent, robot, widgets, mComments.getText().toString());

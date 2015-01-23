@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.database.MetricValue;
@@ -66,20 +67,14 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof MetricWidgetSavedState)) {
-            super.onRestoreInstanceState(state);
-            return;
-        }
-
-        MetricWidgetSavedState ss = (MetricWidgetSavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
-
-        value = Integer.parseInt(ss.value);
+    public JsonElement getData() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("value", value);
+        return jsonObject;
     }
 
     @Override
-    public MetricValue getMetricValue() {
+    public MetricValue getValue() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("value", value);
         return new MetricValue(getMetric(), JSON.getGson().toJson(jsonObject));

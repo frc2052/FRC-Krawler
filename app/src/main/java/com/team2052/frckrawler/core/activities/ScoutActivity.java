@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.client.LoginHandler;
 import com.team2052.frckrawler.client.ScoutSyncHandler;
+import com.team2052.frckrawler.client.background.DeleteAllDataTask;
 import com.team2052.frckrawler.client.events.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.client.events.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.client.events.ScoutSyncStartEvent;
@@ -64,6 +65,9 @@ public class ScoutActivity extends ViewPagerActivity {
             case R.id.menu_sync:
                 handleSyncButton();
                 break;
+            case R.id.reset_server_device:
+                Utilities.ScoutUtil.resetSyncDevice(this);
+                new DeleteAllDataTask(mDaoSession).execute();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -102,6 +106,7 @@ public class ScoutActivity extends ViewPagerActivity {
             Toast.makeText(this, "You cannot sync with a server if you are running a server", Toast.LENGTH_SHORT).show();
             return;
         }
+
         if (Utilities.BluetoothUtil.hasBluetoothAdapter()) {
             if (!Utilities.BluetoothUtil.isBluetoothEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);

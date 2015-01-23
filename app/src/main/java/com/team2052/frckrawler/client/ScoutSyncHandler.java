@@ -24,6 +24,7 @@ public class ScoutSyncHandler {
     private final Context context;
 
     private SyncScoutTask syncAsScoutTask = null;
+    private BluetoothDevice mCurrentSyncingDevice;
 
     public ScoutSyncHandler(Context context) {
         this.context = context;
@@ -43,7 +44,7 @@ public class ScoutSyncHandler {
 
     public void startSync(BluetoothDevice device) {
         cancelAllRunningSyncs();
-        Utilities.ScoutUtil.setSyncDevice(context, device);
+        mCurrentSyncingDevice = device;
         syncAsScoutTask = new SyncScoutTask(context);
         syncAsScoutTask.execute(device);
     }
@@ -66,8 +67,10 @@ public class ScoutSyncHandler {
         //Reset task because it isn't running
         syncAsScoutTask = null;
         Utilities.ScoutUtil.setDeviceAsScout(context, true);
+        Utilities.ScoutUtil.setSyncDevice(context, mCurrentSyncingDevice);
         Toast.makeText(context, context.getString(R.string.sync_successful_message), Toast.LENGTH_LONG).show();
         LogHelper.info("SyncHandler: Sync Successful!");
+        mCurrentSyncingDevice = null;
     }
 
     @SuppressWarnings("unused")
@@ -82,7 +85,9 @@ public class ScoutSyncHandler {
                 dialog.dismiss();
             }
         });
+
         builder.show();
+        mCurrentSyncingDevice = null;
     }
 
     public void startScoutSync() {
