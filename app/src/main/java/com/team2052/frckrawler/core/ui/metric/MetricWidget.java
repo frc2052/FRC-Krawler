@@ -4,12 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
+import com.google.gson.JsonElement;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.Metric;
 
-public abstract class MetricWidget extends FrameLayout implements IMetricWidget {
+public abstract class MetricWidget extends FrameLayout {
 
     protected LayoutInflater inflater;
     private Metric metric;
@@ -46,6 +47,8 @@ public abstract class MetricWidget extends FrameLayout implements IMetricWidget 
     public Metric getMetric() {
         return metric;
     }
+
+    public abstract JsonElement getData();
 
     public MetricValue getValue() {
         return new MetricValue(getMetric(), JSON.getGson().toJson(getData()));

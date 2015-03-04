@@ -7,5 +7,5 @@ import com.google.gson.JsonElement;
  * @since 1/18/2015.
  */
 public interface IMetricWidget {
-    public JsonElement getData();
+
 }

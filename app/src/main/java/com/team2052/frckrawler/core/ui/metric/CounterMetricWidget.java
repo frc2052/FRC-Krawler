@@ -71,11 +71,4 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
         jsonObject.addProperty("value", value);
         return jsonObject;
     }
-
-    @Override
-    public MetricValue getValue() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("value", value);
-        return new MetricValue(getMetric(), JSON.getGson().toJson(jsonObject));
-    }
 }
