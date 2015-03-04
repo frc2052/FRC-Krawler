@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.core.ui.metric;
 
 import com.google.gson.JsonElement;
-import com.team2052.frckrawler.core.database.MetricValue;
 
 /**
  * @author Adam

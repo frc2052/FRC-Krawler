@@ -8,13 +8,14 @@ import com.team2052.frckrawler.db.DaoSession;
  * @author Adam
  * @since 1/22/2015.
  */
-public class DeleteAllDataTask extends AsyncTask<Void, Void, Void>{
+public class DeleteAllDataTask extends AsyncTask<Void, Void, Void> {
     private DaoSession mDaoSession;
 
-    public DeleteAllDataTask(DaoSession daoSession){
+    public DeleteAllDataTask(DaoSession daoSession) {
 
         this.mDaoSession = daoSession;
     }
+
     @Override
     protected Void doInBackground(Void... params) {
         mDaoSession.runInTx(new Runnable() {

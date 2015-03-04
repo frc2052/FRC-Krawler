@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.core.ui.metric;
 
 import android.content.Context;
-import android.os.Parcelable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;

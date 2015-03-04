@@ -11,7 +11,6 @@ import android.util.TypedValue;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.core.GlobalValues;
-import com.team2052.frckrawler.core.activities.ScoutActivity;
 import com.team2052.frckrawler.core.database.CompiledMetricValue;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.tba.JSON;
@@ -166,7 +165,7 @@ public class Utilities {
             return new Metric(null, name, metricCategory.ordinal(), description, CHOOSER, JSON.getGson().toJson(range), game.getId());
         }
 
-        public static Metric createTimerMetric(Game game, MetricType metricCategory, String name, String description){
+        public static Metric createTimerMetric(Game game, MetricType metricCategory, String name, String description) {
             return new Metric(null, name, metricCategory.ordinal(), description, TIMER, null, game.getId());
         }
 

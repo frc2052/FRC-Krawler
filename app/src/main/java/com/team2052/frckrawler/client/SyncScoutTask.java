@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.team2052.frckrawler.client.events.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.client.events.ScoutSyncErrorEvent;

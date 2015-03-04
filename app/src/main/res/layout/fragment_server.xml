@@ -83,15 +83,6 @@
                     android:layout_below="@+id/share_title"
                     android:orientation="horizontal">
 
-                    <!--<Button
-                        android:id="@+id/dbBackups"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="?attr/selectableItemBackground"
-                        android:text="Database Backup"
-                        android:textColor="@color/primary" />-->
-
                     <Button
                         android:id="@+id/excel"
                         android:layout_width="wrap_content"
@@ -128,15 +119,29 @@
                     android:layout_marginTop="8dp"
                     android:text="Settings" />
 
-                <EditText
-                    android:id="@+id/server_setting_compile_weight"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="4dp"
-                    android:inputType="numberDecimal"
-                    android:hint="Compile Weight" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/TextBody"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="16dp"
+                        android:text="Compile Weight"/>
+
+                    <EditText
+                        android:id="@+id/server_setting_compile_weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="4dp"
+                        android:hint="Compile Weight"
+                        android:inputType="numberDecimal"/>
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"

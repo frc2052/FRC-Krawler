@@ -14,8 +14,8 @@ import java.util.ArrayList;
  * @since 1/18/2015.
  */
 public class StopWatchTimer extends MetricWidget {
-    private long mStartTime;
     private final ArrayList<Long> times = new ArrayList<>();
+    private long mStartTime;
     private long mLastSplit;
     private TimeUpdater mUpdater;
 
@@ -32,7 +32,7 @@ public class StopWatchTimer extends MetricWidget {
         mLastSplit = mStartTime;
     }
 
-    public void stop(){
+    public void stop() {
         mUpdater.cancel(false);
     }
 

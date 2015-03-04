@@ -148,7 +148,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
         Metric m = null;
         String name = mName.getText().toString();
         String description = mDescription.getText().toString();
-        
+
         switch (mCurrentSelectedMetricType) {
             case Utilities.MetricUtil.BOOLEAN:
                 m = Utilities.MetricUtil.createBooleanMetric(

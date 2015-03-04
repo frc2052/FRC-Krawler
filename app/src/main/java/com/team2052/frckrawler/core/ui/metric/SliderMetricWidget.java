@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.core.ui.metric;
 
 import android.content.Context;
-import android.os.Parcelable;
 import android.widget.SeekBar;
 import android.widget.TextView;
 

@@ -1,8 +1,6 @@
 package com.team2052.frckrawler.core.database;
 
-import android.util.Log;
-
-import com.team2052.frckrawler.core.util.LogHelper;
+import com.team2052.frckrawler.core.tba.TBA;
 import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
@@ -46,17 +44,22 @@ public class ExportUtil {
             List<String> header = new ArrayList<>();
 
             header.add("Team Number");
+            header.add("Team Name");
             header.add("Comments");
 
             for (Metric metric : metrics) {
                 header.add(metric.getName());
             }
+            header.add("TBA Link");
+
+
 
             writer.writeNext(Arrays.copyOf(header.toArray(), header.size(), String[].class));
 
             for (Map.Entry<Long, List<CompiledMetricValue>> entry : robots.entrySet()) {
                 List<String> record = new ArrayList<>();
                 record.add(String.valueOf(entry.getKey()));
+                record.add(daoSession.getTeamDao().load(entry.getKey()).getName());
 
 
                 //Comments
@@ -75,6 +78,8 @@ public class ExportUtil {
                 for (CompiledMetricValue metricValue : entry.getValue()) {
                     record.add(metricValue.getCompiledValue());
                 }
+
+                record.add(TBA.BASE_TBA_URL + "/team/" + entry.getKey() +  "/" + event.getFmsid().substring(0, 4));
 
                 writer.writeNext(Arrays.copyOf(record.toArray(), record.size(), String[].class));
             }
