@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.team2052.frckrawler.client.LoginHandler;
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.MetricValue;
+import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
@@ -51,6 +52,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         Robot robot = mDaoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.TeamId.eq(mTeam.getNumber())).where(RobotDao.Properties.GameId.eq(mEvent.getGameId())).unique();
 
+        LogHelper.info(String.valueOf(mMatch.getId()));
         //Insert Metric Data
         for (MetricValue metricValue : mMetricValues) {
             QueryBuilder<MatchData> matchDataQueryBuilder = mDaoSession.getMatchDataDao().queryBuilder();
@@ -61,8 +63,6 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
             MatchData currentData = matchDataQueryBuilder.unique();
             MatchData matchData = new MatchData(null, metricValue.getValue(), robot.getId(), metricValue.getMetric().getId(), mMatch.getId(), LoginHandler.getInstance(context, mDaoSession).getLoggedOnUser().getId(), mEvent.getId());
-
-
             if (currentData != null) {
                 currentData.setData(matchData.getData());
                 currentData.update();
@@ -72,19 +72,24 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         }
 
 
-        QueryBuilder<MatchComment> matchCommentQueryBuilder = mDaoSession.getMatchCommentDao().queryBuilder();
-        matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(mEvent.getId()));
-        matchCommentQueryBuilder.where(MatchCommentDao.Properties.TeamId.eq(mTeam.getNumber()));
-        matchCommentQueryBuilder.where(MatchCommentDao.Properties.RobotId.eq(robot.getId()));
+        if(!mComment.isEmpty()) {
+            QueryBuilder<MatchComment> matchCommentQueryBuilder = mDaoSession.getMatchCommentDao().queryBuilder();
 
-        MatchComment currentData = matchCommentQueryBuilder.unique();
-        MatchComment matchComment = new MatchComment(null, mMatch.getId(), mComment, robot.getId(), mEvent.getId(), mTeam.getNumber());
+            matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(mEvent.getId()));
+            matchCommentQueryBuilder.where(MatchCommentDao.Properties.TeamId.eq(mTeam.getNumber()));
+            matchCommentQueryBuilder.where(MatchCommentDao.Properties.RobotId.eq(robot.getId()));
+            matchCommentQueryBuilder.where(MatchCommentDao.Properties.MatchId.eq(mMatch.getId()));
 
-        if (currentData != null) {
-            currentData.setComment(matchComment.getComment());
-            currentData.update();
-        } else if (!mComment.isEmpty()) {
-            mDaoSession.insert(matchComment);
+
+            MatchComment currentData = matchCommentQueryBuilder.unique();
+            MatchComment matchComment = new MatchComment(null, mMatch.getId(), mComment, robot.getId(), mEvent.getId(), mTeam.getNumber());
+
+            if (currentData != null) {
+                currentData.setComment(matchComment.getComment());
+                currentData.update();
+            } else {
+                mDaoSession.insert(matchComment);
+            }
         }
 
         return null;

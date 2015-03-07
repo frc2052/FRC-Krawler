@@ -47,6 +47,8 @@ public class ServerPackage implements Serializable {
                     matchDataQueryBuilder.where(MatchDataDao.Properties.RobotId.eq(m.getRobotId()));
                     matchDataQueryBuilder.where(MatchDataDao.Properties.MetricId.eq(m.getMetricId()));
                     matchDataQueryBuilder.where(MatchDataDao.Properties.MatchId.eq(m.getMatchId()));
+                    matchDataQueryBuilder.where(MatchDataDao.Properties.EventId.eq(m.getEventId()));
+
 
                     MatchData unique = matchDataQueryBuilder.unique();
 

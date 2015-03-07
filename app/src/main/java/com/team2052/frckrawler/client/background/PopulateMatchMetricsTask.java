@@ -7,6 +7,7 @@ import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.fragments.ScoutMatchFragment;
 import com.team2052.frckrawler.core.ui.metric.MetricWidget;
+import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
@@ -59,6 +60,9 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         robotQueryBuilder.where(RobotDao.Properties.TeamId.eq(team.getNumber())).unique();
         Robot robot = robotQueryBuilder.unique();
 
+        LogHelper.info(String.valueOf(event.getId()));
+        LogHelper.info(String.valueOf(match.getId()));
+        LogHelper.info(String.valueOf(robot.getId()));
         //Build the queries
         QueryBuilder<MatchData> matchDataQueryBuilder = mDaoSession.getMatchDataDao().queryBuilder();
         matchDataQueryBuilder.where(MatchDataDao.Properties.EventId.eq(event.getId()));
@@ -80,16 +84,23 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
         //Get the metrics and the current data
         List<Metric> metrics = metricQueryBuilder.list();
+
         List<MatchData> currentData = matchDataQueryBuilder.list();
+
+        LogHelper.info(String.valueOf(currentData.size()));
+
+        LogHelper.info(String.valueOf(metrics.size()));
         mMetricValues = new ArrayList<>();
 
 
         //Use the current data if it's equal to the size of metrics
         if (currentData.size() == metrics.size()) {
+            LogHelper.info("Loading Metrics from Data");
             for (MatchData matchData : currentData) {
                 mMetricValues.add(new MetricValue(matchData));
             }
         } else {
+            LogHelper.info("Loading Metrics");
             for (Metric metric : metrics) {
                 mMetricValues.add(new MetricValue(metric, null));
             }
