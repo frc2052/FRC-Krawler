@@ -56,6 +56,7 @@ public class ExportUtil {
 
             writer.writeNext(Arrays.copyOf(header.toArray(), header.size(), String[].class));
 
+            boolean provideTBAURL = event.getFmsid() != null;
             for (Map.Entry<Long, List<CompiledMetricValue>> entry : robots.entrySet()) {
                 List<String> record = new ArrayList<>();
                 record.add(String.valueOf(entry.getKey()));
@@ -78,8 +79,9 @@ public class ExportUtil {
                 for (CompiledMetricValue metricValue : entry.getValue()) {
                     record.add(metricValue.getCompiledValue());
                 }
-
-                record.add(TBA.BASE_TBA_URL + "/team/" + entry.getKey() +  "/" + event.getFmsid().substring(0, 4));
+                if(provideTBAURL) {
+                    record.add(TBA.BASE_TBA_URL + "/team/" + entry.getKey() + "/" + event.getFmsid().substring(0, 4));
+                }
 
                 writer.writeNext(Arrays.copyOf(record.toArray(), record.size(), String[].class));
             }

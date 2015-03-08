@@ -41,7 +41,6 @@ public class ServerThread extends Thread {
 
     @Override
     public void run() {
-        //Init the socket
         String deviceName = "device";
 
         isOpen = true;
@@ -53,24 +52,29 @@ public class ServerThread extends Thread {
             }
 
             if (serverSocket != null) {
-                long startTime = System.currentTimeMillis();
                 try {
+
                     BluetoothSocket clientSocket = serverSocket.accept();
                     deviceName = clientSocket.getRemoteDevice().getName();
                     //handler.onSyncStart(deviceName);
                     serverSocket.close();
+
                     ObjectOutputStream toScoutStream = new ObjectOutputStream(clientSocket.getOutputStream());
                     ObjectInputStream fromScoutStream = new ObjectInputStream(clientSocket.getInputStream());
                     BluetoothInfo.ConnectionType connectionType = BluetoothInfo.ConnectionType.VALID_CONNECTION_TYPES[fromScoutStream.readInt()];
 
+
+
+                    long startTime = System.currentTimeMillis();
                     switch (connectionType) {
                         case SCOUT_SYNC:
-                            ((ServerPackage) fromScoutStream.readObject()).save(mDaoSession);
+                            ServerPackage serverPackage = (ServerPackage) fromScoutStream.readObject();
                             toScoutStream.writeObject(new ScoutPackage(mDaoSession, hostedEvent));
+                            toScoutStream.flush();
+                            clientSocket.close();
+                            serverPackage.save(mDaoSession);
                     }
 
-                    toScoutStream.flush();
-                    clientSocket.close();
                     //handler.onSyncSuccess(deviceName);
                     Log.d("FRCKrawler", "Synced in: " + (System.currentTimeMillis() - startTime) + "ms");
                 } catch (IOException e) {

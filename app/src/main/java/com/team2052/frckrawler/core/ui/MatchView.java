@@ -55,7 +55,7 @@ public class MatchView extends FrameLayout {
         red3.setText(Long.toString(match.getRed3Id()));
         blue1.setText(Long.toString(match.getBlue1Id()));
         blue2.setText(Long.toString(match.getBlue2Id()));
-        blue3.setText(Long.toString(match.getBlue1Id()));
+        blue3.setText(Long.toString(match.getBlue3Id()));
         //Matches that aren't played yet have a score of -1
         if (match.getRedscore() < 0)
             redScore.setText("?");

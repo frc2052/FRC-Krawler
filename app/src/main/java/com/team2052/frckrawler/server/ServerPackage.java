@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.server;
 
+import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchCommentDao;
@@ -40,6 +41,8 @@ public class ServerPackage implements Serializable {
         session.runInTx(new Runnable() {
             @Override
             public void run() {
+                long startTime = System.currentTimeMillis();
+                LogHelper.info("Saving Data");
                 //Save all the data
                 for (MatchData m : metricMatchData) {
                     m.setId(null);
@@ -48,8 +51,6 @@ public class ServerPackage implements Serializable {
                     matchDataQueryBuilder.where(MatchDataDao.Properties.MetricId.eq(m.getMetricId()));
                     matchDataQueryBuilder.where(MatchDataDao.Properties.MatchId.eq(m.getMatchId()));
                     matchDataQueryBuilder.where(MatchDataDao.Properties.EventId.eq(m.getEventId()));
-
-
                     MatchData unique = matchDataQueryBuilder.unique();
 
 
@@ -93,7 +94,7 @@ public class ServerPackage implements Serializable {
                         session.insert(matchComment);
                     }
                 }
-
+                LogHelper.info("Finished Saving. Took " + (System.currentTimeMillis() - startTime) + "ms");
             }
         });
     }

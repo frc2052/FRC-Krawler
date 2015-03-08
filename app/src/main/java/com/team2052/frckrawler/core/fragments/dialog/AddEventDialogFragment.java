@@ -29,9 +29,6 @@ import butterknife.InjectView;
 public class AddEventDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
     @InjectView(R.id.name)
     EditText name;
-
-    @InjectView(R.id.location)
-    EditText location;
     private Game mGame;
 
     public static AddEventDialogFragment newInstance(Game game) {
@@ -55,7 +52,7 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
         ButterKnife.inject(this, view);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add Event");
-        builder.setPositiveButton("Ok", this);
+        builder.setPositiveButton("Add", this);
         builder.setNegativeButton("Cancel", this);
         builder.setView(view);
         return builder.create();
@@ -73,7 +70,7 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
             DaoSession daoSession = ((FRCKrawler) getActivity().getApplicationContext()).getDaoSession();
-            daoSession.getEventDao().insert(new Event(null, name.getText().toString(), mGame.getId(), location.getText().toString(), new Date(), null));
+            daoSession.getEventDao().insert(new Event(null, name.getText().toString(), mGame.getId(), "Unknown", new Date(), null));
         } else {
             dismiss();
         }

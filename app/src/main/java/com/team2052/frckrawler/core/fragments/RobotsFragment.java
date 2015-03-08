@@ -3,16 +3,22 @@ package com.team2052.frckrawler.core.fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.activities.RobotActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
+import com.team2052.frckrawler.core.fragments.dialog.AddTeamDialogFragment;
 import com.team2052.frckrawler.core.listitems.ListElement;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.elements.RobotListElement;
+import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotDao;
@@ -62,6 +68,32 @@ public class RobotsFragment extends ListFragment {
         Bundle b = getArguments();
         this.mViewType = b.getInt(VIEW_TYPE, 0);
         mKey = b.getLong(DatabaseActivity.PARENT_ID);
+
+        if(mViewType == 1){
+            Event event = mDaoSession.getEventDao().load(mKey);
+            if(event != null) {
+                if (event.getFmsid() == null) {
+                    setHasOptionsMenu(true);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.add_team_manual, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.add_team){
+            Event load = mDaoSession.getEventDao().load(mKey);
+            if(load != null) {
+                AddTeamDialogFragment.newInstance(load).show(getChildFragmentManager(), "addTeam");
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

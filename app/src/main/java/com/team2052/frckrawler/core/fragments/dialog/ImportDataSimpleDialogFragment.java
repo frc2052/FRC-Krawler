@@ -214,8 +214,8 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                         if (robot == null) {
                             daoSession.getRobotEventDao().insert(new RobotEvent(null, daoSession.getRobotDao().insert(new Robot(null, team.getNumber(), mGame.getId(), "", 0.0)), event.getId()));
                         } else {
-                            List<RobotEvent> robotEvents = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
-                            if (robotEvents.size() <= 0) {
+                            RobotEvent robotEvents = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).where(RobotEventDao.Properties.EventId.eq(event.getId())).unique();
+                            if (robotEvents == null) {
                                 daoSession.getRobotEventDao().insert(new RobotEvent(null, robot.getId(), event.getId()));
                             }
                         }

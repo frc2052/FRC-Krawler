@@ -57,7 +57,6 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
         try {
             LogHelper.info("Syncing With Server");
             LogHelper.info("Syncing with: " + deviceName);
-            long startTime = System.currentTimeMillis();
             BluetoothSocket serverSocket = dev[0].createRfcommSocketToServiceRecord(UUID.fromString(BluetoothInfo.UUID));
             serverSocket.connect();
             if (isCancelled())
