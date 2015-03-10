@@ -98,6 +98,9 @@ public class DBManager {
             deletePitData(pitData);
         }
 
+        for (MatchData pitData : daoSession.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.EventId.eq(event.getId())).list()) {
+            deleteMatchData(pitData);
+        }
         daoSession.getEventDao().delete(event);
     }
 
@@ -155,6 +158,9 @@ public class DBManager {
      * @param match
      */
     public void deleteMatch(Match match) {
+        for (MatchData data : daoSession.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.MatchId.eq(match.getId())).list()) {
+            deleteMatchData(data);
+        }
         daoSession.getMatchDao().delete(match);
     }
 

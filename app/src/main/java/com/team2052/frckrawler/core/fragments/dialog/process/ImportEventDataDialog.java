@@ -27,7 +27,6 @@ import com.team2052.frckrawler.db.Team;
  * @since 3/9/2015.
  */
 public class ImportEventDataDialog extends BaseProgressDialog {
-    private DaoSession mDaoSession;
 
     public static ImportEventDataDialog newInstance(String eventKey, Game game) {
         ImportEventDataDialog importDataDialog = new ImportEventDataDialog();
@@ -41,7 +40,6 @@ public class ImportEventDataDialog extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDaoSession = ((FRCKrawler) getActivity().getApplication()).getDaoSession();
         Game game = mDaoSession.getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         String mEventKey = getArguments().getString("eventKey");
         new ImportEvent(mEventKey, game).execute();

@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
+import com.team2052.frckrawler.core.fragments.dialog.process.UpdateMatchesProcessDialog;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.items.MatchListItem;
 import com.team2052.frckrawler.core.tba.HTTP;
@@ -58,7 +59,7 @@ public class MatchListFragment extends ListFragment {
             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    //TODO do stuff
+                    UpdateMatchesProcessDialog.newInstance(mEvent).show(getChildFragmentManager(), "matchUpdateDialog");
                 }
             });
             builder.setNegativeButton("Cancel", null);
