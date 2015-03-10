@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.core.database.ExportUtil;
+import com.team2052.frckrawler.core.fragments.dialog.process.ExportDialogFragment;
 import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.server.Server;
@@ -74,7 +75,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                 break;
             case R.id.excel:
                 if (getSelectedEvent() != null) {
-                    new ExportToFileSystem().execute();
+                    ExportDialogFragment.newInstance(getSelectedEvent()).show(getChildFragmentManager(), "exportDialogProgress");
                 }
                 break;
             /*case R.id.dbBackups:
@@ -145,52 +146,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, Float.parseFloat(compileWeight.getText().toString())).apply();
     }
 
-    public class ExportToFileSystem extends AsyncTask<Void, Void, File> {
-        final float compileWeight;
-        File file = null;
 
-        public ExportToFileSystem() {
-            this.compileWeight = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0).getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
-        }
-
-        @Override
-        protected File doInBackground(Void... voids) {
-            File fileSystem = Environment.getExternalStorageDirectory();
-            Event selectedEvent = getSelectedEvent();
-
-            if (selectedEvent != null) {
-                if (fileSystem.canWrite()) {
-                    LogHelper.debug("Starting Export");
-                    try {
-                        file = File.createTempFile(
-                                selectedEvent.getGame().getName() + "_" + selectedEvent.getName() + "_" + "Summary",  /* prefix */
-                                ".csv",         /* suffix */
-                                fileSystem      /* directory */
-                        );
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (file != null) {
-                        return ExportUtil.exportEventDataToCSV(selectedEvent, file, mDaoSession, compileWeight);
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(File file) {
-            if (file != null) {
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                shareIntent.setType("file/csv");
-                startActivity(Intent.createChooser(shareIntent, "Send To"));
-
-            }
-        }
-    }
 
     private class GetEventsTask extends AsyncTask<Void, Void, List<Event>> {
 
