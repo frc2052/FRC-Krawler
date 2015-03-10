@@ -125,7 +125,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener {
 
     @Override
     public void onAttach(Activity activity) {
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
         super.onAttach(activity);
     }
 

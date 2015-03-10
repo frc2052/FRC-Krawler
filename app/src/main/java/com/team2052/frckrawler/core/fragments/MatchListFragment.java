@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.core.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -49,6 +51,18 @@ public class MatchListFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.update_scores) {
             new GetMatchScores().execute();
+        } else if(item.getItemId() == R.id.update_schedule){
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Are you sure?");
+            builder.setMessage("You will lose all your data.");
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //TODO do stuff
+                }
+            });
+            builder.setNegativeButton("Cancel", null);
+            builder.create().show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -85,6 +99,7 @@ public class MatchListFragment extends ListFragment {
                 showError(true);
                 return;
             }
+
             showError(false);
             List<ListItem> listItems = new ArrayList<>();
 
@@ -95,6 +110,9 @@ public class MatchListFragment extends ListFragment {
         }
     }
 
+    /**
+     * Update match scores
+     */
     public class GetMatchScores extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -120,6 +138,18 @@ public class MatchListFragment extends ListFragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             updateList();
+        }
+    }
+
+    /**
+     *
+     */
+    public class GetMatchesUpdate extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            return null;
         }
     }
 }

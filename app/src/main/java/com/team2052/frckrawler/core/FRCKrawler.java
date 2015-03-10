@@ -48,7 +48,7 @@ public class FRCKrawler extends Application {
     public void onCreate() {
         super.onCreate();
         setupDB();
-        ACRA.init(this);
+        //ACRA.init(this);
     }
 
     private void setupDB() {
