@@ -36,6 +36,11 @@ public class ExportDialogFragment extends BaseProgressDialog {
         new ExportToFileSystem(event).execute();
     }
 
+    @Override
+    public CharSequence getMessage() {
+        return "Generating CSV";
+    }
+
     public class ExportToFileSystem extends AsyncTask<Void, Void, File> {
         final float compileWeight;
         private final Event event;
@@ -82,10 +87,5 @@ public class ExportDialogFragment extends BaseProgressDialog {
                 startActivity(Intent.createChooser(shareIntent, "Share CSV with..."));
             }
         }
-    }
-
-    @Override
-    public CharSequence getMessage() {
-        return "Generating CSV";
     }
 }

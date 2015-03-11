@@ -72,7 +72,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         }
 
 
-        if(!mComment.isEmpty()) {
+        if (!mComment.isEmpty()) {
             QueryBuilder<MatchComment> matchCommentQueryBuilder = mDaoSession.getMatchCommentDao().queryBuilder();
 
             matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(mEvent.getId()));

@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.core.fragments.dialog.process;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -18,6 +17,12 @@ public class BaseProgressDialog extends DialogFragment {
     protected DaoSession mDaoSession;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        mDaoSession = ((FRCKrawler) getActivity().getApplication()).getDaoSession();
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final ProgressDialog dialog = new ProgressDialog(getActivity());
         dialog.setMessage(getMessage());
@@ -25,12 +30,6 @@ public class BaseProgressDialog extends DialogFragment {
         dialog.setCancelable(false);
         setCancelable(false);
         return dialog;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        mDaoSession = ((FRCKrawler) getActivity().getApplication()).getDaoSession();
-        super.onCreate(savedInstanceState);
     }
 
     public CharSequence getMessage() {

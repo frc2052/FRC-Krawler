@@ -113,13 +113,13 @@ public class ImportEventDataDialog extends BaseProgressDialog {
         }
 
         @Override
-        protected void onProgressUpdate(String... values) {
-            ((ProgressDialog) getDialog()).setMessage(values[0]);
+        protected void onPostExecute(Void aVoid) {
+            ImportEventDataDialog.this.dismissAllowingStateLoss();
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            ImportEventDataDialog.this.dismissAllowingStateLoss();
+        protected void onProgressUpdate(String... values) {
+            ((ProgressDialog) getDialog()).setMessage(values[0]);
         }
 
 

@@ -64,7 +64,6 @@ public class ServerThread extends Thread {
                     BluetoothInfo.ConnectionType connectionType = BluetoothInfo.ConnectionType.VALID_CONNECTION_TYPES[fromScoutStream.readInt()];
 
 
-
                     long startTime = System.currentTimeMillis();
                     switch (connectionType) {
                         case SCOUT_SYNC:

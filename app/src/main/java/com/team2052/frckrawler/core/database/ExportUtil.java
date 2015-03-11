@@ -53,7 +53,6 @@ public class ExportUtil {
             header.add("TBA Link");
 
 
-
             writer.writeNext(Arrays.copyOf(header.toArray(), header.size(), String[].class));
 
             boolean provideTBAURL = event.getFmsid() != null;
@@ -79,7 +78,7 @@ public class ExportUtil {
                 for (CompiledMetricValue metricValue : entry.getValue()) {
                     record.add(metricValue.getCompiledValue());
                 }
-                if(provideTBAURL) {
+                if (provideTBAURL) {
                     record.add(TBA.BASE_TBA_URL + "/team/" + entry.getKey() + "/" + event.getFmsid().substring(0, 4));
                 }
 

@@ -23,7 +23,7 @@
     <string name="dialog_error_report">An error has occurred with FRC Krawler</string>
     <string name="dialog_error_report_title">Report Issue</string>
     <string name="dialog_error_report_email">Email</string>
-    <string name="dialog_error_report_comment">Comments</string>
+    <string name="dialog_error_report_comment">Comment</string>
 
     <string name="bluetooth_not_available">Bluetooth not available</string>
     <string name="team">Team</string>

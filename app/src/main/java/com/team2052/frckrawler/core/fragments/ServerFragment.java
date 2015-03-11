@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
@@ -21,14 +19,10 @@ import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.GlobalValues;
-import com.team2052.frckrawler.core.database.ExportUtil;
 import com.team2052.frckrawler.core.fragments.dialog.process.ExportDialogFragment;
-import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.server.Server;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,7 +139,6 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, Float.parseFloat(compileWeight.getText().toString())).apply();
     }
-
 
 
     private class GetEventsTask extends AsyncTask<Void, Void, List<Event>> {

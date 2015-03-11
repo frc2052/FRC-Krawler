@@ -52,7 +52,7 @@ public class MatchListFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.update_scores) {
             new GetMatchScores().execute();
-        } else if(item.getItemId() == R.id.update_schedule){
+        } else if (item.getItemId() == R.id.update_schedule) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Are you sure?");
             builder.setMessage("You will lose all your data.");
