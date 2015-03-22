@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.db;
 
+import java.util.List;
 import com.team2052.frckrawler.db.DaoSession;
 import de.greenrobot.dao.DaoException;
 
@@ -10,18 +11,10 @@ import de.greenrobot.dao.DaoException;
 public class Match implements java.io.Serializable {
 
     private Long id;
-    private Long eventId;
-    private String key;
     private Integer number;
-    private String type;
-    private Long blue1Id;
-    private Long blue2Id;
-    private Long blue3Id;
-    private Long red1Id;
-    private Long red2Id;
-    private Long red3Id;
-    private Integer redscore;
-    private Integer bluescore;
+    private String key;
+    private long eventId;
+    private String data;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -29,27 +22,8 @@ public class Match implements java.io.Serializable {
     /** Used for active entity operations. */
     private transient MatchDao myDao;
 
-    private Event event;
-    private Long event__resolvedKey;
-
-    private Team blue1;
-    private Long blue1__resolvedKey;
-
-    private Team blue2;
-    private Long blue2__resolvedKey;
-
-    private Team blue3;
-    private Long blue3__resolvedKey;
-
-    private Team red1;
-    private Long red1__resolvedKey;
-
-    private Team red2;
-    private Long red2__resolvedKey;
-
-    private Team red3;
-    private Long red3__resolvedKey;
-
+    private List<MatchData> matchDataList;
+    private List<MatchComment> matchCommentList;
 
     public Match() {
     }
@@ -58,20 +32,12 @@ public class Match implements java.io.Serializable {
         this.id = id;
     }
 
-    public Match(Long id, Long eventId, String key, Integer number, String type, Long blue1Id, Long blue2Id, Long blue3Id, Long red1Id, Long red2Id, Long red3Id, Integer redscore, Integer bluescore) {
+    public Match(Long id, Integer number, String key, long eventId, String data) {
         this.id = id;
-        this.eventId = eventId;
-        this.key = key;
         this.number = number;
-        this.type = type;
-        this.blue1Id = blue1Id;
-        this.blue2Id = blue2Id;
-        this.blue3Id = blue3Id;
-        this.red1Id = red1Id;
-        this.red2Id = red2Id;
-        this.red3Id = red3Id;
-        this.redscore = redscore;
-        this.bluescore = bluescore;
+        this.key = key;
+        this.eventId = eventId;
+        this.data = data;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -88,12 +54,12 @@ public class Match implements java.io.Serializable {
         this.id = id;
     }
 
-    public Long getEventId() {
-        return eventId;
+    public Integer getNumber() {
+        return number;
     }
 
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     public String getKey() {
@@ -104,259 +70,64 @@ public class Match implements java.io.Serializable {
         this.key = key;
     }
 
-    public Integer getNumber() {
-        return number;
+    public long getEventId() {
+        return eventId;
     }
 
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setEventId(long eventId) {
+        this.eventId = eventId;
     }
 
-    public String getType() {
-        return type;
+    public String getData() {
+        return data;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setData(String data) {
+        this.data = data;
     }
 
-    public Long getBlue1Id() {
-        return blue1Id;
-    }
-
-    public void setBlue1Id(Long blue1Id) {
-        this.blue1Id = blue1Id;
-    }
-
-    public Long getBlue2Id() {
-        return blue2Id;
-    }
-
-    public void setBlue2Id(Long blue2Id) {
-        this.blue2Id = blue2Id;
-    }
-
-    public Long getBlue3Id() {
-        return blue3Id;
-    }
-
-    public void setBlue3Id(Long blue3Id) {
-        this.blue3Id = blue3Id;
-    }
-
-    public Long getRed1Id() {
-        return red1Id;
-    }
-
-    public void setRed1Id(Long red1Id) {
-        this.red1Id = red1Id;
-    }
-
-    public Long getRed2Id() {
-        return red2Id;
-    }
-
-    public void setRed2Id(Long red2Id) {
-        this.red2Id = red2Id;
-    }
-
-    public Long getRed3Id() {
-        return red3Id;
-    }
-
-    public void setRed3Id(Long red3Id) {
-        this.red3Id = red3Id;
-    }
-
-    public Integer getRedscore() {
-        return redscore;
-    }
-
-    public void setRedscore(Integer redscore) {
-        this.redscore = redscore;
-    }
-
-    public Integer getBluescore() {
-        return bluescore;
-    }
-
-    public void setBluescore(Integer bluescore) {
-        this.bluescore = bluescore;
-    }
-
-    /** To-one relationship, resolved on first access. */
-    public Event getEvent() {
-        Long __key = this.eventId;
-        if (event__resolvedKey == null || !event__resolvedKey.equals(__key)) {
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<MatchData> getMatchDataList() {
+        if (matchDataList == null) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            EventDao targetDao = daoSession.getEventDao();
-            Event eventNew = targetDao.load(__key);
+            MatchDataDao targetDao = daoSession.getMatchDataDao();
+            List<MatchData> matchDataListNew = targetDao._queryMatch_MatchDataList(id);
             synchronized (this) {
-                event = eventNew;
-            	event__resolvedKey = __key;
+                if(matchDataList == null) {
+                    matchDataList = matchDataListNew;
+                }
             }
         }
-        return event;
+        return matchDataList;
     }
 
-    public void setEvent(Event event) {
-        synchronized (this) {
-            this.event = event;
-            eventId = event == null ? null : event.getId();
-            event__resolvedKey = eventId;
-        }
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetMatchDataList() {
+        matchDataList = null;
     }
 
-    /** To-one relationship, resolved on first access. */
-    public Team getBlue1() {
-        Long __key = this.blue1Id;
-        if (blue1__resolvedKey == null || !blue1__resolvedKey.equals(__key)) {
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<MatchComment> getMatchCommentList() {
+        if (matchCommentList == null) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            TeamDao targetDao = daoSession.getTeamDao();
-            Team blue1New = targetDao.load(__key);
+            MatchCommentDao targetDao = daoSession.getMatchCommentDao();
+            List<MatchComment> matchCommentListNew = targetDao._queryMatch_MatchCommentList(id);
             synchronized (this) {
-                blue1 = blue1New;
-            	blue1__resolvedKey = __key;
+                if(matchCommentList == null) {
+                    matchCommentList = matchCommentListNew;
+                }
             }
         }
-        return blue1;
+        return matchCommentList;
     }
 
-    public void setBlue1(Team blue1) {
-        synchronized (this) {
-            this.blue1 = blue1;
-            blue1Id = blue1 == null ? null : blue1.getNumber();
-            blue1__resolvedKey = blue1Id;
-        }
-    }
-
-    /** To-one relationship, resolved on first access. */
-    public Team getBlue2() {
-        Long __key = this.blue2Id;
-        if (blue2__resolvedKey == null || !blue2__resolvedKey.equals(__key)) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            TeamDao targetDao = daoSession.getTeamDao();
-            Team blue2New = targetDao.load(__key);
-            synchronized (this) {
-                blue2 = blue2New;
-            	blue2__resolvedKey = __key;
-            }
-        }
-        return blue2;
-    }
-
-    public void setBlue2(Team blue2) {
-        synchronized (this) {
-            this.blue2 = blue2;
-            blue2Id = blue2 == null ? null : blue2.getNumber();
-            blue2__resolvedKey = blue2Id;
-        }
-    }
-
-    /** To-one relationship, resolved on first access. */
-    public Team getBlue3() {
-        Long __key = this.blue3Id;
-        if (blue3__resolvedKey == null || !blue3__resolvedKey.equals(__key)) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            TeamDao targetDao = daoSession.getTeamDao();
-            Team blue3New = targetDao.load(__key);
-            synchronized (this) {
-                blue3 = blue3New;
-            	blue3__resolvedKey = __key;
-            }
-        }
-        return blue3;
-    }
-
-    public void setBlue3(Team blue3) {
-        synchronized (this) {
-            this.blue3 = blue3;
-            blue3Id = blue3 == null ? null : blue3.getNumber();
-            blue3__resolvedKey = blue3Id;
-        }
-    }
-
-    /** To-one relationship, resolved on first access. */
-    public Team getRed1() {
-        Long __key = this.red1Id;
-        if (red1__resolvedKey == null || !red1__resolvedKey.equals(__key)) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            TeamDao targetDao = daoSession.getTeamDao();
-            Team red1New = targetDao.load(__key);
-            synchronized (this) {
-                red1 = red1New;
-            	red1__resolvedKey = __key;
-            }
-        }
-        return red1;
-    }
-
-    public void setRed1(Team red1) {
-        synchronized (this) {
-            this.red1 = red1;
-            red1Id = red1 == null ? null : red1.getNumber();
-            red1__resolvedKey = red1Id;
-        }
-    }
-
-    /** To-one relationship, resolved on first access. */
-    public Team getRed2() {
-        Long __key = this.red2Id;
-        if (red2__resolvedKey == null || !red2__resolvedKey.equals(__key)) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            TeamDao targetDao = daoSession.getTeamDao();
-            Team red2New = targetDao.load(__key);
-            synchronized (this) {
-                red2 = red2New;
-            	red2__resolvedKey = __key;
-            }
-        }
-        return red2;
-    }
-
-    public void setRed2(Team red2) {
-        synchronized (this) {
-            this.red2 = red2;
-            red2Id = red2 == null ? null : red2.getNumber();
-            red2__resolvedKey = red2Id;
-        }
-    }
-
-    /** To-one relationship, resolved on first access. */
-    public Team getRed3() {
-        Long __key = this.red3Id;
-        if (red3__resolvedKey == null || !red3__resolvedKey.equals(__key)) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            TeamDao targetDao = daoSession.getTeamDao();
-            Team red3New = targetDao.load(__key);
-            synchronized (this) {
-                red3 = red3New;
-            	red3__resolvedKey = __key;
-            }
-        }
-        return red3;
-    }
-
-    public void setRed3(Team red3) {
-        synchronized (this) {
-            this.red3 = red3;
-            red3Id = red3 == null ? null : red3.getNumber();
-            red3__resolvedKey = red3Id;
-        }
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetMatchCommentList() {
+        matchCommentList = null;
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */

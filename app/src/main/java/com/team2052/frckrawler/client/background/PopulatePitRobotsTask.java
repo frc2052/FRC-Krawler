@@ -9,6 +9,7 @@ import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.fragments.ScoutPitFragment;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
@@ -48,6 +49,7 @@ public class PopulatePitRobotsTask extends AsyncTask<Void, Void, Void> {
             public int compare(RobotEvent lhs, RobotEvent rhs) {
                 return Double.compare(lhs.getRobot().getTeam().getNumber(), rhs.getRobot().getTeam().getNumber());
             }
+
         });
 
         ArrayList<String> robots = new ArrayList<>();

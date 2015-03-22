@@ -1,15 +1,15 @@
 package com.team2052.frckrawler.db;
 
 import java.util.List;
-import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
-import de.greenrobot.dao.internal.SqlUtils;
 import de.greenrobot.dao.internal.DaoConfig;
+import de.greenrobot.dao.query.Query;
+import de.greenrobot.dao.query.QueryBuilder;
 
 import com.team2052.frckrawler.db.PitData;
 
@@ -27,15 +27,17 @@ public class PitDataDao extends AbstractDao<PitData, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Data = new Property(1, String.class, "data", false, "DATA");
-        public final static Property RobotId = new Property(2, Long.class, "robotId", false, "ROBOT_ID");
-        public final static Property MetricId = new Property(3, Long.class, "metricId", false, "METRIC_ID");
-        public final static Property EventId = new Property(4, Long.class, "eventId", false, "EVENT_ID");
-        public final static Property UserId = new Property(5, Long.class, "userId", false, "USER_ID");
+        public final static Property RobotId = new Property(1, long.class, "robotId", false, "ROBOT_ID");
+        public final static Property MetricId = new Property(2, long.class, "metricId", false, "METRIC_ID");
+        public final static Property EventId = new Property(3, long.class, "eventId", false, "EVENT_ID");
+        public final static Property UserId = new Property(4, long.class, "userId", false, "USER_ID");
+        public final static Property Data = new Property(5, String.class, "data", false, "DATA");
     };
 
-    private DaoSession daoSession;
-
+    private Query<PitData> event_PitDataListQuery;
+    private Query<PitData> robot_PitDataListQuery;
+    private Query<PitData> metric_PitDataListQuery;
+    private Query<PitData> user_PitDataListQuery;
 
     public PitDataDao(DaoConfig config) {
         super(config);
@@ -43,7 +45,6 @@ public class PitDataDao extends AbstractDao<PitData, Long> {
     
     public PitDataDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
-        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -51,11 +52,11 @@ public class PitDataDao extends AbstractDao<PitData, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'PIT_DATA' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
-                "'DATA' TEXT," + // 1: data
-                "'ROBOT_ID' INTEGER," + // 2: robotId
-                "'METRIC_ID' INTEGER," + // 3: metricId
-                "'EVENT_ID' INTEGER," + // 4: eventId
-                "'USER_ID' INTEGER);"); // 5: userId
+                "'ROBOT_ID' INTEGER NOT NULL ," + // 1: robotId
+                "'METRIC_ID' INTEGER NOT NULL ," + // 2: metricId
+                "'EVENT_ID' INTEGER NOT NULL ," + // 3: eventId
+                "'USER_ID' INTEGER NOT NULL ," + // 4: userId
+                "'DATA' TEXT);"); // 5: data
     }
 
     /** Drops the underlying database table. */
@@ -73,37 +74,15 @@ public class PitDataDao extends AbstractDao<PitData, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
+        stmt.bindLong(2, entity.getRobotId());
+        stmt.bindLong(3, entity.getMetricId());
+        stmt.bindLong(4, entity.getEventId());
+        stmt.bindLong(5, entity.getUserId());
  
         String data = entity.getData();
         if (data != null) {
-            stmt.bindString(2, data);
+            stmt.bindString(6, data);
         }
- 
-        Long robotId = entity.getRobotId();
-        if (robotId != null) {
-            stmt.bindLong(3, robotId);
-        }
- 
-        Long metricId = entity.getMetricId();
-        if (metricId != null) {
-            stmt.bindLong(4, metricId);
-        }
- 
-        Long eventId = entity.getEventId();
-        if (eventId != null) {
-            stmt.bindLong(5, eventId);
-        }
- 
-        Long userId = entity.getUserId();
-        if (userId != null) {
-            stmt.bindLong(6, userId);
-        }
-    }
-
-    @Override
-    protected void attachEntity(PitData entity) {
-        super.attachEntity(entity);
-        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */
@@ -117,11 +96,11 @@ public class PitDataDao extends AbstractDao<PitData, Long> {
     public PitData readEntity(Cursor cursor, int offset) {
         PitData entity = new PitData( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // data
-            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // robotId
-            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // metricId
-            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4), // eventId
-            cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5) // userId
+            cursor.getLong(offset + 1), // robotId
+            cursor.getLong(offset + 2), // metricId
+            cursor.getLong(offset + 3), // eventId
+            cursor.getLong(offset + 4), // userId
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // data
         );
         return entity;
     }
@@ -130,11 +109,11 @@ public class PitDataDao extends AbstractDao<PitData, Long> {
     @Override
     public void readEntity(Cursor cursor, PitData entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setData(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setRobotId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
-        entity.setMetricId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
-        entity.setEventId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
-        entity.setUserId(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
+        entity.setRobotId(cursor.getLong(offset + 1));
+        entity.setMetricId(cursor.getLong(offset + 2));
+        entity.setEventId(cursor.getLong(offset + 3));
+        entity.setUserId(cursor.getLong(offset + 4));
+        entity.setData(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
      }
     
     /** @inheritdoc */
@@ -160,116 +139,60 @@ public class PitDataDao extends AbstractDao<PitData, Long> {
         return true;
     }
     
-    private String selectDeep;
-
-    protected String getSelectDeep() {
-        if (selectDeep == null) {
-            StringBuilder builder = new StringBuilder("SELECT ");
-            SqlUtils.appendColumns(builder, "T", getAllColumns());
-            builder.append(',');
-            SqlUtils.appendColumns(builder, "T0", daoSession.getRobotDao().getAllColumns());
-            builder.append(',');
-            SqlUtils.appendColumns(builder, "T1", daoSession.getMetricDao().getAllColumns());
-            builder.append(',');
-            SqlUtils.appendColumns(builder, "T2", daoSession.getEventDao().getAllColumns());
-            builder.append(',');
-            SqlUtils.appendColumns(builder, "T3", daoSession.getUserDao().getAllColumns());
-            builder.append(" FROM PIT_DATA T");
-            builder.append(" LEFT JOIN ROBOT T0 ON T.'ROBOT_ID'=T0.'_id'");
-            builder.append(" LEFT JOIN METRIC T1 ON T.'METRIC_ID'=T1.'_id'");
-            builder.append(" LEFT JOIN EVENT T2 ON T.'EVENT_ID'=T2.'_id'");
-            builder.append(" LEFT JOIN USER T3 ON T.'USER_ID'=T3.'_id'");
-            builder.append(' ');
-            selectDeep = builder.toString();
-        }
-        return selectDeep;
-    }
-    
-    protected PitData loadCurrentDeep(Cursor cursor, boolean lock) {
-        PitData entity = loadCurrent(cursor, 0, lock);
-        int offset = getAllColumns().length;
-
-        Robot robot = loadCurrentOther(daoSession.getRobotDao(), cursor, offset);
-        entity.setRobot(robot);
-        offset += daoSession.getRobotDao().getAllColumns().length;
-
-        Metric metric = loadCurrentOther(daoSession.getMetricDao(), cursor, offset);
-        entity.setMetric(metric);
-        offset += daoSession.getMetricDao().getAllColumns().length;
-
-        Event event = loadCurrentOther(daoSession.getEventDao(), cursor, offset);
-        entity.setEvent(event);
-        offset += daoSession.getEventDao().getAllColumns().length;
-
-        User user = loadCurrentOther(daoSession.getUserDao(), cursor, offset);
-        entity.setUser(user);
-
-        return entity;    
-    }
-
-    public PitData loadDeep(Long key) {
-        assertSinglePk();
-        if (key == null) {
-            return null;
-        }
-
-        StringBuilder builder = new StringBuilder(getSelectDeep());
-        builder.append("WHERE ");
-        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
-        String sql = builder.toString();
-        
-        String[] keyArray = new String[] { key.toString() };
-        Cursor cursor = db.rawQuery(sql, keyArray);
-        
-        try {
-            boolean available = cursor.moveToFirst();
-            if (!available) {
-                return null;
-            } else if (!cursor.isLast()) {
-                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
-            }
-            return loadCurrentDeep(cursor, true);
-        } finally {
-            cursor.close();
-        }
-    }
-    
-    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
-    public List<PitData> loadAllDeepFromCursor(Cursor cursor) {
-        int count = cursor.getCount();
-        List<PitData> list = new ArrayList<PitData>(count);
-        
-        if (cursor.moveToFirst()) {
-            if (identityScope != null) {
-                identityScope.lock();
-                identityScope.reserveRoom(count);
-            }
-            try {
-                do {
-                    list.add(loadCurrentDeep(cursor, false));
-                } while (cursor.moveToNext());
-            } finally {
-                if (identityScope != null) {
-                    identityScope.unlock();
-                }
+    /** Internal query to resolve the "pitDataList" to-many relationship of Event. */
+    public List<PitData> _queryEvent_PitDataList(long eventId) {
+        synchronized (this) {
+            if (event_PitDataListQuery == null) {
+                QueryBuilder<PitData> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.EventId.eq(null));
+                event_PitDataListQuery = queryBuilder.build();
             }
         }
-        return list;
+        Query<PitData> query = event_PitDataListQuery.forCurrentThread();
+        query.setParameter(0, eventId);
+        return query.list();
     }
-    
-    protected List<PitData> loadDeepAllAndCloseCursor(Cursor cursor) {
-        try {
-            return loadAllDeepFromCursor(cursor);
-        } finally {
-            cursor.close();
-        }
-    }
-    
 
-    /** A raw-style query where you can pass any WHERE clause and arguments. */
-    public List<PitData> queryDeep(String where, String... selectionArg) {
-        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
-        return loadDeepAllAndCloseCursor(cursor);
+    /** Internal query to resolve the "pitDataList" to-many relationship of Robot. */
+    public List<PitData> _queryRobot_PitDataList(long robotId) {
+        synchronized (this) {
+            if (robot_PitDataListQuery == null) {
+                QueryBuilder<PitData> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.RobotId.eq(null));
+                robot_PitDataListQuery = queryBuilder.build();
+            }
+        }
+        Query<PitData> query = robot_PitDataListQuery.forCurrentThread();
+        query.setParameter(0, robotId);
+        return query.list();
     }
- 
+
+    /** Internal query to resolve the "pitDataList" to-many relationship of Metric. */
+    public List<PitData> _queryMetric_PitDataList(long metricId) {
+        synchronized (this) {
+            if (metric_PitDataListQuery == null) {
+                QueryBuilder<PitData> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.MetricId.eq(null));
+                metric_PitDataListQuery = queryBuilder.build();
+            }
+        }
+        Query<PitData> query = metric_PitDataListQuery.forCurrentThread();
+        query.setParameter(0, metricId);
+        return query.list();
+    }
+
+    /** Internal query to resolve the "pitDataList" to-many relationship of User. */
+    public List<PitData> _queryUser_PitDataList(long userId) {
+        synchronized (this) {
+            if (user_PitDataListQuery == null) {
+                QueryBuilder<PitData> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.UserId.eq(null));
+                user_PitDataListQuery = queryBuilder.build();
+            }
+        }
+        Query<PitData> query = user_PitDataListQuery.forCurrentThread();
+        query.setParameter(0, userId);
+        return query.list();
+    }
+
 }

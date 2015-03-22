@@ -62,10 +62,10 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
             matchDataQueryBuilder.where(MatchDataDao.Properties.EventId.eq(mEvent.getId()));
 
             MatchData currentData = matchDataQueryBuilder.unique();
-            MatchData matchData = new MatchData(null, metricValue.getValue(), robot.getId(), metricValue.getMetric().getId(), mMatch.getId(), LoginHandler.getInstance(context, mDaoSession).getLoggedOnUser().getId(), mEvent.getId());
+            MatchData matchData = new MatchData(null, robot.getId(), metricValue.getMetric().getId(), mMatch.getId(), mEvent.getId(), LoginHandler.getInstance(context, mDaoSession).getLoggedOnUser().getId(), metricValue.getValue());
             if (currentData != null) {
                 currentData.setData(matchData.getData());
-                currentData.update();
+                mDaoSession.getMatchDataDao().update(currentData);
             } else {
                 mDaoSession.insert(matchData);
             }
@@ -76,17 +76,16 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
             QueryBuilder<MatchComment> matchCommentQueryBuilder = mDaoSession.getMatchCommentDao().queryBuilder();
 
             matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(mEvent.getId()));
-            matchCommentQueryBuilder.where(MatchCommentDao.Properties.TeamId.eq(mTeam.getNumber()));
             matchCommentQueryBuilder.where(MatchCommentDao.Properties.RobotId.eq(robot.getId()));
             matchCommentQueryBuilder.where(MatchCommentDao.Properties.MatchId.eq(mMatch.getId()));
 
 
             MatchComment currentData = matchCommentQueryBuilder.unique();
-            MatchComment matchComment = new MatchComment(null, mMatch.getId(), mComment, robot.getId(), mEvent.getId(), mTeam.getNumber());
+            MatchComment matchComment = new MatchComment(null, mMatch.getId(), robot.getId(), mEvent.getId(), mComment);
 
             if (currentData != null) {
                 currentData.setComment(matchComment.getComment());
-                currentData.update();
+                mDaoSession.getMatchCommentDao().update(currentData);
             } else {
                 mDaoSession.insert(matchComment);
             }

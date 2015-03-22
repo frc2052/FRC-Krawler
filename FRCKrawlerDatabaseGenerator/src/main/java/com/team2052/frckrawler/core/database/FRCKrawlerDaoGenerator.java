@@ -2,92 +2,122 @@ package com.team2052.frckrawler.core.database;
 
 import de.greenrobot.daogenerator.DaoGenerator;
 import de.greenrobot.daogenerator.Entity;
+import de.greenrobot.daogenerator.Property;
 import de.greenrobot.daogenerator.Schema;
 
 public class FRCKrawlerDaoGenerator {
 
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(1, "com.team2052.frckrawler.core.db");
-        //Games
-        Entity game = schema.addEntity("Game");
-        game.implementsSerializable();
-        game.addIdProperty().autoincrement().unique();
-        game.addStringProperty("name");
+        Schema schema = new Schema(1, "com.team2052.frckrawler.db");
 
-        //Events
-        Entity event = schema.addEntity("Event");
-        event.implementsSerializable();
-        event.addIdProperty().autoincrement().unique();
-        event.addStringProperty("name");
-        event.addToOne(game, event.addLongProperty("gameId").getProperty());
-        event.addStringProperty("location");
-        event.addDateProperty("date");
-        event.addStringProperty("fmsid").unique();
+        Entity matchData = schema.addEntity("MatchData");
+        matchData.implementsSerializable();
+        matchData.addIdProperty();
+        Property match_data_robot_id = matchData.addLongProperty("robotId").notNull().getProperty();
+        Property match_data_metric_id = matchData.addLongProperty("metricId").notNull().getProperty();
+        Property match_data_match_id = matchData.addLongProperty("matchId").notNull().getProperty();
+        Property match_data_event_id = matchData.addLongProperty("eventId").notNull().getProperty();
+        Property match_data_user_id = matchData.addLongProperty("userId").notNull().getProperty();
+        matchData.addStringProperty("data");
 
-        Entity team = schema.addEntity("Team");
-        team.implementsSerializable();
-        team.addLongProperty("number").unique().primaryKey();
-        team.addStringProperty("teamkey").unique();
-        team.addStringProperty("name");
-        team.addStringProperty("location");
-        team.addStringProperty("data");
+        Entity pitData = schema.addEntity("PitData");
+        pitData.implementsSerializable();
+        pitData.addIdProperty();
+        Property pit_data_robot_id = pitData.addLongProperty("robotId").notNull().getProperty();
+        Property pit_data_metric_id = pitData.addLongProperty("metricId").notNull().getProperty();
+        Property pit_data_event_id = pitData.addLongProperty("eventId").notNull().getProperty();
+        Property pit_data_user_id = pitData.addLongProperty("userId").notNull().getProperty();
+        pitData.addStringProperty("data");
 
-        Entity user = schema.addEntity("User");
-        user.implementsSerializable();
-        user.addIdProperty().autoincrement().unique();
-        user.addStringProperty("name");
-
-        Entity contact = schema.addEntity("Contact");
-        contact.implementsSerializable();
-        contact.addIdProperty().autoincrement().unique();
-        contact.addToOne(team, contact.addLongProperty("teamId").getProperty());
-        contact.addStringProperty("name");
-        contact.addStringProperty("email");
-        contact.addStringProperty("address");
-        contact.addStringProperty("phonenumber");
-        contact.addStringProperty("teamrole");
-
-        Entity match = schema.addEntity("Match");
-        match.implementsSerializable();
-        match.addIdProperty().autoincrement().unique();
-        match.addToOne(event, match.addLongProperty("eventId").getProperty());
-        match.addStringProperty("key").unique();
-        match.addIntProperty("number");
-        match.addStringProperty("type");
-        match.addToOne(team, match.addLongProperty("blue1Id").getProperty(), "blue1");
-        match.addToOne(team, match.addLongProperty("blue2Id").getProperty(), "blue2");
-        match.addToOne(team, match.addLongProperty("blue3Id").getProperty(), "blue3");
-        match.addToOne(team, match.addLongProperty("red1Id").getProperty(), "red1");
-        match.addToOne(team, match.addLongProperty("red2Id").getProperty(), "red2");
-        match.addToOne(team, match.addLongProperty("red3Id").getProperty(), "red3");
-
-        match.addIntProperty("redscore");
-        match.addIntProperty("bluescore");
-
-        Entity robot = schema.addEntity("Robot");
-        robot.implementsSerializable();
-        robot.addIdProperty().unique().autoincrement();
-        robot.addToOne(team, robot.addLongProperty("teamId").getProperty());
-        robot.addToOne(game, robot.addLongProperty("gameId").getProperty());
-        robot.addStringProperty("comments");
-        robot.addDoubleProperty("opr");
+        Entity matchComment = schema.addEntity("MatchComment");
+        matchComment.implementsSerializable();
+        matchComment.addIdProperty().autoincrement().unique();
+        Property match_comment_match_id = matchComment.addLongProperty("matchId").getProperty();
+        Property match_comment_robot_id = matchComment.addLongProperty("robotId").getProperty();
+        Property match_comment_event_id = matchComment.addLongProperty("eventId").getProperty();
+        matchComment.addStringProperty("comment");
 
         Entity robotEvent = schema.addEntity("RobotEvent");
         robotEvent.implementsSerializable();
         robotEvent.addIdProperty().unique().autoincrement();
-        robotEvent.addToOne(robot, robotEvent.addLongProperty("robotId").getProperty());
-        robotEvent.addToOne(event, robotEvent.addLongProperty("eventId").getProperty());
+        Property robot_event_robot_id = robotEvent.addLongProperty("robotId").notNull().getProperty();
+        Property robot_event_event_id = robotEvent.addLongProperty("eventId").notNull().getProperty();
+        robotEvent.addStringProperty("data");
+
+        //Match
+        Entity match = schema.addEntity("Match");
+        match.implementsSerializable();
+        match.addIdProperty().autoincrement().unique();
+        match.addIntProperty("number");
+        match.addStringProperty("key").unique();
+        Property match_event_id = match.addLongProperty("eventId").notNull().getProperty();
+        match.addToMany(matchData, match_data_match_id);
+        match.addToMany(matchComment, match_comment_match_id);
+        match.addStringProperty("data");
+
+        //Events
+        Entity event = schema.addEntity("Event");
+        event.addIdProperty().autoincrement().unique();
+        event.implementsSerializable();
+        event.addStringProperty("name");
+        event.addStringProperty("fmsid").unique();
+        Property event_game_id = event.addLongProperty("gameId").notNull().getProperty();
+        event.addToMany(robotEvent, robot_event_event_id);
+        event.addToMany(match, match_event_id);
+        event.addToMany(matchData, match_data_event_id);
+        event.addToMany(pitData, pit_data_event_id);
+        event.addToMany(matchComment, match_comment_event_id);
+        event.addStringProperty("data");
+
+        //Robots
+        Entity robot = schema.addEntity("Robot");
+        robot.implementsSerializable();
+        robot.addIdProperty().unique().autoincrement();
+        Property robot_team_id = robot.addLongProperty("teamId").notNull().getProperty();
+        Property robot_game_id = robot.addLongProperty("gameId").notNull().getProperty();
+        robot.addToMany(robotEvent, robot_event_robot_id);
+        robot.addToMany(matchData, match_data_robot_id);
+        robot.addToMany(pitData, pit_data_robot_id);
+        robot.addToMany(matchComment, match_comment_robot_id);
+        robot.addStringProperty("data");
 
         Entity metric = schema.addEntity("Metric");
         metric.implementsSerializable();
         metric.addIdProperty().unique().autoincrement();
         metric.addStringProperty("name");
+        Property metric_game_id = metric.addLongProperty("gameId").notNull().getProperty();
+        metric.addToMany(matchData, match_data_metric_id);
+        metric.addToMany(pitData, pit_data_metric_id);
         metric.addIntProperty("category");
-        metric.addStringProperty("description");
-        metric.addIntProperty("type");
-        metric.addStringProperty("range");
-        metric.addToOne(game, metric.addLongProperty("gameId").getProperty());
+        metric.addStringProperty("data");
 
+        //Games
+        Entity game = schema.addEntity("Game");
+        game.implementsSerializable();
+        game.addIdProperty().autoincrement().unique();
+        game.addToMany(event, event_game_id);
+        game.addToMany(robot, robot_game_id);
+        game.addToMany(metric, metric_game_id);
+        game.addStringProperty("name");
+
+        //Contact
+        Entity contact = schema.addEntity("Contact");
+        contact.implementsSerializable();
+        contact.addIdProperty().autoincrement().unique();
+        Property contact_team_id = contact.addLongProperty("teamId").notNull().getProperty();
+        contact.addStringProperty("data");
+
+        //Team
+        Entity team = schema.addEntity("Team");
+        team.implementsSerializable();
+        team.addLongProperty("number").unique().primaryKey();
+        team.addStringProperty("teamkey").unique();
+        team.addStringProperty("name");
+        team.addToMany(robot, robot_team_id);
+        team.addToMany(contact, contact_team_id);
+        team.addStringProperty("data");
+
+        //Not used, but still is wanted.
         Entity robotPhoto = schema.addEntity("RobotPhoto");
         robotPhoto.implementsSerializable();
         robotPhoto.addIdProperty().autoincrement().unique();
@@ -96,33 +126,12 @@ public class FRCKrawlerDaoGenerator {
         robotPhoto.addStringProperty("title");
         robotPhoto.addDateProperty("date");
 
-        Entity matchData = schema.addEntity("MatchData");
-        matchData.implementsSerializable();
-        matchData.addIdProperty();
-        matchData.addStringProperty("data");
-        matchData.addToOne(robot, matchData.addLongProperty("robotId").getProperty());
-        matchData.addToOne(metric, matchData.addLongProperty("metricId").getProperty());
-        matchData.addToOne(match, matchData.addLongProperty("matchId").getProperty());
-        matchData.addToOne(event, matchData.addLongProperty("eventId").getProperty());
-        matchData.addToOne(user, matchData.addLongProperty("userId").getProperty());
-
-        Entity pitData = schema.addEntity("PitData");
-        pitData.implementsSerializable();
-        pitData.addIdProperty();
-        pitData.addStringProperty("data");
-        pitData.addToOne(robot, pitData.addLongProperty("robotId").getProperty());
-        pitData.addToOne(metric, pitData.addLongProperty("metricId").getProperty());
-        pitData.addToOne(event, pitData.addLongProperty("eventId").getProperty());
-        pitData.addToOne(user, pitData.addLongProperty("userId").getProperty());
-
-        Entity matchComment = schema.addEntity("MatchComment");
-        matchComment.implementsSerializable();
-        matchComment.addIdProperty();
-        matchComment.addToOne(match, matchComment.addLongProperty("matchId").getProperty());
-        matchComment.addStringProperty("comment");
-        matchComment.addToOne(robot, matchComment.addLongProperty("robotId").getProperty());
-        matchComment.addToOne(event, matchComment.addLongProperty("eventId").getProperty());
-        matchComment.addToOne(team, matchComment.addLongProperty("teamId").getProperty());
+        Entity user = schema.addEntity("User");
+        user.implementsSerializable();
+        user.addIdProperty().autoincrement().unique();
+        user.addToMany(matchData, match_data_user_id);
+        user.addToMany(pitData, pit_data_user_id);
+        user.addStringProperty("name");
 
         new DaoGenerator().generateAll(schema, args[0]);
     }

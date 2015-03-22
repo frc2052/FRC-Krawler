@@ -56,7 +56,7 @@ public class ServerPackage implements Serializable {
 
                     if (unique != null) {
                         unique.setData(m.getData());
-                        unique.update();
+                        session.getMatchDataDao().update(unique);
                     } else {
                         session.insert(m);
                     }
@@ -72,7 +72,7 @@ public class ServerPackage implements Serializable {
 
                     if (unique != null) {
                         unique.setData(m.getData());
-                        unique.update();
+                        session.getPitDataDao().update(unique);
                     } else {
                         session.insert(m);
                     }
@@ -89,7 +89,7 @@ public class ServerPackage implements Serializable {
 
                     if (unique != null) {
                         unique.setComment(matchComment.getComment());
-                        unique.update();
+                        session.getMatchCommentDao().update(unique);
                     } else {
                         session.insert(matchComment);
                     }

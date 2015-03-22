@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.db;
 
+import java.util.List;
 import com.team2052.frckrawler.db.DaoSession;
 import de.greenrobot.dao.DaoException;
 
@@ -11,11 +12,9 @@ public class Metric implements java.io.Serializable {
 
     private Long id;
     private String name;
+    private long gameId;
     private Integer category;
-    private String description;
-    private Integer type;
-    private String range;
-    private Long gameId;
+    private String data;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -23,9 +22,8 @@ public class Metric implements java.io.Serializable {
     /** Used for active entity operations. */
     private transient MetricDao myDao;
 
-    private Game game;
-    private Long game__resolvedKey;
-
+    private List<MatchData> matchDataList;
+    private List<PitData> pitDataList;
 
     public Metric() {
     }
@@ -34,14 +32,12 @@ public class Metric implements java.io.Serializable {
         this.id = id;
     }
 
-    public Metric(Long id, String name, Integer category, String description, Integer type, String range, Long gameId) {
+    public Metric(Long id, String name, long gameId, Integer category, String data) {
         this.id = id;
         this.name = name;
-        this.category = category;
-        this.description = description;
-        this.type = type;
-        this.range = range;
         this.gameId = gameId;
+        this.category = category;
+        this.data = data;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -66,6 +62,14 @@ public class Metric implements java.io.Serializable {
         this.name = name;
     }
 
+    public long getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(long gameId) {
+        this.gameId = gameId;
+    }
+
     public Integer getCategory() {
         return category;
     }
@@ -74,61 +78,56 @@ public class Metric implements java.io.Serializable {
         this.category = category;
     }
 
-    public String getDescription() {
-        return description;
+    public String getData() {
+        return data;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setData(String data) {
+        this.data = data;
     }
 
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public String getRange() {
-        return range;
-    }
-
-    public void setRange(String range) {
-        this.range = range;
-    }
-
-    public Long getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(Long gameId) {
-        this.gameId = gameId;
-    }
-
-    /** To-one relationship, resolved on first access. */
-    public Game getGame() {
-        Long __key = this.gameId;
-        if (game__resolvedKey == null || !game__resolvedKey.equals(__key)) {
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<MatchData> getMatchDataList() {
+        if (matchDataList == null) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            GameDao targetDao = daoSession.getGameDao();
-            Game gameNew = targetDao.load(__key);
+            MatchDataDao targetDao = daoSession.getMatchDataDao();
+            List<MatchData> matchDataListNew = targetDao._queryMetric_MatchDataList(id);
             synchronized (this) {
-                game = gameNew;
-            	game__resolvedKey = __key;
+                if(matchDataList == null) {
+                    matchDataList = matchDataListNew;
+                }
             }
         }
-        return game;
+        return matchDataList;
     }
 
-    public void setGame(Game game) {
-        synchronized (this) {
-            this.game = game;
-            gameId = game == null ? null : game.getId();
-            game__resolvedKey = gameId;
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetMatchDataList() {
+        matchDataList = null;
+    }
+
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<PitData> getPitDataList() {
+        if (pitDataList == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            PitDataDao targetDao = daoSession.getPitDataDao();
+            List<PitData> pitDataListNew = targetDao._queryMetric_PitDataList(id);
+            synchronized (this) {
+                if(pitDataList == null) {
+                    pitDataList = pitDataListNew;
+                }
+            }
         }
+        return pitDataList;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetPitDataList() {
+        pitDataList = null;
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */

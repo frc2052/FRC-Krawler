@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.db;
 
+import java.util.List;
 import com.team2052.frckrawler.db.DaoSession;
 import de.greenrobot.dao.DaoException;
 
@@ -10,10 +11,9 @@ import de.greenrobot.dao.DaoException;
 public class Robot implements java.io.Serializable {
 
     private Long id;
-    private Long teamId;
-    private Long gameId;
-    private String comments;
-    private Double opr;
+    private long teamId;
+    private long gameId;
+    private String data;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -21,12 +21,10 @@ public class Robot implements java.io.Serializable {
     /** Used for active entity operations. */
     private transient RobotDao myDao;
 
-    private Team team;
-    private Long team__resolvedKey;
-
-    private Game game;
-    private Long game__resolvedKey;
-
+    private List<RobotEvent> robotEventList;
+    private List<MatchData> matchDataList;
+    private List<PitData> pitDataList;
+    private List<MatchComment> matchCommentList;
 
     public Robot() {
     }
@@ -35,12 +33,11 @@ public class Robot implements java.io.Serializable {
         this.id = id;
     }
 
-    public Robot(Long id, Long teamId, Long gameId, String comments, Double opr) {
+    public Robot(Long id, long teamId, long gameId, String data) {
         this.id = id;
         this.teamId = teamId;
         this.gameId = gameId;
-        this.comments = comments;
-        this.opr = opr;
+        this.data = data;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -57,86 +54,116 @@ public class Robot implements java.io.Serializable {
         this.id = id;
     }
 
-    public Long getTeamId() {
+    public long getTeamId() {
         return teamId;
     }
 
-    public void setTeamId(Long teamId) {
+    public void setTeamId(long teamId) {
         this.teamId = teamId;
     }
 
-    public Long getGameId() {
+    public long getGameId() {
         return gameId;
     }
 
-    public void setGameId(Long gameId) {
+    public void setGameId(long gameId) {
         this.gameId = gameId;
     }
 
-    public String getComments() {
-        return comments;
+    public String getData() {
+        return data;
     }
 
-    public void setComments(String comments) {
-        this.comments = comments;
+    public void setData(String data) {
+        this.data = data;
     }
 
-    public Double getOpr() {
-        return opr;
-    }
-
-    public void setOpr(Double opr) {
-        this.opr = opr;
-    }
-
-    /** To-one relationship, resolved on first access. */
-    public Team getTeam() {
-        Long __key = this.teamId;
-        if (team__resolvedKey == null || !team__resolvedKey.equals(__key)) {
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<RobotEvent> getRobotEventList() {
+        if (robotEventList == null) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            TeamDao targetDao = daoSession.getTeamDao();
-            Team teamNew = targetDao.load(__key);
+            RobotEventDao targetDao = daoSession.getRobotEventDao();
+            List<RobotEvent> robotEventListNew = targetDao._queryRobot_RobotEventList(id);
             synchronized (this) {
-                team = teamNew;
-            	team__resolvedKey = __key;
+                if(robotEventList == null) {
+                    robotEventList = robotEventListNew;
+                }
             }
         }
-        return team;
+        return robotEventList;
     }
 
-    public void setTeam(Team team) {
-        synchronized (this) {
-            this.team = team;
-            teamId = team == null ? null : team.getNumber();
-            team__resolvedKey = teamId;
-        }
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetRobotEventList() {
+        robotEventList = null;
     }
 
-    /** To-one relationship, resolved on first access. */
-    public Game getGame() {
-        Long __key = this.gameId;
-        if (game__resolvedKey == null || !game__resolvedKey.equals(__key)) {
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<MatchData> getMatchDataList() {
+        if (matchDataList == null) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            GameDao targetDao = daoSession.getGameDao();
-            Game gameNew = targetDao.load(__key);
+            MatchDataDao targetDao = daoSession.getMatchDataDao();
+            List<MatchData> matchDataListNew = targetDao._queryRobot_MatchDataList(id);
             synchronized (this) {
-                game = gameNew;
-            	game__resolvedKey = __key;
+                if(matchDataList == null) {
+                    matchDataList = matchDataListNew;
+                }
             }
         }
-        return game;
+        return matchDataList;
     }
 
-    public void setGame(Game game) {
-        synchronized (this) {
-            this.game = game;
-            gameId = game == null ? null : game.getId();
-            game__resolvedKey = gameId;
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetMatchDataList() {
+        matchDataList = null;
+    }
+
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<PitData> getPitDataList() {
+        if (pitDataList == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            PitDataDao targetDao = daoSession.getPitDataDao();
+            List<PitData> pitDataListNew = targetDao._queryRobot_PitDataList(id);
+            synchronized (this) {
+                if(pitDataList == null) {
+                    pitDataList = pitDataListNew;
+                }
+            }
         }
+        return pitDataList;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetPitDataList() {
+        pitDataList = null;
+    }
+
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<MatchComment> getMatchCommentList() {
+        if (matchCommentList == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            MatchCommentDao targetDao = daoSession.getMatchCommentDao();
+            List<MatchComment> matchCommentListNew = targetDao._queryRobot_MatchCommentList(id);
+            synchronized (this) {
+                if(matchCommentList == null) {
+                    matchCommentList = matchCommentListNew;
+                }
+            }
+        }
+        return matchCommentList;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetMatchCommentList() {
+        matchCommentList = null;
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */

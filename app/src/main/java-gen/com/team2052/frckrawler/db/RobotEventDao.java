@@ -1,15 +1,15 @@
 package com.team2052.frckrawler.db;
 
 import java.util.List;
-import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
-import de.greenrobot.dao.internal.SqlUtils;
 import de.greenrobot.dao.internal.DaoConfig;
+import de.greenrobot.dao.query.Query;
+import de.greenrobot.dao.query.QueryBuilder;
 
 import com.team2052.frckrawler.db.RobotEvent;
 
@@ -27,12 +27,13 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property RobotId = new Property(1, Long.class, "robotId", false, "ROBOT_ID");
-        public final static Property EventId = new Property(2, Long.class, "eventId", false, "EVENT_ID");
+        public final static Property RobotId = new Property(1, long.class, "robotId", false, "ROBOT_ID");
+        public final static Property EventId = new Property(2, long.class, "eventId", false, "EVENT_ID");
+        public final static Property Data = new Property(3, String.class, "data", false, "DATA");
     };
 
-    private DaoSession daoSession;
-
+    private Query<RobotEvent> event_RobotEventListQuery;
+    private Query<RobotEvent> robot_RobotEventListQuery;
 
     public RobotEventDao(DaoConfig config) {
         super(config);
@@ -40,7 +41,6 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long> {
     
     public RobotEventDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
-        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -48,8 +48,9 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'ROBOT_EVENT' (" + //
                 "'_id' INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
-                "'ROBOT_ID' INTEGER," + // 1: robotId
-                "'EVENT_ID' INTEGER);"); // 2: eventId
+                "'ROBOT_ID' INTEGER NOT NULL ," + // 1: robotId
+                "'EVENT_ID' INTEGER NOT NULL ," + // 2: eventId
+                "'DATA' TEXT);"); // 3: data
     }
 
     /** Drops the underlying database table. */
@@ -67,22 +68,13 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
+        stmt.bindLong(2, entity.getRobotId());
+        stmt.bindLong(3, entity.getEventId());
  
-        Long robotId = entity.getRobotId();
-        if (robotId != null) {
-            stmt.bindLong(2, robotId);
+        String data = entity.getData();
+        if (data != null) {
+            stmt.bindString(4, data);
         }
- 
-        Long eventId = entity.getEventId();
-        if (eventId != null) {
-            stmt.bindLong(3, eventId);
-        }
-    }
-
-    @Override
-    protected void attachEntity(RobotEvent entity) {
-        super.attachEntity(entity);
-        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */
@@ -96,8 +88,9 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long> {
     public RobotEvent readEntity(Cursor cursor, int offset) {
         RobotEvent entity = new RobotEvent( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // robotId
-            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2) // eventId
+            cursor.getLong(offset + 1), // robotId
+            cursor.getLong(offset + 2), // eventId
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // data
         );
         return entity;
     }
@@ -106,8 +99,9 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long> {
     @Override
     public void readEntity(Cursor cursor, RobotEvent entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setRobotId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
-        entity.setEventId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setRobotId(cursor.getLong(offset + 1));
+        entity.setEventId(cursor.getLong(offset + 2));
+        entity.setData(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
      }
     
     /** @inheritdoc */
@@ -133,102 +127,32 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long> {
         return true;
     }
     
-    private String selectDeep;
-
-    protected String getSelectDeep() {
-        if (selectDeep == null) {
-            StringBuilder builder = new StringBuilder("SELECT ");
-            SqlUtils.appendColumns(builder, "T", getAllColumns());
-            builder.append(',');
-            SqlUtils.appendColumns(builder, "T0", daoSession.getRobotDao().getAllColumns());
-            builder.append(',');
-            SqlUtils.appendColumns(builder, "T1", daoSession.getEventDao().getAllColumns());
-            builder.append(" FROM ROBOT_EVENT T");
-            builder.append(" LEFT JOIN ROBOT T0 ON T.'ROBOT_ID'=T0.'_id'");
-            builder.append(" LEFT JOIN EVENT T1 ON T.'EVENT_ID'=T1.'_id'");
-            builder.append(' ');
-            selectDeep = builder.toString();
-        }
-        return selectDeep;
-    }
-    
-    protected RobotEvent loadCurrentDeep(Cursor cursor, boolean lock) {
-        RobotEvent entity = loadCurrent(cursor, 0, lock);
-        int offset = getAllColumns().length;
-
-        Robot robot = loadCurrentOther(daoSession.getRobotDao(), cursor, offset);
-        entity.setRobot(robot);
-        offset += daoSession.getRobotDao().getAllColumns().length;
-
-        Event event = loadCurrentOther(daoSession.getEventDao(), cursor, offset);
-        entity.setEvent(event);
-
-        return entity;    
-    }
-
-    public RobotEvent loadDeep(Long key) {
-        assertSinglePk();
-        if (key == null) {
-            return null;
-        }
-
-        StringBuilder builder = new StringBuilder(getSelectDeep());
-        builder.append("WHERE ");
-        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
-        String sql = builder.toString();
-        
-        String[] keyArray = new String[] { key.toString() };
-        Cursor cursor = db.rawQuery(sql, keyArray);
-        
-        try {
-            boolean available = cursor.moveToFirst();
-            if (!available) {
-                return null;
-            } else if (!cursor.isLast()) {
-                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
-            }
-            return loadCurrentDeep(cursor, true);
-        } finally {
-            cursor.close();
-        }
-    }
-    
-    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
-    public List<RobotEvent> loadAllDeepFromCursor(Cursor cursor) {
-        int count = cursor.getCount();
-        List<RobotEvent> list = new ArrayList<RobotEvent>(count);
-        
-        if (cursor.moveToFirst()) {
-            if (identityScope != null) {
-                identityScope.lock();
-                identityScope.reserveRoom(count);
-            }
-            try {
-                do {
-                    list.add(loadCurrentDeep(cursor, false));
-                } while (cursor.moveToNext());
-            } finally {
-                if (identityScope != null) {
-                    identityScope.unlock();
-                }
+    /** Internal query to resolve the "robotEventList" to-many relationship of Event. */
+    public List<RobotEvent> _queryEvent_RobotEventList(long eventId) {
+        synchronized (this) {
+            if (event_RobotEventListQuery == null) {
+                QueryBuilder<RobotEvent> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.EventId.eq(null));
+                event_RobotEventListQuery = queryBuilder.build();
             }
         }
-        return list;
+        Query<RobotEvent> query = event_RobotEventListQuery.forCurrentThread();
+        query.setParameter(0, eventId);
+        return query.list();
     }
-    
-    protected List<RobotEvent> loadDeepAllAndCloseCursor(Cursor cursor) {
-        try {
-            return loadAllDeepFromCursor(cursor);
-        } finally {
-            cursor.close();
-        }
-    }
-    
 
-    /** A raw-style query where you can pass any WHERE clause and arguments. */
-    public List<RobotEvent> queryDeep(String where, String... selectionArg) {
-        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
-        return loadDeepAllAndCloseCursor(cursor);
+    /** Internal query to resolve the "robotEventList" to-many relationship of Robot. */
+    public List<RobotEvent> _queryRobot_RobotEventList(long robotId) {
+        synchronized (this) {
+            if (robot_RobotEventListQuery == null) {
+                QueryBuilder<RobotEvent> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.RobotId.eq(null));
+                robot_RobotEventListQuery = queryBuilder.build();
+            }
+        }
+        Query<RobotEvent> query = robot_RobotEventListQuery.forCurrentThread();
+        query.setParameter(0, robotId);
+        return query.list();
     }
- 
+
 }

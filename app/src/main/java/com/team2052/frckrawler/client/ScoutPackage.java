@@ -7,18 +7,17 @@ import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.core.database.Schedule;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchCommentDao;
-import com.team2052.frckrawler.db.MatchDao;
 import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.MatchDataDao;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.PitDataDao;
+import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
-import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.db.User;
 
@@ -39,22 +38,31 @@ public class ScoutPackage implements Serializable {
     private final Schedule schedule;
     private final List<Metric> metrics;
     private final List<User> users;
-    private final List<RobotEvent> robots;
+    private final List<RobotEvent> robot_events;
+    private final List<Robot> robots = new ArrayList<>();
     private final Event event;
     private final List<MatchData> matchData;
     private final List<MatchComment> matchComments;
+    private final Game game;
 
     public ScoutPackage(DaoSession session, Event event) {
+        this.game = session.getGameDao().load(event.getGameId());
         this.event = event;
         users = session.getUserDao().loadAll();
-        metrics = session.getMetricDao().queryDeep("WHERE " + MetricDao.Properties.GameId.columnName + " = " + event.getGame().getId());
-        robots = session.getRobotEventDao().queryDeep("WHERE " + RobotEventDao.Properties.EventId.columnName + " = " + event.getId());
-        schedule = new Schedule(event, session.getMatchDao().queryDeep("WHERE " + MatchDao.Properties.EventId.columnName + " = " + event.getId()));
+        metrics = game.getMetricList();
+        robot_events = event.getRobotEventList();
+
+        for(RobotEvent robotEvent: robot_events){
+            robots.add(session.getRobotDao().load(robotEvent.getRobotId()));
+        }
+
+        schedule = new Schedule(event, event.getMatchList());
         pitData = session.getPitDataDao().queryBuilder().where(PitDataDao.Properties.EventId.eq(event.getId())).list();
         matchData = session.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.EventId.eq(event.getId())).list();
         matchComments = session.getMatchCommentDao().queryBuilder().where(MatchCommentDao.Properties.EventId.eq(event.getId())).list();
-        for (RobotEvent robotEvent : robots) {
-            teams.add(robotEvent.getRobot().getTeam());
+
+        for (RobotEvent robotEvent : robot_events) {
+            teams.add(session.getTeamDao().load(session.getRobotDao().load(robotEvent.getRobotId()).getTeamId()));
         }
     }
 
@@ -70,9 +78,12 @@ public class ScoutPackage implements Serializable {
                     session.insertOrReplace(user);
                 }
 
-                for (RobotEvent robotEvent : robots) {
+                for (RobotEvent robotEvent : robot_events) {
                     session.insert(robotEvent);
-                    session.insertOrReplace(robotEvent.getRobot());
+                }
+
+                for(Robot robot: robots){
+                    session.insertOrReplace(robot);
                 }
 
                 for (Team team : teams) {
@@ -96,7 +107,7 @@ public class ScoutPackage implements Serializable {
                 }
 
                 session.insertOrReplace(event);
-                session.insertOrReplace(event.getGame());
+                session.insertOrReplace(game);
             }
         });
 

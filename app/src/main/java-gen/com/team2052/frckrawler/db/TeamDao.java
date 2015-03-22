@@ -26,9 +26,10 @@ public class TeamDao extends AbstractDao<Team, Long> {
         public final static Property Number = new Property(0, Long.class, "number", true, "NUMBER");
         public final static Property Teamkey = new Property(1, String.class, "teamkey", false, "TEAMKEY");
         public final static Property Name = new Property(2, String.class, "name", false, "NAME");
-        public final static Property Location = new Property(3, String.class, "location", false, "LOCATION");
-        public final static Property Data = new Property(4, String.class, "data", false, "DATA");
+        public final static Property Data = new Property(3, String.class, "data", false, "DATA");
     };
+
+    private DaoSession daoSession;
 
 
     public TeamDao(DaoConfig config) {
@@ -37,6 +38,7 @@ public class TeamDao extends AbstractDao<Team, Long> {
     
     public TeamDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -46,8 +48,7 @@ public class TeamDao extends AbstractDao<Team, Long> {
                 "'NUMBER' INTEGER PRIMARY KEY UNIQUE ," + // 0: number
                 "'TEAMKEY' TEXT UNIQUE ," + // 1: teamkey
                 "'NAME' TEXT," + // 2: name
-                "'LOCATION' TEXT," + // 3: location
-                "'DATA' TEXT);"); // 4: data
+                "'DATA' TEXT);"); // 3: data
     }
 
     /** Drops the underlying database table. */
@@ -76,15 +77,16 @@ public class TeamDao extends AbstractDao<Team, Long> {
             stmt.bindString(3, name);
         }
  
-        String location = entity.getLocation();
-        if (location != null) {
-            stmt.bindString(4, location);
-        }
- 
         String data = entity.getData();
         if (data != null) {
-            stmt.bindString(5, data);
+            stmt.bindString(4, data);
         }
+    }
+
+    @Override
+    protected void attachEntity(Team entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */
@@ -100,8 +102,7 @@ public class TeamDao extends AbstractDao<Team, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // number
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // teamkey
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // location
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // data
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // data
         );
         return entity;
     }
@@ -112,8 +113,7 @@ public class TeamDao extends AbstractDao<Team, Long> {
         entity.setNumber(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setTeamkey(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setLocation(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setData(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setData(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
      }
     
     /** @inheritdoc */

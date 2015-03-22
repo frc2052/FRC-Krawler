@@ -70,12 +70,11 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         matchDataQueryBuilder.where(MatchDataDao.Properties.RobotId.eq(robot.getId()));
 
         QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
-        metricQueryBuilder.where(MetricDao.Properties.GameId.eq(event.getGame().getId()));
+        metricQueryBuilder.where(MetricDao.Properties.GameId.eq(event.getGameId()));
         metricQueryBuilder.where(MetricDao.Properties.Category.eq(Utilities.MetricUtil.MetricType.MATCH_PERF_METRICS.ordinal()));
 
         QueryBuilder<MatchComment> matchCommentQueryBuilder = mDaoSession.getMatchCommentDao().queryBuilder();
         matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(event.getId()));
-        matchCommentQueryBuilder.where(MatchCommentDao.Properties.TeamId.eq(team.getNumber()));
         matchCommentQueryBuilder.where(MatchCommentDao.Properties.RobotId.eq(robot.getId()));
         matchCommentQueryBuilder.where(MatchCommentDao.Properties.MatchId.eq(match.getId()));
 
@@ -97,7 +96,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         if (currentData.size() == metrics.size()) {
             LogHelper.info("Loading Metrics from Data");
             for (MatchData matchData : currentData) {
-                mMetricValues.add(new MetricValue(matchData));
+                mMetricValues.add(new MetricValue(mDaoSession, matchData));
             }
         } else {
             LogHelper.info("Loading Metrics");

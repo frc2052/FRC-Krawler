@@ -1,15 +1,15 @@
 package com.team2052.frckrawler.db;
 
 import java.util.List;
-import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
-import de.greenrobot.dao.internal.SqlUtils;
 import de.greenrobot.dao.internal.DaoConfig;
+import de.greenrobot.dao.query.Query;
+import de.greenrobot.dao.query.QueryBuilder;
 
 import com.team2052.frckrawler.db.Metric;
 
@@ -28,15 +28,14 @@ public class MetricDao extends AbstractDao<Metric, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Category = new Property(2, Integer.class, "category", false, "CATEGORY");
-        public final static Property Description = new Property(3, String.class, "description", false, "DESCRIPTION");
-        public final static Property Type = new Property(4, Integer.class, "type", false, "TYPE");
-        public final static Property Range = new Property(5, String.class, "range", false, "RANGE");
-        public final static Property GameId = new Property(6, Long.class, "gameId", false, "GAME_ID");
+        public final static Property GameId = new Property(2, long.class, "gameId", false, "GAME_ID");
+        public final static Property Category = new Property(3, Integer.class, "category", false, "CATEGORY");
+        public final static Property Data = new Property(4, String.class, "data", false, "DATA");
     };
 
     private DaoSession daoSession;
 
+    private Query<Metric> game_MetricListQuery;
 
     public MetricDao(DaoConfig config) {
         super(config);
@@ -53,11 +52,9 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         db.execSQL("CREATE TABLE " + constraint + "'METRIC' (" + //
                 "'_id' INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
                 "'NAME' TEXT," + // 1: name
-                "'CATEGORY' INTEGER," + // 2: category
-                "'DESCRIPTION' TEXT," + // 3: description
-                "'TYPE' INTEGER," + // 4: type
-                "'RANGE' TEXT," + // 5: range
-                "'GAME_ID' INTEGER);"); // 6: gameId
+                "'GAME_ID' INTEGER NOT NULL ," + // 2: gameId
+                "'CATEGORY' INTEGER," + // 3: category
+                "'DATA' TEXT);"); // 4: data
     }
 
     /** Drops the underlying database table. */
@@ -80,30 +77,16 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         if (name != null) {
             stmt.bindString(2, name);
         }
+        stmt.bindLong(3, entity.getGameId());
  
         Integer category = entity.getCategory();
         if (category != null) {
-            stmt.bindLong(3, category);
+            stmt.bindLong(4, category);
         }
  
-        String description = entity.getDescription();
-        if (description != null) {
-            stmt.bindString(4, description);
-        }
- 
-        Integer type = entity.getType();
-        if (type != null) {
-            stmt.bindLong(5, type);
-        }
- 
-        String range = entity.getRange();
-        if (range != null) {
-            stmt.bindString(6, range);
-        }
- 
-        Long gameId = entity.getGameId();
-        if (gameId != null) {
-            stmt.bindLong(7, gameId);
+        String data = entity.getData();
+        if (data != null) {
+            stmt.bindString(5, data);
         }
     }
 
@@ -125,11 +108,9 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         Metric entity = new Metric( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // category
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // description
-            cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4), // type
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // range
-            cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6) // gameId
+            cursor.getLong(offset + 2), // gameId
+            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // category
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // data
         );
         return entity;
     }
@@ -139,11 +120,9 @@ public class MetricDao extends AbstractDao<Metric, Long> {
     public void readEntity(Cursor cursor, Metric entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setCategory(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
-        entity.setDescription(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setType(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
-        entity.setRange(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setGameId(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
+        entity.setGameId(cursor.getLong(offset + 2));
+        entity.setCategory(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
+        entity.setData(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
      }
     
     /** @inheritdoc */
@@ -169,95 +148,18 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         return true;
     }
     
-    private String selectDeep;
-
-    protected String getSelectDeep() {
-        if (selectDeep == null) {
-            StringBuilder builder = new StringBuilder("SELECT ");
-            SqlUtils.appendColumns(builder, "T", getAllColumns());
-            builder.append(',');
-            SqlUtils.appendColumns(builder, "T0", daoSession.getGameDao().getAllColumns());
-            builder.append(" FROM METRIC T");
-            builder.append(" LEFT JOIN GAME T0 ON T.'GAME_ID'=T0.'_id'");
-            builder.append(' ');
-            selectDeep = builder.toString();
-        }
-        return selectDeep;
-    }
-    
-    protected Metric loadCurrentDeep(Cursor cursor, boolean lock) {
-        Metric entity = loadCurrent(cursor, 0, lock);
-        int offset = getAllColumns().length;
-
-        Game game = loadCurrentOther(daoSession.getGameDao(), cursor, offset);
-        entity.setGame(game);
-
-        return entity;    
-    }
-
-    public Metric loadDeep(Long key) {
-        assertSinglePk();
-        if (key == null) {
-            return null;
-        }
-
-        StringBuilder builder = new StringBuilder(getSelectDeep());
-        builder.append("WHERE ");
-        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
-        String sql = builder.toString();
-        
-        String[] keyArray = new String[] { key.toString() };
-        Cursor cursor = db.rawQuery(sql, keyArray);
-        
-        try {
-            boolean available = cursor.moveToFirst();
-            if (!available) {
-                return null;
-            } else if (!cursor.isLast()) {
-                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
-            }
-            return loadCurrentDeep(cursor, true);
-        } finally {
-            cursor.close();
-        }
-    }
-    
-    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
-    public List<Metric> loadAllDeepFromCursor(Cursor cursor) {
-        int count = cursor.getCount();
-        List<Metric> list = new ArrayList<Metric>(count);
-        
-        if (cursor.moveToFirst()) {
-            if (identityScope != null) {
-                identityScope.lock();
-                identityScope.reserveRoom(count);
-            }
-            try {
-                do {
-                    list.add(loadCurrentDeep(cursor, false));
-                } while (cursor.moveToNext());
-            } finally {
-                if (identityScope != null) {
-                    identityScope.unlock();
-                }
+    /** Internal query to resolve the "metricList" to-many relationship of Game. */
+    public List<Metric> _queryGame_MetricList(long gameId) {
+        synchronized (this) {
+            if (game_MetricListQuery == null) {
+                QueryBuilder<Metric> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.GameId.eq(null));
+                game_MetricListQuery = queryBuilder.build();
             }
         }
-        return list;
+        Query<Metric> query = game_MetricListQuery.forCurrentThread();
+        query.setParameter(0, gameId);
+        return query.list();
     }
-    
-    protected List<Metric> loadDeepAllAndCloseCursor(Cursor cursor) {
-        try {
-            return loadAllDeepFromCursor(cursor);
-        } finally {
-            cursor.close();
-        }
-    }
-    
 
-    /** A raw-style query where you can pass any WHERE clause and arguments. */
-    public List<Metric> queryDeep(String where, String... selectionArg) {
-        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
-        return loadDeepAllAndCloseCursor(cursor);
-    }
- 
 }
