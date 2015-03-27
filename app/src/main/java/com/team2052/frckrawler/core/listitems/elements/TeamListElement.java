@@ -27,7 +27,7 @@ public class TeamListElement extends ListElement {
         }
         ((TextView) convertView.findViewById(R.id.list_item_team_number)).setText(Long.toString(team.getNumber()));
         ((TextView) convertView.findViewById(R.id.list_item_team_name)).setText(team.getName());
-        ((TextView) convertView.findViewById(R.id.list_item_team_location)).setText(team.getLocation());
+        //((TextView) convertView.findViewById(R.id.list_item_team_location)).setText(team.getLocation());
         return convertView;
     }
 }

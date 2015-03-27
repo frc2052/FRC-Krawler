@@ -73,7 +73,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                     //Save the event
 
                     Event event = JSON.getGson().fromJson(jEvent, Event.class);
-                    event.setGame(game);
+                    event.setGameId(game.getId());
                     daoSession.getEventDao().insert(event);
 
 
@@ -87,11 +87,11 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                         Robot robot = daoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(game.getId())).where(RobotDao.Properties.TeamId.eq(team.getNumber())).unique();
 
                         if (robot == null) {
-                            daoSession.getRobotEventDao().insert(new RobotEvent(null, daoSession.getRobotDao().insert(new Robot(null, team.getNumber(), game.getId(), "", 0.0)), event.getId()));
+                            daoSession.getRobotEventDao().insert(new RobotEvent(null, daoSession.getRobotDao().insert(new Robot(null, team.getNumber(), game.getId(), null)), event.getId(), null));
                         } else {
                             RobotEvent robotEvents = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).where(RobotEventDao.Properties.EventId.eq(event.getId())).unique();
                             if (robotEvents == null) {
-                                daoSession.getRobotEventDao().insert(new RobotEvent(null, robot.getId(), event.getId()));
+                                daoSession.getRobotEventDao().insert(new RobotEvent(null, robot.getId(), event.getId(), null));
                             }
                         }
                     }
@@ -101,9 +101,9 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                         //Save all the matches and alliances
                         Match match = JSON.getGson().fromJson(element, Match.class);
                         //Only save Qualifications
-                        if (match.getType().contains("qm")) {
+                        /*if (match.getType().contains("qm")) {
                             daoSession.insert(match);
-                        }
+                        }*/
                     }
                     LogHelper.debug("Saved " + event.getName() + " In " + (System.currentTimeMillis() - startTime) + "ms");
                 }

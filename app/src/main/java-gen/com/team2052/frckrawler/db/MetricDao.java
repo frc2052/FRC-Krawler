@@ -28,9 +28,10 @@ public class MetricDao extends AbstractDao<Metric, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property GameId = new Property(2, long.class, "gameId", false, "GAME_ID");
-        public final static Property Category = new Property(3, Integer.class, "category", false, "CATEGORY");
+        public final static Property Category = new Property(2, Integer.class, "category", false, "CATEGORY");
+        public final static Property Type = new Property(3, Integer.class, "type", false, "TYPE");
         public final static Property Data = new Property(4, String.class, "data", false, "DATA");
+        public final static Property GameId = new Property(5, long.class, "gameId", false, "GAME_ID");
     };
 
     private DaoSession daoSession;
@@ -52,9 +53,10 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         db.execSQL("CREATE TABLE " + constraint + "'METRIC' (" + //
                 "'_id' INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
                 "'NAME' TEXT," + // 1: name
-                "'GAME_ID' INTEGER NOT NULL ," + // 2: gameId
-                "'CATEGORY' INTEGER," + // 3: category
-                "'DATA' TEXT);"); // 4: data
+                "'CATEGORY' INTEGER," + // 2: category
+                "'TYPE' INTEGER," + // 3: type
+                "'DATA' TEXT," + // 4: data
+                "'GAME_ID' INTEGER NOT NULL );"); // 5: gameId
     }
 
     /** Drops the underlying database table. */
@@ -77,17 +79,22 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         if (name != null) {
             stmt.bindString(2, name);
         }
-        stmt.bindLong(3, entity.getGameId());
  
         Integer category = entity.getCategory();
         if (category != null) {
-            stmt.bindLong(4, category);
+            stmt.bindLong(3, category);
+        }
+ 
+        Integer type = entity.getType();
+        if (type != null) {
+            stmt.bindLong(4, type);
         }
  
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(5, data);
         }
+        stmt.bindLong(6, entity.getGameId());
     }
 
     @Override
@@ -108,9 +115,10 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         Metric entity = new Metric( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.getLong(offset + 2), // gameId
-            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // category
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // data
+            cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // category
+            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // type
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // data
+            cursor.getLong(offset + 5) // gameId
         );
         return entity;
     }
@@ -120,9 +128,10 @@ public class MetricDao extends AbstractDao<Metric, Long> {
     public void readEntity(Cursor cursor, Metric entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setGameId(cursor.getLong(offset + 2));
-        entity.setCategory(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
+        entity.setCategory(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
+        entity.setType(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
         entity.setData(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setGameId(cursor.getLong(offset + 5));
      }
     
     /** @inheritdoc */

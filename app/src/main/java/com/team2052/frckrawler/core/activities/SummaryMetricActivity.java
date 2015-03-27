@@ -57,7 +57,7 @@ public class SummaryMetricActivity extends ListActivity {
 
         @Override
         protected List<Metric> doInBackground(Void... params) {
-            return mDaoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId())).list();
+            return mDaoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(mEvent.getGameId())).list();
         }
 
         @Override

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.listeners.ListUpdateListener;
 import com.team2052.frckrawler.core.listitems.ListElement;
 import com.team2052.frckrawler.db.Contact;
@@ -42,7 +43,6 @@ public class ContactListElement extends ListElement {
                 builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        contact.delete();
                         listener.updateList();
                     }
                 });
@@ -50,8 +50,8 @@ public class ContactListElement extends ListElement {
                 builder.create().show();
             }
         });
-        ((TextView) convertView.findViewById(R.id.contact_name)).setText(contact.getName());
-        ((TextView) convertView.findViewById(R.id.contact_team_role)).setText(contact.getTeamrole());
+        //((TextView) convertView.findViewById(R.id.contact_name)).setText(contact.getName());
+        //((TextView) convertView.findViewById(R.id.contact_team_role)).setText(contact.getTeamrole());
         return convertView;
     }
 }

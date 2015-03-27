@@ -2,27 +2,7 @@ package com.team2052.frckrawler.core.database;
 
 import android.content.Context;
 
-import com.team2052.frckrawler.db.Contact;
-import com.team2052.frckrawler.db.ContactDao;
-import com.team2052.frckrawler.db.DaoSession;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.EventDao;
-import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.db.MatchDao;
-import com.team2052.frckrawler.db.MatchData;
-import com.team2052.frckrawler.db.MatchDataDao;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.MetricDao;
-import com.team2052.frckrawler.db.PitData;
-import com.team2052.frckrawler.db.PitDataDao;
-import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.db.RobotDao;
-import com.team2052.frckrawler.db.RobotEvent;
-import com.team2052.frckrawler.db.RobotEventDao;
-import com.team2052.frckrawler.db.RobotPhoto;
-import com.team2052.frckrawler.db.RobotPhotoDao;
-import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.db.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,16 +17,46 @@ import de.greenrobot.dao.query.QueryBuilder;
  * @author Adam
  * @since 10/7/2014
  */
+
+//TODO
 public class DBManager {
 
     private static DBManager instance;
+
+    private final MatchDataDao matchDataDao;
+    private final PitDataDao pitDataDao;
+    private final MatchCommentDao matchCommentDao;
+    private final RobotEventDao robotEventDao;
+    private final MatchDao matchDao;
+    private final EventDao eventDao;
+    private final RobotDao robotDao;
+    private final MetricDao metricDao;
+    private final GameDao gameDao;
+    private final ContactDao contactDao;
+    private final RobotPhotoDao robotPhotoDao;
+    private final UserDao userDao;
+
     private Context context;
     private DaoSession daoSession;
 
-    private DBManager(Context context, DaoSession daoSession) {
+    private TeamDao teamDao;
 
+    private DBManager(Context context, DaoSession daoSession) {
         this.context = context;
         this.daoSession = daoSession;
+        matchDataDao = daoSession.getMatchDataDao();
+        pitDataDao = daoSession.getPitDataDao();
+        matchCommentDao = daoSession.getMatchCommentDao();
+        robotEventDao = daoSession.getRobotEventDao();
+        matchDao = daoSession.getMatchDao();
+        eventDao = daoSession.getEventDao();
+        robotDao = daoSession.getRobotDao();
+        metricDao = daoSession.getMetricDao();
+        gameDao = daoSession.getGameDao();
+        contactDao = daoSession.getContactDao();
+        teamDao = daoSession.getTeamDao();
+        robotPhotoDao = daoSession.getRobotPhotoDao();
+        userDao = daoSession.getUserDao();
     }
 
     public static DBManager getInstance(Context context, DaoSession daoSession) {
@@ -66,18 +76,19 @@ public class DBManager {
      * @param game
      */
     public void deleteGame(Game game) {
-        for (Event event : daoSession.getEventDao().queryBuilder().where(EventDao.Properties.GameId.eq(game.getId())).list()) {
+        for (Event event : game.getEventList()) {
             deleteEvent(event);
         }
 
-        for (Robot robot : daoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(game.getId())).list()) {
+        for (Metric metric : game.getMetricList()) {
+            deleteMetric(metric);
+        }
+
+        for (Robot robot : game.getRobotList()) {
             deleteRobot(robot);
         }
 
-        for (Metric metric : daoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(game.getId())).list()) {
-            deleteMetric(metric);
-        }
-        daoSession.getGameDao().delete(game);
+        gameDao.delete(game);
     }
 
     /**
@@ -86,23 +97,20 @@ public class DBManager {
      * @param event
      */
     public void deleteEvent(Event event) {
-        for (Match match : daoSession.getMatchDao().queryBuilder().where(MatchDao.Properties.EventId.eq(event.getId())).list()) {
-            deleteMatch(match);
+        for (MatchComment comment : event.getMatchCommentList()) {
+            deleteMatchComment(comment);
         }
-
-        for (RobotEvent robotEvent : daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(event.getId())).list()) {
-            deleteRobotEvent(robotEvent);
-        }
-
-        for (PitData pitData : daoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.EventId.eq(event.getId())).list()) {
-            deletePitData(pitData);
-        }
-
-        for (MatchData pitData : daoSession.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.EventId.eq(event.getId())).list()) {
-            deleteMatchData(pitData);
-        }
-        daoSession.getEventDao().delete(event);
     }
+
+    /**
+     * Used to delete an event deletes all other references
+     *
+     * @param matchComment
+     */
+    public void deleteMatchComment(MatchComment matchComment) {
+        matchCommentDao.delete(matchComment);
+    }
+
 
     /**
      * Used to delete a robotEvent deletes all other references
@@ -110,7 +118,7 @@ public class DBManager {
      * @param robotEvent
      */
     public void deleteRobotEvent(RobotEvent robotEvent) {
-        daoSession.getRobotEventDao().delete(robotEvent);
+        robotEventDao.delete(robotEvent);
     }
 
 
@@ -120,27 +128,7 @@ public class DBManager {
      * @param team
      */
     public void deleteTeam(Team team) {
-        for (Contact contact : daoSession.getContactDao().queryBuilder().where(ContactDao.Properties.TeamId.eq(team.getNumber())).list()) {
-            deleteContact(contact);
-        }
-
-        QueryBuilder<Match> matchQueryBuilder = daoSession.getMatchDao().queryBuilder();
-        matchQueryBuilder.where(MatchDao.Properties.Blue1Id.eq(team.getNumber()));
-        matchQueryBuilder.where(MatchDao.Properties.Blue2Id.eq(team.getNumber()));
-        matchQueryBuilder.where(MatchDao.Properties.Blue3Id.eq(team.getNumber()));
-        matchQueryBuilder.where(MatchDao.Properties.Red1Id.eq(team.getNumber()));
-        matchQueryBuilder.where(MatchDao.Properties.Red2Id.eq(team.getNumber()));
-        matchQueryBuilder.where(MatchDao.Properties.Red3Id.eq(team.getNumber()));
-
-        for (Match match : matchQueryBuilder.list()) {
-            deleteMatch(match);
-        }
-
-        for (Robot robot : daoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.TeamId.eq(team.getNumber())).list()) {
-            deleteRobot(robot);
-        }
-
-        daoSession.getTeamDao().delete(team);
+        teamDao.delete(team);
     }
 
     /**
@@ -149,7 +137,7 @@ public class DBManager {
      * @param contact
      */
     public void deleteContact(Contact contact) {
-        daoSession.getContactDao().delete(contact);
+        contactDao.delete(contact);
     }
 
     /**
@@ -158,10 +146,7 @@ public class DBManager {
      * @param match
      */
     public void deleteMatch(Match match) {
-        for (MatchData data : daoSession.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.MatchId.eq(match.getId())).list()) {
-            deleteMatchData(data);
-        }
-        daoSession.getMatchDao().delete(match);
+        matchDao.delete(match);
     }
 
 
@@ -171,23 +156,7 @@ public class DBManager {
      * @param robot
      */
     public void deleteRobot(Robot robot) {
-        for (RobotEvent robotEvent : daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).list()) {
-            deleteRobotEvent(robotEvent);
-        }
-
-        for (RobotPhoto robotPhoto : daoSession.getRobotPhotoDao().queryBuilder().where(RobotPhotoDao.Properties.RobotId.eq(robot.getId())).list()) {
-            deleteRobotPhoto(robotPhoto);
-        }
-
-        for (PitData pitData : daoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).list()) {
-            deletePitData(pitData);
-        }
-
-        for (MatchData matchData : daoSession.getMatchDataDao().queryBuilder().where(MatchDataDao.Properties.RobotId.eq(robot.getId())).list()) {
-            deleteMatchData(matchData);
-        }
-
-        daoSession.getRobotDao().delete(robot);
+        robotDao.delete(robot);
     }
 
     /**
@@ -196,7 +165,7 @@ public class DBManager {
      * @param metric
      */
     public void deleteMetric(Metric metric) {
-        daoSession.getMetricDao().delete(metric);
+        metricDao.delete(metric);
     }
 
     /**
@@ -208,7 +177,7 @@ public class DBManager {
     public void deleteRobotPhoto(RobotPhoto robotPhoto) {
         //Delete the file
         new File(robotPhoto.getLocation()).delete();
-        daoSession.getRobotPhotoDao().delete(robotPhoto);
+        robotPhotoDao.delete(robotPhoto);
     }
 
     /**
@@ -217,7 +186,7 @@ public class DBManager {
      * @param pitData
      */
     public void deletePitData(PitData pitData) {
-        daoSession.getPitDataDao().delete(pitData);
+        pitDataDao.delete(pitData);
     }
 
 
@@ -227,20 +196,58 @@ public class DBManager {
      * @param matchData
      */
     public void deleteMatchData(MatchData matchData) {
-        daoSession.getMatchDataDao().delete(matchData);
+        matchDataDao.delete(matchData);
     }
 
     public List<Team> getTeamsForMatch(Match match) {
-        List<Team> teams = new ArrayList<>();
-        teams.add(match.getBlue1());
-        teams.add(match.getBlue2());
-        teams.add(match.getBlue3());
-        teams.add(match.getRed1());
-        teams.add(match.getRed2());
-        teams.add(match.getRed3());
-        return teams;
+        return null;
     }
 
+    public long getTeamId(RobotEvent robotEvent) {
+        return robotDao.load(robotEvent.getRobotId()).getTeamId();
+    }
 
+    public Team getTeam(RobotEvent robotEvent) {
+        return teamDao.load(robotDao.load(robotEvent.getRobotId()).getTeamId());
+    }
+
+    public Team getTeam(long pk) {
+        return teamDao.load(pk);
+    }
+
+    public Robot getRobot(RobotEvent robotEvent) {
+        return robotDao.load(robotEvent.getRobotId());
+    }
+
+    public Game getGame(Event event) {
+        return gameDao.load(event.getGameId());
+    }
+
+    public long getEventId(MatchData matchData){
+        return matchDao.load(matchData.getMatchId()).getEventId();
+    }
+
+    public List<Robot> getRobots(Event event) {
+        List<Robot> robots = new ArrayList<>();
+        for (RobotEvent robotEvent : event.getRobotEventList()) {
+            robots.add(getRobot(robotEvent));
+        }
+        return robots;
+    }
+
+    public Match getMatch(MatchData matchData){
+        return matchDao.load(matchData.getMatchId());
+    }
+    public DaoSession getDaoSession() {
+        return daoSession;
+    }
+
+    public Match getMatch(MatchComment matchComment) {
+        return matchDao.load(matchComment.getMatchId());
+    }
+
+    public Game getGame(Robot mRobot) {
+        return gameDao.load(mRobot.getGameId());
+    }
 
 }

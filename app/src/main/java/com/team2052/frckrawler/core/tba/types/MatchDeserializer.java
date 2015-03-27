@@ -26,19 +26,15 @@ public class MatchDeserializer implements JsonDeserializer<Match> {
             match.setKey(object.get("key").getAsString());
         }
 
-        if (object.has("comp_level") && !object.get("comp_level").isJsonNull()) {
-            match.setType(object.get("comp_level").getAsString());
-        }
-
         if (object.has("match_number") && !object.get("match_number").isJsonNull()) {
             match.setNumber(object.get("match_number").getAsInt());
         }
 
         if (object.has("event_key") && !object.get("event_key").isJsonNull()) {
-            match.setEvent(JSON.get_daoSession().getEventDao().queryBuilder().where(EventDao.Properties.Fmsid.eq(object.get("event_key").getAsString())).unique());
+            match.setEventId(JSON.get_daoSession().getEventDao().queryBuilder().where(EventDao.Properties.Fmsid.eq(object.get("event_key").getAsString())).unique().getId());
         }
 
-        JsonObject alliances = object.get("alliances").getAsJsonObject();
+        /*JsonObject alliances = object.get("alliances").getAsJsonObject();
         if (alliances.has("blue") && !alliances.get("blue").isJsonNull()) {
             JsonObject blue = alliances.get("blue").getAsJsonObject();
             if (blue.has("score") && !blue.get("score").isJsonNull()) {
@@ -63,7 +59,7 @@ public class MatchDeserializer implements JsonDeserializer<Match> {
                 match.setRed2(JSON.get_daoSession().getTeamDao().queryBuilder().where(TeamDao.Properties.Teamkey.eq(jBlueTeams.get(1).getAsString())).unique());
                 match.setRed3(JSON.get_daoSession().getTeamDao().queryBuilder().where(TeamDao.Properties.Teamkey.eq(jBlueTeams.get(2).getAsString())).unique());
             }
-        }
+        }*/
         return match;
     }
 }

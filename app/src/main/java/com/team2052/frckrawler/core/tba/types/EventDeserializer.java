@@ -30,7 +30,7 @@ public class EventDeserializer implements JsonDeserializer<Event> {
             event.setName(object.get("name").getAsString());
         }
 
-        if (object.get("location").isJsonNull()) {
+        /*if (object.get("location").isJsonNull()) {
             event.setLocation("");
         } else {
             event.setLocation(object.get("location").getAsString());
@@ -45,7 +45,7 @@ public class EventDeserializer implements JsonDeserializer<Event> {
             }
         } else {
             event.setDate(new Date(0, 0, 0));
-        }
+        }*/
         return event;
     }
 }

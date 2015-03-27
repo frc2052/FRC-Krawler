@@ -16,7 +16,7 @@ import com.team2052.frckrawler.db.Metric;
  * @author Adam
  */
 public class MetricListElement extends ListElement {
-    private final String descriptionString;
+    private final String descriptionString = "No Description";
     private final Metric metric;
     private String typeString = "";
     private String rangeString = "";
@@ -25,11 +25,11 @@ public class MetricListElement extends ListElement {
         super(Long.toString(metric.getId()));
         this.metric = metric;
 
-        if (metric.getDescription().isEmpty()) {
-            descriptionString = "No Description";
-        } else {
-            descriptionString = metric.getDescription();
-        }
+        if (metric.getData().isEmpty()) {
+            //descriptionString = "No Description";
+        } /*else {
+            //descriptionString = metric.getDescription();
+        }*/
 
         switch (metric.getType()) {
             case Utilities.MetricUtil.BOOLEAN:
@@ -38,7 +38,7 @@ public class MetricListElement extends ListElement {
                 break;
             case Utilities.MetricUtil.COUNTER:
                 typeString = "Counter";
-                JsonObject jsonObject = JSON.getAsJsonObject(metric.getRange());
+                JsonObject jsonObject = JSON.getAsJsonObject(metric.getData());
                 rangeString = jsonObject.get("min").getAsString() + " to " + jsonObject.get("max").getAsString() + " Incrementing by " + jsonObject.get("inc").getAsString();
                 break;
             case Utilities.MetricUtil.CHOOSER:

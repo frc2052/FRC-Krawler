@@ -47,7 +47,7 @@ public class RobotAttendingEventsFragment extends ListFragment {
                 public void run() {
                     List<RobotEvent> robotEvents = mDaoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(mRobot.getId())).list();
                     for (RobotEvent eveRobot : robotEvents) {
-                        elements.add(new EventListElement(eveRobot.getEvent()));
+                        //elements.add(new EventListElement(eveRobot.getEvent()));
                     }
                 }
             });

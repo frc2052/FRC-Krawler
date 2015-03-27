@@ -125,12 +125,12 @@ public class MatchListFragment extends ListFragment {
                 JSON.set_daoSession(mDaoSession);
                 for (JsonElement element : jMatches) {
                     Match match = JSON.getGson().fromJson(element, Match.class);
-                    if (match.getType().contains("qm")) {
+                    /*if (match.getType().contains("qm")) {
                         Match unique = mDaoSession.getMatchDao().queryBuilder().where(MatchDao.Properties.Key.eq(match.getKey())).unique();
                         unique.setRedscore(match.getRedscore());
                         unique.setBluescore(match.getBluescore());
                         unique.update();
-                    }
+                    }*/
                 }
             }
             return null;

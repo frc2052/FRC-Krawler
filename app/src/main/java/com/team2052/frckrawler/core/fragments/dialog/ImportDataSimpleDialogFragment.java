@@ -138,12 +138,12 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                 events.add(JSON.getGson().fromJson(element, Event.class));
             }
             //Sort the event by date
-            Collections.sort(events, new Comparator<Event>() {
+            /*Collections.sort(events, new Comparator<Event>() {
                 @Override
                 public int compare(Event event, Event event2) {
                     return Double.compare(event.getDate().getTime(), event2.getDate().getTime());
                 }
-            });
+            });*/
             return events;
         }
 

@@ -127,7 +127,7 @@ public class RobotsFragment extends ListFragment {
                 List<RobotEvent> robotEvents = mDaoSession.getRobotEventDao().queryBuilder().where(condition).list();
                 robots = new ArrayList<>();
                 for (RobotEvent robotEvent : robotEvents) {
-                    robots.add(robotEvent.getRobot());
+                    robots.add(mDBManager.getRobot(robotEvent));
                 }
                 Collections.sort(robots, new Comparator<Robot>() {
                     @Override

@@ -54,7 +54,7 @@ public class AddContactDialogFragment extends DialogFragment {
                 String phone = ((EditText) view.findViewById(R.id.phone)).getText().toString();
                 String address = ((EditText) view.findViewById(R.id.address)).getText().toString();
                 String teamRole = ((EditText) view.findViewById(R.id.teamRole)).getText().toString();
-                ((FRCKrawler) getActivity().getApplication()).getDaoSession().getContactDao().insert(new Contact(null, mTeam.getNumber(), name, email, address, phone, teamRole));
+                //((FRCKrawler) getActivity().getApplication()).getDaoSession().getContactDao().insert(new Contact(null, mTeam.getNumber(), name, email, address, phone, teamRole));
                 ((ListUpdateListener) getParentFragment()).updateList();
             }
         });

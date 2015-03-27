@@ -19,7 +19,7 @@ public class MetricValue {
     }
 
     public MetricValue(DaoSession daoSession, MatchData matchData) {
-        this(daoSession, matchData.getMatchId(), matchData.getData());
+        this(daoSession, matchData.getMetricId(), matchData.getData());
     }
 
     public MetricValue(DaoSession daoSession, PitData matchData) {

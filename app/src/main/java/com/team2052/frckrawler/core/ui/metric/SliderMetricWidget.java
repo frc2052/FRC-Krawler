@@ -28,7 +28,7 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
 
         SeekBar s = (SeekBar) findViewById(R.id.sliderVal);
 
-        JsonObject range = JSON.getAsJsonObject(m.getMetric().getRange());
+        JsonObject range = JSON.getAsJsonObject(m.getMetric().getData());
         min = range.get("min").getAsInt();
         max = range.get("max").getAsInt();
 

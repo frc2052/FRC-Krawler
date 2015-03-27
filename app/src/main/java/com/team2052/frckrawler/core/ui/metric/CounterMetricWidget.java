@@ -29,7 +29,7 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
         findViewById(R.id.plus).setOnClickListener(this);
         findViewById(R.id.minus).setOnClickListener(this);
 
-        JsonObject o = JSON.getAsJsonObject(m.getMetric().getRange());
+        JsonObject o = JSON.getAsJsonObject(m.getMetric().getData());
 
         max = o.get("max").getAsInt();
         min = o.get("min").getAsInt();

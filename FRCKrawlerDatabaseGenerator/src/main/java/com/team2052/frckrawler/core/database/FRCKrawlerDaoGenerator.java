@@ -85,11 +85,12 @@ public class FRCKrawlerDaoGenerator {
         metric.implementsSerializable();
         metric.addIdProperty().unique().autoincrement();
         metric.addStringProperty("name");
-        Property metric_game_id = metric.addLongProperty("gameId").notNull().getProperty();
+        metric.addIntProperty("category");
         metric.addToMany(matchData, match_data_metric_id);
         metric.addToMany(pitData, pit_data_metric_id);
-        metric.addIntProperty("category");
+        metric.addIntProperty("type");
         metric.addStringProperty("data");
+        Property metric_game_id = metric.addLongProperty("gameId").notNull().getProperty();
 
         //Games
         Entity game = schema.addEntity("Game");

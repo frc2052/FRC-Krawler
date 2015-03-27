@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.widget.ArrayAdapter;
 
 import com.team2052.frckrawler.core.FRCKrawler;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.fragments.ScoutPitFragment;
 import com.team2052.frckrawler.db.DaoSession;
@@ -28,6 +29,7 @@ public class PopulatePitRobotsTask extends AsyncTask<Void, Void, Void> {
     private final DaoSession mDaoSession;
     private final Event mEvent;
     private final Context context;
+    private final DBManager dbManager;
     private ArrayList<MetricValue> mMetricWidgets;
     private String[] mRobotListStrings;
     private List<RobotEvent> mRobots;
@@ -37,6 +39,7 @@ public class PopulatePitRobotsTask extends AsyncTask<Void, Void, Void> {
         this.context = fragment.getActivity();
         this.mEvent = event;
         this.mDaoSession = ((FRCKrawler) context.getApplicationContext()).getDaoSession();
+        this.dbManager = DBManager.getInstance(context, mDaoSession);
     }
 
     @Override
@@ -47,7 +50,7 @@ public class PopulatePitRobotsTask extends AsyncTask<Void, Void, Void> {
         Collections.sort(mRobots, new Comparator<RobotEvent>() {
             @Override
             public int compare(RobotEvent lhs, RobotEvent rhs) {
-                return Double.compare(lhs.getRobot().getTeam().getNumber(), rhs.getRobot().getTeam().getNumber());
+                return Double.compare(dbManager.getTeamId(lhs), dbManager.getTeamId(rhs));
             }
 
         });
@@ -55,7 +58,7 @@ public class PopulatePitRobotsTask extends AsyncTask<Void, Void, Void> {
         ArrayList<String> robots = new ArrayList<>();
 
         for (RobotEvent robotEvent : mRobots) {
-            Team robot = robotEvent.getRobot().getTeam();
+            Team robot = dbManager.getTeam(robotEvent);
             robots.add(robot.getNumber() + ", " + robot.getName());
         }
 

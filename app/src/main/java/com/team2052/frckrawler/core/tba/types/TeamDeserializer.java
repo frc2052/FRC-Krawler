@@ -30,9 +30,9 @@ public class TeamDeserializer implements JsonDeserializer<Team> {
             team.setName(object.get("nickname").getAsString());
         }
 
-        if (object.has("location") && !object.get("location").isJsonNull()) {
+        /*if (object.has("location") && !object.get("location").isJsonNull()) {
             team.setLocation(object.get("location").getAsString());
-        }
+        }*/
 
         JsonObject data = new JsonObject();
 

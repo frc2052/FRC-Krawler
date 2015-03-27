@@ -51,7 +51,7 @@ public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
         pitDataQueryBuilder.where(PitDataDao.Properties.RobotId.eq(robot.getId()));
 
         QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
-        metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGame().getId()));
+        metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGameId()));
         metricQueryBuilder.where(MetricDao.Properties.Category.eq(Utilities.MetricUtil.MetricType.ROBOT_METRICS.ordinal()));
 
         List<Metric> metrics = metricQueryBuilder.list();
@@ -59,7 +59,7 @@ public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
 
         if (pitDatas.size() == metrics.size()) {
             for (PitData pitData : pitDatas) {
-                mMetricWidgets.add(new MetricValue(pitData));
+                mMetricWidgets.add(new MetricValue(mDaoSession, pitData));
             }
         } else {
             for (Metric metric : metrics) {
@@ -78,6 +78,7 @@ public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
             mFragment.mLinearLayout.addView(MetricWidget.createWidget(context, metric));
         }
 
-        mFragment.mComments.setText(robot.getComments());
+        //TODO
+        mFragment.mComments.setText("");
     }
 }

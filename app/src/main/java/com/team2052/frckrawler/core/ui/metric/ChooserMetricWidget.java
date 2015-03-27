@@ -35,7 +35,7 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
 
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1);
 
-        JsonArray range = JSON.getAsJsonArray(m.getMetric().getRange());
+        JsonArray range = JSON.getAsJsonArray(m.getMetric().getData());
         List<String> rangeValues = new ArrayList<>();
 
         for (JsonElement jsonElement : range) {

@@ -35,7 +35,7 @@ public class TeamRecyclerAdapter extends RecyclerView.Adapter<TeamRecyclerAdapte
     @Override
     public void onBindViewHolder(TeamViewHolder teamViewHolder, int pos) {
         final Team team = mTeams.get(pos);
-        teamViewHolder.location.setText(team.getLocation());
+        //teamViewHolder.location.setText(team.getLocation());
         teamViewHolder.name.setText(team.getName());
         teamViewHolder.number.setText(String.valueOf(team.getNumber()));
     }

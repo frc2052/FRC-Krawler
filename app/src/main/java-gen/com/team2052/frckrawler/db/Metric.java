@@ -12,9 +12,10 @@ public class Metric implements java.io.Serializable {
 
     private Long id;
     private String name;
-    private long gameId;
     private Integer category;
+    private Integer type;
     private String data;
+    private long gameId;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -32,12 +33,13 @@ public class Metric implements java.io.Serializable {
         this.id = id;
     }
 
-    public Metric(Long id, String name, long gameId, Integer category, String data) {
+    public Metric(Long id, String name, Integer category, Integer type, String data, long gameId) {
         this.id = id;
         this.name = name;
-        this.gameId = gameId;
         this.category = category;
+        this.type = type;
         this.data = data;
+        this.gameId = gameId;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -62,14 +64,6 @@ public class Metric implements java.io.Serializable {
         this.name = name;
     }
 
-    public long getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(long gameId) {
-        this.gameId = gameId;
-    }
-
     public Integer getCategory() {
         return category;
     }
@@ -78,12 +72,28 @@ public class Metric implements java.io.Serializable {
         this.category = category;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     public String getData() {
         return data;
     }
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public long getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(long gameId) {
+        this.gameId = gameId;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */

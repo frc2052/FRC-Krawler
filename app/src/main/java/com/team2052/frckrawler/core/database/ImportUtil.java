@@ -42,7 +42,7 @@ public class ImportUtil {
                 if (teamJSONObject.has("team_number")) {
                     team = JSON.getGson().fromJson(teamJSONObject, Team.class);
                 } else {
-                    team = new Team((long) number, "frc" + number, "Unknown", "Unknown", null);
+                    team = new Team((long) number, "frc" + number, "Unknown", "Unknown");
                 }
 
                 daoSession.insertOrReplace(team);
@@ -54,11 +54,11 @@ public class ImportUtil {
                 Robot robot = daoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(event.getGameId())).where(RobotDao.Properties.TeamId.eq(team.getNumber())).unique();
 
                 if (robot == null) {
-                    daoSession.getRobotEventDao().insert(new RobotEvent(null, daoSession.getRobotDao().insert(new Robot(null, team.getNumber(), event.getGameId(), "", 0.0)), event.getId()));
+                    daoSession.getRobotEventDao().insert(new RobotEvent(null, daoSession.getRobotDao().insert(new Robot(null, team.getNumber(), event.getGameId(), "")), event.getId(), null));
                 } else {
                     List<RobotEvent> robotEvents = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
                     if (robotEvents.size() <= 0) {
-                        daoSession.getRobotEventDao().insert(new RobotEvent(null, robot.getId(), event.getId()));
+                        daoSession.getRobotEventDao().insert(new RobotEvent(null, robot.getId(), event.getId(), null));
                     }
                 }
             }

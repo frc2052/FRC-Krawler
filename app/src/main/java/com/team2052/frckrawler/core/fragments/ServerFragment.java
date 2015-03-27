@@ -154,7 +154,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
             mEvents = _events;
             List<String> eventNames = new ArrayList<>();
             for (Event event : _events) {
-                eventNames.add(event.getGame().getName() + ", " + event.getName());
+                eventNames.add(mDaoSession.getGameDao().load(event.getGameId()) + ", " + event.getName());
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);
             eventChooser.setAdapter(adapter);

@@ -50,14 +50,14 @@ public class MatchView extends FrameLayout {
 
     public void init(Match match) {
         matchTitle.setText("Match " + Integer.toString(match.getNumber()));
-        red1.setText(Long.toString(match.getRed1Id()));
+        /*red1.setText(Long.toString(match.getRed1Id()));
         red2.setText(Long.toString(match.getRed2Id()));
         red3.setText(Long.toString(match.getRed3Id()));
-        blue1.setText(Long.toString(match.getBlue1Id()));
-        blue2.setText(Long.toString(match.getBlue2Id()));
         blue3.setText(Long.toString(match.getBlue3Id()));
+        blue1.setText(Long.toString(match.getBlue1Id()));
+        blue2.setText(Long.toString(match.getBlue2Id()));*/
         //Matches that aren't played yet have a score of -1
-        if (match.getRedscore() < 0)
+        /*if (match.getRedscore() < 0)
             redScore.setText("?");
         else
             redScore.setText(Integer.toString(match.getRedscore()));
@@ -78,6 +78,6 @@ public class MatchView extends FrameLayout {
         } else {
             redAlliance.setBackgroundResource(R.drawable.no_border);
             blueAlliance.setBackgroundResource(R.drawable.no_border);
-        }
+        }*/
     }
 }

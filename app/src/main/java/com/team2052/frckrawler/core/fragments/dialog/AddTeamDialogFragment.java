@@ -106,13 +106,13 @@ public class AddTeamDialogFragment extends android.support.v4.app.DialogFragment
                     Team team1 = JSON.getGson().fromJson(JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url))), Team.class);
 
                     if (team1 != null) {
-                        Robot robot = new Robot(null, daoSession.insert(team1), mEvent.getGameId(), null, null);
-                        daoSession.insert(new RobotEvent(null, daoSession.insert(robot), mEvent.getId()));
+                        //Robot robot = new Robot(null, daoSession.insert(team1), mEvent.getGameId(), null, null);
+                        //daoSession.insert(new RobotEvent(null, daoSession.insert(robot), mEvent.getId()));
                     }
                 } else {
                     //Team exists just robot doesn't exist, and roobtevent (most likely)
-                    Robot robot = new Robot(null, daoSession.insert(team), mEvent.getGameId(), null, null);
-                    daoSession.insert(new RobotEvent(null, daoSession.insert(robot), mEvent.getId()));
+                    //Robot robot = new Robot(null, daoSession.insert(team), mEvent.getGameId(), null, null);
+                    //daoSession.insert(new RobotEvent(null, daoSession.insert(robot), mEvent.getId()));
                 }
             } else {
                 QueryBuilder<RobotEvent> robotEventQueryBuilder = daoSession.getRobotEventDao().queryBuilder();

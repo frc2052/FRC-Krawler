@@ -69,9 +69,9 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
                 //Save all the matches and alliances
                 Match match = JSON.getGson().fromJson(element, Match.class);
                 //Only save Qualifications
-                if (match.getType().contains("qm")) {
+                /*if (match.getType().contains("qm")) {
                     mDaoSession.insert(match);
-                }
+                }*/
             }
 
             return null;

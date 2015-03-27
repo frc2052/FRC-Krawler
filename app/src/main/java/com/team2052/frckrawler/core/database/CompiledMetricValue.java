@@ -81,7 +81,7 @@ public class CompiledMetricValue {
 
                 break;
             case Utilities.MetricUtil.CHOOSER:
-                JsonArray range = JSON.getAsJsonArray(metric.getRange());
+                JsonArray range = JSON.getAsJsonArray(metric.getData());
                 int rangeCnt = range.size();
                 List<String> rangeValues = new ArrayList<>();
 

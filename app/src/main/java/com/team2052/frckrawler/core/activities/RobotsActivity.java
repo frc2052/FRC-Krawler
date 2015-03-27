@@ -51,17 +51,17 @@ public class RobotsActivity extends ListActivity {
 
         @Override
         protected void onPostExecute(List<RobotEvent> robotEvents) {
-            Collections.sort(robotEvents, new Comparator<RobotEvent>() {
+            /*Collections.sort(robotEvents, new Comparator<RobotEvent>() {
                 @Override
                 public int compare(RobotEvent robotEvent, RobotEvent robotEvent2) {
                     return Double.compare(robotEvent.getRobot().getTeam().getNumber(), robotEvent2.getRobot().getTeam().getNumber());
                 }
-            });
+            });*/
 
             List<ListItem> listItems = new ArrayList<>();
-            for (RobotEvent robotEvent : robotEvents) {
+            /*for (RobotEvent robotEvent : robotEvents) {
                 listItems.add(new SimpleListElement(Long.toString(robotEvent.getRobot().getTeam().getNumber()), Long.toString(robotEvent.getRobot().getId())));
-            }
+            }*/
             mListView.setAdapter(mAdapter = new ListViewAdapter(RobotsActivity.this, listItems));
         }
     }

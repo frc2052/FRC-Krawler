@@ -4,10 +4,13 @@ import com.team2052.frckrawler.core.tba.TBA;
 import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchCommentDao;
+import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.MetricDao;
+import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 
@@ -28,14 +31,15 @@ import de.greenrobot.dao.query.QueryBuilder;
  * @since 10/4/2014
  */
 public class ExportUtil {
-    public static File exportEventDataToCSV(Event event, File location, DaoSession daoSession, float compileWeight) {
-        final List<Metric> metrics = daoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(event.getGameId())).list();
-        List<RobotEvent> robotEvents = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
+    public static File exportEventDataToCSV(Event event, File location, DBManager dbManager, float compileWeight) {
+        Game game = dbManager.getGame(event);
+        List<Metric> metrics = game.getMetricList();
+        List<Robot> robots = dbManager.getRobots(event);
+        List<MatchData> matchDataList = event.getMatchDataList();
 
-        Map<Long, List<CompiledMetricValue>> robots = new TreeMap<>();
-
-        for (RobotEvent robotEvent : robotEvents) {
-            robots.put(robotEvent.getRobot().getTeam().getNumber(), Utilities.MetricCompiler.getCompiledRobot(event, robotEvent.getRobot(), daoSession, compileWeight));
+        Map<Long, List<CompiledMetricValue>> compiledMap = new TreeMap<>();
+        for (Robot robot : robots) {
+            compiledMap.put(robot.getTeamId(), Utilities.MetricCompiler.getCompiledRobot(event, robot, dbManager, compileWeight));
         }
 
         try {
@@ -56,20 +60,19 @@ public class ExportUtil {
             writer.writeNext(Arrays.copyOf(header.toArray(), header.size(), String[].class));
 
             boolean provideTBAURL = event.getFmsid() != null;
-            for (Map.Entry<Long, List<CompiledMetricValue>> entry : robots.entrySet()) {
+            for (Map.Entry<Long, List<CompiledMetricValue>> entry : compiledMap.entrySet()) {
                 List<String> record = new ArrayList<>();
                 record.add(String.valueOf(entry.getKey()));
-                record.add(daoSession.getTeamDao().load(entry.getKey()).getName());
+                record.add(dbManager.getTeam(entry.getKey()).getName());
 
 
                 //Comments
-                QueryBuilder<MatchComment> matchCommentQueryBuilder = daoSession.getMatchCommentDao().queryBuilder();
+                QueryBuilder<MatchComment> matchCommentQueryBuilder = dbManager.getDaoSession().getMatchCommentDao().queryBuilder();
                 matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(event.getId()));
-                matchCommentQueryBuilder.where(MatchCommentDao.Properties.TeamId.eq(entry.getKey()));
                 String comments = "";
 
                 for (MatchComment matchComment : matchCommentQueryBuilder.list()) {
-                    comments += "Match " + matchComment.getMatch().getNumber() + ": " + matchComment.getComment() + ", ";
+                    comments += "Match " + dbManager.getMatch(matchComment).getNumber() + ": " + matchComment.getComment() + ", ";
                 }
 
                 record.add(comments);
