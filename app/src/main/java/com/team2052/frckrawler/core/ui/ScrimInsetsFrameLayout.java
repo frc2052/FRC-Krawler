@@ -15,7 +15,7 @@ import com.team2052.frckrawler.R;
 /**
  * A layout that draws something in the insets passed to {@link #fitSystemWindows(Rect)}, i.e. the area above UI chrome
  * (status and navigation bars, overlay action bars).
- * <p/>
+ * <p>
  * From the Google I/O 2014 source code
  * https://github.com/google/iosched/blob/master/android/src/main/java/com/google/samples/apps/iosched/ui/widget/ScrimInsetsFrameLayout.java
  * Used under the Apace License, Version 2.0, a copy of which is available at http://www.apache.org/licenses/LICENSE-2.0

@@ -16,9 +16,9 @@ import java.lang.reflect.Method;
 
 /**
  * A modified Spinner that doesn't automatically select the first entry in the list.
- * <p/>
+ * <p>
  * Shows the prompt if nothing is selected.
- * <p/>
+ * <p>
  * Limitations: does not display prompt if the entry list is empty.
  *
  * @author Adam
