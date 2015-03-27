@@ -44,6 +44,8 @@ public class DBManager {
     private DBManager(Context context, DaoSession daoSession) {
         this.context = context;
         this.daoSession = daoSession;
+
+        //DAO's
         matchDataDao = daoSession.getMatchDataDao();
         pitDataDao = daoSession.getPitDataDao();
         matchCommentDao = daoSession.getMatchCommentDao();
@@ -223,7 +225,7 @@ public class DBManager {
         return gameDao.load(event.getGameId());
     }
 
-    public long getEventId(MatchData matchData){
+    public long getEventId(MatchData matchData) {
         return matchDao.load(matchData.getMatchId()).getEventId();
     }
 
@@ -235,9 +237,10 @@ public class DBManager {
         return robots;
     }
 
-    public Match getMatch(MatchData matchData){
+    public Match getMatch(MatchData matchData) {
         return matchDao.load(matchData.getMatchId());
     }
+
     public DaoSession getDaoSession() {
         return daoSession;
     }
@@ -250,4 +253,59 @@ public class DBManager {
         return gameDao.load(mRobot.getGameId());
     }
 
+
+    /*INSERTERS - UPDATES OR INSERTS DATA*/
+
+    public boolean insertPitData(PitData pitData) {
+        QueryBuilder<PitData> pitDataQueryBuilder = pitDataDao.queryBuilder();
+        pitDataQueryBuilder.where(PitDataDao.Properties.RobotId.eq(pitData.getRobotId()));
+        pitDataQueryBuilder.where(PitDataDao.Properties.MetricId.eq(pitData.getMetricId()));
+        pitDataQueryBuilder.where(PitDataDao.Properties.EventId.eq(pitData.getEventId()));
+        PitData unique = pitDataQueryBuilder.unique();
+
+        if (unique != null) {
+            unique.setData(pitData.getData());
+            pitDataDao.update(unique);
+            return false;
+        } else {
+            pitDataDao.insert(pitData);
+            return true;
+        }
+    }
+
+
+    public boolean insertMatchData(MatchData matchData) {
+        QueryBuilder<MatchData> matchDataQueryBuilder = matchDataDao.queryBuilder();
+        matchDataQueryBuilder.where(MatchDataDao.Properties.RobotId.eq(matchData.getRobotId()));
+        matchDataQueryBuilder.where(MatchDataDao.Properties.MetricId.eq(matchData.getMetricId()));
+        matchDataQueryBuilder.where(MatchDataDao.Properties.MatchId.eq(matchData.getMatchId()));
+        matchDataQueryBuilder.where(MatchDataDao.Properties.EventId.eq(matchData.getEventId()));
+        MatchData unique = matchDataQueryBuilder.unique();
+
+
+        if (unique != null) {
+            unique.setData(matchData.getData());
+            matchDataDao.update(unique);
+            return false;
+        } else {
+            matchDataDao.insert(matchData);
+            return true;
+        }
+    }
+
+    public boolean insertMatchComment(MatchComment matchComment) {
+        QueryBuilder<MatchComment> matchCommentQueryBuilder = matchCommentDao.queryBuilder();
+        matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(matchComment.getEventId()));
+        matchCommentQueryBuilder.where(MatchCommentDao.Properties.RobotId.eq(matchComment.getRobotId()));
+        matchCommentQueryBuilder.where(MatchCommentDao.Properties.MatchId.eq(matchComment.getMatchId()));
+        MatchComment currentData = matchCommentQueryBuilder.unique();
+        if (currentData != null) {
+            currentData.setComment(matchComment.getComment());
+            matchCommentDao.update(currentData);
+            return false;
+        } else {
+            matchCommentDao.insert(matchComment);
+            return true;
+        }
+    }
 }
