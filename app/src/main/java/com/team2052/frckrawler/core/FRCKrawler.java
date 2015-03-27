@@ -9,6 +9,7 @@ import com.team2052.frckrawler.core.database.DatabaseHelper;
 import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
 
+import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.acra.sender.HttpSender;
@@ -47,7 +48,7 @@ public class FRCKrawler extends Application {
     public void onCreate() {
         super.onCreate();
         setupDB();
-        //ACRA.init(this);
+        ACRA.init(this);
     }
 
     private void setupDB() {
