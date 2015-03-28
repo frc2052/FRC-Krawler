@@ -5,6 +5,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.db.Event;
 
 import java.lang.reflect.Type;
@@ -30,11 +31,15 @@ public class EventDeserializer implements JsonDeserializer<Event> {
             event.setName(object.get("name").getAsString());
         }
 
-        /*if (object.get("location").isJsonNull()) {
-            event.setLocation("");
+
+        JsonObject data = new JsonObject();
+        if (object.get("location").isJsonNull()) {
+            data.addProperty("location", "");
         } else {
-            event.setLocation(object.get("location").getAsString());
+            data.addProperty("location", object.get("location").getAsString());
         }
+
+        event.setData(JSON.getGson().toJson(data));
 
         //Parse the date
         if (!object.get("start_date").isJsonNull()) {
@@ -45,7 +50,8 @@ public class EventDeserializer implements JsonDeserializer<Event> {
             }
         } else {
             event.setDate(new Date(0, 0, 0));
-        }*/
+        }
+
         return event;
     }
 }

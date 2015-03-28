@@ -157,10 +157,10 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Match match = mMatches.get(mMatchSpinner.getSelectedItemPosition());
-        mTeams = mDbManager.getTeamsForMatch(match);
+        mTeams = mDbManager.getTeams(match);
         List<String> teamNumbers = new ArrayList<>();
         for (Team team : mTeams) {
-            teamNumbers.add(team.getName() + ", " + team.getNumber());
+            teamNumbers.add(team.getNumber() + ", " + team.getName());
         }
         mAllianceSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, Arrays.copyOf(teamNumbers.toArray(), teamNumbers.size(), String[].class)));
     }

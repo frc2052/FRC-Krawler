@@ -30,9 +30,6 @@ public class TeamDeserializer implements JsonDeserializer<Team> {
             team.setName(object.get("nickname").getAsString());
         }
 
-        /*if (object.has("location") && !object.get("location").isJsonNull()) {
-            team.setLocation(object.get("location").getAsString());
-        }*/
 
         JsonObject data = new JsonObject();
 
@@ -46,6 +43,10 @@ public class TeamDeserializer implements JsonDeserializer<Team> {
 
         if (object.has("name") && !object.get("name").isJsonNull()) {
             data.addProperty("long_name", object.get("name").getAsString());
+        }
+
+        if (object.has("location") && !object.get("location").isJsonNull()) {
+            data.addProperty("location", object.get("location").getAsString());
         }
 
         team.setData(JSON.getGson().toJson(data));

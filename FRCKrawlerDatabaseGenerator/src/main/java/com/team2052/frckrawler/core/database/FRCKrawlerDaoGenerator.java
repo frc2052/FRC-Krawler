@@ -69,6 +69,7 @@ public class FRCKrawlerDaoGenerator {
         event.addToMany(pitData, pit_data_event_id);
         event.addToMany(matchComment, match_comment_event_id);
         event.addStringProperty("data");
+        event.addDateProperty("date");
 
         //Robots
         Entity robot = schema.addEntity("Robot");

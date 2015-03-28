@@ -120,17 +120,16 @@ public class MatchListFragment extends ListFragment {
         protected Void doInBackground(Void... params) {
             //Check if the event is hosted by TBA if not don't update
             if (mEvent.getFmsid() != null) {
-                String url = TBA.BASE_TBA_URL + String.format(TBA.EVENT_REQUEST, mEvent.getFmsid());
+                String url = TBA.BASE_TBA_URL + String.format(TBA.EVENT, mEvent.getFmsid());
                 final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
                 JSON.set_daoSession(mDbManager);
                 for (JsonElement element : jMatches) {
                     Match match = JSON.getGson().fromJson(element, Match.class);
-                    /*if (match.getType().contains("qm")) {
-                        Match unique = mDbManager.getMatchDao().queryBuilder().where(MatchDao.Properties.Key.eq(match.getKey())).unique();
-                        unique.setRedscore(match.getRedscore());
-                        unique.setBluescore(match.getBluescore());
+                    if (match.getType().contains("qm")) {
+                        Match unique = mDbManager.getDaoSession().getMatchDao().queryBuilder().where(MatchDao.Properties.Key.eq(match.getKey())).unique();
+                        unique.setData(match.getData());
                         unique.update();
-                    }*/
+                    }
                 }
             }
             return null;

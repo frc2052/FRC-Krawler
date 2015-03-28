@@ -7,7 +7,10 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.db.Match;
 
 /**
@@ -50,34 +53,43 @@ public class MatchView extends FrameLayout {
 
     public void init(Match match) {
         matchTitle.setText("Match " + Integer.toString(match.getNumber()));
-        /*red1.setText(Long.toString(match.getRed1Id()));
-        red2.setText(Long.toString(match.getRed2Id()));
-        red3.setText(Long.toString(match.getRed3Id()));
-        blue3.setText(Long.toString(match.getBlue3Id()));
-        blue1.setText(Long.toString(match.getBlue1Id()));
-        blue2.setText(Long.toString(match.getBlue2Id()));*/
+        JsonObject alliances = JSON.getAsJsonObject(match.getData()).get("alliances").getAsJsonObject();
+        JsonObject red = alliances.get("red").getAsJsonObject();
+        JsonObject blue = alliances.get("blue").getAsJsonObject();
+
+        JsonArray red_teams = red.get("teams").getAsJsonArray();
+        red1.setText(red_teams.get(0).getAsString().substring(3));
+        red2.setText(red_teams.get(1).getAsString().substring(3));
+        red3.setText(red_teams.get(2).getAsString().substring(3));
+
+        JsonArray blue_teams = blue.get("teams").getAsJsonArray();
+        blue3.setText(blue_teams.get(0).getAsString().substring(3));
+        blue1.setText(blue_teams.get(1).getAsString().substring(3));
+        blue2.setText(blue_teams.get(2).getAsString().substring(3));
+
+        int red_score = red.get("score").getAsInt();
         //Matches that aren't played yet have a score of -1
-        /*if (match.getRedscore() < 0)
+        if (red_score < 0)
             redScore.setText("?");
         else
-            redScore.setText(Integer.toString(match.getRedscore()));
+            redScore.setText(Integer.toString(red_score));
 
-
-        if (match.getBluescore() < 0)
+        int blue_score = blue.get("score").getAsInt();
+        if (blue_score < 0)
             blueScore.setText("?");
         else
-            blueScore.setText(Integer.toString(match.getBluescore()));
+            blueScore.setText(Integer.toString(blue_score));
 
 
-        if (match.getRedscore() > match.getBluescore()) {
+        if (red_score > blue_score) {
             redAlliance.setBackgroundResource(R.drawable.alliance_border);
             blueAlliance.setBackgroundResource(R.drawable.no_border);
-        } else if (match.getBluescore() > match.getRedscore()) {
+        } else if (blue_score > red_score) {
             blueAlliance.setBackgroundResource(R.drawable.alliance_border);
             redAlliance.setBackgroundResource(R.drawable.no_border);
         } else {
             redAlliance.setBackgroundResource(R.drawable.no_border);
             blueAlliance.setBackgroundResource(R.drawable.no_border);
-        }*/
+        }
     }
 }

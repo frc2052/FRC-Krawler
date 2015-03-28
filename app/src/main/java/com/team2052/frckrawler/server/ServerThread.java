@@ -11,6 +11,7 @@ import com.team2052.frckrawler.client.ScoutPackage;
 import com.team2052.frckrawler.core.BluetoothInfo;
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.DBManager;
+import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.core.util.Utilities;
 import com.team2052.frckrawler.db.Event;
 
@@ -65,6 +66,7 @@ public class ServerThread extends Thread {
 
 
                     long startTime = System.currentTimeMillis();
+                    LogHelper.info("Syncing");
                     switch (connectionType) {
                         case SCOUT_SYNC:
                             ServerPackage serverPackage = (ServerPackage) fromScoutStream.readObject();

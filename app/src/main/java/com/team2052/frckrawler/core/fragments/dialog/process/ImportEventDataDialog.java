@@ -51,7 +51,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
 
         public ImportEvent(String eventKey, Game mGame) {
             //Get the main event urource based on the key
-            this.url = TBA.BASE_TBA_URL + String.format(TBA.EVENT_REQUEST, eventKey);
+            this.url = String.format(TBA.EVENT, eventKey);
             this.game = mGame;
         }
 
@@ -101,9 +101,9 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                         //Save all the matches and alliances
                         Match match = JSON.getGson().fromJson(element, Match.class);
                         //Only save Qualifications
-                        /*if (match.getType().contains("qm")) {
-                            daoSession.insert(match);
-                        }*/
+                        if (match.getType().contains("qm")) {
+                            daoSession.getDaoSession().insert(match);
+                        }
                     }
                     LogHelper.debug("Saved " + event.getName() + " In " + (System.currentTimeMillis() - startTime) + "ms");
                 }

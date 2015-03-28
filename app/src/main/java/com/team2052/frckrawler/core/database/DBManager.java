@@ -2,7 +2,35 @@ package com.team2052.frckrawler.core.database;
 
 import android.content.Context;
 
-import com.team2052.frckrawler.db.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.team2052.frckrawler.core.tba.JSON;
+import com.team2052.frckrawler.db.Contact;
+import com.team2052.frckrawler.db.ContactDao;
+import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.EventDao;
+import com.team2052.frckrawler.db.Game;
+import com.team2052.frckrawler.db.GameDao;
+import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.db.MatchComment;
+import com.team2052.frckrawler.db.MatchCommentDao;
+import com.team2052.frckrawler.db.MatchDao;
+import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDataDao;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
+import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.PitDataDao;
+import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.RobotDao;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.RobotEventDao;
+import com.team2052.frckrawler.db.RobotPhoto;
+import com.team2052.frckrawler.db.RobotPhotoDao;
+import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.db.TeamDao;
+import com.team2052.frckrawler.db.UserDao;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -201,10 +229,6 @@ public class DBManager {
         matchDataDao.delete(matchData);
     }
 
-    public List<Team> getTeamsForMatch(Match match) {
-        return null;
-    }
-
     public long getTeamId(RobotEvent robotEvent) {
         return robotDao.load(robotEvent.getRobotId()).getTeamId();
     }
@@ -308,4 +332,72 @@ public class DBManager {
             return true;
         }
     }
+
+    public Robot getRobot(long team_number, long game_id) {
+        QueryBuilder<Robot> robotQueryBuilder = robotDao.queryBuilder();
+        robotQueryBuilder.where(RobotDao.Properties.GameId.eq(game_id));
+        robotQueryBuilder.where(RobotDao.Properties.TeamId.eq(team_number));
+        return robotQueryBuilder.unique();
+    }
+
+    /**
+     * Loads robots
+     * Either one can be null to not query the column
+     * Nulling both will load all robots
+     *
+     * @param team_number can be null
+     * @param game_id     can be null
+     * @return
+     */
+    public List<Robot> getRobots(Long team_number, Long game_id) {
+        QueryBuilder<Robot> robotQueryBuilder = robotDao.queryBuilder();
+        if (team_number != null || game_id != null) {
+            if (team_number != null)
+                robotQueryBuilder.where(RobotDao.Properties.TeamId.eq(team_number));
+            if (game_id != null)
+                robotQueryBuilder.where(RobotDao.Properties.GameId.eq(game_id));
+            return robotQueryBuilder.list();
+        }
+        return robotDao.loadAll();
+    }
+
+
+    public List<MatchData> getMatchData(Long robotId, Long metricId, Long matchId, Long eventId, Long userId) {
+        QueryBuilder<MatchData> matchDataQueryBuilder = matchDataDao.queryBuilder();
+        if (robotId != null || metricId != null || matchId != null || eventId != null || userId != null) {
+            if (robotId != null) {
+                matchDataQueryBuilder.where(MatchDataDao.Properties.RobotId.eq(robotId));
+            }
+            if (metricId != null) {
+                matchDataQueryBuilder.where(MatchDataDao.Properties.MetricId.eq(metricId));
+            }
+            if (matchId != null) {
+                matchDataQueryBuilder.where(MatchDataDao.Properties.MatchId.eq(matchId));
+            }
+            if (eventId != null) {
+                matchDataQueryBuilder.where(MatchDataDao.Properties.EventId.eq(eventId));
+            }
+            if (userId != null) {
+                matchDataQueryBuilder.where(MatchDataDao.Properties.UserId.eq(userId));
+            }
+            return matchDataQueryBuilder.list();
+        }
+        return matchDataDao.loadAll();
+    }
+
+    public List<Team> getTeams(Match match) {
+        JsonObject alliances = JSON.getAsJsonObject(match.getData()).get("alliances").getAsJsonObject();
+        List<Team> teams = new ArrayList<>();
+        JsonArray red = alliances.get("red").getAsJsonObject().get("teams").getAsJsonArray();
+        JsonArray blue = alliances.get("blue").getAsJsonObject().get("teams").getAsJsonArray();
+        teams.add(getTeam(Long.parseLong(red.get(0).getAsString().replace("frc", ""))));
+        teams.add(getTeam(Long.parseLong(red.get(1).getAsString().replace("frc", ""))));
+        teams.add(getTeam(Long.parseLong(red.get(2).getAsString().replace("frc", ""))));
+        teams.add(getTeam(Long.parseLong(blue.get(0).getAsString().replace("frc", ""))));
+        teams.add(getTeam(Long.parseLong(blue.get(1).getAsString().replace("frc", ""))));
+        teams.add(getTeam(Long.parseLong(blue.get(2).getAsString().replace("frc", ""))));
+        return teams;
+    }
+
+
 }

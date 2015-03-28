@@ -34,7 +34,7 @@ public class ImportUtil {
                 //Parse and get the teams
                 int number = Integer.parseInt(stringArr[0]);
                 LogHelper.debug(String.valueOf(number));
-                String url = TBA.BASE_TBA_URL + String.format(TBA.TEAM_REQUEST, number);
+                String url = TBA.BASE_TBA_URL + String.format(TBA.TEAM, number);
                 JsonObject teamJSONObject = JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url)));
 
                 Team team;

@@ -48,7 +48,7 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
             }
 
             this.event = event;
-            this.url = TBA.BASE_TBA_URL + String.format(TBA.EVENT_REQUEST, event.getFmsid());
+            this.url = String.format(TBA.EVENT, event.getFmsid());
 
         }
 
@@ -67,9 +67,9 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
                 //Save all the matches and alliances
                 Match match = JSON.getGson().fromJson(element, Match.class);
                 //Only save Qualifications
-                /*if (match.getType().contains("qm")) {
-                    mDbManager.insert(match);
-                }*/
+                if (match.getType().contains("qm")) {
+                    mDbManager.getDaoSession().insert(match);
+                }
             }
 
             return null;

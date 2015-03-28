@@ -30,6 +30,7 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -72,18 +73,8 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_import_simple, null);
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
-        b.setPositiveButton("Import", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ImportEventDataDialog.newInstance(((ListElement) eventSpinner.getSelectedItem()).getKey(), mGame).show(getFragmentManager(), "importDialog");
-            }
-        });
-        b.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dismiss();
-            }
-        });
+        b.setPositiveButton("Import", (dialog, which) -> ImportEventDataDialog.newInstance(((ListElement) eventSpinner.getSelectedItem()).getKey(), mGame).show(getFragmentManager(), "importDialog"));
+        b.setNegativeButton("Cancel", (dialog, which) -> dismiss());
         yearSpinner = (Spinner) view.findViewById(R.id.import_year_spinner);
         yearSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, yearDropDownItems));
         yearSpinner.setOnItemSelectedListener(this);
@@ -122,7 +113,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         private final String url;
 
         public LoadAllEventsByYear(int year) {
-            this.url = TBA.BASE_TBA_URL + String.format(TBA.EVENT_BY_YEAR_REQUEST, year);
+            this.url = String.format(TBA.EVENT_BY_YEAR, year);
         }
 
         @Override
@@ -136,12 +127,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                 events.add(JSON.getGson().fromJson(element, Event.class));
             }
             //Sort the event by date
-            /*Collections.sort(events, new Comparator<Event>() {
-                @Override
-                public int compare(Event event, Event event2) {
-                    return Double.compare(event.getDate().getTime(), event2.getDate().getTime());
-                }
-            });*/
+            Collections.sort(events, (event, event2) -> Double.compare(event.getDate().getTime(), event2.getDate().getTime()));
             return events;
         }
 

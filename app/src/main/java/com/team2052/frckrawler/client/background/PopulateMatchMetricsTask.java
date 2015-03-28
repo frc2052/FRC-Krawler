@@ -15,11 +15,9 @@ import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchCommentDao;
 import com.team2052.frckrawler.db.MatchData;
-import com.team2052.frckrawler.db.MatchDataDao;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.db.RobotDao;
 import com.team2052.frckrawler.db.Team;
 
 import java.util.ArrayList;
@@ -55,20 +53,8 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         //Get the robot
-        QueryBuilder<Robot> robotQueryBuilder = mDbManager.getDaoSession().getRobotDao().queryBuilder();
-        robotQueryBuilder.where(RobotDao.Properties.GameId.eq(event.getGameId()));
-        robotQueryBuilder.where(RobotDao.Properties.TeamId.eq(team.getNumber())).unique();
-        Robot robot = robotQueryBuilder.unique();
-
-        LogHelper.info(String.valueOf(event.getId()));
-        LogHelper.info(String.valueOf(match.getId()));
-        LogHelper.info(String.valueOf(robot.getId()));
+        Robot robot = mDbManager.getRobot(team.getNumber(), event.getGameId());
         //Build the queries
-        QueryBuilder<MatchData> matchDataQueryBuilder = mDbManager.getDaoSession().getMatchDataDao().queryBuilder();
-        matchDataQueryBuilder.where(MatchDataDao.Properties.EventId.eq(event.getId()));
-        matchDataQueryBuilder.where(MatchDataDao.Properties.MatchId.eq(match.getId()));
-        matchDataQueryBuilder.where(MatchDataDao.Properties.RobotId.eq(robot.getId()));
-
         QueryBuilder<Metric> metricQueryBuilder = mDbManager.getDaoSession().getMetricDao().queryBuilder();
         metricQueryBuilder.where(MetricDao.Properties.GameId.eq(event.getGameId()));
         metricQueryBuilder.where(MetricDao.Properties.Category.eq(Utilities.MetricUtil.MetricType.MATCH_PERF_METRICS.ordinal()));
@@ -84,7 +70,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         //Get the metrics and the current data
         List<Metric> metrics = metricQueryBuilder.list();
 
-        List<MatchData> currentData = matchDataQueryBuilder.list();
+        List<MatchData> currentData = mDbManager.getMatchData(robot.getId(), null, match.getId(), event.getId(), null);
 
         LogHelper.info(String.valueOf(currentData.size()));
 

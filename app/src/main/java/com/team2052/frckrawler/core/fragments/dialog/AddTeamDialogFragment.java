@@ -101,7 +101,7 @@ public class AddTeamDialogFragment extends android.support.v4.app.DialogFragment
                 Team team = teamQueryBuilder.unique();
                 if (team == null) {
                     //Team doesn't exist nor does robot and robotevent (most likely)
-                    String url = TBA.BASE_TBA_URL + String.format(TBA.TEAM_REQUEST, teamNumber);
+                    String url = TBA.BASE_TBA_URL + String.format(TBA.TEAM, teamNumber);
                     //Query Team from TBA :)
                     Team team1 = JSON.getGson().fromJson(JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url))), Team.class);
 

@@ -18,22 +18,19 @@ public class DeleteAllDataTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        mDaoSession.getDaoSession().runInTx(new Runnable() {
-            @Override
-            public void run() {
-                mDaoSession.getDaoSession().getGameDao().deleteAll();
-                mDaoSession.getDaoSession().getMatchDao().deleteAll();
-                mDaoSession.getDaoSession().getRobotDao().deleteAll();
-                mDaoSession.getDaoSession().getRobotEventDao().deleteAll();
-                mDaoSession.getDaoSession().getMatchDao().deleteAll();
-                mDaoSession.getDaoSession().getTeamDao().deleteAll();
-                mDaoSession.getDaoSession().getUserDao().deleteAll();
-                mDaoSession.getDaoSession().getMetricDao().deleteAll();
-                mDaoSession.getDaoSession().getPitDataDao().deleteAll();
-                mDaoSession.getDaoSession().getMatchDataDao().deleteAll();
-                mDaoSession.getDaoSession().getMatchCommentDao().deleteAll();
-                mDaoSession.getDaoSession().getRobotPhotoDao().deleteAll();
-            }
+        mDaoSession.getDaoSession().runInTx(() -> {
+            mDaoSession.getDaoSession().getGameDao().deleteAll();
+            mDaoSession.getDaoSession().getMatchDao().deleteAll();
+            mDaoSession.getDaoSession().getRobotDao().deleteAll();
+            mDaoSession.getDaoSession().getRobotEventDao().deleteAll();
+            mDaoSession.getDaoSession().getMatchDao().deleteAll();
+            mDaoSession.getDaoSession().getTeamDao().deleteAll();
+            mDaoSession.getDaoSession().getUserDao().deleteAll();
+            mDaoSession.getDaoSession().getMetricDao().deleteAll();
+            mDaoSession.getDaoSession().getPitDataDao().deleteAll();
+            mDaoSession.getDaoSession().getMatchDataDao().deleteAll();
+            mDaoSession.getDaoSession().getMatchCommentDao().deleteAll();
+            mDaoSession.getDaoSession().getRobotPhotoDao().deleteAll();
         });
         return null;
     }
