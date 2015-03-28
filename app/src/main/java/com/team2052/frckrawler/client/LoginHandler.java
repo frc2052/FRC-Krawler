@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.db.User;
 
 import java.util.List;
@@ -17,15 +17,15 @@ import java.util.List;
 public class LoginHandler {
     public static volatile LoginHandler instance;
     private final Context context;
-    private DaoSession daoSession;
+    private DBManager daoSession;
     private User loggedOnUser = null;
 
-    private LoginHandler(Context context, DaoSession daoSession) {
+    private LoginHandler(Context context, DBManager daoSession) {
         this.context = context;
         this.daoSession = daoSession;
     }
 
-    public static LoginHandler getInstance(Context context, DaoSession daoSession) {
+    public static LoginHandler getInstance(Context context, DBManager daoSession) {
         if (instance == null) synchronized (LoginHandler.class) {
             if (instance == null) instance = new LoginHandler(context, daoSession);
         }
@@ -39,7 +39,7 @@ public class LoginHandler {
 
     public void login(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        final List<User> users = daoSession.getUserDao().loadAll();
+        final List<User> users = daoSession.getDaoSession().getUserDao().loadAll();
         String[] userNames = new String[users.size()];
 
         for (int i = 0; i < userNames.length; i++) {
@@ -61,7 +61,7 @@ public class LoginHandler {
         if (loggedOnUser == null) {
             return false;
         }
-        return daoSession.getUserDao().load(loggedOnUser.getId()) != null;
+        return daoSession.getDaoSession().getUserDao().load(loggedOnUser.getId()) != null;
     }
 
     public User getLoggedOnUser() {

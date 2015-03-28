@@ -8,7 +8,6 @@ import android.os.Environment;
 
 import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
-import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.ExportUtil;
 import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.db.Event;
@@ -33,7 +32,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Event event = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        Event event = mDbManager.getDaoSession().getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         new ExportToFileSystem(event).execute();
     }
 
@@ -61,7 +60,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
                     LogHelper.debug("Starting Export");
                     try {
                         file = File.createTempFile(
-                                mDaoSession.getGameDao().load(event.getGameId()).getName() + "_" + event.getName() + "_" + "Summary",  /* prefix */
+                                mDbManager.getDaoSession().getGameDao().load(event.getGameId()).getName() + "_" + event.getName() + "_" + "Summary",  /* prefix */
                                 ".csv",         /* suffix */
                                 fileSystem      /* directory */
                         );
@@ -69,7 +68,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
                         e.printStackTrace();
                     }
                     if (file != null) {
-                        return ExportUtil.exportEventDataToCSV(event, file, DBManager.getInstance(getActivity(), mDaoSession), compileWeight);
+                        return ExportUtil.exportEventDataToCSV(event, file, mDbManager, compileWeight);
                     }
                 }
             }

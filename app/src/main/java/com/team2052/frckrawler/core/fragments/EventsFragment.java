@@ -45,7 +45,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             long eventId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
-            event = mDaoSession.getEventDao().load(eventId);
+            event = mDbManager.getDaoSession().getEventDao().load(eventId);
             actionMode.getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
             menu.removeItem(R.id.menu_edit);
             actionMode.setTitle(event.getName());
@@ -66,10 +66,10 @@ public class EventsFragment extends ListFragment implements FABButtonListener {
                     builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            mDaoSession.runInTx(new Runnable() {
+                            mDbManager.getDaoSession().runInTx(new Runnable() {
                                 @Override
                                 public void run() {
-                                    DBManager.getInstance(getActivity(), mDaoSession).deleteEvent(event);
+                                    DBManager.getInstance(getActivity(), mDbManager.getDaoSession()).deleteEvent(event);
                                 }
                             });
                             dialogInterface.dismiss();
@@ -108,7 +108,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                startActivity(EventInfoActivity.newInstance(getActivity(), mDaoSession.getEventDao().load(Long.valueOf(((ListElement) mAdapter.getItem(i)).getKey()))));
+                startActivity(EventInfoActivity.newInstance(getActivity(), mDbManager.getDaoSession().getEventDao().load(Long.valueOf(((ListElement) mAdapter.getItem(i)).getKey()))));
             }
         });
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -120,7 +120,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener {
                 return true;
             }
         });
-        mGame = mDaoSession.getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
+        mGame = mDbManager.getDaoSession().getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
     }
 
     @Override
@@ -156,7 +156,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener {
 
         @Override
         protected List<Event> doInBackground(Void... params) {
-            return mDaoSession.getEventDao().queryBuilder().where(EventDao.Properties.GameId.eq(mGame.getId())).list();
+            return mDbManager.getDaoSession().getEventDao().queryBuilder().where(EventDao.Properties.GameId.eq(mGame.getId())).list();
         }
 
         @Override

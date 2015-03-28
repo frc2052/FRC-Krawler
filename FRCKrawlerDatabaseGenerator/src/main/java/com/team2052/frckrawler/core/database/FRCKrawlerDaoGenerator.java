@@ -54,6 +54,7 @@ public class FRCKrawlerDaoGenerator {
         match.addToMany(matchData, match_data_match_id);
         match.addToMany(matchComment, match_comment_match_id);
         match.addStringProperty("data");
+        match.addStringProperty("type");
 
         //Events
         Entity event = schema.addEntity("Event");

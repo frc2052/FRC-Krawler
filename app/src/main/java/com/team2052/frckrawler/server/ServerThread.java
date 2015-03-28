@@ -10,8 +10,8 @@ import android.util.Log;
 import com.team2052.frckrawler.client.ScoutPackage;
 import com.team2052.frckrawler.core.BluetoothInfo;
 import com.team2052.frckrawler.core.FRCKrawler;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.util.Utilities;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 
 import org.acra.ACRA;
@@ -25,7 +25,7 @@ public class ServerThread extends Thread {
 
     private final BluetoothAdapter mBluetoothAdapter;
     public boolean isOpen;
-    private DaoSession mDaoSession = null;
+    private DBManager mDbManager = null;
     private Context context;
     private Event hostedEvent;
     private BluetoothServerSocket serverSocket;
@@ -35,7 +35,7 @@ public class ServerThread extends Thread {
         context = c.getApplicationContext();
         hostedEvent = e;
         serverSocket = null;
-        mDaoSession = ((FRCKrawler) c.getApplicationContext()).getDaoSession();
+        mDbManager = ((FRCKrawler) c.getApplicationContext()).getDBSession();
         mBluetoothAdapter = Utilities.BluetoothUtil.getBluetoothAdapter();
     }
 
@@ -68,10 +68,10 @@ public class ServerThread extends Thread {
                     switch (connectionType) {
                         case SCOUT_SYNC:
                             ServerPackage serverPackage = (ServerPackage) fromScoutStream.readObject();
-                            toScoutStream.writeObject(new ScoutPackage(mDaoSession, hostedEvent));
+                            toScoutStream.writeObject(new ScoutPackage(mDbManager, hostedEvent));
                             toScoutStream.flush();
                             clientSocket.close();
-                            serverPackage.save(mDaoSession);
+                            serverPackage.save(mDbManager);
                     }
 
                     //handler.onSyncSuccess(deviceName);

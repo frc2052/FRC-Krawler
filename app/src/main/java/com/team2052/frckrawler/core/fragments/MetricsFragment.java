@@ -46,7 +46,7 @@ public class MetricsFragment extends ListFragment implements FABButtonListener {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             long metricId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
-            metric = mDaoSession.getMetricDao().load(metricId);
+            metric = mDbManager.getDaoSession().getMetricDao().load(metricId);
             actionMode.getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
             menu.removeItem(R.id.menu_edit);
             actionMode.setTitle(metric.getName());
@@ -66,10 +66,10 @@ public class MetricsFragment extends ListFragment implements FABButtonListener {
                 builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mDaoSession.runInTx(new Runnable() {
+                        mDbManager.getDaoSession().runInTx(new Runnable() {
                             @Override
                             public void run() {
-                                DBManager.getInstance(getActivity(), mDaoSession).deleteMetric(metric);
+                                DBManager.getInstance(getActivity(), mDbManager.getDaoSession()).deleteMetric(metric);
                             }
                         });
                         dialogInterface.dismiss();
@@ -133,7 +133,7 @@ public class MetricsFragment extends ListFragment implements FABButtonListener {
 
     @Override
     public void preUpdateList() {
-        mGame = mDaoSession.getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
+        mGame = mDbManager.getDaoSession().getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
         mCategory = getArguments().getInt(CATEGORY);
     }
 
@@ -150,7 +150,7 @@ public class MetricsFragment extends ListFragment implements FABButtonListener {
     private class GetMetricsTask extends AsyncTask<Void, Void, List<Metric>> {
         @Override
         protected List<Metric> doInBackground(Void... v) {
-            QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
+            QueryBuilder<Metric> metricQueryBuilder = mDbManager.getDaoSession().getMetricDao().queryBuilder();
             metricQueryBuilder.where(MetricDao.Properties.Category.eq(mCategory));
             metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mGame.getId()));
             ;

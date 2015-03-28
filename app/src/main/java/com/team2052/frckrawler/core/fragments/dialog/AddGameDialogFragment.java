@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.FRCKrawler;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.listeners.ListUpdateListener;
 import com.team2052.frckrawler.db.Game;
 
@@ -18,11 +19,13 @@ import com.team2052.frckrawler.db.Game;
  */
 public class AddGameDialogFragment extends DialogFragment {
     private ListUpdateListener listener;
+    private DBManager mDbSession;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         listener = (ListUpdateListener) getParentFragment();
+        mDbSession = ((FRCKrawler) getActivity().getApplication()).getDBSession();
     }
 
     @Override
@@ -34,7 +37,7 @@ public class AddGameDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Game game = new Game(null, ((TextView) getDialog().getWindow().findViewById(R.id.nameVal)).getText().toString());
-                ((FRCKrawler) getActivity().getApplication()).getDaoSession().getGameDao().insert(game);
+                mDbSession.getDaoSession().getGameDao().insert(game);
                 listener.updateList();
                 dismiss();
             }

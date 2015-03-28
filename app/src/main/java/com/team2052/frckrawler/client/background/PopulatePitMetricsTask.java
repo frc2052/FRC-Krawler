@@ -4,11 +4,11 @@ import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 
 import com.team2052.frckrawler.core.FRCKrawler;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.fragments.ScoutPitFragment;
 import com.team2052.frckrawler.core.ui.metric.MetricWidget;
 import com.team2052.frckrawler.core.util.Utilities;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.MetricDao;
@@ -28,7 +28,7 @@ import de.greenrobot.dao.query.QueryBuilder;
  */
 public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
     private final FragmentActivity context;
-    private final DaoSession mDaoSession;
+    private final DBManager mDaoSession;
     private ScoutPitFragment mFragment;
     private Event mEvent;
     private Robot robot;
@@ -37,7 +37,7 @@ public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
     public PopulatePitMetricsTask(ScoutPitFragment scoutPitFragment, Event mEvent, Robot robot) {
         this.robot = robot;
         this.context = scoutPitFragment.getActivity();
-        this.mDaoSession = ((FRCKrawler) context.getApplicationContext()).getDaoSession();
+        this.mDaoSession = ((FRCKrawler) context.getApplicationContext()).getDBSession();
         this.mFragment = scoutPitFragment;
         this.mEvent = mEvent;
     }
@@ -46,11 +46,11 @@ public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         mMetricWidgets = new ArrayList<>();
 
-        QueryBuilder<PitData> pitDataQueryBuilder = mDaoSession.getPitDataDao().queryBuilder();
+        QueryBuilder<PitData> pitDataQueryBuilder = mDaoSession.getDaoSession().getPitDataDao().queryBuilder();
         pitDataQueryBuilder.where(PitDataDao.Properties.EventId.eq(mEvent.getId()));
         pitDataQueryBuilder.where(PitDataDao.Properties.RobotId.eq(robot.getId()));
 
-        QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
+        QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getDaoSession().getMetricDao().queryBuilder();
         metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGameId()));
         metricQueryBuilder.where(MetricDao.Properties.Category.eq(Utilities.MetricUtil.MetricType.ROBOT_METRICS.ordinal()));
 
@@ -59,7 +59,7 @@ public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
 
         if (pitDatas.size() == metrics.size()) {
             for (PitData pitData : pitDatas) {
-                mMetricWidgets.add(new MetricValue(mDaoSession, pitData));
+                mMetricWidgets.add(new MetricValue(mDaoSession.getDaoSession(), pitData));
             }
         } else {
             for (Metric metric : metrics) {

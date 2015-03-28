@@ -38,8 +38,8 @@ public class SummaryDataActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(EVENT_ID, 0));
-        mMetric = mDaoSession.getMetricDao().load(getIntent().getLongExtra(PARENT_ID, 0));
+        mEvent = mDbManager.getDaoSession().getEventDao().load(getIntent().getLongExtra(EVENT_ID, 0));
+        mMetric = mDbManager.getDaoSession().getMetricDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         if (getActionBar() != null) {
             setActionBarTitle(getString(R.string.Summary));
             setActionBarSubtitle(mMetric.getName());
@@ -63,7 +63,7 @@ public class SummaryDataActivity extends ListActivity {
 
         @Override
         protected List<CompiledMetricValue> doInBackground(Void... params) {
-            return Utilities.MetricCompiler.getCompiledMetric(mEvent, mMetric, mDaoSession, compileWeight);
+            return Utilities.MetricCompiler.getCompiledMetric(mEvent, mMetric, mDbManager, compileWeight);
         }
 
         @Override

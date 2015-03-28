@@ -145,7 +145,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
         @Override
         protected List<Event> doInBackground(Void... params) {
-            return mDaoSession.getEventDao().loadAll();
+            return mDbManager.getDaoSession().getEventDao().loadAll();
         }
 
         @Override
@@ -154,7 +154,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
             mEvents = _events;
             List<String> eventNames = new ArrayList<>();
             for (Event event : _events) {
-                eventNames.add(mDaoSession.getGameDao().load(event.getGameId()) + ", " + event.getName());
+                eventNames.add(mDbManager.getDaoSession().getGameDao().load(event.getGameId()) + ", " + event.getName());
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);
             eventChooser.setAdapter(adapter);

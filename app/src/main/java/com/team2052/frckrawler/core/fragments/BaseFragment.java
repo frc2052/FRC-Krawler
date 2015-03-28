@@ -8,20 +8,17 @@ import android.view.ViewGroup;
 
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.DBManager;
-import com.team2052.frckrawler.db.DaoSession;
 
 /**
  * @author Adam
  * @since 10/5/2014
  */
 public class BaseFragment extends Fragment {
-    protected DaoSession mDaoSession;
-    protected DBManager mDBManager;
+    protected DBManager mDbManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mDaoSession = ((FRCKrawler) getActivity().getApplication()).getDaoSession();
-        mDBManager = DBManager.getInstance(getActivity(), mDaoSession);
+        mDbManager = ((FRCKrawler) getActivity().getApplication()).getDBSession();
         onPostCreate();
         super.onCreate(savedInstanceState);
     }

@@ -36,7 +36,7 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
         @Override
         public boolean onCreateActionMode(android.support.v7.view.ActionMode mode, Menu menu) {
             long gameId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
-            Game game = mDaoSession.getGameDao().load(gameId);
+            Game game = mDbManager.getDaoSession().getGameDao().load(gameId);
             mode.setTitle(game.getName());
             mode.getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
             return true;
@@ -50,7 +50,7 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
         @Override
         public boolean onActionItemClicked(final android.support.v7.view.ActionMode mode, MenuItem item) {
             long gameId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
-            final Game game = mDaoSession.getGameDao().load(gameId);
+            final Game game = mDbManager.getDaoSession().getGameDao().load(gameId);
             switch (item.getItemId()) {
                 case R.id.menu_delete:
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -58,10 +58,10 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            mDaoSession.runInTx(new Runnable() {
+                            mDbManager.getDaoSession().runInTx(new Runnable() {
                                 @Override
                                 public void run() {
-                                    DBManager.getInstance(getActivity(), mDaoSession).deleteGame(game);
+                                    DBManager.getInstance(getActivity(), mDbManager.getDaoSession()).deleteGame(game);
                                 }
                             });
                             dialogInterface.dismiss();
@@ -95,7 +95,7 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 long gameId = Long.parseLong(((ListElement) mAdapter.getItem(i)).getKey());
-                final Game game = mDaoSession.getGameDao().load(gameId);
+                final Game game = mDbManager.getDaoSession().getGameDao().load(gameId);
                 startActivity(GameInfoActivity.newInstance(getActivity(), game));
             }
         });
@@ -139,7 +139,7 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
     private class GetGamesTask extends AsyncTask<Void, Void, List<Game>> {
         @Override
         protected List<Game> doInBackground(Void... params) {
-            return mDaoSession.getGameDao().queryBuilder().list();
+            return mDbManager.getDaoSession().getGameDao().queryBuilder().list();
         }
 
         @Override

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import com.team2052.frckrawler.core.FRCKrawler;
-import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.core.database.DBManager;
 
 /**
  * @author Adam
@@ -14,11 +14,11 @@ import com.team2052.frckrawler.db.DaoSession;
  */
 public class BaseProgressDialog extends DialogFragment {
 
-    protected DaoSession mDaoSession;
+    protected DBManager mDbManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mDaoSession = ((FRCKrawler) getActivity().getApplication()).getDaoSession();
+        mDbManager = ((FRCKrawler) getActivity().getApplication()).getDBSession();
         super.onCreate(savedInstanceState);
     }
 

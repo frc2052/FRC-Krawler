@@ -13,11 +13,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.listeners.ListUpdateListener;
-import com.team2052.frckrawler.db.DaoSession;
-import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
-
-import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,7 +38,7 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mGame = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        this.mGame = ((FRCKrawler) getActivity().getApplication()).getDBSession().getDaoSession().getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override
@@ -69,7 +65,7 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            DaoSession daoSession = ((FRCKrawler) getActivity().getApplicationContext()).getDaoSession();
+            //DaoSession daoSession = ((FRCKrawler) getActivity().getApplicationContext()).getDBSession();
             //daoSession.getEventDao().insert(new Event(null, name.getText().toString(), mGame.getId(), "Unknown", new Date(), null));
         } else {
             dismiss();

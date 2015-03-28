@@ -2,18 +2,12 @@ package com.team2052.frckrawler.server;
 
 import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.util.LogHelper;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.MatchComment;
-import com.team2052.frckrawler.db.MatchCommentDao;
 import com.team2052.frckrawler.db.MatchData;
-import com.team2052.frckrawler.db.MatchDataDao;
 import com.team2052.frckrawler.db.PitData;
-import com.team2052.frckrawler.db.PitDataDao;
 
 import java.io.Serializable;
 import java.util.List;
-
-import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * A object that contains all the data that is sent to the server
@@ -28,10 +22,10 @@ public class ServerPackage implements Serializable {
     private final List<MatchComment> matchComments;
 
 
-    public ServerPackage(DaoSession session) {
-        metricMatchData = session.getMatchDataDao().loadAll();
-        metricPitData = session.getPitDataDao().loadAll();
-        matchComments = session.getMatchCommentDao().loadAll();
+    public ServerPackage(DBManager manager) {
+        metricMatchData = manager.getDaoSession().getMatchDataDao().loadAll();
+        metricPitData = manager.getDaoSession().getPitDataDao().loadAll();
+        matchComments = manager.getDaoSession().getMatchCommentDao().loadAll();
     }
 
     /**

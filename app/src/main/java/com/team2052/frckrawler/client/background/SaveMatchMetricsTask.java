@@ -9,20 +9,15 @@ import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.util.LogHelper;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.MatchComment;
-import com.team2052.frckrawler.db.MatchCommentDao;
 import com.team2052.frckrawler.db.MatchData;
-import com.team2052.frckrawler.db.MatchDataDao;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotDao;
 import com.team2052.frckrawler.db.Team;
 
 import java.util.List;
-
-import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * @author Adam
@@ -35,25 +30,21 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
     private final Match mMatch;
     private final List<MetricValue> mMetricValues;
     private final String mComment;
-    private final DaoSession mDaoSession;
-    private final DBManager mDBManager;
+    private final DBManager mDaoSession;
 
     public SaveMatchMetricsTask(Context context, Event event, Team team, Match match, List<MetricValue> metricValues, String comment) {
         this.context = context;
-        this.mDaoSession = ((FRCKrawler) context.getApplicationContext()).getDaoSession();
-        this.mDBManager = DBManager.getInstance(context, mDaoSession);
+        this.mDaoSession = ((FRCKrawler) context.getApplicationContext()).getDBSession();
         this.mEvent = event;
         this.mTeam = team;
         this.mMatch = match;
         this.mMetricValues = metricValues;
         this.mComment = comment;
-
-
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-        Robot robot = mDaoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.TeamId.eq(mTeam.getNumber())).where(RobotDao.Properties.GameId.eq(mEvent.getGameId())).unique();
+        Robot robot = mDaoSession.getDaoSession().getRobotDao().queryBuilder().where(RobotDao.Properties.TeamId.eq(mTeam.getNumber())).where(RobotDao.Properties.GameId.eq(mEvent.getGameId())).unique();
 
         LogHelper.info(String.valueOf(mMatch.getId()));
         //Insert Metric Data
@@ -65,7 +56,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
                     mMatch.getId(), mEvent.getId(),
                     LoginHandler.getInstance(context, mDaoSession).getLoggedOnUser().getId(),
                     metricValue.getValue());
-            mDBManager.insertMatchData(matchData);
+            mDaoSession.insertMatchData(matchData);
         }
 
 
@@ -76,7 +67,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
                     robot.getId(),
                     mEvent.getId(),
                     mComment);
-            mDBManager.insertMatchComment(matchComment);
+            mDaoSession.insertMatchComment(matchComment);
         }
 
         return null;

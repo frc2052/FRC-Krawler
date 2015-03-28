@@ -11,8 +11,8 @@ import com.team2052.frckrawler.client.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.client.events.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.core.BluetoothInfo;
 import com.team2052.frckrawler.core.FRCKrawler;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.util.LogHelper;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.server.Server;
 import com.team2052.frckrawler.server.ServerPackage;
 
@@ -34,7 +34,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     private static final int SYNC_CANCELLED = 3;
     private static final int SYNC_ERROR = 4;
     private static int tasksRunning = 0;
-    private final DaoSession mDaoSession;
+    private final DBManager mDbManager;
 
     private volatile String deviceName;
     private Context context;
@@ -42,7 +42,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     public SyncScoutTask(Context c) {
         deviceName = "device";
         context = c.getApplicationContext();
-        mDaoSession = ((FRCKrawler) c.getApplicationContext()).getDaoSession();
+        mDbManager = ((FRCKrawler) c.getApplicationContext()).getDBSession();
     }
 
     public static boolean isTaskRunning() {
@@ -68,12 +68,12 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
                 return SYNC_CANCELLED;
             //Write the scout data
             ooStream.writeInt(BluetoothInfo.ConnectionType.SCOUT_SYNC.ordinal());
-            ooStream.writeObject(new ServerPackage(mDaoSession));
+            ooStream.writeObject(new ServerPackage(mDbManager));
             ooStream.flush();
             deleteAllData();
             if (isCancelled())
                 return SYNC_CANCELLED;
-            ((ScoutPackage) ioStream.readObject()).save(mDaoSession, context);
+            ((ScoutPackage) ioStream.readObject()).save(mDbManager, context);
             ooStream.close();
             serverSocket.close();
         } catch (IOException e) {
@@ -107,22 +107,22 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     }
 
     public void deleteAllData() {
-        mDaoSession.runInTx(new Runnable() {
+        mDbManager.getDaoSession().runInTx(new Runnable() {
             @Override
             public void run() {
                 //Delete everything
-                mDaoSession.getGameDao().deleteAll();
-                mDaoSession.getMatchDao().deleteAll();
-                mDaoSession.getRobotDao().deleteAll();
-                mDaoSession.getRobotEventDao().deleteAll();
-                mDaoSession.getMatchDao().deleteAll();
-                mDaoSession.getTeamDao().deleteAll();
-                mDaoSession.getUserDao().deleteAll();
-                mDaoSession.getMetricDao().deleteAll();
-                mDaoSession.getPitDataDao().deleteAll();
-                mDaoSession.getMatchDataDao().deleteAll();
-                mDaoSession.getMatchCommentDao().deleteAll();
-                mDaoSession.getRobotPhotoDao().deleteAll();
+                mDbManager.getDaoSession().getGameDao().deleteAll();
+                mDbManager.getDaoSession().getMatchDao().deleteAll();
+                mDbManager.getDaoSession().getRobotDao().deleteAll();
+                mDbManager.getDaoSession().getRobotEventDao().deleteAll();
+                mDbManager.getDaoSession().getMatchDao().deleteAll();
+                mDbManager.getDaoSession().getTeamDao().deleteAll();
+                mDbManager.getDaoSession().getUserDao().deleteAll();
+                mDbManager.getDaoSession().getMetricDao().deleteAll();
+                mDbManager.getDaoSession().getPitDataDao().deleteAll();
+                mDbManager.getDaoSession().getMatchDataDao().deleteAll();
+                mDbManager.getDaoSession().getMatchCommentDao().deleteAll();
+                mDbManager.getDaoSession().getRobotPhotoDao().deleteAll();
             }
         });
     }

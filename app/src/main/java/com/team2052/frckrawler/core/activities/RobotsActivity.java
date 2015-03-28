@@ -7,14 +7,11 @@ import android.os.Bundle;
 
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
 import com.team2052.frckrawler.core.listitems.ListItem;
-import com.team2052.frckrawler.core.listitems.elements.SimpleListElement;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -34,7 +31,7 @@ public class RobotsActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
+        mEvent = mDbManager.getDaoSession().getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
     }
 
     @Override
@@ -46,7 +43,7 @@ public class RobotsActivity extends ListActivity {
 
         @Override
         protected List<RobotEvent> doInBackground(Void... voids) {
-            return mDaoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(mEvent.getId())).list();
+            return mDbManager.getDaoSession().getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(mEvent.getId())).list();
         }
 
         @Override

@@ -8,11 +8,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.tba.HTTP;
 import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.core.tba.TBA;
 import com.team2052.frckrawler.core.util.LogHelper;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Match;
@@ -40,7 +40,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Game game = mDaoSession.getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        Game game = mDbManager.getDaoSession().getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         String mEventKey = getArguments().getString("eventKey");
         new ImportEvent(mEventKey, game).execute();
     }
@@ -58,7 +58,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
         @Override
         protected Void doInBackground(Void... params) {
             final long startTime = System.currentTimeMillis();
-            final DaoSession daoSession = ((FRCKrawler) getActivity().getApplication()).getDaoSession();
+            final DBManager daoSession = ((FRCKrawler) getActivity().getApplication()).getDBSession();
             //Get all data from TBA ready to parse
 
             publishProgress("Downloading Data");
@@ -67,14 +67,14 @@ public class ImportEventDataDialog extends BaseProgressDialog {
             final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
 
             //Run in bulk transaction
-            daoSession.runInTx(new Runnable() {
+            daoSession.getDaoSession().runInTx(new Runnable() {
                 @Override
                 public void run() {
                     //Save the event
 
                     Event event = JSON.getGson().fromJson(jEvent, Event.class);
                     event.setGameId(game.getId());
-                    daoSession.getEventDao().insert(event);
+                    daoSession.getDaoSession().getEventDao().insert(event);
 
 
                     //Save the teams
@@ -82,16 +82,16 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                     for (JsonElement element : jTeams) {
                         //Convert json element to team
                         Team team = JSON.getGson().fromJson(element, Team.class);
-                        daoSession.getTeamDao().insertOrReplace(team);
+                        daoSession.getDaoSession().getTeamDao().insertOrReplace(team);
                         //Create a robot and save that robot to the database as well with the team
-                        Robot robot = daoSession.getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(game.getId())).where(RobotDao.Properties.TeamId.eq(team.getNumber())).unique();
+                        Robot robot = daoSession.getDaoSession().getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(game.getId())).where(RobotDao.Properties.TeamId.eq(team.getNumber())).unique();
 
                         if (robot == null) {
-                            daoSession.getRobotEventDao().insert(new RobotEvent(null, daoSession.getRobotDao().insert(new Robot(null, team.getNumber(), game.getId(), null)), event.getId(), null));
+                            daoSession.getDaoSession().getRobotEventDao().insert(new RobotEvent(null, daoSession.getDaoSession().getRobotDao().insert(new Robot(null, team.getNumber(), game.getId(), null)), event.getId(), null));
                         } else {
-                            RobotEvent robotEvents = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).where(RobotEventDao.Properties.EventId.eq(event.getId())).unique();
+                            RobotEvent robotEvents = daoSession.getDaoSession().getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).where(RobotEventDao.Properties.EventId.eq(event.getId())).unique();
                             if (robotEvents == null) {
-                                daoSession.getRobotEventDao().insert(new RobotEvent(null, robot.getId(), event.getId(), null));
+                                daoSession.getDaoSession().getRobotEventDao().insert(new RobotEvent(null, robot.getId(), event.getId(), null));
                             }
                         }
                     }

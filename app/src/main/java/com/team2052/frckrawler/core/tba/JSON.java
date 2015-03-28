@@ -6,10 +6,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.tba.types.EventDeserializer;
 import com.team2052.frckrawler.core.tba.types.MatchDeserializer;
 import com.team2052.frckrawler.core.tba.types.TeamDeserializer;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.Team;
@@ -18,7 +18,7 @@ import com.team2052.frckrawler.db.Team;
  * @author Adam
  */
 public class JSON {
-    private static DaoSession _daoSession = null;
+    private static DBManager _daoSession = null;
     private static Gson gson;
     private static JsonParser parser;
 
@@ -58,11 +58,11 @@ public class JSON {
         return parser;
     }
 
-    public static DaoSession get_daoSession() {
+    public static DBManager get_daoSession() {
         return _daoSession;
     }
 
-    public static void set_daoSession(DaoSession _daoSession) {
-        JSON._daoSession = _daoSession;
+    public static void set_daoSession(DBManager dbManager) {
+        JSON._daoSession = dbManager;
     }
 }

@@ -8,9 +8,7 @@ import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.fragments.ScoutPitFragment;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
@@ -26,10 +24,9 @@ import java.util.List;
  */
 public class PopulatePitRobotsTask extends AsyncTask<Void, Void, Void> {
     private final ScoutPitFragment mFragment;
-    private final DaoSession mDaoSession;
+    private final DBManager dbManager;
     private final Event mEvent;
     private final Context context;
-    private final DBManager dbManager;
     private ArrayList<MetricValue> mMetricWidgets;
     private String[] mRobotListStrings;
     private List<RobotEvent> mRobots;
@@ -38,13 +35,12 @@ public class PopulatePitRobotsTask extends AsyncTask<Void, Void, Void> {
         this.mFragment = fragment;
         this.context = fragment.getActivity();
         this.mEvent = event;
-        this.mDaoSession = ((FRCKrawler) context.getApplicationContext()).getDaoSession();
-        this.dbManager = DBManager.getInstance(context, mDaoSession);
+        this.dbManager = ((FRCKrawler) context.getApplicationContext()).getDBSession();
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-        mRobots = mDaoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(mEvent.getId())).list();
+        mRobots = dbManager.getDaoSession().getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(mEvent.getId())).list();
 
         //Sort the robot numbers
         Collections.sort(mRobots, new Comparator<RobotEvent>() {

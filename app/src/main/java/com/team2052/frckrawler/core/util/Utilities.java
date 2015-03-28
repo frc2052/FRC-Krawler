@@ -15,7 +15,6 @@ import com.team2052.frckrawler.core.database.CompiledMetricValue;
 import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.tba.JSON;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.MatchData;
@@ -105,10 +104,10 @@ public class Utilities {
         }
 
         @Nullable
-        public static Event getScoutEvent(Context context, DaoSession session) {
+        public static Event getScoutEvent(Context context, DBManager session) {
             SharedPreferences scoutPrefs = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
             if (scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
-                return session.getEventDao().load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
+                return session.getDaoSession().getEventDao().load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
             }
             return null;
         }
@@ -185,8 +184,8 @@ public class Utilities {
          * @param metric the metric that you want to compile
          * @return the compiled data from attending teams and metric
          */
-        public static List<CompiledMetricValue> getCompiledMetric(Event event, Metric metric, DaoSession daoSession, float compileWeight) {
-            List<RobotEvent> robotEventses = daoSession.getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
+        public static List<CompiledMetricValue> getCompiledMetric(Event event, Metric metric, DBManager dbManager, float compileWeight) {
+            List<RobotEvent> robotEventses = dbManager.getDaoSession().getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.EventId.eq(event.getId())).list();
             List<CompiledMetricValue> compiledMetricValues = new ArrayList<>();
             /*for (RobotEvent robotEvents : robotEventses) {
                 List<MetricValue> metricData = new ArrayList<>();

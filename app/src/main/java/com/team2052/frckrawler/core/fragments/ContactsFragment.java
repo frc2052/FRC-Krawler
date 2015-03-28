@@ -40,7 +40,7 @@ public class ContactsFragment extends ListFragmentFab {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTeam = mDaoSession.getTeamDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
+        mTeam = mDbManager.getDaoSession().getTeamDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
         setHasOptionsMenu(true);
     }
 
@@ -60,7 +60,7 @@ public class ContactsFragment extends ListFragmentFab {
 
         @Override
         protected List<Contact> doInBackground(Void... params) {
-            return mDaoSession.getContactDao().queryBuilder().where(ContactDao.Properties.TeamId.eq(mTeam.getNumber())).list();
+            return mDbManager.getDaoSession().getContactDao().queryBuilder().where(ContactDao.Properties.TeamId.eq(mTeam.getNumber())).list();
         }
 
         @Override

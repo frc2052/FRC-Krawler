@@ -41,11 +41,11 @@ public class SummaryFragment extends ListFragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Metric metric = mDaoSession.getMetricDao().load(Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()));
+                Metric metric = mDbManager.getDaoSession().getMetricDao().load(Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()));
                 startActivity(SummaryDataActivity.newInstance(getActivity(), metric, mEvent));
             }
         });
-        mEvent = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        mEvent = mDbManager.getDaoSession().getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class SummaryFragment extends ListFragment {
 
         @Override
         protected List<Metric> doInBackground(Void... params) {
-            return mDaoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(mEvent.getGameId())).list();
+            return mDbManager.getDaoSession().getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(mEvent.getGameId())).list();
         }
 
         @Override

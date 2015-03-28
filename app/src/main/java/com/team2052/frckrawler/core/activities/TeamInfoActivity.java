@@ -27,7 +27,7 @@ public class TeamInfoActivity extends ViewPagerActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTeam = mDaoSession.getTeamDao().load(getIntent().getLongExtra(PARENT_ID, 0));
+        mTeam = mDbManager.getDaoSession().getTeamDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         setActionBarTitle(getString(R.string.team));
         setActionBarSubtitle(String.valueOf(mTeam.getNumber()));
     }

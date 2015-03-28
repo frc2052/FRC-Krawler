@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.core.tba.types;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -9,7 +8,6 @@ import com.google.gson.JsonParseException;
 import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.db.EventDao;
 import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.db.TeamDao;
 
 import java.lang.reflect.Type;
 
@@ -31,7 +29,7 @@ public class MatchDeserializer implements JsonDeserializer<Match> {
         }
 
         if (object.has("event_key") && !object.get("event_key").isJsonNull()) {
-            match.setEventId(JSON.get_daoSession().getEventDao().queryBuilder().where(EventDao.Properties.Fmsid.eq(object.get("event_key").getAsString())).unique().getId());
+            match.setEventId(JSON.get_daoSession().getDaoSession().getEventDao().queryBuilder().where(EventDao.Properties.Fmsid.eq(object.get("event_key").getAsString())).unique().getId());
         }
 
         /*JsonObject alliances = object.get("alliances").getAsJsonObject();

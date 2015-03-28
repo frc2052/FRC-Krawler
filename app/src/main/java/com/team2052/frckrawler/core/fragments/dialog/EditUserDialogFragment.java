@@ -30,7 +30,7 @@ public class EditUserDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
-        mUser = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getUserDao().load(b.getLong(USER_ID));
+        mUser = ((FRCKrawler) getActivity().getApplication()).getDBSession().getDaoSession().getUserDao().load(b.getLong(USER_ID));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class EditUserDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mUser.setName(editText.getText().toString());
-                ((FRCKrawler) getActivity().getApplication()).getDaoSession().getUserDao().update(mUser);
+                ((FRCKrawler) getActivity().getApplication()).getDBSession().getDaoSession().getUserDao().update(mUser);
                 ((ListUpdateListener) getParentFragment()).updateList();
                 dismiss();
             }

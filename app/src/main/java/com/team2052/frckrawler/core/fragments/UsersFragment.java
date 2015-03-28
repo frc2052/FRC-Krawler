@@ -33,7 +33,7 @@ public class UsersFragment extends ListFragmentFab {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             long userId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
-            User user = mDaoSession.getUserDao().load(userId);
+            User user = mDbManager.getDaoSession().getUserDao().load(userId);
             mode.setTitle(user.getName());
             mode.getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
             return true;
@@ -47,7 +47,7 @@ public class UsersFragment extends ListFragmentFab {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             long userId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
-            User user = mDaoSession.getUserDao().load(userId);
+            User user = mDbManager.getDaoSession().getUserDao().load(userId);
             switch (item.getItemId()) {
                 case R.id.menu_edit:
                     EditUserDialogFragment fragment = EditUserDialogFragment.newInstance(user);
@@ -55,7 +55,7 @@ public class UsersFragment extends ListFragmentFab {
                     currentActionMode.finish();
                     return true;
                 case R.id.menu_delete:
-                    mDaoSession.getUserDao().delete(user);
+                    mDbManager.getDaoSession().getUserDao().delete(user);
                     currentActionMode.finish();
                     updateList();
                     return true;
@@ -110,7 +110,7 @@ public class UsersFragment extends ListFragmentFab {
 
         @Override
         protected List<User> doInBackground(Void... params) {
-            return mDaoSession.getUserDao().loadAll();
+            return mDbManager.getDaoSession().getUserDao().loadAll();
         }
 
         @Override

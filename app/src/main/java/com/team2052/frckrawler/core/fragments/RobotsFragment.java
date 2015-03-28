@@ -69,7 +69,7 @@ public class RobotsFragment extends ListFragment {
         mKey = b.getLong(DatabaseActivity.PARENT_ID);
 
         if (mViewType == 1) {
-            Event event = mDaoSession.getEventDao().load(mKey);
+            Event event = mDbManager.getDaoSession().getEventDao().load(mKey);
             if (event != null) {
                 if (event.getFmsid() == null) {
                     setHasOptionsMenu(true);
@@ -86,7 +86,7 @@ public class RobotsFragment extends ListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_team) {
-            Event load = mDaoSession.getEventDao().load(mKey);
+            Event load = mDbManager.getDaoSession().getEventDao().load(mKey);
             if (load != null) {
                 AddTeamDialogFragment.newInstance(load).show(getChildFragmentManager(), "addTeam");
             }
@@ -121,13 +121,13 @@ public class RobotsFragment extends ListFragment {
             List<Robot> robots;
             if (mViewType == 0) {
                 condition = RobotDao.Properties.TeamId.eq(mKey);
-                robots = mDaoSession.getRobotDao().queryBuilder().where(condition).list();
+                robots = mDbManager.getDaoSession().getRobotDao().queryBuilder().where(condition).list();
             } else {
                 condition = RobotEventDao.Properties.EventId.eq(mKey);
-                List<RobotEvent> robotEvents = mDaoSession.getRobotEventDao().queryBuilder().where(condition).list();
+                List<RobotEvent> robotEvents = mDbManager.getDaoSession().getRobotEventDao().queryBuilder().where(condition).list();
                 robots = new ArrayList<>();
                 for (RobotEvent robotEvent : robotEvents) {
-                    robots.add(mDBManager.getRobot(robotEvent));
+                    robots.add(mDbManager.getRobot(robotEvent));
                 }
                 Collections.sort(robots, new Comparator<Robot>() {
                     @Override

@@ -60,7 +60,7 @@ public class GameInfoActivity extends ViewPagerFABActivity implements View.OnCli
 
     @Override
     public void onPreLoadViewPager() {
-        mGame = mDaoSession.getGameDao().load(getIntent().getLongExtra(PARENT_ID, 0));
+        mGame = mDbManager.getDaoSession().getGameDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         setActionBarTitle("Game");
         setActionBarSubtitle(mGame.getName());
     }

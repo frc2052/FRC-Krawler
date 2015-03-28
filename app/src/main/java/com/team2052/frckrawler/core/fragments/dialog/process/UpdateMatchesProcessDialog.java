@@ -6,7 +6,6 @@ import android.os.Bundle;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
-import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.fragments.ListFragment;
 import com.team2052.frckrawler.core.tba.HTTP;
 import com.team2052.frckrawler.core.tba.JSON;
@@ -34,7 +33,7 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Event event = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        Event event = mDbManager.getDaoSession().getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         new UpdateMatchSchedule(event).execute();
     }
 
@@ -56,21 +55,20 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
         @Override
         protected Void doInBackground(Void... params) {
             //Delete all match data
-            DBManager dbManager = DBManager.getInstance(getActivity(), mDaoSession);
-            List<Match> data = mDaoSession.getMatchDao().queryBuilder().where(MatchDao.Properties.EventId.eq(event.getId())).list();
+            List<Match> data = mDbManager.getDaoSession().getMatchDao().queryBuilder().where(MatchDao.Properties.EventId.eq(event.getId())).list();
             for (Match match : data) {
-                dbManager.deleteMatch(match);
+                mDbManager.deleteMatch(match);
             }
 
             final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
 
-            JSON.set_daoSession(mDaoSession);
+            JSON.set_daoSession(mDbManager);
             for (JsonElement element : jMatches) {
                 //Save all the matches and alliances
                 Match match = JSON.getGson().fromJson(element, Match.class);
                 //Only save Qualifications
                 /*if (match.getType().contains("qm")) {
-                    mDaoSession.insert(match);
+                    mDbManager.insert(match);
                 }*/
             }
 

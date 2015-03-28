@@ -63,7 +63,7 @@ public class PhotosFragment extends BaseFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_grid_photos, null);
         ButterKnife.inject(this, view);
-        mRobot = mDaoSession.getRobotDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
+        mRobot = mDbManager.getDaoSession().getRobotDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
         new GetRobotPhotosTask().execute();
         return view;
     }
@@ -80,7 +80,7 @@ public class PhotosFragment extends BaseFragment {
             builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    mDaoSession.getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId(), editText.getText().toString(), new Date()));
+                    mDbManager.getDaoSession().getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId(), editText.getText().toString(), new Date()));
                     new GetRobotPhotosTask().execute();
                 }
             });
@@ -110,7 +110,7 @@ public class PhotosFragment extends BaseFragment {
             builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    mDaoSession.getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId(), editText.getText().toString(), new Date()));
+                    mDbManager.getDaoSession().getRobotPhotoDao().insert(new RobotPhoto(null, new File(mCurrentPhotoPath).getAbsolutePath(), mRobot.getId(), editText.getText().toString(), new Date()));
                     new GetRobotPhotosTask().execute();
                 }
             });
@@ -160,7 +160,7 @@ public class PhotosFragment extends BaseFragment {
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_" + mDBManager.getGame(mRobot) + "_" + mRobot.getTeamId();
+        String imageFileName = "JPEG_" + timeStamp + "_" + mDbManager.getGame(mRobot) + "_" + mRobot.getTeamId();
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -177,7 +177,7 @@ public class PhotosFragment extends BaseFragment {
 
         @Override
         protected List<RobotPhoto> doInBackground(Void... voids) {
-            return mDaoSession.getRobotPhotoDao().queryBuilder().where(RobotPhotoDao.Properties.RobotId.eq(mRobot.getId())).list();
+            return mDbManager.getDaoSession().getRobotPhotoDao().queryBuilder().where(RobotPhotoDao.Properties.RobotId.eq(mRobot.getId())).list();
         }
 
         @Override

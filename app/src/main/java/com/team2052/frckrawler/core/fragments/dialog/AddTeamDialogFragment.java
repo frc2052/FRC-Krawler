@@ -13,12 +13,12 @@ import android.widget.Toast;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.fragments.ListFragment;
 import com.team2052.frckrawler.core.tba.HTTP;
 import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.core.tba.TBA;
 import com.team2052.frckrawler.core.util.LogHelper;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotDao;
@@ -51,7 +51,7 @@ public class AddTeamDialogFragment extends android.support.v4.app.DialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mEvent = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        this.mEvent = ((FRCKrawler) getActivity().getApplication()).getDBSession().getDaoSession().getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override
@@ -87,16 +87,16 @@ public class AddTeamDialogFragment extends android.support.v4.app.DialogFragment
         @Override
         protected Void doInBackground(Void... params) {
             LogHelper.info("importing team");
-            DaoSession daoSession = ((FRCKrawler) getActivity().getApplicationContext()).getDaoSession();
+            DBManager dbManager = ((FRCKrawler) getActivity().getApplicationContext()).getDBSession();
 
 
-            QueryBuilder<Robot> robotQueryBuilder = daoSession.getRobotDao().queryBuilder();
+            QueryBuilder<Robot> robotQueryBuilder = dbManager.getDaoSession().getRobotDao().queryBuilder();
             robotQueryBuilder.where(RobotDao.Properties.TeamId.eq(teamNumber));
             robotQueryBuilder.where(RobotDao.Properties.GameId.eq(mEvent.getGameId()));
             Robot unique = robotQueryBuilder.unique();
 
             if (unique == null) {
-                QueryBuilder<Team> teamQueryBuilder = daoSession.getTeamDao().queryBuilder();
+                QueryBuilder<Team> teamQueryBuilder = dbManager.getDaoSession().getTeamDao().queryBuilder();
                 teamQueryBuilder.where(TeamDao.Properties.Number.eq(teamNumber));
                 Team team = teamQueryBuilder.unique();
                 if (team == null) {
@@ -115,7 +115,7 @@ public class AddTeamDialogFragment extends android.support.v4.app.DialogFragment
                     //daoSession.insert(new RobotEvent(null, daoSession.insert(robot), mEvent.getId()));
                 }
             } else {
-                QueryBuilder<RobotEvent> robotEventQueryBuilder = daoSession.getRobotEventDao().queryBuilder();
+                QueryBuilder<RobotEvent> robotEventQueryBuilder = dbManager.getDaoSession().getRobotEventDao().queryBuilder();
                 robotEventQueryBuilder.where(RobotEventDao.Properties.RobotId.eq(unique.getId()));
                 robotEventQueryBuilder.where(RobotEventDao.Properties.EventId.eq(mEvent.getId()));
 

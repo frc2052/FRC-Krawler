@@ -4,12 +4,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.team2052.frckrawler.core.FRCKrawler;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.fragments.ScoutMatchFragment;
 import com.team2052.frckrawler.core.ui.metric.MetricWidget;
 import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.core.util.Utilities;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.MatchComment;
@@ -35,7 +35,7 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
     private final Context context;
-    private final DaoSession mDaoSession;
+    private final DBManager mDbManager;
     private ScoutMatchFragment mFragment;
     private Event event;
     private Team team;
@@ -46,7 +46,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
     public PopulateMatchMetricsTask(ScoutMatchFragment fragment, Event event, Team team, Match match) {
         this.mFragment = fragment;
         this.context = fragment.getActivity();
-        this.mDaoSession = ((FRCKrawler) context.getApplicationContext()).getDaoSession();
+        this.mDbManager = ((FRCKrawler) context.getApplicationContext()).getDBSession();
         this.event = event;
         this.team = team;
         this.match = match;
@@ -55,7 +55,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         //Get the robot
-        QueryBuilder<Robot> robotQueryBuilder = mDaoSession.getRobotDao().queryBuilder();
+        QueryBuilder<Robot> robotQueryBuilder = mDbManager.getDaoSession().getRobotDao().queryBuilder();
         robotQueryBuilder.where(RobotDao.Properties.GameId.eq(event.getGameId()));
         robotQueryBuilder.where(RobotDao.Properties.TeamId.eq(team.getNumber())).unique();
         Robot robot = robotQueryBuilder.unique();
@@ -64,16 +64,16 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         LogHelper.info(String.valueOf(match.getId()));
         LogHelper.info(String.valueOf(robot.getId()));
         //Build the queries
-        QueryBuilder<MatchData> matchDataQueryBuilder = mDaoSession.getMatchDataDao().queryBuilder();
+        QueryBuilder<MatchData> matchDataQueryBuilder = mDbManager.getDaoSession().getMatchDataDao().queryBuilder();
         matchDataQueryBuilder.where(MatchDataDao.Properties.EventId.eq(event.getId()));
         matchDataQueryBuilder.where(MatchDataDao.Properties.MatchId.eq(match.getId()));
         matchDataQueryBuilder.where(MatchDataDao.Properties.RobotId.eq(robot.getId()));
 
-        QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getMetricDao().queryBuilder();
+        QueryBuilder<Metric> metricQueryBuilder = mDbManager.getDaoSession().getMetricDao().queryBuilder();
         metricQueryBuilder.where(MetricDao.Properties.GameId.eq(event.getGameId()));
         metricQueryBuilder.where(MetricDao.Properties.Category.eq(Utilities.MetricUtil.MetricType.MATCH_PERF_METRICS.ordinal()));
 
-        QueryBuilder<MatchComment> matchCommentQueryBuilder = mDaoSession.getMatchCommentDao().queryBuilder();
+        QueryBuilder<MatchComment> matchCommentQueryBuilder = mDbManager.getDaoSession().getMatchCommentDao().queryBuilder();
         matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(event.getId()));
         matchCommentQueryBuilder.where(MatchCommentDao.Properties.RobotId.eq(robot.getId()));
         matchCommentQueryBuilder.where(MatchCommentDao.Properties.MatchId.eq(match.getId()));
@@ -96,7 +96,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         if (currentData.size() == metrics.size()) {
             LogHelper.info("Loading Metrics from Data");
             for (MatchData matchData : currentData) {
-                mMetricValues.add(new MetricValue(mDaoSession, matchData));
+                mMetricValues.add(new MetricValue(mDbManager.getDaoSession(), matchData));
             }
         } else {
             LogHelper.info("Loading Metrics");

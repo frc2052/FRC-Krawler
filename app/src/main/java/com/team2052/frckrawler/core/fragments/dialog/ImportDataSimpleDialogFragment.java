@@ -30,8 +30,6 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -63,7 +61,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mGame = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        this.mGame = ((FRCKrawler) getActivity().getApplication()).getDBSession().getDaoSession().getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         yearDropDownItems = new String[GlobalValues.MAX_COMP_YEAR - GlobalValues.FIRST_COMP_YEAR + 1];
         for (int i = 0; i < yearDropDownItems.length; i++) {
             yearDropDownItems[i] = Integer.toString(GlobalValues.MAX_COMP_YEAR - i);

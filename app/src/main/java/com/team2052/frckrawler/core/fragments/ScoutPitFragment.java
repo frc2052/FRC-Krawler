@@ -64,7 +64,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
 
     public void save() {
 
-        Robot robot = mDBManager.getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
+        Robot robot = mDbManager.getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
         List<MetricValue> widgets = new ArrayList<>();
 
         for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
@@ -102,7 +102,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
         ButterKnife.inject(this, view);
         mTeamSpinner = (Spinner) view.findViewById(R.id.team);
         mTeamSpinner.setOnItemSelectedListener(this);
-        loadAllData(Utilities.ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
+        loadAllData(Utilities.ScoutUtil.getScoutEvent(getActivity(), mDbManager));
     }
 
     @Override
@@ -121,7 +121,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
         if (item.getItemId() == R.id.action_save) {
             if (mTeamSpinner.getSelectedItem() != null) {
                 //Get data from view
-                LoginHandler loginHandler = LoginHandler.getInstance(getActivity(), mDaoSession);
+                LoginHandler loginHandler = LoginHandler.getInstance(getActivity(), mDbManager);
                 if (!loginHandler.isLoggedOn() && !loginHandler.loggedOnUserStillExists()) {
                     loginHandler.login(getActivity());
                     //TODO AUTO AFTER RELOG
@@ -136,12 +136,12 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
 
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncSuccessEvent event) {
-        loadAllData(Utilities.ScoutUtil.getScoutEvent(getActivity(), mDaoSession));
+        loadAllData(Utilities.ScoutUtil.getScoutEvent(getActivity(), mDbManager));
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Robot robot = mDBManager.getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
+        Robot robot = mDbManager.getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
         new PopulatePitMetricsTask(this, mEvent, robot).execute();
     }
 

@@ -12,7 +12,6 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.listeners.ListUpdateListener;
-import com.team2052.frckrawler.db.Contact;
 import com.team2052.frckrawler.db.Team;
 
 /**
@@ -32,7 +31,7 @@ public class AddContactDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTeam = ((FRCKrawler) getActivity().getApplication()).getDaoSession().getTeamDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
+        mTeam = ((FRCKrawler) getActivity().getApplication()).getDBSession().getDaoSession().getTeamDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
     }
 
     @Override
@@ -54,7 +53,7 @@ public class AddContactDialogFragment extends DialogFragment {
                 String phone = ((EditText) view.findViewById(R.id.phone)).getText().toString();
                 String address = ((EditText) view.findViewById(R.id.address)).getText().toString();
                 String teamRole = ((EditText) view.findViewById(R.id.teamRole)).getText().toString();
-                //((FRCKrawler) getActivity().getApplication()).getDaoSession().getContactDao().insert(new Contact(null, mTeam.getNumber(), name, email, address, phone, teamRole));
+                //((FRCKrawler) getActivity().getApplication()).getDBManager().getContactDao().insert(new Contact(null, mTeam.getNumber(), name, email, address, phone, teamRole));
                 ((ListUpdateListener) getParentFragment()).updateList();
             }
         });

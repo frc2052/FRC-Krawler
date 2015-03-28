@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.DatabaseHelper;
 import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
@@ -39,9 +40,10 @@ public class FRCKrawler extends Application {
 
     private DaoSession daoSession;
     private DaoMaster daoMaster;
+    private DBManager dbManager;
 
-    public static DaoSession getDaoSession(Context context) {
-        return ((FRCKrawler) context.getApplicationContext()).getDaoSession();
+    public static DBManager getDBManager(Context context) {
+        return ((FRCKrawler) context.getApplicationContext()).getDBSession();
     }
 
     @Override
@@ -56,10 +58,11 @@ public class FRCKrawler extends Application {
         SQLiteDatabase db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
+        dbManager = DBManager.getInstance(getBaseContext(), daoSession);
     }
 
-    public DaoSession getDaoSession() {
-        return daoSession;
+    public DBManager getDBSession() {
+        return dbManager;
     }
 
     public File copyDB(File newPath) throws Exception {

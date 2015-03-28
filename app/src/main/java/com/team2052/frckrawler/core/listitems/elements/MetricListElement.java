@@ -25,7 +25,7 @@ public class MetricListElement extends ListElement {
         super(Long.toString(metric.getId()));
         this.metric = metric;
 
-        if (metric.getData().isEmpty()) {
+        if (metric.getData() != null) {
             //descriptionString = "No Description";
         } /*else {
             //descriptionString = metric.getDescription();

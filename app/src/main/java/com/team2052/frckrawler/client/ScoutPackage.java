@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.team2052.frckrawler.core.GlobalValues;
+import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.Schedule;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
@@ -45,14 +46,16 @@ public class ScoutPackage implements Serializable {
     private final List<MatchComment> matchComments;
     private final Game game;
 
-    public ScoutPackage(DaoSession session, Event event) {
+    public ScoutPackage(DBManager dbManager, Event event) {
+        DaoSession session = dbManager.getDaoSession();
+
         this.game = session.getGameDao().load(event.getGameId());
         this.event = event;
         users = session.getUserDao().loadAll();
         metrics = game.getMetricList();
         robot_events = event.getRobotEventList();
 
-        for(RobotEvent robotEvent: robot_events){
+        for (RobotEvent robotEvent : robot_events) {
             robots.add(session.getRobotDao().load(robotEvent.getRobotId()));
         }
 
@@ -66,48 +69,48 @@ public class ScoutPackage implements Serializable {
         }
     }
 
-    public void save(final DaoSession session, Context context) {
-        session.runInTx(new Runnable() {
+    public void save(final DBManager session, Context context) {
+        session.getDaoSession().runInTx(new Runnable() {
             @Override
             public void run() {
                 for (Metric metric : metrics) {
-                    session.insertOrReplace(metric);
+                    session.getDaoSession().insertOrReplace(metric);
                 }
 
                 for (User user : users) {
-                    session.insertOrReplace(user);
+                    session.getDaoSession().insertOrReplace(user);
                 }
 
                 for (RobotEvent robotEvent : robot_events) {
-                    session.insert(robotEvent);
+                    session.getDaoSession().insert(robotEvent);
                 }
 
-                for(Robot robot: robots){
-                    session.insertOrReplace(robot);
+                for (Robot robot : robots) {
+                    session.getDaoSession().insertOrReplace(robot);
                 }
 
                 for (Team team : teams) {
-                    session.insertOrReplace(team);
+                    session.getDaoSession().insertOrReplace(team);
                 }
 
                 for (Match match : schedule.matches) {
-                    session.insertOrReplace(match);
+                    session.getDaoSession().insertOrReplace(match);
                 }
 
                 for (PitData pitValues : pitData) {
-                    session.insertOrReplace(pitValues);
+                    session.getDaoSession().insertOrReplace(pitValues);
                 }
 
                 for (MatchData matchValues : matchData) {
-                    session.insertOrReplace(matchValues);
+                    session.getDaoSession().insertOrReplace(matchValues);
                 }
 
                 for (MatchComment matchComment : matchComments) {
-                    session.insertOrReplace(matchComment);
+                    session.getDaoSession().insertOrReplace(matchComment);
                 }
 
-                session.insertOrReplace(event);
-                session.insertOrReplace(game);
+                session.getDaoSession().insertOrReplace(event);
+                session.getDaoSession().insertOrReplace(game);
             }
         });
 

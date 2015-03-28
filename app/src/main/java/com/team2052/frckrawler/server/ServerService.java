@@ -34,7 +34,7 @@ public class ServerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (thread == null) {
-            Event e = ((FRCKrawler) getApplication()).getDaoSession().getEventDao().load(intent.getLongExtra(EVENT_ID, 0));
+            Event e = ((FRCKrawler) getApplication()).getDBSession().getDaoSession().getEventDao().load(intent.getLongExtra(EVENT_ID, 0));
             NotificationCompat.Builder b = new NotificationCompat.Builder(this);
             b.setSmallIcon(R.drawable.ic_stat_knightkrawler);
             b.setContentTitle("Server open");

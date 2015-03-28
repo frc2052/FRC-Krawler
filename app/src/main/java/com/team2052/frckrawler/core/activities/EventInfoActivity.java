@@ -30,7 +30,7 @@ public class EventInfoActivity extends ViewPagerActivity {
 
     @Override
     public void onPreLoadViewPager() {
-        mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
+        mEvent = mDbManager.getDaoSession().getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         setActionBarTitle(getString(R.string.event));
         setActionBarSubtitle(mEvent.getName());
     }

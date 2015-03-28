@@ -36,7 +36,7 @@ public class TeamsFragment extends ListFragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Team team = mDaoSession.getTeamDao().load(Long.valueOf((((ListElement) ((ListViewAdapter) mAdapter).getItem(position))).getKey()));
+                Team team = mDbManager.getDaoSession().getTeamDao().load(Long.valueOf((((ListElement) ((ListViewAdapter) mAdapter).getItem(position))).getKey()));
                 startActivity(TeamInfoActivity.newInstance(getActivity(), team));
             }
         });
@@ -54,7 +54,7 @@ public class TeamsFragment extends ListFragment {
 
         @Override
         protected List<Team> doInBackground(Void... params) {
-            return mDaoSession.getTeamDao().queryBuilder().orderAsc(TeamDao.Properties.Number).list();
+            return mDbManager.getDaoSession().getTeamDao().queryBuilder().orderAsc(TeamDao.Properties.Number).list();
         }
 
         @Override

@@ -41,7 +41,7 @@ public class ScoutActivity extends ViewPagerActivity {
         EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle("Scout");
-        Event event = Utilities.ScoutUtil.getScoutEvent(this, mDaoSession);
+        Event event = Utilities.ScoutUtil.getScoutEvent(this, mDbManager);
         if (event != null) {
             getSupportActionBar().setSubtitle(event.getName());
         }
@@ -67,7 +67,7 @@ public class ScoutActivity extends ViewPagerActivity {
                 break;
             case R.id.reset_server_device:
                 Utilities.ScoutUtil.resetSyncDevice(this);
-                new DeleteAllDataTask(mDaoSession).execute();
+                new DeleteAllDataTask(mDbManager).execute();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -120,13 +120,13 @@ public class ScoutActivity extends ViewPagerActivity {
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncSuccessEvent event) {
         setProgress(false);
-        LoginHandler loginHandler = LoginHandler.getInstance(this, mDaoSession);
+        LoginHandler loginHandler = LoginHandler.getInstance(this, mDbManager);
         if (!loginHandler.isLoggedOn()) {
             loginHandler.login(this);
         } else if (!loginHandler.loggedOnUserStillExists()) {
             loginHandler.login(this);
         }
-        getSupportActionBar().setSubtitle(Utilities.ScoutUtil.getScoutEvent(this, mDaoSession).getName());
+        getSupportActionBar().setSubtitle(Utilities.ScoutUtil.getScoutEvent(this, mDbManager).getName());
     }
 
     private void setProgress(boolean toggle) {

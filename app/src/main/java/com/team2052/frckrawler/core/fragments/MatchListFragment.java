@@ -77,7 +77,7 @@ public class MatchListFragment extends ListFragment {
 
     @Override
     public void onPostCreate() {
-        mEvent = mDaoSession.getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        mEvent = mDbManager.getDaoSession().getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class MatchListFragment extends ListFragment {
         @Override
         protected List<Match> doInBackground(Void... params) {
             //Get Matches ascending from the provided event id
-            return mDaoSession.getMatchDao().queryBuilder().orderAsc(MatchDao.Properties.Number).where(MatchDao.Properties.EventId.eq(mEvent.getId())).list();
+            return mDbManager.getDaoSession().getMatchDao().queryBuilder().orderAsc(MatchDao.Properties.Number).where(MatchDao.Properties.EventId.eq(mEvent.getId())).list();
         }
 
         @Override
@@ -122,11 +122,11 @@ public class MatchListFragment extends ListFragment {
             if (mEvent.getFmsid() != null) {
                 String url = TBA.BASE_TBA_URL + String.format(TBA.EVENT_REQUEST, mEvent.getFmsid());
                 final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
-                JSON.set_daoSession(mDaoSession);
+                JSON.set_daoSession(mDbManager);
                 for (JsonElement element : jMatches) {
                     Match match = JSON.getGson().fromJson(element, Match.class);
                     /*if (match.getType().contains("qm")) {
-                        Match unique = mDaoSession.getMatchDao().queryBuilder().where(MatchDao.Properties.Key.eq(match.getKey())).unique();
+                        Match unique = mDbManager.getMatchDao().queryBuilder().where(MatchDao.Properties.Key.eq(match.getKey())).unique();
                         unique.setRedscore(match.getRedscore());
                         unique.setBluescore(match.getBluescore());
                         unique.update();

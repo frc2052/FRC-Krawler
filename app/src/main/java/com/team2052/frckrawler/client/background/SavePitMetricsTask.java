@@ -8,10 +8,8 @@ import com.team2052.frckrawler.client.LoginHandler;
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.MetricValue;
-import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.PitData;
-import com.team2052.frckrawler.db.PitDataDao;
 import com.team2052.frckrawler.db.Robot;
 
 import java.util.List;
@@ -22,8 +20,7 @@ import java.util.List;
  */
 public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
 
-    private final DaoSession mDaoSession;
-    private final DBManager mDBmanager;
+    private final DBManager mDaoSession;
     private Context context;
     private Event mEvent;
     private Robot robot;
@@ -36,24 +33,20 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
         this.robot = robot;
         this.metricValues = metricValues;
         this.comment = comment;
-        this.mDaoSession = ((FRCKrawler) context.getApplicationContext()).getDaoSession();
-        this.mDBmanager = DBManager.getInstance(context, mDaoSession);
+        this.mDaoSession = ((FRCKrawler) context.getApplicationContext()).getDBSession();
     }
 
     @Override
     protected Void doInBackground(Void... params) {
         for (MetricValue widget : metricValues) {
-            PitData currentData = mDaoSession.getPitDataDao().queryBuilder().where(PitDataDao.Properties.RobotId.eq(robot.getId())).where(PitDataDao.Properties.MetricId.eq(widget.getMetric().getId())).where(PitDataDao.Properties.EventId.eq(mEvent.getId())).unique();
-            PitData pitData = new PitData(null, robot.getId(),  widget.getMetric().getId(), mEvent.getId(), LoginHandler.getInstance(context, mDaoSession).getLoggedOnUser().getId(), widget.getValue());
-
-            //If data already exists update it. If not, insert as a new entry.
-            if (currentData != null) {
-                currentData.setData(pitData.getData());
-                mDaoSession.getPitDataDao().update(currentData);
-            } else {
-                mDaoSession.getPitDataDao().insert(pitData);
-            }
-
+            PitData pitData = new PitData(
+                    null,
+                    robot.getId(),
+                    widget.getMetric().getId(),
+                    mEvent.getId(),
+                    LoginHandler.getInstance(context, mDaoSession).getLoggedOnUser().getId(),
+                    widget.getValue());
+            mDaoSession.insertPitData(pitData);
         }
 
         //robot.setComment(comment);

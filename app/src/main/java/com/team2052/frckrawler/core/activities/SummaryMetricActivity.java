@@ -34,11 +34,11 @@ public class SummaryMetricActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mEvent = mDaoSession.getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
+        mEvent = mDbManager.getDaoSession().getEventDao().load(getIntent().getLongExtra(PARENT_ID, 0));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Metric metric = mDaoSession.getMetricDao().load(Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()));
+                Metric metric = mDbManager.getDaoSession().getMetricDao().load(Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()));
                 startActivity(SummaryDataActivity.newInstance(SummaryMetricActivity.this, metric, mEvent));
             }
         });
@@ -57,7 +57,7 @@ public class SummaryMetricActivity extends ListActivity {
 
         @Override
         protected List<Metric> doInBackground(Void... params) {
-            return mDaoSession.getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(mEvent.getGameId())).list();
+            return mDbManager.getDaoSession().getMetricDao().queryBuilder().where(MetricDao.Properties.GameId.eq(mEvent.getGameId())).list();
         }
 
         @Override
