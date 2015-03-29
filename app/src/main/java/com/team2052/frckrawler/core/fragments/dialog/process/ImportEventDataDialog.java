@@ -16,10 +16,6 @@ import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.db.RobotDao;
-import com.team2052.frckrawler.db.RobotEvent;
-import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
 
 /**
@@ -67,46 +63,29 @@ public class ImportEventDataDialog extends BaseProgressDialog {
             final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
 
             //Run in bulk transaction
-            daoSession.getDaoSession().runInTx(new Runnable() {
-                @Override
-                public void run() {
-                    //Save the event
-
-                    Event event = JSON.getGson().fromJson(jEvent, Event.class);
-                    event.setGameId(game.getId());
-                    daoSession.getDaoSession().getEventDao().insert(event);
-
-
-                    //Save the teams
-                    publishProgress("Saving Teams");
-                    for (JsonElement element : jTeams) {
-                        //Convert json element to team
-                        Team team = JSON.getGson().fromJson(element, Team.class);
-                        daoSession.getDaoSession().getTeamDao().insertOrReplace(team);
-                        //Create a robot and save that robot to the database as well with the team
-                        Robot robot = daoSession.getDaoSession().getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(game.getId())).where(RobotDao.Properties.TeamId.eq(team.getNumber())).unique();
-
-                        if (robot == null) {
-                            daoSession.getDaoSession().getRobotEventDao().insert(new RobotEvent(null, daoSession.getDaoSession().getRobotDao().insert(new Robot(null, team.getNumber(), game.getId(), null, null)), event.getId(), null));
-                        } else {
-                            RobotEvent robotEvents = daoSession.getDaoSession().getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).where(RobotEventDao.Properties.EventId.eq(event.getId())).unique();
-                            if (robotEvents == null) {
-                                daoSession.getDaoSession().getRobotEventDao().insert(new RobotEvent(null, robot.getId(), event.getId(), null));
-                            }
-                        }
-                    }
-                    publishProgress("Saving Matches");
-                    JSON.set_daoSession(daoSession);
-                    for (JsonElement element : jMatches) {
-                        //Save all the matches and alliances
-                        Match match = JSON.getGson().fromJson(element, Match.class);
-                        //Only save Qualifications
-                        if (match.getType().contains("qm")) {
-                            daoSession.getDaoSession().insert(match);
-                        }
-                    }
-                    LogHelper.debug("Saved " + event.getName() + " In " + (System.currentTimeMillis() - startTime) + "ms");
+            daoSession.getDaoSession().runInTx(() -> {
+                //Save the event
+                Event event = JSON.getGson().fromJson(jEvent, Event.class);
+                event.setGameId(game.getId());
+                daoSession.getDaoSession().getEventDao().insert(event);
+                //Save the teams
+                publishProgress("Saving Teams");
+                for (JsonElement element : jTeams) {
+                    //Convert json element to team
+                    Team team = JSON.getGson().fromJson(element, Team.class);
+                    mDbManager.insertTeam(team, event);
                 }
+                publishProgress("Saving Matches");
+                JSON.set_daoSession(daoSession);
+                for (JsonElement element : jMatches) {
+                    //Save all the matches and alliances
+                    Match match = JSON.getGson().fromJson(element, Match.class);
+                    //Only save Qualifications
+                    if (match.getType().contains("qm")) {
+                        daoSession.getDaoSession().insert(match);
+                    }
+                }
+                LogHelper.debug("Saved " + event.getName() + " In " + (System.currentTimeMillis() - startTime) + "ms");
             });
 
             return null;

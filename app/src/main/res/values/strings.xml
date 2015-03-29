@@ -55,8 +55,8 @@
     </string-array>
 
     <string-array name="team_tab_titles">
-        <!-- <item>Info</item>-->
+        <item>Info</item>
         <item>Robots</item>
-        <!--<item>Contacts</item>-->
+        <item>Contacts</item>
     </string-array>
 </resources>

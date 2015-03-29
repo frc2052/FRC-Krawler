@@ -83,7 +83,7 @@ public class AddTeamDialogFragment extends android.support.v4.app.DialogFragment
             LogHelper.info("importing team");
             DBManager dbManager = ((FRCKrawler) getActivity().getApplicationContext()).getDBSession();
             //Team doesn't exist nor does robot and robotevent (most likely)
-            String url = TBA.BASE_TBA_URL + String.format(TBA.TEAM, teamNumber);
+            String url = TBA.BASE_TBA_API_URL + String.format(TBA.TEAM, teamNumber);
             //Query Team from TBA :)
             Team team = JSON.getGson().fromJson(JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url))), Team.class);
             dbManager.insertTeam(team, mEvent);

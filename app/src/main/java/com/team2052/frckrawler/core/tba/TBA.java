@@ -12,11 +12,12 @@ import java.util.List;
  * @author Adam
  */
 public class TBA {
-    public static String BASE_TBA_URL = "http://www.thebluealliance.com/api/v2/";
-    public static String EVENT_BY_YEAR = BASE_TBA_URL + "events/%d";
-    public static String EVENT = BASE_TBA_URL + "event/%s";
-    public static String TEAM = BASE_TBA_URL + "team/frc%d";
-    public static String TEAM_EVENTS = BASE_TBA_URL + "team/%s/%d/events";
+    public static String TBA_URL = "http://www.thebluealliance.com/";
+    public static String BASE_TBA_API_URL = "http://www.thebluealliance.com/api/v2/";
+    public static String EVENT_BY_YEAR = BASE_TBA_API_URL + "events/%d";
+    public static String EVENT = BASE_TBA_API_URL + "event/%s";
+    public static String TEAM = BASE_TBA_API_URL + "team/frc%d";
+    public static String TEAM_EVENTS = BASE_TBA_API_URL + "team/%s/%d/events";
 
     public Team request_team(long team_number) {
         return JSON.getGson().fromJson(HTTP.dataFromResponse(HTTP.getResponse(String.format(TEAM, team_number))), Team.class);

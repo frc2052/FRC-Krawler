@@ -6,18 +6,17 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchCommentDao;
-import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.Team;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import de.greenrobot.dao.query.QueryBuilder;
@@ -31,59 +30,55 @@ public class ExportUtil {
         Game game = dbManager.getGame(event);
         List<Metric> metrics = game.getMetricList();
         List<Robot> robots = dbManager.getRobots(event);
-        List<MatchData> matchDataList = event.getMatchDataList();
+        boolean provideTBAURL = event.getFmsid() != null;
 
-        Map<Long, List<CompiledMetricValue>> compiledMap = new TreeMap<>();
-        for (Robot robot : robots) {
-            compiledMap.put(robot.getTeamId(), Utilities.MetricCompiler.getCompiledRobot(event, robot, dbManager, compileWeight));
-        }
+        //Sort Robots
+        Collections.sort(robots, (lhs, rhs) -> Double.compare(lhs.getTeamId(), rhs.getTeamId()));
 
         try {
+
             CSVWriter writer = new CSVWriter(new FileWriter(location), ',');
 
             List<String> header = new ArrayList<>();
-
             header.add("Team Number");
             header.add("Team Name");
-            header.add("Comments");
-
+            header.add("Match Comments");
+            header.add("Robot Comments");
             for (Metric metric : metrics) {
                 header.add(metric.getName());
             }
             header.add("TBA Link");
 
-
             writer.writeNext(Arrays.copyOf(header.toArray(), header.size(), String[].class));
-
-            boolean provideTBAURL = event.getFmsid() != null;
-            for (Map.Entry<Long, List<CompiledMetricValue>> entry : compiledMap.entrySet()) {
+            for (Robot robot : robots) {
                 List<String> record = new ArrayList<>();
-                record.add(String.valueOf(entry.getKey()));
-                record.add(dbManager.getTeam(entry.getKey()).getName());
+                Team team = dbManager.getTeam(robot);
+                record.add(String.valueOf(team.getNumber()));
+                record.add(team.getName());
 
-
-                //Comments
                 QueryBuilder<MatchComment> matchCommentQueryBuilder = dbManager.getDaoSession().getMatchCommentDao().queryBuilder();
                 matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(event.getId()));
+                matchCommentQueryBuilder.where(MatchCommentDao.Properties.RobotId.eq(robot.getId()));
                 String comments = "";
 
                 for (MatchComment matchComment : matchCommentQueryBuilder.list()) {
-                    comments += "Match " + dbManager.getMatch(matchComment).getNumber() + ": " + matchComment.getComment() + ", ";
+                    comments += dbManager.getMatch(matchComment).getNumber() + ": " + matchComment.getComment() + ", ";
                 }
 
                 record.add(comments);
+                record.add(robot.getComments());
 
-                //Compiled values
-                for (CompiledMetricValue metricValue : entry.getValue()) {
+                List<CompiledMetricValue> compiledRobot = Utilities.MetricCompiler.getCompiledRobot(event, robot, dbManager, compileWeight);
+                for (CompiledMetricValue metricValue : compiledRobot) {
                     record.add(metricValue.getCompiledValue());
                 }
+
                 if (provideTBAURL) {
-                    record.add(TBA.BASE_TBA_URL + "/team/" + entry.getKey() + "/" + event.getFmsid().substring(0, 4));
+                    record.add(TBA.TBA_URL + "team/" + team.getNumber() + "/" + event.getFmsid().substring(0, 4));
                 }
 
                 writer.writeNext(Arrays.copyOf(record.toArray(), record.size(), String[].class));
             }
-
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

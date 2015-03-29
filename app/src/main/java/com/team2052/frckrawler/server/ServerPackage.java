@@ -1,7 +1,5 @@
 package com.team2052.frckrawler.server;
 
-import android.util.Log;
-
 import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.RobotComment;
 import com.team2052.frckrawler.core.util.LogHelper;
@@ -46,7 +44,7 @@ public class ServerPackage implements Serializable {
                 LogHelper.info("Saving Data");
                 //Save all the data
                 for (MatchData m : metricMatchData) {
-                    Log.i("FRCKrawler", m.getData() + String.valueOf(dbManager.insertMatchData(m)));
+                    dbManager.insertMatchData(m);
                 }
 
                 for (PitData m : metricPitData) {

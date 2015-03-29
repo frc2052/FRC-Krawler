@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.listeners.ListUpdateListener;
 import com.team2052.frckrawler.core.listitems.ListElement;
 import com.team2052.frckrawler.db.Contact;

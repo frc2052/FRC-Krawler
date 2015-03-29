@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.common.base.Strings;
 import com.team2052.frckrawler.client.LoginHandler;
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.DBManager;
@@ -62,7 +63,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         }
 
 
-        if (!mComment.isEmpty()) {
+        if (!Strings.isNullOrEmpty(mComment)) {
             MatchComment matchComment = new MatchComment(
                     null,
                     mMatch.getId(),

@@ -449,4 +449,8 @@ public class DBManager {
     public Robot getRobot(long robotId) {
         return robotDao.load(robotId);
     }
+
+    public Team getTeam(Robot robot) {
+        return teamDao.load(robot.getTeamId());
+    }
 }

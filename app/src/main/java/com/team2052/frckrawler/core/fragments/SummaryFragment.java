@@ -4,8 +4,6 @@ package com.team2052.frckrawler.core.fragments;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.activities.SummaryDataActivity;
@@ -38,12 +36,9 @@ public class SummaryFragment extends ListFragment {
 
     @Override
     public void preUpdateList() {
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Metric metric = mDbManager.getDaoSession().getMetricDao().load(Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()));
-                startActivity(SummaryDataActivity.newInstance(getActivity(), metric, mEvent));
-            }
+        mListView.setOnItemClickListener((parent, view, position, id) -> {
+            Metric metric = mDbManager.getDaoSession().getMetricDao().load(Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()));
+            startActivity(SummaryDataActivity.newInstance(getActivity(), metric, mEvent));
         });
         mEvent = mDbManager.getDaoSession().getEventDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
