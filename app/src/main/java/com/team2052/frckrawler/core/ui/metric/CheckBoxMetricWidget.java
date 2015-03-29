@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.core.ui.metric;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
@@ -38,7 +37,9 @@ public class CheckBoxMetricWidget extends MetricWidget {
         List<Integer> array = null;
         if (m.getValue() != null) {
             JsonObject value_data = JSON.getAsJsonObject(m.getValue());
-            array = JSON.getGson().fromJson(value_data.get("values"), listType);
+            if (value_data.has("values") && !value_data.get("values").isJsonNull()) {
+                array = JSON.getGson().fromJson(value_data.get("values"), listType);
+            }
         }
 
 
@@ -53,7 +54,6 @@ public class CheckBoxMetricWidget extends MetricWidget {
                     }
                 }
             }
-            Log.i("FRCKrawler", String.valueOf(i) + String.valueOf(checkbox.isChecked()));
             this.values.addView(checkbox);
         }
 
@@ -62,12 +62,10 @@ public class CheckBoxMetricWidget extends MetricWidget {
 
     @Override
     public JsonElement getData() {
-        Log.i("FRCKrawler", "Saving");
         ArrayList<Integer> index_values = new ArrayList<>();
 
         for (int i = 0; i < this.values.getChildCount(); i++) {
             CheckBox check_box = (CheckBox) this.values.getChildAt(i);
-            Log.i("FRCKrawler", String.valueOf(i) + String.valueOf(check_box.isChecked()));
             if (check_box.isChecked()) {
                 index_values.add(i);
             }

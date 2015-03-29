@@ -8,7 +8,7 @@ import de.greenrobot.daogenerator.Schema;
 public class FRCKrawlerDaoGenerator {
 
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(1, "com.team2052.frckrawler.db");
+        Schema schema = new Schema(2, "com.team2052.frckrawler.db");
 
         Entity matchData = schema.addEntity("MatchData");
         matchData.implementsSerializable();

@@ -15,42 +15,36 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.tba.JSON;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedListener {
 
     private final Spinner chooserSpinner;
-    private final List<String> range;
     private final ArrayAdapter<Object> adapter;
-    String value;
+    int value;
 
     public ChooserMetricWidget(Context context, MetricValue m) {
 
         super(context, m);
         inflater.inflate(R.layout.widget_metric_chooser, this);
 
-        if (m.getValue() != null)
-            value = JSON.getAsJsonObject(m.getValue()).get("value").getAsString();
-
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1);
 
-        JsonArray range = JSON.getAsJsonArray(m.getMetric().getData());
-        List<String> rangeValues = new ArrayList<>();
-
-        for (JsonElement jsonElement : range) {
-            JsonObject object = jsonElement.getAsJsonObject();
-            rangeValues.add(object.get("value").getAsString());
-        }
-
-        this.range = rangeValues;
+        JsonArray range = JSON.getAsJsonObject(m.getMetric().getData()).get("values").getAsJsonArray();
 
         int selectedPos = 0;
 
+        if (m.getMetric() != null) {
+            JsonObject json_data = JSON.getAsJsonObject(m.getValue());
+            if (json_data.has("values") && !json_data.get("values").isJsonNull()) {
+                JsonArray values = json_data.get("values").getAsJsonArray();
+                if (values.size() > 0) {
+                    selectedPos = values.get(0).getAsInt();
+                }
+            }
+
+        }
+
         for (int i = 0; i < range.size(); i++) {
-            adapter.add(rangeValues.get(i));
-            if (value != null && value.equals(rangeValues.get(i)))
-                selectedPos = i;
+            adapter.add(range.get(i).getAsString());
         }
 
         chooserSpinner = (Spinner) findViewById(R.id.choooserList);
@@ -62,8 +56,8 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> a, View arg1, int arg2, long arg3) {
-        value = (String) a.getSelectedItem();
+    public void onItemSelected(AdapterView<?> a, View arg1, int pos, long arg3) {
+        value = pos;
     }
 
     @Override
@@ -73,8 +67,10 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
 
     @Override
     public JsonElement getData() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("value", value);
-        return jsonObject;
+        int[] ints = {value};
+        JsonObject data = new JsonObject();
+        JsonElement values = JSON.getGson().toJsonTree(ints);
+        data.add("values", values);
+        return data;
     }
 }

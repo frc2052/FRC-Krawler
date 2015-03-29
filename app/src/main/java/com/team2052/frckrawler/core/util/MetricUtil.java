@@ -4,7 +4,6 @@ package com.team2052.frckrawler.core.util;
  * Created by adam on 3/28/15.
  */
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.core.tba.JSON;
@@ -56,15 +55,13 @@ public class MetricUtil {
     }
 
     public static Metric createChooserMetric(Game game, MetricType metricCategory, String name, String description, List<String> choices) {
-        JsonArray range = new JsonArray();
+        JsonObject data = new JsonObject();
+        JsonElement jsonElements = JSON.getGson().toJsonTree(choices);
+        data.add("values", jsonElements);
 
-        for (String choice : choices) {
-            JsonObject choiceObj = new JsonObject();
-            choiceObj.addProperty("value", choice);
-            range.add(choiceObj);
-        }
+        String str_data = JSON.getGson().toJson(data);
 
-        return new Metric(null, name, metricCategory.ordinal(), CHOOSER, JSON.getGson().toJson(range), game.getId());
+        return new Metric(null, name, metricCategory.ordinal(), CHOOSER, str_data, game.getId());
     }
 
     public static Metric createCheckBoxMetric(Game game, MetricType metricCategory, String name, String description, List<String> values) {

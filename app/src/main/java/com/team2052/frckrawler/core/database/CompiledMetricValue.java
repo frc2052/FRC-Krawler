@@ -2,14 +2,12 @@ package com.team2052.frckrawler.core.database;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.core.util.MetricUtil;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -83,33 +81,6 @@ public class CompiledMetricValue {
 
                 break;
             case MetricUtil.CHOOSER:
-                JsonArray range = JSON.getAsJsonArray(metric.getData());
-                int rangeCnt = range.size();
-                List<String> rangeValues = new ArrayList<>();
-
-                for (JsonElement jsonElement : range) {
-                    JsonObject object = jsonElement.getAsJsonObject();
-                    rangeValues.add(object.get("value").getAsString());
-                }
-
-
-                double[] counts = new double[rangeValues.size()];
-
-                for (MetricValue metricValue : metricData) {
-                    String value = JSON.getAsJsonObject(metricValue.getValue()).get("value").getAsString();
-                    for (int i = 0; i < rangeCnt; i++) {
-                        if (value.equals(rangeValues.get(i))) {
-                            counts[i]++;
-                            break;
-                        }
-                    }
-                }
-
-                for (int choiceCount = 0; choiceCount < rangeCnt; choiceCount++) {
-                    compiledValue += rangeValues.get(choiceCount) + " " + format.format(Double.isNaN((counts[choiceCount] / metricData.size()) * 100) ? 0.0D : (counts[choiceCount] / metricData.size()) * 100) + "% \n";
-                }
-
-                break;
             case MetricUtil.CHECK_BOX:
                 Map<Integer, String> valueNames = new TreeMap<>();
                 JsonArray possible_values = JSON.getAsJsonObject(metric.getData()).get("values").getAsJsonArray();
