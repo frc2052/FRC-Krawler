@@ -21,7 +21,7 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
 
     public CounterMetricWidget(Context context, MetricValue m) {
 
-        super(context, m.getMetric(), m.getValue());
+        super(context, m);
         inflater.inflate(R.layout.widget_metric_counter, this);
 
         ((TextView) findViewById(R.id.title)).setText(m.getMetric().getName());

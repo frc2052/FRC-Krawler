@@ -9,6 +9,8 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.ui.ListEditor;
 import com.team2052.frckrawler.core.ui.TextListEditor;
 
+import java.util.List;
+
 public class ListTester extends BaseActivity implements OnClickListener {
 
     ListEditor list;
@@ -32,7 +34,7 @@ public class ListTester extends BaseActivity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        String[] s = list.getValues();
+        List<String> s = list.getValues();
 
         for (String g : s)
             System.out.println(g);

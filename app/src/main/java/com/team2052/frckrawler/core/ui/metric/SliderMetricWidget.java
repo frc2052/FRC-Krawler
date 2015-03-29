@@ -18,7 +18,7 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
 
     public SliderMetricWidget(Context context, MetricValue m) {
 
-        super(context, m.getMetric(), m.getValue());
+        super(context, m);
         inflater.inflate(R.layout.widget_metric_slider, this);
 
         ((TextView) findViewById(R.id.name)).setText(m.getMetric().getName());

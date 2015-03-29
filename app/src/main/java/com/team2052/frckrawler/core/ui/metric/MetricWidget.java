@@ -7,7 +7,7 @@ import android.widget.FrameLayout;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.tba.JSON;
-import com.team2052.frckrawler.core.util.Utilities;
+import com.team2052.frckrawler.core.util.MetricUtil;
 import com.team2052.frckrawler.db.Metric;
 
 public abstract class MetricWidget extends FrameLayout {
@@ -15,9 +15,9 @@ public abstract class MetricWidget extends FrameLayout {
     protected LayoutInflater inflater;
     private Metric metric;
 
-    protected MetricWidget(Context context, Metric m, String val) {
+    protected MetricWidget(Context context, MetricValue m) {
         super(context);
-        metric = m;
+        metric = m.getMetric();
         inflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -31,14 +31,16 @@ public abstract class MetricWidget extends FrameLayout {
             return null;
 
         switch (m.getMetric().getType()) {
-            case Utilities.MetricUtil.BOOLEAN:
+            case MetricUtil.BOOLEAN:
                 return new BooleanMetricWidget(c, m);
-            case Utilities.MetricUtil.CHOOSER:
+            case MetricUtil.CHOOSER:
                 return new ChooserMetricWidget(c, m);
-            case Utilities.MetricUtil.COUNTER:
+            case MetricUtil.COUNTER:
                 return new CounterMetricWidget(c, m);
-            case Utilities.MetricUtil.SLIDER:
+            case MetricUtil.SLIDER:
                 return new SliderMetricWidget(c, m);
+            case MetricUtil.CHECK_BOX:
+                return new CheckBoxMetricWidget(c, m);
             default:
                 return null;
         }

@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.core.fragments.dialog;
+package com.team2052.frckrawler.core.fragments.dialog.manualmode;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -20,16 +20,10 @@ import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.core.tba.TBA;
 import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.db.RobotDao;
-import com.team2052.frckrawler.db.RobotEvent;
-import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.db.TeamDao;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * @author Adam
@@ -88,44 +82,11 @@ public class AddTeamDialogFragment extends android.support.v4.app.DialogFragment
         protected Void doInBackground(Void... params) {
             LogHelper.info("importing team");
             DBManager dbManager = ((FRCKrawler) getActivity().getApplicationContext()).getDBSession();
-
-
-            QueryBuilder<Robot> robotQueryBuilder = dbManager.getDaoSession().getRobotDao().queryBuilder();
-            robotQueryBuilder.where(RobotDao.Properties.TeamId.eq(teamNumber));
-            robotQueryBuilder.where(RobotDao.Properties.GameId.eq(mEvent.getGameId()));
-            Robot unique = robotQueryBuilder.unique();
-
-            if (unique == null) {
-                QueryBuilder<Team> teamQueryBuilder = dbManager.getDaoSession().getTeamDao().queryBuilder();
-                teamQueryBuilder.where(TeamDao.Properties.Number.eq(teamNumber));
-                Team team = teamQueryBuilder.unique();
-                if (team == null) {
-                    //Team doesn't exist nor does robot and robotevent (most likely)
-                    String url = TBA.BASE_TBA_URL + String.format(TBA.TEAM, teamNumber);
-                    //Query Team from TBA :)
-                    Team team1 = JSON.getGson().fromJson(JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url))), Team.class);
-
-                    if (team1 != null) {
-                        //Robot robot = new Robot(null, daoSession.insert(team1), mEvent.getGameId(), null, null);
-                        //daoSession.insert(new RobotEvent(null, daoSession.insert(robot), mEvent.getId()));
-                    }
-                } else {
-                    //Team exists just robot doesn't exist, and roobtevent (most likely)
-                    //Robot robot = new Robot(null, daoSession.insert(team), mEvent.getGameId(), null, null);
-                    //daoSession.insert(new RobotEvent(null, daoSession.insert(robot), mEvent.getId()));
-                }
-            } else {
-                QueryBuilder<RobotEvent> robotEventQueryBuilder = dbManager.getDaoSession().getRobotEventDao().queryBuilder();
-                robotEventQueryBuilder.where(RobotEventDao.Properties.RobotId.eq(unique.getId()));
-                robotEventQueryBuilder.where(RobotEventDao.Properties.EventId.eq(mEvent.getId()));
-
-                RobotEvent robotEvent = robotEventQueryBuilder.unique();
-                if (robotEvent == null) {
-
-                } else {
-                    //Already Added
-                }
-            }
+            //Team doesn't exist nor does robot and robotevent (most likely)
+            String url = TBA.BASE_TBA_URL + String.format(TBA.TEAM, teamNumber);
+            //Query Team from TBA :)
+            Team team = JSON.getGson().fromJson(JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url))), Team.class);
+            dbManager.insertTeam(team, mEvent);
             return null;
         }
 

@@ -14,7 +14,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.activities.RobotActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
-import com.team2052.frckrawler.core.fragments.dialog.AddTeamDialogFragment;
+import com.team2052.frckrawler.core.fragments.dialog.manualmode.AddTeamDialogFragment;
 import com.team2052.frckrawler.core.listitems.ListElement;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.elements.RobotListElement;

@@ -34,7 +34,7 @@ public class EventDeserializer implements JsonDeserializer<Event> {
 
         JsonObject data = new JsonObject();
         if (object.get("location").isJsonNull()) {
-            data.addProperty("location", "");
+            data.addProperty("location", "Location Unknown");
         } else {
             data.addProperty("location", object.get("location").getAsString());
         }

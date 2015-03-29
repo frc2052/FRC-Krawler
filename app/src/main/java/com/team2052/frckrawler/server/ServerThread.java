@@ -70,10 +70,10 @@ public class ServerThread extends Thread {
                     switch (connectionType) {
                         case SCOUT_SYNC:
                             ServerPackage serverPackage = (ServerPackage) fromScoutStream.readObject();
+                            serverPackage.save(mDbManager);
                             toScoutStream.writeObject(new ScoutPackage(mDbManager, hostedEvent));
                             toScoutStream.flush();
                             clientSocket.close();
-                            serverPackage.save(mDbManager);
                     }
 
                     //handler.onSyncSuccess(deviceName);

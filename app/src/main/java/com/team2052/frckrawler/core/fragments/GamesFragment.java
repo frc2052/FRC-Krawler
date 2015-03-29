@@ -10,7 +10,6 @@ import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.activities.GameInfoActivity;
@@ -91,31 +90,20 @@ public class GamesFragment extends ListFragmentFab implements ListUpdateListener
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                long gameId = Long.parseLong(((ListElement) mAdapter.getItem(i)).getKey());
-                final Game game = mDbManager.getDaoSession().getGameDao().load(gameId);
-                startActivity(GameInfoActivity.newInstance(getActivity(), game));
-            }
+        mListView.setOnItemClickListener((adapterView, view1, i, l) -> {
+            long gameId = Long.parseLong(((ListElement) mAdapter.getItem(i)).getKey());
+            final Game game = mDbManager.getDaoSession().getGameDao().load(gameId);
+            startActivity(GameInfoActivity.newInstance(getActivity(), game));
         });
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (currentActionMode != null) {
-                    return false;
-                }
-                currentSelectedListItem = position;
-                currentActionMode = ((ActionBarActivity) getActivity()).startSupportActionMode(callback);
-                return true;
+        mListView.setOnItemLongClickListener((parent, view1, position, id) -> {
+            if (currentActionMode != null) {
+                return false;
             }
+            currentSelectedListItem = position;
+            currentActionMode = ((ActionBarActivity) getActivity()).startSupportActionMode(callback);
+            return true;
         });
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AddGameDialogFragment().show(getChildFragmentManager(), "addGame");
-            }
-        });
+        mFab.setOnClickListener(view1 -> new AddGameDialogFragment().show(getChildFragmentManager(), "addGame"));
     }
 
     @Override

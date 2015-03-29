@@ -17,7 +17,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.fragments.EventsFragment;
 import com.team2052.frckrawler.core.fragments.MetricsFragment;
 import com.team2052.frckrawler.core.listeners.FABButtonListener;
-import com.team2052.frckrawler.core.util.Utilities;
+import com.team2052.frckrawler.core.util.MetricUtil;
 import com.team2052.frckrawler.db.Game;
 
 /**
@@ -97,9 +97,9 @@ public class GameInfoActivity extends ViewPagerFABActivity implements View.OnCli
                 case 0:
                     return EventsFragment.newInstance(mGame);
                 case 1:
-                    return MetricsFragment.newInstance(Utilities.MetricUtil.MetricType.MATCH_PERF_METRICS.ordinal(), mGame);
+                    return MetricsFragment.newInstance(MetricUtil.MetricType.MATCH_PERF_METRICS.ordinal(), mGame);
                 case 2:
-                    return MetricsFragment.newInstance(Utilities.MetricUtil.MetricType.ROBOT_METRICS.ordinal(), mGame);
+                    return MetricsFragment.newInstance(MetricUtil.MetricType.ROBOT_METRICS.ordinal(), mGame);
             }
             return null;
         }

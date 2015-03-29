@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
 import com.team2052.frckrawler.core.listitems.ListItem;
+import com.team2052.frckrawler.core.listitems.elements.EventListElement;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
@@ -46,7 +47,7 @@ public class RobotAttendingEventsFragment extends ListFragment {
                 public void run() {
                     List<RobotEvent> robotEvents = mDbManager.getDaoSession().getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(mRobot.getId())).list();
                     for (RobotEvent eveRobot : robotEvents) {
-                        //elements.add(new EventListElement(eveRobot.getEvent()));
+                        elements.add(new EventListElement(mDbManager.getDaoSession().getEventDao().load(eveRobot.getEventId())));
                     }
                 }
             });

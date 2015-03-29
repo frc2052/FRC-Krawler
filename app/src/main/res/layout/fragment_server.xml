@@ -13,9 +13,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             app:cardCornerRadius="2dp"
             app:cardElevation="2dp">
 
@@ -56,8 +56,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="4dp"
             app:cardCornerRadius="2dp"
             app:cardElevation="2dp">
@@ -100,8 +100,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="4dp"
             app:cardCornerRadius="2dp"
             app:cardElevation="2dp">
@@ -129,7 +129,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="16dp"
-                        android:text="Compile Weight"/>
+                        android:text="Compile Weight" />
 
                     <EditText
                         android:id="@+id/server_setting_compile_weight"
@@ -139,7 +139,7 @@
                         android:layout_marginRight="8dp"
                         android:layout_marginTop="4dp"
                         android:hint="Compile Weight"
-                        android:inputType="numberDecimal"/>
+                        android:inputType="numberDecimal" />
                 </LinearLayout>
 
 

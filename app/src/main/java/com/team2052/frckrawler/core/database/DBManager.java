@@ -399,5 +399,40 @@ public class DBManager {
         return teams;
     }
 
+    /**
+     * Inserts team and Robot, and Robot Event
+     *
+     * @param team
+     */
+    public void insertTeam(Team team, Event event) {
+        boolean team_added = teamDao.load(team.getNumber()) != null;
+        if (team_added) {
+            team = teamDao.load(team.getNumber());
+        } else {
+            daoSession.insert(team);
+        }
 
+        //Check robot
+        QueryBuilder<Robot> robotQueryBuilder = robotDao.queryBuilder();
+        robotQueryBuilder.where(RobotDao.Properties.GameId.eq(event.getGameId()));
+        robotQueryBuilder.where(RobotDao.Properties.TeamId.eq(team.getNumber()));
+        Robot robot = robotQueryBuilder.unique();
+        boolean robot_added = robot != null;
+
+        if (!robot_added) {
+            robot = new Robot(null, team.getNumber(), event.getGameId(), null);
+            daoSession.insert(robot);
+        }
+
+        QueryBuilder<RobotEvent> robotEventQueryBuilder = robotEventDao.queryBuilder();
+        robotEventQueryBuilder.where(RobotEventDao.Properties.EventId.eq(event.getGameId()));
+        robotEventQueryBuilder.where(RobotEventDao.Properties.RobotId.eq(robot.getId()));
+        RobotEvent robotEvent = robotEventQueryBuilder.unique();
+        boolean robot_event_exists = robotEvent != null;
+
+        if (!robot_event_exists) {
+            robotEvent = new RobotEvent(null, robot.getId(), event.getId(), null);
+            daoSession.insert(robotEvent);
+        }
+    }
 }

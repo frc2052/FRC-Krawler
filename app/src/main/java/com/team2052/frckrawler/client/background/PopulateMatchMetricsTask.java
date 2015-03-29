@@ -8,8 +8,7 @@ import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.fragments.ScoutMatchFragment;
 import com.team2052.frckrawler.core.ui.metric.MetricWidget;
-import com.team2052.frckrawler.core.util.LogHelper;
-import com.team2052.frckrawler.core.util.Utilities;
+import com.team2052.frckrawler.core.util.MetricUtil;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.MatchComment;
@@ -57,7 +56,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         //Build the queries
         QueryBuilder<Metric> metricQueryBuilder = mDbManager.getDaoSession().getMetricDao().queryBuilder();
         metricQueryBuilder.where(MetricDao.Properties.GameId.eq(event.getGameId()));
-        metricQueryBuilder.where(MetricDao.Properties.Category.eq(Utilities.MetricUtil.MetricType.MATCH_PERF_METRICS.ordinal()));
+        metricQueryBuilder.where(MetricDao.Properties.Category.eq(MetricUtil.MetricType.MATCH_PERF_METRICS.ordinal()));
 
         QueryBuilder<MatchComment> matchCommentQueryBuilder = mDbManager.getDaoSession().getMatchCommentDao().queryBuilder();
         matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(event.getId()));
@@ -72,20 +71,15 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
         List<MatchData> currentData = mDbManager.getMatchData(robot.getId(), null, match.getId(), event.getId(), null);
 
-        LogHelper.info(String.valueOf(currentData.size()));
-
-        LogHelper.info(String.valueOf(metrics.size()));
         mMetricValues = new ArrayList<>();
 
 
         //Use the current data if it's equal to the size of metrics
         if (currentData.size() == metrics.size()) {
-            LogHelper.info("Loading Metrics from Data");
             for (MatchData matchData : currentData) {
                 mMetricValues.add(new MetricValue(mDbManager.getDaoSession(), matchData));
             }
         } else {
-            LogHelper.info("Loading Metrics");
             for (Metric metric : metrics) {
                 mMetricValues.add(new MetricValue(metric, null));
             }

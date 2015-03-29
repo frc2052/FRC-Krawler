@@ -27,7 +27,7 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
 
     public ChooserMetricWidget(Context context, MetricValue m) {
 
-        super(context, m.getMetric(), m.getValue());
+        super(context, m);
         inflater.inflate(R.layout.widget_metric_chooser, this);
 
         if (m.getValue() != null)

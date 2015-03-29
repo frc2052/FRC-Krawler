@@ -2,6 +2,7 @@ package com.team2052.frckrawler.client;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.core.database.DBManager;
@@ -102,6 +103,7 @@ public class ScoutPackage implements Serializable {
                 }
 
                 for (MatchData matchValues : matchData) {
+                    Log.i("FRCKrawler", matchValues.getData());
                     session.getDaoSession().insertOrReplace(matchValues);
                 }
 

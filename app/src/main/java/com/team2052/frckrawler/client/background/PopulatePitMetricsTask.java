@@ -8,7 +8,7 @@ import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.database.MetricValue;
 import com.team2052.frckrawler.core.fragments.ScoutPitFragment;
 import com.team2052.frckrawler.core.ui.metric.MetricWidget;
-import com.team2052.frckrawler.core.util.Utilities;
+import com.team2052.frckrawler.core.util.MetricUtil;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.MetricDao;
@@ -52,7 +52,7 @@ public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
 
         QueryBuilder<Metric> metricQueryBuilder = mDaoSession.getDaoSession().getMetricDao().queryBuilder();
         metricQueryBuilder.where(MetricDao.Properties.GameId.eq(mEvent.getGameId()));
-        metricQueryBuilder.where(MetricDao.Properties.Category.eq(Utilities.MetricUtil.MetricType.ROBOT_METRICS.ordinal()));
+        metricQueryBuilder.where(MetricDao.Properties.Category.eq(MetricUtil.MetricType.ROBOT_METRICS.ordinal()));
 
         List<Metric> metrics = metricQueryBuilder.list();
         List<PitData> pitDatas = pitDataQueryBuilder.list();

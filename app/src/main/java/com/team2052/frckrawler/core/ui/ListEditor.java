@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ListEditor extends LinearLayout implements OnClickListener {
 
@@ -55,27 +56,8 @@ public abstract class ListEditor extends LinearLayout implements OnClickListener
         }
     }
 
-    /**
-     * **
-     * Method: getShownValues
-     *
-     * @return Summary: Gets the "fake" values for this ListEditor. These are the
-     * values that the user doesn't see.
-     * ***
-     */
-    public String[] getShownValues() {
-        return shownValues.toArray(new String[0]);
-    }
-
-    /**
-     * **
-     * Method: getValue
-     *
-     * @return Summary: Gets the "real" values of this ListEditor, not the shown values
-     * ***
-     */
-    public String[] getValues() {
-        return values.toArray(new String[0]);
+    public List<String> getValues() {
+        return values;
     }
 
     public int getValueCount() {

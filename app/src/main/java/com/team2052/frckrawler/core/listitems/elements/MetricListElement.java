@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.listitems.ListElement;
 import com.team2052.frckrawler.core.tba.JSON;
-import com.team2052.frckrawler.core.util.Utilities;
+import com.team2052.frckrawler.core.util.MetricUtil;
 import com.team2052.frckrawler.db.Metric;
 
 /**
@@ -32,16 +32,16 @@ public class MetricListElement extends ListElement {
         }*/
 
         switch (metric.getType()) {
-            case Utilities.MetricUtil.BOOLEAN:
+            case MetricUtil.BOOLEAN:
                 typeString = "Boolean";
                 rangeString = "Not Applicable";
                 break;
-            case Utilities.MetricUtil.COUNTER:
+            case MetricUtil.COUNTER:
                 typeString = "Counter";
                 JsonObject jsonObject = JSON.getAsJsonObject(metric.getData());
                 rangeString = jsonObject.get("min").getAsString() + " to " + jsonObject.get("max").getAsString() + " Incrementing by " + jsonObject.get("inc").getAsString();
                 break;
-            case Utilities.MetricUtil.CHOOSER:
+            case MetricUtil.CHOOSER:
                 boolean isFirst = true;
                 /*for (Object o : rangeArr) {
                     if (!isFirst) {
@@ -52,7 +52,7 @@ public class MetricListElement extends ListElement {
                 }*/
                 typeString = "Chooser";
                 break;
-            case Utilities.MetricUtil.SLIDER:
+            case MetricUtil.SLIDER:
                 //rangeString = rangeArr[0] + " to " + rangeArr[1];
                 typeString = "Slider";
                 break;

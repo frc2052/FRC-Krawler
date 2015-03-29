@@ -4,13 +4,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.core.tba.JSON;
-import com.team2052.frckrawler.core.util.Utilities;
+import com.team2052.frckrawler.core.util.MetricUtil;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author Adam
@@ -36,7 +38,7 @@ public class CompiledMetricValue {
 
     private void compileMetricValues() {
         switch (metricType) {
-            case Utilities.MetricUtil.BOOLEAN:
+            case MetricUtil.BOOLEAN:
                 double yes = 0;
                 double no = 0;
 
@@ -59,8 +61,8 @@ public class CompiledMetricValue {
                 }
                 break;
             //Do the same for slider and counter
-            case Utilities.MetricUtil.SLIDER:
-            case Utilities.MetricUtil.COUNTER:
+            case MetricUtil.SLIDER:
+            case MetricUtil.COUNTER:
                 double numerator = 0;
                 double denominator = 0;
 
@@ -80,7 +82,7 @@ public class CompiledMetricValue {
                 }
 
                 break;
-            case Utilities.MetricUtil.CHOOSER:
+            case MetricUtil.CHOOSER:
                 JsonArray range = JSON.getAsJsonArray(metric.getData());
                 int rangeCnt = range.size();
                 List<String> rangeValues = new ArrayList<>();
@@ -103,11 +105,45 @@ public class CompiledMetricValue {
                     }
                 }
 
-                compiledValue += "\n";
                 for (int choiceCount = 0; choiceCount < rangeCnt; choiceCount++) {
                     compiledValue += rangeValues.get(choiceCount) + " " + format.format(Double.isNaN((counts[choiceCount] / metricData.size()) * 100) ? 0.0D : (counts[choiceCount] / metricData.size()) * 100) + "% \n";
                 }
 
+                break;
+            case MetricUtil.CHECK_BOX:
+                Map<Integer, String> valueNames = new TreeMap<>();
+                JsonArray possible_values = JSON.getAsJsonObject(metric.getData()).get("values").getAsJsonArray();
+                for (int i = 0; i < possible_values.size(); i++) {
+                    valueNames.put(i, possible_values.get(i).getAsString());
+                }
+
+                if (metricData.isEmpty()) {
+                    for (String value : valueNames.values()) {
+                        compiledValue += String.format("%s:%s%s ", value, 0.0, '%');
+                    }
+                    break;
+                }
+
+                Map<Integer, Integer> compiledVal = new TreeMap<>();
+
+                for (Integer integer : valueNames.keySet()) {
+                    compiledVal.put(integer, 0);
+                }
+
+                for (MetricValue value : metricData) {
+                    JsonArray values = JSON.getAsJsonObject(value.getValue()).get("values").getAsJsonArray();
+
+                    for (JsonElement element : values) {
+                        int index = element.getAsInt();
+
+                        compiledVal.put(index, compiledVal.get(index) + 1);
+                    }
+                }
+
+                for (Map.Entry<Integer, Integer> entry : compiledVal.entrySet()) {
+                    double i = entry.getValue() / metricData.size() * 100;
+                    compiledValue += String.format("%s:%s%s ", valueNames.get(entry.getKey()), format.format(i), '%');
+                }
                 break;
         }
     }

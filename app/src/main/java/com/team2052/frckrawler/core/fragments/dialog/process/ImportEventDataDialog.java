@@ -50,7 +50,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
         private final Game game;
 
         public ImportEvent(String eventKey, Game mGame) {
-            //Get the main event urource based on the key
+            //Get the main event based on the key
             this.url = String.format(TBA.EVENT, eventKey);
             this.game = mGame;
         }

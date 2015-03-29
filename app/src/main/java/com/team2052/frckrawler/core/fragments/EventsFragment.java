@@ -10,8 +10,6 @@ import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
@@ -105,20 +103,12 @@ public class EventsFragment extends ListFragment implements FABButtonListener {
 
     @Override
     public void preUpdateList() {
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                startActivity(EventInfoActivity.newInstance(getActivity(), mDbManager.getDaoSession().getEventDao().load(Long.valueOf(((ListElement) mAdapter.getItem(i)).getKey()))));
-            }
-        });
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (mCurrentActionMode != null) return false;
-                mCurrentSelectedItem = i;
-                mCurrentActionMode = ((ActionBarActivity) getActivity()).startSupportActionMode(callback);
-                return true;
-            }
+        mListView.setOnItemClickListener((adapterView, view, i, l) -> startActivity(EventInfoActivity.newInstance(getActivity(), mDbManager.getDaoSession().getEventDao().load(Long.valueOf(((ListElement) mAdapter.getItem(i)).getKey())))));
+        mListView.setOnItemLongClickListener((adapterView, view, i, l) -> {
+            if (mCurrentActionMode != null) return false;
+            mCurrentSelectedItem = i;
+            mCurrentActionMode = ((ActionBarActivity) getActivity()).startSupportActionMode(callback);
+            return true;
         });
         mGame = mDbManager.getDaoSession().getGameDao().load(getArguments().getLong(DatabaseActivity.PARENT_ID, 0));
     }
