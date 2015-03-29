@@ -78,7 +78,6 @@ public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
             mFragment.mLinearLayout.addView(MetricWidget.createWidget(context, metric));
         }
 
-        //TODO
-        mFragment.mComments.setText("");
+        mFragment.mComments.setText(robot.getComments());
     }
 }

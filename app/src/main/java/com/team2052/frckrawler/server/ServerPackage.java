@@ -3,10 +3,12 @@ package com.team2052.frckrawler.server;
 import android.util.Log;
 
 import com.team2052.frckrawler.core.database.DBManager;
+import com.team2052.frckrawler.core.database.RobotComment;
 import com.team2052.frckrawler.core.util.LogHelper;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.Robot;
 
 import java.io.Serializable;
 import java.util.List;
@@ -22,12 +24,14 @@ public class ServerPackage implements Serializable {
     private final List<MatchData> metricMatchData;
     private final List<PitData> metricPitData;
     private final List<MatchComment> matchComments;
+    private final List<RobotComment> robotComments;
 
 
     public ServerPackage(DBManager manager) {
         metricMatchData = manager.getDaoSession().getMatchDataDao().loadAll();
         metricPitData = manager.getDaoSession().getPitDataDao().loadAll();
         matchComments = manager.getDaoSession().getMatchCommentDao().loadAll();
+        robotComments = manager.getRobotComments();
     }
 
     /**
@@ -52,6 +56,13 @@ public class ServerPackage implements Serializable {
                 for (MatchComment matchComment : matchComments) {
                     dbManager.insertMatchComment(matchComment);
                 }
+
+                for (RobotComment robotComment : robotComments) {
+                    Robot robot = dbManager.getRobot(robotComment.getRobotId());
+                    robot.setComments(robotComment.getComment());
+                    dbManager.getDaoSession().update(robot);
+                }
+
                 LogHelper.info("Finished Saving. Took " + (System.currentTimeMillis() - startTime) + "ms");
             }
         });

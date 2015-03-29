@@ -82,6 +82,7 @@ public class FRCKrawlerDaoGenerator {
         robot.addToMany(pitData, pit_data_robot_id);
         robot.addToMany(matchComment, match_comment_robot_id);
         robot.addStringProperty("data");
+        robot.addStringProperty("comments");
 
         Entity metric = schema.addEntity("Metric");
         metric.implementsSerializable();

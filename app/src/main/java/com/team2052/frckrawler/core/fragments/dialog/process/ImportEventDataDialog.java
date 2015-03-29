@@ -87,7 +87,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                         Robot robot = daoSession.getDaoSession().getRobotDao().queryBuilder().where(RobotDao.Properties.GameId.eq(game.getId())).where(RobotDao.Properties.TeamId.eq(team.getNumber())).unique();
 
                         if (robot == null) {
-                            daoSession.getDaoSession().getRobotEventDao().insert(new RobotEvent(null, daoSession.getDaoSession().getRobotDao().insert(new Robot(null, team.getNumber(), game.getId(), null)), event.getId(), null));
+                            daoSession.getDaoSession().getRobotEventDao().insert(new RobotEvent(null, daoSession.getDaoSession().getRobotDao().insert(new Robot(null, team.getNumber(), game.getId(), null, null)), event.getId(), null));
                         } else {
                             RobotEvent robotEvents = daoSession.getDaoSession().getRobotEventDao().queryBuilder().where(RobotEventDao.Properties.RobotId.eq(robot.getId())).where(RobotEventDao.Properties.EventId.eq(event.getId())).unique();
                             if (robotEvents == null) {

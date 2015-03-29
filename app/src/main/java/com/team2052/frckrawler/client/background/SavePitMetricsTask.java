@@ -49,7 +49,7 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
             mDaoSession.insertPitData(pitData);
         }
 
-        //robot.setComment(comment);
+        robot.setComments(comment);
         robot.update();
         return null;
     }

@@ -46,7 +46,6 @@ import de.greenrobot.dao.query.QueryBuilder;
  * @since 10/7/2014
  */
 
-//TODO
 public class DBManager {
 
     private static DBManager instance;
@@ -420,7 +419,7 @@ public class DBManager {
         boolean robot_added = robot != null;
 
         if (!robot_added) {
-            robot = new Robot(null, team.getNumber(), event.getGameId(), null);
+            robot = new Robot(null, team.getNumber(), event.getGameId(), null, null);
             daoSession.insert(robot);
         }
 
@@ -434,5 +433,20 @@ public class DBManager {
             robotEvent = new RobotEvent(null, robot.getId(), event.getId(), null);
             daoSession.insert(robotEvent);
         }
+    }
+
+    public List<RobotComment> getRobotComments() {
+        List<Robot> robots = robotDao.loadAll();
+        List<RobotComment> robotComments = new ArrayList<>();
+
+        for (Robot robot : robots) {
+            robotComments.add(new RobotComment(robot.getId(), robot.getComments()));
+        }
+
+        return robotComments;
+    }
+
+    public Robot getRobot(long robotId) {
+        return robotDao.load(robotId);
     }
 }

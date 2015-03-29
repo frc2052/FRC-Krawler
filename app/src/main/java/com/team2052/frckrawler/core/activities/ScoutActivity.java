@@ -49,7 +49,7 @@ public class ScoutActivity extends ViewPagerActivity {
 
     @Override
     public PagerAdapter setAdapter() {
-        return new ScoutPagerAdapter(getSupportFragmentManager());
+        return new ScoutPagerAdapter(getSupportFragmentManager(), Utilities.ScoutUtil.getScoutEvent(this, mDbManager));
     }
 
     @Override

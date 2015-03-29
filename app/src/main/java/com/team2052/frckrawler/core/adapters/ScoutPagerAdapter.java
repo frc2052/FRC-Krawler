@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.team2052.frckrawler.core.fragments.ScoutMatchFragment;
 import com.team2052.frckrawler.core.fragments.ScoutPitFragment;
+import com.team2052.frckrawler.db.Event;
 
 /**
  * @author adam
@@ -13,9 +14,11 @@ import com.team2052.frckrawler.core.fragments.ScoutPitFragment;
  */
 public class ScoutPagerAdapter extends FragmentPagerAdapter {
     public final String[] headers = {"Match Scouting", "Pit Scouting"};
+    private Event event;
 
-    public ScoutPagerAdapter(FragmentManager fm) {
+    public ScoutPagerAdapter(FragmentManager fm, Event event) {
         super(fm);
+        this.event = event;
     }
 
     @Override
