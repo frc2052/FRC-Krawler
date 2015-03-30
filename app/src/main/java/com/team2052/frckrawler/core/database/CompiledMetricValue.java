@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.core.database;
 
+import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,7 +12,6 @@ import com.team2052.frckrawler.db.Robot;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * @author Adam
@@ -81,8 +81,8 @@ public class CompiledMetricValue {
             case MetricUtil.CHOOSER:
             case MetricUtil.CHECK_BOX:
                 JsonArray possible_values = JSON.getAsJsonObject(metric.getData()).get("values").getAsJsonArray();
-                Map<Integer, String> valueNames = new TreeMap<>();
-                Map<Integer, Double> compiledVal = new TreeMap<>();
+                Map<Integer, String> valueNames = Maps.newTreeMap();
+                Map<Integer, Double> compiledVal = Maps.newTreeMap();
                 denominator = 0.0;
 
                 for (int i = 0; i < possible_values.size(); i++) {
@@ -90,10 +90,10 @@ public class CompiledMetricValue {
                     compiledVal.put(i, 0.0);
                 }
 
-                JsonArray names = JSON.getGson().toJsonTree(valueNames.values()).getAsJsonArray();
+                JsonArray names = JSON.getGson().toJsonTree(valueNames.values().toArray()).getAsJsonArray();
 
                 if (metricData.isEmpty()) {
-                    JsonArray values = JSON.getGson().toJsonTree(compiledVal.values()).getAsJsonArray();
+                    JsonArray values = JSON.getGson().toJsonTree(compiledVal.values().toArray()).getAsJsonArray();
                     compiledValue.add("values", values);
                     compiledValue.add("names", names);
                     break;

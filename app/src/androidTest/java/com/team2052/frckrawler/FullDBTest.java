@@ -25,16 +25,17 @@ public class FullDBTest extends AbstractDaoSessionTest<DaoMaster, DaoSession> {
      */
     public void pitDataUpdate() {
         DBManager manager = DBManager.getInstance(getContext(), daoSession);
+        DaoMaster.dropAllTables(daoMaster.getDatabase(), true);
 
         //Insert data
         PitData test = new PitData(0l, 0l, 0l, 0l, 0l, "0");
         boolean inserted = manager.insertPitData(test);
-        assertEquals(inserted, true);
+        assertEquals(true, inserted);
 
         //Insert data over other data
         PitData other = new PitData(0l, 0l, 0l, 0l, 0l, "1");
         inserted = manager.insertPitData(other);
-        assertEquals(inserted, false);
+        assertEquals(false, inserted);
 
         //Check if it was actually updated
         PitData load = daoSession.getPitDataDao().load(0l);

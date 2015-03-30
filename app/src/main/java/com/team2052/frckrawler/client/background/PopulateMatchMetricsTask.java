@@ -73,7 +73,6 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
         mMetricValues = new ArrayList<>();
 
-
         //Use the current data if it's equal to the size of metrics
         if (currentData.size() == metrics.size()) {
             for (MatchData matchData : currentData) {
@@ -81,6 +80,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
             }
         } else {
             for (Metric metric : metrics) {
+
                 mMetricValues.add(new MetricValue(metric, null));
             }
         }

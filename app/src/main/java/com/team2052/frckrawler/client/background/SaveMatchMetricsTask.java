@@ -2,7 +2,6 @@ package com.team2052.frckrawler.client.background;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
@@ -58,8 +57,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
                     mMatch.getId(), mEvent.getId(),
                     LoginHandler.getInstance(context, mDaoSession).getLoggedOnUser().getId(),
                     metricValue.getValue());
-            boolean b = mDaoSession.insertMatchData(matchData);
-            Log.i("FRCKrawler", metricValue.getValue() + String.valueOf(b));
+            mDaoSession.insertMatchData(matchData);
         }
 
 
