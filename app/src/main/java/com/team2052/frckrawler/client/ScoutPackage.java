@@ -2,7 +2,6 @@ package com.team2052.frckrawler.client;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.core.database.DBManager;
@@ -54,6 +53,7 @@ public class ScoutPackage implements Serializable {
         this.event = event;
         users = session.getUserDao().loadAll();
         metrics = game.getMetricList();
+
         robot_events = event.getRobotEventList();
 
         for (RobotEvent robotEvent : robot_events) {
@@ -71,49 +71,45 @@ public class ScoutPackage implements Serializable {
     }
 
     public void save(final DBManager session, Context context) {
-        session.getDaoSession().runInTx(new Runnable() {
-            @Override
-            public void run() {
-                for (Metric metric : metrics) {
-                    session.getDaoSession().insertOrReplace(metric);
-                }
-
-                for (User user : users) {
-                    session.getDaoSession().insertOrReplace(user);
-                }
-
-                for (RobotEvent robotEvent : robot_events) {
-                    session.getDaoSession().insert(robotEvent);
-                }
-
-                for (Robot robot : robots) {
-                    session.getDaoSession().insertOrReplace(robot);
-                }
-
-                for (Team team : teams) {
-                    session.getDaoSession().insertOrReplace(team);
-                }
-
-                for (Match match : schedule.matches) {
-                    session.getDaoSession().insertOrReplace(match);
-                }
-
-                for (PitData pitValues : pitData) {
-                    session.getDaoSession().insertOrReplace(pitValues);
-                }
-
-                for (MatchData matchValues : matchData) {
-                    Log.i("FRCKrawler", matchValues.getData());
-                    session.getDaoSession().insertOrReplace(matchValues);
-                }
-
-                for (MatchComment matchComment : matchComments) {
-                    session.getDaoSession().insertOrReplace(matchComment);
-                }
-
-                session.getDaoSession().insertOrReplace(event);
-                session.getDaoSession().insertOrReplace(game);
+        session.getDaoSession().runInTx(() -> {
+            for (Metric metric : metrics) {
+                session.getDaoSession().insertOrReplace(metric);
             }
+
+            for (User user : users) {
+                session.getDaoSession().insertOrReplace(user);
+            }
+
+            for (RobotEvent robotEvent : robot_events) {
+                session.getDaoSession().insert(robotEvent);
+            }
+
+            for (Robot robot : robots) {
+                session.getDaoSession().insertOrReplace(robot);
+            }
+
+            for (Team team : teams) {
+                session.getDaoSession().insertOrReplace(team);
+            }
+
+            for (Match match : schedule.matches) {
+                session.getDaoSession().insertOrReplace(match);
+            }
+
+            for (PitData pitValues : pitData) {
+                session.getDaoSession().insertOrReplace(pitValues);
+            }
+
+            for (MatchData matchValues : matchData) {
+                session.getDaoSession().insertOrReplace(matchValues);
+            }
+
+            for (MatchComment matchComment : matchComments) {
+                session.getDaoSession().insertOrReplace(matchComment);
+            }
+
+            session.getDaoSession().insertOrReplace(event);
+            session.getDaoSession().insertOrReplace(game);
         });
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
