@@ -24,39 +24,46 @@ public class MetricUtil {
     public static final int CHECK_BOX = 4;
 
     public static Metric createBooleanMetric(Game game, MetricType metricCategory, String name, String description) {
+        JsonObject range = new JsonObject();
+        range.addProperty("description", description);
         return new Metric(
                 null,
                 name,
                 metricCategory.ordinal(),
-                BOOLEAN, null, game.getId());
+                BOOLEAN,
+                JSON.getGson().toJson(range),
+                game.getId());
     }
 
     public static Metric createCounterMetric(Game game, MetricType metricCategory, String name, String description, int min, int max, int incrementation) {
-        JsonObject range = new JsonObject();
-        range.addProperty("min", min);
-        range.addProperty("max", max);
-        range.addProperty("inc", incrementation);
+        JsonObject data = new JsonObject();
+        data.addProperty("description", description);
+        data.addProperty("min", min);
+        data.addProperty("max", max);
+        data.addProperty("inc", incrementation);
 
         return new Metric(
                 null,
                 name,
                 metricCategory.ordinal(),
                 COUNTER,
-                JSON.getGson().toJson(range),
+                JSON.getGson().toJson(data),
                 game.getId());
     }
 
     public static Metric createSliderMetric(Game game, MetricType metricCategory, String name, String description, int min, int max) {
-        JsonObject range = new JsonObject();
-        range.addProperty("min", min);
-        range.addProperty("max", max);
+        JsonObject data = new JsonObject();
+        data.addProperty("description", description);
+        data.addProperty("min", min);
+        data.addProperty("max", max);
 
-        return new Metric(null, name, metricCategory.ordinal(), SLIDER, JSON.getGson().toJson(range), game.getId());
+        return new Metric(null, name, metricCategory.ordinal(), SLIDER, JSON.getGson().toJson(data), game.getId());
     }
 
     public static Metric createChooserMetric(Game game, MetricType metricCategory, String name, String description, List<String> choices) {
         JsonObject data = new JsonObject();
         JsonElement jsonElements = JSON.getGson().toJsonTree(choices);
+        data.addProperty("description", description);
         data.add("values", jsonElements);
 
         String str_data = JSON.getGson().toJson(data);
@@ -67,6 +74,7 @@ public class MetricUtil {
     public static Metric createCheckBoxMetric(Game game, MetricType metricCategory, String name, String description, List<String> values) {
         JsonObject data = new JsonObject();
         JsonElement jsonElements = JSON.getGson().toJsonTree(values);
+        data.addProperty("description", description);
         data.add("values", jsonElements);
 
         String str_data = JSON.getGson().toJson(data);

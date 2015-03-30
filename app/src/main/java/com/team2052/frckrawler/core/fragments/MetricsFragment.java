@@ -2,7 +2,6 @@ package com.team2052.frckrawler.core.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -19,6 +18,7 @@ import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
 import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.fragments.dialog.AddMetricFragment;
+import com.team2052.frckrawler.core.fragments.dialog.EditMetricDialogFragment;
 import com.team2052.frckrawler.core.listeners.FABButtonListener;
 import com.team2052.frckrawler.core.listitems.ListElement;
 import com.team2052.frckrawler.core.listitems.ListItem;
@@ -48,7 +48,6 @@ public class MetricsFragment extends ListFragment implements FABButtonListener {
             long metricId = Long.parseLong(((ListElement) mAdapter.getItem(mCurrentSelectedItem)).getKey());
             metric = mDbManager.getDaoSession().getMetricDao().load(metricId);
             actionMode.getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
-            menu.removeItem(R.id.menu_edit);
             actionMode.setTitle(metric.getName());
             return true;
         }
@@ -63,28 +62,22 @@ public class MetricsFragment extends ListFragment implements FABButtonListener {
             if (menuItem.getItemId() == R.id.menu_delete) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage("Are you sure you want to remove this metric and all its data?");
-                builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mDbManager.getDaoSession().runInTx(new Runnable() {
-                            @Override
-                            public void run() {
-                                DBManager.getInstance(getActivity(), mDbManager.getDaoSession()).deleteMetric(metric);
-                            }
-                        });
-                        dialogInterface.dismiss();
-                        updateList();
-                        actionMode.finish();
-                    }
+                builder.setPositiveButton("Confirm", (dialogInterface, i) -> {
+                    mDbManager.getDaoSession().runInTx(new Runnable() {
+                        @Override
+                        public void run() {
+                            DBManager.getInstance(getActivity(), mDbManager.getDaoSession()).deleteMetric(metric);
+                        }
+                    });
+                    dialogInterface.dismiss();
+                    updateList();
+                    actionMode.finish();
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
+                builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss());
                 builder.show();
                 return true;
+            } else if (menuItem.getItemId() == R.id.menu_edit) {
+                EditMetricDialogFragment.newInstance(metric).show(getChildFragmentManager(), "editMetric");
             }
             return false;
         }

@@ -2,7 +2,6 @@ package com.team2052.frckrawler.core.fragments.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.listeners.ListUpdateListener;
 import com.team2052.frckrawler.core.ui.ListEditor;
-import com.team2052.frckrawler.core.ui.TextListEditor;
 import com.team2052.frckrawler.core.util.MetricUtil;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
@@ -53,7 +51,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
         Bundle args = getArguments();
         mMetricCategory = args.getInt(METRIC_CATEGORY, -1);
         mGame = ((FRCKrawler) getActivity().getApplication()).getDBSession().getDaoSession().getGameDao().load(args.getLong(GAME_NAME_EXTRA));
-        list = new TextListEditor(getActivity());
+        list = new ListEditor(getActivity());
     }
 
     @Override
@@ -61,12 +59,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
         b.setTitle("Add Metric");
         b.setView(initViews());
-        b.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                saveMetric();
-            }
-        });
+        b.setPositiveButton("Add", (dialog, which) -> saveMetric());
         b.setNegativeButton("Cancel", null);
         mMetricTypeSpinner.setOnItemSelectedListener(this);
         mMetricTypeSpinner.setSelection(0);
@@ -111,7 +104,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 mMinimum.setVisibility(View.GONE);
                 mMaximum.setVisibility(View.INVISIBLE);
                 mIncrementation.setVisibility(View.GONE);
-                list = new TextListEditor(getActivity());
+                list = new ListEditor(getActivity());
                 mListEditor.removeAllViews();
                 mListEditor.addView(list);
                 mDivider.setVisibility(View.VISIBLE);
@@ -121,7 +114,7 @@ public class AddMetricFragment extends DialogFragment implements AdapterView.OnI
                 mMinimum.setVisibility(View.GONE);
                 mMaximum.setVisibility(View.INVISIBLE);
                 mIncrementation.setVisibility(View.GONE);
-                list = new TextListEditor(getActivity());
+                list = new ListEditor(getActivity());
                 mListEditor.removeAllViews();
                 mListEditor.addView(list);
                 mDivider.setVisibility(View.VISIBLE);

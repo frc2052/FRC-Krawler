@@ -19,4 +19,6 @@
     <color name="color_accent">#FFC400</color>
     <color name="color_accent_darker">#ffeab200</color>
     <color name="color_accent_ripple">#ffffd500</color>
+
+    <color name="color_action_mode_bg">@color/color_accent</color>
 </resources>

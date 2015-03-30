@@ -16,7 +16,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppBase">
 
-        <activity android:name=".core.activities.ListTester" />
+        <activity android:name=".core.activities.ListTester">
+
+        </activity>
         <activity android:name=".core.activities.MatchListActivity" />
         <activity android:name=".core.activities.TeamInfoActivity" />
         <activity android:name=".core.activities.RobotActivity" />
@@ -41,10 +43,10 @@
         <activity android:name=".core.activities.SetupActivity">
             <!--TODO FINISH SETUP UTILITY-->
         </activity>
-        <activity android:name=".core.activities.ScoutActivity"/>
+        <activity android:name=".core.activities.ScoutActivity" />
 
         <service android:name=".server.ServerService" />
-        <activity android:name="org.acra.CrashReportDialog"/>
+        <activity android:name="org.acra.CrashReportDialog" />
     </application>
 
 </manifest>

@@ -1,118 +1,125 @@
 package com.team2052.frckrawler.core.ui;
 
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.view.Gravity;
+import android.os.Build;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
+import com.team2052.frckrawler.R;
+
 import java.util.List;
 
-public abstract class ListEditor extends LinearLayout implements OnClickListener {
+public class ListEditor extends FrameLayout {
 
-    private static final int ADD_BUTTON_ID = 1;
-    private static final int REMOVE_BUTTON_ID = 2;
-
-    protected ArrayList<String> shownValues;
-    protected ArrayList<String> values;
-
-    private Button addButton;
+    private LinearLayout list;
 
     public ListEditor(Context context) {
-        this(context, new String[0]);
-    }
-
-    public ListEditor(Context context, String[] list) {
         super(context);
-        setOrientation(VERTICAL);
-
-        shownValues = new ArrayList<String>();
-        values = new ArrayList<String>();
-
-        for (String o : list)
-            values.add(o);
-
-        addButton = new MyButton(getContext(), "Add...", this);
-        addButton.setId(ADD_BUTTON_ID);
-        addButton.setGravity(Gravity.CENTER);
-        addButton.setOnClickListener(this);
-        onValuesUpdated();
+        init();
     }
 
-    protected abstract void onAddButtonClicked();
+    public ListEditor(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
 
-    @Override
-    public void onClick(View v) {
-        if (isEnabled()) {
-            if (v.getId() == ADD_BUTTON_ID) {
-                onAddButtonClicked();
+    public ListEditor(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
 
-            } else if (v.getId() == REMOVE_BUTTON_ID) {
-                removeValue(((Integer) v.getTag()).intValue());
-            }
-        }
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public ListEditor(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    private void init() {
+        LayoutInflater.from(getContext()).inflate(R.layout.list_editor, this, true);
+        View addButton = findViewById(R.id.list_editor_add);
+        list = (LinearLayout) findViewById(R.id.list_editor_list);
+        addButton.setOnClickListener(v -> {
+            TextView t = new EditText(getContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Add List Item");
+            builder.setView(t);
+            builder.setPositiveButton("Add", (dialog, which) -> {
+                addListItem(t.getText().toString());
+            });
+            builder.setNegativeButton("Cancel", null);
+            builder.show();
+        });
     }
 
     public List<String> getValues() {
+        List<String> values = Lists.newArrayList();
+
+        for (int i = 0; i < list.getChildCount(); i++) {
+            ListEditorListItem listEditorListItem = (ListEditorListItem) list.getChildAt(i);
+            values.add(listEditorListItem.getText());
+        }
+
         return values;
     }
 
-    public int getValueCount() {
-        return values.size();
+
+    public void addListItem(String text) {
+        ListEditorListItem listEditorListItem = new ListEditorListItem(getContext());
+        list.addView(listEditorListItem);
+        listEditorListItem.initWithParams(text);
     }
 
-    public void addValue(String val, String shownVal) {
-        shownValues.add(shownVal);
-        values.add(val);
-        onValuesUpdated();
 
-        for (String s : values) {
-            System.out.println(s);
+    public class ListEditorListItem extends FrameLayout {
+
+        private TextView textView;
+        private String text;
+
+        public ListEditorListItem(Context context) {
+            super(context);
+        }
+
+        public ListEditorListItem(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        public ListEditorListItem(Context context, AttributeSet attrs, int defStyleAttr) {
+            super(context, attrs, defStyleAttr);
+        }
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        public ListEditorListItem(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+            super(context, attrs, defStyleAttr, defStyleRes);
+        }
+
+        private void initWithParams(String text) {
+            LayoutInflater.from(getContext()).inflate(R.layout.list_editor_list_item, this, true);
+            this.text = text;
+
+            textView = (TextView) findViewById(android.R.id.text1);
+            textView.setText(text);
+
+            findViewById(R.id.list_editor_remove).setOnClickListener(v -> {
+                list.removeViewAt(getIndex());
+            });
+        }
+
+        public int getIndex() {
+            return list.indexOfChild(this);
+        }
+
+        public String getText() {
+            return text;
         }
     }
 
-    public void removeValue(String val) {
-        shownValues.remove(values.indexOf(val));
-        values.remove(val);
-        onValuesUpdated();
-    }
 
-    public void removeValue(int position) {
-        shownValues.remove(position);
-        values.remove(position);
-        onValuesUpdated();
-    }
-
-    public void onValuesUpdated() {
-        removeAllViews();
-
-        for (int i = 0; i < shownValues.size(); i++) {
-
-            LinearLayout l = new LinearLayout(getContext());
-            l.setOrientation(LinearLayout.HORIZONTAL);
-
-            TextView t = new TextView(getContext());
-            t.setText(shownValues.get(i));
-            t.setTextSize(18);
-
-            Button b = new Button(getContext());
-            b.setText("Remove");
-            b.setOnClickListener(this);
-            b.setId(REMOVE_BUTTON_ID);
-            b.setTag(Integer.valueOf(i));
-
-            l.addView(t);
-            l.addView(b);
-            addView(l);
-        }
-
-        addView(addButton);
-    }
-
-    public ArrayList<String> getValuesList() {
-        return values;
-    }
 }
