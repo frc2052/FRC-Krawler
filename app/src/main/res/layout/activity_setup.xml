@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.team2052.frckrawler.core.ui.DisableSwipeViewPager
-    android:id="@+id/view_pager"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.team2052.frckrawler.core.ui.DisableSwipeViewPager xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/view_pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,13 +12,13 @@
 
         <TextView
             android:id="@+id/textView"
+            style="@style/TextHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
-            style="@style/TextHeader"
-            android:textColor="@color/body_text_1"
             android:text="Welcome to\n FRC Krawler"
+            android:textColor="@color/body_text_1"
             android:textSize="40sp" />
 
         <ImageView
@@ -32,15 +31,15 @@
 
         <TextView
             android:id="@+id/welcome_message"
+            style="@style/TextHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/welcome_logo"
             android:gravity="center_horizontal"
             android:paddingLeft="10dp"
-            style="@style/TextHeader"
-            android:textSize="14sp"
             android:paddingRight="10dp"
-            android:text="@string/welcome_message" />
+            android:text="@string/welcome_message"
+            android:textSize="14sp" />
 
 
         <RelativeLayout
@@ -103,10 +102,10 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="16dp"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/body_text_1"
                     android:fontFamily="sans-serif-light"
+                    android:gravity="center_horizontal"
                     android:text="@string/enable_bluetooth_message"
+                    android:textColor="@color/body_text_1"
                     android:textSize="35sp" />
 
                 <ImageView
@@ -167,9 +166,8 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <RelativeLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/setup_role_page"
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -180,10 +178,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:gravity="center_horizontal"
             android:fontFamily="sans-serif-light"
-            android:textColor="@color/body_text_1"
+            android:gravity="center_horizontal"
             android:text="What is the role of this device?"
+            android:textColor="@color/body_text_1"
             android:textSize="35sp" />
 
 

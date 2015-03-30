@@ -3,8 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:baselineAligned="false"
+    android:orientation="horizontal"
     android:padding="16dp">
 
     <RelativeLayout
@@ -16,10 +16,10 @@
 
         <TextView
             android:id="@+id/match_title"
+            style="@style/TextTitle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            style="@style/TextTitle"
             android:gravity="center|center_horizontal|center_vertical" />
     </RelativeLayout>
 

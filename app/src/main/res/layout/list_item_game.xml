@@ -17,10 +17,10 @@
 
     <TextView
         android:id="@+id/text_game"
+        style="@style/TextTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="72dp"
-        style="@style/TextTitle" />
+        android:layout_marginLeft="72dp" />
 
 </RelativeLayout>

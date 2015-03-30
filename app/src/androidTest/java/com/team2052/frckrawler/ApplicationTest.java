@@ -7,23 +7,19 @@ import com.team2052.frckrawler.core.FRCKrawler;
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
  */
-public class ApplicationTest extends ApplicationTestCase<FRCKrawler>
-{
-    public ApplicationTest()
-    {
+public class ApplicationTest extends ApplicationTestCase<FRCKrawler> {
+    public ApplicationTest() {
         super(FRCKrawler.class);
     }
 
     @Override
-    protected void setUp() throws Exception
-    {
+    protected void setUp() throws Exception {
         super.setUp();
         createApplication();
     }
 
     @Override
-    protected void tearDown() throws Exception
-    {
+    protected void tearDown() throws Exception {
         super.tearDown();
     }
 }

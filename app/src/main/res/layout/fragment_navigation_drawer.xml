@@ -20,18 +20,18 @@
                 android:layout_height="64dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
                 android:src="@drawable/ic_launcher" />
 
             <TextView
                 android:id="@+id/profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/profile_image"
                 android:paddingLeft="16dp"
-                android:layout_centerVertical="true"
                 android:text="@string/app_name"
                 android:textColor="@android:color/white"
                 android:textSize="16dp"
@@ -40,9 +40,8 @@
 
     </FrameLayout>
 
-    <ListView
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/left_drawer"
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/banner_container"

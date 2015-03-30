@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/update_scores"
-        android:title="Update Match Scores"/>
+        android:title="Update Match Scores" />
 
     <item
         android:id="@+id/update_schedule"
-        android:title="Re-Download Schedule"/>
+        android:title="Re-Download Schedule" />
 </menu>

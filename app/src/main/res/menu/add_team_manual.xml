@@ -2,5 +2,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/add_team"
-        android:title="Add Team"/>
+        android:title="Add Team" />
 </menu>

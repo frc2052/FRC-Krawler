@@ -6,8 +6,8 @@
     android:minHeight="?attr/listPreferredItemHeight">
 
     <TextView
-        style="@style/TextTitle"
         android:id="@+id/list_item_user_name"
+        style="@style/TextTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

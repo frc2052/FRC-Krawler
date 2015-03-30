@@ -4,28 +4,26 @@ import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.PitData;
-import com.team2052.frckrawler.db.PitDataDao;
 
-import de.greenrobot.dao.query.QueryBuilder;
 import de.greenrobot.dao.test.AbstractDaoSessionTest;
 
 /**
  * Created by adam on 3/26/15.
  */
-public class FullDBTest extends AbstractDaoSessionTest<DaoMaster, DaoSession>{
+public class FullDBTest extends AbstractDaoSessionTest<DaoMaster, DaoSession> {
 
     public FullDBTest() {
         super(DaoMaster.class);
     }
 
-    public void test(){
+    public void test() {
         pitDataUpdate();
     }
 
     /**
      * Check if the pit data can update correctly and insert correctly while still keeping the update function
      */
-    public void pitDataUpdate(){
+    public void pitDataUpdate() {
         DBManager manager = DBManager.getInstance(getContext(), daoSession);
 
         //Insert data

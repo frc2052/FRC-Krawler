@@ -6,8 +6,8 @@
     android:padding="16dp">
 
     <TextView
-        style="@style/TextTitle"
         android:id="@+id/list_item_team_number"
+        style="@style/TextTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -15,21 +15,21 @@
         android:textStyle="bold" />
 
     <TextView
-        style="@style/TextTitle"
         android:id="@+id/list_item_team_name"
+        style="@style/TextTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="72dp"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="72dp"
         android:text="KnightKrawler" />
 
     <TextView
         android:id="@+id/list_item_team_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Location"
+        android:layout_alignParentRight="true"
 
         android:layout_below="@+id/list_item_team_name"
-        android:layout_alignParentRight="true" />
+        android:text="Location" />
 </RelativeLayout>
