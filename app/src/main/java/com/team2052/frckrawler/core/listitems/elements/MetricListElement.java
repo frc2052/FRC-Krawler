@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.core.listitems.elements;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -32,7 +31,7 @@ public class MetricListElement extends ListElement {
         if (!Strings.isNullOrEmpty(data.get("description").getAsString())) {
             descriptionString = data.get("description").getAsString();
         }
-        Log.i("FRCKrawler", String.valueOf(metric.getType()));
+
         switch (metric.getType()) {
             case MetricUtil.BOOLEAN:
                 typeString = "Boolean";

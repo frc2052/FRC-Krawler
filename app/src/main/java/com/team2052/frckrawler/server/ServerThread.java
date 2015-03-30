@@ -88,16 +88,18 @@ public class ServerThread extends Thread {
                 }
             }
         }
+        if (serverSocket != null) {
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                ACRA.getErrorReporter().handleException(e);
+            }
+        }
     }
 
     public void closeServer() {
         isOpen = false;
-        if (serverSocket != null)
-            try {
-                serverSocket.close();
-            } catch (IOException ignored) {
-            }
-
     }
 
 }

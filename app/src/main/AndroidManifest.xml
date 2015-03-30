@@ -19,6 +19,7 @@
         <activity android:name=".core.activities.ListTester">
 
         </activity>
+        <activity android:name=".core.activities.PicklistActivity" />
         <activity android:name=".core.activities.MatchListActivity" />
         <activity android:name=".core.activities.TeamInfoActivity" />
         <activity android:name=".core.activities.RobotActivity" />

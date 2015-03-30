@@ -55,6 +55,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         v.findViewById(R.id.excel).setOnClickListener(this);
         //v.findViewById(R.id.dbBackups).setOnClickListener(this);
         v.findViewById(R.id.hostToggle).setOnClickListener(this);
+        //v.findViewById(R.id.pick_list).setOnClickListener(this);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         compileWeight.setText(Float.toString(sharedPreferences.getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f)));
         mHostToggle.setChecked(server.isOpen());
@@ -72,6 +73,12 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                     ExportDialogFragment.newInstance(getSelectedEvent()).show(getChildFragmentManager(), "exportDialogProgress");
                 }
                 break;
+            /*case R.id.pick_list:
+                if (getSelectedEvent() != null) {
+                    Intent intent = PicklistActivity.newInstance(getActivity(), getSelectedEvent());
+                    startActivity(intent);
+                }
+                break;*/
             /*case R.id.dbBackups:
                 try {
                     ((FRCKrawler) getActivity().getApplication()).copyDB(new File(Environment.getExternalStorageDirectory(), "FRCKrawlerBackup-" + DateFormat.getDateFormat(getActivity()).format(new Date()) + ".db"));
@@ -121,7 +128,9 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
     @Nullable
     private Event getSelectedEvent() {
-        if (mEvents.size() <= 0) {
+        if (mEvents == null) {
+            return null;
+        } else if (mEvents.size() == 0) {
             return null;
         }
         return mEvents.get(eventSpinner.getSelectedItemPosition());

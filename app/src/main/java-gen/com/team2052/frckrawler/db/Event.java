@@ -33,6 +33,7 @@ public class Event implements java.io.Serializable {
     private List<MatchData> matchDataList;
     private List<PitData> pitDataList;
     private List<MatchComment> matchCommentList;
+    private List<PickList> pickListList;
 
     public Event() {
     }
@@ -234,6 +235,32 @@ public class Event implements java.io.Serializable {
      */
     public synchronized void resetMatchCommentList() {
         matchCommentList = null;
+    }
+
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
+    public List<PickList> getPickListList() {
+        if (pickListList == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            PickListDao targetDao = daoSession.getPickListDao();
+            List<PickList> pickListListNew = targetDao._queryEvent_PickListList(id);
+            synchronized (this) {
+                if (pickListList == null) {
+                    pickListList = pickListListNew;
+                }
+            }
+        }
+        return pickListList;
+    }
+
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
+    public synchronized void resetPickListList() {
+        pickListList = null;
     }
 
     /**

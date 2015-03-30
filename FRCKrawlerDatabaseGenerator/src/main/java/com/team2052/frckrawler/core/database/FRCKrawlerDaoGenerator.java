@@ -56,6 +56,12 @@ public class FRCKrawlerDaoGenerator {
         match.addStringProperty("data");
         match.addStringProperty("type");
 
+        Entity picklist = schema.addEntity("PickList");
+        picklist.addIdProperty().autoincrement().unique();
+        picklist.addStringProperty("name");
+        Property pick_list_event_id = picklist.addLongProperty("eventId").getProperty();
+        picklist.addStringProperty("data");
+
         //Events
         Entity event = schema.addEntity("Event");
         event.addIdProperty().autoincrement().unique();
@@ -68,6 +74,7 @@ public class FRCKrawlerDaoGenerator {
         event.addToMany(matchData, match_data_event_id);
         event.addToMany(pitData, pit_data_event_id);
         event.addToMany(matchComment, match_comment_event_id);
+        event.addToMany(picklist, pick_list_event_id);
         event.addStringProperty("data");
         event.addDateProperty("date");
 
@@ -136,6 +143,7 @@ public class FRCKrawlerDaoGenerator {
         user.addToMany(matchData, match_data_user_id);
         user.addToMany(pitData, pit_data_user_id);
         user.addStringProperty("name");
+
 
         new DaoGenerator().generateAll(schema, args[0]);
     }

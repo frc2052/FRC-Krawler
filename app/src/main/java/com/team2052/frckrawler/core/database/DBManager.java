@@ -2,6 +2,7 @@ package com.team2052.frckrawler.core.database;
 
 import android.content.Context;
 
+import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.core.tba.JSON;
@@ -34,6 +35,7 @@ import com.team2052.frckrawler.db.UserDao;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
@@ -444,6 +446,16 @@ public class DBManager {
         }
 
         return robotComments;
+    }
+
+    public List<Team> getTeams(Event event) {
+        List<RobotEvent> robotEventList = event.getRobotEventList();
+        List<Team> teams = Lists.newArrayList();
+        for (RobotEvent robotEvent : robotEventList) {
+            teams.add(getTeam(robotEvent));
+        }
+        Collections.sort(teams, (lhs, rhs) -> Double.compare(lhs.getNumber(), rhs.getNumber()));
+        return teams;
     }
 
     public Robot getRobot(long robotId) {
