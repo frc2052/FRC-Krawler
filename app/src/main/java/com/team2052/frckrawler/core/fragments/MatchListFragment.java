@@ -120,7 +120,7 @@ public class MatchListFragment extends ListFragment {
         protected Void doInBackground(Void... params) {
             //Check if the event is hosted by TBA if not don't update
             if (mEvent.getFmsid() != null) {
-                String url = TBA.BASE_TBA_API_URL + String.format(TBA.EVENT, mEvent.getFmsid());
+                String url = String.format(TBA.EVENT, mEvent.getFmsid());
                 final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
                 JSON.set_daoSession(mDbManager);
                 for (JsonElement element : jMatches) {
@@ -138,18 +138,6 @@ public class MatchListFragment extends ListFragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             updateList();
-        }
-    }
-
-    /**
-     *
-     */
-    public class GetMatchesUpdate extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            return null;
         }
     }
 }

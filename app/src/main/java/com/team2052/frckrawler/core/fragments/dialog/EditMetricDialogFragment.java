@@ -16,6 +16,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.activities.DatabaseActivity;
 import com.team2052.frckrawler.core.database.DBManager;
+import com.team2052.frckrawler.core.listeners.ListUpdateListener;
 import com.team2052.frckrawler.core.tba.JSON;
 import com.team2052.frckrawler.core.ui.ListEditor;
 import com.team2052.frckrawler.core.util.MetricUtil;
@@ -157,6 +158,7 @@ public class EditMetricDialogFragment extends DialogFragment {
         mMetric.setName(name);
         mMetric.setData(JSON.getGson().toJson(data));
         mDbSession.getDaoSession().update(mMetric);
+        ((ListUpdateListener) getParentFragment()).updateList();
     }
 
     private void autoFill() {

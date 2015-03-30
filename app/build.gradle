@@ -4,14 +4,14 @@ apply plugin: 'me.tatarka.retrolambda'
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.2'
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
     defaultConfig {
         applicationId 'com.team2052.frckrawler'
         minSdkVersion 14
-        targetSdkVersion 21
-        versionCode 16
-        versionName "2.0.3"
+        targetSdkVersion 22
+        versionCode 17
+        versionName "2.1.0"
     }
     buildTypes {
         debug {
