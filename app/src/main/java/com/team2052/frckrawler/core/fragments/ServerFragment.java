@@ -2,10 +2,17 @@ package com.team2052.frckrawler.core.fragments;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
@@ -19,10 +26,9 @@ import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.GlobalValues;
-import com.team2052.frckrawler.core.activities.PicklistActivity;
 import com.team2052.frckrawler.core.fragments.dialog.process.ExportDialogFragment;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.server.Server;
+import com.team2052.frckrawler.server.ServerService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,15 +45,36 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     SwitchCompat mHostToggle;
     @InjectView(R.id.server_setting_compile_weight)
     EditText compileWeight;
-    private Server server;
     private List<Event> mEvents;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.server = Server.getInstance(getActivity());
         new GetEventsTask().execute();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        this.getActivity().bindService(new Intent(getActivity(), ServerService.class), mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private Messenger mService;
+    private boolean mBound;
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mService = new Messenger(service);
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+            mBound = false;
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,7 +86,6 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         //v.findViewById(R.id.pick_list).setOnClickListener(this);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         compileWeight.setText(Float.toString(sharedPreferences.getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f)));
-        mHostToggle.setChecked(server.isOpen());
         return v;
     }
 
@@ -101,14 +127,14 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                     return;
                 }
 
-                if (BluetoothAdapter.getDefaultAdapter().isEnabled())
-                    server.open(selectedEvent);
-                else {
+                if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                    openServer(selectedEvent);
+                } else {
                     this.startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_BT_ENABLED);
                 }
 
             } else {
-                server.close();
+                closeServer();
             }
 
         } else {
@@ -122,8 +148,31 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         if (requestCode == REQUEST_BT_ENABLED && resultCode == Activity.RESULT_OK) {
             Event selectedEvent = getSelectedEvent();
             if (selectedEvent != null) {
-                server.open(selectedEvent);
+                openServer(selectedEvent);
             }
+        }
+    }
+
+    public void openServer(Event event) {
+        Message msg = Message.obtain(null, ServerService.MSG_START_SEREVR);
+
+        Bundle bundle = new Bundle();
+        bundle.putLong(ServerService.EVENT_ID_EXTRA, event.getId());
+        msg.setData(bundle);
+
+        try {
+            mService.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeServer() {
+        Message msg = Message.obtain(null, ServerService.MSG_STOP_SEREVR);
+        try {
+            mService.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 
@@ -170,6 +219,15 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);
                 eventChooser.setAdapter(adapter);
             }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mBound) {
+            getActivity().unbindService(mConnection);
+            mBound = false;
         }
     }
 }

@@ -25,17 +25,7 @@ public class ServerCallbackHandler {
         m.notify(SYNC_ONGOING_ID, b.build());
     }
 
-    public void onSyncSuccess(String deviceName) {
-        NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        m.cancel(SYNC_ONGOING_ID);
-        NotificationCompat.Builder b = new NotificationCompat.Builder(context);
-        b.setSmallIcon(R.drawable.ic_stat_navigation_accept);
-        b.setContentTitle("Synced with " + deviceName);
-        b.setContentText("The Server successfully synced with " + deviceName);
-        m.notify(0, b.build());
-    }
-
-    public void onSyncCancel(String deviceName) {
+    public void onSyncCancel() {
         ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(ServerCallbackHandler.SYNC_ONGOING_ID);
     }
 
@@ -44,8 +34,8 @@ public class ServerCallbackHandler {
         m.cancel(SYNC_ONGOING_ID);
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
         b.setSmallIcon(android.R.drawable.ic_dialog_alert);
-        b.setContentTitle("Sync mErrorView");
-        b.setContentText("The FRCKrawler server encountered an mErrorView when " + "syncing with " + deviceName);
+        b.setContentTitle("Sync Error");
+        b.setContentText("The FRCKrawler server encountered an error when syncing with " + deviceName);
         m.notify(0, b.build());
     }
 }

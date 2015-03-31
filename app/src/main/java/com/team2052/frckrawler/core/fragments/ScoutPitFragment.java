@@ -63,22 +63,27 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     public void save() {
+        if(mRobots != null && !mRobots.isEmpty()) {
+            Robot robot = mDbManager.getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
+            List<MetricValue> widgets = new ArrayList<>();
 
-        Robot robot = mDbManager.getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
-        List<MetricValue> widgets = new ArrayList<>();
+            for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
+                widgets.add(((MetricWidget) mLinearLayout.getChildAt(i)).getValue());
+            }
 
-        for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
-            widgets.add(((MetricWidget) mLinearLayout.getChildAt(i)).getValue());
+            mSaveTask = new SavePitMetricsTask(getActivity(), mEvent, robot, widgets, mComments.getText().toString());
+            mSaveTask.execute();
         }
-
-        mSaveTask = new SavePitMetricsTask(getActivity(), mEvent, robot, widgets, mComments.getText().toString());
-        mSaveTask.execute();
     }
 
     private void loadAllData(Event event) {
         if (event == null) {
             setErrorVisible(true);
             return;
+        }
+
+        if(mTask != null){
+            mTask.cancel(false);
         }
 
         mEvent = event;
@@ -89,10 +94,10 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     public void setErrorVisible(boolean visible) {
         if (getView() != null) {
             if (visible) {
-                getView().findViewById(R.id.error).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.error_message).setVisibility(View.VISIBLE);
                 getView().findViewById(R.id.scroll_view).setVisibility(View.GONE);
             } else {
-                getView().findViewById(R.id.error).setVisibility(View.GONE);
+                getView().findViewById(R.id.error_message).setVisibility(View.GONE);
                 getView().findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
             }
         }

@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.core.activities;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
@@ -13,6 +14,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.fragments.NavigationDrawerFragment;
 import com.team2052.frckrawler.core.listitems.items.NavDrawerItem;
 import com.team2052.frckrawler.core.ui.ScrimInsetsFrameLayout;
+import com.team2052.frckrawler.server.ServerService;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -100,6 +102,9 @@ public class NavigationDrawerActivity extends ActionBarActivity implements Navig
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
         // Call this so that subclasses can configure the navigation drawer before it is created
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Intent serverIntent = new Intent(this, ServerService.class);
+        startService(serverIntent);
+
         setSupportActionBar(mToolbar);
     }
 

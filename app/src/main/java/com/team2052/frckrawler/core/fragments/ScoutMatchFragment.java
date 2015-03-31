@@ -90,17 +90,19 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         if (mSaveTask != null) {
             mSaveTask.cancel(false);
         }
-        Team team = mTeams.get(mAllianceSpinner.getSelectedItemPosition());
-        Match match = mMatches.get(mMatchSpinner.getSelectedItemPosition());
-        String comment = mComments.getText().toString();
+        if(mMatches != null && mTeams != null) {
+            Team team = mTeams.get(mAllianceSpinner.getSelectedItemPosition());
+            Match match = mMatches.get(mMatchSpinner.getSelectedItemPosition());
+            String comment = mComments.getText().toString();
 
-        List<MetricValue> metricValues = new ArrayList<>();
-        //Get Widgets
-        for (int i = 0; i < mMetricList.getChildCount(); i++) {
-            metricValues.add(((MetricWidget) mMetricList.getChildAt(i)).getValue());
+            List<MetricValue> metricValues = new ArrayList<>();
+            //Get Widgets
+            for (int i = 0; i < mMetricList.getChildCount(); i++) {
+                metricValues.add(((MetricWidget) mMetricList.getChildAt(i)).getValue());
+            }
+            mSaveTask = new SaveMatchMetricsTask(getActivity(), mEvent, team, match, metricValues, comment);
+            mSaveTask.execute();
         }
-        mSaveTask = new SaveMatchMetricsTask(getActivity(), mEvent, team, match, metricValues, comment);
-        mSaveTask.execute();
     }
 
     @Override

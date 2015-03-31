@@ -15,7 +15,6 @@ import com.team2052.frckrawler.core.BluetoothInfo;
 import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.util.LogHelper;
-import com.team2052.frckrawler.server.Server;
 import com.team2052.frckrawler.server.ServerPackage;
 
 import org.acra.ACRA;
@@ -32,7 +31,6 @@ import de.greenrobot.event.EventBus;
  */
 public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     private static final int SYNC_SUCCESS = 1;
-    private static final int SYNC_SERVER_OPEN = 2;
     private static final int SYNC_CANCELLED = 3;
     private static final int SYNC_ERROR = 4;
     private static int tasksRunning = 0;
@@ -55,8 +53,6 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     @Override
     protected Integer doInBackground(BluetoothDevice... dev) {
         deviceName = dev[0].getName();
-        if (Server.getInstance(context).isOpen())
-            return SYNC_SERVER_OPEN;
         try {
             LogHelper.info("Syncing With Server");
             LogHelper.info("Syncing with: " + deviceName);

@@ -1,30 +1,73 @@
 package com.team2052.frckrawler.server;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.activities.HomeActivity;
-import com.team2052.frckrawler.db.Event;
 
 public class ServerService extends Service {
+    private boolean mServerState = false;
+
+    public static final int MSG_START_SEREVR = 0;
+    public static final int MSG_STOP_SEREVR = 1;
+    private int MSG_GET_RUNNING = 2;
+
     public static int SERVER_OPEN_ID = 10;
     public static String EVENT_ID = "EVENT_ID";
+    public static String EVENT_ID_EXTRA = "com.team2052.ServerService.EVENT_ID.EXTRA";
     private ServerThread thread;
-    private PendingIntent openServerIntent;
+    public static String TAG = "ServerService";
 
-    public Intent newInstance(Context context, Event hostedEvent) {
-        Intent i = new Intent(context, ServerService.class);
-        i.putExtra(EVENT_ID, hostedEvent.getId());
-        return i;
+    class ServerIncomingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_START_SEREVR:
+                    startServer(msg.getData());
+                    break;
+                case MSG_STOP_SEREVR:
+                    stopServer();
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
     }
+
+    private void startServer(Bundle args) {
+        Log.d(TAG, "startServer");
+        showNotification(makeNotification());
+        if (thread != null) {
+            thread.closeServer();
+        }
+        thread = new ServerThread(this, args.getLong(EVENT_ID_EXTRA));
+        thread.start();
+    }
+
+    private void stopServer() {
+        Log.d(TAG, "stopServer");
+        removeNotification();
+        if (thread != null) {
+            thread.closeServer();
+        }
+
+        thread = null;
+    }
+
+    final Messenger mMessenger = new Messenger(new ServerIncomingHandler());
 
     @Override
     public void onCreate() {
@@ -33,38 +76,46 @@ public class ServerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (thread == null) {
-            Event e = ((FRCKrawler) getApplication()).getDBSession().getDaoSession().getEventDao().load(intent.getLongExtra(EVENT_ID, 0));
-            NotificationCompat.Builder b = new NotificationCompat.Builder(this);
-            b.setSmallIcon(R.drawable.ic_stat_knightkrawler);
-            b.setContentTitle("Server open");
-            b.setContentText("The FRCKrawler server is open for scouts to sync");
-            b.setOngoing(true);
-            b.setColor(0x5B0000);
-
-            Intent resultIntent = HomeActivity.newInstance(this, R.id.nav_item_server);
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            stackBuilder.addParentStack(HomeActivity.class);
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            b.setContentIntent(resultPendingIntent);
-
-            NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            m.notify(SERVER_OPEN_ID, b.build());
-
-            thread = new ServerThread(this, e);
-            new Thread(thread).start();
-        }
         return START_REDELIVER_INTENT;
     }
 
     @Override
     public void onDestroy() {
-        thread.closeServer();
+        Log.d(TAG, "onDestroy");
+        stopServer();
+        NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        m.cancel(SERVER_OPEN_ID);
+    }
+
+    private Notification makeNotification() {
+        NotificationCompat.Builder b = new NotificationCompat.Builder(this);
+        b.setSmallIcon(R.drawable.ic_stat_knightkrawler);
+        b.setContentTitle("Server open");
+        b.setContentText("The FRCKrawler server is open for scouts to sync");
+        b.setOngoing(true);
+        b.setColor(0x5B0000);
+
+        Intent resultIntent = HomeActivity.newInstance(this, R.id.nav_item_server);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(HomeActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        b.setContentIntent(resultPendingIntent);
+        return b.build();
+    }
+
+    public void showNotification(Notification notification) {
+        NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        m.notify(SERVER_OPEN_ID, notification);
+    }
+
+    public void removeNotification() {
+        NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        m.cancel(SERVER_OPEN_ID);
     }
 
     @Override
-    public IBinder onBind(Intent arg0) {
-        return null;    //Do not allow binding
+    public IBinder onBind(Intent intent) {
+        return mMessenger.getBinder();
     }
 }
