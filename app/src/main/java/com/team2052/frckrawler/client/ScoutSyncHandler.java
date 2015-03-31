@@ -3,7 +3,6 @@ package com.team2052.frckrawler.client;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
@@ -79,12 +78,7 @@ public class ScoutSyncHandler {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(context.getString(R.string.sync_error_title));
         builder.setMessage(context.getString(R.string.sync_error_message));
-        builder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNeutralButton("Close", (dialog, which) -> dialog.dismiss());
 
         builder.show();
         mCurrentSyncingDevice = null;
@@ -103,10 +97,10 @@ public class ScoutSyncHandler {
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(context);
             builder.setTitle("Select Server Device");
-            builder.setItems(Utilities.ScoutUtil.getDeviceNames(Utilities.ScoutUtil.getAllBluetoothDevices()), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startSync(Utilities.ScoutUtil.getAllBluetoothDevicesArray()[which]);
+            builder.setItems(Utilities.ScoutUtil.getDeviceNames(Utilities.ScoutUtil.getAllBluetoothDevices()), (dialog, which) -> {
+                BluetoothDevice[] allBluetoothDevicesArray = Utilities.ScoutUtil.getAllBluetoothDevicesArray();
+                if (allBluetoothDevicesArray != null) {
+                    startSync(allBluetoothDevicesArray[which]);
                 }
             });
             builder.create().show();

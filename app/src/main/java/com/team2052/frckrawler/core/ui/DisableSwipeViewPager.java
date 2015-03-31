@@ -19,10 +19,7 @@ public class DisableSwipeViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        if (!mSwipeEnabled) {
-            return false;
-        }
-        return super.onInterceptTouchEvent(event);
+        return mSwipeEnabled && super.onInterceptTouchEvent(event);
     }
 
     @Override

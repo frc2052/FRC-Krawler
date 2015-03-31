@@ -4,7 +4,9 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.google.common.base.Strings;
 import com.team2052.frckrawler.client.events.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.client.events.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.client.events.ScoutSyncStartEvent;
@@ -35,6 +37,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     private static final int SYNC_ERROR = 4;
     private static int tasksRunning = 0;
     private final DBManager mDbManager;
+
 
     private volatile String deviceName;
     private Context context;
@@ -78,6 +81,12 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
+            Log.i("FRCKrawler",  e.getMessage());
+            if(!Strings.isNullOrEmpty(e.getMessage())){
+                if(e.getMessage().contains("read failed, socket might closed or timeout, read ret: -1")){
+                    return SYNC_ERROR;
+                }
+            }
             ACRA.getErrorReporter().handleException(e);
             return SYNC_ERROR;
         } catch (ClassNotFoundException e) {

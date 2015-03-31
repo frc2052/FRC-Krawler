@@ -1,11 +1,8 @@
 package com.team2052.frckrawler;
 
-import android.app.Application;
-
 import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
-import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.PitData;
 
 import de.greenrobot.dao.test.AbstractDaoSessionTest;

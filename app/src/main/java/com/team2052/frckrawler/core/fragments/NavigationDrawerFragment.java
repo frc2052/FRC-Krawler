@@ -208,11 +208,13 @@ public class NavigationDrawerFragment extends Fragment {
      * that they don't flow under the status bar.
      */
     public void onInsetsChanged(Rect insets) {
+        if(getView() != null){
+            RelativeLayout accountDetailsContainer = (RelativeLayout) getView().findViewById(R.id.banner_details_container);
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) accountDetailsContainer.getLayoutParams();
+            lp.topMargin = insets.top;
+            accountDetailsContainer.setLayoutParams(lp);
+        }
 
-        RelativeLayout accountDetailsContainer = (RelativeLayout) getView().findViewById(R.id.banner_details_container);
-        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) accountDetailsContainer.getLayoutParams();
-        lp.topMargin = insets.top;
-        accountDetailsContainer.setLayoutParams(lp);
     }
 
     public interface NavigationDrawerListener {

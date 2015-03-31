@@ -58,10 +58,7 @@ public class LoginHandler {
     }
 
     public boolean loggedOnUserStillExists() {
-        if (loggedOnUser == null) {
-            return false;
-        }
-        return daoSession.getDaoSession().getUserDao().load(loggedOnUser.getId()) != null;
+        return loggedOnUser != null && daoSession.getDaoSession().getUserDao().load(loggedOnUser.getId()) != null;
     }
 
     public User getLoggedOnUser() {

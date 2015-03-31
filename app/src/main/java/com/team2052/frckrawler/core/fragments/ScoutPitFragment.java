@@ -87,12 +87,14 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     public void setErrorVisible(boolean visible) {
-        if (visible) {
-            getView().findViewById(R.id.error_message).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.scroll_view).setVisibility(View.GONE);
-        } else {
-            getView().findViewById(R.id.error_message).setVisibility(View.GONE);
-            getView().findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
+        if (getView() != null) {
+            if (visible) {
+                getView().findViewById(R.id.error).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.scroll_view).setVisibility(View.GONE);
+            } else {
+                getView().findViewById(R.id.error).setVisibility(View.GONE);
+                getView().findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
+            }
         }
     }
 

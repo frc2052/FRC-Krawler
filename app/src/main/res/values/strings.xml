@@ -43,7 +43,7 @@
     <string name="scouter_description">The Scouter receives data from matches and the pits. Data is synced from this device to the \"Master Tablet\". Data is saved until you sync, but then is deleted after it has synced to the \"Master Tablet\"</string>
     <string name="enable_bluetooth_message">First, you need to enable your Bluetooth.</string>
     <string name="bluetooth_message">Click \"Next\" to enable Bluetooth on your device. Bluetooth must be kept on at all times when the server is on and when scouting.</string>
-    <string name="sync_error_message">There was an error in syncing with the server</string>
+    <string name="sync_error_message">There was an error in syncing with the server. Check if the server is on.</string>
     <string name="sync_error_title">Sync Error</string>
     <string name="bluetooth_not_supported_message">Sorry, your device does not support Bluetooth</string>
     <string name="sync_successful_message">Sync Successful</string>

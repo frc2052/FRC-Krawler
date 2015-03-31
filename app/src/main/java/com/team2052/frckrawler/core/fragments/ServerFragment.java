@@ -159,14 +159,16 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
         @Override
         protected void onPostExecute(List<Event> _events) {
-            Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
-            mEvents = _events;
-            List<String> eventNames = new ArrayList<>();
-            for (Event event : _events) {
-                eventNames.add(mDbManager.getDaoSession().getGameDao().load(event.getGameId()).getName() + ", " + event.getName());
+            if(getView() != null){
+                Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
+                mEvents = _events;
+                List<String> eventNames = new ArrayList<>();
+                for (Event event : _events) {
+                    eventNames.add(mDbManager.getDaoSession().getGameDao().load(event.getGameId()).getName() + ", " + event.getName());
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);
+                eventChooser.setAdapter(adapter);
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);
-            eventChooser.setAdapter(adapter);
         }
     }
 }

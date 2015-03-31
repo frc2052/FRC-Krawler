@@ -126,7 +126,10 @@ public class ScoutActivity extends ViewPagerActivity {
         } else if (!loginHandler.loggedOnUserStillExists()) {
             loginHandler.login(this);
         }
-        getSupportActionBar().setSubtitle(Utilities.ScoutUtil.getScoutEvent(this, mDbManager).getName());
+        Event scoutEvent = Utilities.ScoutUtil.getScoutEvent(this, mDbManager);
+        if(scoutEvent != null) {
+            getSupportActionBar().setSubtitle(scoutEvent.getName());
+        }
     }
 
     private void setProgress(boolean toggle) {
