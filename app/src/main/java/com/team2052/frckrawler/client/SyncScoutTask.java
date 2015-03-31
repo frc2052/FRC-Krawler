@@ -107,23 +107,20 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     }
 
     public void deleteAllData() {
-        mDbManager.getDaoSession().runInTx(new Runnable() {
-            @Override
-            public void run() {
-                //Delete everything
-                mDbManager.getDaoSession().getGameDao().deleteAll();
-                mDbManager.getDaoSession().getMatchDao().deleteAll();
-                mDbManager.getDaoSession().getRobotDao().deleteAll();
-                mDbManager.getDaoSession().getRobotEventDao().deleteAll();
-                mDbManager.getDaoSession().getMatchDao().deleteAll();
-                mDbManager.getDaoSession().getTeamDao().deleteAll();
-                mDbManager.getDaoSession().getUserDao().deleteAll();
-                mDbManager.getDaoSession().getMetricDao().deleteAll();
-                mDbManager.getDaoSession().getPitDataDao().deleteAll();
-                mDbManager.getDaoSession().getMatchDataDao().deleteAll();
-                mDbManager.getDaoSession().getMatchCommentDao().deleteAll();
-                mDbManager.getDaoSession().getRobotPhotoDao().deleteAll();
-            }
+        mDbManager.getDaoSession().runInTx(() -> {
+            //Delete everything
+            mDbManager.getDaoSession().getGameDao().deleteAll();
+            mDbManager.getDaoSession().getMatchDao().deleteAll();
+            mDbManager.getDaoSession().getRobotDao().deleteAll();
+            mDbManager.getDaoSession().getRobotEventDao().deleteAll();
+            mDbManager.getDaoSession().getMatchDao().deleteAll();
+            mDbManager.getDaoSession().getTeamDao().deleteAll();
+            mDbManager.getDaoSession().getUserDao().deleteAll();
+            mDbManager.getDaoSession().getMetricDao().deleteAll();
+            mDbManager.getDaoSession().getPitDataDao().deleteAll();
+            mDbManager.getDaoSession().getMatchDataDao().deleteAll();
+            mDbManager.getDaoSession().getMatchCommentDao().deleteAll();
+            mDbManager.getDaoSession().getRobotPhotoDao().deleteAll();
         });
     }
 }

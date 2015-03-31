@@ -1,8 +1,11 @@
 package com.team2052.frckrawler;
 
+import android.app.Application;
+
 import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
+import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.PitData;
 
 import de.greenrobot.dao.test.AbstractDaoSessionTest;
@@ -13,20 +16,18 @@ import de.greenrobot.dao.test.AbstractDaoSessionTest;
 public class FullDBTest extends AbstractDaoSessionTest<DaoMaster, DaoSession> {
 
     public FullDBTest() {
-        super(DaoMaster.class);
-    }
-
-    public void test() {
-        pitDataUpdate();
+        super(DaoMaster.class, true);
     }
 
     /**
      * Check if the pit data can update correctly and insert correctly while still keeping the update function
      */
-    public void pitDataUpdate() {
+    public void testPitDataUpdate() {
         DBManager manager = DBManager.getInstance(getContext(), daoSession);
-        DaoMaster.dropAllTables(daoMaster.getDatabase(), true);
+        manager.getDaoSession().getPitDataDao().deleteAll();
 
+
+        assertEquals(0, manager.getDaoSession().getPitDataDao().loadAll().size());
         //Insert data
         PitData test = new PitData(0l, 0l, 0l, 0l, 0l, "0");
         boolean inserted = manager.insertPitData(test);
@@ -38,7 +39,7 @@ public class FullDBTest extends AbstractDaoSessionTest<DaoMaster, DaoSession> {
         assertEquals(false, inserted);
 
         //Check if it was actually updated
-        PitData load = daoSession.getPitDataDao().load(0l);
+        PitData load = manager.getDaoSession().getPitDataDao().load(0l);
         assertEquals(load.getData(), "1");
     }
 

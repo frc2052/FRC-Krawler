@@ -282,6 +282,7 @@ public class DBManager {
     /*INSERTERS - UPDATES OR INSERTS DATA*/
 
     public boolean insertPitData(PitData pitData) {
+        pitData.setId(null);
         QueryBuilder<PitData> pitDataQueryBuilder = pitDataDao.queryBuilder();
         pitDataQueryBuilder.where(PitDataDao.Properties.RobotId.eq(pitData.getRobotId()));
         pitDataQueryBuilder.where(PitDataDao.Properties.MetricId.eq(pitData.getMetricId()));
@@ -300,6 +301,7 @@ public class DBManager {
 
 
     public boolean insertMatchData(MatchData matchData) {
+        matchData.setId(null);
         QueryBuilder<MatchData> matchDataQueryBuilder = matchDataDao.queryBuilder();
         matchDataQueryBuilder.where(MatchDataDao.Properties.RobotId.eq(matchData.getRobotId()));
         matchDataQueryBuilder.where(MatchDataDao.Properties.MetricId.eq(matchData.getMetricId()));
@@ -319,6 +321,7 @@ public class DBManager {
     }
 
     public boolean insertMatchComment(MatchComment matchComment) {
+        matchComment.setId(null);
         QueryBuilder<MatchComment> matchCommentQueryBuilder = matchCommentDao.queryBuilder();
         matchCommentQueryBuilder.where(MatchCommentDao.Properties.EventId.eq(matchComment.getEventId()));
         matchCommentQueryBuilder.where(MatchCommentDao.Properties.RobotId.eq(matchComment.getRobotId()));

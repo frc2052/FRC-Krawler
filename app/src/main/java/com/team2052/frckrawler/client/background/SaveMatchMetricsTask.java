@@ -20,6 +20,8 @@ import com.team2052.frckrawler.db.Team;
 
 import java.util.List;
 
+import de.greenrobot.dao.query.QueryBuilder;
+
 /**
  * @author Adam
  * @since 12/28/2014.
@@ -45,7 +47,10 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        Robot robot = mDaoSession.getDaoSession().getRobotDao().queryBuilder().where(RobotDao.Properties.TeamId.eq(mTeam.getNumber())).where(RobotDao.Properties.GameId.eq(mEvent.getGameId())).unique();
+        QueryBuilder<Robot> robotQueryBuilder = mDaoSession.getDaoSession().getRobotDao().queryBuilder();
+        robotQueryBuilder.where(RobotDao.Properties.TeamId.eq(mTeam.getNumber()));
+        robotQueryBuilder.where(RobotDao.Properties.GameId.eq(mEvent.getGameId()));
+        Robot robot = robotQueryBuilder.unique();
 
         LogHelper.info(String.valueOf(mMatch.getId()));
         //Insert Metric Data

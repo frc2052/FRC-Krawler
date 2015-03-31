@@ -3,6 +3,7 @@ package com.team2052.frckrawler.core.ui.metric;
 import android.content.Context;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -28,12 +29,16 @@ public class CheckBoxMetricWidget extends MetricWidget {
         super(context, m);
         inflater.inflate(R.layout.widget_metric_checkbox, this);
         this.values = (LinearLayout) findViewById(R.id.values);
+        TextView name = (TextView) findViewById(R.id.name);
+        name.setText(m.getMetric().getName());
+
         JsonObject data = JSON.getAsJsonObject(m.getMetric().getData());
 
 
         JsonArray values = data.get("values").getAsJsonArray();
         Type listType = new TypeToken<List<Integer>>() {
         }.getType();
+
         List<Integer> array = null;
         if (m.getValue() != null) {
             JsonObject value_data = JSON.getAsJsonObject(m.getValue());
