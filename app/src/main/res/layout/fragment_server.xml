@@ -55,14 +55,14 @@
                         android:padding="16dp" />
                 </RelativeLayout>
 
-                <!--<Button
+                <Button
                     android:id="@+id/pick_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackground"
                     android:textColor="@color/primary"
                     android:text="Picklist"
-                    android:layout_below="@+id/server_man" />-->
+                    android:layout_below="@+id/server_man" />
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.GlobalValues;
+import com.team2052.frckrawler.core.activities.PicklistActivity;
 import com.team2052.frckrawler.core.fragments.dialog.process.ExportDialogFragment;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.server.Server;
@@ -159,7 +160,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
         @Override
         protected void onPostExecute(List<Event> _events) {
-            if(getView() != null){
+            if (getView() != null) {
                 Spinner eventChooser = (Spinner) getView().findViewById(R.id.chooseEvent);
                 mEvents = _events;
                 List<String> eventNames = new ArrayList<>();

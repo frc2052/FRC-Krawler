@@ -9,10 +9,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
+import com.google.common.collect.Lists;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.core.adapters.ListViewAdapter;
+import com.team2052.frckrawler.core.listitems.ListItem;
+import com.team2052.frckrawler.core.listitems.elements.PickListListElement;
 import com.team2052.frckrawler.core.ui.PickListView;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.PickList;
@@ -26,7 +31,7 @@ public class PicklistActivity extends DatabaseActivity implements View.OnClickLi
 
     private Event mEvent;
     private FloatingActionButton mFab;
-    private LinearLayout mList;
+    private ListView mList;
 
     public static Intent newInstance(Context context, Event event) {
         Intent intent = new Intent(context, PicklistActivity.class);
@@ -46,10 +51,9 @@ public class PicklistActivity extends DatabaseActivity implements View.OnClickLi
 
     private void initViews() {
         setContentView(R.layout.activity_picklist);
-        ObservableScrollView scrollView = (ObservableScrollView) findViewById(R.id.scroll_view);
-        mList = (LinearLayout) findViewById(R.id.pick_list_linear);
+        mList = (ListView) findViewById(R.id.pick_list_view);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.attachToScrollView(scrollView);
+        mFab.attachToListView(mList);
         mFab.setOnClickListener(this);
     }
 
@@ -86,17 +90,17 @@ public class PicklistActivity extends DatabaseActivity implements View.OnClickLi
         protected List<PickList> doInBackground(Void... params) {
             mEvent.resetPickListList();
             return mEvent.getPickListList();
+
         }
 
         @Override
         protected void onPostExecute(List<PickList> pickLists) {
-            Log.d("FRCKrawler", String.format("Loaded %s PickLists", pickLists.size()));
-            mList.removeAllViews();
+            List<ListItem> listItems = Lists.newArrayList();
             for (PickList pickList : pickLists) {
-                PickListView pickListView = new PickListView(PicklistActivity.this);
-                pickListView.initWithParams(pickList, mDbManager);
-                mList.addView(pickListView);
+                listItems.add(new PickListListElement(pickList));
             }
+
+            mList.setAdapter(new ListViewAdapter(PicklistActivity.this, listItems));
         }
     }
 }

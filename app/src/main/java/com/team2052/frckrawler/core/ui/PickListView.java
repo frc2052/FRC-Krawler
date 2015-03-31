@@ -21,6 +21,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.core.FRCKrawler;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
 import com.team2052.frckrawler.core.database.DBManager;
 import com.team2052.frckrawler.core.listitems.ListItem;
@@ -57,8 +58,8 @@ public class PickListView extends FrameLayout implements View.OnClickListener {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void initWithParams(PickList pickList, DBManager dbManager) {
-        this.dbManager = dbManager;
+    public void initWithParams(PickList pickList) {
+        this.dbManager = ((FRCKrawler) getContext().getApplicationContext()).getDBSession();
         LayoutInflater.from(getContext()).inflate(R.layout.pick_list_view, this, true);
         this.mPickList = pickList;
         TextView header = (TextView) findViewById(R.id.pick_list_title);
