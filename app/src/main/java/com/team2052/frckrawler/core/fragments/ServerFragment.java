@@ -61,7 +61,6 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         if(getView() != null){
             ((SwitchCompat) getView().findViewById(R.id.hostToggle)).setChecked(serverStateChangeEvent.getState());
         }
-
     }
 
     @Override

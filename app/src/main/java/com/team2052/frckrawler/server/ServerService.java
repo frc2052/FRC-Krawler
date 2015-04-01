@@ -14,6 +14,7 @@ import android.os.Messenger;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.activities.HomeActivity;
 import com.team2052.frckrawler.server.events.ServerStateChangeEvent;
@@ -33,6 +34,7 @@ public class ServerService extends Service {
     public static String EVENT_ID_EXTRA = "com.team2052.ServerService.EVENT_ID.EXTRA";
     private ServerThread thread;
     public static String TAG = "ServerService";
+    private long timeLastStateChanged = 0;
 
     class ServerIncomingHandler extends Handler {
         @Override
@@ -54,22 +56,40 @@ public class ServerService extends Service {
 
     private void startServer(Bundle args) {
         Log.d(TAG, "startServer");
-        showNotification(makeNotification());
-        if (thread != null) {
-            thread.closeServer();
+        boolean state = false;
+        if (isServerStateChangeTimeValid()) {
+            stopServer();
+            thread = new ServerThread(this, args.getLong(EVENT_ID_EXTRA));
+            thread.start();
+            showNotification(makeNotification());
+            timeLastStateChanged = System.currentTimeMillis();
+            state = true;
+        } else {
+            state = thread != null && thread.isOpen;
         }
-        thread = new ServerThread(this, args.getLong(EVENT_ID_EXTRA));
-        thread.start();
+        EventBus.getDefault().post(new ServerStateChangeEvent(state));
+
+    }
+
+    private boolean isServerStateChangeTimeValid() {
+        Log.d(TAG, "isServerStateChangeTimeValid " + String.valueOf(System.currentTimeMillis() - timeLastStateChanged));
+        return System.currentTimeMillis() - timeLastStateChanged > 2000;
     }
 
     private void stopServer() {
         Log.d(TAG, "stopServer");
-        removeNotification();
-        if (thread != null) {
-            thread.closeServer();
+        boolean state = false;
+        if (isServerStateChangeTimeValid()) {
+            if (thread != null) {
+                removeNotification();
+                thread.closeServer();
+            }
+            timeLastStateChanged = System.currentTimeMillis();
+            state = false;
+        } else {
+            state = thread != null && thread.isOpen;
         }
-
-        thread = null;
+        EventBus.getDefault().post(new ServerStateChangeEvent(state));
     }
 
     final Messenger mMessenger = new Messenger(new ServerIncomingHandler());

@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import com.team2052.frckrawler.client.ScoutPackage;
@@ -30,7 +29,9 @@ public class ServerThread extends Thread {
     private Context context;
     private Event hostedEvent;
     private BluetoothServerSocket serverSocket;
+
     public static String TAG = "ServerThread";
+    private boolean wantRestart;
 
     public ServerThread(Context c, long e) {
         isOpen = false;
@@ -40,7 +41,6 @@ public class ServerThread extends Thread {
         serverSocket = null;
         mBluetoothAdapter = Utilities.BluetoothUtil.getBluetoothAdapter();
         handler = new ServerCallbackHandler(context);
-
     }
 
 
@@ -48,22 +48,20 @@ public class ServerThread extends Thread {
     public void run() {
         Log.d(TAG, "run");
         String deviceName = "device";
-        BluetoothServerSocket mmServerSocket = null;
-
         Log.d(TAG, "Loaded socket");
         isOpen = true;
         while (isOpen) {
             try {
-                mmServerSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
+                serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
             } catch (IOException e) {
                 e.printStackTrace();
                 ACRA.getErrorReporter().handleException(e);
             }
 
-            if (mmServerSocket != null) {
+            if (serverSocket != null) {
                 BluetoothSocket socket = null;
                 try {
-                    socket = mmServerSocket.accept();
+                    socket = serverSocket.accept();
                 } catch (IOException e) {
                     e.printStackTrace();
                     ACRA.getErrorReporter().handleException(e);
@@ -135,7 +133,7 @@ public class ServerThread extends Thread {
                 }
 
                 try {
-                    mmServerSocket.close();
+                    serverSocket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -147,5 +145,4 @@ public class ServerThread extends Thread {
         Log.d(TAG, "closeServer");
         isOpen = false;
     }
-
 }
