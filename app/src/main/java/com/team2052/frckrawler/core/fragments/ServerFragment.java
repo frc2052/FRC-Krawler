@@ -29,6 +29,7 @@ import com.team2052.frckrawler.core.GlobalValues;
 import com.team2052.frckrawler.core.fragments.dialog.process.ExportDialogFragment;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.server.ServerService;
+import com.team2052.frckrawler.server.events.ServerStateChangeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 
 public class ServerFragment extends BaseFragment implements View.OnClickListener {
     private static final int REQUEST_BT_ENABLED = 1;
@@ -50,13 +52,23 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new GetEventsTask().execute();
+
+        EventBus.getDefault().register(this);
+
+    }
+
+    public void onEvent(ServerStateChangeEvent serverStateChangeEvent){
+        if(getView() != null){
+            ((SwitchCompat) getView().findViewById(R.id.hostToggle)).setChecked(serverStateChangeEvent.getState());
+        }
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         this.getActivity().bindService(new Intent(getActivity(), ServerService.class), mConnection, Context.BIND_AUTO_CREATE);
+
     }
 
     private Messenger mService;
@@ -67,6 +79,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         public void onServiceConnected(ComponentName name, IBinder service) {
             mService = new Messenger(service);
             mBound = true;
+            serverState();
         }
 
         @Override
@@ -76,6 +89,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         }
     };
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_server, null);
@@ -83,10 +97,17 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         v.findViewById(R.id.excel).setOnClickListener(this);
         //v.findViewById(R.id.dbBackups).setOnClickListener(this);
         v.findViewById(R.id.hostToggle).setOnClickListener(this);
+        v.findViewById(R.id.hostToggle).setOnClickListener(this);
         //v.findViewById(R.id.pick_list).setOnClickListener(this);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         compileWeight.setText(Float.toString(sharedPreferences.getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f)));
         return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        new GetEventsTask().execute();
     }
 
     @Override
@@ -160,6 +181,15 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         bundle.putLong(ServerService.EVENT_ID_EXTRA, event.getId());
         msg.setData(bundle);
 
+        try {
+            mService.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void serverState() {
+        Message msg = Message.obtain(null, ServerService.MSG_STATE);
         try {
             mService.send(msg);
         } catch (RemoteException e) {

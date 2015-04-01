@@ -106,10 +106,7 @@ public class ServerThread extends Thread {
 
                                     try {
                                         serverPackage = (ServerPackage) fromScoutStream.readObject();
-                                    } catch (ClassNotFoundException e) {
-                                        e.printStackTrace();
-                                        ACRA.getErrorReporter().handleException(e);
-                                    } catch (IOException e) {
+                                    } catch (ClassNotFoundException | IOException e) {
                                         e.printStackTrace();
                                         ACRA.getErrorReporter().handleException(e);
                                     }

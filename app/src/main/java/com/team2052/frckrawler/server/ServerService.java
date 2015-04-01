@@ -14,15 +14,18 @@ import android.os.Messenger;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.activities.HomeActivity;
+import com.team2052.frckrawler.server.events.ServerStateChangeEvent;
+
+import de.greenrobot.event.EventBus;
 
 public class ServerService extends Service {
     private boolean mServerState = false;
 
     public static final int MSG_START_SEREVR = 0;
     public static final int MSG_STOP_SEREVR = 1;
+    public static final int MSG_STATE = 2;
     private int MSG_GET_RUNNING = 2;
 
     public static int SERVER_OPEN_ID = 10;
@@ -41,6 +44,8 @@ public class ServerService extends Service {
                 case MSG_STOP_SEREVR:
                     stopServer();
                     break;
+                case MSG_STATE:
+                    EventBus.getDefault().post(new ServerStateChangeEvent(thread != null && thread.isOpen));
                 default:
                     super.handleMessage(msg);
             }
@@ -83,8 +88,7 @@ public class ServerService extends Service {
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
         stopServer();
-        NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        m.cancel(SERVER_OPEN_ID);
+        removeNotification();
     }
 
     private Notification makeNotification() {
