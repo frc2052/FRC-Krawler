@@ -114,7 +114,7 @@ public class CompiledMetricValue {
                     compiledVal.put(entry.getKey(), entry.getValue() / denominator * 100);
                 }
 
-                JsonArray values = JSON.getGson().toJsonTree(compiledVal.values()).getAsJsonArray();
+                JsonArray values = JSON.getGson().toJsonTree(compiledVal.values().toArray()).getAsJsonArray();
                 compiledValue.add("names", names);
                 compiledValue.add("values", values);
                 break;
