@@ -50,17 +50,16 @@ public class ServerThread extends Thread {
         String deviceName = "device";
         BluetoothServerSocket mmServerSocket = null;
 
-        try {
-            mmServerSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
-        } catch (IOException e) {
-            e.printStackTrace();
-            ACRA.getErrorReporter().handleException(e);
-        }
-
-
         Log.d(TAG, "Loaded socket");
         isOpen = true;
         while (isOpen) {
+            try {
+                mmServerSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
+            } catch (IOException e) {
+                e.printStackTrace();
+                ACRA.getErrorReporter().handleException(e);
+            }
+
             if (mmServerSocket != null) {
                 BluetoothSocket socket = null;
                 try {
@@ -134,20 +133,18 @@ public class ServerThread extends Thread {
                         ACRA.getErrorReporter().handleException(e);
                     }
                 }
+
+                try {
+                    mmServerSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void closeServer() {
         Log.d(TAG, "closeServer");
-        if (serverSocket != null) {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
         isOpen = false;
     }
 
