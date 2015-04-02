@@ -4,8 +4,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.support.v4.app.NotificationCompat;
 
-import com.team2052.frckrawler.R;
-
 public class ServerCallbackHandler {
     public static final int SYNC_ONGOING_ID = 1;
     private Context context;

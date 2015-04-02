@@ -8,17 +8,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.google.common.collect.Lists;
 import com.melnykov.fab.FloatingActionButton;
-import com.melnykov.fab.ObservableScrollView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.core.adapters.ListViewAdapter;
 import com.team2052.frckrawler.core.listitems.ListItem;
 import com.team2052.frckrawler.core.listitems.elements.PickListListElement;
-import com.team2052.frckrawler.core.ui.PickListView;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.PickList;
 

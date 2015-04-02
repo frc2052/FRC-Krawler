@@ -22,6 +22,7 @@ import java.util.UUID;
 
 public class ServerThread extends Thread {
 
+    public static String TAG = "ServerThread";
     private final BluetoothAdapter mBluetoothAdapter;
     private final ServerCallbackHandler handler;
     public boolean isOpen;
@@ -29,8 +30,6 @@ public class ServerThread extends Thread {
     private Context context;
     private Event hostedEvent;
     private BluetoothServerSocket serverSocket;
-
-    public static String TAG = "ServerThread";
     private boolean wantRestart;
 
     public ServerThread(Context c, long e) {

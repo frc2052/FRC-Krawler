@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.client.LoginHandler;
@@ -121,7 +120,7 @@ public class ScoutActivity extends ViewPagerActivity {
             loginHandler.login(this);
         }
         Event scoutEvent = Utilities.ScoutUtil.getScoutEvent(this, mDbManager);
-        if(scoutEvent != null) {
+        if (scoutEvent != null) {
             getSupportActionBar().setSubtitle(scoutEvent.getName());
         }
     }

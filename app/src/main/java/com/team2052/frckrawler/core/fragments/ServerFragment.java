@@ -48,28 +48,6 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     @InjectView(R.id.server_setting_compile_weight)
     EditText compileWeight;
     private List<Event> mEvents;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        EventBus.getDefault().register(this);
-
-    }
-
-    public void onEvent(ServerStateChangeEvent serverStateChangeEvent){
-        if(getView() != null){
-            ((SwitchCompat) getView().findViewById(R.id.hostToggle)).setChecked(serverStateChangeEvent.getState());
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        this.getActivity().bindService(new Intent(getActivity(), ServerService.class), mConnection, Context.BIND_AUTO_CREATE);
-
-    }
-
     private Messenger mService;
     private boolean mBound;
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -88,6 +66,26 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         }
     };
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        EventBus.getDefault().register(this);
+
+    }
+
+    public void onEvent(ServerStateChangeEvent serverStateChangeEvent) {
+        if (getView() != null) {
+            ((SwitchCompat) getView().findViewById(R.id.hostToggle)).setChecked(serverStateChangeEvent.getState());
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        this.getActivity().bindService(new Intent(getActivity(), ServerService.class), mConnection, Context.BIND_AUTO_CREATE);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -228,6 +226,14 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, Float.parseFloat(compileWeight.getText().toString())).apply();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mBound) {
+            getActivity().unbindService(mConnection);
+            mBound = false;
+        }
+    }
 
     private class GetEventsTask extends AsyncTask<Void, Void, List<Event>> {
 
@@ -248,15 +254,6 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);
                 eventChooser.setAdapter(adapter);
             }
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mBound) {
-            getActivity().unbindService(mConnection);
-            mBound = false;
         }
     }
 }

@@ -63,7 +63,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     public void save() {
-        if(mRobots != null && !mRobots.isEmpty()) {
+        if (mRobots != null && !mRobots.isEmpty()) {
             Robot robot = mDbManager.getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
             List<MetricValue> widgets = new ArrayList<>();
 
@@ -82,7 +82,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
             return;
         }
 
-        if(mTask != null){
+        if (mTask != null) {
             mTask.cancel(false);
         }
 

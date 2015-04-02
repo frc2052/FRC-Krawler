@@ -22,37 +22,18 @@ import com.team2052.frckrawler.server.events.ServerStateChangeEvent;
 import de.greenrobot.event.EventBus;
 
 public class ServerService extends Service {
-    private boolean mServerState = false;
-
     public static final int MSG_START_SEREVR = 0;
     public static final int MSG_STOP_SEREVR = 1;
     public static final int MSG_STATE = 2;
-    private int MSG_GET_RUNNING = 2;
-
     public static int SERVER_OPEN_ID = 10;
     public static String EVENT_ID = "EVENT_ID";
     public static String EVENT_ID_EXTRA = "com.team2052.ServerService.EVENT_ID.EXTRA";
-    private ServerThread thread;
     public static String TAG = "ServerService";
+    final Messenger mMessenger = new Messenger(new ServerIncomingHandler());
+    private boolean mServerState = false;
+    private int MSG_GET_RUNNING = 2;
+    private ServerThread thread;
     private long timeLastStateChanged = 0;
-
-    class ServerIncomingHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_START_SEREVR:
-                    startServer(msg.getData());
-                    break;
-                case MSG_STOP_SEREVR:
-                    stopServer();
-                    break;
-                case MSG_STATE:
-                    EventBus.getDefault().post(new ServerStateChangeEvent(thread != null && thread.isOpen));
-                default:
-                    super.handleMessage(msg);
-            }
-        }
-    }
 
     private void startServer(Bundle args) {
         Log.d(TAG, "startServer");
@@ -91,8 +72,6 @@ public class ServerService extends Service {
         }
         EventBus.getDefault().post(new ServerStateChangeEvent(state));
     }
-
-    final Messenger mMessenger = new Messenger(new ServerIncomingHandler());
 
     @Override
     public void onCreate() {
@@ -141,5 +120,23 @@ public class ServerService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return mMessenger.getBinder();
+    }
+
+    class ServerIncomingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_START_SEREVR:
+                    startServer(msg.getData());
+                    break;
+                case MSG_STOP_SEREVR:
+                    stopServer();
+                    break;
+                case MSG_STATE:
+                    EventBus.getDefault().post(new ServerStateChangeEvent(thread != null && thread.isOpen));
+                default:
+                    super.handleMessage(msg);
+            }
+        }
     }
 }

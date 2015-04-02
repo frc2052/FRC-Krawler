@@ -90,7 +90,7 @@ public class ScoutMatchFragment extends BaseFragment implements AdapterView.OnIt
         if (mSaveTask != null) {
             mSaveTask.cancel(false);
         }
-        if(mMatches != null && mTeams != null) {
+        if (mMatches != null && mTeams != null) {
             Team team = mTeams.get(mAllianceSpinner.getSelectedItemPosition());
             Match match = mMatches.get(mMatchSpinner.getSelectedItemPosition());
             String comment = mComments.getText().toString();
