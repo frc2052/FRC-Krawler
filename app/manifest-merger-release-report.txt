@@ -43,8 +43,8 @@ MERGED from com.android.support:support-v4:22.0.0:22:5
 MERGED from com.android.support:cardview-v7:22.0.0:22:5
 MERGED from com.android.support:appcompat-v7:22.0.0:22:5
 MERGED from com.android.support:support-v4:22.0.0:22:5
-MERGED from com.melnykov:floatingactionbutton:1.1.0:12:5
-MERGED from com.android.support:recyclerview-v7:21.0.0:17:5
+MERGED from com.melnykov:floatingactionbutton:1.2.0:12:5
+MERGED from com.android.support:recyclerview-v7:21.0.2:17:5
 MERGED from com.android.support:support-v4:22.0.0:22:5
 	android:label
 		ADDED from AndroidManifest.xml:16:9
@@ -134,8 +134,8 @@ MERGED from com.android.support:support-v4:22.0.0:20:5
 MERGED from com.android.support:cardview-v7:22.0.0:20:5
 MERGED from com.android.support:appcompat-v7:22.0.0:20:5
 MERGED from com.android.support:support-v4:22.0.0:20:5
-MERGED from com.melnykov:floatingactionbutton:1.1.0:8:5
-MERGED from com.android.support:recyclerview-v7:21.0.0:15:5
+MERGED from com.melnykov:floatingactionbutton:1.2.0:8:5
+MERGED from com.android.support:recyclerview-v7:21.0.2:15:5
 MERGED from com.android.support:support-v4:22.0.0:20:5
 MERGED from com.diogobernardino:williamchart:1.7.0:6:5
 	android:targetSdkVersion
@@ -145,8 +145,8 @@ MERGED from com.diogobernardino:williamchart:1.7.0:6:5
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
 activity#android.support.v7.widget.TestActivity
-ADDED from com.android.support:recyclerview-v7:21.0.0:18:9
+ADDED from com.android.support:recyclerview-v7:21.0.2:18:9
 	android:label
-		ADDED from com.android.support:recyclerview-v7:21.0.0:18:19
+		ADDED from com.android.support:recyclerview-v7:21.0.2:18:19
 	android:name
-		ADDED from com.android.support:recyclerview-v7:21.0.0:18:60
+		ADDED from com.android.support:recyclerview-v7:21.0.2:18:60
