@@ -77,6 +77,7 @@ public class CompiledMetricValue {
                 }
 
                 value = format.format(numerator / denominator);
+                compiledValue.addProperty("value", value);
                 break;
             case MetricUtil.CHOOSER:
             case MetricUtil.CHECK_BOX:
