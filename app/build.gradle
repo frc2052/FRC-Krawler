@@ -1,0 +1,65 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.android.databinding'
+apply plugin: 'me.tatarka.retrolambda'
+
+
+def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion '23.0.0 rc2'
+    defaultConfig {
+        applicationId 'com.team2052.frckrawler'
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 21
+        versionName "2.2"
+    }
+    buildTypes {
+        debug {
+            versionNameSuffix "/#" + gitSha
+            applicationIdSuffix '.development'
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/main/java', 'src/main/java-gen']
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'net.sf.opencsv:opencsv:2.3'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    //View helper
+    compile 'com.jakewharton:butterknife:5.1.2'
+    //Data Storage
+    compile 'de.greenrobot:greendao:1.3.7'
+    //Image Caching
+    compile 'com.squareup.picasso:picasso:2.3.4'
+    //Support Libraries
+    compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:cardview-v7:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:support-annotations:22.2.0'
+
+    compile 'ch.acra:acra:4.5.0'
+
+    compile 'com.melnykov:floatingactionbutton:1.2.0'
+
+    compile 'com.diogobernardino:williamchart:1.7.0'
+    compile 'com.google.guava:guava:18.0'
+}

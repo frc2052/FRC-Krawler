@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="compileWeight"
+            type="float"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingTop="8dp">
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginBottom="8dp"
+                                                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                                                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                                                app:cardCornerRadius="2dp"
+                                                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextAppearance.AppCompat.Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:text="@string/server"/>
+
+                    <LinearLayout
+                        android:id="@+id/server_event_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <Spinner
+                                android:id="@+id/event_spinner"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"/>
+
+                            <android.support.v7.widget.SwitchCompat
+                                android:id="@+id/host_toggle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:checked="false"
+                                android:padding="16dp"/>
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/excel"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:background="?attr/selectableItemBackground"
+                            android:text="Excel Export"
+                            android:textColor="@color/color_accent"/>
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/server_events_error"
+                        style="@style/Base.TextAppearance.AppCompat.Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:text="No Events"
+                        android:textStyle="italic"
+                        android:visibility="gone"/>
+
+                    <!--<Button
+                        android:id="@+id/pick_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:textColor="@color/primary"
+                        android:text="Picklist"
+                        android:layout_below="@+id/server_man" />-->
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginBottom="8dp"
+                                                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                                                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                                                android:clipToPadding="false"
+                                                android:descendantFocusability="beforeDescendants"
+                                                android:focusableInTouchMode="true"
+                                                app:cardCornerRadius="2dp"
+                                                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextAppearance.AppCompat.Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:text="@string/settings"/>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/server_setting_compile_weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="4dp">
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Compile Weight"
+                            android:inputType="numberDecimal"
+                            android:text="@{String.valueOf(compileWeight)}"/>
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/server_settings_restore_defaults"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="?attr/selectableItemBackground"
+                            android:text="Restore Defaults"
+                            android:textColor="@color/color_accent"/>
+
+                        <Button
+                            android:id="@+id/server_settings_save"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="?attr/selectableItemBackground"
+                            android:text="Save"
+                            android:textColor="@color/color_accent"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </ScrollView>
+</layout>

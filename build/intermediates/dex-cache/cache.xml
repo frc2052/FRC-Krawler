@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/adam/.gradle/caches/modules-2/files-2.1/net.sf.opencsv/opencsv/2.3/c23708cdb9e80a144db433e23344a788a1fd6599/opencsv-2.3.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="c23708cdb9e80a144db433e23344a788a1fd6599">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/opencsv-2.3-84ad98d6e30b267194d805462f014bb249fc8b82.jar" />
+    </item>
+    <item
+        jar="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/exploded-aar/com.android.support/design/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="fc63b820d54c8a27a3a614bdd93920e0076581c2">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/classes-56d4caabe9247ff6d3a4e303345b440b8e50240f.jar" />
+    </item>
+    <item
+        jar="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="4796f18d3750bf2bfa078407a94a7f9db35b440d">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/classes-85cbf4569682b30776b9ea7b1f158fd5e99caa2b.jar" />
+    </item>
+    <item
+        jar="/home/adam/.gradle/caches/modules-2/files-2.1/com.android.databinding/baseLibrary/1.0-rc0/34ddf14599044eab34480d4ae6aac464c431eff3/baseLibrary-1.0-rc0.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="34ddf14599044eab34480d4ae6aac464c431eff3">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/baseLibrary-1.0-rc0-a2cde2fd0f949ce05316bb9a5f90c0c608dcf2d0.jar" />
+    </item>
+    <item
+        jar="/home/adam/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-f081b09bb1f185f2ca931e1d9ea7db3436cb6be1.jar" />
+    </item>
+    <item
+        jar="/home/adam/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/gson-2.3.1-35be7495aee76c0eaea62df5ca44e07422453c7c.jar" />
+    </item>
+    <item
+        jar="/home/adam/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/18.0/cce0823396aa693798f8882e64213b1772032b09/guava-18.0.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="cce0823396aa693798f8882e64213b1772032b09">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/guava-18.0-a3f2f5618d65679a41b5a2a1b868424679e0bf7f.jar" />
+    </item>
+    <item
+        jar="/home/adam/.gradle/caches/modules-2/files-2.1/de.greenrobot/greendao/1.3.7/dda08161d004c4df96938da6909f1c2b96cd33c8/greendao-1.3.7.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="dda08161d004c4df96938da6909f1c2b96cd33c8">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/greendao-1.3.7-1e9234e4f3705df764a33e7df5f95d4c0621e928.jar" />
+    </item>
+    <item
+        jar="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/classes-f81fd04d8680461b1189924db7a3bc2758a799d2.jar" />
+    </item>
+    <item
+        jar="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/exploded-aar/com.diogobernardino/williamchart/1.7.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="862312b39b3acd6c11012350a7203ea6cd2fc456">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/classes-27f0b15ecec56dd12d0e879ea390750dec1b9145.jar" />
+    </item>
+    <item
+        jar="/home/adam/.gradle/caches/modules-2/files-2.1/de.greenrobot/eventbus/2.4.0/ddd166d01b3158d1c00576d29f7ed15c030df719/eventbus-2.4.0.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="ddd166d01b3158d1c00576d29f7ed15c030df719">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/eventbus-2.4.0-e5488a0c4725844a285ce38190910a27f936985c.jar" />
+    </item>
+    <item
+        jar="/home/adam/Android/Sdk/extras/android/m2repository/com/android/databinding/adapters/1.0-rc0/adapters-1.0-rc0.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="43cd8b4485a9770ddc4bbf0eb28ba3a188d0880b">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/adapters-1.0-rc0-5aa1ed925002a280d31f5a419a731e8cd267c223.jar" />
+    </item>
+    <item
+        jar="/home/adam/.gradle/caches/modules-2/files-2.1/ch.acra/acra/4.5.0/44a5eb946e0d83eed4a0128d877ca1fd8168b83a/acra-4.5.0.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="44a5eb946e0d83eed4a0128d877ca1fd8168b83a">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/acra-4.5.0-f4b6273ad07d3158ea4a01aa6d221f5a24fff21a.jar" />
+    </item>
+    <item
+        jar="/home/adam/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/5.1.2/daf5472b0df6dabaceb6ad755b3812535863965a/butterknife-5.1.2.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="daf5472b0df6dabaceb6ad755b3812535863965a">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/butterknife-5.1.2-1ce6fcb07a5c93b5def8c0fcbb520f45b5ef5ef2.jar" />
+    </item>
+    <item
+        jar="/home/adam/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/library-2.4.0-ada2257be98b5805a3e70fd841aa128ce55ba9b0.jar" />
+    </item>
+    <item
+        jar="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/exploded-aar/com.android.databinding/library/1.0-rc0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="7ce6a308434b0569d59dc70928fca93c4f2f18a4">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/classes-fe1d0e543380c1b268a79c1588efa221e14760b1.jar" />
+    </item>
+    <item
+        jar="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/exploded-aar/com.melnykov/floatingactionbutton/1.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="65620ba5e576dcec2c86efa440b00d042a27383b">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/classes-e9763a3ab2689dd74bc6bc7f554f02c430d177aa.jar" />
+    </item>
+    <item
+        jar="/home/adam/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="6975da39a7040257bd51d21a231b76c915872d38">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/javax.inject-1-e2a3cd2e730bc6e9c53caae3756197cc480afc8b.jar" />
+    </item>
+    <item
+        jar="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/classes-795c16a94b4056c2063d668d8da7f705fdb62b1c.jar" />
+    </item>
+    <item
+        jar="/home/adam/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.3.4/3b646ddbdac8a33fc45b64564011da81d23e4635/picasso-2.3.4.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="3b646ddbdac8a33fc45b64564011da81d23e4635">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/picasso-2.3.4-03c25afc3f8619bbc879f9dadf9c5ac04bb4fd3b.jar" />
+    </item>
+    <item
+        jar="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-274f0a1b78226b9edaea721dda979c72f899432a.jar" />
+    </item>
+    <item
+        jar="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="97f7e239e86ef994de894818fdd8a71d2e89d6aa">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/classes-7814a0eca6fd723a7a1bd4a912e3945eaa725493.jar" />
+    </item>
+    <item
+        jar="/home/adam/.gradle/caches/modules-2/files-2.1/com.squareup.dagger/dagger/1.2.2/e8f912ee19ad84958510883ea191135276b091f8/dagger-1.2.2.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="e8f912ee19ad84958510883ea191135276b091f8">
+        <dex dex="/home/adam/Documents/android_projects/frckrawler/app/build/intermediates/pre-dexed/debug/dagger-1.2.2-ab108ffe3245535fe63102f9f882d8d50220148d.jar" />
+    </item>
+
+</items>
