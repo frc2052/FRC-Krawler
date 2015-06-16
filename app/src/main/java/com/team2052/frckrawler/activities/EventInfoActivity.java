@@ -5,16 +5,20 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.InstanceFragmentStatePagerAdapter;
 import com.team2052.frckrawler.databinding.LayoutTabBinding;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.fragments.event.EventInfoFragment;
 import com.team2052.frckrawler.fragments.match.MatchListFragment;
 import com.team2052.frckrawler.fragments.metric.SummaryFragment;
 import com.team2052.frckrawler.fragments.team.RobotsFragment;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 
 /**
  * @author Adam
@@ -23,6 +27,7 @@ import com.team2052.frckrawler.fragments.team.RobotsFragment;
 public class EventInfoActivity extends BaseActivity {
     private Event mEvent;
     private LayoutTabBinding binding;
+    private EventViewPagerAdapter mAdapter;
 
     public static Intent newInstance(Context context, Event event) {
         Intent intent = new Intent(context, EventInfoActivity.class);
@@ -40,18 +45,29 @@ public class EventInfoActivity extends BaseActivity {
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.layout_tab);
-        binding.viewPager.setAdapter(new EventViewPagerAdapter());
+        binding.viewPager.setAdapter(mAdapter = new EventViewPagerAdapter());
         binding.tabLayout.setupWithViewPager(binding.viewPager);
+
+        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    ((ListUpdateListener) mAdapter.getRegisteredFragment(0)).updateList();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
 
         setSupportActionBar(binding.toolbar);
         setActionBarTitle(getString(R.string.event));
         setActionBarSubtitle(mEvent.getName());
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -63,7 +79,7 @@ public class EventInfoActivity extends BaseActivity {
     }
 
     public class EventViewPagerAdapter extends InstanceFragmentStatePagerAdapter {
-        public String[] headers = new String[]{"Metric Summary", "Schedule", "Attending"};
+        public String[] headers = new String[]{"Info", "Metric Summary", "Schedule", "Attending"};
 
         public EventViewPagerAdapter() {
             super(getSupportFragmentManager());
@@ -73,10 +89,12 @@ public class EventInfoActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return SummaryFragment.newInstance(mEvent);
+                    return EventInfoFragment.newInstance(mEvent);
                 case 1:
-                    return MatchListFragment.newInstance(mEvent);
+                    return SummaryFragment.newInstance(mEvent);
                 case 2:
+                    return MatchListFragment.newInstance(mEvent);
+                case 3:
                     return RobotsFragment.newInstance(mEvent);
             }
             return null;
