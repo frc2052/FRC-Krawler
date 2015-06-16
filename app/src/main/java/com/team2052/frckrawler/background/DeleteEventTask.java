@@ -10,8 +10,7 @@ import com.team2052.frckrawler.db.Event;
 /**
  * Created by adam on 6/16/15.
  */
-public class DeleteEventTask extends AsyncTask<Void, Void, Void>{
-
+public class DeleteEventTask extends AsyncTask<Void, Void, Void> {
 
     private Activity activity;
     private boolean finishActivity;
@@ -33,12 +32,16 @@ public class DeleteEventTask extends AsyncTask<Void, Void, Void>{
         finishActivity = false;
     }
 
-
-
-
     @Override
     protected Void doInBackground(Void... params) {
-        mDBManager.getEventsTable().delete(event);
+        mDBManager.runInTx(() -> mDBManager.getEventsTable().delete(event));
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        if (activity != null && finishActivity) {
+            activity.finish();
+        }
     }
 }

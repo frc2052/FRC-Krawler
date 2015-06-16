@@ -2,10 +2,13 @@ package com.team2052.frckrawler.fragments.event;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
@@ -13,9 +16,10 @@ import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.fragments.ListFragment;
+import com.team2052.frckrawler.fragments.BaseFragment;
 import com.team2052.frckrawler.fragments.event.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.EventListElement;
@@ -27,10 +31,9 @@ import java.util.List;
  * @author Adam
  * @since 10/15/2014
  */
-public class EventsFragment extends ListFragment implements FABButtonListener {
+public class EventsFragment extends BaseFragment implements FABButtonListener, ListUpdateListener {
     private Game mGame;
-    private int mCurrentSelectedItem;
-    private ActionMode mCurrentActionMode;
+    private ListView mListView;
 
     public static EventsFragment newInstance(Game game) {
         EventsFragment fragment = new EventsFragment();
@@ -41,15 +44,34 @@ public class EventsFragment extends ListFragment implements FABButtonListener {
     }
 
     @Override
-    public void preUpdateList() {
-        mListView.setOnItemClickListener((adapterView, view, i, l) -> startActivity(EventInfoActivity.newInstance(getActivity(), mDbManager.getEventsTable().load(Long.valueOf(((ListElement) mAdapter.getItem(i)).getKey())))));
-        mGame = mDbManager.getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID, 0));
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mListView = (ListView) view.findViewById(R.id.list_layout);
+
+        mListView.setOnItemClickListener((parent, view1, position, id) -> {
+            ListElement listElement = (ListElement) parent.getAdapter().getItem(position);
+            Event event = mDbManager.getEventsTable().load(Long.valueOf(listElement.getKey()));
+            startActivity(EventInfoActivity.newInstance(getActivity(), event));
+        });
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateList();
+    }
+
+    @Override
+    public void updateList() {
+        new GetEventsTask().execute();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mGame = mDbManager.getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID, 0));
     }
 
     @Override
@@ -67,8 +89,8 @@ public class EventsFragment extends ListFragment implements FABButtonListener {
     }
 
     @Override
-    public void updateList() {
-        new GetEventsTask().execute();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.list_view, null);
     }
 
     @Override
@@ -89,7 +111,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener {
             for (Event event : events) {
                 eventList.add(new EventListElement(event));
             }
-            mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), eventList));
+            mListView.setAdapter(new ListViewAdapter(getActivity(), eventList));
         }
     }
 }
