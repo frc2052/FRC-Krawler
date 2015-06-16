@@ -64,7 +64,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
                     match_num,
                     metricValue.getValue());
 
-            inserted = mDaoSession.mMatchDatas.insertMatchData(matchData);
+            inserted = mDaoSession.getMatchDataTable().insertMatchData(matchData);
         }
 
 
@@ -76,7 +76,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
                     mRobot.getId(),
                     mEvent.getId(),
                     mComment);
-            inserted = mDaoSession.mMatchComments.insertMatchComment(matchComment);
+            inserted = mDaoSession.getMatchComments().insertMatchComment(matchComment);
         }
 
         return null;

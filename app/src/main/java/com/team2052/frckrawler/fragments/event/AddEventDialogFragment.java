@@ -38,7 +38,7 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mGame = DBManager.getInstance(getActivity()).mGames.load(getArguments().getLong(BaseActivity.PARENT_ID));
+        this.mGame = DBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
     }
 
     @Override

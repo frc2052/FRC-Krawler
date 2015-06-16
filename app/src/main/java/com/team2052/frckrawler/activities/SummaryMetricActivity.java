@@ -31,9 +31,9 @@ public class SummaryMetricActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mEvent = mDbManager.mEvents.load(getIntent().getLongExtra(PARENT_ID, 0));
+        mEvent = mDbManager.getEventsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
         mListView.setOnItemClickListener((parent, view, position, id) -> {
-            Metric metric = mDbManager.mMetrics.load(Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()));
+            Metric metric = mDbManager.getMetricsTable().load(Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()));
             startActivity(SummaryDataActivity.newInstance(SummaryMetricActivity.this, metric, mEvent));
         });
         if (getActionBar() != null) {
@@ -51,7 +51,7 @@ public class SummaryMetricActivity extends ListActivity {
 
         @Override
         protected List<Metric> doInBackground(Void... params) {
-            return mDbManager.mGames.getMetrics(mDbManager.mEvents.getGame(mEvent));
+            return mDbManager.getGamesTable().getMetrics(mDbManager.getEventsTable().getGame(mEvent));
         }
 
         @Override

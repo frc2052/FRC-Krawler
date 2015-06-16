@@ -36,8 +36,8 @@ public class SummaryDataActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mEvent = mDbManager.mEvents.load(getIntent().getLongExtra(EVENT_ID, 0));
-        mMetric = mDbManager.mMetrics.load(getIntent().getLongExtra(PARENT_ID, 0));
+        mEvent = mDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
+        mMetric = mDbManager.getMetricsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
         if (getActionBar() != null) {
             setActionBarTitle(getString(R.string.Summary));
             setActionBarSubtitle(mMetric.getName());

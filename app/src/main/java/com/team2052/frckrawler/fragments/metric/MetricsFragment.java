@@ -60,7 +60,7 @@ public class MetricsFragment extends BaseFragment implements FABButtonListener, 
         ButterKnife.inject(this, view);
         mListView.setOnItemClickListener((parent, view1, position, id) -> {
             long metric_id = Long.parseLong(((MetricListElement) ((ListViewAdapter) parent.getAdapter()).getItem(position)).getKey());
-            Metric metric = mDbManager.mMetrics.load(metric_id);
+            Metric metric = mDbManager.getMetricsTable().load(metric_id);
             startActivity(MetricActivity.newInstance(getActivity(), metric));
         });
     }
@@ -68,7 +68,7 @@ public class MetricsFragment extends BaseFragment implements FABButtonListener, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mGame = mDbManager.mGames.load(getArguments().getLong(GAME_ID, 0));
+        mGame = mDbManager.getGamesTable().load(getArguments().getLong(GAME_ID, 0));
         mCategory = getArguments().getInt(CATEGORY_EXTRA);
         updateList();
     }
@@ -91,7 +91,7 @@ public class MetricsFragment extends BaseFragment implements FABButtonListener, 
     private class GetMetricsTask extends AsyncTask<Void, Void, List<Metric>> {
         @Override
         protected List<Metric> doInBackground(Void... v) {
-            return mDbManager.mMetrics.query(mCategory, null, mGame.getId()).list();
+            return mDbManager.getMetricsTable().query(mCategory, null, mGame.getId()).list();
         }
 
         @Override

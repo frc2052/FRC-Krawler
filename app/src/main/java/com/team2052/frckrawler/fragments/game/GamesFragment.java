@@ -45,7 +45,7 @@ public class GamesFragment extends BaseFragment implements ListUpdateListener {
 
         mListView.setOnItemClickListener((adapterView, view1, i, l) -> {
             long gameId = Long.parseLong(((ListElement) adapterView.getAdapter().getItem(i)).getKey());
-            final Game game = mDbManager.mGames.load(gameId);
+            final Game game = mDbManager.getGamesTable().load(gameId);
             GamesFragment.this.startActivity(GameInfoActivity.newInstance(getActivity(), game));
         });
 
@@ -66,7 +66,7 @@ public class GamesFragment extends BaseFragment implements ListUpdateListener {
     private class GetGamesTask extends AsyncTask<Void, Void, List<Game>> {
         @Override
         protected List<Game> doInBackground(Void... params) {
-            return mDbManager.mGames.loadAll();
+            return mDbManager.getGamesTable().loadAll();
         }
 
         @Override

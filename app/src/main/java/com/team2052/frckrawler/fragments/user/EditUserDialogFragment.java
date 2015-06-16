@@ -30,7 +30,7 @@ public class EditUserDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
-        mUser = DBManager.getInstance(getActivity()).mUsers.load(b.getLong(USER_ID));
+        mUser = DBManager.getInstance(getActivity()).getUsersTable().load(b.getLong(USER_ID));
     }
 
     @Override

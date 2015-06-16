@@ -25,7 +25,7 @@ public class RobotActivity extends ViewPagerActivity {
 
     @Override
     public void onPreLoadViewPager() {
-        mRobot = mDbManager.mRobots.load(getIntent().getLongExtra(PARENT_ID, 0));
+        mRobot = mDbManager.getRobotsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
         setActionBarTitle(getString(R.string.robot_text));
         setActionBarSubtitle(String.valueOf(mRobot.getTeam_id()));
     }

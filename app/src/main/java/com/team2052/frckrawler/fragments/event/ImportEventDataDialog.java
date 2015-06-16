@@ -38,7 +38,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Game game = mDbManager.mGames.load(getArguments().getLong(BaseActivity.PARENT_ID));
+        Game game = mDbManager.getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
         String mEventKey = getArguments().getString("eventKey");
         new ImportEvent(mEventKey, game).execute();
     }
@@ -69,13 +69,13 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                 //Save the event
                 Event event = JSON.getGson().fromJson(jEvent, Event.class);
                 event.setGame_id(game.getId());
-                daoSession.mEvents.insert(event);
+                daoSession.getEventsTable().insert(event);
                 //Save the teams
                 ImportEvent.this.publishProgress("Saving Teams");
                 for (JsonElement element : jTeams) {
                     //Convert json element to team
                     Team team = JSON.getGson().fromJson(element, Team.class);
-                    mDbManager.mTeams.insertNew(team, event);
+                    mDbManager.getTeamsTable().insertNew(team, event);
                 }
                 ImportEvent.this.publishProgress("Saving Matches");
                 JSON.set_daoSession(daoSession);
@@ -84,7 +84,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                     Match match = JSON.getGson().fromJson(element, Match.class);
                     //Only save Qualifications
                     if (match.getType().contains("qm")) {
-                        daoSession.mMatches.insert(match);
+                        daoSession.getMatchesTable().insert(match);
                     }
                 }
                 Log.i(LOG_TAG, "Saved " + event.getName() + " In " + (System.currentTimeMillis() - startTime) + "ms");

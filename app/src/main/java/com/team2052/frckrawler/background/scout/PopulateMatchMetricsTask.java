@@ -11,8 +11,8 @@ import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
-import com.team2052.frckrawler.views.metric.MetricWidget;
 import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -52,9 +52,9 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         //Build the queries
 
-        final QueryBuilder<MatchComment> matchCommentQueryBuilder = mDbManager.mMatchComments.query(match_num, game_type, robot.getId(), event.getId());
+        final QueryBuilder<MatchComment> matchCommentQueryBuilder = mDbManager.getMatchComments().query(match_num, game_type, robot.getId(), event.getId());
 
-        final QueryBuilder<Metric> metricQueryBuilder = mDbManager.mMetrics.query(MetricUtil.MATCH_PERF_METRICS, null, event.getGame_id());
+        final QueryBuilder<Metric> metricQueryBuilder = mDbManager.getMetricsTable().query(MetricUtil.MATCH_PERF_METRICS, null, event.getGame_id());
 
         mDbManager.runInTx(() -> {
 
@@ -62,7 +62,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
             for (Metric metric : metrics) {
                 //Query for existing data
-                QueryBuilder<MatchData> matchDataQueryBuilder = mDbManager.mMatchDatas.query(robot.getId(), metric.getId(), match_num, game_type, event.getId(), null);
+                QueryBuilder<MatchData> matchDataQueryBuilder = mDbManager.getMatchDataTable().query(robot.getId(), metric.getId(), match_num, game_type, event.getId(), null);
                 MatchData currentData = matchDataQueryBuilder.unique();
 
                 //Add the metric values

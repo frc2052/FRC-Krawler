@@ -32,7 +32,7 @@ public class MatchDeserializer implements JsonDeserializer<Match> {
         }
 
         if (object.has("event_key") && !object.get("event_key").isJsonNull()) {
-            match.setEvent_id(JSON.get_daoSession().mEvents.query(object.get("event_key").getAsString(), null).unique().getId());
+            match.setEvent_id(JSON.get_daoSession().getEventsTable().query(object.get("event_key").getAsString(), null).unique().getId());
         }
 
         JsonObject alliances = object.get("alliances").getAsJsonObject();

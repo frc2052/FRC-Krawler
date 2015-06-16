@@ -41,7 +41,7 @@ public class ContactsFragment extends ListFragmentFab {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTeam = mDbManager.mTeams.load(getArguments().getLong(BaseActivity.PARENT_ID, 0));
+        mTeam = mDbManager.getTeamsTable().load(getArguments().getLong(BaseActivity.PARENT_ID, 0));
         setHasOptionsMenu(true);
     }
 
@@ -61,7 +61,7 @@ public class ContactsFragment extends ListFragmentFab {
 
         @Override
         protected List<Contact> doInBackground(Void... params) {
-            return mDbManager.mContacts.getQueryBuilder().where(ContactDao.Properties.Team_id.eq(mTeam.getNumber())).list();
+            return mDbManager.getContactsTable().getQueryBuilder().where(ContactDao.Properties.Team_id.eq(mTeam.getNumber())).list();
         }
 
         @Override

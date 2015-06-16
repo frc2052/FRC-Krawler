@@ -24,7 +24,7 @@ public class AddUserDialogFragment extends DialogFragment {
         builder.setTitle("Add User");
         builder.setView(view);
         builder.setPositiveButton("Add", (dialog, which) -> {
-            DBManager.getInstance(getActivity()).mUsers.insert(new User(null, ((EditText) view.findViewById(R.id.name)).getText().toString().trim()));
+            DBManager.getInstance(getActivity()).getUsersTable().insert(new User(null, ((EditText) view.findViewById(R.id.name)).getText().toString().trim()));
             ((ListUpdateListener) getParentFragment()).updateList();
         });
         builder.setNegativeButton("Cancel", null);

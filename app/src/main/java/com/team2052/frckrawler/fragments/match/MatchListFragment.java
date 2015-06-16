@@ -77,7 +77,7 @@ public class MatchListFragment extends ListFragment {
 
     @Override
     public void onPostCreate() {
-        mEvent = mDbManager.mEvents.load(getArguments().getLong(BaseActivity.PARENT_ID));
+        mEvent = mDbManager.getEventsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class MatchListFragment extends ListFragment {
         @Override
         protected List<Match> doInBackground(Void... params) {
             //Get Matches ascending from the provided event id
-            return mDbManager.mMatches.query(null, null, mEvent.getId(), null).orderAsc(MatchDao.Properties.Number).list();
+            return mDbManager.getMatchesTable().query(null, null, mEvent.getId(), null).orderAsc(MatchDao.Properties.Number).list();
         }
 
         @Override
@@ -126,7 +126,7 @@ public class MatchListFragment extends ListFragment {
                 for (JsonElement element : jMatches) {
                     Match match = JSON.getGson().fromJson(element, Match.class);
                     if (match.getType().contains("qm")) {
-                        Match unique = mDbManager.mMatches.query(null, match.getKey(), null, null).unique();
+                        Match unique = mDbManager.getMatchesTable().query(null, match.getKey(), null, null).unique();
                         unique.setData(match.getData());
                         //unique.update();
                     }

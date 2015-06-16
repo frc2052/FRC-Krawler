@@ -42,7 +42,7 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.layout_tab_fab);
 
-        mGame = mDbManager.mGames.load(getIntent().getLongExtra(PARENT_ID, 0));
+        mGame = mDbManager.getGamesTable().load(getIntent().getLongExtra(PARENT_ID, 0));
         if (mGame == null) {
             finish();
         }

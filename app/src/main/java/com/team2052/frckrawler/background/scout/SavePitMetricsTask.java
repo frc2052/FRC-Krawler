@@ -45,7 +45,7 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
                     mEvent.getId(),
                     LoginHandler.getInstance(context, mDaoSession).getLoggedOnUser().getId(),
                     widget.getValue());
-            mDaoSession.mPitDatas.insert(pitData);
+            mDaoSession.getPitDataTable().insert(pitData);
         }
 
         robot.setComments(comment);

@@ -25,8 +25,8 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.fragments.BaseFragment;
-import com.team2052.frckrawler.views.metric.MetricWidget;
 import com.team2052.frckrawler.util.ScoutUtil;
+import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +130,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
 
     public void save() {
         if (mRobots != null && !mRobots.isEmpty()) {
-            Robot robot = mDbManager.mRobotEvents.getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
+            Robot robot = mDbManager.getRobotEvents().getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
             List<MetricValue> widgets = new ArrayList<>();
 
             for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
@@ -149,7 +149,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Robot robot = mDbManager.mRobotEvents.getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
+        Robot robot = mDbManager.getRobotEvents().getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
         new PopulatePitMetricsTask(this, mEvent, robot).execute();
     }
 

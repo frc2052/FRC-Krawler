@@ -12,8 +12,8 @@ import android.view.View;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.SetupFragmentAdapter;
-import com.team2052.frckrawler.views.DisableSwipeViewPager;
 import com.team2052.frckrawler.util.BluetoothUtil;
+import com.team2052.frckrawler.views.DisableSwipeViewPager;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

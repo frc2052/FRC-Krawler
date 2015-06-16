@@ -31,7 +31,7 @@ public class AddContactDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTeam = DBManager.getInstance(getActivity()).mTeams.load(getArguments().getLong(BaseActivity.PARENT_ID, 0));
+        mTeam = DBManager.getInstance(getActivity()).getTeamsTable().load(getArguments().getLong(BaseActivity.PARENT_ID, 0));
     }
 
     @Override

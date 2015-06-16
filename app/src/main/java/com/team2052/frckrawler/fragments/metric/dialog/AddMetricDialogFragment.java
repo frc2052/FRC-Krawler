@@ -16,8 +16,8 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
-import com.team2052.frckrawler.views.ListEditor;
 import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.views.ListEditor;
 
 /**
  * @author Adam
@@ -51,7 +51,7 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
         Bundle args = getArguments();
         mMetricCategory = args.getInt(METRIC_CATEGORY, -1);
         mDBManager = DBManager.getInstance(getActivity());
-        mGame = mDBManager.mGames.load(args.getLong(GAME_NAME_EXTRA));
+        mGame = mDBManager.getGamesTable().load(args.getLong(GAME_NAME_EXTRA));
         list = new ListEditor(getActivity());
     }
 
@@ -145,7 +145,7 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
         }
 
         if (m != null) {
-            mDBManager.mMetrics.insert(m);
+            mDBManager.getMetricsTable().insert(m);
         }
         ((ListUpdateListener) getParentFragment()).updateList();
         dismiss();

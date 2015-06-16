@@ -25,10 +25,10 @@ import de.greenrobot.dao.query.QueryBuilder;
  */
 public class ExportUtil {
     public static File exportEventDataToCSV(Event event, File location, DBManager dbManager, float compileWeight) {
-        Game game = dbManager.mEvents.getGame(event);
+        Game game = dbManager.getEventsTable().getGame(event);
 
         List<Metric> metrics = game.getMetricList();
-        List<Robot> robots = dbManager.mEvents.getRobots(event);
+        List<Robot> robots = dbManager.getEventsTable().getRobots(event);
         boolean provideTBAURL = event.getFmsid() != null;
 
         //Sort Robots
@@ -50,11 +50,11 @@ public class ExportUtil {
             writer.writeNext(Arrays.copyOf(header.toArray(), header.size(), String[].class));
             for (Robot robot : robots) {
                 List<String> record = new ArrayList<>();
-                Team team = dbManager.mRobots.getTeam(robot);
+                Team team = dbManager.getRobotsTable().getTeam(robot);
                 record.add(String.valueOf(team.getNumber()));
                 record.add(team.getName());
 
-                QueryBuilder<MatchComment> matchCommentQueryBuilder = dbManager.mMatchComments.query(null, null, robot.getId(), event.getId());
+                QueryBuilder<MatchComment> matchCommentQueryBuilder = dbManager.getMatchComments().query(null, null, robot.getId(), event.getId());
                 String comments = "";
 
                 for (MatchComment matchComment : matchCommentQueryBuilder.list()) {
