@@ -10,8 +10,8 @@ import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
-import com.team2052.frckrawler.views.metric.MetricWidget;
 import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.List;

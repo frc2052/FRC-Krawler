@@ -11,8 +11,8 @@ import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
-import com.team2052.frckrawler.views.metric.MetricWidget;
 import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import org.antlr.v4.runtime.misc.NotNull;
 

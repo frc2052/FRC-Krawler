@@ -68,13 +68,6 @@ public class EventsFragment extends BaseFragment implements FABButtonListener, L
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        mGame = mDbManager.getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID, 0));
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.event_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
@@ -86,6 +79,13 @@ public class EventsFragment extends BaseFragment implements FABButtonListener, L
             AddEventDialogFragment.newInstance(mGame).show(getChildFragmentManager(), "addEventDialog");
         }
         return false;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        mGame = mDbManager.getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID, 0));
     }
 
     @Override

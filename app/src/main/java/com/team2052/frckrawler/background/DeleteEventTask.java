@@ -12,11 +12,11 @@ import com.team2052.frckrawler.db.Event;
  */
 public class DeleteEventTask extends AsyncTask<Void, Void, Void> {
 
-    private Activity activity;
-    private boolean finishActivity;
     private final Context context;
     private final Event event;
     private final DBManager mDBManager;
+    private Activity activity;
+    private boolean finishActivity;
 
     public DeleteEventTask(Activity activity, Event event, boolean finishActivity) {
         this(activity, event);

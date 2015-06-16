@@ -16,8 +16,8 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
-import com.team2052.frckrawler.views.ListEditor;
 import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.views.ListEditor;
 
 /**
  * @author Adam
