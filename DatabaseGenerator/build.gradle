@@ -1,4 +1,4 @@
-project(':FRCKrawlerDatabaseGenerator') {
+project(':DatabaseGenerator') {
     apply plugin: 'application'
     apply plugin: 'java'
 
