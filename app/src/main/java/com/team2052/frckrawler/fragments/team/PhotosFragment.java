@@ -163,7 +163,7 @@ public class PhotosFragment extends BaseFragment {
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_" + mDbManager.mRobots.getGame(mRobot) + "_" + mRobot.getTeam_id();
+        String imageFileName = "JPEG_" + timeStamp + "_" + mDbManager.getRobotsTable().getGame(mRobot) + "_" + mRobot.getTeam_id();
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */

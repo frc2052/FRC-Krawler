@@ -33,7 +33,7 @@ public class UsersFragment extends ListFragmentFab {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             long userId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
-            User user = mDbManager.mUsers.load(userId);
+            User user = mDbManager.getUsersTable().load(userId);
             mode.setTitle(user.getName());
             mode.getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
             return true;
@@ -47,7 +47,7 @@ public class UsersFragment extends ListFragmentFab {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             long userId = Long.parseLong(((ListElement) mAdapter.getItem(currentSelectedListItem)).getKey());
-            User user = mDbManager.mUsers.load(userId);
+            User user = mDbManager.getUsersTable().load(userId);
             switch (item.getItemId()) {
                 case R.id.menu_edit:
                     EditUserDialogFragment fragment = EditUserDialogFragment.newInstance(user);
@@ -55,7 +55,7 @@ public class UsersFragment extends ListFragmentFab {
                     currentActionMode.finish();
                     return true;
                 case R.id.menu_delete:
-                    mDbManager.mUsers.delete(user);
+                    mDbManager.getUsersTable().delete(user);
                     currentActionMode.finish();
                     updateList();
                     return true;
@@ -109,7 +109,7 @@ public class UsersFragment extends ListFragmentFab {
 
         @Override
         protected List<User> doInBackground(Void... params) {
-            return mDbManager.mUsers.loadAll();
+            return mDbManager.getUsersTable().loadAll();
         }
 
         @Override

@@ -33,7 +33,7 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Event event = mDbManager.mEvents.load(getArguments().getLong(BaseActivity.PARENT_ID));
+        Event event = mDbManager.getEventsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
         new UpdateMatchSchedule(event).execute();
     }
 
@@ -55,10 +55,10 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
         @Override
         protected Void doInBackground(Void... params) {
             //Delete all match data
-            List<Match> data = mDbManager.mMatches.query(null, null, event.getId(), null).list();
+            List<Match> data = mDbManager.getMatchesTable().query(null, null, event.getId(), null).list();
 
             for (Match match : data) {
-                mDbManager.mMatches.delete(match);
+                mDbManager.getMatchesTable().delete(match);
             }
 
             final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
@@ -69,7 +69,7 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
                 Match match = JSON.getGson().fromJson(element, Match.class);
                 //Only save Qualifications
                 if (match.getType().contains("qm")) {
-                    mDbManager.mMatches.insert(match);
+                    mDbManager.getMatchesTable().insert(match);
                 }
             }
 

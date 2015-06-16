@@ -43,7 +43,7 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mEvent = DBManager.getInstance(getActivity()).mEvents.load(getArguments().getLong(BaseActivity.PARENT_ID));
+        this.mEvent = DBManager.getInstance(getActivity()).getEventsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
     }
 
     @Override
@@ -83,7 +83,7 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
             String url = TBA.BASE_TBA_API_URL + String.format(TBA.TEAM, teamNumber);
             //Query Team from TBA :)
             Team team = JSON.getGson().fromJson(JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url))), Team.class);
-            dbManager.mTeams.insertNew(team, mEvent);
+            dbManager.getTeamsTable().insertNew(team, mEvent);
             return null;
         }
 

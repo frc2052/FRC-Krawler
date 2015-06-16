@@ -38,7 +38,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Event event = mDbManager.mEvents.load(getArguments().getLong(BaseActivity.PARENT_ID));
+        Event event = mDbManager.getEventsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
         new ExportToFileSystem(event).execute();
     }
 
@@ -65,7 +65,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
                 if (fileSystem.canWrite()) {
                     try {
                         file = File.createTempFile(
-                                mDbManager.mGames.load(event.getGame_id()).getName() + "_" + event.getName() + "_" + "Summary",  /* prefix */
+                                mDbManager.getGamesTable().load(event.getGame_id()).getName() + "_" + event.getName() + "_" + "Summary",  /* prefix */
                                 ".csv",         /* suffix */
                                 fileSystem      /* directory */
                         );

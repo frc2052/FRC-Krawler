@@ -45,25 +45,25 @@ public class ScoutPackage implements Serializable {
     private final String TAG = ScoutPackage.class.getSimpleName();
 
     public ScoutPackage(DBManager dbManager, Event event) {
-        this.game = dbManager.mGames.load(event.getGame_id());
+        this.game = dbManager.getGamesTable().load(event.getGame_id());
         this.event = event;
-        users = dbManager.mUsers.loadAll();
+        users = dbManager.getUsersTable().loadAll();
         game.resetMetricList();
         metrics = game.getMetricList();
 
         robot_events = event.getRobotEventList();
 
         for (RobotEvent robotEvent : robot_events) {
-            robots.add(dbManager.mRobotEvents.getRobot(robotEvent));
+            robots.add(dbManager.getRobotEvents().getRobot(robotEvent));
         }
 
         schedule = new Schedule(event);
-        pitData = dbManager.mPitDatas.query(null, null, event.getId(), null).list();
-        matchData = dbManager.mMatchDatas.query(null, null, null, null, event.getId(), null).list();
-        matchComments = dbManager.mMatchComments.query(null, null, null, event.getId()).list();
+        pitData = dbManager.getPitDataTable().query(null, null, event.getId(), null).list();
+        matchData = dbManager.getMatchDataTable().query(null, null, null, null, event.getId(), null).list();
+        matchComments = dbManager.getMatchComments().query(null, null, null, event.getId()).list();
 
         for (RobotEvent robotEvent : robot_events) {
-            teams.add(dbManager.mRobotEvents.getTeam(robotEvent));
+            teams.add(dbManager.getRobotEvents().getTeam(robotEvent));
         }
     }
 
@@ -71,31 +71,31 @@ public class ScoutPackage implements Serializable {
         Log.d(TAG, "Saving");
         dbManager.runInTx(() -> {
                     for (Metric metric : metrics) {
-                        dbManager.mMetrics.insert(metric);
+                        dbManager.getMetricsTable().insert(metric);
                     }
 
                     for (User user : users) {
-                        dbManager.mUsers.insert(user);
+                        dbManager.getUsersTable().insert(user);
                     }
 
                     for (RobotEvent robotEvent : robot_events) {
-                        dbManager.mRobotEvents.insert(robotEvent);
+                        dbManager.getRobotEvents().insert(robotEvent);
                     }
 
                     for (Robot robot : robots) {
-                        dbManager.mRobots.insert(robot);
+                        dbManager.getRobotsTable().insert(robot);
                     }
 
                     for (Team team : teams) {
-                        dbManager.mTeams.insert(team);
+                        dbManager.getTeamsTable().insert(team);
                     }
 
                     for (Match match : schedule.matches) {
-                        dbManager.mMatches.insert(match);
+                        dbManager.getMatchesTable().insert(match);
                     }
 
-                    dbManager.mEvents.insert(event);
-                    dbManager.mGames.insert(game);
+                    dbManager.getEventsTable().insert(event);
+                    dbManager.getGamesTable().insert(game);
                 }
         );
 

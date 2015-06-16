@@ -34,7 +34,7 @@ public class TeamsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         mListView.setOnItemClickListener((parent, view1, position, id) -> {
-            Team team = mDbManager.mTeams.load(Long.valueOf((((ListElement) ((ListViewAdapter) mAdapter).getItem(position))).getKey()));
+            Team team = mDbManager.getTeamsTable().load(Long.valueOf((((ListElement) ((ListViewAdapter) mAdapter).getItem(position))).getKey()));
             startActivity(TeamInfoActivity.newInstance(getActivity(), team));
         });
 
@@ -51,7 +51,7 @@ public class TeamsFragment extends ListFragment {
 
         @Override
         protected List<Team> doInBackground(Void... params) {
-            return mDbManager.mTeams.getQueryBuilder().orderAsc(TeamDao.Properties.Number).list();
+            return mDbManager.getTeamsTable().getQueryBuilder().orderAsc(TeamDao.Properties.Number).list();
         }
 
         @Override

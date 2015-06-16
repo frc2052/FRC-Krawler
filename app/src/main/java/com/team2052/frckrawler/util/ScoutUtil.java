@@ -79,7 +79,7 @@ public class ScoutUtil {
     public static Event getScoutEvent(Context context, DBManager mDBManager) {
         SharedPreferences scoutPrefs = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         if (scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
-            return mDBManager.mEvents.load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
+            return mDBManager.getEventsTable().load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
         }
         return null;
     }

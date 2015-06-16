@@ -34,7 +34,7 @@ public class AddGameDialogFragment extends DialogFragment {
 
         builder.setPositiveButton("Add", (dialog, which) -> {
             Game game = new Game(null, ((TextView) getDialog().getWindow().findViewById(R.id.nameVal)).getText().toString());
-            mDbSession.mGames.insert(game);
+            mDbSession.getGamesTable().insert(game);
             listener.updateList();
             dismiss();
         });

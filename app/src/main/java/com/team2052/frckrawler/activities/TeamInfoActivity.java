@@ -32,7 +32,7 @@ public class TeamInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.layout_tab_fab);
-        mTeam = mDbManager.mTeams.load(getIntent().getLongExtra(PARENT_ID, 0));
+        mTeam = mDbManager.getTeamsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
         setSupportActionBar(binding.toolbar);
 
         binding.viewPager.setAdapter(new ViewTeamPagerAdapter(getSupportFragmentManager()));

@@ -150,7 +150,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
         @Override
         protected List<Event> doInBackground(Void... params) {
-            return mDbManager.mEvents.loadAll();
+            return mDbManager.getEventsTable().loadAll();
         }
 
         @Override
@@ -162,7 +162,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                     List<String> eventNames = new ArrayList<>();
 
                     for (Event event : _events) {
-                        eventNames.add(mDbManager.mEvents.getGame(event).getName() + ", " + event.getName());
+                        eventNames.add(mDbManager.getEventsTable().getGame(event).getName() + ", " + event.getName());
                     }
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);

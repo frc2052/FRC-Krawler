@@ -38,7 +38,7 @@ public class LoginHandler {
 
     public void login(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        final List<User> users = daoSession.mUsers.loadAll();
+        final List<User> users = daoSession.getUsersTable().loadAll();
         String[] userNames = new String[users.size()];
 
         for (int i = 0; i < userNames.length; i++) {
@@ -54,7 +54,7 @@ public class LoginHandler {
     }
 
     public boolean loggedOnUserStillExists() {
-        return loggedOnUser != null && daoSession.mUsers.load(loggedOnUser.getId()) != null;
+        return loggedOnUser != null && daoSession.getUsersTable().load(loggedOnUser.getId()) != null;
     }
 
     public User getLoggedOnUser() {

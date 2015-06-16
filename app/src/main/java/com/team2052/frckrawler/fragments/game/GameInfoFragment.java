@@ -44,7 +44,7 @@ public class GameInfoFragment extends BaseFragment implements ListUpdateListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mGame = mDbManager.mGames.load(getArguments().getLong(GAME_ID));
+        mGame = mDbManager.getGamesTable().load(getArguments().getLong(GAME_ID));
     }
 
     @Override
@@ -124,8 +124,8 @@ public class GameInfoFragment extends BaseFragment implements ListUpdateListener
 
         @Override
         protected Void doInBackground(Void... params) {
-            numOfMatchMetrics = mDbManager.mMetrics.getNumberOfMetrics(mGame, MetricUtil.MATCH_PERF_METRICS);
-            numOfPitMetrics = mDbManager.mMetrics.getNumberOfMetrics(mGame, MetricUtil.ROBOT_METRICS);
+            numOfMatchMetrics = mDbManager.getMetricsTable().getNumberOfMetrics(mGame, MetricUtil.MATCH_PERF_METRICS);
+            numOfPitMetrics = mDbManager.getMetricsTable().getNumberOfMetrics(mGame, MetricUtil.ROBOT_METRICS);
             mGame.resetEventList();
             mGame.resetRobotList();
             numOfEvents = mGame.getEventList().size();

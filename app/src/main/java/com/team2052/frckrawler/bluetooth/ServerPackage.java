@@ -27,10 +27,10 @@ public class ServerPackage implements Serializable {
 
 
     public ServerPackage(DBManager manager) {
-        metricMatchData = manager.mMatchDatas.loadAll();
-        metricPitData = manager.mPitDatas.loadAll();
-        matchComments = manager.mMatchComments.loadAll();
-        robotComments = manager.mRobots.getRobotComments();
+        metricMatchData = manager.getMatchDataTable().loadAll();
+        metricPitData = manager.getPitDataTable().loadAll();
+        matchComments = manager.getMatchComments().loadAll();
+        robotComments = manager.getRobotsTable().getRobotComments();
     }
 
     /**
@@ -42,22 +42,22 @@ public class ServerPackage implements Serializable {
             long startTime = System.currentTimeMillis();
             //Save all the data
             for (MatchData m : metricMatchData) {
-                dbManager.mMatchDatas.insertMatchData(m);
+                dbManager.getMatchDataTable().insertMatchData(m);
             }
 
             for (PitData m : metricPitData) {
-                dbManager.mPitDatas.insert(m);
+                dbManager.getPitDataTable().insert(m);
             }
 
             for (MatchComment matchComment : matchComments) {
-                dbManager.mMatchComments.insertMatchComment(matchComment);
+                dbManager.getMatchComments().insertMatchComment(matchComment);
             }
 
             for (RobotComment robotComment : robotComments) {
-                Robot robot = dbManager.mRobots.load(robotComment.getRobotId());
+                Robot robot = dbManager.getRobotsTable().load(robotComment.getRobotId());
                 robot.setComments(robotComment.getComment());
                 robot.update();
-                dbManager.mRobots.update(robot);
+                dbManager.getRobotsTable().update(robot);
             }
         });
     }

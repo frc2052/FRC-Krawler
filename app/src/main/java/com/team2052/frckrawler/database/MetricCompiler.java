@@ -25,23 +25,23 @@ public class MetricCompiler {
      * @return the compiled data from attending teams and metric
      */
     public static List<CompiledMetricValue> getCompiledMetric(Event event, Metric metric, DBManager dbManager, float compileWeight) {
-        List<RobotEvent> robotEventses = dbManager.mEvents.getRobotEvents(event);
+        List<RobotEvent> robotEventses = dbManager.getEventsTable().getRobotEvents(event);
         List<CompiledMetricValue> compiledMetricValues = new ArrayList<>();
         for (RobotEvent robotEvents : robotEventses) {
             List<MetricValue> metricData = new ArrayList<>();
-            Robot robot = dbManager.mRobotEvents.getRobot(robotEvents);
+            Robot robot = dbManager.getRobotEvents().getRobot(robotEvents);
             if (metric.getCategory() == MetricUtil.MATCH_PERF_METRICS) {
-                QueryBuilder<MatchData> queryBuilder = dbManager.mMatchDatas.query(robot.getId(), metric.getId(), null, null, event.getId(), null);
+                QueryBuilder<MatchData> queryBuilder = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), null, null, event.getId(), null);
 
                 for (MatchData matchData : queryBuilder.list()) {
-                    metricData.add(new MetricValue(dbManager.mMatchDatas.getMetric(matchData), matchData.getData()));
+                    metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), matchData.getData()));
                 }
 
             } else if (metric.getCategory() == MetricUtil.ROBOT_METRICS) {
-                QueryBuilder<PitData> queryBuilder = dbManager.mPitDatas.query(robot.getId(), metric.getId(), event.getId(), null);
+                QueryBuilder<PitData> queryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), event.getId(), null);
 
                 for (PitData pitData : queryBuilder.list()) {
-                    metricData.add(new MetricValue(dbManager.mPitDatas.getMetric(pitData), pitData.getData()));
+                    metricData.add(new MetricValue(dbManager.getPitDataTable().getMetric(pitData), pitData.getData()));
                 }
             }
             compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, metric.getType(), compileWeight));
@@ -58,25 +58,25 @@ public class MetricCompiler {
      */
     public static List<CompiledMetricValue> getCompiledRobot(Event event, Robot robot, DBManager dbManager, float compileWeight) {
         //Load all the metrics
-        final List<Metric> metrics = dbManager.mMetrics.query(null, null, event.getGame_id()).list();
+        final List<Metric> metrics = dbManager.getMetricsTable().query(null, null, event.getGame_id()).list();
         final List<CompiledMetricValue> compiledMetricValues = new ArrayList<>();
         for (Metric metric : metrics) {
             List<MetricValue> metricData = new ArrayList<>();
             if (metric.getCategory() == MetricUtil.MATCH_PERF_METRICS) {
 
-                QueryBuilder<MatchData> queryBuilder = dbManager.mMatchDatas.query(robot.getId(), metric.getId(), null, null, event.getId(), null);
+                QueryBuilder<MatchData> queryBuilder = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), null, null, event.getId(), null);
 
                 for (MatchData matchData : queryBuilder.list()) {
                     if (matchData.getEvent_id() == event.getId()) {
-                        metricData.add(new MetricValue(dbManager.mMatchDatas.getMetric(matchData), matchData.getData()));
+                        metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), matchData.getData()));
                     }
                 }
 
             } else if (metric.getCategory() == MetricUtil.ROBOT_METRICS) {
-                QueryBuilder<PitData> queryBuilder = dbManager.mPitDatas.query(robot.getId(), metric.getId(), event.getId(), null);
+                QueryBuilder<PitData> queryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), event.getId(), null);
 
                 for (PitData pitData : queryBuilder.list()) {
-                    metricData.add(new MetricValue(dbManager.mPitDatas.getMetric(pitData), pitData.getData()));
+                    metricData.add(new MetricValue(dbManager.getPitDataTable().getMetric(pitData), pitData.getData()));
                 }
             }
             compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, metric.getType(), compileWeight));

@@ -32,7 +32,7 @@ public class RobotAttendingEventsFragment extends ListFragment {
 
     @Override
     public void updateList() {
-        mRobot = mDbManager.mRobots.load(getArguments().getLong(BaseActivity.PARENT_ID));
+        mRobot = mDbManager.getRobotsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
         new LoadAllEvents().execute();
     }
 
@@ -43,9 +43,9 @@ public class RobotAttendingEventsFragment extends ListFragment {
         @Override
         protected List<ListItem> doInBackground(Void... voids) {
             mDbManager.runInTx(() -> {
-                List<RobotEvent> robotEvents = mDbManager.mRobots.getRobotEvents(mRobot);
+                List<RobotEvent> robotEvents = mDbManager.getRobotsTable().getRobotEvents(mRobot);
                 for (RobotEvent eveRobot : robotEvents) {
-                    elements.add(new EventListElement(mDbManager.mEvents.load(eveRobot.getEvent_id())));
+                    elements.add(new EventListElement(mDbManager.getEventsTable().load(eveRobot.getEvent_id())));
                 }
             });
             return elements;

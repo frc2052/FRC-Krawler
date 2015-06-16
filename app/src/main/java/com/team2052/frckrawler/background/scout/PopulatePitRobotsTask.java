@@ -37,15 +37,15 @@ public class PopulatePitRobotsTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        mRobots = dbManager.mEvents.getRobotEvents(mEvent);
+        mRobots = dbManager.getEventsTable().getRobotEvents(mEvent);
 
         //Sort the robot numbers
-        Collections.sort(mRobots, (lhs, rhs) -> Double.compare(dbManager.mRobotEvents.getTeam(lhs).getNumber(), dbManager.mRobotEvents.getTeam(rhs).getNumber()));
+        Collections.sort(mRobots, (lhs, rhs) -> Double.compare(dbManager.getRobotEvents().getTeam(lhs).getNumber(), dbManager.getRobotEvents().getTeam(rhs).getNumber()));
 
         ArrayList<String> robots = new ArrayList<>();
 
         for (RobotEvent robotEvent : mRobots) {
-            Team team = dbManager.mRobotEvents.getTeam(robotEvent);
+            Team team = dbManager.getRobotEvents().getTeam(robotEvent);
             robots.add(team.getNumber() + ", " + team.getName());
         }
 

@@ -62,7 +62,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mGame = DBManager.getInstance(getActivity()).mGames.load(getArguments().getLong(BaseActivity.PARENT_ID));
+        this.mGame = DBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
         yearDropDownItems = new String[GlobalValues.MAX_COMP_YEAR - GlobalValues.FIRST_COMP_YEAR + 1];
         for (int i = 0; i < yearDropDownItems.length; i++) {
             yearDropDownItems[i] = Integer.toString(GlobalValues.MAX_COMP_YEAR - i);

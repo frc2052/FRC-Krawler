@@ -36,7 +36,7 @@ public class PopulateMatchScoutTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         Log.d("PopulateMatchScoutTask", "running PopulateMatchScoutTask");
-        mRobots = mDaoSession.mGames.getRobots(mDaoSession.mEvents.getGame(mEvent));
+        mRobots = mDaoSession.getGamesTable().getRobots(mDaoSession.getEventsTable().getGame(mEvent));
         return null;
     }
 
@@ -46,13 +46,13 @@ public class PopulateMatchScoutTask extends AsyncTask<Void, Void, Void> {
         mFragment.setRobots(mRobots);
 
         for (Robot robot : mRobots) {
-            robotListItems.add(String.format("%d, %s", robot.getTeam_id(), mDaoSession.mRobots.getTeam(robot).getName()));
+            robotListItems.add(String.format("%d, %s", robot.getTeam_id(), mDaoSession.getRobotsTable().getTeam(robot).getName()));
         }
 
         mFragment.mRobotNames = robotListItems;
         mFragment.mRobotAutoComplete.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, robotListItems));
         mFragment.selectedRobot = mFragment.getRobots().get(0);
-        mFragment.mRobotAutoComplete.setText(String.format("%d, %s", mFragment.getRobots().get(0).getTeam_id(), mDaoSession.mRobots.getTeam(mFragment.getRobots().get(0)).getName()));
+        mFragment.mRobotAutoComplete.setText(String.format("%d, %s", mFragment.getRobots().get(0).getTeam_id(), mDaoSession.getRobotsTable().getTeam(mFragment.getRobots().get(0)).getName()));
         mFragment.updateMetricValues();
     }
 

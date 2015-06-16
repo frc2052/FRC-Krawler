@@ -6,9 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.InstanceFragmentStatePagerAdapter;
@@ -38,7 +36,7 @@ public class EventInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mEvent = mDbManager.mEvents.load(getIntent().getLongExtra(PARENT_ID, 0));
+        mEvent = mDbManager.getEventsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
 
         if (mEvent == null) {
             finish();

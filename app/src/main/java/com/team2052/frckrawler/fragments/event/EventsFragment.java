@@ -42,8 +42,8 @@ public class EventsFragment extends ListFragment implements FABButtonListener {
 
     @Override
     public void preUpdateList() {
-        mListView.setOnItemClickListener((adapterView, view, i, l) -> startActivity(EventInfoActivity.newInstance(getActivity(), mDbManager.mEvents.load(Long.valueOf(((ListElement) mAdapter.getItem(i)).getKey())))));
-        mGame = mDbManager.mGames.load(getArguments().getLong(BaseActivity.PARENT_ID, 0));
+        mListView.setOnItemClickListener((adapterView, view, i, l) -> startActivity(EventInfoActivity.newInstance(getActivity(), mDbManager.getEventsTable().load(Long.valueOf(((ListElement) mAdapter.getItem(i)).getKey())))));
+        mGame = mDbManager.getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID, 0));
     }
 
     @Override
@@ -80,7 +80,7 @@ public class EventsFragment extends ListFragment implements FABButtonListener {
 
         @Override
         protected List<Event> doInBackground(Void... params) {
-            return mDbManager.mGames.getEvents(mGame);
+            return mDbManager.getGamesTable().getEvents(mGame);
         }
 
         @Override

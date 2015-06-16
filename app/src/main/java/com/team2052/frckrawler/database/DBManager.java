@@ -51,18 +51,18 @@ import de.greenrobot.dao.query.QueryBuilder;
  */
 public class DBManager {
     private static DBManager instance;
-    public final Games mGames;
-    public final Events mEvents;
-    public final Robots mRobots;
-    public final Metrics mMetrics;
-    public final RobotEvents mRobotEvents;
-    public final MatchComments mMatchComments;
-    public final MatchDatas mMatchDatas;
-    public final PitDatas mPitDatas;
-    public final Matches mMatches;
-    public final Teams mTeams;
-    public final Contacts mContacts;
-    public final Users mUsers;
+    private final Games mGames;
+    private final Events mEvents;
+    private final Robots mRobots;
+    private final Metrics mMetrics;
+    private final RobotEvents mRobotEvents;
+    private final MatchComments mMatchComments;
+    private final MatchDatas mMatchDatas;
+    private final PitDatas mPitDatas;
+    private final Matches mMatches;
+    private final Teams mTeams;
+    private final Contacts mContacts;
+    private final Users mUsers;
 
     private final MatchDataDao matchDataDao;
     private final PitDataDao pitDataDao;
@@ -147,6 +147,54 @@ public class DBManager {
         eventDao.deleteAll();
     }
 
+    public Games getGamesTable() {
+        return mGames;
+    }
+
+    public Events getEventsTable() {
+        return mEvents;
+    }
+
+    public Robots getRobotsTable() {
+        return mRobots;
+    }
+
+    public Metrics getMetricsTable() {
+        return mMetrics;
+    }
+
+    public RobotEvents getRobotEvents() {
+        return mRobotEvents;
+    }
+
+    public MatchComments getMatchComments() {
+        return mMatchComments;
+    }
+
+    public MatchDatas getMatchDataTable() {
+        return mMatchDatas;
+    }
+
+    public PitDatas getPitDataTable() {
+        return mPitDatas;
+    }
+
+    public Matches getMatchesTable() {
+        return mMatches;
+    }
+
+    public Teams getTeamsTable() {
+        return mTeams;
+    }
+
+    public Contacts getContactsTable() {
+        return mContacts;
+    }
+
+    public Users getUsersTable() {
+        return mUsers;
+    }
+
     private interface Table<T> {
         T load(long id);
 
@@ -184,13 +232,14 @@ public class DBManager {
 
         public List<Game> loadAll() {
             return gameDao.loadAll();
-        }        @Override
+        }
+
+        @Override
         public void delete(List<Game> games) {
             for (Game game : games) {
                 delete(game);
             }
         }
-
 
 
         @Override
@@ -203,8 +252,8 @@ public class DBManager {
             game.resetEventList();
             game.resetRobotList();
             game.resetMetricList();
-            mEvents.delete(game.getEventList());
-            mRobots.delete(game.getRobotList());
+            DBManager.this.getEventsTable().delete(game.getEventList());
+            DBManager.this.getRobotsTable().delete(game.getRobotList());
             gameDao.delete(game);
         }
 
@@ -220,7 +269,7 @@ public class DBManager {
         public List<Robot> getRobots(Event event) {
             List<Robot> robots = new ArrayList<>();
             for (RobotEvent robotEvent : getRobotEvents(event)) {
-                robots.add(mRobotEvents.getRobot(robotEvent));
+                robots.add(DBManager.this.getRobotEvents().getRobot(robotEvent));
             }
             return robots;
         }
@@ -231,8 +280,10 @@ public class DBManager {
         }
 
         public Game getGame(Event event) {
-            return mGames.load(event.getGame_id());
-        }        @Override
+            return getGamesTable().load(event.getGame_id());
+        }
+
+        @Override
         public Event load(long id) {
             return eventDao.load(id);
         }
@@ -241,7 +292,7 @@ public class DBManager {
             List<RobotEvent> robotEventList = event.getRobotEventList();
             List<Team> teams = Lists.newArrayList();
             for (RobotEvent robotEvent : robotEventList) {
-                teams.add(mRobotEvents.getTeam(robotEvent));
+                teams.add(DBManager.this.getRobotEvents().getTeam(robotEvent));
             }
             Collections.sort(teams, (lhs, rhs) -> Double.compare(lhs.getNumber(), rhs.getNumber()));
             return teams;
@@ -264,8 +315,6 @@ public class DBManager {
             event.resetMatchList();
             return event.getMatchList();
         }
-
-
 
         public List<MatchData> getMatchData(Event event) {
             event.resetMatchDataList();
@@ -297,10 +346,11 @@ public class DBManager {
 
         @Override
         public void delete(Event model) {
-            mMatchDatas.delete(getMatchData(model));
-            mPitDatas.delete(getPitData(model));
-            mMatchComments.delete(getMatchComments(model));
-            mMatches.delete(getMatches(model));
+            getMatchDataTable().delete(getMatchData(model));
+            getPitDataTable().delete(getPitData(model));
+            DBManager.this.getMatchComments().delete(getMatchComments(model));
+            getMatchesTable().delete(getMatches(model));
+            DBManager.this.getRobotEvents().delete(getRobotEvents(model));
             eventDao.delete(model);
         }
 
@@ -339,11 +389,12 @@ public class DBManager {
 
         public List<MatchComment> loadAll() {
             return matchCommentDao.loadAll();
-        }        @Override
+        }
+
+        @Override
         public MatchComment load(long id) {
             return matchCommentDao.load(id);
         }
-
 
 
         @Override
@@ -397,8 +448,10 @@ public class DBManager {
         }
 
         public Metric getMetric(PitData pitData) {
-            return mMetrics.load(pitData.getMetric_id());
-        }        @Override
+            return getMetricsTable().load(pitData.getMetric_id());
+        }
+
+        @Override
         public PitData load(long id) {
             return pitDataDao.load(id);
         }
@@ -411,7 +464,6 @@ public class DBManager {
         public void delete(PitData model) {
             pitDataDao.delete(model);
         }
-
 
 
         @Override
@@ -470,8 +522,10 @@ public class DBManager {
         }
 
         public Metric getMetric(MatchData matchData) {
-            return mMetrics.load(matchData.getMetric_id());
-        }        @Override
+            return getMetricsTable().load(matchData.getMetric_id());
+        }
+
+        @Override
         public MatchData load(long id) {
             return matchDataDao.load(id);
         }
@@ -484,7 +538,6 @@ public class DBManager {
         public void delete(MatchData model) {
             matchDataDao.delete(model);
         }
-
 
 
         @Override
@@ -524,11 +577,12 @@ public class DBManager {
 
         public void insert(Metric metric) {
             metricDao.insertOrReplace(metric);
-        }        @Override
+        }
+
+        @Override
         public Metric load(long id) {
             return metricDao.load(id);
         }
-
 
 
         @Override
@@ -553,12 +607,20 @@ public class DBManager {
             return metricDao.queryBuilder();
         }
 
+        public List<MatchData> getMatchDataList(Metric metric) {
+            metric.resetMatchDataList();
+            return metric.getMatchDataList();
+        }
 
+        public List<PitData> getPitDataList(Metric metric) {
+            metric.resetPitDataList();
+            return metric.getPitDataList();
+        }
     }
 
     public class Robots implements Table<Robot> {
         public Game getGame(Robot mRobot) {
-            return mGames.load(mRobot.getGame_id());
+            return getGamesTable().load(mRobot.getGame_id());
         }
 
         public Team getTeam(Robot robot) {
@@ -578,7 +640,9 @@ public class DBManager {
 
         public RobotComment getRobotComment(Robot robot) {
             return new RobotComment(robot.getId(), robot.getComments());
-        }        @Override
+        }
+
+        @Override
         public void delete(List<Robot> robots) {
             for (Robot robot : robots) {
                 delete(robot);
@@ -586,7 +650,7 @@ public class DBManager {
         }
 
         public QueryBuilder<Robot> query(@Nullable Long team_number, @Nullable Long game_id) {
-            QueryBuilder<Robot> robotQueryBuilder = mRobots.getQueryBuilder();
+            QueryBuilder<Robot> robotQueryBuilder = getRobotsTable().getQueryBuilder();
             if (team_number != null)
                 robotQueryBuilder.where(RobotDao.Properties.Team_id.eq(team_number));
             if (game_id != null)
@@ -596,7 +660,9 @@ public class DBManager {
 
         public void insert(Robot robot) {
             robotDao.insertOrReplace(robot);
-        }        @Override
+        }
+
+        @Override
         public QueryBuilder<Robot> getQueryBuilder() {
             return robotDao.queryBuilder();
         }
@@ -608,21 +674,18 @@ public class DBManager {
         public List<RobotEvent> getRobotEvents(Robot robot) {
             robot.resetRobotEventList();
             return robot.getRobotEventList();
-        }        @Override
+        }
+
+        @Override
         public Robot load(long id) {
             return robotDao.load(id);
         }
-
 
 
         @Override
         public void delete(Robot robot) {
             robotDao.delete(robot);
         }
-
-
-
-
 
 
     }
@@ -633,16 +696,17 @@ public class DBManager {
         }
 
         public Robot getRobot(RobotEvent robotEvent) {
-            return mRobots.load(robotEvent.getRobot_id());
+            return getRobotsTable().load(robotEvent.getRobot_id());
         }
 
         public void insert(RobotEvent robotEvent) {
             robotEventDao.insert(robotEvent);
-        }        @Override
+        }
+
+        @Override
         public RobotEvent load(long id) {
             return robotEventDao.load(id);
         }
-
 
 
         @Override
@@ -672,12 +736,12 @@ public class DBManager {
             List<Team> teams = new ArrayList<>();
             JsonArray red = alliances.get("red").getAsJsonObject().get("teams").getAsJsonArray();
             JsonArray blue = alliances.get("blue").getAsJsonObject().get("teams").getAsJsonArray();
-            teams.add(mTeams.load(Long.parseLong(red.get(0).getAsString().replace("frc", ""))));
-            teams.add(mTeams.load(Long.parseLong(red.get(1).getAsString().replace("frc", ""))));
-            teams.add(mTeams.load(Long.parseLong(red.get(2).getAsString().replace("frc", ""))));
-            teams.add(mTeams.load(Long.parseLong(blue.get(0).getAsString().replace("frc", ""))));
-            teams.add(mTeams.load(Long.parseLong(blue.get(1).getAsString().replace("frc", ""))));
-            teams.add(mTeams.load(Long.parseLong(blue.get(2).getAsString().replace("frc", ""))));
+            teams.add(getTeamsTable().load(Long.parseLong(red.get(0).getAsString().replace("frc", ""))));
+            teams.add(getTeamsTable().load(Long.parseLong(red.get(1).getAsString().replace("frc", ""))));
+            teams.add(getTeamsTable().load(Long.parseLong(red.get(2).getAsString().replace("frc", ""))));
+            teams.add(getTeamsTable().load(Long.parseLong(blue.get(0).getAsString().replace("frc", ""))));
+            teams.add(getTeamsTable().load(Long.parseLong(blue.get(1).getAsString().replace("frc", ""))));
+            teams.add(getTeamsTable().load(Long.parseLong(blue.get(2).getAsString().replace("frc", ""))));
             return teams;
         }
 
@@ -696,11 +760,12 @@ public class DBManager {
             if (type != null)
                 queryBuilder.where(MatchDao.Properties.Event_id.eq(type));
             return queryBuilder;
-        }        @Override
+        }
+
+        @Override
         public Match load(long id) {
             return matchDao.load(id);
         }
-
 
 
         @Override
@@ -738,7 +803,7 @@ public class DBManager {
             }
 
             //Check robot
-            QueryBuilder<Robot> robotQueryBuilder = mRobots.getQueryBuilder();
+            QueryBuilder<Robot> robotQueryBuilder = getRobotsTable().getQueryBuilder();
             robotQueryBuilder.where(RobotDao.Properties.Game_id.eq(event.getGame_id()));
             robotQueryBuilder.where(RobotDao.Properties.Team_id.eq(team.getNumber()));
             Robot robot = robotQueryBuilder.unique();
@@ -749,7 +814,7 @@ public class DBManager {
                 daoSession.insert(robot);
             }
 
-            QueryBuilder<RobotEvent> robotEventQueryBuilder = mRobotEvents.getQueryBuilder();
+            QueryBuilder<RobotEvent> robotEventQueryBuilder = getRobotEvents().getQueryBuilder();
             robotEventQueryBuilder.where(RobotEventDao.Properties.Event_id.eq(event.getGame_id()));
             robotEventQueryBuilder.where(RobotEventDao.Properties.Robot_id.eq(robot.getId()));
             RobotEvent robotEvent = robotEventQueryBuilder.unique();
@@ -820,11 +885,12 @@ public class DBManager {
 
         public void insert(User user) {
             userDao.insertOrReplace(user);
-        }        @Override
+        }
+
+        @Override
         public User load(long id) {
             return userDao.load(id);
         }
-
 
 
         @Override

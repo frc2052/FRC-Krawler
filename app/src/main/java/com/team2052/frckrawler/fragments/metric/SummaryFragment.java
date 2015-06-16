@@ -36,10 +36,10 @@ public class SummaryFragment extends ListFragment {
     @Override
     public void preUpdateList() {
         mListView.setOnItemClickListener((adapterView, view, i, l) -> {
-            Metric metric = mDbManager.mMetrics.load(Long.parseLong(((ListElement) adapterView.getAdapter().getItem(i)).getKey()));
+            Metric metric = mDbManager.getMetricsTable().load(Long.parseLong(((ListElement) adapterView.getAdapter().getItem(i)).getKey()));
             startActivity(SummaryDataActivity.newInstance(getActivity(), metric, mEvent));
         });
-        mEvent = mDbManager.mEvents.load(getArguments().getLong(BaseActivity.PARENT_ID));
+        mEvent = mDbManager.getEventsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class SummaryFragment extends ListFragment {
 
         @Override
         protected List<Metric> doInBackground(Void... params) {
-            return mDbManager.mMetrics.query(null, null, mEvent.getGame_id()).list();
+            return mDbManager.getMetricsTable().query(null, null, mEvent.getGame_id()).list();
         }
 
         @Override
