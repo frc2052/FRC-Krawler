@@ -57,21 +57,22 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
             //Delete all match data
             List<Match> data = mDbManager.getMatchesTable().query(null, null, event.getId(), null).list();
 
-            for (Match match : data) {
-                mDbManager.getMatchesTable().delete(match);
-            }
+            mDbManager.runInTx(() -> mDbManager.getMatchesTable().delete(data));
 
             final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
 
             JSON.set_daoSession(mDbManager);
-            for (JsonElement element : jMatches) {
-                //Save all the matches and alliances
-                Match match = JSON.getGson().fromJson(element, Match.class);
-                //Only save Qualifications
-                if (match.getType().contains("qm")) {
-                    mDbManager.getMatchesTable().insert(match);
+            mDbManager.runInTx(() -> {
+                for (JsonElement element : jMatches) {
+                    //Save all the matches and alliances
+                    Match match = JSON.getGson().fromJson(element, Match.class);
+                    //Only save Qualifications
+                    if (match.getType().contains("qm")) {
+                        mDbManager.getMatchesTable().insert(match);
+                    }
                 }
-            }
+            });
+
 
             return null;
         }

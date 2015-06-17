@@ -28,7 +28,6 @@ import com.team2052.frckrawler.listitems.elements.RobotListElement;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import de.greenrobot.dao.query.WhereCondition;
@@ -130,12 +129,7 @@ public class RobotsFragment extends ListFragment {
                 for (RobotEvent robotEvent : robotEvents) {
                     robots.add(mDbManager.getRobotEvents().getRobot(robotEvent));
                 }
-                Collections.sort(robots, new Comparator<Robot>() {
-                    @Override
-                    public int compare(Robot robot, Robot robot2) {
-                        return Double.compare(robot.getTeam_id(), robot2.getTeam_id());
-                    }
-                });
+                Collections.sort(robots, (robot, robot2) -> Double.compare(robot.getTeam_id(), robot2.getTeam_id()));
             }
             //Load robots based on the view type
             return robots;
@@ -150,7 +144,7 @@ public class RobotsFragment extends ListFragment {
             showError(false);
             List<ListItem> listItems = new ArrayList<>();
             for (Robot robot : robots) {
-                listItems.add(new RobotListElement(robot));
+                listItems.add(new RobotListElement(robot, mDbManager.getRobotsTable().getGame(robot)));
             }
             mListView.setAdapter(new ListViewAdapter(getActivity(), listItems));
         }

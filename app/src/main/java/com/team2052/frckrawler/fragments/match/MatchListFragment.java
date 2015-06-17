@@ -50,20 +50,8 @@ public class MatchListFragment extends ListFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.update_scores) {
-            new GetMatchScores().execute();
-        } else if (item.getItemId() == R.id.update_schedule) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Are you sure?");
-            builder.setMessage("You will lose all your data.");
-            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    UpdateMatchesProcessDialog.newInstance(mEvent).show(getChildFragmentManager(), "matchUpdateDialog");
-                }
-            });
-            builder.setNegativeButton("Cancel", null);
-            builder.create().show();
+        if (item.getItemId() == R.id.update_schedule) {
+            UpdateMatchesProcessDialog.newInstance(mEvent).show(getChildFragmentManager(), "matchUpdateDialog");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -108,36 +96,6 @@ public class MatchListFragment extends ListFragment {
                 listItems.add(new MatchListItem(match));
             }
             mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), listItems));
-        }
-    }
-
-    /**
-     * Update match scores
-     */
-    public class GetMatchScores extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            //Check if the event is hosted by TBA if not don't update
-            if (mEvent.getFmsid() != null) {
-                String url = String.format(TBA.EVENT, mEvent.getFmsid());
-                final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
-                JSON.set_daoSession(mDbManager);
-                for (JsonElement element : jMatches) {
-                    Match match = JSON.getGson().fromJson(element, Match.class);
-                    if (match.getType().contains("qm")) {
-                        Match unique = mDbManager.getMatchesTable().query(null, match.getKey(), null, null).unique();
-                        unique.setData(match.getData());
-                        //unique.update();
-                    }
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            updateList();
         }
     }
 }
