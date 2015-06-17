@@ -12,7 +12,7 @@ public class GlobalValues {
      * The SharedPreferences key for the MAC address of the
      * most recently connected server
      */
-    public static final String MAC_ADRESS_PREF = "MACAdress";
+    public static final String MAC_ADRESS_PREF = "MACAddress";
     public static final int MAX_COMP_YEAR = 2015;
     public static final int FIRST_COMP_YEAR = 1992;
 }
