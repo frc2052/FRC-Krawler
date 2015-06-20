@@ -42,6 +42,7 @@ public class ScoutMatchFragment extends BaseFragment {
     public static final int MATCH_GAME_TYPE = 0;
     public static final int MATCH_PRACTICE_TYPE = 1;
     public static final String MATCH_TYPE = "MATCH_TYPE";
+    public static final String EVENT_ID = "EVENT_ID";
 
     public static final String LOG_TAG = "ScoutMatchFragment";
 
@@ -68,10 +69,11 @@ public class ScoutMatchFragment extends BaseFragment {
     private int mType;
     private List<MetricWidget> mWidgets;
 
-    public static ScoutMatchFragment newInstance(int type) {
+    public static ScoutMatchFragment newInstance(Event event, int type) {
         ScoutMatchFragment scoutMatchFragment = new ScoutMatchFragment();
         Bundle args = new Bundle();
         args.putInt(MATCH_TYPE, type);
+        args.putLong(EVENT_ID, event.getId());
         scoutMatchFragment.setArguments(args);
         return scoutMatchFragment;
     }
@@ -82,7 +84,7 @@ public class ScoutMatchFragment extends BaseFragment {
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        mEvent = ScoutUtil.getScoutEvent(getActivity(), mDbManager);
+        mEvent = mDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
         mType = getArguments().getInt(MATCH_TYPE, 0);
     }
 

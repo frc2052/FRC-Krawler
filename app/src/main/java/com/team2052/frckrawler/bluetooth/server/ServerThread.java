@@ -150,4 +150,8 @@ public class ServerThread extends Thread {
             }
         }
     }
+
+    public Event getHostedEvent() {
+        return hostedEvent;
+    }
 }

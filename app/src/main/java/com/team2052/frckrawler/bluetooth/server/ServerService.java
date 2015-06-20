@@ -60,7 +60,7 @@ public class ServerService extends Service {
             removeNotification();
         }
 
-        EventBus.getDefault().post(new ServerStateChangeEvent(thread != null && thread.isOpen));
+        EventBus.getDefault().post(new ServerStateChangeEvent(thread != null ? thread.getHostedEvent() : null, thread != null && thread.isOpen));
     }
 
     /**
@@ -100,7 +100,7 @@ public class ServerService extends Service {
     }
 
     public void onEvent(ServerStateRequestEvent event) {
-        EventBus.getDefault().post(new ServerStateChangeEvent(thread != null && thread.isOpen));
+        EventBus.getDefault().post(new ServerStateChangeEvent(thread != null ? thread.getHostedEvent() : null, thread != null && thread.isOpen));
     }
 
     @Override

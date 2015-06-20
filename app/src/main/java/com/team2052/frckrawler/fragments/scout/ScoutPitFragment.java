@@ -48,13 +48,21 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     public EditText mComments;
     SavePitMetricsTask mSaveTask;
     private PopulatePitRobotsTask mTask;
+    public static final String EVENT_ID = "EVENT_ID";
+
+    public static ScoutPitFragment newInstance(Event event) {
+        Bundle args = new Bundle();
+        args.putLong(EVENT_ID, event.getId());
+        ScoutPitFragment fragment = new ScoutPitFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -68,11 +76,12 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
         ButterKnife.inject(this, view);
         mTeamSpinner = (Spinner) view.findViewById(R.id.robot);
         mTeamSpinner.setOnItemSelectedListener(this);
-        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDbManager));
+        loadAllData();
     }
 
-    private void loadAllData(Event event) {
-        if (event == null) {
+    private void loadAllData() {
+        mEvent = mDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
+        if (mEvent == null) {
             setErrorVisible(true);
             return;
         }
@@ -81,7 +90,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
             mTask.cancel(false);
         }
 
-        mEvent = event;
+
         mTask = new PopulatePitRobotsTask(this, mEvent);
         mTask.execute();
     }
@@ -140,11 +149,6 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
             mSaveTask = new SavePitMetricsTask(getActivity(), mEvent, robot, widgets, mComments.getText().toString());
             mSaveTask.execute();
         }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEvent(ScoutSyncSuccessEvent event) {
-        loadAllData(ScoutUtil.getScoutEvent(getActivity(), mDbManager));
     }
 
     @Override
