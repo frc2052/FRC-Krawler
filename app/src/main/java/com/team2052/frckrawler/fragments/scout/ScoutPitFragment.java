@@ -63,7 +63,6 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
-        EventBus.getDefault().register(this);
     }
 
     @Override
