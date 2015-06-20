@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/error_message"
@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone">
 
-        <include layout="@layout/fragment_sync_needed"/>
+        <include layout="@layout/fragment_sync_needed" />
     </RelativeLayout>
 
     <!-- Dummy item to prevent EditText from receiving focus -->
@@ -17,7 +17,7 @@
         android:layout_width="0px"
         android:layout_height="0px"
         android:focusable="true"
-        android:focusableInTouchMode="true"/>
+        android:focusableInTouchMode="true" />
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -42,15 +42,14 @@
                     android:id="@+id/robot"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"/>
+                    android:layout_margin="8dp"/>
             </android.support.v7.widget.CardView>
 
             <LinearLayout
                 android:id="@+id/metricWidgetList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -59,18 +58,24 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin">
 
-
-                <EditText
-                    android:id="@+id/comments"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="16dp"
-                    android:ems="10"
-                    android:hint="Comments"
-                    android:inputType="textMultiLine"/>
+                    android:padding="8dp">
+
+                    <EditText
+                        android:id="@+id/comments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="16dp"
+                        android:ems="10"
+                        android:hint="Comments"
+                        android:inputType="textMultiLine" />
+                </android.support.design.widget.TextInputLayout>
+
             </android.support.v7.widget.CardView>
         </LinearLayout>
     </ScrollView>
