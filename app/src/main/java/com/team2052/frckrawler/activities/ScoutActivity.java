@@ -54,7 +54,7 @@ public class ScoutActivity extends BaseActivity {
             switch (scout_type) {
                 case PIT_SCOUT_TYPE:
                     titleResId = R.string.pit_scout;
-                    fragment = new ScoutPitFragment();
+                    fragment = ScoutPitFragment.newInstance(event);
                     break;
                 case PRACTICE_MATCH_SCOUT_TYPE:
                     titleResId = R.string.practice_match_scout;
