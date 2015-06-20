@@ -16,12 +16,14 @@ import android.widget.ArrayAdapter;
 
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
 import com.team2052.frckrawler.databinding.FragmentServerBinding;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.BaseFragment;
+import com.team2052.frckrawler.fragments.event.EventInfoFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +64,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         binder.serverSettingsSave.setOnClickListener(this);
         binder.serverSettingsRestoreDefaults.setOnClickListener(this);
         binder.excel.setOnClickListener(this);
+        binder.viewEvent.setOnClickListener(this);
         binder.setCompileWeight(compileWeight);
 
         EventBus.getDefault().post(new ServerStateRequestEvent());
@@ -82,6 +85,10 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                 } else {
                     Snackbar.make(getView(), "You don't have a selected event", Snackbar.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.view_event:
+                if(isEventsValid() && getSelectedEvent() != null)
+                    startActivity(EventInfoActivity.newInstance(getActivity(), getSelectedEvent()));
                 break;
             case R.id.host_toggle:
                 onHostToggleClicked((SwitchCompat) view);
