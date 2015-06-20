@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
 
@@ -23,13 +24,15 @@ public class ScoutActivity extends BaseActivity {
     public static final int PIT_SCOUT_TYPE = 1;
     public static final int PRACTICE_MATCH_SCOUT_TYPE = 2;
     private static final String SCOUT_TYPE_EXTRA = "com.team2052.frckrawler.SCOUT_TYPE_EXTRA";
+    private static final String EVENT_ID_EXTRA = "com.team2052.frckrawler.EVENT_ID_EXTRA";
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
     private Fragment fragment;
 
-    public static Intent newInstance(Context context, int type) {
+    public static Intent newInstance(Context context, Event event, int type) {
         Intent intent = new Intent(context, ScoutActivity.class);
         intent.putExtra(SCOUT_TYPE_EXTRA, type);
+        intent.putExtra(EVENT_ID_EXTRA, event.getId());
         return intent;
     }
 
@@ -37,6 +40,7 @@ public class ScoutActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Event event = mDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID_EXTRA, 0));
         setContentView(R.layout.activity_scout_main);
         ButterKnife.inject(this);
 
@@ -54,12 +58,12 @@ public class ScoutActivity extends BaseActivity {
                     break;
                 case PRACTICE_MATCH_SCOUT_TYPE:
                     titleResId = R.string.practice_match_scout;
-                    fragment = ScoutMatchFragment.newInstance(ScoutMatchFragment.MATCH_PRACTICE_TYPE);
+                    fragment = ScoutMatchFragment.newInstance(event, ScoutMatchFragment.MATCH_PRACTICE_TYPE);
                     break;
                 case MATCH_SCOUT_TYPE:
                 default:
                     titleResId = R.string.match_scout;
-                    fragment = ScoutMatchFragment.newInstance(ScoutMatchFragment.MATCH_GAME_TYPE);
+                    fragment = ScoutMatchFragment.newInstance(event, ScoutMatchFragment.MATCH_GAME_TYPE);
             }
 
             if (getSupportActionBar() != null) {

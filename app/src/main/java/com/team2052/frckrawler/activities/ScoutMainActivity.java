@@ -9,11 +9,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.background.DeleteAllDataTask;
@@ -22,6 +24,8 @@ import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncSuccessEvent;
+import com.team2052.frckrawler.bluetooth.server.events.ServerStateChangeEvent;
+import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 import com.team2052.frckrawler.util.BluetoothUtil;
@@ -46,16 +50,17 @@ public class ScoutMainActivity extends BaseActivity {
     ImageButton sync_button;
     @InjectView(R.id.sync_progress_bar)
     ProgressBar sync_progress_bar;
+    @InjectView(R.id.scout_sync_container)
+    RelativeLayout scoutSyncContainer;
     @Nullable
     Event currentEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         useActionBarToggle();
         mSyncHandler = ScoutSyncHandler.getInstance(this);
-
-        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_scout);
         ButterKnife.inject(this);
         setSupportActionBar(toolbar);
@@ -69,6 +74,17 @@ public class ScoutMainActivity extends BaseActivity {
         if (currentEvent != null) {
             getSupportActionBar().setSubtitle(currentEvent.getName());
         }
+
+        EventBus.getDefault().post(new ServerStateRequestEvent());
+    }
+
+
+    public void onEvent(ServerStateChangeEvent event) {
+        Log.d("ScoutMainActivity", "onEvent ServerStateChangeEvent");
+        if (event.getEvent() != null || event.getState()) {
+            scoutSyncContainer.setVisibility(View.GONE);
+            setCurrentEvent(event.getEvent());
+        }
     }
 
     @OnClick({R.id.scout_match_button, R.id.scout_practice_button, R.id.scout_pit_button})
@@ -76,13 +92,13 @@ public class ScoutMainActivity extends BaseActivity {
         if (currentEvent != null) {
             switch (view.getId()) {
                 case R.id.scout_pit_button:
-                    startActivity(ScoutActivity.newInstance(this, ScoutActivity.PIT_SCOUT_TYPE));
+                    startActivity(ScoutActivity.newInstance(this, currentEvent, ScoutActivity.PIT_SCOUT_TYPE));
                     break;
                 case R.id.scout_practice_button:
-                    startActivity(ScoutActivity.newInstance(this, ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE));
+                    startActivity(ScoutActivity.newInstance(this, currentEvent, ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE));
                     break;
                 case R.id.scout_match_button:
-                    startActivity(ScoutActivity.newInstance(this, ScoutActivity.MATCH_SCOUT_TYPE));
+                    startActivity(ScoutActivity.newInstance(this, currentEvent, ScoutActivity.MATCH_SCOUT_TYPE));
                     break;
             }
         } else {
@@ -110,6 +126,7 @@ public class ScoutMainActivity extends BaseActivity {
     public void onNavDrawerItemClicked(NavDrawerItem item) {
         int id = item.getId();
         if (id != R.id.nav_item_scout) {
+            finish();
             startActivity(HomeActivity.newInstance(this, id));
         }
     }
@@ -136,7 +153,11 @@ public class ScoutMainActivity extends BaseActivity {
     public void onEvent(ScoutSyncSuccessEvent event) {
         setProgress(false);
         Snackbar.make(findViewById(R.id.container), "Sync Successful", Snackbar.LENGTH_LONG).show();
-        currentEvent = ScoutUtil.getScoutEvent(this, mDbManager);
+        setCurrentEvent(ScoutUtil.getScoutEvent(this, mDbManager));
+    }
+
+    public void setCurrentEvent(Event event) {
+        currentEvent = event;
         if (currentEvent != null) {
             getSupportActionBar().setSubtitle(currentEvent.getName());
         }
