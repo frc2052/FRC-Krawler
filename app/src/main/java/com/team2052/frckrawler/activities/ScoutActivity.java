@@ -41,7 +41,7 @@ public class ScoutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Event event = mDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID_EXTRA, 0));
-        setContentView(R.layout.activity_scout_main);
+        setContentView(R.layout.activity_scout);
         ButterKnife.inject(this);
 
         setSupportActionBar(toolbar);

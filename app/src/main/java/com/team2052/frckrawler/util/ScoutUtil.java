@@ -76,10 +76,10 @@ public class ScoutUtil {
     }
 
     @Nullable
-    public static Event getScoutEvent(Context context, DBManager mDBManager) {
+    public static Event getScoutEvent(Context context) {
         SharedPreferences scoutPrefs = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         if (scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
-            return mDBManager.getEventsTable().load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
+            return DBManager.getInstance(context).getEventsTable().load(scoutPrefs.getLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
         }
         return null;
     }
