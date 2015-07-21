@@ -8,6 +8,7 @@ import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.util.Tuple2;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -46,31 +47,19 @@ public class CompiledMetricValue {
                     break;
                 }
 
-                for (MetricValue matchData : metricData) {
-                    if (matchData.getValue() != null) {
-                        //Get the value
-                        JsonObject values = JSON.getAsJsonObject(matchData.getValue());
+                for (MetricValue metricValue : metricData) {
+                    Tuple2<Boolean, MetricHelper.CompileResult> result = MetricHelper.compileBooleanMetricValue(metricValue);
 
-                        boolean data = false;
+                    if (result.t2.isError)
+                        continue;
 
-                        if (values.has("value") && !values.get("value").isJsonNull()) {
-                            try {
-                                data = values.get("value").getAsBoolean();
-                            } catch (NumberFormatException e) {
-                                data = false;
-                            }
-                        }
-
-                        if (data) {
-                            numerator += compileWeight;
-                        } else {
-                            denominator += compileWeight;
-                        }
+                    if (result.t1) {
+                        numerator += compileWeight;
+                    } else {
+                        denominator += compileWeight;
                     }
                 }
 
-                //Check to see if it is a NaN if it is then set the value to 0.0
-                //Return the amount of yes in the amount of yes and no's
                 value = format.format((numerator / (numerator + denominator)) * 100);
                 compiledValue.addProperty("value", value);
                 break;
