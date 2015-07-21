@@ -25,7 +25,6 @@ import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.BaseFragment;
-import com.team2052.frckrawler.util.ScoutUtil;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.ArrayList;
@@ -148,7 +147,7 @@ public class ScoutMatchFragment extends BaseFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!isCommentValid()) {
-                    mComments.setError("Thomas! NO!");
+                    mComments.setError("You had one job");
                 }
             }
         });
@@ -179,7 +178,7 @@ public class ScoutMatchFragment extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
-            if (mEvent != null && getSelectedRobot() != null && isMatchNumberValid() && isCommentValid()) {
+            if (mEvent != null && getSelectedRobot() != null && isMatchNumberValid()) {
                 mSaveTask = new SaveMatchMetricsTask(
                         getActivity(),
                         this,
@@ -195,8 +194,6 @@ public class ScoutMatchFragment extends BaseFragment {
                 Snackbar.make(getView(), "Please select a robot", Snackbar.LENGTH_SHORT).show();
             } else if (!isMatchNumberValid()) {
                 Snackbar.make(getView(), "Match Number is Invalid", Snackbar.LENGTH_SHORT).show();
-            } else if (!isCommentValid()) {
-                Snackbar.make(getView(), getActivity().getString(R.string.thomas_no), Snackbar.LENGTH_LONG).show();
             } else {
                 Snackbar.make(getView(), getActivity().getString(R.string.something_seems_wrong), Snackbar.LENGTH_SHORT).show();
             }
@@ -231,6 +228,9 @@ public class ScoutMatchFragment extends BaseFragment {
     }
 
     private String getComment() {
+        if (isCommentValid()) {
+            return "";
+        }
         return mComments.getEditText().getText().toString();
     }
 
