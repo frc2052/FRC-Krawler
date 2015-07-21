@@ -6,15 +6,14 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.MatchListActivity;
@@ -32,7 +31,6 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 
 /**
  * @author Adam
@@ -55,7 +53,7 @@ public class ScoutMatchFragment extends BaseFragment {
     public TextInputLayout mComments;
 
     @InjectView(R.id.robot)
-    public AutoCompleteTextView mRobotAutoComplete;
+    public Spinner mRobotAutoComplete;
 
     public Robot selectedRobot;
     public List<String> mRobotNames;
@@ -97,8 +95,6 @@ public class ScoutMatchFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.inject(this, view);
-        mRobotAutoComplete.setThreshold(0);
-
         mMatchNumberInput.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -151,17 +147,6 @@ public class ScoutMatchFragment extends BaseFragment {
                 }
             }
         });
-
-        mRobotAutoComplete.setOnItemClickListener((parent, view1, position, id) -> {
-            //Position is based off the dropdown so we have to get the actual position....
-            String selected = (String) parent.getItemAtPosition(position);
-            int pos = mRobotNames.indexOf(selected);
-
-            selectedRobot = mRobots.get(pos);
-            Log.i("onRobotItemSelected", String.valueOf(selectedRobot.getTeam_id()));
-            updateMetricValues();
-        });
-
         mPopulateTask = new PopulateMatchScoutTask(this, mEvent);
         mPopulateTask.execute();
     }
@@ -261,12 +246,6 @@ public class ScoutMatchFragment extends BaseFragment {
     @Nullable
     public Robot getSelectedRobot() {
         return selectedRobot;
-    }
-
-    @OnClick(R.id.team_clear_button)
-    public void onTeamClearButtonPressed(View view) {
-        mRobotAutoComplete.getText().clear();
-        selectedRobot = null;
     }
 
     public void setWidgets(List<MetricWidget> widgets) {

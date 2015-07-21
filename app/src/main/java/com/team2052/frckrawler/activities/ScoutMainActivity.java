@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +50,8 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
         useActionBarToggle();
 
         binding.scoutMatchButton.setOnClickListener(this);
+        binding.scoutPitButton.setOnClickListener(this);
+        binding.scoutPracticeButton.setOnClickListener(this);
 
         //Binding doesn't include <include> layout
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
