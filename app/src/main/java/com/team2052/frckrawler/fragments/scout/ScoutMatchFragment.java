@@ -213,9 +213,6 @@ public class ScoutMatchFragment extends BaseFragment {
     }
 
     private String getComment() {
-        if (isCommentValid()) {
-            return "";
-        }
         return mComments.getEditText().getText().toString();
     }
 
