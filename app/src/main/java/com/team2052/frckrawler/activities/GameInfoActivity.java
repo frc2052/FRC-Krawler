@@ -66,10 +66,10 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    binding.floatingActionButton.setVisibility(View.GONE);
+                    binding.floatingActionButton.hide();
                     ((ListUpdateListener) mAdapter.getRegisteredFragment(0)).updateList();
                 } else {
-                    binding.floatingActionButton.setVisibility(View.VISIBLE);
+                    binding.floatingActionButton.show();
                 }
             }
 

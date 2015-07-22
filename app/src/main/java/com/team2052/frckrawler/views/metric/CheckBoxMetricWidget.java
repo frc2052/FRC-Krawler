@@ -21,8 +21,6 @@ import java.util.List;
  * Created by adam on 3/28/15.
  */
 public class CheckBoxMetricWidget extends MetricWidget {
-
-
     private final LinearLayout values;
 
     public CheckBoxMetricWidget(Context context, MetricValue m) {

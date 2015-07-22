@@ -17,7 +17,8 @@ import de.greenrobot.dao.query.QueryBuilder;
 /**
  * DAO for table MATCH_COMMENT.
  */
-public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
+public class
+        MatchCommentDao extends AbstractDao<MatchComment, Long> {
 
     public static final String TABLENAME = "MATCH_COMMENT";
     private Query<MatchComment> event_MatchCommentListQuery;

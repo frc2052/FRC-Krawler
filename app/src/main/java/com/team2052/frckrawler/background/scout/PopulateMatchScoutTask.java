@@ -52,7 +52,7 @@ public class PopulateMatchScoutTask extends AsyncTask<Void, Void, Void> {
         mFragment.mRobotNames = robotListItems;
         mFragment.mRobotAutoComplete.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, robotListItems));
         mFragment.selectedRobot = mFragment.getRobots().get(0);
-        mFragment.mRobotAutoComplete.setText(String.format("%d, %s", mFragment.getRobots().get(0).getTeam_id(), mDaoSession.getRobotsTable().getTeam(mFragment.getRobots().get(0)).getName()));
+        mFragment.mRobotAutoComplete.setSelection(mFragment.getRobots().indexOf(mFragment.selectedRobot));
         mFragment.updateMetricValues();
     }
 

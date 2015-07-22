@@ -86,21 +86,15 @@ public class ScoutSyncHandler extends ContextWrapper {
             if (devices != null) {
                 if (devices.isEmpty()) {
                     builder.setTitle("No Devices are paired with this device");
-                    builder.setPositiveButton("Bluetooth Settings", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            context.startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
-                        }
+                    builder.setPositiveButton("Bluetooth Settings", (dialog, which) -> {
+                        context.startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
                     });
                 } else {
                     builder.setTitle("Select Server Device");
-                    builder.setItems(ScoutUtil.getDeviceNames(devices), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            BluetoothDevice[] allBluetoothDevicesArray = ScoutUtil.getAllBluetoothDevicesArray();
-                            if (allBluetoothDevicesArray != null) {
-                                ScoutSyncHandler.this.startSync(allBluetoothDevicesArray[which], context);
-                            }
+                    builder.setItems(ScoutUtil.getDeviceNames(devices), (dialog, which) -> {
+                        BluetoothDevice[] allBluetoothDevicesArray = ScoutUtil.getAllBluetoothDevicesArray();
+                        if (allBluetoothDevicesArray != null) {
+                            ScoutSyncHandler.this.startSync(allBluetoothDevicesArray[which], context);
                         }
                     });
                 }

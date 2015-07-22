@@ -2,6 +2,7 @@ package com.team2052.frckrawler.fragments.event;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +24,7 @@ import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.EventListElement;
+import com.team2052.frckrawler.tba.ConnectionChecker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +55,6 @@ public class EventsFragment extends BaseFragment implements FABButtonListener, L
             Event event = mDbManager.getEventsTable().load(Long.valueOf(listElement.getKey()));
             startActivity(EventInfoActivity.newInstance(getActivity(), event));
         });
-
     }
 
     @Override
@@ -95,7 +96,10 @@ public class EventsFragment extends BaseFragment implements FABButtonListener, L
 
     @Override
     public void onFABPressed() {
-        ImportDataSimpleDialogFragment.newInstance(mGame).show(getChildFragmentManager(), "importEvent");
+        if (ConnectionChecker.isConnectedToInternet(getActivity()))
+            ImportDataSimpleDialogFragment.newInstance(mGame).show(getChildFragmentManager(), "importEvent");
+        else
+            Snackbar.make(getView(), getActivity().getResources().getString(R.string.not_connected_to_internet), Snackbar.LENGTH_LONG).show();
     }
 
     private class GetEventsTask extends AsyncTask<Void, Void, List<Event>> {

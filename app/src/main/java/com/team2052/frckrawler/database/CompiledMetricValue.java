@@ -8,6 +8,7 @@ import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.util.Tuple2;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -46,31 +47,22 @@ public class CompiledMetricValue {
                     break;
                 }
 
-                for (MetricValue matchData : metricData) {
-                    if (matchData.getValue() != null) {
-                        //Get the value
-                        JsonObject values = JSON.getAsJsonObject(matchData.getValue());
+                for (MetricValue metricValue : metricData) {
+                    Tuple2<Boolean, MetricHelper.CompileResult> result = MetricHelper.compileBooleanMetricValue(metricValue);
 
-                        boolean data = false;
+                    if (result.t2.isError)
+                        continue;
 
-                        if (values.has("value") && !values.get("value").isJsonNull()) {
-                            try {
-                                data = values.get("value").getAsBoolean();
-                            } catch (NumberFormatException e) {
-                                data = false;
-                            }
-                        }
-
-                        if (data) {
-                            numerator += compileWeight;
-                        } else {
-                            denominator += compileWeight;
-                        }
+                    if (result.t1) {
+                        numerator += compileWeight;
+                    } else {
+                        denominator += compileWeight;
                     }
                 }
 
-                //Check to see if it is a NaN if it is then set the value to 0.0
-                //Return the amount of yes in the amount of yes and no's
+                if (denominator < 1)
+                    denominator = 1;
+
                 value = format.format((numerator / (numerator + denominator)) * 100);
                 compiledValue.addProperty("value", value);
                 break;
@@ -83,23 +75,17 @@ public class CompiledMetricValue {
                 }
 
                 for (MetricValue metricValue : metricData) {
-                    if (metricValue.getValue() != null) {
-                        JsonObject values = JSON.getAsJsonObject(metricValue.getValue());
+                    final Tuple2<Integer, MetricHelper.CompileResult> result = MetricHelper.getIntMetricValue(metricValue);
 
-                        int int_val = 0;
+                    if (result.t2.isError)
+                        continue;
 
-                        if (values.has("value") && !values.get("value").isJsonNull()) {
-                            try {
-                                int_val = values.get("value").getAsInt();
-                            } catch (NumberFormatException e) {
-                                int_val = 0;
-                            }
-                        }
-
-                        numerator += int_val * compileWeight;
-                        denominator += compileWeight;
-                    }
+                    numerator += result.t1 * compileWeight;
+                    denominator += compileWeight;
                 }
+
+                if (denominator < 1)
+                    denominator = 1;
 
                 value = format.format(numerator / denominator);
                 compiledValue.addProperty("value", value);
@@ -107,21 +93,17 @@ public class CompiledMetricValue {
             case MetricUtil.CHOOSER:
             case MetricUtil.CHECK_BOX:
                 JsonArray possible_values = JSON.getAsJsonObject(metric.getData()).get("values").getAsJsonArray();
-                Map<Integer, String> valueNames = Maps.newTreeMap();
-                Map<Integer, Double> compiledVal = Maps.newTreeMap();
-                denominator = 0.0;
+                Map<Integer, Tuple2<String, Double>> compiledVal = Maps.newTreeMap();
 
                 for (int i = 0; i < possible_values.size(); i++) {
-                    valueNames.put(i, possible_values.get(i).getAsString());
-                    compiledVal.put(i, 0.0);
+                    compiledVal.put(i, new Tuple2<>(possible_values.get(i).getAsString(), 0.0));
                 }
 
-                JsonArray names = JSON.getGson().toJsonTree(valueNames.values().toArray()).getAsJsonArray();
 
                 if (metricData.isEmpty()) {
-                    JsonArray values = JSON.getGson().toJsonTree(compiledVal.values().toArray()).getAsJsonArray();
+                    JsonArray values = JSON.getGson().toJsonTree(Tuple2.yieldValues(compiledVal.values()).toArray()).getAsJsonArray();
+                    compiledValue.add("names", possible_values);
                     compiledValue.add("values", values);
-                    compiledValue.add("names", names);
                     break;
                 }
 
@@ -131,16 +113,17 @@ public class CompiledMetricValue {
 
                     for (JsonElement element : values) {
                         int index = element.getAsInt();
-                        compiledVal.put(index, compiledVal.get(index) + compileWeight);
+                        compiledVal.put(index, compiledVal.get(index).setT2(compiledVal.get(index).t2 * compileWeight));
                     }
                     denominator += compileWeight;
                 }
 
-                for (Map.Entry<Integer, Double> entry : compiledVal.entrySet()) {
-                    compiledVal.put(entry.getKey(), entry.getValue() / denominator * 100);
+                for (Map.Entry<Integer, Tuple2<String, Double>> entry : compiledVal.entrySet()) {
+                    compiledVal.put(entry.getKey(), entry.getValue().setT2(entry.getValue().t2 / denominator * 100));
                 }
-                JsonArray values = JSON.getGson().toJsonTree(compiledVal.values().toArray()).getAsJsonArray();
-                compiledValue.add("names", names);
+
+                JsonArray values = JSON.getGson().toJsonTree(Tuple2.yieldValues(compiledVal.values()).toArray()).getAsJsonArray();
+                compiledValue.add("names", possible_values);
                 compiledValue.add("values", values);
                 break;
         }
@@ -155,7 +138,7 @@ public class CompiledMetricValue {
             case MetricUtil.COUNTER:
             case MetricUtil.SLIDER:
             case MetricUtil.BOOLEAN:
-                return compiledValue.get("value").getAsString();
+                return String.valueOf(compiledValue.get("value").getAsDouble());
             case MetricUtil.CHOOSER:
             case MetricUtil.CHECK_BOX:
                 JsonArray names = compiledValue.get("names").getAsJsonArray();

@@ -6,15 +6,14 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.MatchListActivity;
@@ -25,7 +24,6 @@ import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.BaseFragment;
-import com.team2052.frckrawler.util.ScoutUtil;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.ArrayList;
@@ -33,7 +31,6 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 
 /**
  * @author Adam
@@ -42,6 +39,7 @@ public class ScoutMatchFragment extends BaseFragment {
     public static final int MATCH_GAME_TYPE = 0;
     public static final int MATCH_PRACTICE_TYPE = 1;
     public static final String MATCH_TYPE = "MATCH_TYPE";
+    public static final String EVENT_ID = "EVENT_ID";
 
     public static final String LOG_TAG = "ScoutMatchFragment";
 
@@ -55,7 +53,7 @@ public class ScoutMatchFragment extends BaseFragment {
     public TextInputLayout mComments;
 
     @InjectView(R.id.robot)
-    public AutoCompleteTextView mRobotAutoComplete;
+    public Spinner mRobotAutoComplete;
 
     public Robot selectedRobot;
     public List<String> mRobotNames;
@@ -68,10 +66,11 @@ public class ScoutMatchFragment extends BaseFragment {
     private int mType;
     private List<MetricWidget> mWidgets;
 
-    public static ScoutMatchFragment newInstance(int type) {
+    public static ScoutMatchFragment newInstance(Event event, int type) {
         ScoutMatchFragment scoutMatchFragment = new ScoutMatchFragment();
         Bundle args = new Bundle();
         args.putInt(MATCH_TYPE, type);
+        args.putLong(EVENT_ID, event.getId());
         scoutMatchFragment.setArguments(args);
         return scoutMatchFragment;
     }
@@ -82,7 +81,7 @@ public class ScoutMatchFragment extends BaseFragment {
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        mEvent = ScoutUtil.getScoutEvent(getActivity(), mDbManager);
+        mEvent = mDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
         mType = getArguments().getInt(MATCH_TYPE, 0);
     }
 
@@ -96,8 +95,6 @@ public class ScoutMatchFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.inject(this, view);
-        mRobotAutoComplete.setThreshold(0);
-
         mMatchNumberInput.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -146,21 +143,10 @@ public class ScoutMatchFragment extends BaseFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!isCommentValid()) {
-                    mComments.setError("Thomas! NO!");
+                    mComments.setError("You had one job");
                 }
             }
         });
-
-        mRobotAutoComplete.setOnItemClickListener((parent, view1, position, id) -> {
-            //Position is based off the dropdown so we have to get the actual position....
-            String selected = (String) parent.getItemAtPosition(position);
-            int pos = mRobotNames.indexOf(selected);
-
-            selectedRobot = mRobots.get(pos);
-            Log.i("onRobotItemSelected", String.valueOf(selectedRobot.getTeam_id()));
-            updateMetricValues();
-        });
-
         mPopulateTask = new PopulateMatchScoutTask(this, mEvent);
         mPopulateTask.execute();
     }
@@ -177,7 +163,7 @@ public class ScoutMatchFragment extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
-            if (mEvent != null && getSelectedRobot() != null && isMatchNumberValid() && isCommentValid()) {
+            if (mEvent != null && getSelectedRobot() != null && isMatchNumberValid()) {
                 mSaveTask = new SaveMatchMetricsTask(
                         getActivity(),
                         this,
@@ -193,8 +179,6 @@ public class ScoutMatchFragment extends BaseFragment {
                 Snackbar.make(getView(), "Please select a robot", Snackbar.LENGTH_SHORT).show();
             } else if (!isMatchNumberValid()) {
                 Snackbar.make(getView(), "Match Number is Invalid", Snackbar.LENGTH_SHORT).show();
-            } else if (!isCommentValid()) {
-                Snackbar.make(getView(), getActivity().getString(R.string.thomas_no), Snackbar.LENGTH_LONG).show();
             } else {
                 Snackbar.make(getView(), getActivity().getString(R.string.something_seems_wrong), Snackbar.LENGTH_SHORT).show();
             }
@@ -259,12 +243,6 @@ public class ScoutMatchFragment extends BaseFragment {
     @Nullable
     public Robot getSelectedRobot() {
         return selectedRobot;
-    }
-
-    @OnClick(R.id.team_clear_button)
-    public void onTeamClearButtonPressed(View view) {
-        mRobotAutoComplete.getText().clear();
-        selectedRobot = null;
     }
 
     public void setWidgets(List<MetricWidget> widgets) {
