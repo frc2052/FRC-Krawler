@@ -384,6 +384,8 @@ public class DBManager {
             if (game_type != null)
                 queryBuilder.where(MatchCommentDao.Properties.Game_type.eq(game_type));
             if (robot_id != null)
+                queryBuilder.where(MatchCommentDao.Properties.Robot_id.eq(robot_id));
+            if (event_id != null)
                 queryBuilder.where(MatchCommentDao.Properties.Event_id.eq(event_id));
             return queryBuilder;
         }
