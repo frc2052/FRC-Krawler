@@ -514,7 +514,7 @@ public class DBManager {
             if (metricId != null)
                 matchDataQueryBuilder.where(MatchDataDao.Properties.Metric_id.eq(metricId));
             if (match_number != null)
-                matchDataQueryBuilder.where(MatchDataDao.Properties.Match_number.eq(metricId));
+                matchDataQueryBuilder.where(MatchDataDao.Properties.Match_number.eq(match_number));
             if (game_type != null)
                 matchDataQueryBuilder.where(MatchDataDao.Properties.Game_type.eq(game_type));
             if (eventId != null)

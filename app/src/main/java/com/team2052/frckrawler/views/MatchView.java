@@ -25,6 +25,16 @@ public class MatchView extends FrameLayout {
         init();
     }
 
+    public MatchView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public MatchView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.match_view, this, true);
         matchTitle = (TextView) findViewById(R.id.match_title);
@@ -38,16 +48,6 @@ public class MatchView extends FrameLayout {
         redScore = (TextView) findViewById(R.id.red_score);
         redAlliance = findViewById(R.id.red_alliance);
         blueAlliance = findViewById(R.id.blue_alliance);
-    }
-
-    public MatchView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public MatchView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
     }
 
     public void init(Match match, boolean showScores) {

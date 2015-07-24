@@ -1,15 +1,11 @@
 package com.team2052.frckrawler.fragments.match;
 
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
@@ -19,9 +15,6 @@ import com.team2052.frckrawler.db.MatchDao;
 import com.team2052.frckrawler.fragments.ListFragment;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.items.MatchListItem;
-import com.team2052.frckrawler.tba.HTTP;
-import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.tba.TBA;
 
 import java.util.ArrayList;
 import java.util.List;

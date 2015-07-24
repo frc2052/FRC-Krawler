@@ -39,6 +39,7 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
     public ScoutSyncHandler mSyncHandler;
     Event currentEvent;
     private ActivityScoutMainBinding binding;
+    private boolean isServer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +57,8 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
         //Binding doesn't include <include> layout
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.setTitle("Scout");
-        }
 
+        if (supportActionBar != null) supportActionBar.setTitle("Scout");
         EventBus.getDefault().post(new ServerStateRequestEvent());
     }
 
@@ -95,24 +94,27 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
 
     public void onEvent(ServerStateChangeEvent event) {
         if (event.getEvent() != null && event.getState()) {
+            isServer = true;
             binding.scoutSyncContainer.setVisibility(View.GONE);
             setCurrentEvent(event.getEvent());
         } else {
+            isServer = false;
             binding.scoutSyncContainer.setVisibility(View.VISIBLE);
             setCurrentEvent(ScoutUtil.getScoutEvent(this));
         }
+        invalidateOptionsMenu();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.scout_main_sync, menu);
+        if (!isServer && ScoutUtil.getDeviceIsScout(this))
+            getMenuInflater().inflate(R.menu.scout_main_sync, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            //TODO: Only allow on scout
             case R.id.reset_server_device:
                 ScoutUtil.resetSyncDevice(this);
                 new DeleteAllDataTask(mDbManager).execute();
@@ -124,6 +126,7 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
     public void onNavDrawerItemClicked(NavDrawerItem item) {
         int id = item.getId();
         if (id != R.id.nav_item_scout) {
+            finish();
             finish();
             startActivity(HomeActivity.newInstance(this, id));
         }

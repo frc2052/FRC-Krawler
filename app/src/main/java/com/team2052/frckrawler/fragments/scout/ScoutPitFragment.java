@@ -19,13 +19,11 @@ import com.team2052.frckrawler.background.scout.PopulatePitMetricsTask;
 import com.team2052.frckrawler.background.scout.PopulatePitRobotsTask;
 import com.team2052.frckrawler.background.scout.SavePitMetricsTask;
 import com.team2052.frckrawler.bluetooth.client.LoginHandler;
-import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.fragments.BaseFragment;
-import com.team2052.frckrawler.util.ScoutUtil;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.ArrayList;
@@ -39,6 +37,7 @@ import de.greenrobot.event.EventBus;
  * @author Adam
  */
 public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
+    public static final String EVENT_ID = "EVENT_ID";
     @InjectView(R.id.metricWidgetList)
     public LinearLayout mLinearLayout;
     public Event mEvent;
@@ -48,7 +47,6 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     public EditText mComments;
     SavePitMetricsTask mSaveTask;
     private PopulatePitRobotsTask mTask;
-    public static final String EVENT_ID = "EVENT_ID";
 
     public static ScoutPitFragment newInstance(Event event) {
         Bundle args = new Bundle();

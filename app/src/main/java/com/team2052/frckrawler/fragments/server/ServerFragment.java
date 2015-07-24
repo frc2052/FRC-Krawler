@@ -23,7 +23,6 @@ import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
 import com.team2052.frckrawler.databinding.FragmentServerBinding;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.BaseFragment;
-import com.team2052.frckrawler.fragments.event.EventInfoFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +86,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                 }
                 break;
             case R.id.view_event:
-                if(isEventsValid() && getSelectedEvent() != null)
+                if (isEventsValid() && getSelectedEvent() != null)
                     startActivity(EventInfoActivity.newInstance(getActivity(), getSelectedEvent()));
                 break;
             case R.id.host_toggle:

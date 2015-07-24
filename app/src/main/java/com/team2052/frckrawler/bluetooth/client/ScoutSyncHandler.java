@@ -3,7 +3,6 @@ package com.team2052.frckrawler.bluetooth.client;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;

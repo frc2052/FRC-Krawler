@@ -2,15 +2,22 @@ package com.team2052.frckrawler.database;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.MetricUtil;
 import com.team2052.frckrawler.util.Tuple2;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 public class MetricHelper {
+    private static Type listType = new TypeToken<List<Integer>>() {
+    }.getType();
+
     public static Optional<JsonElement> getMetricValue(MetricValue metricValue) {
         if (metricValue == null)
             return Optional.absent();
@@ -19,53 +26,80 @@ public class MetricHelper {
         return Optional.of(JSON.getParser().parse(metricValue.getValue()));
     }
 
-    public static Tuple2<Boolean, CompileResult> compileBooleanMetricValue(MetricValue metricValue) {
+    public static Optional<JsonElement> getMetricData(Metric metric) {
+        if (metric == null)
+            return Optional.absent();
+        if (metric.getData() == null)
+            return Optional.absent();
+        return Optional.of(JSON.getParser().parse(metric.getData()));
+    }
+
+    public static Tuple2<Boolean, ReturnResult> compileBooleanMetricValue(MetricValue metricValue) {
         if (metricValue.getMetric().getType() != MetricUtil.BOOLEAN)
-            return new Tuple2<>(false, CompileResult.WRONG_METRIC_TYPE);
+            return new Tuple2<>(false, ReturnResult.WRONG_METRIC_TYPE);
 
         Optional<JsonElement> optional = getMetricValue(metricValue);
         if (!optional.isPresent())
-            return new Tuple2<>(false, CompileResult.ABSENT_VALUE);
+            return new Tuple2<>(false, ReturnResult.ABSENT_VALUE);
 
         JsonObject value = optional.get().getAsJsonObject();
         if (value.has("value") && !value.get("value").isJsonNull()) {
             try {
-                return new Tuple2<>(value.get("value").getAsBoolean(), CompileResult.SUCCEED);
+                return new Tuple2<>(value.get("value").getAsBoolean(), ReturnResult.SUCCEED);
             } catch (ClassCastException e) {
-                return new Tuple2<>(false, CompileResult.WRONG_TYPE_VALUE);
+                return new Tuple2<>(false, ReturnResult.WRONG_TYPE_VALUE);
             }
         }
-        return new Tuple2<>(false, CompileResult.OTHER_ERROR);
+        return new Tuple2<>(false, ReturnResult.OTHER_ERROR);
     }
 
-    public static Tuple2<Integer, CompileResult> getIntMetricValue(MetricValue metricValue) {
+    public static Tuple2<Integer, ReturnResult> getIntMetricValue(MetricValue metricValue) {
         if (metricValue.getMetric().getType() != MetricUtil.SLIDER && metricValue.getMetric().getType() != MetricUtil.COUNTER)
-            return new Tuple2<>(-1, CompileResult.WRONG_METRIC_TYPE);
+            return new Tuple2<>(-1, ReturnResult.WRONG_METRIC_TYPE);
 
         final Optional<JsonElement> optional = getMetricValue(metricValue);
         if (!optional.isPresent())
-            return new Tuple2<>(-1, CompileResult.ABSENT_VALUE);
+            return new Tuple2<>(-1, ReturnResult.ABSENT_VALUE);
 
         JsonObject value = optional.get().getAsJsonObject();
         if (value.has("value") && !value.get("value").isJsonNull()) {
             try {
-                return new Tuple2<>(value.get("value").getAsInt(), CompileResult.SUCCEED);
+                return new Tuple2<>(value.get("value").getAsInt(), ReturnResult.SUCCEED);
             } catch (ClassCastException e) {
-                return new Tuple2<>(-1, CompileResult.WRONG_TYPE_VALUE);
+                return new Tuple2<>(-1, ReturnResult.WRONG_TYPE_VALUE);
             }
         }
-        return new Tuple2<>(-1, CompileResult.OTHER_ERROR);
+        return new Tuple2<>(-1, ReturnResult.OTHER_ERROR);
     }
 
-    //NOT IMPLEMENTED
-    public static Tuple2<List<Integer>, CompileResult> getListIndexMetricValue(MetricValue metricValue) {
-        return new Tuple2<>(Lists.newArrayList(), CompileResult.OTHER_ERROR);
+    public static Tuple2<List<Integer>, ReturnResult> getListIndexMetricValue(MetricValue metricValue) {
+        if (metricValue.getMetric().getType() != MetricUtil.CHECK_BOX && metricValue.getMetric().getType() != MetricUtil.CHOOSER)
+            return new Tuple2<>(Lists.newArrayList(), ReturnResult.WRONG_METRIC_TYPE);
+
+        final Optional<JsonElement> optionalValue = getMetricValue(metricValue);
+        if (!optionalValue.isPresent())
+            return new Tuple2<>(Lists.newArrayList(), ReturnResult.ABSENT_VALUE);
+
+        List<Integer> array = null;
+        final JsonObject valueJson = optionalValue.get().getAsJsonObject();
+        if (valueJson.has("values") && !valueJson.get("values").isJsonNull()) {
+            array = JSON.getGson().fromJson(valueJson.get("values"), listType);
+            return new Tuple2<>(array, ReturnResult.SUCCEED);
+        }
+        return new Tuple2<>(Lists.newArrayList(), ReturnResult.OTHER_ERROR);
     }
 
     public static JsonObject buildBooleanMetricValue(boolean value) {
         JsonObject json = new JsonObject();
         json.addProperty("value", value);
         return json;
+    }
+
+    public static JsonObject buildListIndexValue(List<Integer> index_data) {
+        JsonObject data = new JsonObject();
+        JsonElement values = JSON.getGson().toJsonTree(index_data);
+        data.add("values", values);
+        return data;
     }
 
     public static Optional<Boolean> getBooleanValue(MetricValue metricValue) {
@@ -90,12 +124,29 @@ public class MetricHelper {
         return Optional.absent();
     }
 
+    public static Optional<List<String>> getListItemIndexRange(Metric metric) {
+        if (metric.getType() != MetricUtil.CHECK_BOX && metric.getType() != MetricUtil.CHOOSER)
+            return Optional.absent();
+
+        final Optional<JsonElement> optionalData = getMetricData(metric);
+        if (!optionalData.isPresent())
+            return Optional.absent();
+
+        final JsonObject dataJson = optionalData.get().getAsJsonObject();
+        if (dataJson.has("values") && !dataJson.get("values").isJsonNull() && dataJson.get("values").isJsonArray()) {
+            final JsonArray values = dataJson.get("values").getAsJsonArray();
+            final List<String> range = Lists.newArrayList();
+            for (JsonElement value : values) range.add(value.getAsString());
+            return Optional.of(range);
+        }
+        return Optional.absent();
+    }
 
     public static String convertToJsonString(JsonElement json) {
         return JSON.getGson().toJson(json);
     }
 
-    public enum CompileResult {
+    public enum ReturnResult {
         SUCCEED(false),
         ABSENT_VALUE(true),
         WRONG_METRIC_TYPE(true),
@@ -104,7 +155,7 @@ public class MetricHelper {
 
         public boolean isError;
 
-        CompileResult(boolean isError) {
+        ReturnResult(boolean isError) {
             this.isError = isError;
         }
     }

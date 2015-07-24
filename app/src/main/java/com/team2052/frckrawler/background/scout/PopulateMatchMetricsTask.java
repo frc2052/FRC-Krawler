@@ -3,6 +3,7 @@ package com.team2052.frckrawler.background.scout;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.google.common.base.Optional;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
@@ -79,7 +80,9 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         List<MetricWidget> widgets = new ArrayList<>();
 
         for (MetricValue value : mMetricValues) {
-            widgets.add(MetricWidget.createWidget(context, value));
+            final Optional<MetricWidget> widget = MetricWidget.createWidget(context, value);
+            if (widget.isPresent())
+                widgets.add(widget.get());
         }
 
         mFragment.setWidgets(widgets);

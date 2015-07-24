@@ -2,7 +2,6 @@ package com.team2052.frckrawler.database;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
@@ -48,7 +47,7 @@ public class CompiledMetricValue {
                 }
 
                 for (MetricValue metricValue : metricData) {
-                    Tuple2<Boolean, MetricHelper.CompileResult> result = MetricHelper.compileBooleanMetricValue(metricValue);
+                    Tuple2<Boolean, MetricHelper.ReturnResult> result = MetricHelper.compileBooleanMetricValue(metricValue);
 
                     if (result.t2.isError)
                         continue;
@@ -75,7 +74,7 @@ public class CompiledMetricValue {
                 }
 
                 for (MetricValue metricValue : metricData) {
-                    final Tuple2<Integer, MetricHelper.CompileResult> result = MetricHelper.getIntMetricValue(metricValue);
+                    final Tuple2<Integer, MetricHelper.ReturnResult> result = MetricHelper.getIntMetricValue(metricValue);
 
                     if (result.t2.isError)
                         continue;
@@ -99,7 +98,6 @@ public class CompiledMetricValue {
                     compiledVal.put(i, new Tuple2<>(possible_values.get(i).getAsString(), 0.0));
                 }
 
-
                 if (metricData.isEmpty()) {
                     JsonArray values = JSON.getGson().toJsonTree(Tuple2.yieldValues(compiledVal.values()).toArray()).getAsJsonArray();
                     compiledValue.add("names", possible_values);
@@ -109,12 +107,14 @@ public class CompiledMetricValue {
 
 
                 for (MetricValue metricValue : metricData) {
-                    JsonArray values = JSON.getAsJsonObject(metricValue.getValue()).get("values").getAsJsonArray();
+                    final Tuple2<List<Integer>, MetricHelper.ReturnResult> result = MetricHelper.getListIndexMetricValue(metricValue);
 
-                    for (JsonElement element : values) {
-                        int index = element.getAsInt();
-                        compiledVal.put(index, compiledVal.get(index).setT2(compiledVal.get(index).t2 * compileWeight));
-                    }
+                    if (result.t2.isError)
+                        continue;
+
+                    for (Integer index : result.t1)
+                        compiledVal.put(index, compiledVal.get(index).setT2(compiledVal.get(index).t2 + compileWeight));
+
                     denominator += compileWeight;
                 }
 

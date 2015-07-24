@@ -32,6 +32,16 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
         init(context, null, 0);
     }
 
+    public ScrimInsetsFrameLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context, attrs, 0);
+    }
+
+    public ScrimInsetsFrameLayout(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(context, attrs, defStyle);
+    }
+
     private void init(Context context, AttributeSet attrs, int defStyle) {
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScrimInsetsView, defStyle, 0);
         if (a == null) {
@@ -41,16 +51,6 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
         a.recycle();
 
         setWillNotDraw(true);
-    }
-
-    public ScrimInsetsFrameLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context, attrs, 0);
-    }
-
-    public ScrimInsetsFrameLayout(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init(context, attrs, defStyle);
     }
 
     @Override
