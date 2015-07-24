@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.util.MetricUtil.MetricType;
 import com.team2052.frckrawler.util.Tuple2;
 
 import java.lang.reflect.Type;
@@ -35,7 +35,7 @@ public class MetricHelper {
     }
 
     public static Tuple2<Boolean, ReturnResult> compileBooleanMetricValue(MetricValue metricValue) {
-        if (metricValue.getMetric().getType() != MetricUtil.BOOLEAN)
+        if (metricValue.getMetric().getType() != MetricType.BOOLEAN.id)
             return new Tuple2<>(false, ReturnResult.WRONG_METRIC_TYPE);
 
         Optional<JsonElement> optional = getMetricValue(metricValue);
@@ -54,7 +54,7 @@ public class MetricHelper {
     }
 
     public static Tuple2<Integer, ReturnResult> getIntMetricValue(MetricValue metricValue) {
-        if (metricValue.getMetric().getType() != MetricUtil.SLIDER && metricValue.getMetric().getType() != MetricUtil.COUNTER)
+        if (metricValue.getMetric().getType() != MetricType.SLIDER.id && metricValue.getMetric().getType() != MetricType.COUNTER.id)
             return new Tuple2<>(-1, ReturnResult.WRONG_METRIC_TYPE);
 
         final Optional<JsonElement> optional = getMetricValue(metricValue);
@@ -73,7 +73,7 @@ public class MetricHelper {
     }
 
     public static Tuple2<List<Integer>, ReturnResult> getListIndexMetricValue(MetricValue metricValue) {
-        if (metricValue.getMetric().getType() != MetricUtil.CHECK_BOX && metricValue.getMetric().getType() != MetricUtil.CHOOSER)
+        if (metricValue.getMetric().getType() != MetricType.CHECK_BOX.id && metricValue.getMetric().getType() != MetricType.CHOOSER.id)
             return new Tuple2<>(Lists.newArrayList(), ReturnResult.WRONG_METRIC_TYPE);
 
         final Optional<JsonElement> optionalValue = getMetricValue(metricValue);
@@ -125,7 +125,7 @@ public class MetricHelper {
     }
 
     public static Optional<List<String>> getListItemIndexRange(Metric metric) {
-        if (metric.getType() != MetricUtil.CHECK_BOX && metric.getType() != MetricUtil.CHOOSER)
+        if (metric.getType() != MetricType.CHECK_BOX.id && metric.getType() != MetricType.CHOOSER.id)
             return Optional.absent();
 
         final Optional<JsonElement> optionalData = getMetricData(metric);

@@ -6,12 +6,13 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.MetricUtil;
 import com.team2052.frckrawler.util.Tuple2;
 
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
+
+import static com.team2052.frckrawler.util.MetricUtil.MetricType;
 
 /**
  * @author Adam
@@ -20,12 +21,12 @@ public class CompiledMetricValue {
     public static final DecimalFormat format = new DecimalFormat("0.0");
     private final List<MetricValue> metricData;
     private Robot robot;
-    private int metricType;
+    private MetricType metricType;
     private Metric metric;
     private double compileWeight;
     private JsonObject compiledValue = new JsonObject();
 
-    public CompiledMetricValue(Robot robot, Metric metric, List<MetricValue> metricData, int metricType, float compileWeight) {
+    public CompiledMetricValue(Robot robot, Metric metric, List<MetricValue> metricData, MetricType metricType, float compileWeight) {
         this.robot = robot;
         this.metric = metric;
         this.metricData = metricData;
@@ -40,7 +41,7 @@ public class CompiledMetricValue {
         double numerator = 0;
         double denominator = 0;
         switch (metricType) {
-            case MetricUtil.BOOLEAN:
+            case BOOLEAN:
                 if (metricData.isEmpty()) {
                     compiledValue.addProperty("value", 0.0);
                     break;
@@ -66,8 +67,8 @@ public class CompiledMetricValue {
                 compiledValue.addProperty("value", value);
                 break;
             //Do the same for slider and counter
-            case MetricUtil.SLIDER:
-            case MetricUtil.COUNTER:
+            case SLIDER:
+            case COUNTER:
                 if (metricData.isEmpty()) {
                     compiledValue.addProperty("value", 0.0);
                     break;
@@ -89,8 +90,8 @@ public class CompiledMetricValue {
                 value = format.format(numerator / denominator);
                 compiledValue.addProperty("value", value);
                 break;
-            case MetricUtil.CHOOSER:
-            case MetricUtil.CHECK_BOX:
+            case CHOOSER:
+            case CHECK_BOX:
                 JsonArray possible_values = JSON.getAsJsonObject(metric.getData()).get("values").getAsJsonArray();
                 Map<Integer, Tuple2<String, Double>> compiledVal = Maps.newTreeMap();
 
@@ -135,12 +136,12 @@ public class CompiledMetricValue {
 
     public String getCompiledValue() {
         switch (metricType) {
-            case MetricUtil.COUNTER:
-            case MetricUtil.SLIDER:
-            case MetricUtil.BOOLEAN:
+            case COUNTER:
+            case SLIDER:
+            case BOOLEAN:
                 return String.valueOf(compiledValue.get("value").getAsDouble());
-            case MetricUtil.CHOOSER:
-            case MetricUtil.CHECK_BOX:
+            case CHOOSER:
+            case CHECK_BOX:
                 JsonArray names = compiledValue.get("names").getAsJsonArray();
                 JsonArray values = compiledValue.get("values").getAsJsonArray();
                 String value = "";

@@ -32,38 +32,27 @@ public class MetricListElement extends ListElement {
             descriptionString = data.get("description").getAsString();
         }
 
-        switch (metric.getType()) {
-            case MetricUtil.BOOLEAN:
+        switch (MetricUtil.MetricType.values()[metric.getType()]) {
+            case BOOLEAN:
                 typeString = "Boolean";
                 rangeString = "Not Applicable";
                 break;
-            case MetricUtil.COUNTER:
+            case COUNTER:
                 typeString = "Counter";
                 rangeString = data.get("min").getAsString() + " to " + data.get("max").getAsString() + " Incrementing by " + data.get("inc").getAsString();
                 break;
-            case MetricUtil.CHECK_BOX:
-                boolean isFirst = true;
+            case CHECK_BOX:
+            case CHOOSER:
+                StringBuilder sb = new StringBuilder();
+                String comma = "";
                 for (JsonElement value : data.get("values").getAsJsonArray()) {
-                    if (!isFirst) {
-                        rangeString += ", ";
-                    }
-                    isFirst = false;
-                    rangeString += value;
+                    sb.append(comma).append(value.getAsString());
+                    comma = ", ";
                 }
-                typeString = "Check Box";
-                break;
-            case MetricUtil.CHOOSER:
-                isFirst = true;
-                for (JsonElement value : data.get("values").getAsJsonArray()) {
-                    if (!isFirst) {
-                        rangeString += ", ";
-                    }
-                    isFirst = false;
-                    rangeString += value;
-                }
+                rangeString = sb.toString();
                 typeString = "Chooser";
                 break;
-            case MetricUtil.SLIDER:
+            case SLIDER:
                 rangeString = data.get("min").getAsString() + " to " + data.get("max").getAsString();
                 typeString = "Slider";
                 break;

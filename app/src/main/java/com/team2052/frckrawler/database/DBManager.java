@@ -353,8 +353,6 @@ public class DBManager {
             DBManager.this.getRobotEvents().delete(getRobotEvents(model));
             eventDao.delete(model);
         }
-
-
     }
 
     public class MatchComments implements Table<MatchComment> {
@@ -416,8 +414,6 @@ public class DBManager {
         public QueryBuilder<MatchComment> getQueryBuilder() {
             return matchCommentDao.queryBuilder();
         }
-
-
     }
 
     public class PitDatas implements Table<PitData> {
@@ -911,7 +907,5 @@ public class DBManager {
         public QueryBuilder<User> getQueryBuilder() {
             return userDao.queryBuilder();
         }
-
-
     }
 }

@@ -113,9 +113,9 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
                 case 1:
                     return EventsFragment.newInstance(mGame);
                 case 2:
-                    return MetricsGameFragment.newInstance(MetricUtil.MATCH_PERF_METRICS, mGame);
+                    return MetricsGameFragment.newInstance(MetricUtil.MetricCategory.MATCH_PERF_METRICS.id, mGame);
                 case 3:
-                    return MetricsGameFragment.newInstance(MetricUtil.ROBOT_METRICS, mGame);
+                    return MetricsGameFragment.newInstance(MetricUtil.MetricCategory.ROBOT_METRICS.id, mGame);
             }
             return null;
         }

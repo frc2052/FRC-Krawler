@@ -3,6 +3,7 @@ package com.team2052.frckrawler.fragments.metric.dialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -19,7 +20,7 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.util.MetricUtil.MetricType;
 import com.team2052.frckrawler.views.ListEditor;
 
 /**
@@ -47,10 +48,10 @@ public class EditMetricDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mDbSession = DBManager.getInstance(getActivity());
-
         super.onCreate(savedInstanceState);
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mMetric = mDbSession.getMetricsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
@@ -86,22 +87,22 @@ public class EditMetricDialogFragment extends DialogFragment {
     }
 
     public void setupEditor(int type) {
-        switch (type) {
-            case MetricUtil.COUNTER:
+        switch (MetricType.values()[mCurrentSelectedMetricType]) {
+            case COUNTER:
                 mMinimum.setVisibility(View.VISIBLE);
                 mMaximum.setVisibility(View.VISIBLE);
                 mIncrementation.setVisibility(View.VISIBLE);
                 mListEditor.removeAllViews();
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case MetricUtil.SLIDER:
+            case SLIDER:
                 mMinimum.setVisibility(View.VISIBLE);
                 mMaximum.setVisibility(View.VISIBLE);
                 mIncrementation.setVisibility(View.GONE);
                 mListEditor.removeAllViews();
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case MetricUtil.CHOOSER:
+            case CHOOSER:
                 mMinimum.setVisibility(View.GONE);
                 mMaximum.setVisibility(View.INVISIBLE);
                 mIncrementation.setVisibility(View.GONE);
@@ -110,7 +111,7 @@ public class EditMetricDialogFragment extends DialogFragment {
                 mListEditor.addView(list);
                 mListHeader.setVisibility(View.VISIBLE);
                 break;
-            case MetricUtil.CHECK_BOX:
+            case CHECK_BOX:
                 mMinimum.setVisibility(View.GONE);
                 mMaximum.setVisibility(View.INVISIBLE);
                 mIncrementation.setVisibility(View.GONE);
@@ -134,18 +135,18 @@ public class EditMetricDialogFragment extends DialogFragment {
         String description = mDescription.getText().toString();
         JsonObject data = new JsonObject();
         data.addProperty("description", description);
-        switch (mMetric.getType()) {
-            case MetricUtil.BOOLEAN:
+        switch (MetricType.values()[mMetric.getType()]) {
+            case BOOLEAN:
                 break;
-            case MetricUtil.CHOOSER:
-            case MetricUtil.CHECK_BOX:
+            case CHOOSER:
+            case CHECK_BOX:
                 JsonElement values = JSON.getGson().toJsonTree(list.getValues());
                 data.add("values", values);
                 break;
-            case MetricUtil.COUNTER:
+            case COUNTER:
                 int inc = Integer.parseInt(mIncrementation.getText().toString());
                 data.addProperty("inc", inc);
-            case MetricUtil.SLIDER:
+            case SLIDER:
                 int max = Integer.parseInt(mMaximum.getText().toString());
                 int min = Integer.parseInt(mMinimum.getText().toString());
                 data.addProperty("min", min);
@@ -164,18 +165,15 @@ public class EditMetricDialogFragment extends DialogFragment {
         mName.setText(mMetric.getName());
         mDescription.setText(data.get("description").getAsString());
 
-        switch (mMetric.getType()) {
-            case MetricUtil.BOOLEAN:
-                //do nothing
-                break;
-            case MetricUtil.COUNTER:
+        switch (MetricType.values()[mMetric.getType()]) {
+            case COUNTER:
                 mIncrementation.setText(data.get("inc").getAsString());
-            case MetricUtil.SLIDER:
+            case SLIDER:
                 mMinimum.setText(data.get("min").getAsString());
                 mMaximum.setText(data.get("max").getAsString());
                 break;
-            case MetricUtil.CHOOSER:
-            case MetricUtil.CHECK_BOX:
+            case CHOOSER:
+            case CHECK_BOX:
                 JsonArray values = data.get("values").getAsJsonArray();
                 if (list != null) {
                     for (JsonElement element : values) {

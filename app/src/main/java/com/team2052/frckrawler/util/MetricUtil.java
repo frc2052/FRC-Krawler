@@ -4,6 +4,8 @@ package com.team2052.frckrawler.util;
  * Created by adam on 3/28/15.
  */
 
+import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.db.Game;
@@ -17,85 +19,93 @@ import java.util.List;
  * @since 12/21/2014.
  */
 public class MetricUtil {
-    public static final int BOOLEAN = 0;
-    public static final int COUNTER = 1;
-    public static final int SLIDER = 2;
-    public static final int CHOOSER = 3;
-    public static final int CHECK_BOX = 4;
-
-    public static final int MATCH_PERF_METRICS = 0;
-    public static final int ROBOT_METRICS = 1;
-
-    public static Metric createBooleanMetric(Game game, MetricType metricCategory, String name, String description) {
-        JsonObject range = new JsonObject();
-        range.addProperty("description", description);
-        return new Metric(
-                null,
-                name,
-                metricCategory.ordinal(),
-                BOOLEAN,
-                JSON.getGson().toJson(range),
-                game.getId());
-    }
-
-    public static Metric createCounterMetric(Game game, MetricType metricCategory, String name, String description, int min, int max, int incrementation) {
-        JsonObject data = new JsonObject();
-        data.addProperty("description", description);
-        data.addProperty("min", min);
-        data.addProperty("max", max);
-        data.addProperty("inc", incrementation);
-
-        return new Metric(
-                null,
-                name,
-                metricCategory.ordinal(),
-                COUNTER,
-                JSON.getGson().toJson(data),
-                game.getId());
-    }
-
-    public static Metric createSliderMetric(Game game, MetricType metricCategory, String name, String description, int min, int max) {
-        JsonObject data = new JsonObject();
-        data.addProperty("description", description);
-        data.addProperty("min", min);
-        data.addProperty("max", max);
-
-        return new Metric(null, name, metricCategory.ordinal(), SLIDER, JSON.getGson().toJson(data), game.getId());
-    }
-
-    public static Metric createChooserMetric(Game game, MetricType metricCategory, String name, String description, List<String> choices) {
-        JsonObject data = new JsonObject();
-        JsonElement jsonElements = JSON.getGson().toJsonTree(choices);
-        data.addProperty("description", description);
-        data.add("values", jsonElements);
-
-        String str_data = JSON.getGson().toJson(data);
-
-        return new Metric(null, name, metricCategory.ordinal(), CHOOSER, str_data, game.getId());
-    }
-
-    public static Metric createCheckBoxMetric(Game game, MetricType metricCategory, String name, String description, List<String> values) {
-        JsonObject data = new JsonObject();
-        JsonElement jsonElements = JSON.getGson().toJsonTree(values);
-        data.addProperty("description", description);
-        data.add("values", jsonElements);
-
-        String str_data = JSON.getGson().toJson(data);
-
-
-        return new Metric(null,
-                name,
-                metricCategory.ordinal(),
-                CHECK_BOX,
-                str_data,
-                game.getId());
-    }
-
-    @Deprecated
-    public enum MetricType {
+    public enum MetricCategory {
         MATCH_PERF_METRICS, ROBOT_METRICS;
-        public static final MetricType[] VALID_TYPES = values();
+        public int id = ordinal();
     }
 
+    public enum MetricType {
+        BOOLEAN, COUNTER, SLIDER, CHOOSER, CHECK_BOX;
+        public int id = ordinal();
+    }
 
+    public static class MetricFactory {
+        final Game game;
+        MetricCategory metricCategory;
+        MetricType metricType;
+        String name;
+        JsonObject data = new JsonObject();
+
+        public MetricFactory(Game game, String name) {
+            if (game == null || name.isEmpty())
+                throw new IllegalStateException("Couldn't create MetricFactory");
+            this.game = game;
+            this.name = name;
+        }
+
+        public void setMetricType(MetricType metricType) {
+            this.metricType = metricType;
+        }
+
+        public void setMetricCategory(MetricCategory metricCategory) {
+            this.metricCategory = metricCategory;
+        }
+
+        public void setDataListIndexValue(List<String> names) {
+            JsonElement jsonElements = JSON.getGson().toJsonTree(names);
+            data.add("values", jsonElements);
+        }
+
+        public void setDataMinMaxInc(int min, int max, Optional<Integer> inc) {
+            data.addProperty("min", min);
+            data.addProperty("max", max);
+            if (inc.isPresent())
+                data.addProperty("inc", inc.get());
+        }
+
+        public void setDescription(String description) {
+            data.addProperty("description", Strings.nullToEmpty(description));
+        }
+
+        public Metric buildMetric() {
+            //Clean up data if needed
+            if (!data.has("description"))
+                data.addProperty("description", "");
+
+            switch (metricType) {
+                case BOOLEAN:
+                    if (data.has("values"))
+                        data.remove("values");
+                    if (data.has("min"))
+                        data.remove("min");
+                    if (data.has("max"))
+                        data.remove("max");
+                    if (data.has("inc"))
+                        data.remove("inc");
+                    break;
+                case SLIDER:
+                case COUNTER:
+                    if (data.has("values"))
+                        data.remove("values");
+                    break;
+                case CHOOSER:
+                case CHECK_BOX:
+                    if (data.has("min"))
+                        data.remove("min");
+                    if (data.has("max"))
+                        data.remove("max");
+                    if (data.has("inc"))
+                        data.remove("inc");
+                    break;
+            }
+
+            return new Metric(
+                    null,
+                    name,
+                    metricCategory.id,
+                    metricType.id,
+                    JSON.getGson().toJson(data),
+                    game.getId());
+        }
+    }
 }

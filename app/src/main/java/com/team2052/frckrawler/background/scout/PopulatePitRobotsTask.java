@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.ArrayAdapter;
 
+import com.google.common.collect.Lists;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
@@ -38,6 +39,8 @@ public class PopulatePitRobotsTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         mRobots = dbManager.getEventsTable().getRobotEvents(mEvent);
+        if (mRobots == null)
+            mRobots = Lists.newArrayList();
 
         //Sort the robot numbers
         Collections.sort(mRobots, (lhs, rhs) -> Double.compare(dbManager.getRobotEvents().getTeam(lhs).getNumber(), dbManager.getRobotEvents().getTeam(rhs).getNumber()));
@@ -57,6 +60,5 @@ public class PopulatePitRobotsTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         mFragment.mRobots = mRobots;
         mFragment.mTeamSpinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, mRobotListStrings));
-        mFragment.setErrorVisible(false);
     }
 }

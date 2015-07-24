@@ -11,12 +11,14 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.common.base.Optional;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.util.MetricUtil.MetricFactory;
 import com.team2052.frckrawler.views.ListEditor;
 
 /**
@@ -86,67 +88,40 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
         Metric m = null;
         String name = mName.getText().toString();
         String description = mDescription.getText().toString();
-
-        switch (mCurrentSelectedMetricType) {
-            case MetricUtil.BOOLEAN:
-                m = MetricUtil.createBooleanMetric(
-                        mGame,
-                        MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
-                        name,
-                        description);
-                break;
-
-            case MetricUtil.COUNTER:
+        final MetricFactory metricFactory = new MetricFactory(mGame, name);
+        metricFactory.setDescription(description);
+        metricFactory.setMetricCategory(MetricUtil.MetricCategory.values()[mMetricCategory]);
+        metricFactory.setMetricType(MetricUtil.MetricType.values()[mCurrentSelectedMetricType]);
+        switch (MetricUtil.MetricType.values()[mCurrentSelectedMetricType]) {
+            case COUNTER:
                 try {
-                    m = MetricUtil.createCounterMetric(mGame,
-                            MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
-                            name,
-                            description,
+                    metricFactory.setDataMinMaxInc(
                             Integer.parseInt(mMinimum.getText().toString()),
                             Integer.parseInt(mMaximum.getText().toString()),
-                            Integer.parseInt(mIncrementation.getText().toString()));
+                            Optional.of(Integer.parseInt(mIncrementation.getText().toString())));
                 } catch (NumberFormatException e) {
                     Toast.makeText(getActivity(), "Could not create add_button. Make sure you " + "have filled out all of the necessary fields.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 break;
-
-            case MetricUtil.SLIDER:
+            case SLIDER:
                 try {
-                    m = MetricUtil.createSliderMetric(
-                            mGame,
-                            MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
-                            name,
-                            description,
+                    metricFactory.setDataMinMaxInc(
                             Integer.parseInt(mMinimum.getText().toString()),
-                            Integer.parseInt(mMaximum.getText().toString()));
+                            Integer.parseInt(mMaximum.getText().toString()),
+                            Optional.absent());
                 } catch (NumberFormatException e) {
                     Toast.makeText(getActivity(), "Could not create add_button. Make sure you " + "have filled out all of the necessary fields.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 break;
-
-            case MetricUtil.CHOOSER:
-                m = MetricUtil.createChooserMetric(
-                        mGame,
-                        MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
-                        name,
-                        description,
-                        list.getValues());
-                break;
-            case MetricUtil.CHECK_BOX:
-                m = MetricUtil.createCheckBoxMetric(
-                        mGame,
-                        MetricUtil.MetricType.VALID_TYPES[mMetricCategory],
-                        name,
-                        description,
-                        list.getValues());
+            case CHOOSER:
+            case CHECK_BOX:
+                metricFactory.setDataListIndexValue(list.getValues());
                 break;
         }
 
-        if (m != null) {
-            mDBManager.getMetricsTable().insert(m);
-        }
+        mDBManager.getMetricsTable().insert(metricFactory.buildMetric());
         ((ListUpdateListener) getParentFragment()).updateList();
         dismiss();
     }
@@ -154,33 +129,25 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mCurrentSelectedMetricType = position;
-        switch (position) {
-            case MetricUtil.COUNTER:
+        switch (MetricUtil.MetricType.values()[position]) {
+            case COUNTER:
                 mMinimum.setVisibility(View.VISIBLE);
                 mMaximum.setVisibility(View.VISIBLE);
                 mIncrementation.setVisibility(View.VISIBLE);
                 mListEditor.removeAllViews();
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case MetricUtil.SLIDER:
+            case SLIDER:
                 mMinimum.setVisibility(View.VISIBLE);
                 mMaximum.setVisibility(View.VISIBLE);
                 mIncrementation.setVisibility(View.GONE);
                 mListEditor.removeAllViews();
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case MetricUtil.CHOOSER:
+            case CHECK_BOX:
+            case CHOOSER:
                 mMinimum.setVisibility(View.GONE);
-                mMaximum.setVisibility(View.INVISIBLE);
-                mIncrementation.setVisibility(View.GONE);
-                list = new ListEditor(getActivity());
-                mListEditor.removeAllViews();
-                mListEditor.addView(list);
-                mListHeader.setVisibility(View.VISIBLE);
-                break;
-            case MetricUtil.CHECK_BOX:
-                mMinimum.setVisibility(View.GONE);
-                mMaximum.setVisibility(View.INVISIBLE);
+                mMaximum.setVisibility(View.GONE);
                 mIncrementation.setVisibility(View.GONE);
                 list = new ListEditor(getActivity());
                 mListEditor.removeAllViews();

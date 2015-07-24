@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.MetricUtil;
+import com.team2052.frckrawler.util.MetricUtil.MetricType;
 
 public abstract class MetricWidget extends FrameLayout {
 
@@ -31,16 +31,16 @@ public abstract class MetricWidget extends FrameLayout {
         if (m == null)
             return Optional.absent();
 
-        switch (m.getMetric().getType()) {
-            case MetricUtil.BOOLEAN:
+        switch (MetricType.values()[m.getMetric().getType()]) {
+            case BOOLEAN:
                 return Optional.of(new BooleanMetricWidget(c, m));
-            case MetricUtil.CHOOSER:
+            case CHOOSER:
                 return Optional.of(new ChooserMetricWidget(c, m));
-            case MetricUtil.COUNTER:
+            case COUNTER:
                 return Optional.of(new CounterMetricWidget(c, m));
-            case MetricUtil.SLIDER:
+            case SLIDER:
                 return Optional.of(new SliderMetricWidget(c, m));
-            case MetricUtil.CHECK_BOX:
+            case CHECK_BOX:
                 return Optional.of(new CheckBoxMetricWidget(c, m));
             default:
                 return Optional.absent();

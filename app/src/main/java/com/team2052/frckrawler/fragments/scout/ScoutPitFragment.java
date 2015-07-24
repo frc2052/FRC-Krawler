@@ -2,6 +2,8 @@ package com.team2052.frckrawler.fragments.scout;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,16 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
+import com.google.common.collect.Lists;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.background.scout.PopulatePitMetricsTask;
 import com.team2052.frckrawler.background.scout.PopulatePitRobotsTask;
 import com.team2052.frckrawler.background.scout.SavePitMetricsTask;
-import com.team2052.frckrawler.bluetooth.client.LoginHandler;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
@@ -26,7 +26,6 @@ import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.fragments.BaseFragment;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -38,14 +37,16 @@ import de.greenrobot.event.EventBus;
  */
 public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
     public static final String EVENT_ID = "EVENT_ID";
+    public Event mEvent;
+    public List<RobotEvent> mRobots;
     @InjectView(R.id.metricWidgetList)
     public LinearLayout mLinearLayout;
-    public Event mEvent;
-    public Spinner mTeamSpinner;
-    public List<RobotEvent> mRobots;
     @InjectView(R.id.comments)
-    public EditText mComments;
-    SavePitMetricsTask mSaveTask;
+    public TextInputLayout mComments;
+    @InjectView(R.id.robot)
+    public Spinner mTeamSpinner;
+
+    private SavePitMetricsTask mSaveTask;
     private PopulatePitRobotsTask mTask;
 
     public static ScoutPitFragment newInstance(Event event) {
@@ -61,6 +62,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
+        mEvent = mDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
     }
 
     @Override
@@ -72,37 +74,9 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.inject(this, view);
-        mTeamSpinner = (Spinner) view.findViewById(R.id.robot);
         mTeamSpinner.setOnItemSelectedListener(this);
-        loadAllData();
-    }
-
-    private void loadAllData() {
-        mEvent = mDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
-        if (mEvent == null) {
-            setErrorVisible(true);
-            return;
-        }
-
-        if (mTask != null) {
-            mTask.cancel(false);
-        }
-
-
         mTask = new PopulatePitRobotsTask(this, mEvent);
         mTask.execute();
-    }
-
-    public void setErrorVisible(boolean visible) {
-        if (getView() != null) {
-            if (visible) {
-                getView().findViewById(R.id.error_message).setVisibility(View.VISIBLE);
-                getView().findViewById(R.id.scroll_view).setVisibility(View.GONE);
-            } else {
-                getView().findViewById(R.id.error_message).setVisibility(View.GONE);
-                getView().findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
-            }
-        }
     }
 
     @Override
@@ -120,33 +94,35 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
-            if (mTeamSpinner.getSelectedItem() != null) {
-                //Get data from view
-                LoginHandler loginHandler = LoginHandler.getInstance(getActivity(), mDbManager);
-                if (!loginHandler.isLoggedOn() && !loginHandler.loggedOnUserStillExists()) {
-                    loginHandler.login(getActivity());
-                    //TODO AUTO AFTER RELOG
-                    Toast.makeText(getActivity(), "Try to save again", Toast.LENGTH_LONG).show();
-                } else {
-                    save();
-                }
+            if (!mRobots.isEmpty() && mEvent != null && getSelectedRobot() != null) {
+                mSaveTask = new SavePitMetricsTask(
+                        getActivity(),
+                        mEvent,
+                        getSelectedRobot(),
+                        getMetricValues(),
+                        getComment());
+                mSaveTask.execute();
             }
+        } else {
+            Snackbar.make(getView(), getActivity().getString(R.string.something_seems_wrong), Snackbar.LENGTH_SHORT).show();
         }
         return false;
     }
 
-    public void save() {
-        if (mRobots != null && !mRobots.isEmpty()) {
-            Robot robot = mDbManager.getRobotEvents().getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
-            List<MetricValue> widgets = new ArrayList<>();
+    private Robot getSelectedRobot() {
+        return mDbManager.getRobotEvents().getRobot(mRobots.get(mTeamSpinner.getSelectedItemPosition()));
+    }
 
-            for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
-                widgets.add(((MetricWidget) mLinearLayout.getChildAt(i)).getValue());
-            }
-
-            mSaveTask = new SavePitMetricsTask(getActivity(), mEvent, robot, widgets, mComments.getText().toString());
-            mSaveTask.execute();
+    private List<MetricValue> getMetricValues() {
+        List<MetricValue> values = Lists.newArrayList();
+        for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
+            values.add(((MetricWidget) mLinearLayout.getChildAt(i)).getValue());
         }
+        return values;
+    }
+
+    private String getComment() {
+        return mComments.getEditText().getText().toString();
     }
 
     @Override
@@ -156,7 +132,5 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
+    public void onNothingSelected(AdapterView<?> parent) {/*Nope*/}
 }
