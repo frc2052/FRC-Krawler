@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
+import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Metric;
@@ -22,27 +23,27 @@ public abstract class MetricWidget extends FrameLayout {
                 (Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public static MetricWidget createWidget(Context c, Metric m) {
+    public static Optional<MetricWidget> createWidget(Context c, Metric m) {
         return createWidget(c, new MetricValue(m, null));
     }
 
-    public static MetricWidget createWidget(Context c, MetricValue m) {
+    public static Optional<MetricWidget> createWidget(Context c, MetricValue m) {
         if (m == null)
-            return null;
+            return Optional.absent();
 
         switch (m.getMetric().getType()) {
             case MetricUtil.BOOLEAN:
-                return new BooleanMetricWidget(c, m);
+                return Optional.of(new BooleanMetricWidget(c, m));
             case MetricUtil.CHOOSER:
-                return new ChooserMetricWidget(c, m);
+                return Optional.of(new ChooserMetricWidget(c, m));
             case MetricUtil.COUNTER:
-                return new CounterMetricWidget(c, m);
+                return Optional.of(new CounterMetricWidget(c, m));
             case MetricUtil.SLIDER:
-                return new SliderMetricWidget(c, m);
+                return Optional.of(new SliderMetricWidget(c, m));
             case MetricUtil.CHECK_BOX:
-                return new CheckBoxMetricWidget(c, m);
+                return Optional.of(new CheckBoxMetricWidget(c, m));
             default:
-                return null;
+                return Optional.absent();
         }
     }
 

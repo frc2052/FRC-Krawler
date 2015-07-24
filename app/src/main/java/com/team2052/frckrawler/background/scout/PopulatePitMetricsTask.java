@@ -3,6 +3,7 @@ package com.team2052.frckrawler.background.scout;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 
+import com.google.common.base.Optional;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
@@ -62,7 +63,9 @@ public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
         mFragment.mLinearLayout.removeAllViews();
 
         for (MetricValue metric : mMetricWidgets) {
-            mFragment.mLinearLayout.addView(MetricWidget.createWidget(context, metric));
+            final Optional<MetricWidget> widget = MetricWidget.createWidget(context, metric);
+            if (widget.isPresent())
+                mFragment.mLinearLayout.addView(widget.get());
         }
 
         mFragment.mComments.setText(robot.getComments());

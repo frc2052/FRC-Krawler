@@ -5,15 +5,13 @@ import android.support.v7.widget.AppCompatCheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.JsonArray;
+import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
-import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.util.Tuple2;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,41 +28,31 @@ public class CheckBoxMetricWidget extends MetricWidget {
         TextView name = (TextView) findViewById(R.id.name);
         name.setText(m.getMetric().getName());
 
-        JsonObject data = JSON.getAsJsonObject(m.getMetric().getData());
+        final Optional<List<String>> optionalValues = MetricHelper.getListItemIndexRange(m.getMetric());
+        if (!optionalValues.isPresent())
+            throw new IllegalStateException("Couldn't parse values, cannot proceed");
 
+        final List<String> rangeValues = optionalValues.get();
+        final Tuple2<List<Integer>, MetricHelper.ReturnResult> preLoadedValuesResult = MetricHelper.getListIndexMetricValue(m);
 
-        JsonArray values = data.get("values").getAsJsonArray();
-        Type listType = new TypeToken<List<Integer>>() {
-        }.getType();
-
-        List<Integer> array = null;
-        if (m.getValue() != null) {
-            JsonObject value_data = JSON.getAsJsonObject(m.getValue());
-            if (value_data.has("values") && !value_data.get("values").isJsonNull()) {
-                array = JSON.getGson().fromJson(value_data.get("values"), listType);
-            }
-        }
-
-
-        for (int i = 0; i < values.size(); i++) {
-            String value = values.get(i).getAsString();
+        //Add checkboxes and preloaded values
+        for (int i = 0; i < rangeValues.size(); i++) {
+            String value = rangeValues.get(i);
             AppCompatCheckBox checkbox = new AppCompatCheckBox(getContext());
             checkbox.setText(value);
-            if (array != null) {
-                for (Integer integer : array) {
-                    if (i == integer) {
-                        checkbox.setChecked(true);
-                    }
-                }
-            }
+            for (Integer integer : preLoadedValuesResult.t1)
+                if (i == integer) checkbox.setChecked(true);
             this.values.addView(checkbox);
         }
-
     }
 
 
     @Override
     public JsonElement getData() {
+        return MetricHelper.buildListIndexValue(getIndexValues());
+    }
+
+    public List<Integer> getIndexValues() {
         ArrayList<Integer> index_values = new ArrayList<>();
 
         for (int i = 0; i < this.values.getChildCount(); i++) {
@@ -74,10 +62,6 @@ public class CheckBoxMetricWidget extends MetricWidget {
             }
         }
 
-        JsonObject data = new JsonObject();
-        JsonElement values = JSON.getGson().toJsonTree(index_values);
-
-        data.add("values", values);
-        return data;
+        return index_values;
     }
 }

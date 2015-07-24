@@ -27,6 +27,22 @@ public class ListEditor extends FrameLayout {
         init();
     }
 
+    public ListEditor(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public ListEditor(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public ListEditor(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.list_editor, this, true);
         View addButton = findViewById(R.id.list_editor_add);
@@ -54,22 +70,6 @@ public class ListEditor extends FrameLayout {
         ListEditorListItem listEditorListItem = new ListEditorListItem(getContext());
         list.addView(listEditorListItem);
         listEditorListItem.initWithParams(text);
-    }
-
-    public ListEditor(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public ListEditor(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ListEditor(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
     }
 
     public List<String> getValues() {
