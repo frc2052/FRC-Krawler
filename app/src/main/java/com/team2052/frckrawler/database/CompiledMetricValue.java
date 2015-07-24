@@ -12,7 +12,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
-import static com.team2052.frckrawler.util.MetricUtil.MetricType;
+import static com.team2052.frckrawler.database.MetricHelper.MetricType;
 
 /**
  * @author Adam

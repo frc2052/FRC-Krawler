@@ -13,7 +13,7 @@ import com.team2052.frckrawler.tba.JSON;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.team2052.frckrawler.util.MetricUtil.MetricType;
+import static com.team2052.frckrawler.database.MetricHelper.MetricType;
 
 /**
  * Created by Adam on 6/11/2015.

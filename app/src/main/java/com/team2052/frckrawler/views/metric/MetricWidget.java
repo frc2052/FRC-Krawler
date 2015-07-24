@@ -6,10 +6,10 @@ import android.widget.FrameLayout;
 
 import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
+import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.MetricUtil.MetricType;
 
 public abstract class MetricWidget extends FrameLayout {
 
@@ -31,7 +31,7 @@ public abstract class MetricWidget extends FrameLayout {
         if (m == null)
             return Optional.absent();
 
-        switch (MetricType.values()[m.getMetric().getType()]) {
+        switch (MetricHelper.MetricType.values()[m.getMetric().getType()]) {
             case BOOLEAN:
                 return Optional.of(new BooleanMetricWidget(c, m));
             case CHOOSER:

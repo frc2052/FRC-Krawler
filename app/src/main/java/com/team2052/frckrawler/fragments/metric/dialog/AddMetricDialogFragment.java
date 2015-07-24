@@ -14,11 +14,11 @@ import android.widget.Toast;
 import com.google.common.base.Optional;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.MetricHelper;
+import com.team2052.frckrawler.database.MetricHelper.MetricFactory;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
-import com.team2052.frckrawler.util.MetricUtil;
-import com.team2052.frckrawler.util.MetricUtil.MetricFactory;
 import com.team2052.frckrawler.views.ListEditor;
 
 /**
@@ -90,9 +90,9 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
         String description = mDescription.getText().toString();
         final MetricFactory metricFactory = new MetricFactory(mGame, name);
         metricFactory.setDescription(description);
-        metricFactory.setMetricCategory(MetricUtil.MetricCategory.values()[mMetricCategory]);
-        metricFactory.setMetricType(MetricUtil.MetricType.values()[mCurrentSelectedMetricType]);
-        switch (MetricUtil.MetricType.values()[mCurrentSelectedMetricType]) {
+        metricFactory.setMetricCategory(MetricHelper.MetricCategory.values()[mMetricCategory]);
+        metricFactory.setMetricType(MetricHelper.MetricType.values()[mCurrentSelectedMetricType]);
+        switch (MetricHelper.MetricType.values()[mCurrentSelectedMetricType]) {
             case COUNTER:
                 try {
                     metricFactory.setDataMinMaxInc(
@@ -129,7 +129,7 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mCurrentSelectedMetricType = position;
-        switch (MetricUtil.MetricType.values()[position]) {
+        switch (MetricHelper.MetricType.values()[position]) {
             case COUNTER:
                 mMinimum.setVisibility(View.VISIBLE);
                 mMaximum.setVisibility(View.VISIBLE);

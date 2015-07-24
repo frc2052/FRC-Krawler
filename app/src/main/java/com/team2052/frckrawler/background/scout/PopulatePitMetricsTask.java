@@ -5,13 +5,13 @@ import android.support.v4.app.FragmentActivity;
 
 import com.google.common.base.Optional;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
-import com.team2052.frckrawler.util.MetricUtil.MetricCategory;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         mMetricWidgets = new ArrayList<>();
 
-        List<Metric> metrics = mDBManager.getMetricsTable().query(MetricCategory.ROBOT_METRICS.id, null, mEvent.getGame_id()).list();
+        List<Metric> metrics = mDBManager.getMetricsTable().query(MetricHelper.MetricCategory.ROBOT_METRICS.id, null, mEvent.getGame_id()).list();
         List<PitData> pitDatas = mDBManager.getPitDataTable().query(robot.getId(), null, mEvent.getId(), null).list();
 
         if (pitDatas.size() == metrics.size()) {

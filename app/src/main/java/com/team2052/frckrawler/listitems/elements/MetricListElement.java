@@ -9,10 +9,10 @@ import com.google.common.base.Strings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.MetricUtil;
 
 /**
  * @author Adam
@@ -32,7 +32,7 @@ public class MetricListElement extends ListElement {
             descriptionString = data.get("description").getAsString();
         }
 
-        switch (MetricUtil.MetricType.values()[metric.getType()]) {
+        switch (MetricHelper.MetricType.values()[metric.getType()]) {
             case BOOLEAN:
                 typeString = "Boolean";
                 rangeString = "Not Applicable";

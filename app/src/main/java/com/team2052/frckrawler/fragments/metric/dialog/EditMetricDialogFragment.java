@@ -17,10 +17,10 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.MetricUtil.MetricType;
 import com.team2052.frckrawler.views.ListEditor;
 
 /**
@@ -87,7 +87,7 @@ public class EditMetricDialogFragment extends DialogFragment {
     }
 
     public void setupEditor(int type) {
-        switch (MetricType.values()[mCurrentSelectedMetricType]) {
+        switch (MetricHelper.MetricType.values()[mCurrentSelectedMetricType]) {
             case COUNTER:
                 mMinimum.setVisibility(View.VISIBLE);
                 mMaximum.setVisibility(View.VISIBLE);
@@ -135,7 +135,7 @@ public class EditMetricDialogFragment extends DialogFragment {
         String description = mDescription.getText().toString();
         JsonObject data = new JsonObject();
         data.addProperty("description", description);
-        switch (MetricType.values()[mMetric.getType()]) {
+        switch (MetricHelper.MetricType.values()[mMetric.getType()]) {
             case BOOLEAN:
                 break;
             case CHOOSER:
@@ -165,7 +165,7 @@ public class EditMetricDialogFragment extends DialogFragment {
         mName.setText(mMetric.getName());
         mDescription.setText(data.get("description").getAsString());
 
-        switch (MetricType.values()[mMetric.getType()]) {
+        switch (MetricHelper.MetricType.values()[mMetric.getType()]) {
             case COUNTER:
                 mIncrementation.setText(data.get("inc").getAsString());
             case SLIDER:

@@ -14,11 +14,11 @@ import android.view.ViewGroup;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.background.DeleteGameTask;
+import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.databinding.FragmentGameInfoBinding;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragments.BaseFragment;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
-import com.team2052.frckrawler.util.MetricUtil.MetricCategory;
 import com.team2052.frckrawler.util.Util;
 
 /**
@@ -124,8 +124,8 @@ public class GameInfoFragment extends BaseFragment implements ListUpdateListener
 
         @Override
         protected Void doInBackground(Void... params) {
-            numOfMatchMetrics = mDbManager.getMetricsTable().getNumberOfMetrics(mGame, MetricCategory.MATCH_PERF_METRICS.id);
-            numOfPitMetrics = mDbManager.getMetricsTable().getNumberOfMetrics(mGame, MetricCategory.ROBOT_METRICS.id);
+            numOfMatchMetrics = mDbManager.getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.MetricCategory.MATCH_PERF_METRICS.id);
+            numOfPitMetrics = mDbManager.getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.MetricCategory.ROBOT_METRICS.id);
             mGame.resetEventList();
             mGame.resetRobotList();
             numOfEvents = mGame.getEventList().size();

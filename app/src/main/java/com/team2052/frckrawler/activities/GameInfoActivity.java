@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.InstanceFragmentStatePagerAdapter;
+import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.databinding.LayoutTabFabBinding;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragments.event.EventsFragment;
@@ -19,7 +20,6 @@ import com.team2052.frckrawler.fragments.game.GameInfoFragment;
 import com.team2052.frckrawler.fragments.game.MetricsGameFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
-import com.team2052.frckrawler.util.MetricUtil;
 
 /**
  * @author Adam
@@ -113,9 +113,9 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
                 case 1:
                     return EventsFragment.newInstance(mGame);
                 case 2:
-                    return MetricsGameFragment.newInstance(MetricUtil.MetricCategory.MATCH_PERF_METRICS.id, mGame);
+                    return MetricsGameFragment.newInstance(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, mGame);
                 case 3:
-                    return MetricsGameFragment.newInstance(MetricUtil.MetricCategory.ROBOT_METRICS.id, mGame);
+                    return MetricsGameFragment.newInstance(MetricHelper.MetricCategory.ROBOT_METRICS.id, mGame);
             }
             return null;
         }

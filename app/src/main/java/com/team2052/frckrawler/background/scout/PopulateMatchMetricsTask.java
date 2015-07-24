@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.google.common.base.Optional;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchComment;
@@ -12,7 +13,6 @@ import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
-import com.team2052.frckrawler.util.MetricUtil.MetricCategory;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import org.antlr.v4.runtime.misc.NotNull;
@@ -55,7 +55,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
         final QueryBuilder<MatchComment> matchCommentQueryBuilder = mDbManager.getMatchComments().query(match_num, game_type, robot.getId(), event.getId());
 
-        final QueryBuilder<Metric> metricQueryBuilder = mDbManager.getMetricsTable().query(MetricCategory.MATCH_PERF_METRICS.id, null, event.getGame_id());
+        final QueryBuilder<Metric> metricQueryBuilder = mDbManager.getMetricsTable().query(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, null, event.getGame_id());
 
         mDbManager.runInTx(() -> {
 
