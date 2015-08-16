@@ -2,7 +2,6 @@ package com.team2052.frckrawler.views;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
@@ -47,22 +46,16 @@ public class ListEditor extends FrameLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.list_editor, this, true);
         View addButton = findViewById(R.id.list_editor_add);
         list = (LinearLayout) findViewById(R.id.list_editor_list);
-        addButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final TextView t = new EditText(ListEditor.this.getContext());
-                AlertDialog.Builder builder = new AlertDialog.Builder(ListEditor.this.getContext());
-                builder.setTitle("Add List Item");
-                builder.setView(t);
-                builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ListEditor.this.addListItem(t.getText().toString());
-                    }
-                });
-                builder.setNegativeButton("Cancel", null);
-                builder.show();
-            }
+        addButton.setOnClickListener(v -> {
+            final TextView t = new EditText(ListEditor.this.getContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(ListEditor.this.getContext());
+            builder.setTitle("Add List Item");
+            builder.setView(t);
+            builder.setPositiveButton("Add", (dialog, which) -> {
+                ListEditor.this.addListItem(t.getText().toString());
+            });
+            builder.setNegativeButton("Cancel", null);
+            builder.show();
         });
     }
 
@@ -112,12 +105,7 @@ public class ListEditor extends FrameLayout {
             textView = (TextView) findViewById(android.R.id.text1);
             textView.setText(text);
 
-            findViewById(R.id.list_editor_remove).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    list.removeViewAt(ListEditorListItem.this.getIndex());
-                }
-            });
+            findViewById(R.id.list_editor_remove).setOnClickListener(v -> list.removeViewAt(ListEditorListItem.this.getIndex()));
         }
 
         public int getIndex() {

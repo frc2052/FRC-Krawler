@@ -13,20 +13,20 @@ import java.util.List;
  * @author Adam
  * @since 12/18/2014.
  */
-public class LoginHandler {
-    public static volatile LoginHandler instance;
+public class UserSessionHandler {
+    public static volatile UserSessionHandler instance;
     private final Context context;
     private DBManager daoSession;
     private User loggedOnUser = null;
 
-    private LoginHandler(Context context, DBManager daoSession) {
+    private UserSessionHandler(Context context, DBManager daoSession) {
         this.context = context;
         this.daoSession = daoSession;
     }
 
-    public static LoginHandler getInstance(Context context, DBManager daoSession) {
-        if (instance == null) synchronized (LoginHandler.class) {
-            if (instance == null) instance = new LoginHandler(context, daoSession);
+    public static UserSessionHandler getInstance(Context context, DBManager daoSession) {
+        if (instance == null) synchronized (UserSessionHandler.class) {
+            if (instance == null) instance = new UserSessionHandler(context, daoSession);
         }
         return instance;
     }

@@ -4,18 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.widget.ListView;
 
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.CompiledMetricValue;
 import com.team2052.frckrawler.database.MetricCompiler;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListItem;
+import com.team2052.frckrawler.listitems.elements.CompiledMetricListElement;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -23,6 +26,7 @@ import java.util.List;
  */
 public class SummaryDataActivity extends BaseActivity {
     public static String EVENT_ID = "EVENT_ID";
+    private ListView mListView;
     private Event mEvent;
     private Metric mMetric;
 
@@ -36,12 +40,16 @@ public class SummaryDataActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        useActionBarToggle();
+        setContentView(R.layout.activity_list_view);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        mListView = (ListView) findViewById(R.id.list_layout);
         mEvent = mDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
         mMetric = mDbManager.getMetricsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
-        if (getActionBar() != null) {
-            setActionBarTitle(getString(R.string.Summary));
-            setActionBarSubtitle(mMetric.getName());
-        }
+        setActionBarTitle(getString(R.string.Summary));
+        setActionBarSubtitle(mMetric.getName());
         new GetCompiledData().execute();
     }
 
@@ -64,17 +72,12 @@ public class SummaryDataActivity extends BaseActivity {
         protected void onPostExecute(List<CompiledMetricValue> compiledMetricValues) {
             List<ListItem> listItems = new ArrayList<>();
 
-            Collections.sort(compiledMetricValues, new Comparator<CompiledMetricValue>() {
-                @Override
-                public int compare(CompiledMetricValue cmv, CompiledMetricValue cmv1) {
-                    return Double.compare(cmv.getRobot().getTeam_id(), cmv1.getRobot().getTeam_id());
-                }
-            });
+            Collections.sort(compiledMetricValues, (cmv, cmv1) -> Double.compare(cmv.getRobot().getTeam_id(), cmv1.getRobot().getTeam_id()));
 
-            /*for (CompiledMetricValue metricValue : compiledMetricValues) {
+            for (CompiledMetricValue metricValue : compiledMetricValues) {
                 listItems.add(new CompiledMetricListElement(metricValue));
-            }*/
-            //mListView.setMetricAdapter(mAdapter = new ListViewAdapter(SummaryDataActivity.this, listItems));
+            }
+            mListView.setAdapter(new ListViewAdapter(SummaryDataActivity.this, listItems));
         }
     }
 }

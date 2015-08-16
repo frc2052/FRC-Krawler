@@ -142,7 +142,7 @@ public class NavigationDrawerFragment extends Fragment {
         if (!scoutPrefs.getBoolean(GlobalValues.IS_SCOUT_PREF, false)) {
             NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, getActivity().getString(R.string.server), R.drawable.ic_bluetooth_black_24dp));
             NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, getActivity().getString(R.string.teams), R.drawable.ic_group_black_24dp));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, getActivity().getString(R.string.users), R.drawable.ic_person_black_24dp));
+            //TODO: NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, getActivity().getString(R.string.users), R.drawable.ic_person_black_24dp));
             NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, getActivity().getString(R.string.games), R.drawable.ic_games_black_24dp));
         }
 
