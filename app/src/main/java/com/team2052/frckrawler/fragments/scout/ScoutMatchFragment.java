@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -146,6 +147,16 @@ public class ScoutMatchFragment extends BaseFragment {
                     mComments.setError("You had one job");
                 }
             }
+        });
+        mRobotAutoComplete.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!(mRobots.size() < position))
+                    selectedRobot = mRobots.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {/*NOOP*/}
         });
         mPopulateTask = new PopulateMatchScoutTask(this, mEvent);
         mPopulateTask.execute();

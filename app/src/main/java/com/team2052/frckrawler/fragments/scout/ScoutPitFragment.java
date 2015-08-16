@@ -100,7 +100,8 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
                         mEvent,
                         getSelectedRobot(),
                         getMetricValues(),
-                        getComment());
+                        getComment(),
+                        null);
                 mSaveTask.execute();
             }
         } else {

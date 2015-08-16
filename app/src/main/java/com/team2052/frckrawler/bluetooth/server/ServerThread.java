@@ -9,16 +9,17 @@ import android.util.Log;
 import com.team2052.frckrawler.bluetooth.BluetoothInfo;
 import com.team2052.frckrawler.bluetooth.ServerPackage;
 import com.team2052.frckrawler.bluetooth.client.ScoutPackage;
+import com.team2052.frckrawler.bluetooth.server.events.ServerStateChangeEvent;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.util.BluetoothUtil;
-
-import org.acra.ACRA;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.UUID;
+
+import de.greenrobot.event.EventBus;
 
 public class ServerThread extends Thread {
 
@@ -51,7 +52,6 @@ public class ServerThread extends Thread {
                 serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
             } catch (IOException e) {
                 e.printStackTrace();
-                ACRA.getErrorReporter().handleException(e);
             }
 
             if (serverSocket != null) {
@@ -76,7 +76,6 @@ public class ServerThread extends Thread {
                         fromScoutStream = new ObjectInputStream(clientSocket.getInputStream());
                     } catch (IOException e) {
                         e.printStackTrace();
-                        ACRA.getErrorReporter().handleException(e);
                     }
 
 
@@ -87,7 +86,6 @@ public class ServerThread extends Thread {
                             connection_type = BluetoothInfo.ConnectionType.VALID_CONNECTION_TYPES[fromScoutStream.readInt()];
                         } catch (IOException e) {
                             e.printStackTrace();
-                            ACRA.getErrorReporter().handleException(e);
                         }
 
                         if (connection_type != null) {
@@ -101,7 +99,6 @@ public class ServerThread extends Thread {
                                         serverPackage = (ServerPackage) fromScoutStream.readObject();
                                     } catch (ClassNotFoundException | IOException e) {
                                         e.printStackTrace();
-                                        ACRA.getErrorReporter().handleException(e);
                                     }
 
                                     if (serverPackage != null) {
@@ -129,7 +126,6 @@ public class ServerThread extends Thread {
                                         clientSocket.close();
                                     } catch (IOException e) {
                                         e.printStackTrace();
-                                        ACRA.getErrorReporter().handleException(e);
                                     }
                                 }
                             }
@@ -139,6 +135,7 @@ public class ServerThread extends Thread {
             }
         }
         Log.d(TAG, "Server Closed");
+        EventBus.getDefault().post(new ServerStateChangeEvent(null, false));
     }
 
     public void closeServer() {

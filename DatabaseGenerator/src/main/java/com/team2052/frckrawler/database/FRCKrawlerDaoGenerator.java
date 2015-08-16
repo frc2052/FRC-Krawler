@@ -27,7 +27,7 @@ public class FRCKrawlerDaoGenerator {
         Property pit_data_robot_id = pitData.addLongProperty("robot_id").notNull().getProperty();
         Property pit_data_metric_id = pitData.addLongProperty("metric_id").notNull().getProperty();
         Property pit_data_event_id = pitData.addLongProperty("event_id").notNull().getProperty();
-        Property pit_data_user_id = pitData.addLongProperty("user_id").notNull().getProperty();
+        Property pit_data_user_id = pitData.addLongProperty("user_id").getProperty();
         pitData.addStringProperty("data");
 
         Entity matchComment = schema.addEntity("MatchComment");

@@ -19,7 +19,7 @@ public abstract class ListIndexMetricWidget extends MetricWidget {
     /**
      * @return the values that are valid for compiling ex if a checkbox is checked the index value of that checkbox should be in the list.
      */
-    abstract List<Integer> getIndexValues();
+    public abstract List<Integer> getIndexValues();
 
     @Override
     public JsonElement getData() {

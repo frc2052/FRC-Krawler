@@ -4,12 +4,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.team2052.frckrawler.bluetooth.client.LoginHandler;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.User;
 
 import java.util.List;
 
@@ -20,16 +20,18 @@ import java.util.List;
 public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
 
     private final DBManager mDaoSession;
+    private final User user;
     private Context context;
     private Event mEvent;
     private Robot robot;
     private List<MetricValue> metricValues;
     private String comment;
 
-    public SavePitMetricsTask(Context context, Event event, Robot robot, List<MetricValue> metricValues, String comment) {
+    public SavePitMetricsTask(Context context, Event event, Robot robot, List<MetricValue> metricValues, String comment, User user) {
         this.context = context;
         this.mEvent = event;
         this.robot = robot;
+        this.user = user;
         this.metricValues = metricValues;
         this.comment = comment;
         this.mDaoSession = DBManager.getInstance(context);
@@ -43,7 +45,7 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
                     robot.getId(),
                     widget.getMetric().getId(),
                     mEvent.getId(),
-                    LoginHandler.getInstance(context, mDaoSession).getLoggedOnUser().getId(),
+                    user != null ? user.getId() : null,
                     widget.getValue());
             mDaoSession.getPitDataTable().insert(pitData);
         }

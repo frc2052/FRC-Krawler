@@ -2,7 +2,6 @@ package com.team2052.frckrawler.views;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
@@ -106,12 +105,7 @@ public class ListEditor extends FrameLayout {
             textView = (TextView) findViewById(android.R.id.text1);
             textView.setText(text);
 
-            findViewById(R.id.list_editor_remove).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    list.removeViewAt(ListEditorListItem.this.getIndex());
-                }
-            });
+            findViewById(R.id.list_editor_remove).setOnClickListener(v -> list.removeViewAt(ListEditorListItem.this.getIndex()));
         }
 
         public int getIndex() {

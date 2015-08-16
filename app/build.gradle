@@ -2,9 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.android.databinding'
 apply plugin: 'me.tatarka.retrolambda'
 
-
-def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
-
 android {
     compileSdkVersion 22
     buildToolsVersion '23.0.0 rc3'
@@ -17,7 +14,6 @@ android {
     }
     buildTypes {
         debug {
-            versionNameSuffix "/#" + gitSha
             applicationIdSuffix '.development'
         }
         release {
@@ -59,7 +55,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:support-annotations:22.2.1'
-    compile 'ch.acra:acra:4.5.0'
     compile 'com.melnykov:floatingactionbutton:1.2.0'
     compile 'com.google.guava:guava:18.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.0'
