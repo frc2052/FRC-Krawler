@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.views.metric;
+package com.team2052.frckrawler.views.metric.impl;
 
 import android.content.Context;
 import android.view.View;
@@ -6,27 +6,28 @@ import android.view.View.OnClickListener;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
-import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.views.metric.MetricWidget;
 
 public class BooleanMetricWidget extends MetricWidget implements OnClickListener {
     boolean value = false;
 
     public BooleanMetricWidget(Context context, MetricValue m) {
-
         super(context, m);
         inflater.inflate(R.layout.widget_metric_boolean, this);
         ((TextView) findViewById(R.id.name)).setText(m.getMetric().getName());
         findViewById(R.id.yes).setOnClickListener(this);
         findViewById(R.id.no).setOnClickListener(this);
 
-        if (m.getValue() != null)
-            value = JSON.getAsJsonObject(m.getValue()).get("value").getAsBoolean();
-
-        setValue(value);
+        final Optional<Boolean> optionalValue = MetricHelper.getBooleanValue(m);
+        if (optionalValue.isPresent())
+            setValue(optionalValue.get());
+        else
+            setValue(false);
     }
 
     public void setValue(boolean value) {

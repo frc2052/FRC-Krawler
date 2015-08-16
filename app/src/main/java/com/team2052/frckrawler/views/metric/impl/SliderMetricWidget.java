@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.views.metric;
+package com.team2052.frckrawler.views.metric.impl;
 
 import android.content.Context;
 import android.widget.SeekBar;
@@ -7,8 +7,10 @@ import android.widget.TextView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.views.metric.MetricWidget;
 
 public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBarChangeListener {
 
@@ -69,9 +71,7 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
 
     @Override
     public JsonElement getData() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("value", value);
-        return jsonObject;
+        return MetricHelper.buildIntMetricValue(value);
     }
 
 

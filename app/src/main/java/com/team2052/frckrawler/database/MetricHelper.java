@@ -96,6 +96,12 @@ public class MetricHelper {
         return json;
     }
 
+    public static JsonObject buildIntMetricValue(int value) {
+        JsonObject data = new JsonObject();
+        data.addProperty("value", value);
+        return data;
+    }
+
     public static JsonObject buildListIndexValue(List<Integer> index_data) {
         JsonObject data = new JsonObject();
         JsonElement values = JSON.getGson().toJsonTree(index_data);

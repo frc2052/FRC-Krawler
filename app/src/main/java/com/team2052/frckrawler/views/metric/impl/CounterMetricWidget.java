@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.views.metric;
+package com.team2052.frckrawler.views.metric.impl;
 
 import android.content.Context;
 import android.view.View;
@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.views.metric.MetricWidget;
 
 
 public class CounterMetricWidget extends MetricWidget implements OnClickListener {

@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.views.metric;
+package com.team2052.frckrawler.views.metric.impl;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -11,6 +11,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.util.Tuple2;
+import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class CheckBoxMetricWidget extends MetricWidget {
 
         final Optional<List<String>> optionalValues = MetricHelper.getListItemIndexRange(m.getMetric());
         if (!optionalValues.isPresent())
-            throw new IllegalStateException("Couldn't parse values, cannot proceed");
+            throw new IllegalStateException("Couldn't parse range values, cannot proceed");
 
         final List<String> rangeValues = optionalValues.get();
         final Tuple2<List<Integer>, MetricHelper.ReturnResult> preLoadedValuesResult = MetricHelper.getListIndexMetricValue(m);

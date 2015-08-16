@@ -10,6 +10,11 @@ import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.views.metric.impl.BooleanMetricWidget;
+import com.team2052.frckrawler.views.metric.impl.CheckBoxMetricWidget;
+import com.team2052.frckrawler.views.metric.impl.ChooserMetricWidget;
+import com.team2052.frckrawler.views.metric.impl.CounterMetricWidget;
+import com.team2052.frckrawler.views.metric.impl.SliderMetricWidget;
 
 public abstract class MetricWidget extends FrameLayout {
 

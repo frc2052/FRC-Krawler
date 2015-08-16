@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.views.metric;
+package com.team2052.frckrawler.views.metric.impl;
 
 import android.content.Context;
 import android.view.View;
@@ -10,15 +10,15 @@ import android.widget.TextView;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.google.gson.JsonElement;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.util.Tuple2;
+import com.team2052.frckrawler.views.metric.ListIndexMetricWidget;
 
 import java.util.List;
 
-public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedListener {
+public class ChooserMetricWidget extends ListIndexMetricWidget implements OnItemSelectedListener {
 
     private final Spinner chooserSpinner;
     int value;
@@ -59,7 +59,7 @@ public class ChooserMetricWidget extends MetricWidget implements OnItemSelectedL
     }
 
     @Override
-    public JsonElement getData() {
-        return MetricHelper.buildListIndexValue(Lists.newArrayList(value));
+    public List<Integer> getIndexValues() {
+        return Lists.newArrayList(value);
     }
 }
