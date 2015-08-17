@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextAppearance.AppCompat.Headline"
+                        android:text="Options"
+                        android:paddingLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <CheckBox
+                        android:id="@+id/team_names_export"
+                        android:layout_marginTop="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Include Team Names" />
+
+                    <CheckBox
+                        android:id="@+id/tba_links_export"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Include TBA Links" />
+
+                    <CheckBox
+                        android:id="@+id/pit_metrics_export"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pit Metrics" />
+
+                    <CheckBox
+                        android:id="@+id/match_metrics_export"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Match Metrics" />
+
+
+                    <CheckBox
+                        android:id="@+id/robot_comments_export"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Robot Comments" />
+
+                    <CheckBox
+                        android:id="@+id/match_comments_export"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Match Comments" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+</layout>

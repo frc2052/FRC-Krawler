@@ -7,6 +7,8 @@ public class MetricValue {
     private String value;
 
     public MetricValue(Metric metric, String value) {
+        if(metric == null)
+            throw new IllegalStateException("Metric cannot be null");
         this.metric = metric;
         this.value = value;
     }

@@ -1,12 +1,14 @@
 package com.team2052.frckrawler.db;
 
 import java.util.List;
+import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
+import de.greenrobot.dao.internal.SqlUtils;
 import de.greenrobot.dao.internal.DaoConfig;
 import de.greenrobot.dao.query.Query;
 import de.greenrobot.dao.query.QueryBuilder;
@@ -36,6 +38,8 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         public final static Property Data = new Property(7, String.class, "data", false, "DATA");
     };
 
+    private DaoSession daoSession;
+
     private Query<MatchData> event_MatchDataListQuery;
     private Query<MatchData> robot_MatchDataListQuery;
     private Query<MatchData> metric_MatchDataListQuery;
@@ -47,6 +51,7 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
     
     public MatchDataDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -93,6 +98,12 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         if (data != null) {
             stmt.bindString(8, data);
         }
+    }
+
+    @Override
+    protected void attachEntity(MatchData entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */
@@ -209,4 +220,122 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
+    protected String getSelectDeep() {
+        if (selectDeep == null) {
+            StringBuilder builder = new StringBuilder("SELECT ");
+            SqlUtils.appendColumns(builder, "T", getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T0", daoSession.getEventDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T1", daoSession.getRobotDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T2", daoSession.getUserDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T3", daoSession.getMetricDao().getAllColumns());
+            builder.append(" FROM MATCH_DATA T");
+            builder.append(" LEFT JOIN EVENT T0 ON T.'EVENT_ID'=T0.'_id'");
+            builder.append(" LEFT JOIN ROBOT T1 ON T.'ROBOT_ID'=T1.'_id'");
+            builder.append(" LEFT JOIN USER T2 ON T.'USER_ID'=T2.'_id'");
+            builder.append(" LEFT JOIN METRIC T3 ON T.'METRIC_ID'=T3.'_id'");
+            builder.append(' ');
+            selectDeep = builder.toString();
+        }
+        return selectDeep;
+    }
+    
+    protected MatchData loadCurrentDeep(Cursor cursor, boolean lock) {
+        MatchData entity = loadCurrent(cursor, 0, lock);
+        int offset = getAllColumns().length;
+
+        Event event = loadCurrentOther(daoSession.getEventDao(), cursor, offset);
+         if(event != null) {
+            entity.setEvent(event);
+        }
+        offset += daoSession.getEventDao().getAllColumns().length;
+
+        Robot robot = loadCurrentOther(daoSession.getRobotDao(), cursor, offset);
+         if(robot != null) {
+            entity.setRobot(robot);
+        }
+        offset += daoSession.getRobotDao().getAllColumns().length;
+
+        User user = loadCurrentOther(daoSession.getUserDao(), cursor, offset);
+        entity.setUser(user);
+        offset += daoSession.getUserDao().getAllColumns().length;
+
+        Metric metric = loadCurrentOther(daoSession.getMetricDao(), cursor, offset);
+         if(metric != null) {
+            entity.setMetric(metric);
+        }
+
+        return entity;    
+    }
+
+    public MatchData loadDeep(Long key) {
+        assertSinglePk();
+        if (key == null) {
+            return null;
+        }
+
+        StringBuilder builder = new StringBuilder(getSelectDeep());
+        builder.append("WHERE ");
+        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
+        String sql = builder.toString();
+        
+        String[] keyArray = new String[] { key.toString() };
+        Cursor cursor = db.rawQuery(sql, keyArray);
+        
+        try {
+            boolean available = cursor.moveToFirst();
+            if (!available) {
+                return null;
+            } else if (!cursor.isLast()) {
+                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
+            }
+            return loadCurrentDeep(cursor, true);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
+    public List<MatchData> loadAllDeepFromCursor(Cursor cursor) {
+        int count = cursor.getCount();
+        List<MatchData> list = new ArrayList<MatchData>(count);
+        
+        if (cursor.moveToFirst()) {
+            if (identityScope != null) {
+                identityScope.lock();
+                identityScope.reserveRoom(count);
+            }
+            try {
+                do {
+                    list.add(loadCurrentDeep(cursor, false));
+                } while (cursor.moveToNext());
+            } finally {
+                if (identityScope != null) {
+                    identityScope.unlock();
+                }
+            }
+        }
+        return list;
+    }
+    
+    protected List<MatchData> loadDeepAllAndCloseCursor(Cursor cursor) {
+        try {
+            return loadAllDeepFromCursor(cursor);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+
+    /** A raw-style query where you can pass any WHERE clause and arguments. */
+    public List<MatchData> queryDeep(String where, String... selectionArg) {
+        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
+        return loadDeepAllAndCloseCursor(cursor);
+    }
+ 
 }

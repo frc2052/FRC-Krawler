@@ -62,13 +62,13 @@ public class ScoutUtil {
     public static void setSyncDevice(Context context, BluetoothDevice device) {
         SharedPreferences prefs = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString(GlobalValues.MAC_ADRESS_PREF, device.getAddress());
+        prefsEditor.putString(GlobalValues.MAC_ADDRESS_PREF, device.getAddress());
         prefsEditor.apply();
     }
 
     public static BluetoothDevice getSyncDevice(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
-        String address = prefs.getString(GlobalValues.MAC_ADRESS_PREF, "null");
+        String address = prefs.getString(GlobalValues.MAC_ADDRESS_PREF, "null");
         if (address.equals("null")) {
             return null;
         }
@@ -87,7 +87,7 @@ public class ScoutUtil {
     public static void resetSyncDevice(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString(GlobalValues.MAC_ADRESS_PREF, "null");
+        prefsEditor.putString(GlobalValues.MAC_ADDRESS_PREF, "null");
         prefsEditor.apply();
     }
 }

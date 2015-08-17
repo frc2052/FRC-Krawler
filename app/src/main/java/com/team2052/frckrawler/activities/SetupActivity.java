@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
@@ -32,13 +34,16 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     protected View welcomeNextButton;
     @InjectView(R.id.bluetooth_next_page)
     protected View bluetoothNextButton;
-    @InjectView(R.id.server_button)
-    protected View serverButton;
-    @InjectView(R.id.scout_button)
-    protected View scoutButton;
+    @InjectView(R.id.enable_bluetooth_button)
+    protected Button enableBluetoothButton;
+    @InjectView(R.id.scout_card)
+    protected CardView scoutCard;
+    @InjectView(R.id.server_card)
+    protected CardView serverCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
 
         if (sharedPreferences.getBoolean(PREF_SETUP, false)) {
@@ -50,11 +55,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         ButterKnife.inject(this);
         setupViews();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
-        }
-
-        super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary));
     }
 
     private void setupViews() {
@@ -65,10 +67,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
 
         //Setup on clicks
-        scoutButton.setOnClickListener(this);
-        serverButton.setOnClickListener(this);
+        scoutCard.setOnClickListener(this);
+        serverCard.setOnClickListener(this);
         welcomeNextButton.setOnClickListener(this);
         bluetoothNextButton.setOnClickListener(this);
+        enableBluetoothButton.setOnClickListener(this);
     }
 
     @Override
@@ -82,26 +85,19 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     pager.goToNextPage();
                 }
                 break;
-            case R.id.scout_button:
-                //TODO FINISH SETUP SCOUT
-                //This is not finished, allow the tester to use the app after this screen
-                setupFinished();
-                break;
-            case R.id.server_button:
-                //TODO FINISH SETUP SERVER
-                //This is not finished, allow the tester to use the app after this screen
-                setupFinished();
-                break;
             case R.id.bluetooth_next_page:
+            case R.id.enable_bluetooth_button:
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
                 break;
-
+            case R.id.server_card:
+            case R.id.scout_card:
+                setupFinished();
+                break;
         }
     }
 
     public void setupFinished() {
-
         SharedPreferences preferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         SharedPreferences.Editor edit = preferences.edit();
         edit.putBoolean(PREF_SETUP, true);

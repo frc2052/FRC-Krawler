@@ -29,7 +29,7 @@ public class ExportUtil {
         List<Metric> metrics = game.getMetricList();
         List<Robot> robots = dbManager.getEventsTable().getRobots(event);
 
-        //Sort Robots
+        //Sort Robots by team number
         Collections.sort(robots, (lhs, rhs) -> Double.compare(lhs.getTeam_id(), rhs.getTeam_id()));
 
         try {
