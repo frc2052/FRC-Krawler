@@ -41,7 +41,7 @@
     <string name="welcome_message">Before you can you can use the app. The app needs to get setup.\nClick \"Next\" when you are ready.</string>
     <string name="server_description">The Server is known as the \"Master Tablet\". All the data from the scouters get synced to this device. Data is compiled, shared, and viewed on this device.</string>
     <string name="scouter_description">The Scouter receives data from matches and the pits. Data is synced from this device to the \"Master Tablet\". Data is saved until you sync, but then is deleted after it has synced to the \"Master Tablet\"</string>
-    <string name="enable_bluetooth_message">First, you need to enable your Bluetooth.</string>
+    <string name="enable_bluetooth_message">First, you need to enable Bluetooth.</string>
     <string name="bluetooth_message">Enable Bluetooth on your device. Bluetooth must be kept on at all times when the server is on and or scouting.</string>
     <string name="sync_error_message">There was an error in syncing with the server. Check if the server is on.</string>
     <string name="sync_error_title">Sync Error</string>

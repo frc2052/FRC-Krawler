@@ -56,7 +56,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         setupViews();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            getWindow().setStatusBarColor(getResources().getColor(R.color.primary));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
     }
 
     private void setupViews() {
