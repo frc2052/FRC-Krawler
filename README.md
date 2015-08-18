@@ -2,7 +2,7 @@
 
 <img src="https://raw.githubusercontent.com/frc2052/FRC-Krawler/master/art/logoformarketing.jpg" width="64"> [![Google Play](http://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=com.team2052.frckrawler&hl=en)
 
-FRC Krawler is a *FIRST* Robotics Scouting App by Team2052 KnightKrawler.
+FRC Krawler is a *FIRST* Robotics Scouting App by Team 2052 KnightKrawler.
 
 # Project Management/Contributing
 ### Keeping up to date
