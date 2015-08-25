@@ -8,9 +8,9 @@ android {
     defaultConfig {
         applicationId 'com.team2052.frckrawler'
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 21
-        versionName "2.2"
+        versionName "3.0"
     }
     buildTypes {
         debug {
