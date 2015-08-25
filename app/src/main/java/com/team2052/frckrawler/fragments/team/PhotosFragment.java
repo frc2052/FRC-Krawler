@@ -34,7 +34,7 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 /**
  * Not in use anymore.
@@ -47,7 +47,7 @@ import butterknife.InjectView;
 public class PhotosFragment extends BaseFragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int RESULT_LOAD_IMAGE = 2;
-    @InjectView(R.id.gridview)
+    @Bind(R.id.gridview)
     GridView mGridview;
     private String mCurrentPhotoPath;
     private Robot mRobot;
@@ -65,7 +65,7 @@ public class PhotosFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_grid_photos, null);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         mRobot = null; //mDbManager.getDaoSession().getRobotDao().load(getArguments().getLong(BaseActivity.PARENT_ID, 0));
         new GetRobotPhotosTask().execute();
         return view;

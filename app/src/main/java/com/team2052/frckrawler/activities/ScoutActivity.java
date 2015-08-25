@@ -12,8 +12,8 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by adam on 5/2/15.
@@ -25,7 +25,7 @@ public class ScoutActivity extends BaseActivity {
     public static final int PRACTICE_MATCH_SCOUT_TYPE = 2;
     private static final String SCOUT_TYPE_EXTRA = "com.team2052.frckrawler.SCOUT_TYPE_EXTRA";
     private static final String EVENT_ID_EXTRA = "com.team2052.frckrawler.EVENT_ID_EXTRA";
-    @InjectView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
     private Fragment fragment;
 
@@ -42,7 +42,7 @@ public class ScoutActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         Event event = mDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID_EXTRA, 0));
         setContentView(R.layout.activity_scout);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
 

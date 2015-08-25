@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 /**
  * @author Adam
@@ -44,16 +44,16 @@ public class ScoutMatchFragment extends BaseFragment {
 
     public static final String LOG_TAG = "ScoutMatchFragment";
 
-    @InjectView(R.id.match_number_input)
+    @Bind(R.id.match_number_input)
     public TextInputLayout mMatchNumberInput;
 
-    @InjectView(R.id.metric_widget_list)
+    @Bind(R.id.metric_widget_list)
     public LinearLayout mMetricList;
 
-    @InjectView(R.id.comments)
+    @Bind(R.id.comments)
     public TextInputLayout mComments;
 
-    @InjectView(R.id.robot)
+    @Bind(R.id.robot)
     public Spinner mRobotAutoComplete;
 
     public Robot selectedRobot;
@@ -95,7 +95,7 @@ public class ScoutMatchFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         mMatchNumberInput.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -17,13 +17,13 @@ import com.team2052.frckrawler.fragments.team.TeamsFragment;
 import com.team2052.frckrawler.fragments.user.UsersFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class HomeActivity extends BaseActivity {
     private static final String REQUESTED_MODE = "requested_mode";
     private static final String STATE_SELECTED_NAV_ID = "selected_navigation_drawer_position";
-    @InjectView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
     private int mCurrentSelectedNavigationItemId;
     private boolean mFromSavedInstanceState = false;
@@ -80,7 +80,7 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
 

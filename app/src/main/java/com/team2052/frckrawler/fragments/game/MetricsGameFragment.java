@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import de.greenrobot.dao.query.QueryBuilder;
 
 /**
@@ -34,7 +34,7 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class MetricsGameFragment extends BaseFragment implements FABButtonListener, ListUpdateListener {
     private static final String CATEGORY_EXTRA = "CATEGORY_EXTRA";
     private static final String GAME_ID = "GAME_ID";
-    @InjectView(R.id.list_layout)
+    @Bind(R.id.list_layout)
     ListView mListView;
     private Game mGame;
     private int mCategory;
@@ -58,7 +58,7 @@ public class MetricsGameFragment extends BaseFragment implements FABButtonListen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         mListView.setOnItemClickListener((parent, view1, position, id) -> {
             long metric_id = Long.parseLong(((MetricListElement) ((ListViewAdapter) parent.getAdapter()).getItem(position)).getKey());
             Metric metric = mDbManager.getMetricsTable().load(metric_id);

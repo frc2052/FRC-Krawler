@@ -12,15 +12,15 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.views.SlidingTabLayout;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 /**
  * @author Adam
  */
 public abstract class ViewPagerFragment extends BaseFragment {
-    @InjectView(R.id.tabs)
+    @Bind(R.id.tabs)
     protected SlidingTabLayout mTabs;
-    @InjectView(R.id.pager)
+    @Bind(R.id.pager)
     protected ViewPager mViewPager;
 
     @Override
@@ -31,7 +31,7 @@ public abstract class ViewPagerFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         mTabs.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
         mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.color_accent));
         mViewPager.setAdapter(setAdapter());

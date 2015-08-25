@@ -18,7 +18,7 @@ import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.views.DisableSwipeViewPager;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 /**
  * @author Adam
@@ -28,17 +28,17 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     public static final String PREF_SETUP = "PREF_LOADED";
     private static final int REQUEST_ENABLE_BT = 1;
     private static final String LOG_TAG = "SetupActivity";
-    @InjectView(R.id.view_pager)
+    @Bind(R.id.view_pager)
     protected DisableSwipeViewPager pager;
-    @InjectView(R.id.welcome_next_page)
+    @Bind(R.id.welcome_next_page)
     protected View welcomeNextButton;
-    @InjectView(R.id.bluetooth_next_page)
+    @Bind(R.id.bluetooth_next_page)
     protected View bluetoothNextButton;
-    @InjectView(R.id.enable_bluetooth_button)
+    @Bind(R.id.enable_bluetooth_button)
     protected Button enableBluetoothButton;
-    @InjectView(R.id.scout_card)
+    @Bind(R.id.scout_card)
     protected CardView scoutCard;
-    @InjectView(R.id.server_card)
+    @Bind(R.id.server_card)
     protected CardView serverCard;
 
     @Override
@@ -52,7 +52,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         }
 
         setContentView(R.layout.activity_setup);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         setupViews();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)

@@ -23,13 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class GamesFragment extends BaseFragment implements ListUpdateListener {
-    @InjectView(R.id.list_layout)
+    @Bind(R.id.list_layout)
     protected ListView mListView;
 
-    @InjectView(R.id.fab)
+    @Bind(R.id.fab)
     protected FloatingActionButton mFab;
 
     @Nullable
@@ -41,7 +41,7 @@ public class GamesFragment extends BaseFragment implements ListUpdateListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         mListView.setOnItemClickListener((adapterView, view1, i, l) -> {
             long gameId = Long.parseLong(((ListElement) adapterView.getAdapter().getItem(i)).getKey());

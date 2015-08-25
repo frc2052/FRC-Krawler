@@ -29,7 +29,7 @@ import com.team2052.frckrawler.views.metric.MetricWidget;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -39,11 +39,11 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     public static final String EVENT_ID = "EVENT_ID";
     public Event mEvent;
     public List<RobotEvent> mRobots;
-    @InjectView(R.id.metricWidgetList)
+    @Bind(R.id.metricWidgetList)
     public LinearLayout mLinearLayout;
-    @InjectView(R.id.comments)
+    @Bind(R.id.comments)
     public TextInputLayout mComments;
-    @InjectView(R.id.robot)
+    @Bind(R.id.robot)
     public Spinner mTeamSpinner;
 
     private SavePitMetricsTask mSaveTask;
@@ -73,7 +73,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         mTeamSpinner.setOnItemSelectedListener(this);
         mTask = new PopulatePitRobotsTask(this, mEvent);
         mTask.execute();

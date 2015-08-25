@@ -13,7 +13,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 /**
  * @author Adam
@@ -21,10 +21,10 @@ import butterknife.InjectView;
  */
 @Deprecated
 public abstract class ListFragmentFab extends BaseFragment implements ListUpdateListener {
-    @InjectView(R.id.list_layout)
+    @Bind(R.id.list_layout)
     protected ListView mListView;
 
-    @InjectView(R.id.fab)
+    @Bind(R.id.fab)
     protected FloatingActionButton mFab;
 
     protected ListAdapter mAdapter;
@@ -39,7 +39,7 @@ public abstract class ListFragmentFab extends BaseFragment implements ListUpdate
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.list_view_fab, null);
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
         preUpdateList();
         if (mAdapter != null) {
             mListView.setAdapter(mAdapter);

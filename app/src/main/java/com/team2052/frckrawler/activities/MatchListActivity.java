@@ -20,16 +20,16 @@ import com.team2052.frckrawler.listitems.items.MatchListItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * @author Adam
  */
 public class MatchListActivity extends BaseActivity {
-    @InjectView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
-    @InjectView(R.id.list)
+    @Bind(R.id.list)
     ListView mListView;
     private Event mEvent;
     private ListViewAdapter mAdapter;
@@ -44,7 +44,7 @@ public class MatchListActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_view_list);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         mEvent = mDbManager.getEventsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
 
