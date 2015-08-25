@@ -41,7 +41,7 @@ import com.team2052.frckrawler.db.RobotPhotoDao;
 
 /**
  * {@inheritDoc}
- * 
+ *
  * @see de.greenrobot.dao.AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
@@ -145,7 +145,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(Team.class, teamDao);
         registerDao(RobotPhoto.class, robotPhotoDao);
     }
-    
+
     public void clear() {
         matchDataDaoConfig.getIdentityScope().clear();
         pitDataDaoConfig.getIdentityScope().clear();
