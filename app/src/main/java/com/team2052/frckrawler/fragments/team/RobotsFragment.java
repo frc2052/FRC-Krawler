@@ -8,7 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
@@ -71,7 +70,7 @@ public class RobotsFragment extends ListFragment {
         if (mViewType == 1) {
             Event event = mDbManager.getEventsTable().load(mKey);
             if (event != null) {
-                if (event.getFmsid() == null) {
+                if (event.getFmsid() == null || !event.getFmsid().equals("null")) {
                     setHasOptionsMenu(true);
                 }
             }
@@ -98,12 +97,7 @@ public class RobotsFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                getActivity().startActivity(RobotActivity.newInstance(getActivity(), Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey())));
-            }
-        });
+        mListView.setOnItemClickListener((parent, view1, position, id) -> getActivity().startActivity(RobotActivity.newInstance(getActivity(), Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()))));
         return view;
     }
 
@@ -117,7 +111,7 @@ public class RobotsFragment extends ListFragment {
 
         @Override
         protected List<Robot> doInBackground(Void... params) {
-            WhereCondition condition = null;
+            WhereCondition condition;
             List<Robot> robots;
             if (mViewType == 0) {
                 condition = RobotDao.Properties.Team_id.eq(mKey);
@@ -137,7 +131,7 @@ public class RobotsFragment extends ListFragment {
 
         @Override
         protected void onPostExecute(List<Robot> robots) {
-            if (robots.size() == 0) {
+            if (robots.isEmpty()) {
                 showError(true);
                 return;
             }

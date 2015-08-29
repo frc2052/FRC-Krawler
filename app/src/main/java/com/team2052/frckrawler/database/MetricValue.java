@@ -1,12 +1,13 @@
 package com.team2052.frckrawler.database;
 
+import com.google.gson.JsonElement;
 import com.team2052.frckrawler.db.Metric;
 
 public class MetricValue {
     private Metric metric;
-    private String value;
+    private JsonElement value;
 
-    public MetricValue(Metric metric, String value) {
+    public MetricValue(Metric metric, JsonElement value) {
         if(metric == null)
             throw new IllegalStateException("Metric cannot be null");
         this.metric = metric;
@@ -17,7 +18,7 @@ public class MetricValue {
         return metric;
     }
 
-    public String getValue() {
+    public JsonElement getValue() {
         return value;
     }
 

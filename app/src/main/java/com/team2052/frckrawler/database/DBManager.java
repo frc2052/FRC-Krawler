@@ -7,8 +7,6 @@ import android.support.annotation.Nullable;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.team2052.frckrawler.db.Contact;
-import com.team2052.frckrawler.db.ContactDao;
 import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
@@ -61,7 +59,6 @@ public class DBManager {
     private final PitDatas mPitDatas;
     private final Matches mMatches;
     private final Teams mTeams;
-    private final Contacts mContacts;
     private final Users mUsers;
 
     private final MatchDataDao matchDataDao;
@@ -71,7 +68,6 @@ public class DBManager {
     private final RobotEventDao robotEventDao;
     private final MatchDao matchDao;
     private final MetricDao metricDao;
-    private final ContactDao contactDao;
     private final RobotPhotoDao robotPhotoDao;
     private final UserDao userDao;
     private final RobotDao robotDao;
@@ -99,7 +95,6 @@ public class DBManager {
         robotEventDao = daoSession.getRobotEventDao();
         matchDao = daoSession.getMatchDao();
         metricDao = daoSession.getMetricDao();
-        contactDao = daoSession.getContactDao();
         teamDao = daoSession.getTeamDao();
         robotPhotoDao = daoSession.getRobotPhotoDao();
         userDao = daoSession.getUserDao();
@@ -117,7 +112,6 @@ public class DBManager {
         mPitDatas = new PitDatas();
         mMatches = new Matches();
         mTeams = new Teams();
-        mContacts = new Contacts();
         mUsers = new Users();
     }
 
@@ -140,7 +134,6 @@ public class DBManager {
         robotEventDao.deleteAll();
         matchDao.deleteAll();
         metricDao.deleteAll();
-        contactDao.deleteAll();
         robotPhotoDao.deleteAll();
         userDao.deleteAll();
         robotDao.deleteAll();
@@ -185,10 +178,6 @@ public class DBManager {
 
     public Teams getTeamsTable() {
         return mTeams;
-    }
-
-    public Contacts getContactsTable() {
-        return mContacts;
     }
 
     public Users getUsersTable() {
@@ -488,7 +477,7 @@ public class DBManager {
             matchDataQueryBuilder.where(MatchDataDao.Properties.Metric_id.eq(matchData.getMetric_id()));
             matchDataQueryBuilder.where(MatchDataDao.Properties.Match_number.eq(matchData.getMatch_number()));
             matchDataQueryBuilder.where(MatchDataDao.Properties.Event_id.eq(matchData.getEvent_id()));
-            matchDataQueryBuilder.where(MatchDataDao.Properties.Game_type.eq(matchData.getGame_type()));
+            matchDataQueryBuilder.where(MatchDataDao.Properties.Match_type.eq(matchData.getMatch_type()));
 
             long count = matchDataQueryBuilder.count();
 
@@ -503,7 +492,7 @@ public class DBManager {
             }
         }
 
-        public QueryBuilder<MatchData> query(Long robotId, Long metricId, Integer match_number, Integer game_type, Long eventId, Long userId) {
+        public QueryBuilder<MatchData> query(Long robotId, Long metricId, Integer match_number, Integer match_type, Long eventId, Long userId) {
             QueryBuilder<MatchData> matchDataQueryBuilder = getQueryBuilder();
             if (robotId != null)
                 matchDataQueryBuilder.where(MatchDataDao.Properties.Robot_id.eq(robotId));
@@ -511,8 +500,8 @@ public class DBManager {
                 matchDataQueryBuilder.where(MatchDataDao.Properties.Metric_id.eq(metricId));
             if (match_number != null)
                 matchDataQueryBuilder.where(MatchDataDao.Properties.Match_number.eq(match_number));
-            if (game_type != null)
-                matchDataQueryBuilder.where(MatchDataDao.Properties.Game_type.eq(game_type));
+            if (match_type != null)
+                matchDataQueryBuilder.where(MatchDataDao.Properties.Match_type.eq(match_type));
             if (eventId != null)
                 matchDataQueryBuilder.where(MatchDataDao.Properties.Event_id.eq(eventId));
             if (userId != null)
@@ -848,30 +837,6 @@ public class DBManager {
         @Override
         public QueryBuilder<Team> getQueryBuilder() {
             return teamDao.queryBuilder();
-        }
-    }
-
-    public class Contacts implements Table<Contact> {
-        @Override
-        public Contact load(long id) {
-            return contactDao.load(id);
-        }
-
-        @Override
-        public void delete(Contact contact) {
-            contactDao.delete(contact);
-        }
-
-        @Override
-        public void delete(List<Contact> models) {
-            for (Contact model : models) {
-                delete(model);
-            }
-        }
-
-        @Override
-        public QueryBuilder<Contact> getQueryBuilder() {
-            return contactDao.queryBuilder();
         }
     }
 

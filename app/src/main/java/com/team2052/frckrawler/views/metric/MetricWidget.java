@@ -9,7 +9,6 @@ import com.google.gson.JsonElement;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.views.metric.impl.BooleanMetricWidget;
 import com.team2052.frckrawler.views.metric.impl.CheckBoxMetricWidget;
 import com.team2052.frckrawler.views.metric.impl.ChooserMetricWidget;
@@ -53,7 +52,7 @@ public abstract class MetricWidget extends FrameLayout {
     }
 
     public MetricValue getValue() {
-        return new MetricValue(getMetric(), JSON.getGson().toJson(getData()));
+        return new MetricValue(getMetric(), getData());
     }
 
     public Metric getMetric() {

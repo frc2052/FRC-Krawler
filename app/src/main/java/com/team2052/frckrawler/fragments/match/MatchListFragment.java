@@ -25,7 +25,6 @@ import java.util.List;
 public class MatchListFragment extends ListFragment {
 
     private Event mEvent;
-    private List<Match> mMatches;
 
     public static MatchListFragment newInstance(Event event) {
         MatchListFragment fragment = new MatchListFragment();
@@ -76,7 +75,6 @@ public class MatchListFragment extends ListFragment {
 
         @Override
         protected void onPostExecute(List<Match> matches) {
-            mMatches = matches;
             if (matches.size() == 0) {
                 showError(true);
                 return;

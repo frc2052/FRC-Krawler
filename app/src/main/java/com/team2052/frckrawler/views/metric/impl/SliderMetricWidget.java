@@ -34,8 +34,8 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
         min = range.get("min").getAsInt();
         max = range.get("max").getAsInt();
 
-        if (m.getValue() != null && !m.getValue().equals(""))
-            value = JSON.getAsJsonObject(m.getValue()).get("value").getAsInt();
+        if (m.getValue() != null && !m.getValue().getAsJsonObject().get("value").isJsonNull())
+            value = m.getValue().getAsJsonObject().get("value").getAsInt();
         else
             value = min;
 

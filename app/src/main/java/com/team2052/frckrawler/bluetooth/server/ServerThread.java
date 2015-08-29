@@ -45,7 +45,7 @@ public class ServerThread extends Thread {
     @Override
     public void run() {
         Log.d(TAG, "Server Open");
-        String deviceName = "device";
+        String deviceName;
         isOpen = true;
         while (isOpen) {
             try {

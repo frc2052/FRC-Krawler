@@ -12,7 +12,6 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.databinding.LayoutTabFabBinding;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.fragments.scout.NeedSyncFragment;
-import com.team2052.frckrawler.fragments.team.ContactsFragment;
 import com.team2052.frckrawler.fragments.team.RobotsFragment;
 
 /**
@@ -58,9 +57,6 @@ public class TeamInfoActivity extends BaseActivity {
                     break;
                 case 1:
                     fragment = RobotsFragment.newInstance(mTeam);
-                    break;
-                case 2:
-                    fragment = ContactsFragment.newInstance(mTeam);
                     break;
             }
             return fragment;

@@ -37,7 +37,7 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
         increment = o.get("inc").getAsInt();
 
         if (m.getValue() != null)
-            value = JSON.getAsJsonObject(m.getValue()).get("value").getAsInt();
+            value = m.getValue().getAsJsonObject().get("value").getAsInt();
         else
             value = min;
 

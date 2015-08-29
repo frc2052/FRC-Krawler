@@ -48,7 +48,6 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
         }
 
         setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setActionBarTitle("Game");
         setActionBarSubtitle(mGame.getName());
 

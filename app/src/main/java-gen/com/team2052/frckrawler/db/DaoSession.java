@@ -9,31 +9,29 @@ import de.greenrobot.dao.AbstractDaoSession;
 import de.greenrobot.dao.identityscope.IdentityScopeType;
 import de.greenrobot.dao.internal.DaoConfig;
 
-import com.team2052.frckrawler.db.MatchData;
-import com.team2052.frckrawler.db.PitData;
-import com.team2052.frckrawler.db.MatchComment;
-import com.team2052.frckrawler.db.RobotEvent;
-import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.db.Contact;
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.User;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchComment;
+import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.db.RobotPhoto;
 
-import com.team2052.frckrawler.db.MatchDataDao;
-import com.team2052.frckrawler.db.PitDataDao;
-import com.team2052.frckrawler.db.MatchCommentDao;
-import com.team2052.frckrawler.db.RobotEventDao;
-import com.team2052.frckrawler.db.MatchDao;
-import com.team2052.frckrawler.db.EventDao;
-import com.team2052.frckrawler.db.RobotDao;
-import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.GameDao;
-import com.team2052.frckrawler.db.ContactDao;
+import com.team2052.frckrawler.db.EventDao;
 import com.team2052.frckrawler.db.UserDao;
+import com.team2052.frckrawler.db.MetricDao;
+import com.team2052.frckrawler.db.MatchDao;
+import com.team2052.frckrawler.db.MatchDataDao;
+import com.team2052.frckrawler.db.MatchCommentDao;
+import com.team2052.frckrawler.db.RobotDao;
+import com.team2052.frckrawler.db.RobotEventDao;
+import com.team2052.frckrawler.db.PitDataDao;
 import com.team2052.frckrawler.db.TeamDao;
 import com.team2052.frckrawler.db.RobotPhotoDao;
 
@@ -41,36 +39,34 @@ import com.team2052.frckrawler.db.RobotPhotoDao;
 
 /**
  * {@inheritDoc}
- *
+ * 
  * @see de.greenrobot.dao.AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
 
-    private final DaoConfig matchDataDaoConfig;
-    private final DaoConfig pitDataDaoConfig;
-    private final DaoConfig matchCommentDaoConfig;
-    private final DaoConfig robotEventDaoConfig;
-    private final DaoConfig matchDaoConfig;
-    private final DaoConfig eventDaoConfig;
-    private final DaoConfig robotDaoConfig;
-    private final DaoConfig metricDaoConfig;
     private final DaoConfig gameDaoConfig;
-    private final DaoConfig contactDaoConfig;
+    private final DaoConfig eventDaoConfig;
     private final DaoConfig userDaoConfig;
+    private final DaoConfig metricDaoConfig;
+    private final DaoConfig matchDaoConfig;
+    private final DaoConfig matchDataDaoConfig;
+    private final DaoConfig matchCommentDaoConfig;
+    private final DaoConfig robotDaoConfig;
+    private final DaoConfig robotEventDaoConfig;
+    private final DaoConfig pitDataDaoConfig;
     private final DaoConfig teamDaoConfig;
     private final DaoConfig robotPhotoDaoConfig;
 
-    private final MatchDataDao matchDataDao;
-    private final PitDataDao pitDataDao;
-    private final MatchCommentDao matchCommentDao;
-    private final RobotEventDao robotEventDao;
-    private final MatchDao matchDao;
-    private final EventDao eventDao;
-    private final RobotDao robotDao;
-    private final MetricDao metricDao;
     private final GameDao gameDao;
-    private final ContactDao contactDao;
+    private final EventDao eventDao;
     private final UserDao userDao;
+    private final MetricDao metricDao;
+    private final MatchDao matchDao;
+    private final MatchDataDao matchDataDao;
+    private final MatchCommentDao matchCommentDao;
+    private final RobotDao robotDao;
+    private final RobotEventDao robotEventDao;
+    private final PitDataDao pitDataDao;
     private final TeamDao teamDao;
     private final RobotPhotoDao robotPhotoDao;
 
@@ -78,38 +74,35 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
-        matchDataDaoConfig = daoConfigMap.get(MatchDataDao.class).clone();
-        matchDataDaoConfig.initIdentityScope(type);
-
-        pitDataDaoConfig = daoConfigMap.get(PitDataDao.class).clone();
-        pitDataDaoConfig.initIdentityScope(type);
-
-        matchCommentDaoConfig = daoConfigMap.get(MatchCommentDao.class).clone();
-        matchCommentDaoConfig.initIdentityScope(type);
-
-        robotEventDaoConfig = daoConfigMap.get(RobotEventDao.class).clone();
-        robotEventDaoConfig.initIdentityScope(type);
-
-        matchDaoConfig = daoConfigMap.get(MatchDao.class).clone();
-        matchDaoConfig.initIdentityScope(type);
+        gameDaoConfig = daoConfigMap.get(GameDao.class).clone();
+        gameDaoConfig.initIdentityScope(type);
 
         eventDaoConfig = daoConfigMap.get(EventDao.class).clone();
         eventDaoConfig.initIdentityScope(type);
 
-        robotDaoConfig = daoConfigMap.get(RobotDao.class).clone();
-        robotDaoConfig.initIdentityScope(type);
+        userDaoConfig = daoConfigMap.get(UserDao.class).clone();
+        userDaoConfig.initIdentityScope(type);
 
         metricDaoConfig = daoConfigMap.get(MetricDao.class).clone();
         metricDaoConfig.initIdentityScope(type);
 
-        gameDaoConfig = daoConfigMap.get(GameDao.class).clone();
-        gameDaoConfig.initIdentityScope(type);
+        matchDaoConfig = daoConfigMap.get(MatchDao.class).clone();
+        matchDaoConfig.initIdentityScope(type);
 
-        contactDaoConfig = daoConfigMap.get(ContactDao.class).clone();
-        contactDaoConfig.initIdentityScope(type);
+        matchDataDaoConfig = daoConfigMap.get(MatchDataDao.class).clone();
+        matchDataDaoConfig.initIdentityScope(type);
 
-        userDaoConfig = daoConfigMap.get(UserDao.class).clone();
-        userDaoConfig.initIdentityScope(type);
+        matchCommentDaoConfig = daoConfigMap.get(MatchCommentDao.class).clone();
+        matchCommentDaoConfig.initIdentityScope(type);
+
+        robotDaoConfig = daoConfigMap.get(RobotDao.class).clone();
+        robotDaoConfig.initIdentityScope(type);
+
+        robotEventDaoConfig = daoConfigMap.get(RobotEventDao.class).clone();
+        robotEventDaoConfig.initIdentityScope(type);
+
+        pitDataDaoConfig = daoConfigMap.get(PitDataDao.class).clone();
+        pitDataDaoConfig.initIdentityScope(type);
 
         teamDaoConfig = daoConfigMap.get(TeamDao.class).clone();
         teamDaoConfig.initIdentityScope(type);
@@ -117,93 +110,86 @@ public class DaoSession extends AbstractDaoSession {
         robotPhotoDaoConfig = daoConfigMap.get(RobotPhotoDao.class).clone();
         robotPhotoDaoConfig.initIdentityScope(type);
 
-        matchDataDao = new MatchDataDao(matchDataDaoConfig, this);
-        pitDataDao = new PitDataDao(pitDataDaoConfig, this);
-        matchCommentDao = new MatchCommentDao(matchCommentDaoConfig, this);
-        robotEventDao = new RobotEventDao(robotEventDaoConfig, this);
-        matchDao = new MatchDao(matchDaoConfig, this);
-        eventDao = new EventDao(eventDaoConfig, this);
-        robotDao = new RobotDao(robotDaoConfig, this);
-        metricDao = new MetricDao(metricDaoConfig, this);
         gameDao = new GameDao(gameDaoConfig, this);
-        contactDao = new ContactDao(contactDaoConfig, this);
+        eventDao = new EventDao(eventDaoConfig, this);
         userDao = new UserDao(userDaoConfig, this);
+        metricDao = new MetricDao(metricDaoConfig, this);
+        matchDao = new MatchDao(matchDaoConfig, this);
+        matchDataDao = new MatchDataDao(matchDataDaoConfig, this);
+        matchCommentDao = new MatchCommentDao(matchCommentDaoConfig, this);
+        robotDao = new RobotDao(robotDaoConfig, this);
+        robotEventDao = new RobotEventDao(robotEventDaoConfig, this);
+        pitDataDao = new PitDataDao(pitDataDaoConfig, this);
         teamDao = new TeamDao(teamDaoConfig, this);
         robotPhotoDao = new RobotPhotoDao(robotPhotoDaoConfig, this);
 
-        registerDao(MatchData.class, matchDataDao);
-        registerDao(PitData.class, pitDataDao);
-        registerDao(MatchComment.class, matchCommentDao);
-        registerDao(RobotEvent.class, robotEventDao);
-        registerDao(Match.class, matchDao);
-        registerDao(Event.class, eventDao);
-        registerDao(Robot.class, robotDao);
-        registerDao(Metric.class, metricDao);
         registerDao(Game.class, gameDao);
-        registerDao(Contact.class, contactDao);
+        registerDao(Event.class, eventDao);
         registerDao(User.class, userDao);
+        registerDao(Metric.class, metricDao);
+        registerDao(Match.class, matchDao);
+        registerDao(MatchData.class, matchDataDao);
+        registerDao(MatchComment.class, matchCommentDao);
+        registerDao(Robot.class, robotDao);
+        registerDao(RobotEvent.class, robotEventDao);
+        registerDao(PitData.class, pitDataDao);
         registerDao(Team.class, teamDao);
         registerDao(RobotPhoto.class, robotPhotoDao);
     }
-
+    
     public void clear() {
-        matchDataDaoConfig.getIdentityScope().clear();
-        pitDataDaoConfig.getIdentityScope().clear();
-        matchCommentDaoConfig.getIdentityScope().clear();
-        robotEventDaoConfig.getIdentityScope().clear();
-        matchDaoConfig.getIdentityScope().clear();
-        eventDaoConfig.getIdentityScope().clear();
-        robotDaoConfig.getIdentityScope().clear();
-        metricDaoConfig.getIdentityScope().clear();
         gameDaoConfig.getIdentityScope().clear();
-        contactDaoConfig.getIdentityScope().clear();
+        eventDaoConfig.getIdentityScope().clear();
         userDaoConfig.getIdentityScope().clear();
+        metricDaoConfig.getIdentityScope().clear();
+        matchDaoConfig.getIdentityScope().clear();
+        matchDataDaoConfig.getIdentityScope().clear();
+        matchCommentDaoConfig.getIdentityScope().clear();
+        robotDaoConfig.getIdentityScope().clear();
+        robotEventDaoConfig.getIdentityScope().clear();
+        pitDataDaoConfig.getIdentityScope().clear();
         teamDaoConfig.getIdentityScope().clear();
         robotPhotoDaoConfig.getIdentityScope().clear();
-    }
-
-    public MatchDataDao getMatchDataDao() {
-        return matchDataDao;
-    }
-
-    public PitDataDao getPitDataDao() {
-        return pitDataDao;
-    }
-
-    public MatchCommentDao getMatchCommentDao() {
-        return matchCommentDao;
-    }
-
-    public RobotEventDao getRobotEventDao() {
-        return robotEventDao;
-    }
-
-    public MatchDao getMatchDao() {
-        return matchDao;
-    }
-
-    public EventDao getEventDao() {
-        return eventDao;
-    }
-
-    public RobotDao getRobotDao() {
-        return robotDao;
-    }
-
-    public MetricDao getMetricDao() {
-        return metricDao;
     }
 
     public GameDao getGameDao() {
         return gameDao;
     }
 
-    public ContactDao getContactDao() {
-        return contactDao;
+    public EventDao getEventDao() {
+        return eventDao;
     }
 
     public UserDao getUserDao() {
         return userDao;
+    }
+
+    public MetricDao getMetricDao() {
+        return metricDao;
+    }
+
+    public MatchDao getMatchDao() {
+        return matchDao;
+    }
+
+    public MatchDataDao getMatchDataDao() {
+        return matchDataDao;
+    }
+
+    public MatchCommentDao getMatchCommentDao() {
+        return matchCommentDao;
+    }
+
+    public RobotDao getRobotDao() {
+        return robotDao;
+    }
+
+    public RobotEventDao getRobotEventDao() {
+        return robotEventDao;
+    }
+
+    public PitDataDao getPitDataDao() {
+        return pitDataDao;
     }
 
     public TeamDao getTeamDao() {

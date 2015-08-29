@@ -24,7 +24,7 @@ public class MetricHelper {
             return Optional.absent();
         if (metricValue.getValue() == null)
             return Optional.absent();
-        return Optional.of(JSON.getParser().parse(metricValue.getValue()));
+        return Optional.of(metricValue.getValue());
     }
 
     public static Optional<JsonElement> getMetricData(Metric metric) {

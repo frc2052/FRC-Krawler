@@ -51,7 +51,8 @@ public class PopulateMatchScoutTask extends AsyncTask<Void, Void, Void> {
 
         mFragment.mRobotNames = robotListItems;
         mFragment.mRobotAutoComplete.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, robotListItems));
-        mFragment.selectedRobot = mFragment.getRobots().get(0);
+        if (!mRobots.isEmpty())
+            mFragment.selectedRobot = mFragment.getRobots().get(0);
         mFragment.mRobotAutoComplete.setSelection(mFragment.getRobots().indexOf(mFragment.selectedRobot));
         mFragment.updateMetricValues();
     }

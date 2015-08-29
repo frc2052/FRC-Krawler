@@ -6,38 +6,43 @@ import de.greenrobot.daogenerator.Property;
 import de.greenrobot.daogenerator.Schema;
 
 public class FRCKrawlerDaoGenerator {
+    public static final String jsonPropertyConverter = "com.team2052.frckrawler.database.converters.JsonPropertyConverter";
+    public static final String jsonElementType = "com.google.gson.JsonElement";
 
     public static void main(String args[]) throws Exception {
         Schema schema = new Schema(1, "com.team2052.frckrawler.db");
 
-
-        Entity matchData = schema.addEntity("MatchData");
-        Entity pitData = schema.addEntity("PitData");
-        Entity matchComment = schema.addEntity("MatchComment");
-        Entity robotEvent = schema.addEntity("RobotEvent");
-        Entity match = schema.addEntity("Match");
-        Entity event = schema.addEntity("Event");
-        Entity robot = schema.addEntity("Robot");
-        Entity metric = schema.addEntity("Metric");
         Entity game = schema.addEntity("Game");
-        Entity contact = schema.addEntity("Contact");
+        Entity event = schema.addEntity("Event");
         Entity user = schema.addEntity("User");
+        Entity metric = schema.addEntity("Metric");
+        Entity match = schema.addEntity("Match");
+        Entity matchData = schema.addEntity("MatchData");
+        Entity matchComment = schema.addEntity("MatchComment");
+        Entity robot = schema.addEntity("Robot");
+        Entity robotEvent = schema.addEntity("RobotEvent");
+        Entity pitData = schema.addEntity("PitData");
 
         //Match data
         matchData.implementsSerializable();
         matchData.addIdProperty();
+
         Property match_data_event_id = matchData.addLongProperty("event_id").notNull().getProperty();
-        Property match_data_robot_id = matchData.addLongProperty("robot_id").notNull().getProperty();
-        Property match_data_user_id = matchData.addLongProperty("user_id").getProperty();
-        Property match_data_game_type = matchData.addIntProperty("game_type").notNull().getProperty();
-        Property match_data_metric_id = matchData.addLongProperty("metric_id").notNull().getProperty();
-        matchData.addLongProperty("match_number").notNull();
-        matchData.addStringProperty("data");
         matchData.addToOne(event, match_data_event_id);
+
+        Property match_data_robot_id = matchData.addLongProperty("robot_id").notNull().getProperty();
         matchData.addToOne(robot, match_data_robot_id);
+
+        Property match_data_user_id = matchData.addLongProperty("user_id").getProperty();
         matchData.addToOne(user, match_data_user_id);
+
+        Property match_data_metric_id = matchData.addLongProperty("metric_id").notNull().getProperty();
         matchData.addToOne(metric, match_data_metric_id);
 
+        matchData.addIntProperty("match_type").notNull().getProperty();
+        matchData.addLongProperty("match_number").notNull();
+        matchData.addDateProperty("last_updated").notNull();
+        matchData.addStringProperty("data").customType(jsonElementType, jsonPropertyConverter);
 
         //Pit data
         pitData.implementsSerializable();
@@ -46,11 +51,12 @@ public class FRCKrawlerDaoGenerator {
         Property pit_data_metric_id = pitData.addLongProperty("metric_id").notNull().getProperty();
         Property pit_data_event_id = pitData.addLongProperty("event_id").notNull().getProperty();
         Property pit_data_user_id = pitData.addLongProperty("user_id").getProperty();
-        pitData.addStringProperty("data");
+        pitData.addStringProperty("data").customType(jsonElementType, jsonPropertyConverter);
         pitData.addToOne(event, pit_data_event_id);
         pitData.addToOne(robot, pit_data_robot_id);
         pitData.addToOne(user, pit_data_user_id);
         pitData.addToOne(metric, pit_data_metric_id);
+
 
         //Match Comment
         matchComment.implementsSerializable();
@@ -122,12 +128,6 @@ public class FRCKrawlerDaoGenerator {
         game.addToMany(metric, metric_game_id);
         game.addStringProperty("name");
 
-        //Contact
-        contact.implementsSerializable();
-        contact.addIdProperty().autoincrement().unique();
-        Property contact_team_id = contact.addLongProperty("team_id").notNull().getProperty();
-        contact.addStringProperty("data");
-
         //Team
         Entity team = schema.addEntity("Team");
         team.implementsSerializable();
@@ -135,7 +135,6 @@ public class FRCKrawlerDaoGenerator {
         team.addStringProperty("teamkey").unique();
         team.addStringProperty("name");
         team.addToMany(robot, robot_team_id);
-        team.addToMany(contact, contact_team_id);
         team.addStringProperty("data");
 
         //Not used, but still is wanted.

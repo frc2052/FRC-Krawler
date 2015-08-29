@@ -59,8 +59,8 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
                     mEvent.getId(),
                     mRobot.getId(),
                     user != null ? user.getId() : null,
-                    match_type,
                     metricValue.getMetric().getId(),
+                    match_type,
                     match_num,
                     metricValue.getValue());
 
