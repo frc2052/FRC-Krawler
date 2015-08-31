@@ -15,6 +15,7 @@ import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.User;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -62,6 +63,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
                     metricValue.getMetric().getId(),
                     match_type,
                     match_num,
+                    new Date(),
                     metricValue.getValue());
 
             inserted = mDaoSession.getMatchDataTable().insertMatchData(matchData);
@@ -69,13 +71,12 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
 
         if (!Strings.isNullOrEmpty(mComment)) {
-            MatchComment matchComment = new MatchComment(
-                    null,
-                    (long) match_num,
-                    match_type,
-                    mRobot.getId(),
-                    mEvent.getId(),
-                    mComment);
+            MatchComment matchComment = new MatchComment(null);
+            matchComment.setMatch_number((long) match_num);
+            matchComment.setMatch_type(match_type);
+            matchComment.setRobot(mRobot);
+            matchComment.setEvent(mEvent);
+            matchComment.setComment(mComment);
             inserted = mDaoSession.getMatchComments().insertMatchComment(matchComment);
         }
 

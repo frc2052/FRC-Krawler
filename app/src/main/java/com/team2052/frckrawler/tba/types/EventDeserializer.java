@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.tba.JSON;
 
 import java.lang.reflect.Type;
 import java.sql.Date;
@@ -39,7 +38,7 @@ public class EventDeserializer implements JsonDeserializer<Event> {
             data.addProperty("location", object.get("location").getAsString());
         }
 
-        event.setData(JSON.getGson().toJson(data));
+        event.setData(data);
 
         //Parse the date
         if (!object.get("start_date").isJsonNull()) {

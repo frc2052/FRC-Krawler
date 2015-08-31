@@ -83,7 +83,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                     //Save all the matches and alliances
                     Match match = JSON.getGson().fromJson(element, Match.class);
                     //Only save Qualifications
-                    if (match.getType().contains("qm")) {
+                    if (match.getMatch_type().contains("qm")) {
                         daoSession.getMatchesTable().insert(match);
                     }
                 }

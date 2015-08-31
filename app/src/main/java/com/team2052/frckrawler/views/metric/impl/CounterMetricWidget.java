@@ -9,7 +9,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricValue;
-import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 
@@ -30,7 +29,7 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
         findViewById(R.id.plus).setOnClickListener(this);
         findViewById(R.id.minus).setOnClickListener(this);
 
-        JsonObject o = JSON.getAsJsonObject(m.getMetric().getData());
+        JsonObject o = m.getMetric().getData().getAsJsonObject();
 
         max = o.get("max").getAsInt();
         min = o.get("min").getAsInt();

@@ -11,7 +11,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.tba.JSON;
 
 /**
  * @author Adam Custom view just for matches
@@ -51,8 +50,8 @@ public class MatchView extends FrameLayout {
     }
 
     public void init(Match match, boolean showScores) {
-        matchTitle.setText("Match " + Integer.toString(match.getNumber()));
-        JsonObject alliances = JSON.getAsJsonObject(match.getData()).get("alliances").getAsJsonObject();
+        matchTitle.setText("Match " + Integer.toString(match.getMatch_number()));
+        JsonObject alliances = match.getData().getAsJsonObject().get("alliances").getAsJsonObject();
         JsonObject red = alliances.get("red").getAsJsonObject();
         JsonObject blue = alliances.get("blue").getAsJsonObject();
 

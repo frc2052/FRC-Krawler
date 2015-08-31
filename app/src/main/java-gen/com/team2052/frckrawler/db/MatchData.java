@@ -18,6 +18,7 @@ public class MatchData implements java.io.Serializable {
     private long metric_id;
     private int match_type;
     private long match_number;
+    private java.util.Date last_updated;
     private JsonElement data;
 
     /** Used to resolve relations */
@@ -46,7 +47,7 @@ public class MatchData implements java.io.Serializable {
         this.id = id;
     }
 
-    public MatchData(Long id, long event_id, long robot_id, Long user_id, long metric_id, int match_type, long match_number, JsonElement data) {
+    public MatchData(Long id, long event_id, long robot_id, Long user_id, long metric_id, int match_type, long match_number, java.util.Date last_updated, JsonElement data) {
         this.id = id;
         this.event_id = event_id;
         this.robot_id = robot_id;
@@ -54,6 +55,7 @@ public class MatchData implements java.io.Serializable {
         this.metric_id = metric_id;
         this.match_type = match_type;
         this.match_number = match_number;
+        this.last_updated = last_updated;
         this.data = data;
     }
 
@@ -117,6 +119,14 @@ public class MatchData implements java.io.Serializable {
 
     public void setMatch_number(long match_number) {
         this.match_number = match_number;
+    }
+
+    public java.util.Date getLast_updated() {
+        return last_updated;
+    }
+
+    public void setLast_updated(java.util.Date last_updated) {
+        this.last_updated = last_updated;
     }
 
     public JsonElement getData() {

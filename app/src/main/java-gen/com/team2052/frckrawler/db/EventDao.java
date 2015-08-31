@@ -1,15 +1,20 @@
 package com.team2052.frckrawler.db;
 
 import java.util.List;
+import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
+import de.greenrobot.dao.internal.SqlUtils;
 import de.greenrobot.dao.internal.DaoConfig;
 import de.greenrobot.dao.query.Query;
 import de.greenrobot.dao.query.QueryBuilder;
+
+import com.google.gson.JsonElement;
+import com.team2052.frckrawler.database.converters.JsonPropertyConverter;
 
 import com.team2052.frckrawler.db.Event;
 
@@ -27,8 +32,8 @@ public class EventDao extends AbstractDao<Event, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Fmsid = new Property(2, String.class, "fmsid", false, "FMSID");
+        public final static Property Fmsid = new Property(1, String.class, "fmsid", false, "FMSID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
         public final static Property Game_id = new Property(3, long.class, "game_id", false, "GAME_ID");
         public final static Property Data = new Property(4, String.class, "data", false, "DATA");
         public final static Property Date = new Property(5, java.util.Date.class, "date", false, "DATE");
@@ -36,6 +41,7 @@ public class EventDao extends AbstractDao<Event, Long> {
 
     private DaoSession daoSession;
 
+    private final JsonPropertyConverter dataConverter = new JsonPropertyConverter();
     private Query<Event> game_EventListQuery;
 
     public EventDao(DaoConfig config) {
@@ -51,9 +57,9 @@ public class EventDao extends AbstractDao<Event, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"EVENT\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
-                "\"NAME\" TEXT," + // 1: name
-                "\"FMSID\" TEXT UNIQUE ," + // 2: fmsid
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"FMSID\" TEXT UNIQUE ," + // 1: fmsid
+                "\"NAME\" TEXT," + // 2: name
                 "\"GAME_ID\" INTEGER NOT NULL ," + // 3: game_id
                 "\"DATA\" TEXT," + // 4: data
                 "\"DATE\" INTEGER);"); // 5: date
@@ -75,20 +81,20 @@ public class EventDao extends AbstractDao<Event, Long> {
             stmt.bindLong(1, id);
         }
  
-        String name = entity.getName();
-        if (name != null) {
-            stmt.bindString(2, name);
-        }
- 
         String fmsid = entity.getFmsid();
         if (fmsid != null) {
-            stmt.bindString(3, fmsid);
+            stmt.bindString(2, fmsid);
+        }
+ 
+        String name = entity.getName();
+        if (name != null) {
+            stmt.bindString(3, name);
         }
         stmt.bindLong(4, entity.getGame_id());
  
-        String data = entity.getData();
+        JsonElement data = entity.getData();
         if (data != null) {
-            stmt.bindString(5, data);
+            stmt.bindString(5, dataConverter.convertToDatabaseValue(data));
         }
  
         java.util.Date date = entity.getDate();
@@ -114,10 +120,10 @@ public class EventDao extends AbstractDao<Event, Long> {
     public Event readEntity(Cursor cursor, int offset) {
         Event entity = new Event( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // fmsid
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // fmsid
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
             cursor.getLong(offset + 3), // game_id
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // data
+            cursor.isNull(offset + 4) ? null : dataConverter.convertToEntityProperty(cursor.getString(offset + 4)), // data
             cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)) // date
         );
         return entity;
@@ -127,10 +133,10 @@ public class EventDao extends AbstractDao<Event, Long> {
     @Override
     public void readEntity(Cursor cursor, Event entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setFmsid(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setFmsid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setGame_id(cursor.getLong(offset + 3));
-        entity.setData(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setData(cursor.isNull(offset + 4) ? null : dataConverter.convertToEntityProperty(cursor.getString(offset + 4)));
         entity.setDate(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
      }
     
@@ -171,4 +177,97 @@ public class EventDao extends AbstractDao<Event, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
+    protected String getSelectDeep() {
+        if (selectDeep == null) {
+            StringBuilder builder = new StringBuilder("SELECT ");
+            SqlUtils.appendColumns(builder, "T", getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T0", daoSession.getGameDao().getAllColumns());
+            builder.append(" FROM EVENT T");
+            builder.append(" LEFT JOIN GAME T0 ON T.\"GAME_ID\"=T0.\"_id\"");
+            builder.append(' ');
+            selectDeep = builder.toString();
+        }
+        return selectDeep;
+    }
+    
+    protected Event loadCurrentDeep(Cursor cursor, boolean lock) {
+        Event entity = loadCurrent(cursor, 0, lock);
+        int offset = getAllColumns().length;
+
+        Game game = loadCurrentOther(daoSession.getGameDao(), cursor, offset);
+         if(game != null) {
+            entity.setGame(game);
+        }
+
+        return entity;    
+    }
+
+    public Event loadDeep(Long key) {
+        assertSinglePk();
+        if (key == null) {
+            return null;
+        }
+
+        StringBuilder builder = new StringBuilder(getSelectDeep());
+        builder.append("WHERE ");
+        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
+        String sql = builder.toString();
+        
+        String[] keyArray = new String[] { key.toString() };
+        Cursor cursor = db.rawQuery(sql, keyArray);
+        
+        try {
+            boolean available = cursor.moveToFirst();
+            if (!available) {
+                return null;
+            } else if (!cursor.isLast()) {
+                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
+            }
+            return loadCurrentDeep(cursor, true);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
+    public List<Event> loadAllDeepFromCursor(Cursor cursor) {
+        int count = cursor.getCount();
+        List<Event> list = new ArrayList<Event>(count);
+        
+        if (cursor.moveToFirst()) {
+            if (identityScope != null) {
+                identityScope.lock();
+                identityScope.reserveRoom(count);
+            }
+            try {
+                do {
+                    list.add(loadCurrentDeep(cursor, false));
+                } while (cursor.moveToNext());
+            } finally {
+                if (identityScope != null) {
+                    identityScope.unlock();
+                }
+            }
+        }
+        return list;
+    }
+    
+    protected List<Event> loadDeepAllAndCloseCursor(Cursor cursor) {
+        try {
+            return loadAllDeepFromCursor(cursor);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+
+    /** A raw-style query where you can pass any WHERE clause and arguments. */
+    public List<Event> queryDeep(String where, String... selectionArg) {
+        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
+        return loadDeepAllAndCloseCursor(cursor);
+    }
+ 
 }

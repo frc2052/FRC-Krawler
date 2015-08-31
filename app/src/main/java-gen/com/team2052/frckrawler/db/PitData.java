@@ -17,6 +17,7 @@ public class PitData implements java.io.Serializable {
     private long event_id;
     private Long user_id;
     private JsonElement data;
+    private java.util.Date last_updated;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -24,17 +25,17 @@ public class PitData implements java.io.Serializable {
     /** Used for active entity operations. */
     private transient PitDataDao myDao;
 
-    private Event event;
-    private Long event__resolvedKey;
-
     private Robot robot;
     private Long robot__resolvedKey;
 
-    private User user;
-    private Long user__resolvedKey;
-
     private Metric metric;
     private Long metric__resolvedKey;
+
+    private Event event;
+    private Long event__resolvedKey;
+
+    private User user;
+    private Long user__resolvedKey;
 
 
     public PitData() {
@@ -44,13 +45,14 @@ public class PitData implements java.io.Serializable {
         this.id = id;
     }
 
-    public PitData(Long id, long robot_id, long metric_id, long event_id, Long user_id, JsonElement data) {
+    public PitData(Long id, long robot_id, long metric_id, long event_id, Long user_id, JsonElement data, java.util.Date last_updated) {
         this.id = id;
         this.robot_id = robot_id;
         this.metric_id = metric_id;
         this.event_id = event_id;
         this.user_id = user_id;
         this.data = data;
+        this.last_updated = last_updated;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -107,32 +109,12 @@ public class PitData implements java.io.Serializable {
         this.data = data;
     }
 
-    /** To-one relationship, resolved on first access. */
-    public Event getEvent() {
-        long __key = this.event_id;
-        if (event__resolvedKey == null || !event__resolvedKey.equals(__key)) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            EventDao targetDao = daoSession.getEventDao();
-            Event eventNew = targetDao.load(__key);
-            synchronized (this) {
-                event = eventNew;
-            	event__resolvedKey = __key;
-            }
-        }
-        return event;
+    public java.util.Date getLast_updated() {
+        return last_updated;
     }
 
-    public void setEvent(Event event) {
-        if (event == null) {
-            throw new DaoException("To-one property 'event_id' has not-null constraint; cannot set to-one to null");
-        }
-        synchronized (this) {
-            this.event = event;
-            event_id = event.getId();
-            event__resolvedKey = event_id;
-        }
+    public void setLast_updated(java.util.Date last_updated) {
+        this.last_updated = last_updated;
     }
 
     /** To-one relationship, resolved on first access. */
@@ -164,31 +146,6 @@ public class PitData implements java.io.Serializable {
     }
 
     /** To-one relationship, resolved on first access. */
-    public User getUser() {
-        Long __key = this.user_id;
-        if (user__resolvedKey == null || !user__resolvedKey.equals(__key)) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            UserDao targetDao = daoSession.getUserDao();
-            User userNew = targetDao.load(__key);
-            synchronized (this) {
-                user = userNew;
-            	user__resolvedKey = __key;
-            }
-        }
-        return user;
-    }
-
-    public void setUser(User user) {
-        synchronized (this) {
-            this.user = user;
-            user_id = user == null ? null : user.getId();
-            user__resolvedKey = user_id;
-        }
-    }
-
-    /** To-one relationship, resolved on first access. */
     public Metric getMetric() {
         long __key = this.metric_id;
         if (metric__resolvedKey == null || !metric__resolvedKey.equals(__key)) {
@@ -213,6 +170,59 @@ public class PitData implements java.io.Serializable {
             this.metric = metric;
             metric_id = metric.getId();
             metric__resolvedKey = metric_id;
+        }
+    }
+
+    /** To-one relationship, resolved on first access. */
+    public Event getEvent() {
+        long __key = this.event_id;
+        if (event__resolvedKey == null || !event__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            EventDao targetDao = daoSession.getEventDao();
+            Event eventNew = targetDao.load(__key);
+            synchronized (this) {
+                event = eventNew;
+            	event__resolvedKey = __key;
+            }
+        }
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        if (event == null) {
+            throw new DaoException("To-one property 'event_id' has not-null constraint; cannot set to-one to null");
+        }
+        synchronized (this) {
+            this.event = event;
+            event_id = event.getId();
+            event__resolvedKey = event_id;
+        }
+    }
+
+    /** To-one relationship, resolved on first access. */
+    public User getUser() {
+        Long __key = this.user_id;
+        if (user__resolvedKey == null || !user__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            UserDao targetDao = daoSession.getUserDao();
+            User userNew = targetDao.load(__key);
+            synchronized (this) {
+                user = userNew;
+            	user__resolvedKey = __key;
+            }
+        }
+        return user;
+    }
+
+    public void setUser(User user) {
+        synchronized (this) {
+            this.user = user;
+            user_id = user == null ? null : user.getId();
+            user__resolvedKey = user_id;
         }
     }
 

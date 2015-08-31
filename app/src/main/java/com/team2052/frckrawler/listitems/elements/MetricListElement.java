@@ -12,7 +12,6 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListElement;
-import com.team2052.frckrawler.tba.JSON;
 
 /**
  * @author Adam
@@ -26,7 +25,7 @@ public class MetricListElement extends ListElement {
     public MetricListElement(Metric metric) {
         super(Long.toString(metric.getId()));
         this.metric = metric;
-        JsonObject data = JSON.getAsJsonObject(metric.getData());
+        JsonObject data = metric.getData().getAsJsonObject();
 
         if (!Strings.isNullOrEmpty(data.get("description").getAsString())) {
             descriptionString = data.get("description").getAsString();

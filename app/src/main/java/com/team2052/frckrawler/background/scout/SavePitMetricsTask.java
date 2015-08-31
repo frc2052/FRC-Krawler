@@ -40,13 +40,12 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         for (MetricValue widget : metricValues) {
-            PitData pitData = new PitData(
-                    null,
-                    robot.getId(),
-                    widget.getMetric().getId(),
-                    mEvent.getId(),
-                    user != null ? user.getId() : null,
-                    widget.getValue());
+            PitData pitData = new PitData(null);
+            pitData.setRobot(robot);
+            pitData.setMetric(widget.getMetric());
+            pitData.setEvent(mEvent);
+            pitData.setUser_id(user != null ? user.getId() : null);
+            pitData.setData(widget.getValue());
             mDaoSession.getPitDataTable().insert(pitData);
         }
 

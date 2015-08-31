@@ -38,7 +38,8 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         public final static Property Metric_id = new Property(4, long.class, "metric_id", false, "METRIC_ID");
         public final static Property Match_type = new Property(5, int.class, "match_type", false, "MATCH_TYPE");
         public final static Property Match_number = new Property(6, long.class, "match_number", false, "MATCH_NUMBER");
-        public final static Property Data = new Property(7, String.class, "data", false, "DATA");
+        public final static Property Last_updated = new Property(7, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
+        public final static Property Data = new Property(8, String.class, "data", false, "DATA");
     };
 
     private DaoSession daoSession;
@@ -69,7 +70,8 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
                 "\"METRIC_ID\" INTEGER NOT NULL ," + // 4: metric_id
                 "\"MATCH_TYPE\" INTEGER NOT NULL ," + // 5: match_type
                 "\"MATCH_NUMBER\" INTEGER NOT NULL ," + // 6: match_number
-                "\"DATA\" TEXT);"); // 7: data
+                "\"LAST_UPDATED\" INTEGER," + // 7: last_updated
+                "\"DATA\" TEXT);"); // 8: data
     }
 
     /** Drops the underlying database table. */
@@ -98,9 +100,14 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         stmt.bindLong(6, entity.getMatch_type());
         stmt.bindLong(7, entity.getMatch_number());
  
+        java.util.Date last_updated = entity.getLast_updated();
+        if (last_updated != null) {
+            stmt.bindLong(8, last_updated.getTime());
+        }
+ 
         JsonElement data = entity.getData();
         if (data != null) {
-            stmt.bindString(8, dataConverter.convertToDatabaseValue(data));
+            stmt.bindString(9, dataConverter.convertToDatabaseValue(data));
         }
     }
 
@@ -127,7 +134,8 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
             cursor.getLong(offset + 4), // metric_id
             cursor.getInt(offset + 5), // match_type
             cursor.getLong(offset + 6), // match_number
-            cursor.isNull(offset + 7) ? null : dataConverter.convertToEntityProperty(cursor.getString(offset + 7)) // data
+            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // last_updated
+            cursor.isNull(offset + 8) ? null : dataConverter.convertToEntityProperty(cursor.getString(offset + 8)) // data
         );
         return entity;
     }
@@ -142,7 +150,8 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         entity.setMetric_id(cursor.getLong(offset + 4));
         entity.setMatch_type(cursor.getInt(offset + 5));
         entity.setMatch_number(cursor.getLong(offset + 6));
-        entity.setData(cursor.isNull(offset + 7) ? null : dataConverter.convertToEntityProperty(cursor.getString(offset + 7)));
+        entity.setLast_updated(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
+        entity.setData(cursor.isNull(offset + 8) ? null : dataConverter.convertToEntityProperty(cursor.getString(offset + 8)));
      }
     
     /** @inheritdoc */

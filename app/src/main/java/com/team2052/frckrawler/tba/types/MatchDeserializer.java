@@ -20,15 +20,15 @@ public class MatchDeserializer implements JsonDeserializer<Match> {
         final Match match = new Match();
         final JsonObject object = json.getAsJsonObject();
         if (object.has("key") && !object.get("key").isJsonNull()) {
-            match.setKey(object.get("key").getAsString());
+            match.setMatch_key(object.get("key").getAsString());
         }
 
         if (object.has("comp_level") && !object.get("comp_level").isJsonNull()) {
-            match.setType(object.get("comp_level").getAsString());
+            match.setMatch_type(object.get("comp_level").getAsString());
         }
 
         if (object.has("match_number") && !object.get("match_number").isJsonNull()) {
-            match.setNumber(object.get("match_number").getAsInt());
+            match.setMatch_number(object.get("match_number").getAsInt());
         }
 
         if (object.has("event_key") && !object.get("event_key").isJsonNull()) {
@@ -38,7 +38,7 @@ public class MatchDeserializer implements JsonDeserializer<Match> {
         JsonObject alliances = object.get("alliances").getAsJsonObject();
         JsonObject data = new JsonObject();
         data.add("alliances", alliances);
-        match.setData(JSON.getGson().toJson(data));
+        match.setData(data);
         return match;
     }
 }

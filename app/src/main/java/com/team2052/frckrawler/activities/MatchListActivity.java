@@ -80,7 +80,7 @@ public class MatchListActivity extends BaseActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<Match> matches = mDbManager.getMatchesTable().query(null, null, mEvent.getId(), null).orderAsc(MatchDao.Properties.Number).list();
+            List<Match> matches = mDbManager.getMatchesTable().query(null, null, mEvent.getId(), null).orderAsc(MatchDao.Properties.Match_number).list();
             List<ListItem> listItems = new ArrayList<>();
             for (Match match : matches) {
                 listItems.add(new MatchListItem(match));

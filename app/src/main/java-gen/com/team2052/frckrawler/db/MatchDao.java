@@ -1,15 +1,20 @@
 package com.team2052.frckrawler.db;
 
 import java.util.List;
+import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
+import de.greenrobot.dao.internal.SqlUtils;
 import de.greenrobot.dao.internal.DaoConfig;
 import de.greenrobot.dao.query.Query;
 import de.greenrobot.dao.query.QueryBuilder;
+
+import com.google.gson.JsonElement;
+import com.team2052.frckrawler.database.converters.JsonPropertyConverter;
 
 import com.team2052.frckrawler.db.Match;
 
@@ -27,13 +32,16 @@ public class MatchDao extends AbstractDao<Match, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Number = new Property(1, Integer.class, "number", false, "NUMBER");
-        public final static Property Key = new Property(2, String.class, "key", false, "KEY");
-        public final static Property Event_id = new Property(3, long.class, "event_id", false, "EVENT_ID");
-        public final static Property Data = new Property(4, String.class, "data", false, "DATA");
-        public final static Property Type = new Property(5, String.class, "type", false, "TYPE");
+        public final static Property Match_key = new Property(1, String.class, "match_key", false, "MATCH_KEY");
+        public final static Property Match_type = new Property(2, String.class, "match_type", false, "MATCH_TYPE");
+        public final static Property Match_number = new Property(3, Integer.class, "match_number", false, "MATCH_NUMBER");
+        public final static Property Event_id = new Property(4, long.class, "event_id", false, "EVENT_ID");
+        public final static Property Data = new Property(5, String.class, "data", false, "DATA");
     };
 
+    private DaoSession daoSession;
+
+    private final JsonPropertyConverter dataConverter = new JsonPropertyConverter();
     private Query<Match> event_MatchListQuery;
 
     public MatchDao(DaoConfig config) {
@@ -42,18 +50,19 @@ public class MatchDao extends AbstractDao<Match, Long> {
     
     public MatchDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"MATCH\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
-                "\"NUMBER\" INTEGER," + // 1: number
-                "\"KEY\" TEXT UNIQUE ," + // 2: key
-                "\"EVENT_ID\" INTEGER NOT NULL ," + // 3: event_id
-                "\"DATA\" TEXT," + // 4: data
-                "\"TYPE\" TEXT);"); // 5: type
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"MATCH_KEY\" TEXT UNIQUE ," + // 1: match_key
+                "\"MATCH_TYPE\" TEXT," + // 2: match_type
+                "\"MATCH_NUMBER\" INTEGER," + // 3: match_number
+                "\"EVENT_ID\" INTEGER NOT NULL ," + // 4: event_id
+                "\"DATA\" TEXT);"); // 5: data
     }
 
     /** Drops the underlying database table. */
@@ -72,26 +81,32 @@ public class MatchDao extends AbstractDao<Match, Long> {
             stmt.bindLong(1, id);
         }
  
-        Integer number = entity.getNumber();
-        if (number != null) {
-            stmt.bindLong(2, number);
+        String match_key = entity.getMatch_key();
+        if (match_key != null) {
+            stmt.bindString(2, match_key);
         }
  
-        String key = entity.getKey();
-        if (key != null) {
-            stmt.bindString(3, key);
+        String match_type = entity.getMatch_type();
+        if (match_type != null) {
+            stmt.bindString(3, match_type);
         }
-        stmt.bindLong(4, entity.getEvent_id());
  
-        String data = entity.getData();
+        Integer match_number = entity.getMatch_number();
+        if (match_number != null) {
+            stmt.bindLong(4, match_number);
+        }
+        stmt.bindLong(5, entity.getEvent_id());
+ 
+        JsonElement data = entity.getData();
         if (data != null) {
-            stmt.bindString(5, data);
+            stmt.bindString(6, dataConverter.convertToDatabaseValue(data));
         }
- 
-        String type = entity.getType();
-        if (type != null) {
-            stmt.bindString(6, type);
-        }
+    }
+
+    @Override
+    protected void attachEntity(Match entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */
@@ -105,11 +120,11 @@ public class MatchDao extends AbstractDao<Match, Long> {
     public Match readEntity(Cursor cursor, int offset) {
         Match entity = new Match( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1), // number
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // key
-            cursor.getLong(offset + 3), // event_id
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // data
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // type
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // match_key
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // match_type
+            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // match_number
+            cursor.getLong(offset + 4), // event_id
+            cursor.isNull(offset + 5) ? null : dataConverter.convertToEntityProperty(cursor.getString(offset + 5)) // data
         );
         return entity;
     }
@@ -118,11 +133,11 @@ public class MatchDao extends AbstractDao<Match, Long> {
     @Override
     public void readEntity(Cursor cursor, Match entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setNumber(cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1));
-        entity.setKey(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setEvent_id(cursor.getLong(offset + 3));
-        entity.setData(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setType(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setMatch_key(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setMatch_type(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setMatch_number(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
+        entity.setEvent_id(cursor.getLong(offset + 4));
+        entity.setData(cursor.isNull(offset + 5) ? null : dataConverter.convertToEntityProperty(cursor.getString(offset + 5)));
      }
     
     /** @inheritdoc */
@@ -162,4 +177,97 @@ public class MatchDao extends AbstractDao<Match, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
+    protected String getSelectDeep() {
+        if (selectDeep == null) {
+            StringBuilder builder = new StringBuilder("SELECT ");
+            SqlUtils.appendColumns(builder, "T", getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T0", daoSession.getEventDao().getAllColumns());
+            builder.append(" FROM MATCH T");
+            builder.append(" LEFT JOIN EVENT T0 ON T.\"EVENT_ID\"=T0.\"_id\"");
+            builder.append(' ');
+            selectDeep = builder.toString();
+        }
+        return selectDeep;
+    }
+    
+    protected Match loadCurrentDeep(Cursor cursor, boolean lock) {
+        Match entity = loadCurrent(cursor, 0, lock);
+        int offset = getAllColumns().length;
+
+        Event event = loadCurrentOther(daoSession.getEventDao(), cursor, offset);
+         if(event != null) {
+            entity.setEvent(event);
+        }
+
+        return entity;    
+    }
+
+    public Match loadDeep(Long key) {
+        assertSinglePk();
+        if (key == null) {
+            return null;
+        }
+
+        StringBuilder builder = new StringBuilder(getSelectDeep());
+        builder.append("WHERE ");
+        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
+        String sql = builder.toString();
+        
+        String[] keyArray = new String[] { key.toString() };
+        Cursor cursor = db.rawQuery(sql, keyArray);
+        
+        try {
+            boolean available = cursor.moveToFirst();
+            if (!available) {
+                return null;
+            } else if (!cursor.isLast()) {
+                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
+            }
+            return loadCurrentDeep(cursor, true);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
+    public List<Match> loadAllDeepFromCursor(Cursor cursor) {
+        int count = cursor.getCount();
+        List<Match> list = new ArrayList<Match>(count);
+        
+        if (cursor.moveToFirst()) {
+            if (identityScope != null) {
+                identityScope.lock();
+                identityScope.reserveRoom(count);
+            }
+            try {
+                do {
+                    list.add(loadCurrentDeep(cursor, false));
+                } while (cursor.moveToNext());
+            } finally {
+                if (identityScope != null) {
+                    identityScope.unlock();
+                }
+            }
+        }
+        return list;
+    }
+    
+    protected List<Match> loadDeepAllAndCloseCursor(Cursor cursor) {
+        try {
+            return loadAllDeepFromCursor(cursor);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+
+    /** A raw-style query where you can pass any WHERE clause and arguments. */
+    public List<Match> queryDeep(String where, String... selectionArg) {
+        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
+        return loadDeepAllAndCloseCursor(cursor);
+    }
+ 
 }

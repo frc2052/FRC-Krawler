@@ -70,7 +70,7 @@ public class MatchListFragment extends ListFragment {
         @Override
         protected List<Match> doInBackground(Void... params) {
             //Get Matches ascending from the provided event id
-            return mDbManager.getMatchesTable().query(null, null, mEvent.getId(), null).orderAsc(MatchDao.Properties.Number).list();
+            return mDbManager.getMatchesTable().query(null, null, mEvent.getId(), null).orderAsc(MatchDao.Properties.Match_number).list();
         }
 
         @Override

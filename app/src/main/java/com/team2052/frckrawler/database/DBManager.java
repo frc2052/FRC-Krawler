@@ -27,15 +27,14 @@ import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotDao;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
-import com.team2052.frckrawler.db.RobotPhotoDao;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.db.TeamDao;
 import com.team2052.frckrawler.db.User;
 import com.team2052.frckrawler.db.UserDao;
-import com.team2052.frckrawler.tba.JSON;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
@@ -68,7 +67,6 @@ public class DBManager {
     private final RobotEventDao robotEventDao;
     private final MatchDao matchDao;
     private final MetricDao metricDao;
-    private final RobotPhotoDao robotPhotoDao;
     private final UserDao userDao;
     private final RobotDao robotDao;
     private final DaoMaster daoMaster;
@@ -96,7 +94,6 @@ public class DBManager {
         matchDao = daoSession.getMatchDao();
         metricDao = daoSession.getMetricDao();
         teamDao = daoSession.getTeamDao();
-        robotPhotoDao = daoSession.getRobotPhotoDao();
         userDao = daoSession.getUserDao();
         gameDao = daoSession.getGameDao();
         eventDao = daoSession.getEventDao();
@@ -134,7 +131,6 @@ public class DBManager {
         robotEventDao.deleteAll();
         matchDao.deleteAll();
         metricDao.deleteAll();
-        robotPhotoDao.deleteAll();
         userDao.deleteAll();
         robotDao.deleteAll();
         eventDao.deleteAll();
@@ -351,7 +347,7 @@ public class DBManager {
             matchCommentQueryBuilder.where(MatchCommentDao.Properties.Event_id.eq(matchComment.getEvent_id()));
             matchCommentQueryBuilder.where(MatchCommentDao.Properties.Robot_id.eq(matchComment.getRobot_id()));
             matchCommentQueryBuilder.where(MatchCommentDao.Properties.Match_number.eq(matchComment.getMatch_number()));
-            matchCommentQueryBuilder.where(MatchCommentDao.Properties.Game_type.eq(matchComment.getGame_type()));
+            matchCommentQueryBuilder.where(MatchCommentDao.Properties.Match_type.eq(matchComment.getMatch_type()));
             long count = matchCommentQueryBuilder.count();
             if (count > 0) {
                 MatchComment currentData = matchCommentQueryBuilder.unique();
@@ -369,7 +365,7 @@ public class DBManager {
             if (match_number != null)
                 queryBuilder.where(MatchCommentDao.Properties.Match_number.eq(match_number));
             if (game_type != null)
-                queryBuilder.where(MatchCommentDao.Properties.Game_type.eq(game_type));
+                queryBuilder.where(MatchCommentDao.Properties.Match_type.eq(game_type));
             if (robot_id != null)
                 queryBuilder.where(MatchCommentDao.Properties.Robot_id.eq(robot_id));
             if (event_id != null)
@@ -719,7 +715,7 @@ public class DBManager {
 
     public class Matches implements Table<Match> {
         public List<Team> getTeams(Match match) {
-            JsonObject alliances = JSON.getAsJsonObject(match.getData()).get("alliances").getAsJsonObject();
+            JsonObject alliances = match.getData().getAsJsonObject().get("alliances").getAsJsonObject();
             List<Team> teams = new ArrayList<>();
             JsonArray red = alliances.get("red").getAsJsonObject().get("teams").getAsJsonArray();
             JsonArray blue = alliances.get("blue").getAsJsonObject().get("teams").getAsJsonArray();
@@ -739,9 +735,9 @@ public class DBManager {
         public QueryBuilder<Match> query(Integer match_number, String key, Long event_id, String type) {
             QueryBuilder<Match> queryBuilder = getQueryBuilder();
             if (match_number != null)
-                queryBuilder.where(MatchDao.Properties.Number.eq(match_number));
+                queryBuilder.where(MatchDao.Properties.Match_number.eq(match_number));
             if (key != null)
-                queryBuilder.where(MatchDao.Properties.Key.eq(key));
+                queryBuilder.where(MatchDao.Properties.Match_key.eq(key));
             if (event_id != null)
                 queryBuilder.where(MatchDao.Properties.Event_id.eq(event_id));
             if (type != null)
@@ -797,7 +793,7 @@ public class DBManager {
             boolean robot_added = robot != null;
 
             if (!robot_added) {
-                robot = new Robot(null, team.getNumber(), event.getGame_id(), null, null);
+                robot = new Robot(null, team.getNumber(), event.getGame_id(), null, null, new Date());
                 daoSession.insert(robot);
             }
 
