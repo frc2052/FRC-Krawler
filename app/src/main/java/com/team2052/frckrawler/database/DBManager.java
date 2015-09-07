@@ -31,6 +31,7 @@ import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.db.TeamDao;
 import com.team2052.frckrawler.db.User;
 import com.team2052.frckrawler.db.UserDao;
+import com.team2052.frckrawler.tba.JSON;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -715,7 +716,7 @@ public class DBManager {
 
     public class Matches implements Table<Match> {
         public List<Team> getTeams(Match match) {
-            JsonObject alliances = match.getData().getAsJsonObject().get("alliances").getAsJsonObject();
+            JsonObject alliances = JSON.getAsJsonObject(match.getData()).get("alliances").getAsJsonObject();
             List<Team> teams = new ArrayList<>();
             JsonArray red = alliances.get("red").getAsJsonObject().get("teams").getAsJsonArray();
             JsonArray blue = alliances.get("blue").getAsJsonObject().get("teams").getAsJsonArray();

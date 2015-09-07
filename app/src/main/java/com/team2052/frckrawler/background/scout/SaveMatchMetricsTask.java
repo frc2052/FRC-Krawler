@@ -14,6 +14,7 @@ import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.User;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
+import com.team2052.frckrawler.tba.JSON;
 
 import java.util.Date;
 import java.util.List;
@@ -64,7 +65,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
                     match_type,
                     match_num,
                     new Date(),
-                    metricValue.getValue());
+                    JSON.getGson().toJson(metricValue.getValue()));
 
             inserted = mDaoSession.getMatchDataTable().insertMatchData(matchData);
         }

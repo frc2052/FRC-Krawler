@@ -10,6 +10,7 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.User;
+import com.team2052.frckrawler.tba.JSON;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
             pitData.setMetric(widget.getMetric());
             pitData.setEvent(mEvent);
             pitData.setUser_id(user != null ? user.getId() : null);
-            pitData.setData(widget.getValue());
+            pitData.setData(JSON.getGson().toJson(widget.getValue()));
             mDaoSession.getPitDataTable().insert(pitData);
         }
 

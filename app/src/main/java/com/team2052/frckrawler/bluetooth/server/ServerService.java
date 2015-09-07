@@ -47,9 +47,8 @@ public class ServerService extends Service {
                     thread.start();
                 }
             } else {
-                if (thread != null) {
+                if (thread != null)
                     thread.closeServer();
-                }
             }
             timeLastChanged = System.currentTimeMillis();
         }

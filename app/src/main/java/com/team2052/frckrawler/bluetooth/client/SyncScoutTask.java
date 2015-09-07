@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.team2052.frckrawler.BuildConfig;
 import com.team2052.frckrawler.bluetooth.BluetoothInfo;
 import com.team2052.frckrawler.bluetooth.ServerPackage;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncCancelledEvent;
@@ -60,6 +61,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
                 serverSocket.connect();
             } catch (IOException e) {
                 e.printStackTrace();
+                //Server is most likely off
                 return SYNC_ERROR;
             }
 
@@ -74,6 +76,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             }
 
             try {
+                ooStream.writeInt(BuildConfig.VERSION_CODE);
                 ooStream.writeInt(BluetoothInfo.ConnectionType.SCOUT_SYNC.ordinal());
                 ooStream.writeObject(new ServerPackage(mDbManager));
                 ooStream.flush();

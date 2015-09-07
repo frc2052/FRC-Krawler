@@ -42,7 +42,7 @@ public class FRCKrawlerDaoGenerator {
         matchData.addIntProperty("match_type").notNull().getProperty();
         matchData.addLongProperty("match_number").notNull();
         matchData.addDateProperty("last_updated");
-        matchData.addStringProperty("data").customType(jsonElementType, jsonPropertyConverter);
+        matchData.addStringProperty("data");
 
         //Pit data
         pitData.implementsSerializable();
@@ -60,7 +60,7 @@ public class FRCKrawlerDaoGenerator {
         Property pit_data_user_id = pitData.addLongProperty("user_id").getProperty();
         pitData.addToOne(user, pit_data_user_id);
 
-        pitData.addStringProperty("data").customType(jsonElementType, jsonPropertyConverter);
+        pitData.addStringProperty("data");
         pitData.addDateProperty("last_updated");
 
 
@@ -90,7 +90,7 @@ public class FRCKrawlerDaoGenerator {
         Property robot_event_event_id = robotEvent.addLongProperty("event_id").notNull().getProperty();
         robotEvent.addToOne(event, robot_event_event_id);
 
-        robotEvent.addStringProperty("data").customType(jsonElementType, jsonPropertyConverter);
+        robotEvent.addStringProperty("data");
 
         //Match
         match.implementsSerializable();
@@ -102,7 +102,7 @@ public class FRCKrawlerDaoGenerator {
         Property match_event_id = match.addLongProperty("event_id").notNull().getProperty();
         match.addToOne(event, match_event_id);
 
-        match.addStringProperty("data").customType(jsonElementType, jsonPropertyConverter);
+        match.addStringProperty("data");
 
         //Events
         event.implementsSerializable();
@@ -112,7 +112,7 @@ public class FRCKrawlerDaoGenerator {
         Property event_game_id = event.addLongProperty("game_id").notNull().getProperty();
         event.addToOne(game, event_game_id);
         event.addToMany(matchComment, match_comment_event_id);
-        event.addStringProperty("data").customType(jsonElementType, jsonPropertyConverter);
+        event.addStringProperty("data");
         event.addDateProperty("date");
 
         event.addToMany(robotEvent, robot_event_event_id);
@@ -126,7 +126,7 @@ public class FRCKrawlerDaoGenerator {
         Property robot_team_id = robot.addLongProperty("team_id").notNull().getProperty();
         Property robot_game_id = robot.addLongProperty("game_id").notNull().getProperty();
 
-        robot.addStringProperty("data").customType(jsonElementType, jsonPropertyConverter);
+        robot.addStringProperty("data");
         robot.addStringProperty("comments");
         robot.addDateProperty("last_updated");
 
@@ -143,7 +143,7 @@ public class FRCKrawlerDaoGenerator {
         metric.addToMany(matchData, match_data_metric_id);
         metric.addToMany(pitData, pit_data_metric_id);
         metric.addIntProperty("type");
-        metric.addStringProperty("data").customType(jsonElementType, jsonPropertyConverter);
+        metric.addStringProperty("data");
         Property metric_game_id = metric.addLongProperty("game_id").notNull().getProperty();
 
         //Games
@@ -161,7 +161,7 @@ public class FRCKrawlerDaoGenerator {
         team.addStringProperty("teamkey").unique();
         team.addStringProperty("name");
         team.addToMany(robot, robot_team_id);
-        team.addStringProperty("data").customType(jsonElementType, jsonPropertyConverter);
+        team.addStringProperty("data");
 
         //User
         user.implementsSerializable();

@@ -13,6 +13,7 @@ import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
+import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import org.antlr.v4.runtime.misc.NotNull;
@@ -67,7 +68,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
                 MatchData currentData = matchDataQueryBuilder.unique();
 
                 //Add the metric values
-                mMetricValues.add(new MetricValue(metric, currentData == null ? null : currentData.getData()));
+                mMetricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
             }
             mMatchComment = matchCommentQueryBuilder.unique();
         });

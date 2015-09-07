@@ -6,6 +6,7 @@ import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.tba.JSON;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +34,14 @@ public class MetricCompiler {
                 QueryBuilder<MatchData> queryBuilder = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), null, null, event.getId(), null);
 
                 for (MatchData matchData : queryBuilder.list()) {
-                    metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), matchData.getData()));
+                    metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), JSON.getAsJsonObject(matchData.getData())));
                 }
 
             } else if (metric.getCategory() == MetricHelper.MetricCategory.ROBOT_METRICS.id) {
                 QueryBuilder<PitData> queryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), event.getId(), null);
 
                 for (PitData pitData : queryBuilder.list()) {
-                    metricData.add(new MetricValue(dbManager.getPitDataTable().getMetric(pitData), pitData.getData()));
+                    metricData.add(new MetricValue(dbManager.getPitDataTable().getMetric(pitData), JSON.getAsJsonObject(pitData.getData())));
                 }
             }
             compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, MetricHelper.MetricType.values()[metric.getType()], compileWeight));
@@ -67,7 +68,7 @@ public class MetricCompiler {
 
                 for (MatchData matchData : queryBuilder.list()) {
                     if (matchData.getEvent_id() == event.getId()) {
-                        metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), matchData.getData()));
+                        metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), JSON.getAsJsonObject(matchData.getData())));
                     }
                 }
 
@@ -75,7 +76,7 @@ public class MetricCompiler {
                 QueryBuilder<PitData> queryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), event.getId(), null);
 
                 for (PitData pitData : queryBuilder.list()) {
-                    metricData.add(new MetricValue(dbManager.getPitDataTable().getMetric(pitData), pitData.getData()));
+                    metricData.add(new MetricValue(dbManager.getPitDataTable().getMetric(pitData), JSON.getAsJsonObject(pitData.getData())));
                 }
             }
             compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, MetricHelper.MetricType.values()[metric.getType()], compileWeight));

@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.listitems.ListElement;
+import com.team2052.frckrawler.tba.JSON;
 
 /**
  * @author Adam
@@ -20,7 +21,7 @@ public class TeamListElement extends ListElement {
     public TeamListElement(Team team) {
         super(Long.toString(team.getNumber()));
         this.team = team;
-        this.data = team.getData().getAsJsonObject();
+        this.data = JSON.getAsJsonObject(team.getData());
     }
 
     @Override

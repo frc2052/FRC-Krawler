@@ -6,9 +6,13 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.common.base.Optional;
+import com.team2052.frckrawler.BuildConfig;
 import com.team2052.frckrawler.bluetooth.BluetoothInfo;
 import com.team2052.frckrawler.bluetooth.ServerPackage;
 import com.team2052.frckrawler.bluetooth.client.ScoutPackage;
+import com.team2052.frckrawler.bluetooth.server.events.ServerQuitEvent;
+import com.team2052.frckrawler.bluetooth.server.events.ServerStartEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateChangeEvent;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
@@ -47,6 +51,7 @@ public class ServerThread extends Thread {
         Log.d(TAG, "Server Open");
         String deviceName;
         isOpen = true;
+        EventBus.getDefault().post(new ServerStartEvent());
         while (isOpen) {
             try {
                 serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
@@ -80,17 +85,22 @@ public class ServerThread extends Thread {
 
 
                     if (fromScoutStream != null) {
-                        BluetoothInfo.ConnectionType connection_type = null;
-
+                        Optional<BluetoothInfo.ConnectionType> connection_type = Optional.absent();
+                        boolean validVersion = false;
                         try {
-                            connection_type = BluetoothInfo.ConnectionType.VALID_CONNECTION_TYPES[fromScoutStream.readInt()];
+                            validVersion = fromScoutStream.readInt() == BuildConfig.VERSION_CODE;
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
 
-                        if (connection_type != null) {
+                        try {
+                            connection_type = Optional.of(BluetoothInfo.ConnectionType.VALID_CONNECTION_TYPES[fromScoutStream.readInt()]);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-                            switch (connection_type) {
+                        if (connection_type.isPresent() && validVersion) {
+                            switch (connection_type.get()) {
                                 case SCOUT_SYNC: {
                                     Log.d(TAG, "Starting sync with Scout");
                                     ServerPackage serverPackage = null;
@@ -114,21 +124,26 @@ public class ServerThread extends Thread {
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-
-                                    //Sleep to keep stream open
-                                    //Some random bug in Android
-                                    try {
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException ignored) {
-                                    }
-
-                                    try {
-                                        clientSocket.close();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
                                 }
                             }
+                        } else {
+                            try {
+                                toScoutStream.flush();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        //Sleep to keep stream open
+                        //Some random bug in Android
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException ignored) {
+                        }
+
+                        try {
+                            clientSocket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -136,6 +151,7 @@ public class ServerThread extends Thread {
         }
         Log.d(TAG, "Server Closed");
         EventBus.getDefault().post(new ServerStateChangeEvent(null, false));
+        EventBus.getDefault().post(new ServerQuitEvent());
     }
 
     public void closeServer() {

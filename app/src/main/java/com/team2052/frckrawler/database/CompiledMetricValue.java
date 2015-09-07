@@ -92,7 +92,7 @@ public class CompiledMetricValue {
                 break;
             case CHOOSER:
             case CHECK_BOX:
-                JsonArray possible_values = metric.getData().getAsJsonObject().get("values").getAsJsonArray();
+                JsonArray possible_values = JSON.getAsJsonObject(metric.getData()).get("values").getAsJsonArray();
                 Map<Integer, Tuple2<String, Double>> compiledVal = Maps.newTreeMap();
 
                 for (int i = 0; i < possible_values.size(); i++) {

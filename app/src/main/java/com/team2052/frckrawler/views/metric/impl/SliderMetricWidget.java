@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBarChangeListener {
@@ -29,7 +30,7 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
 
         SeekBar s = (SeekBar) findViewById(R.id.sliderVal);
 
-        JsonObject range = m.getMetric().getData().getAsJsonObject();
+        JsonObject range = JSON.getAsJsonObject(m.getMetric().getData());
         min = range.get("min").getAsInt();
         max = range.get("max").getAsInt();
 

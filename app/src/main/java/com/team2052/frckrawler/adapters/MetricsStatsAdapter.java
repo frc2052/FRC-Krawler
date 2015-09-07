@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.database.CompiledMetricValue;
 import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.tba.JSON;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class MetricsStatsAdapter extends ListViewAdapter {
                 break;
             case CHOOSER:
             case CHECK_BOX:
-                JsonObject data_json = metric.getData().getAsJsonObject();
+                JsonObject data_json = JSON.getAsJsonObject(metric.getData());
                 JsonArray values = data_json.get("values").getAsJsonArray();
                 for (JsonElement value : values) {
                     items.add(String.format("%s %s", value.getAsString(), "ASC"));

@@ -2,20 +2,23 @@ package com.team2052.frckrawler.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.databinding.LayoutTabBinding;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.event.RobotAttendingEventsFragment;
 
 /**
  * @author Adam
  */
-public class RobotActivity extends ViewPagerActivity {
+public class RobotActivity extends BaseActivity {
     private Robot mRobot;
+    private LayoutTabBinding binding;
 
     public static Intent newInstance(Context context, long rKey) {
         Intent intent = new Intent(context, RobotActivity.class);
@@ -24,15 +27,17 @@ public class RobotActivity extends ViewPagerActivity {
     }
 
     @Override
-    public void onPreLoadViewPager() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = DataBindingUtil.setContentView(this, R.layout.layout_tab);
+        setSupportActionBar(binding.toolbar);
+
         mRobot = mDbManager.getRobotsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
         setActionBarTitle(getString(R.string.robot_text));
         setActionBarSubtitle(String.valueOf(mRobot.getTeam_id()));
-    }
 
-    @Override
-    public PagerAdapter setAdapter() {
-        return new RobotViewPagerAdapter(getSupportFragmentManager());
+        binding.viewPager.setAdapter(new RobotViewPagerAdapter(getSupportFragmentManager()));
+        binding.tabLayout.setupWithViewPager(binding.viewPager);
     }
 
     public class RobotViewPagerAdapter extends FragmentPagerAdapter {
@@ -49,7 +54,7 @@ public class RobotActivity extends ViewPagerActivity {
                     return new NeedSyncFragment();*/
                 case 0:
                     return RobotAttendingEventsFragment.newInstance(mRobot);
-/*                case 1:
+                /*case 1:
                     return PhotosFragment.newInstance(mRobot);*/
             }
             return null;

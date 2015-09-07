@@ -38,7 +38,7 @@ public class MatchDeserializer implements JsonDeserializer<Match> {
         JsonObject alliances = object.get("alliances").getAsJsonObject();
         JsonObject data = new JsonObject();
         data.add("alliances", alliances);
-        match.setData(data);
+        match.setData(JSON.getGson().toJson(data));
         return match;
     }
 }

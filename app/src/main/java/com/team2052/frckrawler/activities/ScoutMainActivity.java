@@ -53,6 +53,8 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
         binding.scoutMatchButton.setOnClickListener(this);
         binding.scoutPitButton.setOnClickListener(this);
         binding.scoutPracticeButton.setOnClickListener(this);
+        binding.syncButton.setOnClickListener(this);
+
 
         //Binding doesn't include <include> layout
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));

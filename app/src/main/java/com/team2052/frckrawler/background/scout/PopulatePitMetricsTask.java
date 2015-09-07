@@ -12,6 +12,7 @@ import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
+import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
 
         if (pitDatas.size() == metrics.size()) {
             for (PitData pitData : pitDatas) {
-                mMetricWidgets.add(new MetricValue(mDBManager.getPitDataTable().getMetric(pitData), pitData.getData()));
+                mMetricWidgets.add(new MetricValue(mDBManager.getPitDataTable().getMetric(pitData), JSON.getAsJsonObject(pitData.getData())));
             }
         } else {
             for (Metric metric : metrics) {

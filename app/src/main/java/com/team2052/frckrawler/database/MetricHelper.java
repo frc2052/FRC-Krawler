@@ -32,7 +32,7 @@ public class MetricHelper {
             return Optional.absent();
         if (metric.getData() == null)
             return Optional.absent();
-        return Optional.of(metric.getData());
+        return Optional.of(JSON.getAsJsonObject(metric.getData()));
     }
 
     public static Tuple2<Boolean, ReturnResult> compileBooleanMetricValue(MetricValue metricValue) {
@@ -252,7 +252,7 @@ public class MetricHelper {
                     name,
                     metricCategory.id,
                     metricType.id,
-                    data,
+                    JSON.getGson().toJson(data),
                     game.getId());
         }
     }
