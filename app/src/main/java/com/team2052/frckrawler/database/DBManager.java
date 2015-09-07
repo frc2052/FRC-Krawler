@@ -352,10 +352,14 @@ public class DBManager {
             long count = matchCommentQueryBuilder.count();
             if (count > 0) {
                 MatchComment currentData = matchCommentQueryBuilder.unique();
-                currentData.setComment(matchComment.getComment());
-                matchCommentDao.update(currentData);
+                if (currentData.getLast_updated().getTime() <= new Date().getTime()) {
+                    currentData.setLast_updated(new Date());
+                    currentData.setComment(matchComment.getComment());
+                    matchCommentDao.update(currentData);
+                }
                 return false;
             } else {
+                matchComment.setLast_updated(new Date());
                 matchCommentDao.insert(matchComment);
                 return true;
             }
@@ -412,10 +416,14 @@ public class DBManager {
 
             if (count > 0) {
                 PitData unique = pitDataQueryBuilder.unique();
-                unique.setData(pitData.getData());
-                pitDataDao.update(unique);
+                if (unique.getLast_updated().getTime() <= new Date().getTime()) {
+                    unique.setLast_updated(new Date());
+                    unique.setData(pitData.getData());
+                    pitDataDao.update(unique);
+                }
                 return false;
             } else {
+                pitData.setLast_updated(new Date());
                 pitDataDao.insert(pitData);
                 return true;
             }
@@ -475,15 +483,18 @@ public class DBManager {
             matchDataQueryBuilder.where(MatchDataDao.Properties.Match_number.eq(matchData.getMatch_number()));
             matchDataQueryBuilder.where(MatchDataDao.Properties.Event_id.eq(matchData.getEvent_id()));
             matchDataQueryBuilder.where(MatchDataDao.Properties.Match_type.eq(matchData.getMatch_type()));
-
             long count = matchDataQueryBuilder.count();
 
             if (count > 0) {
                 MatchData unique = matchDataQueryBuilder.unique();
-                unique.setData(matchData.getData());
-                matchDataDao.update(unique);
+                if (unique.getLast_updated().getTime() <= new Date().getTime()) {
+                    unique.setLast_updated(new Date());
+                    unique.setData(matchData.getData());
+                    matchDataDao.update(unique);
+                }
                 return false;
             } else {
+                matchData.setLast_updated(new Date());
                 matchDataDao.insert(matchData);
                 return true;
             }
