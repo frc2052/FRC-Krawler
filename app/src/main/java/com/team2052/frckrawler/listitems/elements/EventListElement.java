@@ -25,7 +25,10 @@ public class EventListElement extends ListElement {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_event, null);
         }
-        ((TextView) convertView.findViewById(R.id.list_view_event_location)).setText(JSON.getAsJsonObject(event.getData()).get("location").getAsString());
+        if (event.getData() != null && JSON.getAsJsonObject(event.getData()).has("location"))
+            ((TextView) convertView.findViewById(R.id.list_view_event_location)).setText(JSON.getAsJsonObject(event.getData()).get("location").getAsString());
+        else
+            ((TextView) convertView.findViewById(R.id.list_view_event_location)).setText("Unknown");
         ((TextView) convertView.findViewById(R.id.list_view_event_name)).setText(event.getName());
         ((TextView) convertView.findViewById(R.id.list_view_event_date)).setText(DateFormat.getDateInstance().format(event.getDate()));
         return convertView;

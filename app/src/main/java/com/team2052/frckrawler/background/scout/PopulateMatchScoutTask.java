@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
+import com.team2052.frckrawler.comparators.RobotTeamNumberComparator;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
@@ -13,6 +14,7 @@ import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,6 +39,7 @@ public class PopulateMatchScoutTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         Log.d("PopulateMatchScoutTask", "running PopulateMatchScoutTask");
         mRobots = mDaoSession.getGamesTable().getRobots(mDaoSession.getEventsTable().getGame(mEvent));
+        Collections.sort(mRobots, new RobotTeamNumberComparator());
         return null;
     }
 

@@ -34,8 +34,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -48,7 +47,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="16dp"
-                        android:text="Number of Events"
+                        android:text="Events"
                         android:textColor="@android:color/black"/>
 
                     <TextView
@@ -71,7 +70,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="16dp"
-                        android:text="Number of Match Metrics"
+                        android:text="Match Metrics"
                         android:textColor="@android:color/black"/>
 
                     <TextView
@@ -93,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="16dp"
-                        android:text="Number of Match Metrics"
+                        android:text="Pit Metrics"
                         android:textColor="@android:color/black"/>
 
                     <TextView
@@ -116,7 +115,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="16dp"
-                        android:text="Number of Robots"
+                        android:text="Robots"
                         android:textColor="@android:color/black"/>
 
                     <TextView

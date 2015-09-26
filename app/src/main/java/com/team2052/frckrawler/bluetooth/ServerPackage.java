@@ -8,6 +8,7 @@ import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,9 +56,12 @@ public class ServerPackage implements Serializable {
 
             for (RobotComment robotComment : robotComments) {
                 Robot robot = dbManager.getRobotsTable().load(robotComment.getRobotId());
-                robot.setComments(robotComment.getComment());
-                robot.update();
-                dbManager.getRobotsTable().update(robot);
+                if (robot.getLast_updated().getTime() <= new Date().getTime()) {
+                    robot.setLast_updated(new Date());
+                    robot.setComments(robotComment.getComment());
+                    robot.update();
+                    dbManager.getRobotsTable().update(robot);
+                }
             }
         });
     }

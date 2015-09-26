@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.listitems.ListElement;
@@ -31,7 +32,7 @@ public class RobotListElement extends ListElement {
             convertView = inflater.inflate(R.layout.list_item_robot, null);
         }
         ((TextView) convertView.findViewById(R.id.number)).setText("Team " + String.valueOf(mRobot.getTeam_id()));
-        ((TextView) convertView.findViewById(R.id.game)).setText(game.getName());
+        ((TextView) convertView.findViewById(R.id.game)).setText(game.getName() + " - " + DBManager.getInstance(c).getRobotsTable().getTeam(mRobot).getName());
         return convertView;
     }
 }

@@ -33,8 +33,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -47,7 +46,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="16dp"
-                        android:text="Number of Matches"
+                        android:text="Matches"
                         android:textColor="@android:color/black"/>
 
                     <TextView
@@ -70,7 +69,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="16dp"
-                        android:text="Number of Teams Attending"
+                        android:text="Teams Attending"
                         android:textColor="@android:color/black"/>
 
                     <TextView
@@ -93,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="16dp"
-                        android:text="Ammount of Match Data"
+                        android:text="Amount of Match Data"
                         android:textColor="@android:color/black"/>
 
                     <TextView
@@ -116,7 +115,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="16dp"
-                        android:text="Ammount of Pit Data"
+                        android:text="Amount of Pit Data"
                         android:textColor="@android:color/black"/>
 
                     <TextView

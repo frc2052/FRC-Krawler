@@ -94,6 +94,10 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    public void setProgressBar(boolean visible) {
+
+    }
+
     public void onEvent(ServerStateChangeEvent event) {
         if (event.getEvent() != null && event.getState()) {
             isServer = true;
@@ -142,7 +146,7 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
 
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncSuccessEvent event) {
-        setProgress(View.GONE);
+        setProgressVisibility(View.GONE);
         Snackbar.make(findViewById(R.id.container), "Sync Successful", Snackbar.LENGTH_LONG).show();
         setCurrentEvent(ScoutUtil.getScoutEvent(this));
     }
@@ -175,12 +179,12 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
 
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncCancelledEvent event) {
-        setProgress(View.GONE);
+        setProgressVisibility(View.GONE);
     }
 
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncErrorEvent event) {
-        setProgress(View.GONE);
+        setProgressVisibility(View.GONE);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getBaseContext().getString(R.string.sync_error_title));
@@ -195,7 +199,7 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncStartEvent event) {
         Snackbar.make(findViewById(R.id.container), "Starting Sync", Snackbar.LENGTH_SHORT).show();
-        setProgress(View.VISIBLE);
+        setProgressVisibility(View.VISIBLE);
     }
 
 

@@ -8,8 +8,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import com.squareup.okhttp.Response;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
@@ -20,8 +20,8 @@ import com.team2052.frckrawler.tba.HTTP;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.tba.TBA;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * @author Adam
@@ -52,7 +52,7 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_team, null);
         ButterKnife.bind(this, view);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add Event");
+        builder.setTitle("Add Team");
         builder.setPositiveButton("Add", this);
         builder.setNegativeButton("Cancel", this);
         builder.setView(view);
@@ -80,16 +80,20 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
         protected Void doInBackground(Void... params) {
             DBManager dbManager = DBManager.getInstance(getActivity());
             //Team doesn't exist nor does robot and robotevent (most likely)
-            String url = TBA.BASE_TBA_API_URL + String.format(TBA.TEAM, teamNumber);
+            String url = String.format(TBA.TEAM, teamNumber);
             //Query Team from TBA :)
-            Team team = JSON.getGson().fromJson(JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url))), Team.class);
-            dbManager.getTeamsTable().insertNew(team, mEvent);
+            Response response = HTTP.getResponse(url);
+            if (response.isSuccessful()) {
+                String responseString = HTTP.dataFromResponse(response);
+                Team team = JSON.getGson().fromJson(JSON.getAsJsonObject(responseString), Team.class);
+                dbManager.getTeamsTable().insertNew(team, mEvent);
+            }
+
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Toast.makeText(getActivity(), "Imported Team" + teamNumber, Toast.LENGTH_SHORT).show();
             ((ListFragment) getParentFragment()).updateList();
             dismiss();
         }

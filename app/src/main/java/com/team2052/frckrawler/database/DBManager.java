@@ -810,7 +810,7 @@ public class DBManager {
             }
 
             QueryBuilder<RobotEvent> robotEventQueryBuilder = getRobotEvents().getQueryBuilder();
-            robotEventQueryBuilder.where(RobotEventDao.Properties.Event_id.eq(event.getGame_id()));
+            robotEventQueryBuilder.where(RobotEventDao.Properties.Event_id.eq(event.getId()));
             robotEventQueryBuilder.where(RobotEventDao.Properties.Robot_id.eq(robot.getId()));
             RobotEvent robotEvent = robotEventQueryBuilder.unique();
             boolean robot_event_exists = robotEvent != null;

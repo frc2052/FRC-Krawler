@@ -12,11 +12,14 @@ import android.widget.EditText;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
 
-import butterknife.ButterKnife;
+import java.util.Date;
+
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * @author Adam
@@ -65,8 +68,12 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            //DaoSession daoSession = ((FRCKrawler) getActivity().provideApplicationContext()).getDBManager();
-            //daoSession.getEventDao().insert(new Event(null, name.getText().toString(), mGame.getId(), "Unknown", new Date(), null));
+            Event event = new Event(null);
+            event.setName(name.getText().toString());
+            event.setGame(mGame);
+            event.setFmsid(null);
+            event.setDate(new Date());
+            DBManager.getInstance(getContext()).getEventsTable().insert(event);
         } else {
             dismiss();
         }
