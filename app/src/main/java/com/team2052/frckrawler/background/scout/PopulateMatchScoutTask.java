@@ -38,7 +38,7 @@ public class PopulateMatchScoutTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         Log.d("PopulateMatchScoutTask", "running PopulateMatchScoutTask");
-        mRobots = mDaoSession.getGamesTable().getRobots(mDaoSession.getEventsTable().getGame(mEvent));
+        mRobots = mDaoSession.getEventsTable().getRobots(mEvent);
         Collections.sort(mRobots, new RobotTeamNumberComparator());
         return null;
     }
