@@ -81,7 +81,7 @@ public class DBManager {
     private DBManager(Context context) {
         this.context = context;
 
-        DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(context, "frc-krawler-database", null);
+        DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(context, "frc-krawler-database-v3", null);
 
         SQLiteDatabase db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);

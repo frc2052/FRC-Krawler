@@ -80,7 +80,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             case R.id.welcome_next_page:
                 Log.i(LOG_TAG, String.valueOf(BluetoothUtil.isBluetoothEnabled()));
                 if (BluetoothUtil.isBluetoothEnabled()) {
-                    pager.setCurrentItem(2);
+                    setupFinished();
                 } else {
                     pager.goToNextPage();
                 }
@@ -109,7 +109,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BT && resultCode == RESULT_OK) {
-            pager.goToNextPage();
+            setupFinished();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

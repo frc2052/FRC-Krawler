@@ -20,9 +20,5 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldSchemaVer, int newSchemaVer) {
         Log.i(LOG_TAG, "Upgrading Schema Version from " + oldSchemaVer + " to " + newSchemaVer);
-        if (newSchemaVer == 2) {
-            DaoMaster.dropAllTables(db, true);
-            onCreate(db);
-        }
     }
 }

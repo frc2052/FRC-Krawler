@@ -84,7 +84,7 @@ public class MatchListFragment extends ListFragment {
             List<ListItem> listItems = new ArrayList<>();
 
             for (Match match : matches) {
-                listItems.add(new MatchListItem(match));
+                listItems.add(new MatchListItem(match, true));
             }
             mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), listItems));
         }

@@ -153,6 +153,7 @@ public class ScoutMatchFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!(mRobots.size() < position))
                     selectedRobot = mRobots.get(position);
+                updateMetricValues();
             }
 
             @Override

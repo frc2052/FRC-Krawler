@@ -52,8 +52,6 @@ public class MatchListActivity extends BaseActivity {
         toolbar.setSubtitle(mEvent.getName());
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         setActionBarTitle("Schedule");
         setActionBarSubtitle(mEvent.getName());
         if (getActionBar() != null) {
