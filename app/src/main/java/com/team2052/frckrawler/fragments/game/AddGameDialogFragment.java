@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activities.GameInfoActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
@@ -36,6 +37,7 @@ public class AddGameDialogFragment extends DialogFragment {
             Game game = new Game(null, ((TextView) getDialog().getWindow().findViewById(R.id.nameVal)).getText().toString());
             mDbSession.getGamesTable().insert(game);
             listener.updateList();
+            getActivity().startActivity(GameInfoActivity.newInstance(getContext(), game));
             dismiss();
         });
 

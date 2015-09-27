@@ -157,7 +157,6 @@ public class EditMetricDialogFragment extends DialogFragment {
         mMetric.setName(name);
         mMetric.setData(JSON.getGson().toJson(data));
         mMetric.update();
-        ((ListUpdateListener) getParentFragment()).updateList();
     }
 
     private void autoFill() {

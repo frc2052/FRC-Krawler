@@ -1,90 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:id="@+id/scrollView1"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:padding="16dp">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1" android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/root"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
-
-        <Spinner
-            android:id="@+id/type"
+        <RelativeLayout
+            android:id="@+id/root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            android:entries="@array/metric_types"/>
+            android:padding="8dp">
 
-        <EditText
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/type"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            android:hint="Name"/>
+            <Spinner
+                android:id="@+id/type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:entries="@array/metric_types" />
 
-        <EditText
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/name"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            android:hint="Description"/>
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/type"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:hint="Name" />
 
-        <EditText
-            android:id="@+id/minimum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/description"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            android:hint="Minimum"
-            android:inputType="number"/>
+            <EditText
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/name"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:hint="Description" />
 
-        <EditText
-            android:id="@+id/maximum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/minimum"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            android:hint="Maximum"
-            android:inputType="number"/>
+            <EditText
+                android:id="@+id/minimum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/description"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:hint="Minimum"
+                android:inputType="number" />
 
-        <EditText
-            android:id="@+id/incrementation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/maximum"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            android:hint="Incrementation"
-            android:inputType="number"/>
+            <EditText
+                android:id="@+id/maximum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/minimum"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:hint="Maximum"
+                android:inputType="number" />
 
-        <TextView
-            android:id="@+id/list_header"
-            style="@style/TextHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/incrementation"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="16dp"
-            android:text="List"/>
+            <EditText
+                android:id="@+id/incrementation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/maximum"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:hint="Incrementation"
+                android:inputType="number" />
 
-        <FrameLayout
-            android:id="@+id/list_editor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/list_header"/>
-    </RelativeLayout>
-</ScrollView>
+            <TextView
+                android:id="@+id/list_header"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/incrementation"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:text="List" />
+
+            <FrameLayout
+                android:id="@+id/list_editor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/list_header" />
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>

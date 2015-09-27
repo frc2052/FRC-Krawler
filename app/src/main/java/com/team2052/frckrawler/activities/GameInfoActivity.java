@@ -130,5 +130,4 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
             return headers[position];
         }
     }
-
 }

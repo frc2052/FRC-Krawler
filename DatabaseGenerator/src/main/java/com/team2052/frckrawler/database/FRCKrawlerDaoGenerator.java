@@ -145,6 +145,7 @@ public class FRCKrawlerDaoGenerator {
         metric.addIntProperty("type");
         metric.addStringProperty("data");
         Property metric_game_id = metric.addLongProperty("game_id").notNull().getProperty();
+        metric.addToOne(game, metric_game_id);
 
         //Games
         game.implementsSerializable();

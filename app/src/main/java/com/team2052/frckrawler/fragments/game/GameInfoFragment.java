@@ -87,7 +87,7 @@ public class GameInfoFragment extends BaseFragment implements ListUpdateListener
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Delete Game?");
         builder.setMessage("Are you sure you want to delete this game?");
-        builder.setPositiveButton("Ok", (dialog, which) -> {
+        builder.setPositiveButton("Delete", (dialog, which) -> {
             new DeleteGameTask(getActivity(), mGame, true).execute();
         });
         builder.setNegativeButton("Cancel", null);

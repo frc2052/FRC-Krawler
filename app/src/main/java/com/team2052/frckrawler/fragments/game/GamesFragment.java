@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.fragments.game;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -55,6 +56,12 @@ public class GamesFragment extends BaseFragment implements ListUpdateListener {
     @Override
     public void onResume() {
         super.onResume();
+        updateList();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
         updateList();
     }
 

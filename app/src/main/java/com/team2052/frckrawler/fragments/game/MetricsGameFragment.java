@@ -45,7 +45,6 @@ public class MetricsGameFragment extends BaseFragment implements FABButtonListen
         bundle.putLong(GAME_ID, game.getId());
         bundle.putInt(CATEGORY_EXTRA, category);
         fragment.setArguments(bundle);
-        fragment.setRetainInstance(true);
         return fragment;
     }
 
@@ -53,6 +52,12 @@ public class MetricsGameFragment extends BaseFragment implements FABButtonListen
     public void onAttach(Activity activity) {
         setHasOptionsMenu(true);
         super.onAttach(activity);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateList();
     }
 
     @Override
