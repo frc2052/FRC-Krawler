@@ -33,7 +33,6 @@ public class EditMetricDialogFragment extends DialogFragment {
     private FrameLayout mListEditor;
     private ListEditor list;
     private View mListHeader;
-    private int mCurrentSelectedMetricType;
     private DBManager mDbSession;
     private Metric mMetric;
 
@@ -56,13 +55,10 @@ public class EditMetricDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mMetric = mDbSession.getMetricsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
-        b.setTitle("Edit " + mMetric.getName());
+        b.setTitle("Edit Metric");
         b.setView(initViews());
-        b.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                EditMetricDialogFragment.this.onUpdateButtonPressed();
-            }
+        b.setPositiveButton("Update", (dialog, which) -> {
+            EditMetricDialogFragment.this.onUpdateButtonPressed();
         });
         b.setNegativeButton("Cancel", null);
 
@@ -87,7 +83,7 @@ public class EditMetricDialogFragment extends DialogFragment {
     }
 
     public void setupEditor(int type) {
-        switch (MetricHelper.MetricType.values()[mCurrentSelectedMetricType]) {
+        switch (MetricHelper.MetricType.values()[type]) {
             case COUNTER:
                 mMinimum.setVisibility(View.VISIBLE);
                 mMaximum.setVisibility(View.VISIBLE);

@@ -25,6 +25,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="false"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/valuesGroup"
             android:text="Boolean"/>
 
         <RadioGroup

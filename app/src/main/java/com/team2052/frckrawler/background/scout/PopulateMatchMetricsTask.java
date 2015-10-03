@@ -91,6 +91,8 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         //Set the comment
         if (mMatchComment != null) {
             mFragment.setComment(mMatchComment.getComment());
+        } else {
+            mFragment.setComment("");
         }
     }
 }
