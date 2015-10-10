@@ -62,12 +62,12 @@
         <activity
             android:name=".activities.ScoutActivity"
             android:parentActivityName=".activities.ScoutMainActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ScoutMainActivity" />
         </activity>
         <activity android:name=".activities.MetricActivity" />
-        <activity android:name="com.github.mmin18.layoutcast.ResetActivity" />
     </application>
 </manifest>

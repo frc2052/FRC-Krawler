@@ -15,6 +15,7 @@ import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.User;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.util.SnackbarUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -90,9 +91,9 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         if (inserted) {
-            Snackbar.make(fragment.getView(), "Save Complete", Snackbar.LENGTH_LONG).show();
+            SnackbarUtil.make(fragment.getView(), "Save Complete", Snackbar.LENGTH_LONG).show();
         } else {
-            Snackbar.make(fragment.getView(), "Update Complete", Snackbar.LENGTH_LONG).show();
+            SnackbarUtil.make(fragment.getView(), "Update Complete", Snackbar.LENGTH_LONG).show();
         }
     }
 }

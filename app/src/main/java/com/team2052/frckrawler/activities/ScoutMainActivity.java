@@ -26,6 +26,7 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.ScoutUtil;
+import com.team2052.frckrawler.util.SnackbarUtil;
 
 import de.greenrobot.event.EventBus;
 
@@ -77,20 +78,19 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
                 case R.id.scout_practice_button:
                     startActivity(ScoutActivity.newInstance(this, currentEvent, ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE));
                     break;
+                case R.id.sync_button:
+                    if (BluetoothUtil.hasBluetoothAdapter()) {
+                        if (!BluetoothUtil.isBluetoothEnabled()) {
+                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                        } else {
+                            mSyncHandler.startScoutSync(this);
+                        }
+                    }
+                    break;
             }
         } else {
             Snackbar.make(binding.container, "Cannot open, you must have a synced event", Snackbar.LENGTH_SHORT).show();
-        }
-
-        if (v.getId() == R.id.sync_button) {
-            if (BluetoothUtil.hasBluetoothAdapter()) {
-                if (!BluetoothUtil.isBluetoothEnabled()) {
-                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-                } else {
-                    mSyncHandler.startScoutSync(this);
-                }
-            }
         }
     }
 
@@ -147,7 +147,7 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncSuccessEvent event) {
         setProgressVisibility(View.GONE);
-        Snackbar.make(findViewById(R.id.container), "Sync Successful", Snackbar.LENGTH_LONG).show();
+        SnackbarUtil.make(findViewById(R.id.container), "Sync Successful", Snackbar.LENGTH_LONG).show();
         setCurrentEvent(ScoutUtil.getScoutEvent(this));
     }
 
@@ -198,7 +198,7 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
 
     @SuppressWarnings("unused")
     public void onEvent(ScoutSyncStartEvent event) {
-        Snackbar.make(findViewById(R.id.container), "Starting Sync", Snackbar.LENGTH_SHORT).show();
+        SnackbarUtil.make(findViewById(R.id.container), "Starting Sync", Snackbar.LENGTH_SHORT).show();
         setProgressVisibility(View.VISIBLE);
     }
 

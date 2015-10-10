@@ -3,6 +3,7 @@ package com.team2052.frckrawler.bluetooth.client;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -45,10 +46,17 @@ public class ScoutSyncHandler extends ContextWrapper {
     }
 
     public void startSync(BluetoothDevice device, Context context) {
-        cancelAllRunningSyncs();
-        mCurrentSyncingDevice = device;
-        syncAsScoutTask = new SyncScoutTask(context);
-        syncAsScoutTask.execute(device);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setTitle("Are you sure you want to sync?");
+        dialog.setMessage("Are you sure you want to sync to " + device.getName() + "?");
+        dialog.setPositiveButton("Yes", (dialog1, which) -> {
+            cancelAllRunningSyncs();
+            mCurrentSyncingDevice = device;
+            syncAsScoutTask = new SyncScoutTask(context);
+            syncAsScoutTask.execute(device);
+        });
+        dialog.setNegativeButton("No", null);
+        dialog.create().show();
     }
 
     public void cancelAllRunningSyncs() {

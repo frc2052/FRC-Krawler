@@ -119,6 +119,7 @@ public class ScoutMatchFragment extends BaseFragment {
                         mMatchNumberInput.setErrorEnabled(true);
                         mMatchNumberInput.setError("It's over 9000!");
                     } else {
+                        mMatchNumberInput.setError("");
                         mMatchNumberInput.setErrorEnabled(false);
                     }
                     updateMetricValues();
@@ -145,6 +146,10 @@ public class ScoutMatchFragment extends BaseFragment {
             public void afterTextChanged(Editable s) {
                 if (!isCommentValid()) {
                     mComments.setError("You had one job");
+                } else {
+
+                    mComments.setError("");
+                    mComments.setErrorEnabled(false);
                 }
             }
         });

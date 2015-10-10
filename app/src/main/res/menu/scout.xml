@@ -10,7 +10,6 @@
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_view_match"
-        android:icon="@drawable/ic_schedule_white_24dp"
         android:title="View Schedule"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 </menu>
