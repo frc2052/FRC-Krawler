@@ -118,6 +118,7 @@ public class ServerThread extends Thread {
 
                                     try {
                                         Log.d(TAG, "Sending Data to Scout");
+                                        toScoutStream.writeInt(BluetoothInfo.OK);
                                         toScoutStream.writeObject(new ScoutPackage(mDbManager, hostedEvent));
                                         toScoutStream.flush();
                                         handler.onSyncCancel();
@@ -128,7 +129,10 @@ public class ServerThread extends Thread {
                             }
                         } else {
                             try {
+                                toScoutStream.writeInt(BluetoothInfo.VERSION_ERROR);
+                                toScoutStream.writeObject(BuildConfig.VERSION_NAME);
                                 toScoutStream.flush();
+                                handler.onSyncCancel();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

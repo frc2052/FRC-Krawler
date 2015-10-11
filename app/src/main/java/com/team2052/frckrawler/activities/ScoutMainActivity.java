@@ -186,7 +186,7 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getBaseContext().getString(R.string.sync_error_title));
-        builder.setMessage(getBaseContext().getString(R.string.sync_error_message));
+        builder.setMessage(event.message == null ? getBaseContext().getString(R.string.sync_error_message) : event.message);
         builder.setNeutralButton(getString(R.string.close), (dialog, which) -> {
             dialog.dismiss();
         });

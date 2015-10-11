@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
 import com.team2052.frckrawler.BuildConfig;
@@ -32,6 +33,8 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     private static int tasksRunning = 0;
     private final DBManager mDbManager;
     private final String TAG = SyncScoutTask.class.getSimpleName();
+
+    private String errorMessage = null;
 
 
     private volatile String deviceName;
@@ -89,7 +92,13 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
 
             ScoutPackage scoutPackage = null;
             try {
-                scoutPackage = (ScoutPackage) ioStream.readObject();
+                int code = ioStream.readInt();
+                if(code == BluetoothInfo.OK){
+                    scoutPackage = (ScoutPackage) ioStream.readObject();
+                } else if(code == BluetoothInfo.VERSION_ERROR){
+                    errorMessage = String.format("The server version is incompatible with your version. You are running %s and the server is running %s", BuildConfig.VERSION_NAME, ioStream.readObject());
+                    return SYNC_ERROR;
+                }
             } catch (ClassNotFoundException | IOException e) {
                 e.printStackTrace();
                 return SYNC_ERROR;
@@ -121,7 +130,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
         if (i == SYNC_SUCCESS)
             EventBus.getDefault().post(new ScoutSyncSuccessEvent());
         else if (i == SYNC_ERROR)
-            EventBus.getDefault().post(new ScoutSyncErrorEvent());
+            EventBus.getDefault().post(new ScoutSyncErrorEvent(errorMessage));
         else if (i == SYNC_CANCELLED)
             EventBus.getDefault().post(new ScoutSyncCancelledEvent());
     }
