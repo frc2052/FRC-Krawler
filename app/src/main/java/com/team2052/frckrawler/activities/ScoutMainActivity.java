@@ -67,6 +67,18 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        if (v.getId() == R.id.sync_button) {
+            if (BluetoothUtil.hasBluetoothAdapter()) {
+                if (!BluetoothUtil.isBluetoothEnabled()) {
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                } else {
+                    mSyncHandler.startScoutSync(this);
+                }
+            }
+            return;
+        }
+
         if (isCurrentEventValid()) {
             switch (v.getId()) {
                 case R.id.scout_match_button:
@@ -78,24 +90,10 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
                 case R.id.scout_practice_button:
                     startActivity(ScoutActivity.newInstance(this, currentEvent, ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE));
                     break;
-                case R.id.sync_button:
-                    if (BluetoothUtil.hasBluetoothAdapter()) {
-                        if (!BluetoothUtil.isBluetoothEnabled()) {
-                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-                        } else {
-                            mSyncHandler.startScoutSync(this);
-                        }
-                    }
-                    break;
             }
         } else {
             Snackbar.make(binding.container, "Cannot open, you must have a synced event", Snackbar.LENGTH_SHORT).show();
         }
-    }
-
-    public void setProgressBar(boolean visible) {
-
     }
 
     public void onEvent(ServerStateChangeEvent event) {
