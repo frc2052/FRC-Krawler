@@ -10,9 +10,6 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
-
-import org.antlr.v4.runtime.misc.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +25,7 @@ public class PopulateMatchScoutTask extends AsyncTask<Void, Void, Void> {
     private ScoutMatchFragment mFragment;
     private List<Robot> mRobots;
 
-    public PopulateMatchScoutTask(@NotNull ScoutMatchFragment fragment, @NotNull Event event) {
+    public PopulateMatchScoutTask(ScoutMatchFragment fragment,Event event) {
         mFragment = fragment;
         this.context = fragment.getActivity();
         this.mDaoSession = DBManager.getInstance(context);
