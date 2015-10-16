@@ -2,6 +2,7 @@ package com.team2052.frckrawler.fragments.scout;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -30,13 +31,13 @@ import com.team2052.frckrawler.views.metric.MetricWidget;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * @author Adam
  */
-public class ScoutMatchFragment extends BaseFragment {
+public class ScoutMatchFragment extends BaseFragment implements View.OnClickListener {
     public static final int MATCH_GAME_TYPE = 0;
     public static final int MATCH_PRACTICE_TYPE = 1;
     public static final String MATCH_TYPE = "MATCH_TYPE";
@@ -55,6 +56,9 @@ public class ScoutMatchFragment extends BaseFragment {
 
     @Bind(R.id.robot)
     public Spinner mRobotAutoComplete;
+
+    @Bind(R.id.button_save)
+    public FloatingActionButton mSaveButton;
 
     public Robot selectedRobot;
     public List<String> mRobotNames;
@@ -96,6 +100,7 @@ public class ScoutMatchFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        mSaveButton.setOnClickListener(this);
         mMatchNumberInput.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -179,30 +184,9 @@ public class ScoutMatchFragment extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            if (mEvent != null && getSelectedRobot() != null && isMatchNumberValid()) {
-                mSaveTask = new SaveMatchMetricsTask(
-                        getActivity(),
-                        this,
-                        mEvent,
-                        getSelectedRobot(),
-                        /*TODO: USER*/ null,
-                        getMatchNumber(),
-                        mType,
-                        getMetricValues(),
-                        getComment());
-                mSaveTask.execute();
-            } else if (getSelectedRobot() == null) {
-                Snackbar.make(getView(), "Please select a robot", Snackbar.LENGTH_SHORT).show();
-            } else if (!isMatchNumberValid()) {
-                Snackbar.make(getView(), "Match Number is Invalid", Snackbar.LENGTH_SHORT).show();
-            } else {
-                Snackbar.make(getView(), getActivity().getString(R.string.something_seems_wrong), Snackbar.LENGTH_SHORT).show();
-            }
-        } else if (item.getItemId() == R.id.action_view_match) {
+        if (item.getItemId() == R.id.action_view_match) {
             startActivity(MatchListActivity.newInstance(getActivity(), mEvent));
         }
-
         return false;
     }
 
@@ -275,5 +259,30 @@ public class ScoutMatchFragment extends BaseFragment {
 
     public void setRobots(List<Robot> mRobots) {
         this.mRobots = mRobots;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_save) {
+            if (mEvent != null && getSelectedRobot() != null && isMatchNumberValid()) {
+                mSaveTask = new SaveMatchMetricsTask(
+                        getActivity(),
+                        this,
+                        mEvent,
+                        getSelectedRobot(),
+                        /*TODO: USER*/ null,
+                        getMatchNumber(),
+                        mType,
+                        getMetricValues(),
+                        getComment());
+                mSaveTask.execute();
+            } else if (getSelectedRobot() == null) {
+                Snackbar.make(getView(), "Please select a robot", Snackbar.LENGTH_SHORT).show();
+            } else if (!isMatchNumberValid()) {
+                Snackbar.make(getView(), "Match Number is Invalid", Snackbar.LENGTH_SHORT).show();
+            } else {
+                Snackbar.make(getView(), getActivity().getString(R.string.something_seems_wrong), Snackbar.LENGTH_SHORT).show();
+            }
+        }
     }
 }

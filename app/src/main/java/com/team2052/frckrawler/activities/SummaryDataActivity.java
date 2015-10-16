@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.adapters.MetricsStatsAdapter;
 import com.team2052.frckrawler.database.CompiledMetricValue;
 import com.team2052.frckrawler.database.MetricCompiler;
 import com.team2052.frckrawler.db.Event;
@@ -29,6 +29,7 @@ public class SummaryDataActivity extends BaseActivity {
     private ListView mListView;
     private Event mEvent;
     private Metric mMetric;
+    private MetricsStatsAdapter mAdapter;
 
     public static Intent newInstance(Context context, Metric metric, Event event) {
         Intent intent = new Intent(context, SummaryDataActivity.class);
@@ -77,7 +78,8 @@ public class SummaryDataActivity extends BaseActivity {
             for (CompiledMetricValue metricValue : compiledMetricValues) {
                 listItems.add(new CompiledMetricListElement(metricValue));
             }
-            mListView.setAdapter(new ListViewAdapter(SummaryDataActivity.this, listItems));
+            mListView.setAdapter(mAdapter = new MetricsStatsAdapter(SummaryDataActivity.this, mMetric, listItems));
+            //mAdapter.getDialog().show();
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.views.metric.impl;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -28,7 +29,7 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
         min = 0;
         max = 1;
 
-        SeekBar s = (SeekBar) findViewById(R.id.sliderVal);
+        AppCompatSeekBar s = (AppCompatSeekBar) findViewById(R.id.sliderVal);
 
         JsonObject range = JSON.getAsJsonObject(m.getMetric().getData());
         min = range.get("min").getAsInt();
@@ -73,6 +74,4 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
     public JsonElement getData() {
         return MetricHelper.buildIntMetricValue(value);
     }
-
-
 }

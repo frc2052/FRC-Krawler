@@ -17,7 +17,7 @@ import com.team2052.frckrawler.listitems.ListElement;
  */
 public class CompiledMetricListElement extends ListElement {
 
-    private CompiledMetricValue compiledMetricValue;
+    public CompiledMetricValue compiledMetricValue;
 
     public CompiledMetricListElement(CompiledMetricValue compiledMetricValue) {
         super(String.valueOf(compiledMetricValue.getRobot().getTeam_id()));

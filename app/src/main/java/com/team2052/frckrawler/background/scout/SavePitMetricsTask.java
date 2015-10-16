@@ -2,6 +2,7 @@ package com.team2052.frckrawler.background.scout;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
 import com.team2052.frckrawler.database.DBManager;
@@ -10,7 +11,9 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.User;
+import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
 import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.util.SnackbarUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -23,20 +26,21 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
 
     private final DBManager mDaoSession;
     private final User user;
-    private Context context;
+    private final ScoutPitFragment mFragment;
     private Event mEvent;
     private Robot robot;
     private List<MetricValue> metricValues;
     private String comment;
+    private boolean saved = false;
 
-    public SavePitMetricsTask(Context context, Event event, Robot robot, List<MetricValue> metricValues, String comment, User user) {
-        this.context = context;
+    public SavePitMetricsTask(ScoutPitFragment fragment, Event event, Robot robot, List<MetricValue> metricValues, String comment, User user) {
+        this.mFragment = fragment;
         this.mEvent = event;
         this.robot = robot;
         this.user = user;
         this.metricValues = metricValues;
         this.comment = comment;
-        this.mDaoSession = DBManager.getInstance(context);
+        this.mDaoSession = DBManager.getInstance(fragment.getContext());
     }
 
     @Override
@@ -48,7 +52,8 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
             pitData.setEvent(mEvent);
             pitData.setUser_id(user != null ? user.getId() : null);
             pitData.setData(JSON.getGson().toJson(widget.getValue()));
-            mDaoSession.getPitDataTable().insert(pitData);
+            if(mDaoSession.getPitDataTable().insert(pitData) && !saved)
+                saved = true;
         }
 
         robot.setComments(comment);
@@ -59,6 +64,10 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        Toast.makeText(context, "Save Complete", Toast.LENGTH_LONG).show();
+        if(saved){
+            SnackbarUtil.make(mFragment.getView(), "Save Complete", Snackbar.LENGTH_SHORT).show();
+        } else {
+            SnackbarUtil.make(mFragment.getView(), "Update Complete", Snackbar.LENGTH_SHORT).show();
+        }
     }
 }

@@ -352,7 +352,7 @@ public class DBManager {
             long count = matchCommentQueryBuilder.count();
             if (count > 0) {
                 MatchComment currentData = matchCommentQueryBuilder.unique();
-                if (currentData.getLast_updated().getTime() <= new Date().getTime()) {
+                if (currentData.getLast_updated().getTime() <= System.currentTimeMillis()) {
                     currentData.setLast_updated(new Date());
                     currentData.setComment(matchComment.getComment());
                     matchCommentDao.update(currentData);
@@ -416,7 +416,7 @@ public class DBManager {
 
             if (count > 0) {
                 PitData unique = pitDataQueryBuilder.unique();
-                if (unique.getLast_updated().getTime() <= new Date().getTime()) {
+                if (unique.getLast_updated().getTime() <= System.currentTimeMillis()) {
                     unique.setLast_updated(new Date());
                     unique.setData(pitData.getData());
                     pitDataDao.update(unique);
@@ -487,7 +487,7 @@ public class DBManager {
 
             if (count > 0) {
                 MatchData unique = matchDataQueryBuilder.unique();
-                if (unique.getLast_updated().getTime() <= new Date().getTime()) {
+                if (unique.getLast_updated().getTime() <= System.currentTimeMillis()) {
                     unique.setLast_updated(new Date());
                     unique.setData(matchData.getData());
                     matchDataDao.update(unique);

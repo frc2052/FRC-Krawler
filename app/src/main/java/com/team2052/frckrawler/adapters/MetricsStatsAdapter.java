@@ -6,11 +6,13 @@ import android.support.v7.app.AlertDialog;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.team2052.frckrawler.database.CompiledMetricValue;
+import com.team2052.frckrawler.comparators.SimpleValueCompiledComparator;
 import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.tba.JSON;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.team2052.frckrawler.database.MetricHelper.MetricType;
@@ -22,9 +24,10 @@ import static com.team2052.frckrawler.database.MetricHelper.MetricType;
 public class MetricsStatsAdapter extends ListViewAdapter {
 
     private Metric metric;
+    private List<ListItem> tempSortedItems;
 
-    public MetricsStatsAdapter(Context context, Metric metric, List<CompiledMetricValue> values) {
-        super(context, null);
+    public MetricsStatsAdapter(Context context, Metric metric, List<ListItem> values) {
+        super(context, values);
         this.metric = metric;
     }
 
@@ -35,31 +38,53 @@ public class MetricsStatsAdapter extends ListViewAdapter {
     public AlertDialog getDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         List<String> items = new ArrayList<>();
+        items.add("Team Ascending");
+        items.add("Team Descending");
         switch (MetricType.values()[metric.getType()]) {
             case BOOLEAN:
-                items.add("YES ASC");
-                items.add("YES DESC");
-                items.add("NO ASC");
-                items.add("NO DESC");
-                break;
             case COUNTER:
             case SLIDER:
-                items.add("VALUE ASC");
-                items.add("VALUE DESC");
+                items.add("Value Ascending");
+                items.add("Value Descending");
                 break;
             case CHOOSER:
             case CHECK_BOX:
                 JsonObject data_json = JSON.getAsJsonObject(metric.getData());
                 JsonArray values = data_json.get("values").getAsJsonArray();
+
                 for (JsonElement value : values) {
-                    items.add(String.format("%s %s", value.getAsString(), "ASC"));
-                    items.add(String.format("%s %s", value.getAsString(), "DESC"));
+                    items.add(String.format("%s %s", value.getAsString(), "Ascending"));
+                    items.add(String.format("%s %s", value.getAsString(), "Descending"));
                 }
+
                 break;
         }
 
-        builder.setSingleChoiceItems((String[]) items.toArray(), 0, (dialog, which) -> {
+        builder.setSingleChoiceItems(items.toArray(new String[items.size()]), 0, (dialog, which) -> {
+            tempSortedItems = values;
+            if (which <= 2) {
+            } else {
+                switch (MetricType.values()[metric.getType()]) {
+                    case COUNTER:
+                    case SLIDER:
+                    case BOOLEAN:
+                        Collections.sort(tempSortedItems, new SimpleValueCompiledComparator(which % 2 == 0));
+                        break;
+                    case CHOOSER:
+                    case CHECK_BOX:
+                        int index = which % 2 == 0 ? which / 2 : (which + 1) / 2;
+                        index -= 1;
 
+                        break;
+
+                }
+            }
+        });
+        builder.setTitle("Sort");
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            values = tempSortedItems;
+            tempSortedItems = null;
+            notifyDataSetChanged();
         });
         return builder.create();
     }

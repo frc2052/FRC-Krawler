@@ -2,6 +2,7 @@ package com.team2052.frckrawler.fragments.scout;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
@@ -28,14 +29,14 @@ import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 
 /**
  * @author Adam
  */
-public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
+public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
     public static final String EVENT_ID = "EVENT_ID";
     public Event mEvent;
     public List<RobotEvent> mRobots;
@@ -45,6 +46,8 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     public TextInputLayout mComments;
     @Bind(R.id.robot)
     public Spinner mTeamSpinner;
+    @Bind(R.id.button_save)
+    public FloatingActionButton mSaveButton;
 
     private SavePitMetricsTask mSaveTask;
     private PopulatePitRobotsTask mTask;
@@ -74,6 +77,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        mSaveButton.setOnClickListener(this);
         mTeamSpinner.setOnItemSelectedListener(this);
         mTask = new PopulatePitRobotsTask(this, mEvent);
         mTask.execute();
@@ -93,20 +97,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            if (!mRobots.isEmpty() && mEvent != null && getSelectedRobot() != null) {
-                mSaveTask = new SavePitMetricsTask(
-                        getActivity(),
-                        mEvent,
-                        getSelectedRobot(),
-                        getMetricValues(),
-                        getComment(),
-                        null);
-                mSaveTask.execute();
-            }
-        } else {
-            Snackbar.make(getView(), getActivity().getString(R.string.something_seems_wrong), Snackbar.LENGTH_SHORT).show();
-        }
+
         return false;
     }
 
@@ -134,4 +125,23 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {/*Nope*/}
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_save) {
+            if (!mRobots.isEmpty() && mEvent != null && getSelectedRobot() != null) {
+                mSaveTask = new SavePitMetricsTask(
+                        this,
+                        mEvent,
+                        getSelectedRobot(),
+                        getMetricValues(),
+                        getComment(),
+                        null);
+                mSaveTask.execute();
+            } else {
+                Snackbar.make(getView(), getActivity().getString(R.string.something_seems_wrong), Snackbar.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
+

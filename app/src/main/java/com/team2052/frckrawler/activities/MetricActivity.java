@@ -13,7 +13,6 @@ import com.google.common.base.Strings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.background.DeleteGameTask;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.databinding.ActivityMetricBinding;
 import com.team2052.frckrawler.db.Metric;
@@ -33,7 +32,6 @@ public class MetricActivity extends BaseActivity {
         intent.putExtra(METRIC_ID, metric.getId());
         return intent;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

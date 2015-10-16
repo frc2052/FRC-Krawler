@@ -11,7 +11,7 @@ import com.team2052.frckrawler.listitems.ListItem;
 import java.util.List;
 
 public class ListViewAdapter extends ArrayAdapter<ListItem> {
-    private final List<ListItem> values;
+    protected List<ListItem> values;
     private final LayoutInflater inflater;
 
     public ListViewAdapter(Context context, List<ListItem> values) {

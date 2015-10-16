@@ -37,7 +37,6 @@ public class TeamsFragment extends ListFragment {
             Team team = mDbManager.getTeamsTable().load(Long.valueOf((((ListElement) ((ListViewAdapter) mAdapter).getItem(position))).getKey()));
             startActivity(TeamInfoActivity.newInstance(getActivity(), team));
         });
-
         return view;
     }
 

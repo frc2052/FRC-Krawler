@@ -36,7 +36,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
     @Nullable
     private User user;
     private int match_type;
-    private boolean inserted;
+    private boolean saved;
 
     public SaveMatchMetricsTask(Context context, ScoutMatchFragment fragment, Event event, Robot robot, @Nullable User user, int match_num, int match_type, List<MetricValue> metricValues, String comment) {
         this.context = context;
@@ -54,8 +54,7 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         //Insert Metric Data
-        long userid = 0;
-        inserted = false;
+        saved = false;
         for (MetricValue metricValue : mMetricValues) {
             MatchData matchData = new MatchData(
                     null,
@@ -67,9 +66,8 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
                     match_num,
                     new Date(),
                     JSON.getGson().toJson(metricValue.getValue()));
-            boolean mInserted = mDaoSession.getMatchDataTable().insertMatchData(matchData);
-
-            if (!inserted) inserted = mInserted;
+            if (mDaoSession.getMatchDataTable().insertMatchData(matchData) && !saved)
+                saved = true;
         }
 
 
@@ -80,8 +78,8 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
             matchComment.setRobot(mRobot);
             matchComment.setEvent(mEvent);
             matchComment.setComment(mComment);
-            boolean mInserted = mDaoSession.getMatchComments().insertMatchComment(matchComment);
-            if (!inserted) inserted = mInserted;
+            if (mDaoSession.getMatchComments().insertMatchComment(matchComment) && !saved)
+                saved = true;
         }
 
         return null;
@@ -90,10 +88,10 @@ public class SaveMatchMetricsTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        if (inserted) {
-            SnackbarUtil.make(fragment.getView(), "Save Complete", Snackbar.LENGTH_LONG).show();
+        if (saved) {
+            SnackbarUtil.make(fragment.getView(), "Save Complete", Snackbar.LENGTH_SHORT).show();
         } else {
-            SnackbarUtil.make(fragment.getView(), "Update Complete", Snackbar.LENGTH_LONG).show();
+            SnackbarUtil.make(fragment.getView(), "Update Complete", Snackbar.LENGTH_SHORT).show();
         }
     }
 }
