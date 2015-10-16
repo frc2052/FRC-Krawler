@@ -38,7 +38,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
     private final ArrayList<MetricValue> mMetricValues = new ArrayList<>();
     private MatchComment mMatchComment;
 
-    public PopulateMatchMetricsTask( ScoutMatchFragment fragment,  Event event,  Robot robot,  int match_num,  int match_type) {
+    public PopulateMatchMetricsTask(ScoutMatchFragment fragment, Event event, Robot robot, int match_num, int match_type) {
         this.mFragment = fragment;
         this.match_num = match_num;
         this.game_type = match_type;
