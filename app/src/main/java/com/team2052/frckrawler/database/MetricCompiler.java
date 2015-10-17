@@ -31,7 +31,7 @@ public class MetricCompiler {
             List<MetricValue> metricData = new ArrayList<>();
             Robot robot = dbManager.getRobotEvents().getRobot(robotEvents);
             if (metric.getCategory() == MetricHelper.MetricCategory.MATCH_PERF_METRICS.id) {
-                QueryBuilder<MatchData> queryBuilder = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), null, null, event.getId(), null);
+                QueryBuilder<MatchData> queryBuilder = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), null, 1, event.getId(), null);
 
                 for (MatchData matchData : queryBuilder.list()) {
                     metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), JSON.getAsJsonObject(matchData.getData())));

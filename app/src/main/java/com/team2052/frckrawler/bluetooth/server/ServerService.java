@@ -13,6 +13,8 @@ import android.util.Log;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.HomeActivity;
+import com.team2052.frckrawler.bluetooth.server.events.ServerQuitEvent;
+import com.team2052.frckrawler.bluetooth.server.events.ServerStartEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
@@ -23,8 +25,6 @@ public class ServerService extends Service {
     private static final int STATE_CHANGE_THRESH = 2000; //in-mills
     public static int SERVER_OPEN_ID = 10;
     public static String TAG = "ServerService";
-    private boolean mServerState = false;
-    private int MSG_GET_RUNNING = 2;
     private ServerThread thread;
     private long timeLastChanged = 0;
 
@@ -35,30 +35,16 @@ public class ServerService extends Service {
      * We carefully time the toggles so the thread doesn't cause any issues when destructing the BluetoothSocket
      */
     public void onEvent(ServerStateRequestChangeEvent stateEvent) {
-        if (System.currentTimeMillis() - timeLastChanged > STATE_CHANGE_THRESH) {
-            if (stateEvent.getRequestedState()) {
-                if (stateEvent.getEvent() != null) {
-                    //Server is already open you derp...
-                    if (thread != null && thread.isOpen) {
-                        return;
-                    }
-                    //Start the server thread
-                    thread = new ServerThread(this, stateEvent.getEvent());
-                    thread.start();
-                }
-            } else {
-                if (thread != null)
-                    thread.closeServer();
+        if (stateEvent.getRequestedState()) {
+            if (stateEvent.getEvent() != null && thread == null) {
+                //Start the server thread
+                thread = new ServerThread(this, stateEvent.getEvent());
+                thread.start();
             }
-            timeLastChanged = System.currentTimeMillis();
-        }
-
-        if (thread != null && thread.isOpen) {
-            showNotification();
         } else {
-            removeNotification();
+            if (thread != null)
+                thread.closeServer();
         }
-
         EventBus.getDefault().post(new ServerStateChangeEvent(thread != null ? thread.getHostedEvent() : null, thread != null && thread.isOpen));
     }
 
@@ -102,6 +88,15 @@ public class ServerService extends Service {
         EventBus.getDefault().post(new ServerStateChangeEvent(thread != null ? thread.getHostedEvent() : null, thread != null && thread.isOpen));
     }
 
+    public void onEvent(ServerQuitEvent event) {
+        removeNotification();
+        thread = null;
+    }
+
+    public void onEvent(ServerStartEvent event) {
+        showNotification();
+    }
+
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate");
@@ -117,6 +112,8 @@ public class ServerService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
+        if(thread != null)
+            thread.closeServer();
         removeNotification();
         EventBus.getDefault().unregister(this);
     }

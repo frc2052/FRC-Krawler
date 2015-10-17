@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
@@ -29,7 +30,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class ServerFragment extends BaseFragment implements View.OnClickListener {
+public class ServerFragment extends BaseFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static final int REQUEST_BT_ENABLED = 1;
 
     private List<Event> mEvents = new ArrayList<>();
@@ -48,7 +49,9 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     }
 
     public void onEvent(ServerStateChangeEvent serverStateChangeEvent) {
-        binder.hostToggle.setChecked(serverStateChangeEvent.getState());
+        synchronized (this) {
+            binder.hostToggle.setChecked(serverStateChangeEvent.getState());
+        }
     }
 
     @Override
@@ -59,7 +62,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         float compileWeight = sharedPreferences.getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
 
-        binder.hostToggle.setOnClickListener(this);
+        binder.hostToggle.setOnCheckedChangeListener(this);
         binder.serverSettingsSave.setOnClickListener(this);
         binder.serverSettingsRestoreDefaults.setOnClickListener(this);
         binder.excel.setOnClickListener(this);
@@ -89,9 +92,6 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                 if (isEventsValid() && getSelectedEvent() != null)
                     startActivity(EventInfoActivity.newInstance(getActivity(), getSelectedEvent()));
                 break;
-            case R.id.host_toggle:
-                onHostToggleClicked((SwitchCompat) view);
-                break;
             case R.id.server_settings_save:
                 onServerSettingSaveButtonClicked();
                 break;
@@ -109,7 +109,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         return mEvents != null && !mEvents.isEmpty();
     }
 
-    public void onHostToggleClicked(SwitchCompat switchCompat) {
+    public void onHostToggleClicked(SwitchCompat switchCompat, boolean checked) {
         boolean currentState = switchCompat.isChecked();
         if (BluetoothAdapter.getDefaultAdapter() == null) {
             Snackbar.make(getView(), "Sorry, your device does not support bluetooth.", Snackbar.LENGTH_LONG).show();
@@ -118,7 +118,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
             startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_BT_ENABLED);
             return;
         }
-        switchCompat.setChecked(!currentState);
+        switchCompat.setChecked(!checked);
         toggleServer();
     }
 
@@ -149,6 +149,13 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         } else {
             binder.serverEventContainer.setVisibility(View.VISIBLE);
             binder.serverEventsError.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(buttonView.getId() == R.id.host_toggle){
+            onHostToggleClicked((SwitchCompat) buttonView, isChecked);
         }
     }
 

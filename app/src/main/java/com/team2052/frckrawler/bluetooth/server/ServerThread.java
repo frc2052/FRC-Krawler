@@ -56,7 +56,11 @@ public class ServerThread extends Thread {
             try {
                 serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
             } catch (IOException e) {
-                e.printStackTrace();
+                if(isOpen)
+                    e.printStackTrace();
+                else {
+                    break;
+                }
             }
 
             if (serverSocket != null) {
@@ -154,7 +158,6 @@ public class ServerThread extends Thread {
             }
         }
         Log.d(TAG, "Server Closed");
-        EventBus.getDefault().post(new ServerStateChangeEvent(null, false));
         EventBus.getDefault().post(new ServerQuitEvent());
     }
 

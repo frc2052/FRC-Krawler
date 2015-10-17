@@ -10,10 +10,7 @@ import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.db.MatchComment;
-import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.Team;
@@ -32,15 +29,12 @@ import java.util.List;
  */
 public class ScoutPackage implements Serializable {
     private final ArrayList<Team> teams = new ArrayList<>();
-    private final List<PitData> pitData;
     private final Schedule schedule;
     private final List<Metric> metrics;
     private final List<User> users;
     private final List<RobotEvent> robot_events;
     private final List<Robot> robots = new ArrayList<>();
     private final Event event;
-    private final List<MatchData> matchData;
-    private final List<MatchComment> matchComments;
     private final Game game;
     private final String TAG = ScoutPackage.class.getSimpleName();
 
@@ -58,9 +52,6 @@ public class ScoutPackage implements Serializable {
         }
 
         schedule = new Schedule(event);
-        pitData = dbManager.getPitDataTable().query(null, null, event.getId(), null).list();
-        matchData = dbManager.getMatchDataTable().query(null, null, null, null, event.getId(), null).list();
-        matchComments = dbManager.getMatchComments().query(null, null, null, event.getId()).list();
 
         for (RobotEvent robotEvent : robot_events) {
             teams.add(dbManager.getRobotEvents().getTeam(robotEvent));

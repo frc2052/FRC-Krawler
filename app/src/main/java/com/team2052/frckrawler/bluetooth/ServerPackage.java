@@ -40,7 +40,6 @@ public class ServerPackage implements Serializable {
      */
     public void save(final DBManager dbManager) {
         dbManager.runInTx(() -> {
-            long startTime = System.currentTimeMillis();
             //Save all the data
             for (MatchData m : metricMatchData) {
                 dbManager.getMatchDataTable().insertMatchData(m);
