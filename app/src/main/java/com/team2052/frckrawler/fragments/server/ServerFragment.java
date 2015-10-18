@@ -49,9 +49,9 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     }
 
     public void onEvent(ServerStateChangeEvent serverStateChangeEvent) {
-        synchronized (this) {
-            binder.hostToggle.setChecked(serverStateChangeEvent.getState());
-        }
+        binder.hostToggle.setOnCheckedChangeListener(null);
+        binder.hostToggle.setChecked(serverStateChangeEvent.getState());
+        binder.hostToggle.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(buttonView.getId() == R.id.host_toggle){
+        if (buttonView.getId() == R.id.host_toggle) {
             onHostToggleClicked((SwitchCompat) buttonView, isChecked);
         }
     }
