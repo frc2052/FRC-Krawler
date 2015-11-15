@@ -9,8 +9,8 @@ android {
         applicationId 'com.team2052.frckrawler'
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 25
-        versionName "3.0.4"
+        versionCode 26
+        versionName "3.0.5"
     }
     buildTypes {
         debug {

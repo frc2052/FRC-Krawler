@@ -32,7 +32,7 @@ public class CompiledMetricValue {
         this.metricData = metricData;
         this.metricType = metricType;
         //Compute the compile weight
-        this.compileWeight = Math.pow(compileWeight, metricData.size());
+        this.compileWeight = compileWeight;
         compileMetricValues();
     }
 
@@ -40,6 +40,7 @@ public class CompiledMetricValue {
         String value;
         double numerator = 0;
         double denominator = 0;
+        double weight = 0;
         switch (metricType) {
             case BOOLEAN:
                 if (metricData.isEmpty()) {
@@ -53,15 +54,14 @@ public class CompiledMetricValue {
                     if (result.t2.isError)
                         continue;
 
+                    weight = getCompileWeightForMatchNumber(metricValue);
+
                     if (result.t1) {
-                        numerator += compileWeight;
+                        numerator += weight;
                     } else {
-                        denominator += compileWeight;
+                        denominator += weight;
                     }
                 }
-
-                if (denominator < 1)
-                    denominator = 1;
 
                 value = format.format((numerator / (numerator + denominator)) * 100);
                 compiledValue.addProperty("value", value);
@@ -80,8 +80,9 @@ public class CompiledMetricValue {
                     if (result.t2.isError)
                         continue;
 
-                    numerator += result.t1 * compileWeight;
-                    denominator += compileWeight;
+                    weight = getCompileWeightForMatchNumber(metricValue);
+                    numerator += result.t1 * weight;
+                    denominator += weight;
                 }
 
                 if (denominator < 1)
@@ -109,14 +110,15 @@ public class CompiledMetricValue {
 
                 for (MetricValue metricValue : metricData) {
                     final Tuple2<List<Integer>, MetricHelper.ReturnResult> result = MetricHelper.getListIndexMetricValue(metricValue);
-
                     if (result.t2.isError)
                         continue;
 
-                    for (Integer index : result.t1)
-                        compiledVal.put(index, compiledVal.get(index).setT2(compiledVal.get(index).t2 + compileWeight));
+                    weight = getCompileWeightForMatchNumber(metricValue);
 
-                    denominator += compileWeight;
+                    for (Integer index : result.t1)
+                        compiledVal.put(index, compiledVal.get(index).setT2(compiledVal.get(index).t2 + weight));
+
+                    denominator += weight;
                 }
 
                 for (Map.Entry<Integer, Tuple2<String, Double>> entry : compiledVal.entrySet()) {
@@ -151,6 +153,10 @@ public class CompiledMetricValue {
                 return value;
         }
         return "Error";
+    }
+
+    private double getCompileWeightForMatchNumber(MetricValue metricValue){
+        return Math.pow(compileWeight, metricData.indexOf(metricValue) + 1);
     }
 
     public Metric getMetric() {

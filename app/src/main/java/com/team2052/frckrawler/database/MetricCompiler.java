@@ -2,6 +2,7 @@ package com.team2052.frckrawler.database;
 
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDataDao;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
@@ -31,7 +32,7 @@ public class MetricCompiler {
             List<MetricValue> metricData = new ArrayList<>();
             Robot robot = dbManager.getRobotEvents().getRobot(robotEvents);
             if (metric.getCategory() == MetricHelper.MetricCategory.MATCH_PERF_METRICS.id) {
-                QueryBuilder<MatchData> queryBuilder = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), null, 1, event.getId(), null);
+                QueryBuilder<MatchData> queryBuilder = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), null, 0, event.getId(), null).orderAsc(MatchDataDao.Properties.Match_number);
 
                 for (MatchData matchData : queryBuilder.list()) {
                     metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), JSON.getAsJsonObject(matchData.getData())));
@@ -63,13 +64,11 @@ public class MetricCompiler {
         for (Metric metric : metrics) {
             List<MetricValue> metricData = new ArrayList<>();
             if (metric.getCategory() == MetricHelper.MetricCategory.MATCH_PERF_METRICS.id) {
-
-                QueryBuilder<MatchData> queryBuilder = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), null, null, event.getId(), null);
+                QueryBuilder<MatchData> queryBuilder = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), null, 0, event.getId(), null).orderAsc(MatchDataDao.Properties.Match_number);
+                ;
 
                 for (MatchData matchData : queryBuilder.list()) {
-                    if (matchData.getEvent_id() == event.getId()) {
-                        metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), JSON.getAsJsonObject(matchData.getData())));
-                    }
+                    metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), JSON.getAsJsonObject(matchData.getData())));
                 }
 
             } else if (metric.getCategory() == MetricHelper.MetricCategory.ROBOT_METRICS.id) {
