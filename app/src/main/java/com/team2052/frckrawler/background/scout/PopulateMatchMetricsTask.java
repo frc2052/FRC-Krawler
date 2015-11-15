@@ -16,8 +16,6 @@ import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
-import org.antlr.v4.runtime.misc.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +38,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
     private final ArrayList<MetricValue> mMetricValues = new ArrayList<>();
     private MatchComment mMatchComment;
 
-    public PopulateMatchMetricsTask(@NotNull ScoutMatchFragment fragment, @NotNull Event event, @NotNull Robot robot, @NotNull int match_num, @NotNull int match_type) {
+    public PopulateMatchMetricsTask(ScoutMatchFragment fragment, Event event, Robot robot, int match_num, int match_type) {
         this.mFragment = fragment;
         this.match_num = match_num;
         this.game_type = match_type;
