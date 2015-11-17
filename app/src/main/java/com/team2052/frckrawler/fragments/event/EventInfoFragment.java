@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.background.DeleteEventTask;
-import com.team2052.frckrawler.databinding.FragmentEventInfoBinding;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.BaseFragment;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
@@ -25,7 +24,6 @@ import com.team2052.frckrawler.util.Util;
  */
 public class EventInfoFragment extends BaseFragment implements ListUpdateListener {
     public static final String EVENT_ID = "EVENT_ID";
-    private FragmentEventInfoBinding binding;
     private Event mEvent;
 
     public static EventInfoFragment newInstance(Event event) {
@@ -51,7 +49,7 @@ public class EventInfoFragment extends BaseFragment implements ListUpdateListene
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding = FragmentEventInfoBinding.bind(view);
+        //binding = FragmentEventInfoBinding.bind(view);
         updateList();
     }
 
@@ -124,10 +122,10 @@ public class EventInfoFragment extends BaseFragment implements ListUpdateListene
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            binding.setNumOfTeams(numOfTeams);
+            /*binding.setNumOfTeams(numOfTeams);
             binding.setNumOfMatches(numOfMatches);
             binding.setNumOfPitData(numOfPitData);
-            binding.setNumOfMatchData(numOfMatchData);
+            binding.setNumOfMatchData(numOfMatchData);*/
         }
     }
 }

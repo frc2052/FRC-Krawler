@@ -2,7 +2,6 @@ package com.team2052.frckrawler.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
@@ -14,7 +13,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricHelper;
-import com.team2052.frckrawler.databinding.ActivityMetricBinding;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.fragments.metric.dialog.EditMetricDialogFragment;
 import com.team2052.frckrawler.tba.JSON;
@@ -25,7 +23,6 @@ import com.team2052.frckrawler.tba.JSON;
 public class MetricActivity extends BaseActivity {
     public static final String METRIC_ID = "METRIC_ID";
     private Metric metric;
-    private ActivityMetricBinding binding;
 
     public static Intent newInstance(Context context, Metric metric) {
         Intent intent = new Intent(context, MetricActivity.class);
@@ -36,14 +33,14 @@ public class MetricActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_metric);
-        setSupportActionBar(binding.toolbar);
+        /*binding = DataBindingUtil.setContentView(this, R.layout.activity_metric);
+        setSupportActionBar(binding.toolbar);*/
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        metric = mDbManager.getMetricsTable().load(getIntent().getExtras().getLong(METRIC_ID));
+        /*metric = mDbManager.getMetricsTable().load(getIntent().getExtras().getLong(METRIC_ID));
 
         JsonObject data = JSON.getAsJsonObject(metric.getData());
 
@@ -80,7 +77,7 @@ public class MetricActivity extends BaseActivity {
                 binding.setMax(String.format("Max: %s", data.get("max").getAsString()));
                 binding.setType("Slider");
                 break;
-        }
+        }*/
     }
 
     @Override

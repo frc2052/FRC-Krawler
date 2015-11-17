@@ -2,7 +2,6 @@ package com.team2052.frckrawler.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -10,7 +9,6 @@ import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.InstanceFragmentStatePagerAdapter;
-import com.team2052.frckrawler.databinding.LayoutTabBinding;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.event.EventInfoFragment;
 import com.team2052.frckrawler.fragments.match.MatchListFragment;
@@ -24,7 +22,6 @@ import com.team2052.frckrawler.listeners.ListUpdateListener;
  */
 public class EventInfoActivity extends BaseActivity {
     private Event mEvent;
-    private LayoutTabBinding binding;
     private EventViewPagerAdapter mAdapter;
 
     public static Intent newInstance(Context context, Event event) {
@@ -42,7 +39,7 @@ public class EventInfoActivity extends BaseActivity {
             finish();
         }
 
-        binding = DataBindingUtil.setContentView(this, R.layout.layout_tab);
+        /*binding = DataBindingUtil.setContentView(this, R.layout.layout_tab);
         binding.viewPager.setAdapter(mAdapter = new EventViewPagerAdapter());
         binding.tabLayout.setupWithViewPager(binding.viewPager);
 
@@ -61,9 +58,9 @@ public class EventInfoActivity extends BaseActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
             }
-        });
+        });*/
 
-        setSupportActionBar(binding.toolbar);
+        //setSupportActionBar(binding.toolbar);
         setActionBarTitle(getString(R.string.event));
         setActionBarSubtitle(mEvent.getName());
     }

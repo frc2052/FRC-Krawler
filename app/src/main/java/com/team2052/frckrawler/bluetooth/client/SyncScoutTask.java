@@ -4,12 +4,11 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.util.Log;
 
 import com.team2052.frckrawler.BuildConfig;
 import com.team2052.frckrawler.bluetooth.BluetoothInfo;
-import com.team2052.frckrawler.bluetooth.ServerPackage;
+import com.team2052.frckrawler.bluetooth.server.ServerPackage;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;

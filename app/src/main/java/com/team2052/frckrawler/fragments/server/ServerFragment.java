@@ -3,7 +3,6 @@ package com.team2052.frckrawler.fragments.server;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,20 +20,19 @@ import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
-import com.team2052.frckrawler.databinding.FragmentServerBinding;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import de.greenrobot.event.EventBus;
 
 public class ServerFragment extends BaseFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static final int REQUEST_BT_ENABLED = 1;
 
     private List<Event> mEvents = new ArrayList<>();
-    private FragmentServerBinding binder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,14 +42,13 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binder = DataBindingUtil.inflate(inflater, R.layout.fragment_server, null, false);
-        return binder.getRoot();
+        return inflater.inflate(R.layout.fragment_server, null, false);
     }
 
     public void onEvent(ServerStateChangeEvent serverStateChangeEvent) {
-        binder.hostToggle.setOnCheckedChangeListener(null);
+        /*binder.hostToggle.setOnCheckedChangeListener(null);
         binder.hostToggle.setChecked(serverStateChangeEvent.getState());
-        binder.hostToggle.setOnCheckedChangeListener(this);
+        binder.hostToggle.setOnCheckedChangeListener(this);*/
     }
 
     @Override
@@ -62,12 +59,12 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         float compileWeight = sharedPreferences.getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
 
-        binder.hostToggle.setOnCheckedChangeListener(this);
+       /* binder.hostToggle.setOnCheckedChangeListener(this);
         binder.serverSettingsSave.setOnClickListener(this);
         binder.serverSettingsRestoreDefaults.setOnClickListener(this);
         binder.excel.setOnClickListener(this);
         binder.viewEvent.setOnClickListener(this);
-        binder.setCompileWeight(compileWeight);
+        binder.setCompileWeight(compileWeight);*/
 
         EventBus.getDefault().post(new ServerStateRequestEvent());
     }
@@ -102,7 +99,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     }
 
     private Event getSelectedEvent() {
-        return mEvents.get(binder.eventSpinner.getSelectedItemPosition());
+        return null;//mEvents.get(binder.eventSpinner.getSelectedItemPosition());
     }
 
     private boolean isEventsValid() {
@@ -125,31 +122,31 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     public void toggleServer() {
         if (isEventsValid()) {
             Event event = getSelectedEvent();
-            EventBus.getDefault().post(new ServerStateRequestChangeEvent(!binder.hostToggle.isChecked(), event));
+            //EventBus.getDefault().post(new ServerStateRequestChangeEvent(!binder.hostToggle.isChecked(), event));
         }
     }
 
     public void onRestoreButtonClicked() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f).apply();
-        binder.setCompileWeight(1.0f);
+        //binder.setCompileWeight(1.0f);
     }
 
     public void onServerSettingSaveButtonClicked() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+     /*   SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         float compileWeight = Float.parseFloat(binder.serverSettingCompileWeight.getEditText().getText().toString());
         binder.setCompileWeight(compileWeight);
-        sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, compileWeight).apply();
+        sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, compileWeight).apply();*/
     }
 
     public void showEventError(boolean shown) {
-        if (shown) {
+        /*if (shown) {
             binder.serverEventContainer.setVisibility(View.GONE);
             binder.serverEventsError.setVisibility(View.VISIBLE);
         } else {
             binder.serverEventContainer.setVisibility(View.VISIBLE);
             binder.serverEventsError.setVisibility(View.GONE);
-        }
+        }*/
     }
 
     @Override
@@ -179,7 +176,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                     }
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);
-                    binder.eventSpinner.setAdapter(adapter);
+                    //binder.eventSpinner.setAdapter(adapter);
                     showEventError(false);
                     return;
                 }

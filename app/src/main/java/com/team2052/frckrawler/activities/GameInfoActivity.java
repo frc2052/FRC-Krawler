@@ -2,24 +2,19 @@ package com.team2052.frckrawler.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.InstanceFragmentStatePagerAdapter;
 import com.team2052.frckrawler.database.MetricHelper;
-import com.team2052.frckrawler.databinding.LayoutTabFabBinding;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragments.event.EventsFragment;
 import com.team2052.frckrawler.fragments.game.GameInfoFragment;
 import com.team2052.frckrawler.fragments.game.MetricsGameFragment;
-import com.team2052.frckrawler.listeners.FABButtonListener;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
 
 /**
  * @author Adam
@@ -29,7 +24,6 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
 
     private Game mGame;
     private GameInfoPagerAdapter mAdapter;
-    private LayoutTabFabBinding binding;
 
     public static Intent newInstance(Context context, Game game) {
         Intent intent = new Intent(context, GameInfoActivity.class);
@@ -40,20 +34,20 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.layout_tab_fab);
+        setContentView(R.layout.layout_tab_fab);
 
         mGame = mDbManager.getGamesTable().load(getIntent().getLongExtra(PARENT_ID, 0));
         if (mGame == null) {
             finish();
         }
 
-        setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setActionBarTitle("Game");
-        setActionBarSubtitle(mGame.getName());
+        //setSupportActionBar(toolbar);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //setActionBarTitle("Game");
+        //setActionBarSubtitle(mGame.getName());
 
         mAdapter = new GameInfoPagerAdapter(getSupportFragmentManager());
-        binding.viewPager.setAdapter(mAdapter);
+        /*binding.viewPager.setAdapter(mAdapter);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
 
         binding.floatingActionButton.setOnClickListener(this);
@@ -76,7 +70,7 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onPageScrollStateChanged(int state) {
             }
-        });
+        });*/
     }
 
     @Override
@@ -93,9 +87,9 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.floating_action_button) {
+        /*if (v.getId() == R.id.floating_action_button) {
             ((FABButtonListener) mAdapter.getRegisteredFragment(binding.viewPager.getCurrentItem())).onFABPressed();
-        }
+        }*/
     }
 
     public class GameInfoPagerAdapter extends InstanceFragmentStatePagerAdapter {

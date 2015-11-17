@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.JsonObject;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
-import com.team2052.frckrawler.databinding.FragmentTeamInfoBinding;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.fragments.BaseFragment;
 import com.team2052.frckrawler.tba.JSON;
@@ -18,7 +18,6 @@ import com.team2052.frckrawler.tba.JSON;
  */
 public class TeamInfoFragment extends BaseFragment {
     private Team team;
-    private FragmentTeamInfoBinding binding;
 
     public static TeamInfoFragment newInstance(Team team) {
         TeamInfoFragment fragment = new TeamInfoFragment();
@@ -36,14 +35,13 @@ public class TeamInfoFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentTeamInfoBinding.inflate(inflater);
-        return binding.getRoot();
+        return inflater.inflate(R.layout.fragment_team_info, null, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.teamInfoName.setText(team.getName());
+        /*binding.teamInfoName.setText(team.getName());
         JsonObject data = JSON.getAsJsonObject(team.getData());
 
         if (data.has("rookie_year") && !data.get("rookie_year").isJsonNull()) {
@@ -62,6 +60,6 @@ public class TeamInfoFragment extends BaseFragment {
             binding.teamInfoWebsite.setText(data.get("website").getAsString());
         } else {
             binding.teamInfoWebsite.setVisibility(View.GONE);
-        }
+        }*/
     }
 }

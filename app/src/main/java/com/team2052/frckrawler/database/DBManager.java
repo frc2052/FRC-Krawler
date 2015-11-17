@@ -38,6 +38,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Singleton;
+
 import de.greenrobot.dao.query.QueryBuilder;
 
 /**
@@ -47,6 +49,7 @@ import de.greenrobot.dao.query.QueryBuilder;
  * @author Adam
  * @since 10/7/2014
  */
+@Singleton
 public class DBManager {
     private static DBManager instance;
     private final Games mGames;

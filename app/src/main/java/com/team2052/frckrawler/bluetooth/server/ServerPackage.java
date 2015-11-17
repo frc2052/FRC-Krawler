@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.bluetooth;
+package com.team2052.frckrawler.bluetooth.server;
 
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.RobotComment;

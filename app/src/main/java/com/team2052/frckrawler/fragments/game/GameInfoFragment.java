@@ -15,7 +15,6 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.background.DeleteGameTask;
 import com.team2052.frckrawler.database.MetricHelper;
-import com.team2052.frckrawler.databinding.FragmentGameInfoBinding;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragments.BaseFragment;
 import com.team2052.frckrawler.listeners.ListUpdateListener;
@@ -28,7 +27,6 @@ public class GameInfoFragment extends BaseFragment implements ListUpdateListener
 
     public static final String GAME_ID = "GAME_ID";
 
-    private FragmentGameInfoBinding binding;
     private Game mGame;
 
     public static GameInfoFragment newInstance(Game game) {
@@ -55,7 +53,7 @@ public class GameInfoFragment extends BaseFragment implements ListUpdateListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding = FragmentGameInfoBinding.bind(view);
+        //binding = FragmentGameInfoBinding.bind(view);
     }
 
     @Override
@@ -135,10 +133,10 @@ public class GameInfoFragment extends BaseFragment implements ListUpdateListener
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            binding.setNumOfEvents(numOfEvents);
+            /*binding.setNumOfEvents(numOfEvents);
             binding.setNumOfMatchMetrics(numOfMatchMetrics);
             binding.setNumOfPitMetrics(numOfPitMetrics);
-            binding.setNumOfRobots(numOfRobots);
+            binding.setNumOfRobots(numOfRobots);*/
         }
     }
 

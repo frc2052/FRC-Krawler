@@ -2,7 +2,6 @@ package com.team2052.frckrawler.activities;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
@@ -21,7 +20,6 @@ import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
-import com.team2052.frckrawler.databinding.ActivityScoutMainBinding;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 import com.team2052.frckrawler.util.BluetoothUtil;
@@ -39,7 +37,6 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
     private static final int REQUEST_ENABLE_BT = 0;
     public ScoutSyncHandler mSyncHandler;
     Event currentEvent;
-    private ActivityScoutMainBinding binding;
     private boolean isServer;
 
     @Override
@@ -48,13 +45,13 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
         EventBus.getDefault().register(this);
         mSyncHandler = ScoutSyncHandler.getInstance(this);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_scout_main);
+        /*binding = DataBindingUtil.setContentView(this, R.layout.activity_scout_main);
         useActionBarToggle();
 
         binding.scoutMatchButton.setOnClickListener(this);
         binding.scoutPitButton.setOnClickListener(this);
         binding.scoutPracticeButton.setOnClickListener(this);
-        binding.syncButton.setOnClickListener(this);
+        binding.syncButton.setOnClickListener(this);*/
 
 
         //Binding doesn't include <include> layout
@@ -92,12 +89,12 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
                     break;
             }
         } else {
-            Snackbar.make(binding.container, "Cannot open, you must have a synced event", Snackbar.LENGTH_SHORT).show();
+            //Snackbar.make(binding.container, "Cannot open, you must have a synced event", Snackbar.LENGTH_SHORT).show();
         }
     }
 
     public void onEvent(ServerStateChangeEvent event) {
-        if (event.getEvent() != null && event.getState()) {
+        /*if (event.getEvent() != null && event.getState()) {
             isServer = true;
             binding.scoutSyncContainer.setVisibility(View.GONE);
             setCurrentEvent(event.getEvent());
@@ -106,7 +103,7 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
             binding.scoutSyncContainer.setVisibility(View.VISIBLE);
             setCurrentEvent(ScoutUtil.getScoutEvent(this));
         }
-        invalidateOptionsMenu();
+        invalidateOptionsMenu();*/
     }
 
     @Override
@@ -157,8 +154,8 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void setProgressVisibility(int view_state) {
-        binding.syncButton.setVisibility(view_state == View.VISIBLE ? View.GONE : View.VISIBLE);
-        binding.syncProgressBar.setVisibility(view_state);
+       /* binding.syncButton.setVisibility(view_state == View.VISIBLE ? View.GONE : View.VISIBLE);
+        binding.syncProgressBar.setVisibility(view_state);*/
     }
 
     @Override

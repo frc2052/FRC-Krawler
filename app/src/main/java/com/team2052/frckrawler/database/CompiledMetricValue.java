@@ -85,9 +85,6 @@ public class CompiledMetricValue {
                     denominator += weight;
                 }
 
-                if (denominator < 1)
-                    denominator = 1;
-
                 value = format.format(numerator / denominator);
                 compiledValue.addProperty("value", value);
                 break;
