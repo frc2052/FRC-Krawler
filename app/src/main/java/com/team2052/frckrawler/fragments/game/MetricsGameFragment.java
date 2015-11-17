@@ -39,10 +39,10 @@ public class MetricsGameFragment extends BaseFragment implements FABButtonListen
     private Game mGame;
     private int mCategory;
 
-    public static MetricsGameFragment newInstance(int category, Game game) {
+    public static MetricsGameFragment newInstance(int category, long game_id) {
         MetricsGameFragment fragment = new MetricsGameFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(GAME_ID, game.getId());
+        bundle.putLong(GAME_ID, game_id);
         bundle.putInt(CATEGORY_EXTRA, category);
         fragment.setArguments(bundle);
         return fragment;

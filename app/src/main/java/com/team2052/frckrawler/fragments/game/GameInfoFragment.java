@@ -29,9 +29,9 @@ public class GameInfoFragment extends BaseFragment implements ListUpdateListener
 
     private Game mGame;
 
-    public static GameInfoFragment newInstance(Game game) {
+    public static GameInfoFragment newInstance(long game_id) {
         Bundle args = new Bundle();
-        args.putLong(GAME_ID, game.getId());
+        args.putLong(GAME_ID, game_id);
         GameInfoFragment fragment = new GameInfoFragment();
         fragment.setArguments(args);
         return fragment;

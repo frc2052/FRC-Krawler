@@ -37,10 +37,10 @@ public class EventsFragment extends BaseFragment implements FABButtonListener, L
     private Game mGame;
     private ListView mListView;
 
-    public static EventsFragment newInstance(Game game) {
+    public static EventsFragment newInstance(long game_id) {
         EventsFragment fragment = new EventsFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(BaseActivity.PARENT_ID, game.getId());
+        bundle.putLong(BaseActivity.PARENT_ID, game_id);
         fragment.setArguments(bundle);
         return fragment;
     }

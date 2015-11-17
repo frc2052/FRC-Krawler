@@ -3,26 +3,29 @@ package com.team2052.frckrawler.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.adapters.InstanceFragmentStatePagerAdapter;
-import com.team2052.frckrawler.database.MetricHelper;
+import com.team2052.frckrawler.adapters.tab.GameInfoPagerAdapter;
 import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.fragments.event.EventsFragment;
-import com.team2052.frckrawler.fragments.game.GameInfoFragment;
-import com.team2052.frckrawler.fragments.game.MetricsGameFragment;
+import com.team2052.frckrawler.listeners.FABButtonListener;
+import com.team2052.frckrawler.listeners.ListUpdateListener;
 
 /**
  * @author Adam
  * @since 10/15/2014
  */
-public class GameInfoActivity extends BaseActivity implements View.OnClickListener {
+public class GameInfoActivity extends DatabaseActivity implements View.OnClickListener {
 
-    private Game mGame;
+    ViewPager mViewPager;
+    TabLayout mTabLayout;
+    FloatingActionButton mFab;
+
     private GameInfoPagerAdapter mAdapter;
 
     public static Intent newInstance(Context context, Game game) {
@@ -35,24 +38,23 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_tab_fab);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mViewPager = (ViewPager) findViewById(R.id.view_pager);
 
-        mGame = mDbManager.getGamesTable().load(getIntent().getLongExtra(PARENT_ID, 0));
-        if (mGame == null) {
-            finish();
-        }
+        mFab = (FloatingActionButton) findViewById(R.id.floating_action_button);
+        mFab.setOnClickListener(this);
 
-        //setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //setActionBarTitle("Game");
-        //setActionBarSubtitle(mGame.getName());
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setActionBarTitle("Game");
 
-        mAdapter = new GameInfoPagerAdapter(getSupportFragmentManager());
-        /*binding.viewPager.setAdapter(mAdapter);
-        binding.tabLayout.setupWithViewPager(binding.viewPager);
+        mAdapter = new GameInfoPagerAdapter(this, getSupportFragmentManager(), getIntent().getLongExtra(PARENT_ID, 0));
+        mViewPager.setAdapter(mAdapter);
+        mTabLayout.setupWithViewPager(mViewPager);
 
-        binding.floatingActionButton.setOnClickListener(this);
 
-        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -60,17 +62,22 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    binding.floatingActionButton.hide();
+                    mFab.hide();
                     ((ListUpdateListener) mAdapter.getRegisteredFragment(0)).updateList();
                 } else {
-                    binding.floatingActionButton.show();
+                    mFab.show();
                 }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
             }
-        });*/
+        });
+    }
+
+    @Override
+    public void inject() {
+        getComponent().inject(this);
     }
 
     @Override
@@ -87,41 +94,9 @@ public class GameInfoActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        /*if (v.getId() == R.id.floating_action_button) {
-            ((FABButtonListener) mAdapter.getRegisteredFragment(binding.viewPager.getCurrentItem())).onFABPressed();
-        }*/
-    }
-
-    public class GameInfoPagerAdapter extends InstanceFragmentStatePagerAdapter {
-        public String[] headers = new String[]{"Info", "Events", "Match Metrics", "Pit Metrics"};
-
-        public GameInfoPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return GameInfoFragment.newInstance(mGame);
-                case 1:
-                    return EventsFragment.newInstance(mGame);
-                case 2:
-                    return MetricsGameFragment.newInstance(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, mGame);
-                case 3:
-                    return MetricsGameFragment.newInstance(MetricHelper.MetricCategory.ROBOT_METRICS.id, mGame);
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return headers.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return headers[position];
+        if (v.getId() == R.id.floating_action_button) {
+            ((FABButtonListener) mAdapter.getRegisteredFragment(mViewPager.getCurrentItem())).onFABPressed();
         }
     }
+
 }
