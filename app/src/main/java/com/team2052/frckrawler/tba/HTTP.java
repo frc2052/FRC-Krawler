@@ -13,6 +13,7 @@ import java.io.IOException;
 public class HTTP {
     public static final String TBA_APP_HEADER = "frc2052:frckrawler-scouting-system:v2";
     private static OkHttpClient client;
+
     public static OkHttpClient getClient() {
         if (client == null) {
             client = new OkHttpClient();
@@ -20,6 +21,7 @@ public class HTTP {
         }
         return client;
     }
+
     public static Response getResponse(String url) {
         Request.Builder requestBuilder = new Request.Builder()
                 .url(url)

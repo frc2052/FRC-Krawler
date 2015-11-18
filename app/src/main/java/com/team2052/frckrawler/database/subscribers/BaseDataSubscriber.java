@@ -2,11 +2,10 @@ package com.team2052.frckrawler.database.subscribers;
 
 import com.team2052.frckrawler.database.consumer.DataComsumer;
 
-import dagger.Provides;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
-public abstract class BaseDataSubscriber<T, V> implements Observer<T>{
+public abstract class BaseDataSubscriber<T, V> implements Observer<T> {
     DataComsumer<V> mConsumer;
     T data;
     V dataToBind;
@@ -19,7 +18,7 @@ public abstract class BaseDataSubscriber<T, V> implements Observer<T>{
     @Override
     public void onError(Throwable e) {
         AndroidSchedulers.mainThread().createWorker().schedule(() -> {
-            if(mConsumer != null){
+            if (mConsumer != null) {
                 mConsumer.onError(e);
             }
         });
@@ -32,9 +31,9 @@ public abstract class BaseDataSubscriber<T, V> implements Observer<T>{
         bindData();
     }
 
-    public void bindData(){
+    public void bindData() {
         AndroidSchedulers.mainThread().createWorker().schedule(() -> {
-            if(mConsumer != null){
+            if (mConsumer != null) {
                 mConsumer.updateData(dataToBind);
             }
         });

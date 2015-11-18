@@ -23,8 +23,8 @@ import com.team2052.frckrawler.listitems.elements.MetricListElement;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.greenrobot.dao.query.QueryBuilder;
 
 /**

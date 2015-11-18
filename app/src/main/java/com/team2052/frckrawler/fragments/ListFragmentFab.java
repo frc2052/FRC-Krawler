@@ -12,8 +12,8 @@ import android.widget.ListView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.listeners.RefreshListener;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * @author Adam

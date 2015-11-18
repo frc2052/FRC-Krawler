@@ -21,10 +21,13 @@ import dagger.Component;
 }, dependencies = ApplicationComponent.class)
 public interface FragmentComponent {
     DBManager dbManager();
+
     void inject(HomeActivity activity);
+
     void inject(GamesFragment gamesFragment);
 
     void inject(GameInfoActivity gameInfoActivity);
+
     void inject(EventsFragment eventsNewFragment);
 
     void inject(EventInfoActivity eventInfoActivity);

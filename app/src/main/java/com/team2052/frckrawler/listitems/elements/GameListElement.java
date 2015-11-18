@@ -23,7 +23,7 @@ public class GameListElement extends ListElement {
     @Override
     public View getView(final Context c, LayoutInflater inflater, View convertView) {
         convertView = inflater.inflate(R.layout.list_item_game, null, false);
-        ((TextView)convertView.findViewById(R.id.game_name)).setText(game.getName());
+        ((TextView) convertView.findViewById(R.id.game_name)).setText(game.getName());
         return convertView;
     }
 

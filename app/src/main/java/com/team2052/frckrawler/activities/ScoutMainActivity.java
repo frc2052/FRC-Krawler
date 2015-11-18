@@ -45,10 +45,10 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
         EventBus.getDefault().register(this);
         mSyncHandler = ScoutSyncHandler.getInstance(this);
 
-        /*binding = DataBindingUtil.setContentView(this, R.layout.activity_scout_main);
+        setContentView(R.layout.activity_scout_main);
         useActionBarToggle();
 
-        binding.scoutMatchButton.setOnClickListener(this);
+        /*binding.scoutMatchButton.setOnClickListener(this);
         binding.scoutPitButton.setOnClickListener(this);
         binding.scoutPracticeButton.setOnClickListener(this);
         binding.syncButton.setOnClickListener(this);*/

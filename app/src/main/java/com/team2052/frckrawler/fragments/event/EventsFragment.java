@@ -24,6 +24,7 @@ import rx.Observable;
  */
 public class EventsFragment extends ListViewFragment<List<Event>, EventListSubscriber> implements FABButtonListener {
     private long mGame_id;
+
     public static EventsFragment newInstance(long game_id) {
         EventsFragment fragment = new EventsFragment();
         Bundle bundle = new Bundle();

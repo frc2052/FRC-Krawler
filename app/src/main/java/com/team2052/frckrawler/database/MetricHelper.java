@@ -16,7 +16,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class MetricHelper {
-    private static Type listType = new TypeToken<List<Integer>>() {}.getType();
+    private static Type listType = new TypeToken<List<Integer>>() {
+    }.getType();
 
     public static Optional<JsonElement> getMetricValue(MetricValue metricValue) {
         if (metricValue == null)
@@ -214,7 +215,7 @@ public class MetricHelper {
             data.addProperty("description", Strings.nullToEmpty(description));
         }
 
-        private void clean(){
+        private void clean() {
             //Clean up data if needed
             if (!data.has("description"))
                 data.addProperty("description", "");

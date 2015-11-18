@@ -5,12 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.fragments.BaseFragment;
-import com.team2052.frckrawler.tba.JSON;
 
 /**
  * @author Adam

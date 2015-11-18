@@ -185,6 +185,24 @@ public class DBManager {
         return mUsers;
     }
 
+    public Observable<List<Event>> eventsByGame(long game_id) {
+        return Observable.create(subscriber -> {
+            subscriber.onStart();
+            List<Event> events = getEventsTable().getQueryBuilder().where(EventDao.Properties.Game_id.eq(game_id)).list();
+            subscriber.onNext(events);
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<List<Game>> allGames() {
+        return Observable.create(subscriber -> {
+            subscriber.onStart();
+            List<Game> games = getGamesTable().loadAll();
+            subscriber.onNext(games);
+            subscriber.onCompleted();
+        });
+    }
+
     private interface Table<T> {
         T load(long id);
 
@@ -882,23 +900,5 @@ public class DBManager {
         public QueryBuilder<User> getQueryBuilder() {
             return userDao.queryBuilder();
         }
-    }
-
-    public Observable<List<Event>> eventsByGame(long game_id) {
-        return Observable.create(subscriber -> {
-            subscriber.onStart();
-            List<Event> events = getEventsTable().getQueryBuilder().where(EventDao.Properties.Game_id.eq(game_id)).list();
-            subscriber.onNext(events);
-            subscriber.onCompleted();
-        });
-    }
-
-    public Observable<List<Game>> allGames() {
-        return Observable.create(subscriber -> {
-            subscriber.onStart();
-            List<Game> games = getGamesTable().loadAll();
-            subscriber.onNext(games);
-            subscriber.onCompleted();
-        });
     }
 }

@@ -11,8 +11,8 @@ import com.team2052.frckrawler.listitems.ListItem;
 import java.util.List;
 
 public class ListViewAdapter extends ArrayAdapter<ListItem> {
-    protected List<ListItem> values;
     private final LayoutInflater inflater;
+    protected List<ListItem> values;
 
     public ListViewAdapter(Context context, List<ListItem> values) {
         super(context, android.R.layout.simple_list_item_1, values);

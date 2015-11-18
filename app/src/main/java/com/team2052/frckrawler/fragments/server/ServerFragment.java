@@ -18,7 +18,6 @@ import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateChangeEvent;
-import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.BaseFragment;
@@ -26,7 +25,6 @@ import com.team2052.frckrawler.fragments.BaseFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
 import de.greenrobot.event.EventBus;
 
 public class ServerFragment extends BaseFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {

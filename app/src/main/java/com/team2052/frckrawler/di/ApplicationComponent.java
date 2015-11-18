@@ -8,6 +8,8 @@ import dagger.Component;
 @Component(modules = {FRCKrawlerModule.class})
 public interface ApplicationComponent {
     void inject(FRCKrawler app);
+
     void inject(SubscriberModule module);
+
     void inject(FRCKrawlerModule module);
 }

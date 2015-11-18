@@ -16,12 +16,12 @@ public class SubscriberModule {
     }
 
     @Provides
-    public EventListSubscriber provideEventListSubscriber(){
+    public EventListSubscriber provideEventListSubscriber() {
         return new EventListSubscriber();
     }
 
     @Provides
-    public GameListSubscriber provideGameListSubscriber(){
+    public GameListSubscriber provideGameListSubscriber() {
         return new GameListSubscriber();
     }
 }

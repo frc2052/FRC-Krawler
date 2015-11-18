@@ -1,9 +1,7 @@
 package com.team2052.frckrawler.background.scout;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
-import android.widget.Toast;
 
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.MetricValue;
@@ -52,7 +50,7 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
             pitData.setEvent(mEvent);
             pitData.setUser_id(user != null ? user.getId() : null);
             pitData.setData(JSON.getGson().toJson(widget.getValue()));
-            if(mDaoSession.getPitDataTable().insert(pitData) && !saved)
+            if (mDaoSession.getPitDataTable().insert(pitData) && !saved)
                 saved = true;
         }
 
@@ -64,7 +62,7 @@ public class SavePitMetricsTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        if(saved){
+        if (saved) {
             SnackbarUtil.make(mFragment.getView(), "Save Complete", Snackbar.LENGTH_SHORT).show();
         } else {
             SnackbarUtil.make(mFragment.getView(), "Update Complete", Snackbar.LENGTH_SHORT).show();

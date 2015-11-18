@@ -54,7 +54,7 @@ public class ServerThread extends Thread {
             try {
                 serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
             } catch (IOException e) {
-                if(isOpen)
+                if (isOpen)
                     e.printStackTrace();
                 else {
                     break;

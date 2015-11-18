@@ -97,7 +97,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
         @Override
         protected void onPostExecute(Void aVoid) {
             ImportEventDataDialog.this.dismissAllowingStateLoss();
-            if(getParentFragment() instanceof RefreshListener){
+            if (getParentFragment() instanceof RefreshListener) {
                 ((RefreshListener) getParentFragment()).refresh();
             }
         }

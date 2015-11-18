@@ -6,16 +6,10 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.google.common.base.Strings;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.fragments.metric.dialog.EditMetricDialogFragment;
-import com.team2052.frckrawler.tba.JSON;
 
 /**
  * Created by Adam on 6/13/2015.

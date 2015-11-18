@@ -15,7 +15,8 @@ import javax.inject.Inject;
  */
 public abstract class DatabaseActivity extends BaseActivity implements HasComponent {
     FragmentComponent mComponent;
-    @Inject DBManager dbManager;
+    @Inject
+    DBManager dbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

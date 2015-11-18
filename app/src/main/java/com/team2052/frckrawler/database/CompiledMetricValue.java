@@ -152,7 +152,7 @@ public class CompiledMetricValue {
         return "Error";
     }
 
-    private double getCompileWeightForMatchNumber(MetricValue metricValue){
+    private double getCompileWeightForMatchNumber(MetricValue metricValue) {
         return Math.pow(compileWeight, metricData.indexOf(metricValue) + 1);
     }
 

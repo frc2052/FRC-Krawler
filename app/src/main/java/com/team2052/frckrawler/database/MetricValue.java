@@ -8,7 +8,7 @@ public class MetricValue {
     private JsonElement value;
 
     public MetricValue(Metric metric, JsonElement value) {
-        if(metric == null)
+        if (metric == null)
             throw new IllegalStateException("Metric cannot be null");
         this.metric = metric;
         this.value = value;

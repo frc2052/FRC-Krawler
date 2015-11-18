@@ -17,8 +17,8 @@ import com.team2052.frckrawler.adapters.SetupFragmentAdapter;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.views.DisableSwipeViewPager;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * @author Adam

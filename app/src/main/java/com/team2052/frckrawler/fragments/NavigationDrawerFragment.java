@@ -11,8 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;

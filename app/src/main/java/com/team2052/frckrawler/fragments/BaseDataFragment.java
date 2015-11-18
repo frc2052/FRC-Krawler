@@ -20,17 +20,17 @@ import rx.schedulers.Schedulers;
 public abstract class BaseDataFragment
         <T, V, S extends BaseDataSubscriber<T, V>, B extends DataComsumer<V>>
         extends Fragment {
+    protected FragmentComponent mComponent;
+    protected DBManager dbManager;
     @Inject
     S subscriber;
     @Inject
     B binder;
-    protected FragmentComponent mComponent;
-    protected DBManager dbManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getActivity() instanceof HasComponent){
+        if (getActivity() instanceof HasComponent) {
             mComponent = ((HasComponent) getActivity()).getComponent();
         }
         mComponent.dbManager();
@@ -43,7 +43,7 @@ public abstract class BaseDataFragment
     @Override
     public void onResume() {
         super.onResume();
-         getObservable().subscribeOn(Schedulers.io())
+        getObservable().subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .subscribe(subscriber);
     }

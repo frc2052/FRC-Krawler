@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.views.SlidingTabLayout;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * @author Adam

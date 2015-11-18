@@ -7,12 +7,12 @@ import com.team2052.frckrawler.listitems.ListItem;
 
 import java.util.List;
 
-public class ListViewConsumer extends DataComsumer<List<ListItem>>{
+public class ListViewConsumer extends DataComsumer<List<ListItem>> {
     public ListView listView;
 
     @Override
     public void updateData(List<ListItem> data) {
-        if(data == null || listView == null)
+        if (data == null || listView == null)
             return;
         ListViewAdapter adapter = new ListViewAdapter(mActivity, data);
         listView.setAdapter(adapter);

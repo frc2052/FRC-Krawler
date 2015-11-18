@@ -112,7 +112,7 @@ public class ServerService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
-        if(thread != null)
+        if (thread != null)
             thread.closeServer();
         removeNotification();
         EventBus.getDefault().unregister(this);
