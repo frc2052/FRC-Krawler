@@ -43,7 +43,7 @@ public abstract class BaseDataFragment
     @Override
     public void onResume() {
         super.onResume();
-        getObservable().subscribeOn(Schedulers.io())
+         getObservable().subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .subscribe(subscriber);
     }

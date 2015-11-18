@@ -2,14 +2,17 @@ package com.team2052.frckrawler.fragments.event;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.database.subscribers.EventListSubscriber;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.ListViewFragment;
 import com.team2052.frckrawler.fragments.event.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
+import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.tba.ConnectionChecker;
 
 import java.util.List;
@@ -38,6 +41,15 @@ public class EventsFragment extends ListViewFragment<List<Event>, EventListSubsc
     public void onCreate(Bundle savedInstanceState) {
         mGame_id = getArguments().getLong(BaseActivity.PARENT_ID, 0);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mListView.setOnItemClickListener((parent, view1, position, id) -> {
+            ListElement listElement = (ListElement) parent.getAdapter().getItem(position);
+            startActivity(EventInfoActivity.newInstance(getActivity(), Long.valueOf(listElement.getKey())));
+        });
     }
 
     @Override

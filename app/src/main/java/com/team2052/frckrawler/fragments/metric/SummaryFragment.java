@@ -25,10 +25,10 @@ import java.util.List;
 public class SummaryFragment extends ListFragment {
     private Event mEvent;
 
-    public static SummaryFragment newInstance(Event event) {
+    public static SummaryFragment newInstance(long event_id) {
         SummaryFragment fragment = new SummaryFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(BaseActivity.PARENT_ID, event.getId());
+        bundle.putLong(BaseActivity.PARENT_ID, event_id);
         fragment.setArguments(bundle);
         return fragment;
     }

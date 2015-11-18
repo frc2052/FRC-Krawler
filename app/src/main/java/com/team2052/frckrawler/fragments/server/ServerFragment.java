@@ -87,7 +87,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                 break;
             case R.id.view_event:
                 if (isEventsValid() && getSelectedEvent() != null)
-                    startActivity(EventInfoActivity.newInstance(getActivity(), getSelectedEvent()));
+                    startActivity(EventInfoActivity.newInstance(getActivity(), getSelectedEvent().getId()));
                 break;
             case R.id.server_settings_save:
                 onServerSettingSaveButtonClicked();

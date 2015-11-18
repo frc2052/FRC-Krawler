@@ -49,11 +49,11 @@ public class RobotsFragment extends ListFragment {
         return fragment;
     }
 
-    public static RobotsFragment newInstance(Event event) {
+    public static RobotsFragment newInstance(long event_id) {
         RobotsFragment fragment = new RobotsFragment();
         Bundle b = new Bundle();
         b.putInt(VIEW_TYPE, 1);
-        b.putLong(BaseActivity.PARENT_ID, event.getId());
+        b.putLong(BaseActivity.PARENT_ID, event_id);
         fragment.setArguments(b);
         return fragment;
     }

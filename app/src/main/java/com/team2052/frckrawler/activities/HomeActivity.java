@@ -20,7 +20,7 @@ import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends DatabaseActivity {
     private static final String REQUESTED_MODE = "requested_mode";
     private static final String STATE_SELECTED_NAV_ID = "selected_navigation_drawer_position";
     @Bind(R.id.toolbar)
@@ -105,6 +105,11 @@ public class HomeActivity extends BaseActivity {
         } else {
             switchToModeForId(initNavId);
         }
+    }
+
+    @Override
+    public void inject() {
+        getComponent().inject(this);
     }
 
     @Override

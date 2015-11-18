@@ -26,9 +26,9 @@ public class EventInfoFragment extends BaseFragment implements RefreshListener {
     public static final String EVENT_ID = "EVENT_ID";
     private Event mEvent;
 
-    public static EventInfoFragment newInstance(Event event) {
+    public static EventInfoFragment newInstance(long event_id) {
         Bundle args = new Bundle();
-        args.putLong(EVENT_ID, event.getId());
+        args.putLong(EVENT_ID, event_id);
         EventInfoFragment fragment = new EventInfoFragment();
         fragment.setArguments(args);
         return fragment;

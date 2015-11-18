@@ -14,6 +14,7 @@ import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.fragments.BaseProgressDialog;
+import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.tba.HTTP;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.tba.TBA;
@@ -96,6 +97,9 @@ public class ImportEventDataDialog extends BaseProgressDialog {
         @Override
         protected void onPostExecute(Void aVoid) {
             ImportEventDataDialog.this.dismissAllowingStateLoss();
+            if(getParentFragment() instanceof RefreshListener){
+                ((RefreshListener) getParentFragment()).refresh();
+            }
         }
 
         @Override

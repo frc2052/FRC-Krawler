@@ -19,15 +19,19 @@ import rx.schedulers.Schedulers;
 
 public abstract class ListViewFragment<T, S extends BaseDataSubscriber<T, List<ListItem>>>
         extends BaseDataFragment<T, List<ListItem>, S, ListViewConsumer> implements RefreshListener {
-    private ListView mListView;
+    protected ListView mListView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.list_view, null);
-        mListView = (ListView) v.findViewById(R.id.list_layout);
+        return inflater.inflate(R.layout.list_view, null);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        mListView = (ListView) view.findViewById(R.id.list_layout);
         binder.listView = mListView;
-        return v;
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

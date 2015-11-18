@@ -26,10 +26,10 @@ public class MatchListFragment extends ListFragment {
 
     private Event mEvent;
 
-    public static MatchListFragment newInstance(Event event) {
+    public static MatchListFragment newInstance(long event_id) {
         MatchListFragment fragment = new MatchListFragment();
         Bundle b = new Bundle();
-        b.putLong(BaseActivity.PARENT_ID, event.getId());
+        b.putLong(BaseActivity.PARENT_ID, event_id);
         fragment.setArguments(b);
         return fragment;
     }

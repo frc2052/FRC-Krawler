@@ -19,4 +19,9 @@ public class SubscriberModule {
     public EventListSubscriber provideEventListSubscriber(){
         return new EventListSubscriber();
     }
+
+    @Provides
+    public GameListSubscriber provideGameListSubscriber(){
+        return new GameListSubscriber();
+    }
 }

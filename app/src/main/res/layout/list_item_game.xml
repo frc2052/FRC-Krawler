@@ -15,6 +15,7 @@
 
     <TextView
         style="@style/TextTitle"
+        android:id="@+id/game_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

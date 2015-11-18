@@ -28,9 +28,9 @@ public class GameInfoActivity extends DatabaseActivity implements View.OnClickLi
 
     private GameInfoPagerAdapter mAdapter;
 
-    public static Intent newInstance(Context context, Game game) {
+    public static Intent newInstance(Context context, long game_id) {
         Intent intent = new Intent(context, GameInfoActivity.class);
-        intent.putExtra(PARENT_ID, game.getId());
+        intent.putExtra(PARENT_ID, game_id);
         return intent;
     }
 

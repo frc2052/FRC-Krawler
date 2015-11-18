@@ -892,4 +892,13 @@ public class DBManager {
             subscriber.onCompleted();
         });
     }
+
+    public Observable<List<Game>> allGames() {
+        return Observable.create(subscriber -> {
+            subscriber.onStart();
+            List<Game> games = getGamesTable().loadAll();
+            subscriber.onNext(games);
+            subscriber.onCompleted();
+        });
+    }
 }
