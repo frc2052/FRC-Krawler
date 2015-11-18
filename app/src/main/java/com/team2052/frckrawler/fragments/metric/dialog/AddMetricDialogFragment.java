@@ -38,11 +38,11 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
     private View mListHeader;
     private DBManager mDBManager;
 
-    public static AddMetricDialogFragment newInstance(int metricCategory, Game game) {
+    public static AddMetricDialogFragment newInstance(int metricCategory, long game_id) {
         AddMetricDialogFragment f = new AddMetricDialogFragment();
         Bundle args = new Bundle();
         args.putInt(METRIC_CATEGORY, metricCategory);
-        args.putLong(GAME_NAME_EXTRA, game.getId());
+        args.putLong(GAME_NAME_EXTRA, game_id);
         f.setArguments(args);
         return f;
     }

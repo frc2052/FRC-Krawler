@@ -24,4 +24,9 @@ public class SubscriberModule {
     public GameListSubscriber provideGameListSubscriber() {
         return new GameListSubscriber();
     }
+
+    @Provides
+    public MetricListSubscriber provideMetricListSubscriber() {
+        return new MetricListSubscriber();
+    }
 }

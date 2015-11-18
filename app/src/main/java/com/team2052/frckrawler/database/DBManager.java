@@ -203,6 +203,18 @@ public class DBManager {
         });
     }
 
+    public Observable<List<Metric>> metricsInGame(long game_id, Integer category){
+        return Observable.create(subscriber -> {
+            subscriber.onStart();
+            QueryBuilder<Metric> where = getMetricsTable().getQueryBuilder().where(MetricDao.Properties.Game_id.eq(game_id));
+            if(category != null)
+                where.where(MetricDao.Properties.Category.eq(category));
+            List<Metric> metrics = where.list();
+            subscriber.onNext(metrics);
+            subscriber.onCompleted();
+        });
+    }
+
     private interface Table<T> {
         T load(long id);
 

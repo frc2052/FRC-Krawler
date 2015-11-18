@@ -8,7 +8,7 @@ import com.team2052.frckrawler.adapters.InstanceFragmentStatePagerAdapter;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.fragments.event.EventsFragment;
 import com.team2052.frckrawler.fragments.game.GameInfoFragment;
-import com.team2052.frckrawler.fragments.game.MetricsGameFragment;
+import com.team2052.frckrawler.fragments.metric.MetricsFragment;
 
 /**
  * Created by Acorp on 11/17/2015.
@@ -31,9 +31,9 @@ public class GameInfoPagerAdapter extends InstanceFragmentStatePagerAdapter {
             case 1:
                 return EventsFragment.newInstance(mGameId);
             case 2:
-                return MetricsGameFragment.newInstance(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, mGameId);
+                return MetricsFragment.newInstance(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, mGameId);
             case 3:
-                return MetricsGameFragment.newInstance(MetricHelper.MetricCategory.ROBOT_METRICS.id, mGameId);
+                return MetricsFragment.newInstance(MetricHelper.MetricCategory.ROBOT_METRICS.id, mGameId);
         }
         return null;
     }
