@@ -94,7 +94,7 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            ((ListFragment) getParentFragment()).updateList();
+            ((ListFragment) getParentFragment()).refresh();
             dismiss();
         }
     }

@@ -42,7 +42,7 @@ public class TeamsFragment extends ListFragment {
 
 
     @Override
-    public void updateList() {
+    public void refresh() {
         new GetTeamsTask().execute();
     }
 

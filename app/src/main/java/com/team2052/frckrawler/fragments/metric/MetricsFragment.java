@@ -16,7 +16,7 @@ import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.fragments.BaseFragment;
 import com.team2052.frckrawler.fragments.metric.dialog.AddMetricDialogFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.MetricListElement;
 
@@ -30,7 +30,7 @@ import butterknife.Bind;
  * @author Adam
  * @since 10/15/2014
  */
-public class MetricsFragment extends BaseFragment implements FABButtonListener, ListUpdateListener {
+public class MetricsFragment extends BaseFragment implements FABButtonListener, RefreshListener {
     private static final String CATEGORY_EXTRA = "CATEGORY_EXTRA";
     private static final String GAME_ID = "GAME_ID";
     @Bind(R.id.list_layout)
@@ -56,7 +56,7 @@ public class MetricsFragment extends BaseFragment implements FABButtonListener, 
     @Override
     public void onResume() {
         super.onResume();
-        updateList();
+        refresh();
     }
 
     @Override
@@ -75,7 +75,7 @@ public class MetricsFragment extends BaseFragment implements FABButtonListener, 
         super.onCreate(savedInstanceState);
         mGame = mDbManager.getGamesTable().load(getArguments().getLong(GAME_ID, 0));
         mCategory = getArguments().getInt(CATEGORY_EXTRA);
-        updateList();
+        refresh();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class MetricsFragment extends BaseFragment implements FABButtonListener, 
     }
 
     @Override
-    public void updateList() {
+    public void refresh() {
         new GetMetricsTask().execute();
     }
 

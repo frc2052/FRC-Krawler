@@ -41,6 +41,7 @@ import java.util.List;
 import javax.inject.Singleton;
 
 import de.greenrobot.dao.query.QueryBuilder;
+import rx.Observable;
 
 /**
  * Used to keep a clean database
@@ -245,8 +246,6 @@ public class DBManager {
             DBManager.this.getRobotsTable().delete(game.getRobotList());
             gameDao.delete(game);
         }
-
-
     }
 
     public class Events implements Table<Event> {
@@ -883,5 +882,14 @@ public class DBManager {
         public QueryBuilder<User> getQueryBuilder() {
             return userDao.queryBuilder();
         }
+    }
+
+    public Observable<List<Event>> eventsByGame(long game_id) {
+        return Observable.create(subscriber -> {
+            subscriber.onStart();
+            List<Event> events = getEventsTable().getQueryBuilder().where(EventDao.Properties.Game_id.eq(game_id)).list();
+            subscriber.onNext(events);
+            subscriber.onCompleted();
+        });
     }
 }

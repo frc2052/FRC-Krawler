@@ -10,7 +10,7 @@ import android.widget.EditText;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.User;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 
 /**
  * @author Adam
@@ -25,7 +25,7 @@ public class AddUserDialogFragment extends DialogFragment {
         builder.setView(view);
         builder.setPositiveButton("Add", (dialog, which) -> {
             DBManager.getInstance(getActivity()).getUsersTable().insert(new User(null, ((EditText) view.findViewById(R.id.name)).getText().toString().trim()));
-            ((ListUpdateListener) getParentFragment()).updateList();
+            ((RefreshListener) getParentFragment()).refresh();
         });
         builder.setNegativeButton("Cancel", null);
         return builder.create();

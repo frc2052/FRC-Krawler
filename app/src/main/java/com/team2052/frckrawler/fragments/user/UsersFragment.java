@@ -57,7 +57,7 @@ public class UsersFragment extends ListFragmentFab {
                 case R.id.menu_delete:
                     mDbManager.getUsersTable().delete(user);
                     currentActionMode.finish();
-                    updateList();
+                    refresh();
                     return true;
                 default:
                     return false;
@@ -101,7 +101,7 @@ public class UsersFragment extends ListFragmentFab {
     }
 
     @Override
-    public void updateList() {
+    public void refresh() {
         new GetUsersTask().execute();
     }
 

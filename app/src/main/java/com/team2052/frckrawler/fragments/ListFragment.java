@@ -9,7 +9,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
@@ -19,7 +19,7 @@ import butterknife.Bind;
  */
 
 @Deprecated
-public abstract class ListFragment extends BaseFragment implements ListUpdateListener {
+public abstract class ListFragment extends BaseFragment implements RefreshListener {
     @Bind(R.id.list_layout)
     protected ListView mListView;
 
@@ -44,7 +44,7 @@ public abstract class ListFragment extends BaseFragment implements ListUpdateLis
             mListView.setAdapter(mAdapter);
             mListView.onRestoreInstanceState(mListState);
         } else {
-            updateList();
+            refresh();
         }
         return v;
     }

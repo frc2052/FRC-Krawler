@@ -15,7 +15,7 @@ import com.team2052.frckrawler.activities.GameInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragments.BaseFragment;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.GameListElement;
@@ -26,7 +26,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.Bind;
 
-public class GamesFragment extends BaseFragment implements ListUpdateListener {
+public class GamesFragment extends BaseFragment implements RefreshListener {
     @Bind(R.id.list_layout)
     protected ListView mListView;
 
@@ -56,17 +56,17 @@ public class GamesFragment extends BaseFragment implements ListUpdateListener {
     @Override
     public void onResume() {
         super.onResume();
-        updateList();
+        refresh();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        updateList();
+        refresh();
     }
 
     @Override
-    public void updateList() {
+    public void refresh() {
         new GetGamesTask().execute();
     }
 

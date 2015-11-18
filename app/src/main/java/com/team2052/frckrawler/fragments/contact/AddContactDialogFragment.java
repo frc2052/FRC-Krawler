@@ -12,7 +12,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 
 /**
  * @author Adam
@@ -54,7 +54,7 @@ public class AddContactDialogFragment extends DialogFragment {
                 String address = ((EditText) view.findViewById(R.id.address)).getText().toString();
                 String teamRole = ((EditText) view.findViewById(R.id.teamRole)).getText().toString();
                 //((FRCKrawler) getActivity().getApplication()).getDBManager().getContactDao().insert(new Contact(null, mTeam.getNumber(), name, email, address, phone, teamRole));
-                ((ListUpdateListener) getParentFragment()).updateList();
+                ((RefreshListener) getParentFragment()).refresh();
             }
         });
         builder.setTitle("Add Contact");

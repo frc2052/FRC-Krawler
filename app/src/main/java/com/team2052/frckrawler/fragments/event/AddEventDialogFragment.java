@@ -14,7 +14,7 @@ import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 
 import java.util.Date;
 
@@ -59,8 +59,8 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        if (getParentFragment() != null && getParentFragment() instanceof ListUpdateListener) {
-            ((ListUpdateListener) getParentFragment()).updateList();
+        if (getParentFragment() != null && getParentFragment() instanceof RefreshListener) {
+            ((RefreshListener) getParentFragment()).refresh();
         }
         super.onDismiss(dialog);
     }

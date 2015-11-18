@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.User;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 
 /**
  * @author Adam
@@ -45,7 +45,7 @@ public class EditUserDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 mUser.setName(editText.getText().toString());
                 mUser.update();
-                ((ListUpdateListener) getParentFragment()).updateList();
+                ((RefreshListener) getParentFragment()).refresh();
                 dismiss();
             }
         });

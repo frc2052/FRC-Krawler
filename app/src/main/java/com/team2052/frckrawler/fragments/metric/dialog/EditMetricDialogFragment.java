@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.fragments.metric.dialog;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -19,7 +18,6 @@ import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.views.ListEditor;
 

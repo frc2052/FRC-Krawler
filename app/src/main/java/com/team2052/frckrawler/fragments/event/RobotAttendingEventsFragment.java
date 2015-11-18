@@ -31,7 +31,7 @@ public class RobotAttendingEventsFragment extends ListFragment {
     }
 
     @Override
-    public void updateList() {
+    public void refresh() {
         mRobot = mDbManager.getRobotsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
         new LoadAllEvents().execute();
     }

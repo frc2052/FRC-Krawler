@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.subscribers.SubscriberModule;
 import com.team2052.frckrawler.di.DaggerFragmentComponent;
 import com.team2052.frckrawler.di.FragmentComponent;
 
@@ -15,7 +16,7 @@ import javax.inject.Inject;
 public abstract class DatabaseActivity extends BaseActivity implements HasComponent {
     FragmentComponent mComponent;
     @Inject DBManager dbManager;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +30,7 @@ public abstract class DatabaseActivity extends BaseActivity implements HasCompon
             mComponent = DaggerFragmentComponent
                     .builder()
                     .fRCKrawlerModule(app.getModule())
+                    .subscriberModule(new SubscriberModule(this))
                     .applicationComponent(app.getComponent())
                     .build();
         }

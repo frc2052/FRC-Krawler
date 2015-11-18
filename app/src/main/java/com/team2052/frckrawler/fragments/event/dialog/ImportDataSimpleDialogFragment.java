@@ -21,7 +21,7 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragments.event.ImportEventDataDialog;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
@@ -51,10 +51,10 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
      * @param game the game that the event will eventually be imported to.
      * @return The fragment with the specific arguments to run the dialog
      */
-    public static ImportDataSimpleDialogFragment newInstance(Game game) {
+    public static ImportDataSimpleDialogFragment newInstance(long game_id) {
         ImportDataSimpleDialogFragment fragment = new ImportDataSimpleDialogFragment();
         Bundle b = new Bundle();
-        b.putLong(BaseActivity.PARENT_ID, game.getId());
+        b.putLong(BaseActivity.PARENT_ID, game_id);
         fragment.setArguments(b);
         return fragment;
     }
@@ -91,8 +91,8 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        if (getParentFragment() != null && getParentFragment() instanceof ListUpdateListener) {
-            ((ListUpdateListener) getParentFragment()).updateList();
+        if (getParentFragment() != null && getParentFragment() instanceof RefreshListener) {
+            ((RefreshListener) getParentFragment()).refresh();
         }
         super.onDismiss(dialog);
     }

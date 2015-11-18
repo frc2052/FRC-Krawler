@@ -17,13 +17,13 @@ import com.team2052.frckrawler.background.DeleteGameTask;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragments.BaseFragment;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.util.Util;
 
 /**
  * Created by adam on 6/14/15.
  */
-public class GameInfoFragment extends BaseFragment implements ListUpdateListener {
+public class GameInfoFragment extends BaseFragment implements RefreshListener {
 
     public static final String GAME_ID = "GAME_ID";
 
@@ -59,7 +59,7 @@ public class GameInfoFragment extends BaseFragment implements ListUpdateListener
     @Override
     public void onResume() {
         super.onResume();
-        updateList();
+        refresh();
     }
 
     @Override
@@ -110,7 +110,7 @@ public class GameInfoFragment extends BaseFragment implements ListUpdateListener
     }
 
     @Override
-    public void updateList() {
+    public void refresh() {
         new GetGameInfo().execute();
     }
 

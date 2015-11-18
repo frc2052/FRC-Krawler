@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
@@ -14,7 +13,6 @@ import com.team2052.frckrawler.fragments.event.EventInfoFragment;
 import com.team2052.frckrawler.fragments.match.MatchListFragment;
 import com.team2052.frckrawler.fragments.metric.SummaryFragment;
 import com.team2052.frckrawler.fragments.team.RobotsFragment;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
 
 /**
  * @author Adam
@@ -51,7 +49,7 @@ public class EventInfoActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    ((ListUpdateListener) mAdapter.getRegisteredFragment(0)).updateList();
+                    ((RefreshListener) mAdapter.getRegisteredFragment(0)).refresh();
                 }
             }
 

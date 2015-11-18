@@ -43,7 +43,7 @@ public class SummaryMetricActivity extends ListActivity {
     }
 
     @Override
-    public void updateList() {
+    public void refresh() {
         new LoadAllMetrics().execute();
     }
 

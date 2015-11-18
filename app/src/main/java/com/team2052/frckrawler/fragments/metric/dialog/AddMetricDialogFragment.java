@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -19,7 +18,7 @@ import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricHelper.MetricFactory;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.views.ListEditor;
 
 /**
@@ -123,7 +122,7 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
         }
 
         mDBManager.getMetricsTable().insert(metricFactory.buildMetric());
-        ((ListUpdateListener) getParentFragment()).updateList();
+        ((RefreshListener) getParentFragment()).refresh();
         dismiss();
     }
 

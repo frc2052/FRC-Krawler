@@ -43,7 +43,7 @@ public class SummaryFragment extends ListFragment {
     }
 
     @Override
-    public void updateList() {
+    public void refresh() {
         new LoadAllMetrics().execute();
     }
 

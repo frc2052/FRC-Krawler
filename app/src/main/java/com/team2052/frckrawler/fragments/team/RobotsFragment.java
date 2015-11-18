@@ -103,7 +103,7 @@ public class RobotsFragment extends ListFragment {
     }
 
     @Override
-    public void updateList() {
+    public void refresh() {
         new GetAllRobotsBy().execute();
     }
 

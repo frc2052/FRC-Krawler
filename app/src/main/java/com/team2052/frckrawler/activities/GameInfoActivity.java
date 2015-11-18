@@ -14,7 +14,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.tab.GameInfoPagerAdapter;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.listeners.FABButtonListener;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 
 /**
  * @author Adam
@@ -63,7 +63,7 @@ public class GameInfoActivity extends DatabaseActivity implements View.OnClickLi
             public void onPageSelected(int position) {
                 if (position == 0) {
                     mFab.hide();
-                    ((ListUpdateListener) mAdapter.getRegisteredFragment(0)).updateList();
+                    ((RefreshListener) mAdapter.getRegisteredFragment(0)).refresh();
                 } else {
                     mFab.show();
                 }

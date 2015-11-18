@@ -2,22 +2,15 @@ package com.team2052.frckrawler;
 
 import android.app.Application;
 
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.consumer.ConsumerModule;
 import com.team2052.frckrawler.di.ApplicationComponent;
 import com.team2052.frckrawler.di.DaggerApplicationComponent;
 import com.team2052.frckrawler.di.FRCKrawlerModule;
 
 public class FRCKrawler extends Application {
-
     private FRCKrawlerModule mModule;
     private ApplicationComponent mApplicationComponent;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        //Initiate Database
-        DBManager.getInstance(getBaseContext());
-    }
+    private ConsumerModule mConsumerModule;
 
     public ApplicationComponent getComponent() {
         if (mApplicationComponent == null) {
@@ -36,4 +29,10 @@ public class FRCKrawler extends Application {
         return mModule;
     }
 
+    public ConsumerModule getConsumerModule() {
+        if (mConsumerModule == null) {
+            mConsumerModule = new ConsumerModule();
+        }
+        return mConsumerModule;
+    }
 }

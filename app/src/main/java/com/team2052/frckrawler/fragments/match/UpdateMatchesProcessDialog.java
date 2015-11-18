@@ -79,7 +79,7 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            ((ListFragment) getParentFragment()).updateList();
+            ((ListFragment) getParentFragment()).refresh();
             dismissAllowingStateLoss();
         }
     }

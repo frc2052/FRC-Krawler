@@ -16,13 +16,13 @@ import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.background.DeleteEventTask;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.BaseFragment;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.util.Util;
 
 /**
  * Created by adam on 6/15/15.
  */
-public class EventInfoFragment extends BaseFragment implements ListUpdateListener {
+public class EventInfoFragment extends BaseFragment implements RefreshListener {
     public static final String EVENT_ID = "EVENT_ID";
     private Event mEvent;
 
@@ -50,7 +50,7 @@ public class EventInfoFragment extends BaseFragment implements ListUpdateListene
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //binding = FragmentEventInfoBinding.bind(view);
-        updateList();
+        refresh();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class EventInfoFragment extends BaseFragment implements ListUpdateListene
     }
 
     @Override
-    public void updateList() {
+    public void refresh() {
         new LoadEventInfo().execute();
     }
 

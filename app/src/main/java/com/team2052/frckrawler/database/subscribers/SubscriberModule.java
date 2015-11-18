@@ -1,0 +1,22 @@
+package com.team2052.frckrawler.database.subscribers;
+
+import android.app.Activity;
+
+import com.team2052.frckrawler.di.FRCKrawlerModule;
+
+import dagger.Module;
+import dagger.Provides;
+
+@Module(includes = {FRCKrawlerModule.class})
+public class SubscriberModule {
+    private Activity mActivity;
+
+    public SubscriberModule(Activity activity) {
+        mActivity = activity;
+    }
+
+    @Provides
+    public EventListSubscriber provideEventListSubscriber(){
+        return new EventListSubscriber();
+    }
+}

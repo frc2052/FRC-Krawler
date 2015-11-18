@@ -61,7 +61,7 @@ public class MatchListFragment extends ListFragment {
     }
 
     @Override
-    public void updateList() {
+    public void refresh() {
         new GetMatches().execute();
     }
 

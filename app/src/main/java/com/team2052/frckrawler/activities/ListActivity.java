@@ -7,13 +7,13 @@ import android.widget.ListView;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.listeners.RefreshListener;
 
 /**
  * @author Adam
  */
 @Deprecated
-public abstract class ListActivity extends BaseActivity implements ListUpdateListener {
+public abstract class ListActivity extends BaseActivity implements RefreshListener {
     protected ListView mListView;
     protected ListAdapter mAdapter;
     private Parcelable mListState;
@@ -48,7 +48,7 @@ public abstract class ListActivity extends BaseActivity implements ListUpdateLis
             mListView.setAdapter(mAdapter);
             mListView.onRestoreInstanceState(mListState);
         } else {
-            updateList();
+            refresh();
         }
         super.onResume();
     }
