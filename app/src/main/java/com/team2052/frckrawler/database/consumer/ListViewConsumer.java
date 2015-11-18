@@ -7,7 +7,7 @@ import com.team2052.frckrawler.listitems.ListItem;
 
 import java.util.List;
 
-public class ListViewConsumer extends DataComsumer<List<ListItem>> {
+public class ListViewConsumer extends DataConsumer<List<ListItem>> {
     public ListView listView;
 
     @Override

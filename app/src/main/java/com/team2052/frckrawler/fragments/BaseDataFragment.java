@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 
 import com.team2052.frckrawler.activities.HasComponent;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.consumer.DataComsumer;
+import com.team2052.frckrawler.database.consumer.DataConsumer;
 import com.team2052.frckrawler.database.subscribers.BaseDataSubscriber;
 import com.team2052.frckrawler.di.FragmentComponent;
 
@@ -18,7 +18,7 @@ import rx.schedulers.Schedulers;
  * Created by Acorp on 11/17/2015.
  */
 public abstract class BaseDataFragment
-        <T, V, S extends BaseDataSubscriber<T, V>, B extends DataComsumer<V>>
+        <T, V, S extends BaseDataSubscriber<T, V>, B extends DataConsumer<V>>
         extends Fragment {
     protected FragmentComponent mComponent;
     protected DBManager dbManager;

@@ -1,12 +1,12 @@
 package com.team2052.frckrawler.database.subscribers;
 
-import com.team2052.frckrawler.database.consumer.DataComsumer;
+import com.team2052.frckrawler.database.consumer.DataConsumer;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
 public abstract class BaseDataSubscriber<T, V> implements Observer<T> {
-    DataComsumer<V> mConsumer;
+    DataConsumer<V> mConsumer;
     T data;
     V dataToBind;
 
@@ -39,7 +39,7 @@ public abstract class BaseDataSubscriber<T, V> implements Observer<T> {
         });
     }
 
-    public void setConsumer(DataComsumer<V> mConsumer) {
+    public void setConsumer(DataConsumer<V> mConsumer) {
         this.mConsumer = mConsumer;
     }
 
