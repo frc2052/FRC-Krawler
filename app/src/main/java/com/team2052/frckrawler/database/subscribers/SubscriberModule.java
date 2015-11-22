@@ -29,4 +29,9 @@ public class SubscriberModule {
     public MetricListSubscriber provideMetricListSubscriber() {
         return new MetricListSubscriber();
     }
+
+    @Provides
+    public TeamListSubscriber provideTeamListSubscriber() {
+        return new TeamListSubscriber();
+    }
 }

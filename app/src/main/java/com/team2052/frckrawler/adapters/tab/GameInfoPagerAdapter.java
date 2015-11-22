@@ -6,9 +6,9 @@ import android.support.v4.app.FragmentManager;
 import com.team2052.frckrawler.activities.GameInfoActivity;
 import com.team2052.frckrawler.adapters.InstanceFragmentStatePagerAdapter;
 import com.team2052.frckrawler.database.MetricHelper;
-import com.team2052.frckrawler.fragments.event.EventsFragment;
-import com.team2052.frckrawler.fragments.game.GameInfoFragment;
-import com.team2052.frckrawler.fragments.metric.MetricsFragment;
+import com.team2052.frckrawler.fragments.EventsFragment;
+import com.team2052.frckrawler.fragments.GameInfoFragment;
+import com.team2052.frckrawler.fragments.MetricsFragment;
 
 /**
  * Created by Acorp on 11/17/2015.

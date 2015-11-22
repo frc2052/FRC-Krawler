@@ -9,8 +9,8 @@ import android.support.v7.widget.Toolbar;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
-import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
+import com.team2052.frckrawler.fragments.ScoutMatchFragment;
+import com.team2052.frckrawler.fragments.ScoutPitFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

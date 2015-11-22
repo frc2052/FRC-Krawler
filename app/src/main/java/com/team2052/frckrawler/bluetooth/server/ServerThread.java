@@ -87,7 +87,7 @@ public class ServerThread extends Thread {
 
 
                     if (fromScoutStream != null) {
-                        Optional<BluetoothInfo.ConnectionType> connection_type = Optional.absent();
+                        Optional<Integer> connection_type = Optional.absent();
                         boolean validVersion = false;
                         try {
                             validVersion = fromScoutStream.readInt() == BuildConfig.VERSION_CODE;
@@ -96,14 +96,14 @@ public class ServerThread extends Thread {
                         }
 
                         try {
-                            connection_type = Optional.of(BluetoothInfo.ConnectionType.VALID_CONNECTION_TYPES[fromScoutStream.readInt()]);
+                            connection_type = Optional.of(fromScoutStream.readInt());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
 
                         if (connection_type.isPresent() && validVersion) {
                             switch (connection_type.get()) {
-                                case SCOUT_SYNC: {
+                                case BluetoothInfo.SCOUT_SYNC: {
                                     Log.d(TAG, "Starting sync with Scout");
                                     ServerPackage serverPackage = null;
 

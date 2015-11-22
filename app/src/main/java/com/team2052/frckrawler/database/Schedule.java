@@ -6,10 +6,6 @@ import com.team2052.frckrawler.db.Match;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * @author Adam
- *         Compact way of a match list
- */
 public class Schedule implements Serializable {
     public Event event;
     public List<Match> matches;

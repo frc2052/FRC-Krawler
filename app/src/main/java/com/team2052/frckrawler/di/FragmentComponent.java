@@ -6,9 +6,10 @@ import com.team2052.frckrawler.activities.HomeActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.consumer.ConsumerModule;
 import com.team2052.frckrawler.database.subscribers.SubscriberModule;
-import com.team2052.frckrawler.fragments.event.EventsFragment;
-import com.team2052.frckrawler.fragments.game.GamesFragment;
-import com.team2052.frckrawler.fragments.metric.MetricsFragment;
+import com.team2052.frckrawler.fragments.EventsFragment;
+import com.team2052.frckrawler.fragments.GamesFragment;
+import com.team2052.frckrawler.fragments.MetricsFragment;
+import com.team2052.frckrawler.fragments.TeamsFragment;
 
 import javax.inject.Singleton;
 
@@ -34,4 +35,6 @@ public interface FragmentComponent {
     void inject(EventInfoActivity eventInfoActivity);
 
     void inject(MetricsFragment metricsFragment);
+
+    void inject(TeamsFragment teamsFragment);
 }

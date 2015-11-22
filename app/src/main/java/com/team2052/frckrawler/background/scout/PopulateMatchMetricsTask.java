@@ -12,7 +12,7 @@ import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
+import com.team2052.frckrawler.fragments.ScoutMatchFragment;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 

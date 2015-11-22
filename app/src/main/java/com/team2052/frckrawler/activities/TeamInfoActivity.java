@@ -9,8 +9,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.fragments.team.RobotsFragment;
-import com.team2052.frckrawler.fragments.team.TeamInfoFragment;
+import com.team2052.frckrawler.fragments.RobotsFragment;
+import com.team2052.frckrawler.fragments.TeamInfoFragment;
 
 /**
  * @author Adam

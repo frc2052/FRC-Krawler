@@ -14,8 +14,6 @@ public class GameListSubscriber extends BaseDataSubscriber<List<Game>, List<List
     @Override
     public void parseData() {
         dataToBind = new ArrayList<>();
-        for (Game game : data) {
-            dataToBind.add(new GameListElement(game));
-        }
+        for (Game game : data) dataToBind.add(new GameListElement(game));
     }
 }

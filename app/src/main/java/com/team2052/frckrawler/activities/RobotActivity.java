@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.fragments.event.RobotAttendingEventsFragment;
+import com.team2052.frckrawler.fragments.RobotAttendingEventsFragment;
 
 /**
  * @author Adam

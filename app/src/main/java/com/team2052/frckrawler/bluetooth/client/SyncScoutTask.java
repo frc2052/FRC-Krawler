@@ -79,7 +79,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
 
             try {
                 ooStream.writeInt(BuildConfig.VERSION_CODE);
-                ooStream.writeInt(BluetoothInfo.ConnectionType.SCOUT_SYNC.ordinal());
+                ooStream.writeInt(BluetoothInfo.SCOUT_SYNC);
                 ooStream.writeObject(new ServerPackage(mDbManager));
                 ooStream.flush();
             } catch (IOException e) {

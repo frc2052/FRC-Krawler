@@ -9,7 +9,7 @@ import com.team2052.frckrawler.comparators.RobotTeamNumberComparator;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
+import com.team2052.frckrawler.fragments.ScoutMatchFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;

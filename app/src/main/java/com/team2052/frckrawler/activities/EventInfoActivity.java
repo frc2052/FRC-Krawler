@@ -10,10 +10,10 @@ import android.support.v7.widget.Toolbar;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.InstanceFragmentStatePagerAdapter;
-import com.team2052.frckrawler.fragments.event.EventInfoFragment;
-import com.team2052.frckrawler.fragments.match.MatchListFragment;
-import com.team2052.frckrawler.fragments.metric.SummaryFragment;
-import com.team2052.frckrawler.fragments.team.RobotsFragment;
+import com.team2052.frckrawler.fragments.EventInfoFragment;
+import com.team2052.frckrawler.fragments.MatchListFragment;
+import com.team2052.frckrawler.fragments.RobotsFragment;
+import com.team2052.frckrawler.fragments.SummaryFragment;
 import com.team2052.frckrawler.listeners.RefreshListener;
 
 /**

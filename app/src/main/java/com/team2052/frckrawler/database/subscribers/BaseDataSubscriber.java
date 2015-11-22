@@ -12,7 +12,11 @@ public abstract class BaseDataSubscriber<T, V> implements Observer<T> {
 
     @Override
     public void onCompleted() {
-
+        AndroidSchedulers.mainThread().createWorker().schedule(() -> {
+            if (mConsumer != null) {
+                mConsumer.onCompleted();
+            }
+        });
     }
 
     @Override

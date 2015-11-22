@@ -41,19 +41,20 @@ public class ServerPackage implements Serializable {
     public void save(final DBManager dbManager) {
         dbManager.runInTx(() -> {
             //Save all the data
-            for (MatchData m : metricMatchData) {
-                dbManager.getMatchDataTable().insertMatchData(m);
+            for (int i = 0; i < metricMatchData.size(); i++) {
+                dbManager.getMatchDataTable().insertMatchData(metricMatchData.get(i));
             }
 
-            for (PitData m : metricPitData) {
-                dbManager.getPitDataTable().insert(m);
+            for (int i = 0; i < metricPitData.size(); i++) {
+                dbManager.getPitDataTable().insert(metricPitData.get(i));
             }
 
-            for (MatchComment matchComment : matchComments) {
-                dbManager.getMatchComments().insertMatchComment(matchComment);
+            for (int i = 0; i < matchComments.size(); i++) {
+                dbManager.getMatchComments().insertMatchComment(matchComments.get(i));
             }
 
-            for (RobotComment robotComment : robotComments) {
+            for (int i = 0; i < robotComments.size(); i++) {
+                RobotComment robotComment = robotComments.get(i);
                 Robot robot = dbManager.getRobotsTable().load(robotComment.getRobotId());
                 if (robot.getLast_updated().getTime() <= new Date().getTime()) {
                     robot.setLast_updated(new Date());

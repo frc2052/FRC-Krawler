@@ -6,9 +6,5 @@ public class BluetoothInfo {
     public static final int OK = 1;
     public static final int VERSION_ERROR = -1;
 
-    public enum ConnectionType {
-        SCOUT_SYNC;
-
-        public static ConnectionType[] VALID_CONNECTION_TYPES = values();
-    }
+    public static final int SCOUT_SYNC = 1;
 }

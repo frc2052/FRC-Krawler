@@ -5,16 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.fragments.game.GamesFragment;
-import com.team2052.frckrawler.fragments.server.ServerFragment;
-import com.team2052.frckrawler.fragments.team.TeamsFragment;
-import com.team2052.frckrawler.fragments.user.UsersFragment;
+import com.team2052.frckrawler.fragments.GamesFragment;
+import com.team2052.frckrawler.fragments.ServerFragment;
+import com.team2052.frckrawler.fragments.TeamsFragment;
+import com.team2052.frckrawler.fragments.UsersFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 
 import butterknife.Bind;
@@ -83,6 +84,8 @@ public class HomeActivity extends DatabaseActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+
+        ViewCompat.setElevation(toolbar, getResources().getDimension(R.dimen.toolbar_elevation));
 
         SharedPreferences sharedPreferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         boolean mIsScout = sharedPreferences.getBoolean(GlobalValues.IS_SCOUT_PREF, false);

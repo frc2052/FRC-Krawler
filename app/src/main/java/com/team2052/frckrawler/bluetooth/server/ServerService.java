@@ -22,11 +22,9 @@ import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
 import de.greenrobot.event.EventBus;
 
 public class ServerService extends Service {
-    private static final int STATE_CHANGE_THRESH = 2000; //in-mills
     public static int SERVER_OPEN_ID = 10;
     public static String TAG = "ServerService";
     private ServerThread thread;
-    private long timeLastChanged = 0;
 
     /**
      * Any part of the application that wants to change the state of the server should use the
