@@ -15,7 +15,6 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.fragments.GamesFragment;
 import com.team2052.frckrawler.fragments.ServerFragment;
 import com.team2052.frckrawler.fragments.TeamsFragment;
-import com.team2052.frckrawler.fragments.UsersFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 
 import butterknife.Bind;
@@ -62,9 +61,6 @@ public class HomeActivity extends DatabaseActivity {
                 break;
             case R.id.nav_item_teams:
                 fragment = new TeamsFragment();
-                break;
-            case R.id.nav_item_users:
-                fragment = new UsersFragment();
                 break;
             case R.id.nav_item_games:
                 fragment = new GamesFragment();
@@ -138,9 +134,6 @@ public class HomeActivity extends DatabaseActivity {
                     break;
                 case R.id.nav_item_teams:
                     bar.setTitle("Teams");
-                    break;
-                case R.id.nav_item_users:
-                    bar.setTitle("Users");
                     break;
                 case R.id.nav_item_games:
                     bar.setTitle("Games");

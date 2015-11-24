@@ -4,16 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.adapters.InstanceFragmentStatePagerAdapter;
-import com.team2052.frckrawler.fragments.EventInfoFragment;
-import com.team2052.frckrawler.fragments.MatchListFragment;
-import com.team2052.frckrawler.fragments.RobotsFragment;
-import com.team2052.frckrawler.fragments.SummaryFragment;
+import com.team2052.frckrawler.adapters.tab.EventViewPagerAdapter;
 import com.team2052.frckrawler.listeners.RefreshListener;
 
 /**
@@ -24,7 +19,6 @@ public class EventInfoActivity extends DatabaseActivity {
     ViewPager mViewPager;
     TabLayout mTabLayout;
 
-    private long mEvent_id;
     private EventViewPagerAdapter mAdapter;
 
     public static Intent newInstance(Context context, long event_id) {
@@ -36,7 +30,7 @@ public class EventInfoActivity extends DatabaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mEvent_id = getIntent().getLongExtra(PARENT_ID, 0);
+        long mEvent_id = getIntent().getLongExtra(PARENT_ID, 0);
         setContentView(R.layout.layout_tab);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -45,7 +39,7 @@ public class EventInfoActivity extends DatabaseActivity {
         setSupportActionBar(toolbar);
         setActionBarTitle(getString(R.string.event));
 
-        mViewPager.setAdapter(mAdapter = new EventViewPagerAdapter());
+        mViewPager.setAdapter(mAdapter = new EventViewPagerAdapter(getSupportFragmentManager(), mEvent_id));
         mTabLayout.setupWithViewPager(mViewPager);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -69,39 +63,6 @@ public class EventInfoActivity extends DatabaseActivity {
     @Override
     public void inject() {
         getComponent().inject(this);
-    }
-
-    public class EventViewPagerAdapter extends InstanceFragmentStatePagerAdapter {
-        public String[] headers = new String[]{"Info", "Metric Summary", "Schedule", "Attending"};
-
-        public EventViewPagerAdapter() {
-            super(getSupportFragmentManager());
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return EventInfoFragment.newInstance(mEvent_id);
-                case 1:
-                    return SummaryFragment.newInstance(mEvent_id);
-                case 2:
-                    return MatchListFragment.newInstance(mEvent_id);
-                case 3:
-                    return RobotsFragment.newInstance(mEvent_id);
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return headers.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return headers[position];
-        }
     }
 
 }

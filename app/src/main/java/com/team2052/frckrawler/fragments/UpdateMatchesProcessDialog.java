@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.tba.HTTP;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.tba.TBA;
@@ -20,10 +21,10 @@ import java.util.List;
  */
 public class UpdateMatchesProcessDialog extends BaseProgressDialog {
 
-    public static UpdateMatchesProcessDialog newInstance(Event event) {
+    public static UpdateMatchesProcessDialog newInstance(long event_id) {
         UpdateMatchesProcessDialog updateMatchesProcessDialog = new UpdateMatchesProcessDialog();
         Bundle bundle = new Bundle();
-        bundle.putLong(BaseActivity.PARENT_ID, event.getId());
+        bundle.putLong(BaseActivity.PARENT_ID, event_id);
         updateMatchesProcessDialog.setArguments(bundle);
         return updateMatchesProcessDialog;
     }
@@ -77,7 +78,7 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            ((ListFragment) getParentFragment()).refresh();
+            ((RefreshListener) getParentFragment()).refresh();
             dismissAllowingStateLoss();
         }
     }

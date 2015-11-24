@@ -194,6 +194,43 @@ public class DBManager {
         });
     }
 
+    public Observable<List<Event>> robotAtEvents(long robot_id) {
+        return Observable.create(subscriber -> {
+            subscriber.onStart();
+            List<Event> events = new ArrayList<>();
+            Robot load = getRobotsTable().load(robot_id);
+            List<RobotEvent> robotEventList = load.getRobotEventList();
+            for (int i = 0; i < robotEventList.size(); i++) {
+                events.add(robotEventList.get(i).getEvent());
+            }
+            subscriber.onNext(events);
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<List<Robot>> robotsWithTeam(long team_id) {
+        return Observable.create(subscriber -> {
+            subscriber.onStart();
+            List<Robot> robots = getRobotsTable().getQueryBuilder().where(RobotDao.Properties.Team_id.eq(team_id)).list();
+            subscriber.onNext(robots);
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<List<Robot>> robotsAtEvent(long event_id) {
+        return Observable.create(subscriber -> {
+            subscriber.onStart();
+            Event event = getEventsTable().load(event_id);
+            List<RobotEvent> robotEvents = getEventsTable().getRobotEvents(event);
+            List<Robot> robots = new ArrayList<>();
+            for(int i = 0; i < robotEvents.size();i++){
+                robots.add(robotEvents.get(i).getRobot());
+            }
+            subscriber.onNext(robots);
+            subscriber.onCompleted();
+        });
+    }
+
     public Observable<List<Game>> allGames() {
         return Observable.create(subscriber -> {
             subscriber.onStart();
@@ -216,10 +253,14 @@ public class DBManager {
     }
 
     public Observable<List<Team>> allTeams() {
+        return Observable.just(getTeamsTable().getQueryBuilder().orderAsc(TeamDao.Properties.Number).list());
+    }
+
+    public Observable<List<Match>> matchesAtEvent(long event_id) {
         return Observable.create(subscriber -> {
             subscriber.onStart();
-            List<Team> teams = getTeamsTable().getQueryBuilder().orderAsc(TeamDao.Properties.Number).list();
-            subscriber.onNext(teams);
+            List<Match> matches = getMatchesTable().getQueryBuilder().where(MatchDao.Properties.Event_id.eq(event_id)).list();
+            subscriber.onNext(matches);
             subscriber.onCompleted();
         });
     }

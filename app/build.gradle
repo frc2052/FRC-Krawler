@@ -4,7 +4,7 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId 'com.team2052.frckrawler'
         minSdkVersion 14
@@ -61,10 +61,6 @@ dependencies {
     //Http
     compile 'com.facebook.stetho:stetho:1.1.1'
     compile 'com.facebook.stetho:stetho-okhttp:1.1.1'
-
-    //TODO Deprecated -- Removing soon
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.0'
-    compile 'com.melnykov:floatingactionbutton:1.2.0'
 
     compile 'io.reactivex:rxandroid:1.0.1'
 

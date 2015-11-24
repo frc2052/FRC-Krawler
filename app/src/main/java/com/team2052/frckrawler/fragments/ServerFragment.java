@@ -33,9 +33,10 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     private static final int REQUEST_BT_ENABLED = 1;
     private List<Event> mEvents = new ArrayList<>();
 
-    SwitchCompat host_toggle;
-    Spinner event_spinner;
-    TextInputLayout server_setting_compile_weight;
+    SwitchCompat mHostToggle;
+    Spinner mEventSpinner;
+    TextInputLayout mServerSettingCompileWeight;
+    View mServerEventContainer, mServerEventsError;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,17 +50,20 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     }
 
     public void onEvent(ServerStateChangeEvent serverStateChangeEvent) {
-        host_toggle.setOnCheckedChangeListener(null);
-        host_toggle.setChecked(serverStateChangeEvent.getState());
-        host_toggle.setOnCheckedChangeListener(this);
+        mHostToggle.setOnCheckedChangeListener(null);
+        mHostToggle.setChecked(serverStateChangeEvent.getState());
+        mHostToggle.setOnCheckedChangeListener(this);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        host_toggle = (SwitchCompat) view.findViewById(R.id.host_toggle);
-        event_spinner = (Spinner) view.findViewById(R.id.event_spinner);
-        server_setting_compile_weight = (TextInputLayout) view.findViewById(R.id.server_setting_compile_weight);
+        mHostToggle = (SwitchCompat) view.findViewById(R.id.host_toggle);
+        mEventSpinner = (Spinner) view.findViewById(R.id.event_spinner);
+        mServerSettingCompileWeight = (TextInputLayout) view.findViewById(R.id.server_setting_compile_weight);
+        mServerEventContainer = view.findViewById(R.id.server_event_container);
+        mServerEventsError = view.findViewById(R.id.server_events_error);
+
         view.findViewById(R.id.view_event).setOnClickListener(this);
         view.findViewById(R.id.excel).setOnClickListener(this);
         view.findViewById(R.id.server_settings_save).setOnClickListener(this);
@@ -70,10 +74,10 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         float compileWeight = sharedPreferences.getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
 
-        host_toggle.setOnCheckedChangeListener(this);
+        mHostToggle.setOnCheckedChangeListener(this);
 
-        if (server_setting_compile_weight.getEditText() != null)
-            server_setting_compile_weight.getEditText().setText(String.valueOf(compileWeight));
+        if (mServerSettingCompileWeight.getEditText() != null)
+            mServerSettingCompileWeight.getEditText().setText(String.valueOf(compileWeight));
 
         EventBus.getDefault().post(new ServerStateRequestEvent());
     }
@@ -108,7 +112,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     }
 
     private Event getSelectedEvent() {
-        return mEvents.get(event_spinner.getSelectedItemPosition());
+        return mEvents.get(mEventSpinner.getSelectedItemPosition());
     }
 
     private boolean isEventsValid() {
@@ -130,31 +134,31 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     public void toggleServer() {
         if (isEventsValid()) {
             Event event = getSelectedEvent();
-            EventBus.getDefault().post(new ServerStateRequestChangeEvent(!host_toggle.isChecked(), event));
+            EventBus.getDefault().post(new ServerStateRequestChangeEvent(!mHostToggle.isChecked(), event));
         }
     }
 
     public void onRestoreButtonClicked() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f).apply();
-        server_setting_compile_weight.getEditText().setText(String.valueOf(1.0f));
+        mServerSettingCompileWeight.getEditText().setText(String.valueOf(1.0f));
     }
 
     public void onServerSettingSaveButtonClicked() {
-     /*   SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
-        float compileWeight = Float.parseFloat(binder.serverSettingCompileWeight.getEditText().getText().toString());
-        binder.setCompileWeight(compileWeight);
-        sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, compileWeight).apply();*/
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        float compileWeight = Float.parseFloat(mServerSettingCompileWeight.getEditText().getText().toString());
+        mServerSettingCompileWeight.getEditText().setText(String.valueOf(compileWeight));
+        sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, compileWeight).apply();
     }
 
     public void showEventError(boolean shown) {
-        /*if (shown) {
-            binder.serverEventContainer.setVisibility(View.GONE);
-            binder.serverEventsError.setVisibility(View.VISIBLE);
+        if (shown) {
+            mServerEventContainer.setVisibility(View.GONE);
+            mServerEventsError.setVisibility(View.VISIBLE);
         } else {
-            binder.serverEventContainer.setVisibility(View.VISIBLE);
-            binder.serverEventsError.setVisibility(View.GONE);
-        }*/
+            mServerEventContainer.setVisibility(View.VISIBLE);
+            mServerEventsError.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -184,7 +188,7 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
                     }
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);
-                    //binder.eventSpinner.setAdapter(adapter);
+                    mEventSpinner.setAdapter(adapter);
                     showEventError(false);
                     return;
                 }

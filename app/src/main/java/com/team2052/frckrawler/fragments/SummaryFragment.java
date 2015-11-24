@@ -4,10 +4,14 @@ package com.team2052.frckrawler.fragments;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.database.CompiledMetricValue;
+import com.team2052.frckrawler.database.subscribers.MetricListSubscriber;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListElement;
@@ -17,11 +21,13 @@ import com.team2052.frckrawler.listitems.elements.MetricListElement;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+
 /**
  * @author Adam
  * @since 10/16/2014
  */
-public class SummaryFragment extends ListFragment {
+public class SummaryFragment extends ListViewFragment<List<Metric>, MetricListSubscriber> {
     private Event mEvent;
 
     public static SummaryFragment newInstance(long event_id) {
@@ -33,47 +39,22 @@ public class SummaryFragment extends ListFragment {
     }
 
     @Override
-    public void preUpdateList() {
-        mListView.setOnItemClickListener((adapterView, view, i, l) -> {
-            Metric metric = mDbManager.getMetricsTable().load(Long.parseLong(((ListElement) adapterView.getAdapter().getItem(i)).getKey()));
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mEvent = dbManager.getEventsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
+        mListView.setOnItemClickListener((adapterView, view1, i, l) -> {
+            Metric metric = dbManager.getMetricsTable().load(Long.parseLong(((ListElement) adapterView.getAdapter().getItem(i)).getKey()));
             startActivity(SummaryDataActivity.newInstance(getActivity(), metric, mEvent));
         });
-        mEvent = mDbManager.getEventsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
     }
 
     @Override
-    public void refresh() {
-        new LoadAllMetrics().execute();
+    public void inject() {
+        mComponent.inject(this);
     }
-
 
     @Override
-    public void onAttach(Activity activity) {
-        setShowAddAction(false);
-        super.onAttach(activity);
-    }
-
-    public class LoadAllMetrics extends AsyncTask<Void, Void, List<Metric>> {
-
-        @Override
-        protected List<Metric> doInBackground(Void... params) {
-            return mDbManager.getMetricsTable().query(null, null, mEvent.getGame_id()).list();
-        }
-
-        @Override
-        protected void onPostExecute(List<Metric> metrics) {
-            if (metrics.size() == 0) {
-                showError(true);
-                return;
-            }
-            showError(false);
-            List<ListItem> listItems = new ArrayList<>();
-
-            for (Metric metric : metrics) {
-                listItems.add(new MetricListElement(metric));
-            }
-
-            mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), listItems));
-        }
+    protected Observable<? extends List<Metric>> getObservable() {
+        return dbManager.metricsInGame(mEvent.getGame_id(), null);
     }
 }

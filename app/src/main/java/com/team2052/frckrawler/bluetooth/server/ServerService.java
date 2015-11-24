@@ -91,6 +91,11 @@ public class ServerService extends Service {
         thread = null;
     }
 
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        stopSelf();
+    }
+
     public void onEvent(ServerStartEvent event) {
         showNotification();
     }
@@ -114,6 +119,7 @@ public class ServerService extends Service {
             thread.closeServer();
         removeNotification();
         EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     @Override

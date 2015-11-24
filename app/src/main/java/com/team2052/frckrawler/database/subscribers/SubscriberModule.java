@@ -34,4 +34,14 @@ public class SubscriberModule {
     public TeamListSubscriber provideTeamListSubscriber() {
         return new TeamListSubscriber();
     }
+
+    @Provides
+    public MatchListSubscriber provideMatchListSubscriber() {
+        return new MatchListSubscriber();
+    }
+
+    @Provides
+    public RobotListSubscriber provideRobotListSubscriber() {
+        return new RobotListSubscriber();
+    }
 }

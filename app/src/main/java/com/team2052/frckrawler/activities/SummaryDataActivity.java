@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
+import com.facebook.stetho.common.android.ViewUtil;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.MetricsStatsAdapter;
@@ -41,11 +43,11 @@ public class SummaryDataActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        useActionBarToggle();
         setContentView(R.layout.activity_list_view);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ViewCompat.setElevation(toolbar, getResources().getDimension(R.dimen.toolbar_elevation));
         mListView = (ListView) findViewById(R.id.list_layout);
         mEvent = mDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
         mMetric = mDbManager.getMetricsTable().load(getIntent().getLongExtra(PARENT_ID, 0));

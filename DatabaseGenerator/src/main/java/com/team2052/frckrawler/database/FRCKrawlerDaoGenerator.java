@@ -130,6 +130,7 @@ public class FRCKrawlerDaoGenerator {
         robot.addStringProperty("comments");
         robot.addDateProperty("last_updated");
 
+        robot.addToOne(game, robot_game_id);
         robot.addToMany(robotEvent, robot_event_robot_id);
         robot.addToMany(matchData, match_data_robot_id);
         robot.addToMany(pitData, pit_data_robot_id);

@@ -1,58 +1,45 @@
 package com.team2052.frckrawler.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.team2052.frckrawler.activities.BaseActivity;
-import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.database.subscribers.EventListSubscriber;
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.db.RobotEvent;
-import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.elements.EventListElement;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
 
 /**
  * @author Adam
  * @since 11/24/2014
  */
-public class RobotAttendingEventsFragment extends ListFragment {
+public class RobotAttendingEventsFragment extends ListViewFragment<List<Event>, EventListSubscriber> {
 
-    private Robot mRobot;
+    private long robot_id;
 
-    public static RobotAttendingEventsFragment newInstance(Robot robot) {
+    public static RobotAttendingEventsFragment newInstance(long robot_id) {
         RobotAttendingEventsFragment fragment = new RobotAttendingEventsFragment();
         Bundle args = new Bundle();
-        args.putLong(BaseActivity.PARENT_ID, robot.getId());
+        args.putLong(BaseActivity.PARENT_ID, robot_id);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void refresh() {
-        mRobot = mDbManager.getRobotsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
-        new LoadAllEvents().execute();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        robot_id = getArguments().getLong(BaseActivity.PARENT_ID);
     }
 
-    private class LoadAllEvents extends AsyncTask<Void, Void, List<ListItem>> {
+    @Override
+    public void inject() {
+        mComponent.inject(this);
+    }
 
-        List<ListItem> elements = new ArrayList<>();
-
-        @Override
-        protected List<ListItem> doInBackground(Void... voids) {
-            mDbManager.runInTx(() -> {
-                List<RobotEvent> robotEvents = mDbManager.getRobotsTable().getRobotEvents(mRobot);
-                for (RobotEvent eveRobot : robotEvents) {
-                    elements.add(new EventListElement(mDbManager.getEventsTable().load(eveRobot.getEvent_id())));
-                }
-            });
-            return elements;
-        }
-
-        @Override
-        protected void onPostExecute(List<ListItem> listItems) {
-            mListView.setAdapter(mAdapter = new ListViewAdapter(getActivity(), listItems));
-        }
+    @Override
+    protected Observable<? extends List<Event>> getObservable() {
+        return dbManager.robotAtEvents(robot_id);
     }
 }

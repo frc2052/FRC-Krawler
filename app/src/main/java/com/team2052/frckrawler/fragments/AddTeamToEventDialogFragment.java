@@ -15,6 +15,7 @@ import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.tba.HTTP;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.tba.TBA;
@@ -93,7 +94,7 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            ((ListFragment) getParentFragment()).refresh();
+            ((RefreshListener) getParentFragment()).refresh();
             dismiss();
         }
     }

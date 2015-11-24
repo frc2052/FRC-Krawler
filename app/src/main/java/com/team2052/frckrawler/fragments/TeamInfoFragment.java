@@ -16,10 +16,10 @@ import com.team2052.frckrawler.db.Team;
 public class TeamInfoFragment extends BaseFragment {
     private Team team;
 
-    public static TeamInfoFragment newInstance(Team team) {
+    public static TeamInfoFragment newInstance(long team_id) {
         TeamInfoFragment fragment = new TeamInfoFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(BaseActivity.PARENT_ID, team.getNumber());
+        bundle.putLong(BaseActivity.PARENT_ID, team_id);
         fragment.setArguments(bundle);
         return fragment;
     }
