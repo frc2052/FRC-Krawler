@@ -14,6 +14,6 @@ public class MetricListSubscriber extends BaseDataSubscriber<List<Metric>, List<
     @Override
     public void parseData() {
         dataToBind = new ArrayList<>();
-        for (Metric metric : data) dataToBind.add(new MetricListElement(metric));
+        for (int i = 0; i < data.size(); i++) dataToBind.add(new MetricListElement(data.get(i)));
     }
 }

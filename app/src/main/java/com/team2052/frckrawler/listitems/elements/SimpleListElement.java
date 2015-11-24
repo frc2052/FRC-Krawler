@@ -31,7 +31,7 @@ public class SimpleListElement extends ListElement {
         return convertView;
     }
 
-    //No Idea why a spinner does to string instead of get view -- quick fix
+    //No Idea why a mSpinner does to string instead of get view -- quick fix
     @Override
     public String toString() {
         return name;

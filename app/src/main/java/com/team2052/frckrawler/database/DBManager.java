@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
@@ -194,9 +195,12 @@ public class DBManager {
         });
     }
 
+    public Observable<List<Event>> allEvents() {
+        return Observable.just(getEventsTable().loadAll());
+    }
+
     public Observable<List<Event>> robotAtEvents(long robot_id) {
         return Observable.create(subscriber -> {
-            subscriber.onStart();
             List<Event> events = new ArrayList<>();
             Robot load = getRobotsTable().load(robot_id);
             List<RobotEvent> robotEventList = load.getRobotEventList();
@@ -210,7 +214,6 @@ public class DBManager {
 
     public Observable<List<Robot>> robotsWithTeam(long team_id) {
         return Observable.create(subscriber -> {
-            subscriber.onStart();
             List<Robot> robots = getRobotsTable().getQueryBuilder().where(RobotDao.Properties.Team_id.eq(team_id)).list();
             subscriber.onNext(robots);
             subscriber.onCompleted();
@@ -219,7 +222,6 @@ public class DBManager {
 
     public Observable<List<Robot>> robotsAtEvent(long event_id) {
         return Observable.create(subscriber -> {
-            subscriber.onStart();
             Event event = getEventsTable().load(event_id);
             List<RobotEvent> robotEvents = getEventsTable().getRobotEvents(event);
             List<Robot> robots = new ArrayList<>();
@@ -233,7 +235,6 @@ public class DBManager {
 
     public Observable<List<Game>> allGames() {
         return Observable.create(subscriber -> {
-            subscriber.onStart();
             List<Game> games = getGamesTable().loadAll();
             subscriber.onNext(games);
             subscriber.onCompleted();
@@ -242,7 +243,6 @@ public class DBManager {
 
     public Observable<List<Metric>> metricsInGame(long game_id, Integer category) {
         return Observable.create(subscriber -> {
-            subscriber.onStart();
             QueryBuilder<Metric> where = getMetricsTable().getQueryBuilder().where(MetricDao.Properties.Game_id.eq(game_id));
             if (category != null)
                 where.where(MetricDao.Properties.Category.eq(category));
@@ -258,7 +258,6 @@ public class DBManager {
 
     public Observable<List<Match>> matchesAtEvent(long event_id) {
         return Observable.create(subscriber -> {
-            subscriber.onStart();
             List<Match> matches = getMatchesTable().getQueryBuilder().where(MatchDao.Properties.Event_id.eq(event_id)).list();
             subscriber.onNext(matches);
             subscriber.onCompleted();

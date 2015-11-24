@@ -22,14 +22,19 @@ import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
+import com.team2052.frckrawler.database.consumer.SpinnerConsumer;
+import com.team2052.frckrawler.database.subscribers.EventStringSubscriber;
 import com.team2052.frckrawler.db.Event;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import rx.Observable;
 
-public class ServerFragment extends BaseFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class ServerFragment extends
+        BaseDataFragment<List<Event>, List<String>, EventStringSubscriber, SpinnerConsumer>
+        implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static final int REQUEST_BT_ENABLED = 1;
     private List<Event> mEvents = new ArrayList<>();
 
@@ -45,6 +50,16 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     }
 
     @Override
+    public void inject() {
+        mComponent.inject(this);
+    }
+
+    @Override
+    protected Observable<? extends List<Event>> getObservable() {
+        return dbManager.allEvents();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_server, null, false);
     }
@@ -57,19 +72,17 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         mHostToggle = (SwitchCompat) view.findViewById(R.id.host_toggle);
         mEventSpinner = (Spinner) view.findViewById(R.id.event_spinner);
         mServerSettingCompileWeight = (TextInputLayout) view.findViewById(R.id.server_setting_compile_weight);
         mServerEventContainer = view.findViewById(R.id.server_event_container);
         mServerEventsError = view.findViewById(R.id.server_events_error);
-
         view.findViewById(R.id.view_event).setOnClickListener(this);
         view.findViewById(R.id.excel).setOnClickListener(this);
         view.findViewById(R.id.server_settings_save).setOnClickListener(this);
         view.findViewById(R.id.server_settings_restore_defaults).setOnClickListener(this);
 
-        new GetEventsTask().execute();
+        binder.mSpinner = mEventSpinner;
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
         float compileWeight = sharedPreferences.getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
@@ -80,6 +93,8 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
             mServerSettingCompileWeight.getEditText().setText(String.valueOf(compileWeight));
 
         EventBus.getDefault().post(new ServerStateRequestEvent());
+
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -165,36 +180,6 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getId() == R.id.host_toggle) {
             onHostToggleClicked((SwitchCompat) buttonView, isChecked);
-        }
-    }
-
-    private class GetEventsTask extends AsyncTask<Void, Void, List<Event>> {
-
-        @Override
-        protected List<Event> doInBackground(Void... params) {
-            return mDbManager.getEventsTable().loadAll();
-        }
-
-        @Override
-        protected void onPostExecute(List<Event> _events) {
-            if (getView() != null) {
-                mEvents = _events;
-
-                if (isEventsValid()) {
-                    List<String> eventNames = new ArrayList<>();
-
-                    for (Event event : _events) {
-                        eventNames.add(mDbManager.getEventsTable().getGame(event).getName() + ", " + event.getName());
-                    }
-
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventNames);
-                    mEventSpinner.setAdapter(adapter);
-                    showEventError(false);
-                    return;
-                }
-
-                showEventError(true);
-            }
         }
     }
 }

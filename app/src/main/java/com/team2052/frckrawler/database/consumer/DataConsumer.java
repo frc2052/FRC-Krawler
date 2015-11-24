@@ -7,7 +7,7 @@ public abstract class DataConsumer<V> {
 
     public abstract void updateData(V data);
 
-    public abstract void onError(Throwable e);
+    public void onError(Throwable e){}
 
     public void setActivity(Activity activity) {
         mActivity = activity;

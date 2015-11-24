@@ -38,12 +38,6 @@
                         android:text="Include Team Names" />
 
                     <CheckBox
-                        android:id="@+id/tba_links_export"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Include TBA Links" />
-
-                    <CheckBox
                         android:id="@+id/pit_metrics_export"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

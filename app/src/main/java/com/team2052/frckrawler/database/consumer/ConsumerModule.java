@@ -9,4 +9,9 @@ public class ConsumerModule {
     public ListViewConsumer provideListViewConsumer() {
         return new ListViewConsumer();
     }
+
+    @Provides
+    public SpinnerConsumer provideSpinnerConsumer() {
+        return new SpinnerConsumer();
+    }
 }

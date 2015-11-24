@@ -14,6 +14,6 @@ public class TeamListSubscriber extends BaseDataSubscriber<List<Team>, List<List
     @Override
     public void parseData() {
         dataToBind = new ArrayList<>();
-        for (Team team : data) dataToBind.add(new TeamListElement(team));
+        for (int i = 0; i < data.size(); i++) dataToBind.add(new TeamListElement(data.get(i)));
     }
 }

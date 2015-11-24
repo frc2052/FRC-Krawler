@@ -43,6 +43,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     private Spinner yearSpinner;
     private Spinner eventSpinner;
     private Game mGame;
+    private LoadAllEventsByYear eventsByYear;
 
     /**
      * Used to create the dialog. To import the event to the game
@@ -90,6 +91,9 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
 
     @Override
     public void onDismiss(DialogInterface dialog) {
+        if(eventsByYear != null && !eventsByYear.isCancelled()){
+            eventsByYear.cancel(false);
+        }
         if (getParentFragment() != null && getParentFragment() instanceof RefreshListener) {
             ((RefreshListener) getParentFragment()).refresh();
         }
@@ -98,7 +102,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        LoadAllEventsByYear eventsByYear = new LoadAllEventsByYear(Integer.parseInt((String) yearSpinner.getSelectedItem()));
+        eventsByYear = new LoadAllEventsByYear(Integer.parseInt((String) yearSpinner.getSelectedItem()));
         eventSpinner.setVisibility(View.GONE);
         getDialog().findViewById(R.id.progress).setVisibility(View.VISIBLE);
         eventsByYear.execute();
@@ -109,11 +113,10 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     }
 
     /**
-     * Used to load all events and post it to a spinner list
+     * Used to load all events and post it to a mSpinner list
      *
      * @author Adam
      */
-    //TODO FIX BUG WHERE YOU CLICK CANCEL BEFORE THIS FINISHES AND CRASHES
     private class LoadAllEventsByYear extends AsyncTask<Void, Void, List<Event>> {
         private final String url;
 
@@ -143,7 +146,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             for (Event event : events) {
                 listItems.add(new SimpleListElement(event.getName(), event.getFmsid()));
             }
-            //Set the adapter for the events spinner
+            //Set the adapter for the events mSpinner
             ListViewAdapter adapter = new ListViewAdapter(getActivity(), listItems);
             eventSpinner.setAdapter(adapter);
             getDialog().findViewById(R.id.progress).setVisibility(View.GONE);

@@ -10,12 +10,12 @@ import java.util.List;
 /**
  * Created by Adam on 11/23/2015.
  */
-public class MatchListSubscriber extends BaseDataSubscriber<List<Match>, List<ListItem>>{
+public class MatchListSubscriber extends BaseDataSubscriber<List<Match>, List<ListItem>> {
     @Override
     public void parseData() {
         dataToBind = new ArrayList<>();
-        for (Match match : data) {
-            dataToBind.add(new MatchListItem(match, true));
+        for (int i = 0; i < data.size(); i++) {
+            dataToBind.add(new MatchListItem(data.get(i), true));
         }
     }
 }

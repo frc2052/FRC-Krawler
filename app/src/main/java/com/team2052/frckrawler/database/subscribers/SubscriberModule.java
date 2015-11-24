@@ -44,4 +44,9 @@ public class SubscriberModule {
     public RobotListSubscriber provideRobotListSubscriber() {
         return new RobotListSubscriber();
     }
+
+    @Provides
+    public EventStringSubscriber provideEventStringListSubscriber() {
+        return new EventStringSubscriber();
+    }
 }
