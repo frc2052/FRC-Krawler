@@ -24,4 +24,14 @@
         android:layout_marginTop="16dp"
         android:visibility="gone"/>
 
+    <TextView
+        android:id="@+id/no_connection"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        style="@style/TextTitle"
+        android:textStyle="italic"
+        android:visibility="gone"
+        android:text="No Connection"/>
+
 </LinearLayout>

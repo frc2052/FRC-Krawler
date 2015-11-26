@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.database.subscribers.EventListSubscriber;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Robot;
 
 import java.util.List;
 

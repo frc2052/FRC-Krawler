@@ -13,6 +13,7 @@ import android.view.Menu;
 import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.fragments.GamesFragment;
+import com.team2052.frckrawler.fragments.ScoutFragment;
 import com.team2052.frckrawler.fragments.ServerFragment;
 import com.team2052.frckrawler.fragments.TeamsFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
@@ -52,10 +53,8 @@ public class HomeActivity extends DatabaseActivity {
         Fragment fragment = null;
         switch (id) {
             case R.id.nav_item_scout:
-                mCurrentSelectedNavigationItemId = id;
-                startActivity(new Intent(this, ScoutMainActivity.class));
-                finish();
-                return;
+                fragment = new ScoutFragment();
+                break;
             case R.id.nav_item_server:
                 fragment = new ServerFragment();
                 break;

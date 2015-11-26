@@ -24,6 +24,7 @@ import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
+import com.team2052.frckrawler.tba.ConnectionChecker;
 import com.team2052.frckrawler.tba.HTTP;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.tba.TBA;
@@ -44,6 +45,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     private Spinner eventSpinner;
     private Game mGame;
     private LoadAllEventsByYear eventsByYear;
+    private boolean isConnected;
 
     /**
      * Used to create the dialog. To import the event to the game
@@ -63,6 +65,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mGame = DBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
+        isConnected = ConnectionChecker.isConnectedToInternet(getActivity());
         yearDropDownItems = new String[GlobalValues.MAX_COMP_YEAR - GlobalValues.FIRST_COMP_YEAR + 1];
         for (int i = 0; i < yearDropDownItems.length; i++) {
             yearDropDownItems[i] = Integer.toString(GlobalValues.MAX_COMP_YEAR - i);
@@ -80,10 +83,18 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         b.setNegativeButton("Cancel", (dialog, which) -> {
             ImportDataSimpleDialogFragment.this.dismiss();
         });
+        b.setNeutralButton("Add Manual", ((dialog, which) -> {
+            AddEventDialogFragment.newInstance(mGame).show(getParentFragment().getChildFragmentManager(), "addEvent");
+        }));
         yearSpinner = (Spinner) view.findViewById(R.id.import_year_spinner);
         yearSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, yearDropDownItems));
         yearSpinner.setOnItemSelectedListener(this);
         eventSpinner = (Spinner) view.findViewById(R.id.import_event_spinner);
+        if(!isConnected){
+            yearSpinner.setVisibility(View.GONE);
+            eventSpinner.setVisibility(View.GONE);
+            view.findViewById(R.id.no_connection).setVisibility(View.VISIBLE);
+        }
         b.setView(view);
         b.setTitle("Import Event");
         return b.create();
@@ -91,7 +102,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        if(eventsByYear != null && !eventsByYear.isCancelled()){
+        if (eventsByYear != null && !eventsByYear.isCancelled()) {
             eventsByYear.cancel(false);
         }
         if (getParentFragment() != null && getParentFragment() instanceof RefreshListener) {
@@ -102,10 +113,12 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        eventsByYear = new LoadAllEventsByYear(Integer.parseInt((String) yearSpinner.getSelectedItem()));
-        eventSpinner.setVisibility(View.GONE);
-        getDialog().findViewById(R.id.progress).setVisibility(View.VISIBLE);
-        eventsByYear.execute();
+        if(isConnected){
+            eventsByYear = new LoadAllEventsByYear(Integer.parseInt((String) yearSpinner.getSelectedItem()));
+            eventSpinner.setVisibility(View.GONE);
+            getDialog().findViewById(R.id.progress).setVisibility(View.VISIBLE);
+            eventsByYear.execute();
+        }
     }
 
     @Override

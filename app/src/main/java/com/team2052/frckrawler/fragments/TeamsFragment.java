@@ -2,9 +2,7 @@ package com.team2052.frckrawler.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;

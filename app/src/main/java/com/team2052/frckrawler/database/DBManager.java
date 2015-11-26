@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
@@ -196,7 +195,11 @@ public class DBManager {
     }
 
     public Observable<List<Event>> allEvents() {
-        return Observable.just(getEventsTable().loadAll());
+        return Observable.create(subscriber -> {
+            List<Event> events = getEventsTable().loadAll();
+            subscriber.onNext(events);
+            subscriber.onCompleted();
+        });
     }
 
     public Observable<List<Event>> robotAtEvents(long robot_id) {
@@ -225,7 +228,7 @@ public class DBManager {
             Event event = getEventsTable().load(event_id);
             List<RobotEvent> robotEvents = getEventsTable().getRobotEvents(event);
             List<Robot> robots = new ArrayList<>();
-            for(int i = 0; i < robotEvents.size();i++){
+            for (int i = 0; i < robotEvents.size(); i++) {
                 robots.add(robotEvents.get(i).getRobot());
             }
             subscriber.onNext(robots);
@@ -253,7 +256,11 @@ public class DBManager {
     }
 
     public Observable<List<Team>> allTeams() {
-        return Observable.just(getTeamsTable().getQueryBuilder().orderAsc(TeamDao.Properties.Number).list());
+        return Observable.create(subscriber -> {
+            List<Team> teams = getTeamsTable().getQueryBuilder().orderAsc(TeamDao.Properties.Number).list();
+            subscriber.onNext(teams);
+            subscriber.onCompleted();
+        });
     }
 
     public Observable<List<Match>> matchesAtEvent(long event_id) {

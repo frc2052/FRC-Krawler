@@ -37,6 +37,9 @@ android {
     repositories {
         maven { url "https://jitpack.io" }
     }
+    dexOptions {
+        dexInProcess = true
+    }
 }
 
 dependencies {

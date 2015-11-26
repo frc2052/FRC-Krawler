@@ -2,12 +2,10 @@ package com.team2052.frckrawler.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
@@ -15,7 +13,6 @@ import com.team2052.frckrawler.activities.RobotActivity;
 import com.team2052.frckrawler.database.subscribers.RobotListSubscriber;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.listitems.ListElement;
 
 import java.util.List;

@@ -49,6 +49,10 @@ public abstract class BaseDataSubscriber<T, V> implements Observer<T> {
 
     public abstract void parseData();
 
+    public T getData() {
+        return data;
+    }
+
     public void setData(T data) {
         this.data = data;
     }

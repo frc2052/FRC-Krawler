@@ -32,6 +32,7 @@ import de.greenrobot.event.EventBus;
  * @author adam
  * @since 12/27/14.
  */
+@Deprecated
 public class ScoutMainActivity extends BaseActivity implements View.OnClickListener {
 
     private static final int REQUEST_ENABLE_BT = 0;
@@ -139,12 +140,7 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
         setNavigationDrawerItemSelected(R.id.nav_item_scout);
     }
 
-    @SuppressWarnings("unused")
-    public void onEvent(ScoutSyncSuccessEvent event) {
-        setProgressVisibility(View.GONE);
-        SnackbarUtil.make(findViewById(R.id.container), "Sync Successful", Snackbar.LENGTH_LONG).show();
-        setCurrentEvent(ScoutUtil.getScoutEvent(this));
-    }
+
 
     public void setCurrentEvent(Event event) {
         currentEvent = event;

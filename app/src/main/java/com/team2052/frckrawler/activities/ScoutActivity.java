@@ -76,4 +76,6 @@ public class ScoutActivity extends BaseActivity {
         transaction.replace(R.id.fragment_holder, fragment);
         transaction.commit();
     }
+
+
 }

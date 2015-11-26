@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
@@ -16,9 +15,9 @@ import com.team2052.frckrawler.db.Robot;
  * @author Adam
  */
 public class RobotActivity extends DatabaseActivity {
-    private Robot mRobot;
     ViewPager viewPager;
     TabLayout tabLayout;
+    private Robot mRobot;
 
     public static Intent newInstance(Context context, long rKey) {
         Intent intent = new Intent(context, RobotActivity.class);

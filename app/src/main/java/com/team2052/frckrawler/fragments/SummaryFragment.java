@@ -1,24 +1,17 @@
 package com.team2052.frckrawler.fragments;
 
 
-import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
-import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.CompiledMetricValue;
 import com.team2052.frckrawler.database.subscribers.MetricListSubscriber;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListElement;
-import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.elements.MetricListElement;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;

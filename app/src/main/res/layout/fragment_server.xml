@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.team2052.frckrawler.views.NonFocusingScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -29,7 +29,8 @@
                     style="@style/TextAppearance.AppCompat.Title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingLeft="16dp"
                     android:text="@string/server" />
 
                 <LinearLayout
@@ -45,14 +46,14 @@
 
                         <Spinner
                             android:id="@+id/event_spinner"
-                            android:layout_width="fill_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="2" />
 
                         <android.support.v7.widget.SwitchCompat
                             android:id="@+id/host_toggle"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
                             android:checked="false"
                             android:padding="16dp" />
@@ -70,9 +71,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:text="CSV Export" />
-
-
+                        android:text="CSV File Export" />
                 </LinearLayout>
 
                 <TextView
@@ -85,15 +84,53 @@
                     android:text="No Events"
                     android:textStyle="italic"
                     android:visibility="gone" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
 
-                <!--<Button
-                    android:id="@+id/pick_list"
+        <android.support.v7.widget.CardView
+            android:id="@+id/scout_server_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:textColor="@color/primary"
-                    android:text="Picklist"
-                    android:layout_below="@+id/server_man" />-->
+                    android:paddingLeft="16dp"
+                    android:paddingTop="16dp"
+                    android:text="@string/scout" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/scout_title"
+                    android:padding="8dp"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/scout_match_button"
+                        style="@style/AppCompatButtonPrimaryStyle"
+                        android:text="@string/match_scout" />
+
+                    <Button
+                        android:id="@+id/scout_pit_button"
+                        style="@style/AppCompatButtonPrimaryStyle"
+                        android:text="@string/pit_scout" />
+
+                    <Button
+                        android:id="@+id/scout_practice_button"
+                        style="@style/AppCompatButtonPrimaryStyle"
+                        android:text="@string/practice_match_scout" />
+
+                </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -105,6 +142,7 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:clipToPadding="false"
+            app:contentPaddingTop="8dp"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             app:cardCornerRadius="2dp"
@@ -162,4 +200,4 @@
         </android.support.v7.widget.CardView>
     </LinearLayout>
 
-</ScrollView>
+</com.team2052.frckrawler.views.NonFocusingScrollView>

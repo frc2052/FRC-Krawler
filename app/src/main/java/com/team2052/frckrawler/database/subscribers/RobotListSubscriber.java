@@ -10,11 +10,11 @@ import java.util.List;
 /**
  * Created by Adam on 11/23/2015.
  */
-public class RobotListSubscriber extends BaseDataSubscriber<List<Robot>, List<ListItem>>{
+public class RobotListSubscriber extends BaseDataSubscriber<List<Robot>, List<ListItem>> {
     @Override
     public void parseData() {
         dataToBind = new ArrayList<>();
-        for(int i = 0; i < data.size(); i++){
+        for (int i = 0; i < data.size(); i++) {
             Robot robot = data.get(i);
             dataToBind.add(new RobotListElement(robot, robot.getGame()));
         }

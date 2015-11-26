@@ -43,6 +43,8 @@
 
                 <ImageView
                     android:id="@+id/welcome_logo"
+                    android:layout_below="@+id/welcome_frc_krawler"
+                    android:layout_above="@+id/welcome_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
