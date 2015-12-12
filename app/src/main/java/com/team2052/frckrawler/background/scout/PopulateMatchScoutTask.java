@@ -9,7 +9,7 @@ import com.team2052.frckrawler.comparators.RobotTeamNumberComparator;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.fragments.ScoutMatchFragment;
+import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +43,7 @@ public class PopulateMatchScoutTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        List<String> robotListItems = new ArrayList<>();
+        /*List<String> robotListItems = new ArrayList<>();
         mFragment.setRobots(mRobots);
 
         for (Robot robot : mRobots) {
@@ -55,7 +55,7 @@ public class PopulateMatchScoutTask extends AsyncTask<Void, Void, Void> {
         if (!mRobots.isEmpty())
             mFragment.selectedRobot = mFragment.getRobots().get(0);
         mFragment.mRobotAutoComplete.setSelection(mFragment.getRobots().indexOf(mFragment.selectedRobot));
-        mFragment.updateMetricValues();
+        mFragment.updateMetricValues();*/
     }
 
 

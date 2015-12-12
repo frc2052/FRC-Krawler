@@ -4,6 +4,7 @@ import android.app.Activity;
 
 public abstract class DataConsumer<V> {
     protected Activity mActivity;
+    public OnCompletedListener onCompletedListener;
 
     public abstract void updateData(V data);
 
@@ -15,5 +16,7 @@ public abstract class DataConsumer<V> {
     }
 
     public void onCompleted() {
+        if (onCompletedListener != null)
+            onCompletedListener.onCompleted();
     }
 }

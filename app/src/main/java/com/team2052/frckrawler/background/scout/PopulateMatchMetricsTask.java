@@ -12,7 +12,7 @@ import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.fragments.ScoutMatchFragment;
+import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
@@ -53,29 +53,23 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         //Build the queries
 
         final QueryBuilder<MatchComment> matchCommentQueryBuilder = mDbManager.getMatchComments().query(match_num, game_type, robot.getId(), event.getId());
-
         final QueryBuilder<Metric> metricQueryBuilder = mDbManager.getMetricsTable().query(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, null, event.getGame_id());
+        List<Metric> metrics = metricQueryBuilder.list();
+        for (Metric metric : metrics) {
+            //Query for existing data
+            QueryBuilder<MatchData> matchDataQueryBuilder = mDbManager.getMatchDataTable().query(robot.getId(), metric.getId(), match_num, game_type, event.getId(), null);
+            MatchData currentData = matchDataQueryBuilder.unique();
 
-        mDbManager.runInTx(() -> {
-
-            List<Metric> metrics = metricQueryBuilder.list();
-
-            for (Metric metric : metrics) {
-                //Query for existing data
-                QueryBuilder<MatchData> matchDataQueryBuilder = mDbManager.getMatchDataTable().query(robot.getId(), metric.getId(), match_num, game_type, event.getId(), null);
-                MatchData currentData = matchDataQueryBuilder.unique();
-
-                //Add the metric values
-                mMetricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
-            }
-            mMatchComment = matchCommentQueryBuilder.unique();
-        });
+            //Add the metric values
+            mMetricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
+        }
+        mMatchComment = matchCommentQueryBuilder.unique();
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        mFragment.mMetricList.removeAllViews();
+        /*mFragment.mMetricList.removeAllViews();
         List<MetricWidget> widgets = new ArrayList<>();
 
         for (MetricValue value : mMetricValues) {
@@ -91,6 +85,6 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
             mFragment.setComment(mMatchComment.getComment());
         } else {
             mFragment.setComment("");
-        }
+        }*/
     }
 }

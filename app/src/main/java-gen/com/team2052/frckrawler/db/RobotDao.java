@@ -192,8 +192,11 @@ public class RobotDao extends AbstractDao<Robot, Long> {
             SqlUtils.appendColumns(builder, "T", getAllColumns());
             builder.append(',');
             SqlUtils.appendColumns(builder, "T0", daoSession.getGameDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T1", daoSession.getTeamDao().getAllColumns());
             builder.append(" FROM ROBOT T");
             builder.append(" LEFT JOIN GAME T0 ON T.\"GAME_ID\"=T0.\"_id\"");
+            builder.append(" LEFT JOIN TEAM T1 ON T.\"TEAM_ID\"=T1.\"NUMBER\"");
             builder.append(' ');
             selectDeep = builder.toString();
         }
@@ -207,6 +210,12 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         Game game = loadCurrentOther(daoSession.getGameDao(), cursor, offset);
          if(game != null) {
             entity.setGame(game);
+        }
+        offset += daoSession.getGameDao().getAllColumns().length;
+
+        Team team = loadCurrentOther(daoSession.getTeamDao(), cursor, offset);
+         if(team != null) {
+            entity.setTeam(team);
         }
 
         return entity;    

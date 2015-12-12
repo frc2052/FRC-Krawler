@@ -14,6 +14,7 @@ public class FRCKrawlerDaoGenerator {
 
         Entity game = schema.addEntity("Game");
         Entity event = schema.addEntity("Event");
+        Entity team = schema.addEntity("Team");
         Entity user = schema.addEntity("User");
         Entity metric = schema.addEntity("Metric");
         Entity match = schema.addEntity("Match");
@@ -131,6 +132,7 @@ public class FRCKrawlerDaoGenerator {
         robot.addDateProperty("last_updated");
 
         robot.addToOne(game, robot_game_id);
+        robot.addToOne(team, robot_team_id);
         robot.addToMany(robotEvent, robot_event_robot_id);
         robot.addToMany(matchData, match_data_robot_id);
         robot.addToMany(pitData, pit_data_robot_id);
@@ -157,7 +159,7 @@ public class FRCKrawlerDaoGenerator {
         game.addStringProperty("name");
 
         //Team
-        Entity team = schema.addEntity("Team");
+
         team.implementsSerializable();
         team.addLongProperty("number").unique().primaryKey();
         team.addStringProperty("teamkey").unique();

@@ -23,9 +23,9 @@ public abstract class BaseDataFragment
     protected FragmentComponent mComponent;
     protected DBManager dbManager;
     @Inject
-    S subscriber;
+    protected S subscriber;
     @Inject
-    B binder;
+    protected B binder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

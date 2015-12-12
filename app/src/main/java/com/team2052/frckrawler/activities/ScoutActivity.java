@@ -9,8 +9,8 @@ import android.support.v7.widget.Toolbar;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.fragments.ScoutMatchFragment;
-import com.team2052.frckrawler.fragments.ScoutPitFragment;
+import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
+import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 /**
  * Created by adam on 5/2/15.
  */
-public class ScoutActivity extends BaseActivity {
+public class ScoutActivity extends DatabaseActivity {
 
     public static final int MATCH_SCOUT_TYPE = 0;
     public static final int PIT_SCOUT_TYPE = 1;
@@ -77,5 +77,8 @@ public class ScoutActivity extends BaseActivity {
         transaction.commit();
     }
 
-
+    @Override
+    public void inject() {
+        getComponent().inject(this);
+    }
 }

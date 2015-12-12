@@ -16,7 +16,7 @@ public class SpinnerConsumer extends DataConsumer<List<String>> {
     public void updateData(List<String> data) {
         if (data == null || mSpinner == null)
             return;
-        if (data.isEmpty()) {
+        if (data.isEmpty() && noDataHandler != null) {
             noDataHandler.noData(this);
             return;
         }
@@ -24,6 +24,7 @@ public class SpinnerConsumer extends DataConsumer<List<String>> {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_list_item_1, data);
         mSpinner.setAdapter(adapter);
 
-        noDataHandler.showData();
+        if(noDataHandler != null)
+            noDataHandler.showData();
     }
 }

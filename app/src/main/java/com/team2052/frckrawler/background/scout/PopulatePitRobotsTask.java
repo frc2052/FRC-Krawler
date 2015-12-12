@@ -10,7 +10,7 @@ import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.fragments.ScoutPitFragment;
+import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;

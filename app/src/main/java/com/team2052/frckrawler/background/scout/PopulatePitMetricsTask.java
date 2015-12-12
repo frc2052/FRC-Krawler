@@ -11,7 +11,7 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.fragments.ScoutPitFragment;
+import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 

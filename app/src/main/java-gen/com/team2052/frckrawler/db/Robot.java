@@ -26,6 +26,9 @@ public class Robot implements java.io.Serializable {
     private Game game;
     private Long game__resolvedKey;
 
+    private Team team;
+    private Long team__resolvedKey;
+
     private List<RobotEvent> robotEventList;
     private List<MatchData> matchDataList;
     private List<PitData> pitDataList;
@@ -126,6 +129,34 @@ public class Robot implements java.io.Serializable {
             this.game = game;
             game_id = game.getId();
             game__resolvedKey = game_id;
+        }
+    }
+
+    /** To-one relationship, resolved on first access. */
+    public Team getTeam() {
+        long __key = this.team_id;
+        if (team__resolvedKey == null || !team__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            TeamDao targetDao = daoSession.getTeamDao();
+            Team teamNew = targetDao.load(__key);
+            synchronized (this) {
+                team = teamNew;
+            	team__resolvedKey = __key;
+            }
+        }
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        if (team == null) {
+            throw new DaoException("To-one property 'team_id' has not-null constraint; cannot set to-one to null");
+        }
+        synchronized (this) {
+            this.team = team;
+            team_id = team.getNumber();
+            team__resolvedKey = team_id;
         }
     }
 

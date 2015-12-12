@@ -168,30 +168,7 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @SuppressWarnings("unused")
-    public void onEvent(ScoutSyncCancelledEvent event) {
-        setProgressVisibility(View.GONE);
-    }
 
-    @SuppressWarnings("unused")
-    public void onEvent(ScoutSyncErrorEvent event) {
-        setProgressVisibility(View.GONE);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getBaseContext().getString(R.string.sync_error_title));
-        builder.setMessage(event.message == null ? getBaseContext().getString(R.string.sync_error_message) : event.message);
-        builder.setNeutralButton(getString(R.string.close), (dialog, which) -> {
-            dialog.dismiss();
-        });
-
-        builder.show();
-    }
-
-    @SuppressWarnings("unused")
-    public void onEvent(ScoutSyncStartEvent event) {
-        SnackbarUtil.make(findViewById(R.id.container), "Starting Sync", Snackbar.LENGTH_SHORT).show();
-        setProgressVisibility(View.VISIBLE);
-    }
 
 
     public boolean isCurrentEventValid() {

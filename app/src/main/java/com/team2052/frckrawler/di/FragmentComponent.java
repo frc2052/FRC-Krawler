@@ -4,6 +4,7 @@ import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.GameInfoActivity;
 import com.team2052.frckrawler.activities.HomeActivity;
 import com.team2052.frckrawler.activities.RobotActivity;
+import com.team2052.frckrawler.activities.ScoutActivity;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
 import com.team2052.frckrawler.database.DBManager;
@@ -18,6 +19,7 @@ import com.team2052.frckrawler.fragments.RobotsFragment;
 import com.team2052.frckrawler.fragments.ServerFragment;
 import com.team2052.frckrawler.fragments.SummaryFragment;
 import com.team2052.frckrawler.fragments.TeamsFragment;
+import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 
 import javax.inject.Singleton;
 
@@ -61,4 +63,8 @@ public interface FragmentComponent {
     void inject(RobotActivity robotActivity);
 
     void inject(ServerFragment serverFragment);
+
+    void inject(ScoutMatchFragment scoutMatchFragment);
+
+    void inject(ScoutActivity scoutActivity);
 }
