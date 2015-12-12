@@ -43,41 +43,66 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
     private static String MATCH_TYPE = "MATCH_TYPE";
 
     TextInputLayout mComments, mMatchNumber;
-    View mProgressBar;
     LinearLayout mMetricList;
 
     private int mMatchType;
+
+    public Observable<MetricValue> metricListObservable() {
+        return Observable.create(sub -> {
+            final QueryBuilder<Metric> metricQueryBuilder
+                    = dbManager.getMetricsTable().query(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, null, mEvent.getGame_id());
+            List<Metric> metrics = metricQueryBuilder.list();
+            for (int i = 0; i < metrics.size(); i++)
+                sub.onNext(new MetricValue(metrics.get(i), null));
+            sub.onCompleted();
+        });
+    }
+
+    public Subscriber<MetricValue> metricValueSubscriber() {
+        return new Subscriber<MetricValue>() {
+            @Override
+            public void onStart() {
+                mMetricList.removeAllViews();
+            }
+
+            @Override
+            public void onCompleted() {
+                updateMetricList();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onNext(MetricValue metricValue) {
+                Optional<MetricWidget> widget = MetricWidget.createWidget(getActivity(), metricValue);
+                if (widget.isPresent())
+                    mMetricList.addView(widget.get());
+            }
+        };
+    }
 
     public Observable<MatchScoutData> matchScoutDataObservable(Robot robot) {
         return Observable.just(robot).map(robot1 -> {
             MatchScoutData matchScoutData = new MatchScoutData();
             final int match_num = getMatchNumber();
             final int game_type = mMatchType;
-
-            final QueryBuilder<Metric> metricQueryBuilder
-                    = dbManager.getMetricsTable().query(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, null, mEvent.getGame_id());
+            final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, null, mEvent.getGame_id());
             List<Metric> metrics = metricQueryBuilder.list();
-            for (Metric metric : metrics) {
+            for (int i = 0; i < metrics.size(); i++) {
+                Metric metric = metrics.get(i);
                 //Query for existing data
-                QueryBuilder<MatchData> matchDataQueryBuilder
-                        = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), match_num, game_type, mEvent.getId(), null);
+                QueryBuilder<MatchData> matchDataQueryBuilder = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), match_num, game_type, mEvent.getId(), null);
                 MatchData currentData = matchDataQueryBuilder.unique();
                 //Add the metric values
                 matchScoutData.values.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
             }
-
             final QueryBuilder<MatchComment> matchCommentQueryBuilder
                     = dbManager.getMatchComments().query(match_num, game_type, robot.getId(), mEvent.getId());
             MatchComment mMatchComment = matchCommentQueryBuilder.unique();
             if (mMatchComment != null)
                 matchScoutData.comments = mMatchComment.getComment();
-
-            //For ux to show the user that data is being loaded and changed
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             return matchScoutData;
         });
     }
@@ -86,26 +111,21 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
         return new Subscriber<MatchScoutData>() {
             @Override
             public void onCompleted() {
-                mProgressBar.setVisibility(View.GONE);
-                mMetricList.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onStart() {
-                mProgressBar.setVisibility(View.VISIBLE);
-                mMetricList.setVisibility(View.GONE);
             }
 
             @Override
             public void onError(Throwable e) {
-
             }
 
             @Override
             public void onNext(MatchScoutData matchScoutData) {
                 if (mComments.getEditText() != null)
                     mComments.getEditText().setText(matchScoutData.comments);
-                setMetrics(matchScoutData.values);
+                setData(matchScoutData.values);
                 onCompleted();
             }
         };
@@ -148,7 +168,6 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
         mComments = (TextInputLayout) view.findViewById(R.id.comments);
         mMatchNumber = (TextInputLayout) view.findViewById(R.id.match_number_input);
         mMetricList = (LinearLayout) view.findViewById(R.id.metric_widget_list);
-        mProgressBar = view.findViewById(R.id.scout_loading_progress);
         binder.mSpinner = (Spinner) view.findViewById(R.id.robot);
 
         binder.mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -156,7 +175,7 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!init) {
+                if (!init) {
                     init = true;
                     return;
                 }
@@ -171,6 +190,7 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
         if (mMatchNumber.getEditText() != null)
             mMatchNumber.getEditText().addTextChangedListener(new TextWatcher() {
                 boolean init = false;
+
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
@@ -181,7 +201,7 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if(!init) {
+                    if (!init) {
                         init = true;
                         return;
                     }
@@ -215,7 +235,10 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
 
     @Override
     public void onCompleted() {
-        updateMetricList();
+        metricListObservable()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(metricValueSubscriber());
     }
 
     public void updateMetricList() {
@@ -243,12 +266,9 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
         }
     }
 
-    private void setMetrics(List<MetricValue> metricValues) {
-        mMetricList.removeAllViews();
+    private void setData(List<MetricValue> metricValues) {
         for (int i = 0; i < metricValues.size(); i++) {
-            Optional<MetricWidget> widget = MetricWidget.createWidget(getActivity(), metricValues.get(i));
-            if (widget.isPresent())
-                mMetricList.addView(widget.get());
+            ((MetricWidget) mMetricList.getChildAt(i)).setMetricValue(metricValues.get(i));
         }
     }
 }

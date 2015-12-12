@@ -23,12 +23,17 @@ public class ChooserMetricWidget extends ListIndexMetricWidget implements OnItem
     private final Spinner chooserSpinner;
     int value;
 
-    public ChooserMetricWidget(Context context, MetricValue m) {
-        super(context, m);
+    public ChooserMetricWidget(Context context, MetricValue metricValue) {
+        super(context, metricValue);
         inflater.inflate(R.layout.widget_metric_chooser, this);
-        ((TextView) findViewById(R.id.name)).setText(m.getMetric().getName());
+        ((TextView) findViewById(R.id.name)).setText(metricValue.getMetric().getName());
         chooserSpinner = (Spinner) findViewById(R.id.choooserList);
         chooserSpinner.setOnItemSelectedListener(this);
+        setMetricValue(metricValue);
+    }
+
+    @Override
+    public void setMetricValue(MetricValue m) {
 
         final Optional<List<String>> optionalValues = MetricHelper.getListItemIndexRange(m.getMetric());
         if (!optionalValues.isPresent())

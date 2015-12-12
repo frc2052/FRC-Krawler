@@ -26,6 +26,11 @@ public class CheckBoxMetricWidget extends MetricWidget {
         super(context, m);
         inflater.inflate(R.layout.widget_metric_checkbox, this);
         this.values = (LinearLayout) findViewById(R.id.values);
+        setMetricValue(m);
+    }
+
+    @Override
+    public void setMetricValue(MetricValue m) {
         TextView name = (TextView) findViewById(R.id.name);
         name.setText(m.getMetric().getName());
 

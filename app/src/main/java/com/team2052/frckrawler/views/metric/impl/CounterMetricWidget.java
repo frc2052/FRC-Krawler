@@ -20,11 +20,15 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
     private int min;
     private int increment;
 
-    public CounterMetricWidget(Context context, MetricValue m) {
+    public CounterMetricWidget(Context context, MetricValue metricValue) {
 
-        super(context, m);
+        super(context, metricValue);
         inflater.inflate(R.layout.widget_metric_counter, this);
+        setMetricValue(metricValue);
+    }
 
+    @Override
+    public void setMetricValue(MetricValue m) {
         ((TextView) findViewById(R.id.title)).setText(m.getMetric().getName());
 
         findViewById(R.id.plus).setOnClickListener(this);

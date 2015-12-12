@@ -27,6 +27,8 @@ public abstract class MetricWidget extends FrameLayout {
                 (Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    public abstract void setMetricValue(MetricValue m);
+
     public static Optional<MetricWidget> createWidget(Context c, Metric m) {
         return createWidget(c, new MetricValue(m, null));
     }

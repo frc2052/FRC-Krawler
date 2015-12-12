@@ -59,6 +59,7 @@
         <activity
             android:name=".activities.ScoutActivity"
             android:screenOrientation="portrait"
+            android:parentActivityName=".activities.HomeActivity"
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

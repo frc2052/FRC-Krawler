@@ -19,11 +19,14 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
     private int min;
     private int max;
 
-    public SliderMetricWidget(Context context, MetricValue m) {
-
-        super(context, m);
+    public SliderMetricWidget(Context context, MetricValue metricValue) {
+        super(context, metricValue);
         inflater.inflate(R.layout.widget_metric_slider, this);
+        setMetricValue(metricValue);
+    }
 
+    @Override
+    public void setMetricValue(MetricValue m) {
         ((TextView) findViewById(R.id.name)).setText(m.getMetric().getName());
 
         min = 0;
