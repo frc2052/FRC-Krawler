@@ -31,7 +31,7 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property Category = new Property(2, Integer.class, "category", false, "CATEGORY");
-        public final static Property Type = new Property(3, Integer.class, "type", false, "TYPE");
+        public final static Property Type = new Property(3, Integer.class, "scoutType", false, "TYPE");
         public final static Property Data = new Property(4, String.class, "data", false, "DATA");
         public final static Property Game_id = new Property(5, long.class, "game_id", false, "GAME_ID");
     };
@@ -56,7 +56,7 @@ public class MetricDao extends AbstractDao<Metric, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
                 "\"NAME\" TEXT," + // 1: name
                 "\"CATEGORY\" INTEGER," + // 2: category
-                "\"TYPE\" INTEGER," + // 3: type
+                "\"TYPE\" INTEGER," + // 3: scoutType
                 "\"DATA\" TEXT," + // 4: data
                 "\"GAME_ID\" INTEGER NOT NULL );"); // 5: game_id
     }
@@ -118,7 +118,7 @@ public class MetricDao extends AbstractDao<Metric, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // category
-            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // type
+            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // scoutType
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // data
             cursor.getLong(offset + 5) // game_id
         );

@@ -2,7 +2,7 @@ package com.team2052.frckrawler;
 
 import android.app.Application;
 
-import com.team2052.frckrawler.database.consumer.ConsumerModule;
+import com.team2052.frckrawler.consumer.ConsumerModule;
 import com.team2052.frckrawler.di.ApplicationComponent;
 import com.team2052.frckrawler.di.DaggerApplicationComponent;
 import com.team2052.frckrawler.di.FRCKrawlerModule;

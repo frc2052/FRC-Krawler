@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment;
 
 import com.team2052.frckrawler.activities.HasComponent;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.consumer.DataConsumer;
-import com.team2052.frckrawler.database.subscribers.BaseDataSubscriber;
+import com.team2052.frckrawler.consumer.DataConsumer;
+import com.team2052.frckrawler.subscribers.BaseDataSubscriber;
 import com.team2052.frckrawler.di.FragmentComponent;
 
 import javax.inject.Inject;

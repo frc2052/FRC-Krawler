@@ -10,9 +10,10 @@ import android.view.View;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.activities.RobotActivity;
-import com.team2052.frckrawler.database.subscribers.RobotListSubscriber;
+import com.team2052.frckrawler.subscribers.RobotListSubscriber;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.fragments.dialog.AddTeamToEventDialogFragment;
 import com.team2052.frckrawler.listitems.ListElement;
 
 import java.util.List;

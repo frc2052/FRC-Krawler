@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.consumer.ListViewConsumer;
-import com.team2052.frckrawler.database.subscribers.BaseDataSubscriber;
+import com.team2052.frckrawler.consumer.ListViewConsumer;
+import com.team2052.frckrawler.subscribers.BaseDataSubscriber;
 import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.listitems.ListItem;
 

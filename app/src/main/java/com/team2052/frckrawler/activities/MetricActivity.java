@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.fragments.EditMetricDialogFragment;
+import com.team2052.frckrawler.fragments.dialog.EditMetricDialogFragment;
 
 /**
  * Created by Adam on 6/13/2015.

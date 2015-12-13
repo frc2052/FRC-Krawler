@@ -8,15 +8,14 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 
 import com.google.common.base.Optional;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.background.scout.SaveMatchMetricsTask;
+import com.team2052.frckrawler.consumer.OnCompletedListener;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
-import com.team2052.frckrawler.database.consumer.OnCompletedListener;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchData;
@@ -37,58 +36,21 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Adam on 11/26/2015.
  */
-public class ScoutMatchFragment extends BaseScoutFragment implements OnCompletedListener {
+public class ScoutMatchFragment extends BaseScoutFragment implements OnCompletedListener, View.OnClickListener {
     public static final int MATCH_GAME_TYPE = 0;
     public static final int MATCH_PRACTICE_TYPE = 1;
     private static String MATCH_TYPE = "MATCH_TYPE";
 
     TextInputLayout mComments, mMatchNumber;
     LinearLayout mMetricList;
-
     private int mMatchType;
-
-    public Observable<MetricValue> metricListObservable() {
-        return Observable.create(sub -> {
-            final QueryBuilder<Metric> metricQueryBuilder
-                    = dbManager.getMetricsTable().query(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, null, mEvent.getGame_id());
-            List<Metric> metrics = metricQueryBuilder.list();
-            for (int i = 0; i < metrics.size(); i++)
-                sub.onNext(new MetricValue(metrics.get(i), null));
-            sub.onCompleted();
-        });
-    }
-
-    public Subscriber<MetricValue> metricValueSubscriber() {
-        return new Subscriber<MetricValue>() {
-            @Override
-            public void onStart() {
-                mMetricList.removeAllViews();
-            }
-
-            @Override
-            public void onCompleted() {
-                updateMetricList();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-            }
-
-            @Override
-            public void onNext(MetricValue metricValue) {
-                Optional<MetricWidget> widget = MetricWidget.createWidget(getActivity(), metricValue);
-                if (widget.isPresent())
-                    mMetricList.addView(widget.get());
-            }
-        };
-    }
 
     public Observable<MatchScoutData> matchScoutDataObservable(Robot robot) {
         return Observable.just(robot).map(robot1 -> {
             MatchScoutData matchScoutData = new MatchScoutData();
             final int match_num = getMatchNumber();
             final int game_type = mMatchType;
-            final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, null, mEvent.getGame_id());
+            final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, mEvent.getGame_id());
             List<Metric> metrics = metricQueryBuilder.list();
             for (int i = 0; i < metrics.size(); i++) {
                 Metric metric = metrics.get(i);
@@ -131,6 +93,27 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
         };
     }
 
+    @Override
+    protected void saveMetrics() {
+        new SaveMatchMetricsTask(
+                getActivity(),
+                this,
+                mEvent,
+                getRobot(),
+                null,
+                getMatchNumber(),
+                mMatchType,
+                getValues(),
+                mComments.getEditText().getText().toString()).execute();
+    }
+
+    public List<MetricValue> getValues() {
+        List<MetricValue> values = new ArrayList<>();
+        for (int i = 0; i < mMetricList.getChildCount(); i++) {
+            values.add(((MetricWidget) mMetricList.getChildAt(i)).getValue());
+        }
+        return values;
+    }
 
     public static class MatchScoutData {
         public String comments = "";
@@ -155,6 +138,7 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mMatchType = getArguments().getInt(MATCH_TYPE);
+        scoutType = MetricHelper.MATCH_PERF_METRICS;
     }
 
     @Nullable
@@ -165,27 +149,10 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mComments = (TextInputLayout) view.findViewById(R.id.comments);
         mMatchNumber = (TextInputLayout) view.findViewById(R.id.match_number_input);
         mMetricList = (LinearLayout) view.findViewById(R.id.metric_widget_list);
-        binder.mSpinner = (Spinner) view.findViewById(R.id.robot);
-
-        binder.mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public boolean init;
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!init) {
-                    init = true;
-                    return;
-                }
-                updateMetricList();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
 
         if (mMatchNumber.getEditText() != null)
             mMatchNumber.getEditText().addTextChangedListener(new TextWatcher() {
@@ -207,19 +174,8 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
                     }
                     try {
                         int value = Integer.parseInt(s.toString());
-                        if (value == 0) {
-                            mMatchNumber.setErrorEnabled(true);
-                            mMatchNumber.setError("You must be an engineer!");
-                        } else if (value == 2052) {
-                            mMatchNumber.setErrorEnabled(true);
-                            mMatchNumber.setError("That's a good tem");
-                        } else if (value > 9000) {
-                            mMatchNumber.setErrorEnabled(true);
-                            mMatchNumber.setError("It's over 9000!");
-                        } else {
-                            mMatchNumber.setError("");
-                            mMatchNumber.setErrorEnabled(false);
-                        }
+                        mMatchNumber.setErrorEnabled(false);
+                        mMatchNumber.setError("");
                         updateMetricList();
                     } catch (NumberFormatException e) {
                         mMatchNumber.setErrorEnabled(true);
@@ -228,17 +184,6 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
 
                 }
             });
-
-        binder.onCompletedListener = this;
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onCompleted() {
-        metricListObservable()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(metricValueSubscriber());
     }
 
     public void updateMetricList() {
@@ -267,8 +212,17 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
     }
 
     private void setData(List<MetricValue> metricValues) {
-        for (int i = 0; i < metricValues.size(); i++) {
-            ((MetricWidget) mMetricList.getChildAt(i)).setMetricValue(metricValues.get(i));
+        if (metricValues.size() != mMetricList.getChildCount()) {
+            //This shouldn't happen, but just in case
+            for (int i = 0; i < metricValues.size(); i++) {
+                Optional<MetricWidget> widget = MetricWidget.createWidget(getActivity(), metricValues.get(i));
+                if (widget.isPresent())
+                    mMetricList.addView(widget.get());
+            }
+        } else {
+            for (int i = 0; i < metricValues.size(); i++) {
+                ((MetricWidget) mMetricList.getChildAt(i)).setMetricValue(metricValues.get(i));
+            }
         }
     }
 }

@@ -31,9 +31,9 @@ public class GameInfoPagerAdapter extends InstanceFragmentStatePagerAdapter {
             case 1:
                 return EventsFragment.newInstance(mGameId);
             case 2:
-                return MetricsFragment.newInstance(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, mGameId);
+                return MetricsFragment.newInstance(MetricHelper.MATCH_PERF_METRICS, mGameId);
             case 3:
-                return MetricsFragment.newInstance(MetricHelper.MetricCategory.ROBOT_METRICS.id, mGameId);
+                return MetricsFragment.newInstance(MetricHelper.ROBOT_METRICS, mGameId);
         }
         return null;
     }

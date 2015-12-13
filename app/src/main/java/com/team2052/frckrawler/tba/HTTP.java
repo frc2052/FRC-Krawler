@@ -11,7 +11,7 @@ import java.io.IOException;
  * @author Adam
  */
 public class HTTP {
-    public static final String TBA_APP_HEADER = "frc2052:frckrawler-scouting-system:v2";
+    public static final String TBA_APP_HEADER = "frc2052:frckrawler-scouting-system:v3";
     private static OkHttpClient client;
 
     public static OkHttpClient getClient() {

@@ -53,7 +53,7 @@ public class PopulateMatchMetricsTask extends AsyncTask<Void, Void, Void> {
         //Build the queries
 
         final QueryBuilder<MatchComment> matchCommentQueryBuilder = mDbManager.getMatchComments().query(match_num, game_type, robot.getId(), event.getId());
-        final QueryBuilder<Metric> metricQueryBuilder = mDbManager.getMetricsTable().query(MetricHelper.MetricCategory.MATCH_PERF_METRICS.id, null, event.getGame_id());
+        final QueryBuilder<Metric> metricQueryBuilder = mDbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, event.getGame_id());
         List<Metric> metrics = metricQueryBuilder.list();
         for (Metric metric : metrics) {
             //Query for existing data

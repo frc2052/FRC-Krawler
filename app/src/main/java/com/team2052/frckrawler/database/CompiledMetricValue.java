@@ -18,13 +18,13 @@ import static com.team2052.frckrawler.database.MetricHelper.MetricType;
  * @author Adam
  */
 public class CompiledMetricValue {
-    public static final DecimalFormat format = new DecimalFormat("0.0");
+    private static final DecimalFormat format = new DecimalFormat("0.0");
     private final List<MetricValue> metricData;
-    private Robot robot;
-    private MetricType metricType;
-    private Metric metric;
-    private double compileWeight;
-    private JsonObject compiledValue = new JsonObject();
+    private final Robot robot;
+    private final MetricType metricType;
+    private final Metric metric;
+    private final double compileWeight;
+    private final JsonObject compiledValue = new JsonObject();
 
     public CompiledMetricValue(Robot robot, Metric metric, List<MetricValue> metricData, MetricType metricType, float compileWeight) {
         this.robot = robot;
@@ -40,7 +40,7 @@ public class CompiledMetricValue {
         String value;
         double numerator = 0;
         double denominator = 0;
-        double weight = 0;
+        double weight;
         switch (metricType) {
             case BOOLEAN:
                 if (metricData.isEmpty()) {

@@ -43,7 +43,7 @@ public class PopulatePitMetricsTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         mMetricWidgets = new ArrayList<>();
 
-        List<Metric> metrics = mDBManager.getMetricsTable().query(MetricHelper.MetricCategory.ROBOT_METRICS.id, null, mEvent.getGame_id()).list();
+        List<Metric> metrics = mDBManager.getMetricsTable().query(MetricHelper.ROBOT_METRICS, null, mEvent.getGame_id()).list();
         List<PitData> pitDatas = mDBManager.getPitDataTable().query(robot.getId(), null, mEvent.getId(), null).list();
 
         if (pitDatas.size() == metrics.size()) {

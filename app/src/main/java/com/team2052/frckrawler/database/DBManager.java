@@ -648,7 +648,7 @@ public class DBManager {
             return (int) metricQueryBuilder.count();
         }
 
-        public QueryBuilder<Metric> query(Integer category, Integer type, Long game_id) {
+        public QueryBuilder<Metric> query(@MetricHelper.MetricCategory Integer category, Integer type, Long game_id) {
             QueryBuilder<Metric> queryBuilder = getQueryBuilder();
             if (category != null)
                 queryBuilder.where(MetricDao.Properties.Category.eq(category));

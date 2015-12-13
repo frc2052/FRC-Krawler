@@ -121,8 +121,8 @@ public class GameInfoFragment extends BaseFragment implements RefreshListener {
 
         @Override
         protected Void doInBackground(Void... params) {
-            numOfMatchMetrics = mDbManager.getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.MetricCategory.MATCH_PERF_METRICS.id);
-            numOfPitMetrics = mDbManager.getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.MetricCategory.ROBOT_METRICS.id);
+            numOfMatchMetrics = mDbManager.getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.MATCH_PERF_METRICS);
+            numOfPitMetrics = mDbManager.getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.ROBOT_METRICS);
             mGame.resetEventList();
             mGame.resetRobotList();
             numOfEvents = mGame.getEventList().size();

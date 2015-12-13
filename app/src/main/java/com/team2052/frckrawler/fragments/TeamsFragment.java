@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.subscribers.TeamListSubscriber;
+import com.team2052.frckrawler.subscribers.TeamListSubscriber;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.listitems.ListElement;
 

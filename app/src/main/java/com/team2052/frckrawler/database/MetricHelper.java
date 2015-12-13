@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.database;
 
+import android.support.annotation.IntDef;
+
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -12,6 +14,8 @@ import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.Tuple2;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -167,10 +171,12 @@ public class MetricHelper {
         }
     }
 
-    public enum MetricCategory {
-        MATCH_PERF_METRICS, ROBOT_METRICS;
-        public int id = ordinal();
+    @IntDef({MATCH_PERF_METRICS, ROBOT_METRICS})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface MetricCategory {
     }
+
+    public static final int MATCH_PERF_METRICS = 0, ROBOT_METRICS = 1;
 
     public enum MetricType {
         BOOLEAN, COUNTER, SLIDER, CHOOSER, CHECK_BOX;
@@ -179,7 +185,7 @@ public class MetricHelper {
 
     public static class MetricFactory {
         final Game game;
-        MetricCategory metricCategory;
+        @MetricCategory int metricCategory;
         MetricType metricType;
         String name;
         JsonObject data = new JsonObject();
@@ -195,7 +201,7 @@ public class MetricHelper {
             this.metricType = metricType;
         }
 
-        public void setMetricCategory(MetricCategory metricCategory) {
+        public void setMetricCategory(@MetricCategory  int metricCategory) {
             this.metricCategory = metricCategory;
         }
 
@@ -253,7 +259,7 @@ public class MetricHelper {
             return new Metric(
                     null,
                     name,
-                    metricCategory.id,
+                    metricCategory,
                     metricType.id,
                     JSON.getGson().toJson(data),
                     game.getId());

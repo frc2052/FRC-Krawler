@@ -26,29 +26,34 @@ public class CheckBoxMetricWidget extends MetricWidget {
         super(context, m);
         inflater.inflate(R.layout.widget_metric_checkbox, this);
         this.values = (LinearLayout) findViewById(R.id.values);
-        setMetricValue(m);
-    }
-
-    @Override
-    public void setMetricValue(MetricValue m) {
         TextView name = (TextView) findViewById(R.id.name);
         name.setText(m.getMetric().getName());
 
         final Optional<List<String>> optionalValues = MetricHelper.getListItemIndexRange(m.getMetric());
         if (!optionalValues.isPresent())
             throw new IllegalStateException("Couldn't parse range values, cannot proceed");
-
         final List<String> rangeValues = optionalValues.get();
-        final Tuple2<List<Integer>, MetricHelper.ReturnResult> preLoadedValuesResult = MetricHelper.getListIndexMetricValue(m);
 
-        //Add checkboxes and preloaded values
         for (int i = 0; i < rangeValues.size(); i++) {
             String value = rangeValues.get(i);
             AppCompatCheckBox checkbox = new AppCompatCheckBox(getContext());
             checkbox.setText(value);
-            for (Integer integer : preLoadedValuesResult.t1)
-                if (i == integer) checkbox.setChecked(true);
             this.values.addView(checkbox);
+        }
+
+        setMetricValue(m);
+    }
+
+    @Override
+    public void setMetricValue(MetricValue m) {
+        final Tuple2<List<Integer>, MetricHelper.ReturnResult> preLoadedValuesResult = MetricHelper.getListIndexMetricValue(m);
+
+        for (int i = 0; i < values.getChildCount(); i++) {
+            if (preLoadedValuesResult.t1.contains(i)) {
+                ((AppCompatCheckBox) values.getChildAt(i)).setChecked(true);
+            } else {
+                ((AppCompatCheckBox) values.getChildAt(i)).setChecked(false);
+            }
         }
     }
 

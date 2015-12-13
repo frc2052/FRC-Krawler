@@ -9,8 +9,9 @@ import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
-import com.team2052.frckrawler.database.subscribers.MatchListSubscriber;
+import com.team2052.frckrawler.subscribers.MatchListSubscriber;
 import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.fragments.dialog.UpdateMatchesProcessDialog;
 import com.team2052.frckrawler.util.Util;
 
 import java.util.List;

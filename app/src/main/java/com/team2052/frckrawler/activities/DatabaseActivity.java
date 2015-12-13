@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.subscribers.SubscriberModule;
+import com.team2052.frckrawler.subscribers.SubscriberModule;
 import com.team2052.frckrawler.di.DaggerFragmentComponent;
 import com.team2052.frckrawler.di.FragmentComponent;
 

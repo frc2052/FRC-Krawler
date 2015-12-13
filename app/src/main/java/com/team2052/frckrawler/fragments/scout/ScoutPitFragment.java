@@ -40,7 +40,7 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     public static final String EVENT_ID = "EVENT_ID";
     public Event mEvent;
     public List<RobotEvent> mRobots;
-    @Bind(R.id.metricWidgetList)
+    @Bind(R.id.metric_widget_list)
     public LinearLayout mLinearLayout;
     @Bind(R.id.comments)
     public TextInputLayout mComments;
@@ -93,12 +93,6 @@ public class ScoutPitFragment extends BaseFragment implements AdapterView.OnItem
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.scout, menu);
         menu.removeItem(R.id.action_view_match);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return false;
     }
 
     private Robot getSelectedRobot() {
