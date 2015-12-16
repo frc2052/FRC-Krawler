@@ -9,6 +9,7 @@ import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.consumer.ConsumerModule;
+import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
 import com.team2052.frckrawler.subscribers.SubscriberModule;
 import com.team2052.frckrawler.fragments.EventsFragment;
 import com.team2052.frckrawler.fragments.GamesFragment;
@@ -67,4 +68,6 @@ public interface FragmentComponent {
     void inject(ScoutMatchFragment scoutMatchFragment);
 
     void inject(ScoutActivity scoutActivity);
+
+    void inject(ScoutPitFragment scoutPitFragment);
 }

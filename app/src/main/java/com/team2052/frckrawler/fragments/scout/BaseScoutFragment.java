@@ -2,7 +2,7 @@ package com.team2052.frckrawler.fragments.scout;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -17,10 +17,12 @@ import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.fragments.BaseDataFragment;
 import com.team2052.frckrawler.subscribers.RobotStringSubscriber;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
@@ -37,6 +39,7 @@ public abstract class BaseScoutFragment extends BaseDataFragment<List<Robot>, Li
     protected Event mEvent;
     public static final String EVENT_ID = "EVENT_ID";
     public LinearLayout mMetricList;
+    TextInputLayout mComments;
     @MetricHelper.MetricCategory
     public int scoutType = 0;
 
@@ -48,10 +51,39 @@ public abstract class BaseScoutFragment extends BaseDataFragment<List<Robot>, Li
         return dbManager.robotsAtEvent(mEvent.getId());
     }
 
+    public static class ScoutData {
+        public String comments = "";
+        public List<MetricValue> values = new ArrayList<>();
+    }
+
+    public Subscriber<ScoutData> scoutDataSubscriber() {
+        return new Subscriber<ScoutData>() {
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onNext(ScoutData matchScoutData) {
+                if (mComments.getEditText() != null)
+                    mComments.getEditText().setText(matchScoutData.comments);
+                setValues(matchScoutData.values);
+            }
+        };
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mMetricList = (LinearLayout) view.findViewById(R.id.metric_widget_list);
         binder.mSpinner = (Spinner) view.findViewById(R.id.robot);
+        mComments = (TextInputLayout) view.findViewById(R.id.comments);
 
         binder.mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public boolean init;
@@ -143,6 +175,31 @@ public abstract class BaseScoutFragment extends BaseDataFragment<List<Robot>, Li
     public void onClick(View v) {
         if (v.getId() == R.id.button_save) {
             saveMetrics();
+        }
+    }
+
+    public List<MetricValue> getValues() {
+        List<MetricValue> values = new ArrayList<>();
+        for (int i = 0; i < mMetricList.getChildCount(); i++) {
+            values.add(((MetricWidget) mMetricList.getChildAt(i)).getValue());
+        }
+        return values;
+    }
+
+
+    protected void setValues(List<MetricValue> metricValues) {
+        if (metricValues.size() != mMetricList.getChildCount()) {
+            //This shouldn't happen, but just in case
+            mMetricList.removeAllViews();
+            for (int i = 0; i < metricValues.size(); i++) {
+                Optional<MetricWidget> widget = MetricWidget.createWidget(getActivity(), metricValues.get(i));
+                if (widget.isPresent())
+                    mMetricList.addView(widget.get());
+            }
+        } else {
+            for (int i = 0; i < metricValues.size(); i++) {
+                ((MetricWidget) mMetricList.getChildAt(i)).setMetricValue(metricValues.get(i));
+            }
         }
     }
 
