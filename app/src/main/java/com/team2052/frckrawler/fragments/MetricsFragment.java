@@ -5,11 +5,11 @@ import android.view.View;
 
 import com.team2052.frckrawler.activities.MetricActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.subscribers.MetricListSubscriber;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.fragments.dialog.AddMetricDialogFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.elements.MetricListElement;
+import com.team2052.frckrawler.subscribers.MetricListSubscriber;
 
 import java.util.List;
 

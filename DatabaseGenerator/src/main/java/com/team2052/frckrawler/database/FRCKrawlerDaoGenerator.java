@@ -10,7 +10,7 @@ public class FRCKrawlerDaoGenerator {
     public static final String jsonElementType = "com.google.gson.JsonElement";
 
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(1, "com.team2052.frckrawler.db");
+        Schema schema = new Schema(2, "com.team2052.frckrawler.db");
 
         Entity game = schema.addEntity("Game");
         Entity event = schema.addEntity("Event");
@@ -149,6 +149,7 @@ public class FRCKrawlerDaoGenerator {
         metric.addStringProperty("data");
         Property metric_game_id = metric.addLongProperty("game_id").notNull().getProperty();
         metric.addToOne(game, metric_game_id);
+        metric.addBooleanProperty("enabled");
 
         //Games
         game.implementsSerializable();

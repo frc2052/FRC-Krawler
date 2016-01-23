@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class MetricHelper {
+    public static final int MATCH_PERF_METRICS = 0, ROBOT_METRICS = 1;
     private static Type listType = new TypeToken<List<Integer>>() {
     }.getType();
 
@@ -171,21 +172,20 @@ public class MetricHelper {
         }
     }
 
-    @IntDef({MATCH_PERF_METRICS, ROBOT_METRICS})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface MetricCategory {
-    }
-
-    public static final int MATCH_PERF_METRICS = 0, ROBOT_METRICS = 1;
-
     public enum MetricType {
         BOOLEAN, COUNTER, SLIDER, CHOOSER, CHECK_BOX;
         public int id = ordinal();
     }
 
+    @IntDef({MATCH_PERF_METRICS, ROBOT_METRICS})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface MetricCategory {
+    }
+
     public static class MetricFactory {
         final Game game;
-        @MetricCategory int metricCategory;
+        @MetricCategory
+        int metricCategory;
         MetricType metricType;
         String name;
         JsonObject data = new JsonObject();
@@ -201,7 +201,7 @@ public class MetricHelper {
             this.metricType = metricType;
         }
 
-        public void setMetricCategory(@MetricCategory  int metricCategory) {
+        public void setMetricCategory(@MetricCategory int metricCategory) {
             this.metricCategory = metricCategory;
         }
 
@@ -262,7 +262,8 @@ public class MetricHelper {
                     metricCategory,
                     metricType.id,
                     JSON.getGson().toJson(data),
-                    game.getId());
+                    game.getId(),
+                    true);
         }
     }
 }

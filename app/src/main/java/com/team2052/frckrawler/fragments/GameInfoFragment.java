@@ -23,7 +23,6 @@ import com.team2052.frckrawler.util.Util;
  * Created by adam on 6/14/15.
  */
 public class GameInfoFragment extends BaseFragment implements RefreshListener {
-
     public static final String GAME_ID = "GAME_ID";
 
     private Game mGame;
@@ -36,7 +35,6 @@ public class GameInfoFragment extends BaseFragment implements RefreshListener {
         return fragment;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,12 +45,6 @@ public class GameInfoFragment extends BaseFragment implements RefreshListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_game_info, null);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //binding = FragmentGameInfoBinding.bind(view);
     }
 
     @Override

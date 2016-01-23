@@ -90,7 +90,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         yearSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, yearDropDownItems));
         yearSpinner.setOnItemSelectedListener(this);
         eventSpinner = (Spinner) view.findViewById(R.id.import_event_spinner);
-        if(!isConnected){
+        if (!isConnected) {
             yearSpinner.setVisibility(View.GONE);
             eventSpinner.setVisibility(View.GONE);
             view.findViewById(R.id.no_connection).setVisibility(View.VISIBLE);
@@ -113,7 +113,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(isConnected){
+        if (isConnected) {
             eventsByYear = new LoadAllEventsByYear(Integer.parseInt((String) yearSpinner.getSelectedItem()));
             eventSpinner.setVisibility(View.GONE);
             getDialog().findViewById(R.id.progress).setVisibility(View.VISIBLE);

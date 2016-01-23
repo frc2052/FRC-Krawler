@@ -43,10 +43,10 @@
 
                 <ImageView
                     android:id="@+id/welcome_logo"
-                    android:layout_below="@+id/welcome_frc_krawler"
-                    android:layout_above="@+id/welcome_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_above="@+id/welcome_message"
+                    android:layout_below="@+id/welcome_frc_krawler"
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_10th_logo_transparent" />
 

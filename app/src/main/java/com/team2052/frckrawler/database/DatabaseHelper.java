@@ -20,5 +20,8 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldSchemaVer, int newSchemaVer) {
         Log.i(LOG_TAG, "Upgrading Schema Version from " + oldSchemaVer + " to " + newSchemaVer);
+        if (oldSchemaVer == 1 && newSchemaVer == 2) {
+            db.execSQL("ALTER TABLE 'METRIC' ADD COLUMN ENABLED INTEGER");
+        }
     }
 }

@@ -3,9 +3,7 @@ package com.team2052.frckrawler.activities;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,17 +12,12 @@ import android.view.View;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.background.DeleteAllDataTask;
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
-import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncCancelledEvent;
-import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncErrorEvent;
-import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;
-import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.ScoutUtil;
-import com.team2052.frckrawler.util.SnackbarUtil;
 
 import de.greenrobot.event.EventBus;
 
@@ -141,7 +134,6 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
     }
 
 
-
     public void setCurrentEvent(Event event) {
         currentEvent = event;
         if (isCurrentEventValid()) {
@@ -167,8 +159,6 @@ public class ScoutMainActivity extends BaseActivity implements View.OnClickListe
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
 
 
     public boolean isCurrentEventValid() {

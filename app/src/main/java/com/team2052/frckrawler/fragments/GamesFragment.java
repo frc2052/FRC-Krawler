@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.GameInfoActivity;
-import com.team2052.frckrawler.subscribers.GameListSubscriber;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragments.dialog.AddGameDialogFragment;
 import com.team2052.frckrawler.listitems.ListElement;
+import com.team2052.frckrawler.subscribers.GameListSubscriber;
 
 import java.util.List;
 

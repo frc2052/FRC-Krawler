@@ -4,19 +4,32 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SwitchCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.TextView;
 
+import com.google.common.base.Strings;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.fragments.dialog.EditMetricDialogFragment;
+import com.team2052.frckrawler.tba.JSON;
 
 /**
  * Created by Adam on 6/13/2015.
  */
-public class MetricActivity extends BaseActivity {
-    public static final String METRIC_ID = "METRIC_ID";
+public class MetricActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
+    publicID="METRIC_ID";
+    static final String M, mRangeMax, mRangeInc;
+    TextView mName, mTyETRIC_Description, mRangeMinpe, m
+    SwitchCompat mEnabled;
     private Metric metric;
+    private View mMetricRangeCard;
 
     public static Intent newInstance(Context context, Metric metric) {
         Intent intent = new Intent(context, MetricActivity.class);
@@ -27,33 +40,44 @@ public class MetricActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*binding = DataBindingUtil.setContentView(this, R.layout.activity_metric);
-        setSupportActionBar(binding.toolbar);*/
+        setContentView(R.layout.activity_metric);
+        mDescription = (TextView) findViewById(R.id.metric_info_description);
+        mName = (TextView) findViewById(R.id.metric_info_name);
+        mType = (TextView) findViewById(R.id.metric_info_type);
+        mEnabled = (SwitchCompat) findViewById(R.id.metric_info_enabled);
+        mMetricRangeCard = findViewById(R.id.metric_range_card);
+        mRangeInc = (TextView) findViewById(R.id.metric_info_range_inc);
+        mRangeMax = (TextView) findViewById(R.id.metric_info_range_max);
+        mRangeMin = (TextView) findViewById(R.id.metric_info_range_min);
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        /*metric = mDbManager.getMetricsTable().load(getIntent().getExtras().getLong(METRIC_ID));
-
+        metric = mDbManager.getMetricsTable().load(getIntent().getExtras().getLong(METRIC_ID));
+        mEnabled.setChecked(metric.getEnabled());
+        mEnabled.setOnCheckedChangeListener(this);
         JsonObject data = JSON.getAsJsonObject(metric.getData());
 
         if (!Strings.isNullOrEmpty(data.get("description").getAsString())) {
-            binding.setDescription(String.format("Description: %s", data.get("description").getAsString()));
+            mDescription.setText(String.format("Description: %s", data.get("description").getAsString()));
         } else {
-            binding.setDescription("No Description Provided");
+            mDescription.setText("No Description Provided");
         }
-        binding.setName(String.format("Name: %s", metric.getName()));
+
+        mName.setText(String.format("Name: %s", metric.getName()));
         switch (MetricHelper.MetricType.values()[metric.getType()]) {
             case BOOLEAN:
-                binding.setType("Boolean");
+                mType.setText("Boolean");
                 break;
             case COUNTER:
-                binding.metricRangeCard.setVisibility(View.VISIBLE);
-                binding.setType("Counter");
-                binding.setMin(String.format("Min: %s", data.get("min").getAsString()));
-                binding.setMax(String.format("Max: %s", data.get("max").getAsString()));
-                binding.setInc(String.format("Incrementation: %s", data.get("inc").getAsString()));
+                mMetricRangeCard.setVisibility(View.VISIBLE);
+                mType.setText("Counter");
+                mRangeMin.setText(String.format("Min: %s", data.get("min").getAsString()));
+                mRangeMax.setText(String.format("Max: %s", data.get("max").getAsString()));
+                mRangeInc.setText(String.format("Incrementation: %s", data.get("inc").getAsString()));
                 break;
             case CHECK_BOX:
             case CHOOSER:
@@ -63,15 +87,15 @@ public class MetricActivity extends BaseActivity {
                     sb.append(comma).append(value.getAsString());
                     comma = ", ";
                 }
-                binding.setType("Chooser");
+                mType.setText("Chooser");
                 break;
             case SLIDER:
-                binding.metricRangeCard.setVisibility(View.VISIBLE);
-                binding.setMin(String.format("Min: %s", data.get("min").getAsString()));
-                binding.setMax(String.format("Max: %s", data.get("max").getAsString()));
-                binding.setType("Slider");
+                mMetricRangeCard.setVisibility(View.VISIBLE);
+                mRangeMin.setText(String.format("Min: %s", data.get("min").getAsString()));
+                mRangeMax.setText(String.format("Max: %s", data.get("max").getAsString()));
+                mType.setText("Slider");
                 break;
-        }*/
+        }
     }
 
     @Override
@@ -96,5 +120,11 @@ public class MetricActivity extends BaseActivity {
             builder.create().show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        metric.setEnabled(isChecked);
+        metric.update();
     }
 }

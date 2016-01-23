@@ -39,26 +39,46 @@
                     android:text="Info"
                     android:textColor="@color/primary" />
 
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/metric_info_enabled"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Enabled"
+                    android:textColor="@android:color/black" />
+
                 <TextView
+                    android:id="@+id/metric_info_name"
                     style="@style/TextAppearance.AppCompat.Body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
                     tools:text="Name" />
 
                 <TextView
+                    android:id="@+id/metric_info_description"
                     style="@style/TextAppearance.AppCompat.Body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
                     tools:text="Description" />
 
                 <TextView
+                    android:id="@+id/metric_info_type"
                     style="@style/TextAppearance.AppCompat.Body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
                     tools:text="Type" />
+
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -88,6 +108,7 @@
                     android:textColor="@color/primary" />
 
                 <TextView
+                    android:id="@+id/metric_info_range_min"
                     style="@style/TextAppearance.AppCompat.Body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -95,6 +116,7 @@
                     tools:text="Min" />
 
                 <TextView
+                    android:id="@+id/metric_info_range_max"
                     style="@style/TextAppearance.AppCompat.Body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -102,6 +124,7 @@
                     tools:text="Max" />
 
                 <TextView
+                    android:id="@+id/metric_info_range_inc"
                     style="@style/TextAppearance.AppCompat.Body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -7,10 +7,10 @@ import android.view.View;
 
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
-import com.team2052.frckrawler.subscribers.MetricListSubscriber;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListElement;
+import com.team2052.frckrawler.subscribers.MetricListSubscriber;
 
 import java.util.List;
 

@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.team2052.frckrawler.activities.HasComponent;
-import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.consumer.DataConsumer;
-import com.team2052.frckrawler.subscribers.BaseDataSubscriber;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.di.FragmentComponent;
+import com.team2052.frckrawler.subscribers.BaseDataSubscriber;
 
 import javax.inject.Inject;
 
@@ -16,6 +16,10 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created by Acorp on 11/17/2015.
+ * T - Type of the Data
+ * V - View Type of Data
+ * S - Subscriber Type
+ * B - Binder Type
  */
 public abstract class BaseDataFragment
         <T, V, S extends BaseDataSubscriber<T, V>, B extends DataConsumer<V>>

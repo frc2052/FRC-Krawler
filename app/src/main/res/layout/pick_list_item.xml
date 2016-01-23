@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:minHeight="?attr/listPreferredItemHeight"
-              android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/listPreferredItemHeight"
+    android:orientation="horizontal">
 
     <CheckBox
         android:id="@+id/pick_list_item_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"/>
+        android:layout_gravity="center_vertical" />
 
     <TextView
         android:id="@+id/pick_list_item_team"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="2"
-        android:text="2052"/>
+        android:text="2052" />
 
     <TextView
         android:id="@+id/pick_list_item_priority"
@@ -26,5 +26,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|center_vertical"
         android:padding="16dp"
-        android:text="20"/>
+        android:text="20" />
 </LinearLayout>

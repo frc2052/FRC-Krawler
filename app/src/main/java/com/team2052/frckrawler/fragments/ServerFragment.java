@@ -24,9 +24,9 @@ import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
 import com.team2052.frckrawler.consumer.DataConsumer;
 import com.team2052.frckrawler.consumer.NoDataHandler;
 import com.team2052.frckrawler.consumer.SpinnerConsumer;
-import com.team2052.frckrawler.subscribers.EventStringSubscriber;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.dialog.ExportDialogFragment;
+import com.team2052.frckrawler.subscribers.EventStringSubscriber;
 
 import java.util.List;
 

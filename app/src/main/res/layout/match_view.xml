@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:baselineAligned="false"
-              android:orientation="horizontal"
-              android:padding="16dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/match_title"
@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_weight="1.5"
-        android:gravity="center|center_horizontal|center_vertical"/>
+        android:gravity="center|center_horizontal|center_vertical" />
 
     <TableLayout
         android:layout_width="0dp"
@@ -48,7 +48,7 @@
                         android:background="#fdd"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Red 1"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/red2"
@@ -58,7 +58,7 @@
                         android:background="#fdd"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Red 2"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/red3"
@@ -68,7 +68,7 @@
                         android:background="#fdd"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Red 3"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/red_score"
@@ -79,7 +79,7 @@
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Red Score"
                         android:textColor="@color/black"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -97,7 +97,7 @@
                         android:background="#ddf"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Blue 1"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/blue2"
@@ -107,7 +107,7 @@
                         android:background="#ddf"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Blue 2"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/blue3"
@@ -117,7 +117,7 @@
                         android:background="#ddf"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Blue 3"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/blue_score"
@@ -128,7 +128,7 @@
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Blue Score"
                         android:textColor="@color/black"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                 </LinearLayout>
             </LinearLayout>

@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.background.scout.SaveMatchMetricsTask;
-import com.team2052.frckrawler.consumer.OnCompletedListener;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
@@ -32,7 +31,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Adam on 11/26/2015.
  */
-public class ScoutMatchFragment extends BaseScoutFragment implements OnCompletedListener, View.OnClickListener {
+public class ScoutMatchFragment extends BaseScoutFragment {
     public static final int MATCH_GAME_TYPE = 0;
     public static final int MATCH_PRACTICE_TYPE = 1;
     private static String MATCH_TYPE = "MATCH_TYPE";
@@ -41,12 +40,21 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
     LinearLayout mMetricList;
     private int mMatchType;
 
+    public static ScoutMatchFragment newInstance(Event event, int type) {
+        ScoutMatchFragment scoutMatchFragment = new ScoutMatchFragment();
+        Bundle args = new Bundle();
+        args.putInt(MATCH_TYPE, type);
+        args.putLong(EVENT_ID, event.getId());
+        scoutMatchFragment.setArguments(args);
+        return scoutMatchFragment;
+    }
+
     public Observable<ScoutData> matchScoutDataObservable(Robot robot) {
         return Observable.just(robot).map(robot1 -> {
             ScoutData matchScoutData = new ScoutData();
             final int match_num = getMatchNumber();
             final int game_type = mMatchType;
-            final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, mEvent.getGame_id());
+            final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, mEvent.getGame_id(), true);
             List<Metric> metrics = metricQueryBuilder.list();
             for (int i = 0; i < metrics.size(); i++) {
                 Metric metric = metrics.get(i);
@@ -65,16 +73,14 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
         });
     }
 
-
-
     @Override
     protected void saveMetrics() {
         //TODO: Handle the errors
-        if(!isMatchNumberValid())
+        if (!isMatchNumberValid())
             return;
-        if(getRobot() == null)
+        if (getRobot() == null)
             return;
-        if(mEvent == null)
+        if (mEvent == null)
             return;
 
         new SaveMatchMetricsTask(
@@ -87,15 +93,6 @@ public class ScoutMatchFragment extends BaseScoutFragment implements OnCompleted
                 mMatchType,
                 getValues(),
                 mComments.getEditText().getText().toString()).execute();
-    }
-
-    public static ScoutMatchFragment newInstance(Event event, int type) {
-        ScoutMatchFragment scoutMatchFragment = new ScoutMatchFragment();
-        Bundle args = new Bundle();
-        args.putInt(MATCH_TYPE, type);
-        args.putLong(EVENT_ID, event.getId());
-        scoutMatchFragment.setArguments(args);
-        return scoutMatchFragment;
     }
 
     @Override

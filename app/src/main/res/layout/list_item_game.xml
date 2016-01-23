@@ -14,8 +14,8 @@
         android:src="@drawable/ic_games_black_24dp" />
 
     <TextView
-        style="@style/TextTitle"
         android:id="@+id/game_name"
+        style="@style/TextTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

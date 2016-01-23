@@ -29,8 +29,8 @@
                     style="@style/TextAppearance.AppCompat.Title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
                     android:paddingLeft="16dp"
+                    android:paddingTop="16dp"
                     android:text="@string/server" />
 
                 <LinearLayout
@@ -91,8 +91,8 @@
             android:id="@+id/scout_server_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="8dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin">
 
             <LinearLayout
@@ -112,8 +112,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/scout_title"
-                    android:padding="8dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
                     <Button
                         android:id="@+id/scout_match_button"
@@ -142,11 +142,11 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:clipToPadding="false"
-            app:contentPaddingTop="8dp"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             app:cardCornerRadius="2dp"
-            app:cardElevation="2dp">
+            app:cardElevation="2dp"
+            app:contentPaddingTop="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"

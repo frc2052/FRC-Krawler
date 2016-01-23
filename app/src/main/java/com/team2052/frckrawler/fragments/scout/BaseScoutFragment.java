@@ -17,7 +17,6 @@ import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.fragments.BaseDataFragment;
 import com.team2052.frckrawler.subscribers.RobotStringSubscriber;
 import com.team2052.frckrawler.views.metric.MetricWidget;
@@ -36,12 +35,12 @@ import rx.schedulers.Schedulers;
  */
 public abstract class BaseScoutFragment extends BaseDataFragment<List<Robot>, List<String>, RobotStringSubscriber, SpinnerConsumer>
         implements OnCompletedListener, View.OnClickListener {
-    protected Event mEvent;
     public static final String EVENT_ID = "EVENT_ID";
     public LinearLayout mMetricList;
-    TextInputLayout mComments;
     @MetricHelper.MetricCategory
     public int scoutType = 0;
+    protected Event mEvent;
+    TextInputLayout mComments;
 
     @Override
     public abstract void inject();
@@ -49,11 +48,6 @@ public abstract class BaseScoutFragment extends BaseDataFragment<List<Robot>, Li
     @Override
     protected Observable<? extends List<Robot>> getObservable() {
         return dbManager.robotsAtEvent(mEvent.getId());
-    }
-
-    public static class ScoutData {
-        public String comments = "";
-        public List<MetricValue> values = new ArrayList<>();
     }
 
     public Subscriber<ScoutData> scoutDataSubscriber() {
@@ -128,7 +122,7 @@ public abstract class BaseScoutFragment extends BaseDataFragment<List<Robot>, Li
 
     public Observable<MetricValue> metricListObservable() {
         return Observable.create(sub -> {
-            final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(scoutType, null, mEvent.getGame_id());
+            final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(scoutType, null, mEvent.getGame_id(), true);
             List<Metric> metrics = metricQueryBuilder.list();
             for (int i = 0; i < metrics.size(); i++)
                 sub.onNext(new MetricValue(metrics.get(i), null));
@@ -186,7 +180,6 @@ public abstract class BaseScoutFragment extends BaseDataFragment<List<Robot>, Li
         return values;
     }
 
-
     protected void setValues(List<MetricValue> metricValues) {
         if (metricValues.size() != mMetricList.getChildCount()) {
             //This shouldn't happen, but just in case
@@ -204,4 +197,9 @@ public abstract class BaseScoutFragment extends BaseDataFragment<List<Robot>, Li
     }
 
     protected abstract void saveMetrics();
+
+    public static class ScoutData {
+        public String comments = "";
+        public List<MetricValue> values = new ArrayList<>();
+    }
 }

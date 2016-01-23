@@ -59,7 +59,7 @@ public class MetricCompiler {
      */
     public static List<CompiledMetricValue> getCompiledRobot(Event event, Robot robot, DBManager dbManager, float compileWeight) {
         //Load all the metrics
-        final List<Metric> metrics = dbManager.getMetricsTable().query(null, null, event.getGame_id()).list();
+        final List<Metric> metrics = dbManager.getMetricsTable().query(null, null, event.getGame_id(), null).list();
         final List<CompiledMetricValue> compiledMetricValues = new ArrayList<>();
         for (Metric metric : metrics) {
             List<MetricValue> metricData = new ArrayList<>();

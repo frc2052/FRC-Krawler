@@ -85,7 +85,7 @@ public class DBManager {
     private DBManager(Context context) {
         this.context = context;
 
-        DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(context, "frc-krawler-database-v3", null);
+        DaoMaster.OpenHelper helper = new DatabaseHelper(context, "frc-krawler-database-v3", null);
 
         SQLiteDatabase db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
@@ -648,7 +648,7 @@ public class DBManager {
             return (int) metricQueryBuilder.count();
         }
 
-        public QueryBuilder<Metric> query(@MetricHelper.MetricCategory Integer category, Integer type, Long game_id) {
+        public QueryBuilder<Metric> query(@MetricHelper.MetricCategory Integer category, Integer type, Long game_id, Boolean enabled) {
             QueryBuilder<Metric> queryBuilder = getQueryBuilder();
             if (category != null)
                 queryBuilder.where(MetricDao.Properties.Category.eq(category));
@@ -656,6 +656,8 @@ public class DBManager {
                 queryBuilder.where(MetricDao.Properties.Type.eq(type));
             if (game_id != null)
                 queryBuilder.where(MetricDao.Properties.Game_id.eq(game_id));
+            if (enabled != null)
+                queryBuilder.where(MetricDao.Properties.Enabled.eq(enabled));
             return queryBuilder;
         }
 

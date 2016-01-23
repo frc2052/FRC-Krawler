@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:minHeight="48dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="48dp">
 
     <TextView
         android:id="@+id/metric_list_name"
@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/metric_list_type"
@@ -24,7 +24,7 @@
         android:layout_alignTop="@+id/metric_list_default_type"
         android:layout_marginLeft="4dp"
         android:layout_toRightOf="@+id/metric_list_default_type"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/metric_list_description"
@@ -33,7 +33,7 @@
         android:layout_below="@+id/metric_list_name"
         android:layout_marginLeft="4dp"
         android:layout_toRightOf="@+id/metric_list_default_description"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/metric_list_range"
@@ -43,7 +43,7 @@
         android:layout_marginLeft="4dp"
         android:layout_toRightOf="@+id/metric_list_default_range"
         android:singleLine="false"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/metric_list_default_type"
@@ -56,7 +56,7 @@
         android:layout_marginLeft="16dp"
         android:text="Type:"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/metric_list_default_description"
@@ -68,7 +68,7 @@
         android:layout_marginLeft="16dp"
         android:text="Description:"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/metric_list_default_range"
@@ -79,5 +79,5 @@
         android:layout_toRightOf="@+id/metric_list_description"
         android:text="Range:"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 </RelativeLayout>

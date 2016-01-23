@@ -15,6 +15,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="LStyled.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@color/color_action_mode_bg</item>
     </style>

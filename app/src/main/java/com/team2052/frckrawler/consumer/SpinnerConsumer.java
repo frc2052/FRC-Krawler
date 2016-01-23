@@ -24,7 +24,7 @@ public class SpinnerConsumer extends DataConsumer<List<String>> {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_list_item_1, data);
         mSpinner.setAdapter(adapter);
 
-        if(noDataHandler != null)
+        if (noDataHandler != null)
             noDataHandler.showData();
     }
 }

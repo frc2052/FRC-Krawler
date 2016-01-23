@@ -5,11 +5,11 @@ import android.view.View;
 
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.activities.EventInfoActivity;
-import com.team2052.frckrawler.subscribers.EventListSubscriber;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.ListElement;
+import com.team2052.frckrawler.subscribers.EventListSubscriber;
 
 import java.util.List;
 
