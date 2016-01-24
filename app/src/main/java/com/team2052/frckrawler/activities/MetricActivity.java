@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,9 +25,8 @@ import com.team2052.frckrawler.tba.JSON;
  * Created by Adam on 6/13/2015.
  */
 public class MetricActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
-    publicID="METRIC_ID";
-    static final String M, mRangeMax, mRangeInc;
-    TextView mName, mTyETRIC_Description, mRangeMinpe, m
+    public static final String METRIC_ID = "METRIC_ID";
+    TextView mName, mDescription, mRangeMin,  mRangeMax, mRangeInc, mType;
     SwitchCompat mEnabled;
     private Metric metric;
     private View mMetricRangeCard;
@@ -50,7 +50,8 @@ public class MetricActivity extends BaseActivity implements CompoundButton.OnChe
         mRangeMax = (TextView) findViewById(R.id.metric_info_range_max);
         mRangeMin = (TextView) findViewById(R.id.metric_info_range_min);
 
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -87,12 +88,16 @@ public class MetricActivity extends BaseActivity implements CompoundButton.OnChe
                     sb.append(comma).append(value.getAsString());
                     comma = ", ";
                 }
+                mMetricRangeCard.setVisibility(View.VISIBLE);
+                mRangeInc.setVisibility(View.GONE);
+                mRangeMin.setText(sb.toString());
                 mType.setText("Chooser");
                 break;
             case SLIDER:
                 mMetricRangeCard.setVisibility(View.VISIBLE);
                 mRangeMin.setText(String.format("Min: %s", data.get("min").getAsString()));
                 mRangeMax.setText(String.format("Max: %s", data.get("max").getAsString()));
+                mRangeInc.setVisibility(View.GONE);
                 mType.setText("Slider");
                 break;
         }
