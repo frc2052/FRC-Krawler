@@ -13,6 +13,6 @@ public class GlobalValues {
      * most recently connected server
      */
     public static final String MAC_ADDRESS_PREF = "MACAddress";
-    public static final int MAX_COMP_YEAR = 2015;
+    public static final int MAX_COMP_YEAR = 2016;
     public static final int FIRST_COMP_YEAR = 1992;
 }
