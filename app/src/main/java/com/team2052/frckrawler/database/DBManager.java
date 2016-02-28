@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.team2052.frckrawler.comparators.RobotTeamNumberComparator;
 import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
@@ -231,6 +232,7 @@ public class DBManager {
             for (int i = 0; i < robotEvents.size(); i++) {
                 robots.add(robotEvents.get(i).getRobot());
             }
+            Collections.sort(robots, new RobotTeamNumberComparator());
             subscriber.onNext(robots);
             subscriber.onCompleted();
         });

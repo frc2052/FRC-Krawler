@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.db;
 
+import com.team2052.frckrawler.database.MetricHelper;
+
 import java.util.List;
 
 import de.greenrobot.dao.DaoException;
@@ -84,7 +86,7 @@ public class Metric implements java.io.Serializable {
         this.category = category;
     }
 
-    public Integer getType() {
+    public @MetricHelper.MetricType Integer getType() {
         return type;
     }
 

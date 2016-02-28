@@ -30,7 +30,9 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
     private static final String METRIC_CATEGORY = "METRIC_CATEGORY";
     private int mMetricCategory;
     private ListEditor list;
-    private int mCurrentSelectedMetricType;
+    private
+    @MetricHelper.MetricType
+    int mCurrentSelectedMetricType;
     private Game mGame;
     private Spinner mMetricTypeSpinner;
     private EditText mName, mDescription, mMinimum, mMaximum, mIncrementation;
@@ -91,9 +93,9 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
         final MetricFactory metricFactory = new MetricFactory(mGame, name);
         metricFactory.setDescription(description);
         metricFactory.setMetricCategory(mMetricCategory);
-        metricFactory.setMetricType(MetricHelper.MetricType.values()[mCurrentSelectedMetricType]);
-        switch (MetricHelper.MetricType.values()[mCurrentSelectedMetricType]) {
-            case COUNTER:
+        metricFactory.setMetricType(mCurrentSelectedMetricType);
+        switch (mCurrentSelectedMetricType) {
+            case MetricHelper.COUNTER:
                 try {
                     metricFactory.setDataMinMaxInc(
                             Integer.parseInt(mMinimum.getText().toString()),
@@ -104,7 +106,7 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
                     return;
                 }
                 break;
-            case SLIDER:
+            case MetricHelper.SLIDER:
                 try {
                     metricFactory.setDataMinMaxInc(
                             Integer.parseInt(mMinimum.getText().toString()),
@@ -115,8 +117,8 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
                     return;
                 }
                 break;
-            case CHOOSER:
-            case CHECK_BOX:
+            case MetricHelper.CHOOSER:
+            case MetricHelper.CHECK_BOX:
                 metricFactory.setDataListIndexValue(list.getValues());
                 break;
         }
@@ -129,23 +131,23 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mCurrentSelectedMetricType = position;
-        switch (MetricHelper.MetricType.values()[position]) {
-            case COUNTER:
+        switch (mCurrentSelectedMetricType) {
+            case MetricHelper.COUNTER:
                 mMinimum.setVisibility(View.VISIBLE);
                 mMaximum.setVisibility(View.VISIBLE);
                 mIncrementation.setVisibility(View.VISIBLE);
                 mListEditor.removeAllViews();
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case SLIDER:
+            case MetricHelper.SLIDER:
                 mMinimum.setVisibility(View.VISIBLE);
                 mMaximum.setVisibility(View.VISIBLE);
                 mIncrementation.setVisibility(View.GONE);
                 mListEditor.removeAllViews();
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case CHECK_BOX:
-            case CHOOSER:
+            case MetricHelper.CHOOSER:
+            case MetricHelper.CHECK_BOX:
                 mMinimum.setVisibility(View.GONE);
                 mMaximum.setVisibility(View.GONE);
                 mIncrementation.setVisibility(View.GONE);

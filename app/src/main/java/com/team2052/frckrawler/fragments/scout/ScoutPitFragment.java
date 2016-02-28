@@ -56,7 +56,7 @@ public class ScoutPitFragment extends BaseScoutFragment {
         return Observable.just(robot).map(robotMap -> {
             ScoutData pitScoutData = new ScoutData();
 
-            final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, mEvent.getGame_id(), true);
+            final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(scoutType, null, mEvent.getGame_id(), true);
             List<Metric> metrics = metricQueryBuilder.list();
 
             for (int i = 0; i < metrics.size(); i++) {

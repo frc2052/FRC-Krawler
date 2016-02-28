@@ -80,23 +80,23 @@ public class EditMetricDialogFragment extends DialogFragment {
         return view;
     }
 
-    public void setupEditor(int type) {
-        switch (MetricHelper.MetricType.values()[type]) {
-            case COUNTER:
+    public void setupEditor(@MetricHelper.MetricType int type) {
+        switch (type) {
+            case MetricHelper.COUNTER:
                 mMinimum.setVisibility(View.VISIBLE);
                 mMaximum.setVisibility(View.VISIBLE);
                 mIncrementation.setVisibility(View.VISIBLE);
                 mListEditor.removeAllViews();
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case SLIDER:
+            case MetricHelper.SLIDER:
                 mMinimum.setVisibility(View.VISIBLE);
                 mMaximum.setVisibility(View.VISIBLE);
                 mIncrementation.setVisibility(View.GONE);
                 mListEditor.removeAllViews();
                 mListHeader.setVisibility(View.GONE);
                 break;
-            case CHOOSER:
+            case MetricHelper.CHOOSER:
                 mMinimum.setVisibility(View.GONE);
                 mMaximum.setVisibility(View.INVISIBLE);
                 mIncrementation.setVisibility(View.GONE);
@@ -105,7 +105,7 @@ public class EditMetricDialogFragment extends DialogFragment {
                 mListEditor.addView(list);
                 mListHeader.setVisibility(View.VISIBLE);
                 break;
-            case CHECK_BOX:
+            case MetricHelper.CHECK_BOX:
                 mMinimum.setVisibility(View.GONE);
                 mMaximum.setVisibility(View.INVISIBLE);
                 mIncrementation.setVisibility(View.GONE);
@@ -129,18 +129,18 @@ public class EditMetricDialogFragment extends DialogFragment {
         String description = mDescription.getText().toString();
         JsonObject data = new JsonObject();
         data.addProperty("description", description);
-        switch (MetricHelper.MetricType.values()[mMetric.getType()]) {
-            case BOOLEAN:
+        switch (mMetric.getType()) {
+            case MetricHelper.BOOLEAN:
                 break;
-            case CHOOSER:
-            case CHECK_BOX:
+            case MetricHelper.CHOOSER:
+            case MetricHelper.CHECK_BOX:
                 JsonElement values = JSON.getGson().toJsonTree(list.getValues());
                 data.add("values", values);
                 break;
-            case COUNTER:
+            case MetricHelper.COUNTER:
                 int inc = Integer.parseInt(mIncrementation.getText().toString());
                 data.addProperty("inc", inc);
-            case SLIDER:
+            case MetricHelper.SLIDER:
                 int max = Integer.parseInt(mMaximum.getText().toString());
                 int min = Integer.parseInt(mMinimum.getText().toString());
                 data.addProperty("min", min);
@@ -158,15 +158,15 @@ public class EditMetricDialogFragment extends DialogFragment {
         mName.setText(mMetric.getName());
         mDescription.setText(data.get("description").getAsString());
 
-        switch (MetricHelper.MetricType.values()[mMetric.getType()]) {
-            case COUNTER:
+        switch (mMetric.getType()) {
+            case MetricHelper.COUNTER:
                 mIncrementation.setText(data.get("inc").getAsString());
-            case SLIDER:
+            case MetricHelper.SLIDER:
                 mMinimum.setText(data.get("min").getAsString());
                 mMaximum.setText(data.get("max").getAsString());
                 break;
-            case CHOOSER:
-            case CHECK_BOX:
+            case MetricHelper.CHOOSER:
+            case MetricHelper.CHECK_BOX:
                 JsonArray values = data.get("values").getAsJsonArray();
                 if (list != null) {
                     for (JsonElement element : values) {

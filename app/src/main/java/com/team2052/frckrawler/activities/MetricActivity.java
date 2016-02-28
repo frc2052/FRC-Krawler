@@ -26,7 +26,7 @@ import com.team2052.frckrawler.tba.JSON;
  */
 public class MetricActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     public static final String METRIC_ID = "METRIC_ID";
-    TextView mName, mDescription, mRangeMin,  mRangeMax, mRangeInc, mType;
+    TextView mName, mDescription, mRangeMin, mRangeMax, mRangeInc, mType;
     SwitchCompat mEnabled;
     private Metric metric;
     private View mMetricRangeCard;
@@ -69,19 +69,19 @@ public class MetricActivity extends BaseActivity implements CompoundButton.OnChe
         }
 
         mName.setText(String.format("Name: %s", metric.getName()));
-        switch (MetricHelper.MetricType.values()[metric.getType()]) {
-            case BOOLEAN:
+        switch (metric.getType()) {
+            case MetricHelper.BOOLEAN:
                 mType.setText("Boolean");
                 break;
-            case COUNTER:
+            case MetricHelper.COUNTER:
                 mMetricRangeCard.setVisibility(View.VISIBLE);
                 mType.setText("Counter");
                 mRangeMin.setText(String.format("Min: %s", data.get("min").getAsString()));
                 mRangeMax.setText(String.format("Max: %s", data.get("max").getAsString()));
                 mRangeInc.setText(String.format("Incrementation: %s", data.get("inc").getAsString()));
                 break;
-            case CHECK_BOX:
-            case CHOOSER:
+            case MetricHelper.CHECK_BOX:
+            case MetricHelper.CHOOSER:
                 StringBuilder sb = new StringBuilder();
                 String comma = "";
                 for (JsonElement value : data.get("values").getAsJsonArray()) {
@@ -93,7 +93,7 @@ public class MetricActivity extends BaseActivity implements CompoundButton.OnChe
                 mRangeMin.setText(sb.toString());
                 mType.setText("Chooser");
                 break;
-            case SLIDER:
+            case MetricHelper.SLIDER:
                 mMetricRangeCard.setVisibility(View.VISIBLE);
                 mRangeMin.setText(String.format("Min: %s", data.get("min").getAsString()));
                 mRangeMax.setText(String.format("Max: %s", data.get("max").getAsString()));

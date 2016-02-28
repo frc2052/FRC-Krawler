@@ -21,6 +21,8 @@ import java.util.List;
 
 public class MetricHelper {
     public static final int MATCH_PERF_METRICS = 0, ROBOT_METRICS = 1;
+    public static final int BOOLEAN = 0, COUNTER = 1, SLIDER = 2, CHOOSER = 3, CHECK_BOX = 4;
+
     private static Type listType = new TypeToken<List<Integer>>() {
     }.getType();
 
@@ -41,7 +43,7 @@ public class MetricHelper {
     }
 
     public static Tuple2<Boolean, ReturnResult> compileBooleanMetricValue(MetricValue metricValue) {
-        if (metricValue.getMetric().getType() != MetricType.BOOLEAN.id)
+        if (metricValue.getMetric().getType() != BOOLEAN)
             return new Tuple2<>(false, ReturnResult.WRONG_METRIC_TYPE);
 
         Optional<JsonElement> optional = getMetricValue(metricValue);
@@ -60,7 +62,7 @@ public class MetricHelper {
     }
 
     public static Tuple2<Integer, ReturnResult> getIntMetricValue(MetricValue metricValue) {
-        if (metricValue.getMetric().getType() != MetricType.SLIDER.id && metricValue.getMetric().getType() != MetricType.COUNTER.id)
+        if (metricValue.getMetric().getType() != SLIDER && metricValue.getMetric().getType() != COUNTER)
             return new Tuple2<>(-1, ReturnResult.WRONG_METRIC_TYPE);
 
         final Optional<JsonElement> optional = getMetricValue(metricValue);
@@ -79,7 +81,7 @@ public class MetricHelper {
     }
 
     public static Tuple2<List<Integer>, ReturnResult> getListIndexMetricValue(MetricValue metricValue) {
-        if (metricValue.getMetric().getType() != MetricType.CHECK_BOX.id && metricValue.getMetric().getType() != MetricType.CHOOSER.id)
+        if (metricValue.getMetric().getType() != CHECK_BOX && metricValue.getMetric().getType() != CHOOSER)
             return new Tuple2<>(Lists.newArrayList(), ReturnResult.WRONG_METRIC_TYPE);
 
         final Optional<JsonElement> optionalValue = getMetricValue(metricValue);
@@ -137,7 +139,7 @@ public class MetricHelper {
     }
 
     public static Optional<List<String>> getListItemIndexRange(Metric metric) {
-        if (metric.getType() != MetricType.CHECK_BOX.id && metric.getType() != MetricType.CHOOSER.id)
+        if (metric.getType() != CHECK_BOX && metric.getType() != CHOOSER)
             return Optional.absent();
 
         final Optional<JsonElement> optionalData = getMetricData(metric);
@@ -172,9 +174,9 @@ public class MetricHelper {
         }
     }
 
-    public enum MetricType {
-        BOOLEAN, COUNTER, SLIDER, CHOOSER, CHECK_BOX;
-        public int id = ordinal();
+    @IntDef({BOOLEAN, COUNTER, SLIDER, CHOOSER, CHECK_BOX})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface MetricType {
     }
 
     @IntDef({MATCH_PERF_METRICS, ROBOT_METRICS})
@@ -186,7 +188,8 @@ public class MetricHelper {
         final Game game;
         @MetricCategory
         int metricCategory;
-        MetricType metricType;
+        @MetricType
+        int metricType;
         String name;
         JsonObject data = new JsonObject();
 
@@ -197,7 +200,7 @@ public class MetricHelper {
             this.name = name;
         }
 
-        public void setMetricType(MetricType metricType) {
+        public void setMetricType(@MetricType int metricType) {
             this.metricType = metricType;
         }
 
@@ -260,7 +263,7 @@ public class MetricHelper {
                     null,
                     name,
                     metricCategory,
-                    metricType.id,
+                    metricType,
                     JSON.getGson().toJson(data),
                     game.getId(),
                     true);

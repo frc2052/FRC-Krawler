@@ -45,7 +45,7 @@ public class MetricCompiler {
                     metricData.add(new MetricValue(dbManager.getPitDataTable().getMetric(pitData), JSON.getAsJsonObject(pitData.getData())));
                 }
             }
-            compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, MetricHelper.MetricType.values()[metric.getType()], compileWeight));
+            compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, compileWeight));
         }
         return compiledMetricValues;
     }
@@ -78,7 +78,7 @@ public class MetricCompiler {
                     metricData.add(new MetricValue(dbManager.getPitDataTable().getMetric(pitData), JSON.getAsJsonObject(pitData.getData())));
                 }
             }
-            compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, MetricHelper.MetricType.values()[metric.getType()], compileWeight));
+            compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, compileWeight));
         }
         return compiledMetricValues;
     }

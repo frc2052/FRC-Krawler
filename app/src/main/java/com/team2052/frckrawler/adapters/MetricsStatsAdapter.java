@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.comparators.SimpleValueCompiledComparator;
+import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.tba.JSON;
@@ -14,8 +15,6 @@ import com.team2052.frckrawler.tba.JSON;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static com.team2052.frckrawler.database.MetricHelper.MetricType;
 
 /**
  * Created by Adam on 6/11/2015.
@@ -40,15 +39,15 @@ public class MetricsStatsAdapter extends ListViewAdapter {
         List<String> items = new ArrayList<>();
         items.add("Team Ascending");
         items.add("Team Descending");
-        switch (MetricType.values()[metric.getType()]) {
-            case BOOLEAN:
-            case COUNTER:
-            case SLIDER:
+        switch (metric.getType()) {
+            case MetricHelper.BOOLEAN:
+            case MetricHelper.COUNTER:
+            case MetricHelper.SLIDER:
                 items.add("Value Ascending");
                 items.add("Value Descending");
                 break;
-            case CHOOSER:
-            case CHECK_BOX:
+            case MetricHelper.CHOOSER:
+            case MetricHelper.CHECK_BOX:
                 JsonObject data_json = JSON.getAsJsonObject(metric.getData());
                 JsonArray values = data_json.get("values").getAsJsonArray();
 
@@ -64,14 +63,14 @@ public class MetricsStatsAdapter extends ListViewAdapter {
             tempSortedItems = values;
             if (which <= 2) {
             } else {
-                switch (MetricType.values()[metric.getType()]) {
-                    case COUNTER:
-                    case SLIDER:
-                    case BOOLEAN:
+                switch (metric.getType()) {
+                    case MetricHelper.COUNTER:
+                    case MetricHelper.SLIDER:
+                    case MetricHelper.BOOLEAN:
                         Collections.sort(tempSortedItems, new SimpleValueCompiledComparator(which % 2 == 0));
                         break;
-                    case CHOOSER:
-                    case CHECK_BOX:
+                    case MetricHelper.CHOOSER:
+                    case MetricHelper.CHECK_BOX:
                         int index = which % 2 == 0 ? which / 2 : (which + 1) / 2;
                         index -= 1;
 

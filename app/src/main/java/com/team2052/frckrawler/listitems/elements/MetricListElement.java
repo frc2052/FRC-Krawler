@@ -32,17 +32,17 @@ public class MetricListElement extends ListElement {
             descriptionString = data.get("description").getAsString();
         }
 
-        switch (MetricHelper.MetricType.values()[metric.getType()]) {
-            case BOOLEAN:
+        switch (metric.getType()) {
+            case MetricHelper.BOOLEAN:
                 typeString = "Boolean";
                 rangeString = "Not Applicable";
                 break;
-            case COUNTER:
+            case MetricHelper.COUNTER:
                 typeString = "Counter";
                 rangeString = data.get("min").getAsString() + " to " + data.get("max").getAsString() + " Incrementing by " + data.get("inc").getAsString();
                 break;
-            case CHECK_BOX:
-            case CHOOSER:
+            case MetricHelper.CHECK_BOX:
+            case MetricHelper.CHOOSER:
                 StringBuilder sb = new StringBuilder();
                 String comma = "";
                 for (JsonElement value : data.get("values").getAsJsonArray()) {
@@ -52,7 +52,7 @@ public class MetricListElement extends ListElement {
                 rangeString = sb.toString();
                 typeString = "Chooser";
                 break;
-            case SLIDER:
+            case MetricHelper.SLIDER:
                 rangeString = data.get("min").getAsString() + " to " + data.get("max").getAsString();
                 typeString = "Slider";
                 break;

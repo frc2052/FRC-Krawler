@@ -54,7 +54,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             ScoutData matchScoutData = new ScoutData();
             final int match_num = getMatchNumber();
             final int game_type = mMatchType;
-            final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, mEvent.getGame_id(), true);
+            final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(scoutType, null, mEvent.getGame_id(), true);
             List<Metric> metrics = metricQueryBuilder.list();
             for (int i = 0; i < metrics.size(); i++) {
                 Metric metric = metrics.get(i);
@@ -81,6 +81,8 @@ public class ScoutMatchFragment extends BaseScoutFragment {
         if (getRobot() == null)
             return;
         if (mEvent == null)
+            return;
+        if (mComments.getEditText() == null)
             return;
 
         new SaveMatchMetricsTask(

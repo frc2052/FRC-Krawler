@@ -35,16 +35,16 @@ public abstract class MetricWidget extends FrameLayout {
         if (m == null)
             return Optional.absent();
 
-        switch (MetricHelper.MetricType.values()[m.getMetric().getType()]) {
-            case BOOLEAN:
+        switch (m.getMetric().getType()) {
+            case MetricHelper.BOOLEAN:
                 return Optional.of(new BooleanMetricWidget(c, m));
-            case CHOOSER:
+            case MetricHelper.CHOOSER:
                 return Optional.of(new ChooserMetricWidget(c, m));
-            case COUNTER:
+            case MetricHelper.COUNTER:
                 return Optional.of(new CounterMetricWidget(c, m));
-            case SLIDER:
+            case MetricHelper.SLIDER:
                 return Optional.of(new SliderMetricWidget(c, m));
-            case CHECK_BOX:
+            case MetricHelper.CHECK_BOX:
                 return Optional.of(new CheckBoxMetricWidget(c, m));
             default:
                 return Optional.absent();
