@@ -1,6 +1,6 @@
 package com.team2052.frckrawler;
 
-public class GlobalValues {
+public class Constants {
     /**
      * SharedPreferences file name
      */

@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 
-import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
@@ -81,8 +81,8 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
         binder.mSpinner = mEventSpinner;
         binder.noDataHandler = this;
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
-        float compileWeight = sharedPreferences.getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
+        float compileWeight = sharedPreferences.getFloat(Constants.PREFS_COMPILE_WEIGHT, 1.0f);
         if (mServerSettingCompileWeight.getEditText() != null)
             mServerSettingCompileWeight.getEditText().setText(String.valueOf(compileWeight));
 
@@ -111,7 +111,7 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
 
     @Override
     public void onClick(View view) {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
         if (isEventsValid() && getSelectedEvent() != null) {
             switch (view.getId()) {
                 case R.id.excel:
@@ -135,10 +135,10 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
             case R.id.server_settings_save:
                 float compileWeight = Float.parseFloat(mServerSettingCompileWeight.getEditText().getText().toString());
                 mServerSettingCompileWeight.getEditText().setText(String.valueOf(compileWeight));
-                sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, compileWeight).apply();
+                sharedPreferences.edit().putFloat(Constants.PREFS_COMPILE_WEIGHT, compileWeight).apply();
                 break;
             case R.id.server_settings_restore_defaults:
-                sharedPreferences.edit().putFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f).apply();
+                sharedPreferences.edit().putFloat(Constants.PREFS_COMPILE_WEIGHT, 1.0f).apply();
                 mServerSettingCompileWeight.getEditText().setText(String.valueOf(1.0f));
                 break;
         }

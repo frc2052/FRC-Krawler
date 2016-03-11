@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
+import com.team2052.frckrawler.consumer.ListViewConsumer;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.subscribers.TeamListSubscriber;
@@ -43,5 +45,11 @@ public class TeamsFragment extends ListViewFragment<List<Team>, TeamListSubscrib
             Team team = dbManager.getTeamsTable().load(Long.valueOf((((ListElement) ((ListViewAdapter) parent.getAdapter()).getItem(position))).getKey()));
             startActivity(TeamInfoActivity.newInstance(getActivity(), team));
         });
+    }
+
+
+    @Override
+    protected ListViewConsumer.ListViewNoDataParams getNoDataParams() {
+        return new ListViewConsumer.ListViewNoDataParams("No teams found", R.drawable.ic_team);
     }
 }

@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 
-import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.database.ExportUtil;
 import com.team2052.frckrawler.db.Event;
@@ -52,7 +52,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
         File file = null;
 
         public ExportToFileSystem(Event event) {
-            this.compileWeight = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0).getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
+            this.compileWeight = getActivity().getSharedPreferences(Constants.PREFS_FILE_NAME, 0).getFloat(Constants.PREFS_COMPILE_WEIGHT, 1.0f);
             this.event = event;
         }
 

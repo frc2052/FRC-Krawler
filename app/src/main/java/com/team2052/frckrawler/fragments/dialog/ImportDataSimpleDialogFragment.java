@@ -13,7 +13,7 @@ import android.widget.Spinner;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
@@ -66,9 +66,9 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         super.onCreate(savedInstanceState);
         this.mGame = DBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
         isConnected = ConnectionChecker.isConnectedToInternet(getActivity());
-        yearDropDownItems = new String[GlobalValues.MAX_COMP_YEAR - GlobalValues.FIRST_COMP_YEAR + 1];
+        yearDropDownItems = new String[Constants.MAX_COMP_YEAR - Constants.FIRST_COMP_YEAR + 1];
         for (int i = 0; i < yearDropDownItems.length; i++) {
-            yearDropDownItems[i] = Integer.toString(GlobalValues.MAX_COMP_YEAR - i);
+            yearDropDownItems[i] = Integer.toString(Constants.MAX_COMP_YEAR - i);
         }
     }
 

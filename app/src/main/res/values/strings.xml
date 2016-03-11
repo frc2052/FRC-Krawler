@@ -35,7 +35,7 @@
     <string name="games">Games</string>
     <string name="options">Options</string>
     <string name="scout">Scout</string>
-    <string name="Summary">Summary</string>
+    <string name="summary_title">Summary</string>
     <string name="event">Event</string>
 
     <string name="welcome_message">Before you can you can use the app. The app needs to get setup.\nClick \"Next\" when you are ready.</string>

@@ -3,8 +3,10 @@ package com.team2052.frckrawler.fragments;
 import android.os.Bundle;
 import android.view.View;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.activities.EventInfoActivity;
+import com.team2052.frckrawler.consumer.ListViewConsumer;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
@@ -57,5 +59,10 @@ public class EventsFragment extends ListViewFragment<List<Event>, EventListSubsc
     @Override
     public void onFABPressed() {
         ImportDataSimpleDialogFragment.newInstance(mGame_id).show(getChildFragmentManager(), "importEvent");
+    }
+
+    @Override
+    protected ListViewConsumer.ListViewNoDataParams getNoDataParams() {
+        return new ListViewConsumer.ListViewNoDataParams("No events found", R.drawable.ic_event);
     }
 }

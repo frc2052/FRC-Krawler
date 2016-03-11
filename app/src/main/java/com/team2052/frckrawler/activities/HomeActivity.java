@@ -10,7 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
-import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.fragments.GamesFragment;
 import com.team2052.frckrawler.fragments.ScoutFragment;
@@ -82,8 +82,8 @@ public class HomeActivity extends DatabaseActivity {
 
         ViewCompat.setElevation(toolbar, getResources().getDimension(R.dimen.toolbar_elevation));
 
-        SharedPreferences sharedPreferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
-        boolean mIsScout = sharedPreferences.getBoolean(GlobalValues.IS_SCOUT_PREF, false);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
+        boolean mIsScout = sharedPreferences.getBoolean(Constants.IS_SCOUT_PREF, false);
         int initNavId = mIsScout ? R.id.nav_item_scout : R.id.nav_item_server;
 
         //Used to switch to a different fragment if it came from a separate activity

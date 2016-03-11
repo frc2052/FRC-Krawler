@@ -8,7 +8,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
-import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.MetricsStatsAdapter;
 import com.team2052.frckrawler.database.CompiledMetricValue;
@@ -50,19 +50,17 @@ public class SummaryDataActivity extends BaseActivity {
         mListView = (ListView) findViewById(R.id.list_layout);
         mEvent = mDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
         mMetric = mDbManager.getMetricsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
-        setActionBarTitle(getString(R.string.Summary));
+        setActionBarTitle(getString(R.string.summary_title));
         setActionBarSubtitle(mMetric.getName());
         new GetCompiledData().execute();
     }
 
 
     public class GetCompiledData extends AsyncTask<Void, Void, List<CompiledMetricValue>> {
-
         final float compileWeight;
 
         public GetCompiledData() {
-            this.compileWeight = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0).getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
-
+            this.compileWeight = getSharedPreferences(Constants.PREFS_FILE_NAME, 0).getFloat(Constants.PREFS_COMPILE_WEIGHT, 1.0f);
         }
 
         @Override
