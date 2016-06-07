@@ -1,10 +1,13 @@
 package com.team2052.frckrawler.consumer;
 
 import android.app.Activity;
+import android.support.annotation.UiThread;
+import android.view.View;
 
 public abstract class DataConsumer<V> {
     protected Activity mActivity;
     private OnCompletedListener onCompletedListener;
+    protected View rootView;
 
     public abstract void updateData(V data);
 
@@ -23,4 +26,11 @@ public abstract class DataConsumer<V> {
     public void setOnCompletedListener(OnCompletedListener onCompletedListener) {
         this.onCompletedListener = onCompletedListener;
     }
+
+    public void setRootView(View rootView) {
+        this.rootView = rootView;
+    }
+
+    @UiThread
+    public abstract void bindViews();
 }

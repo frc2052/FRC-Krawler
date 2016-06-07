@@ -37,7 +37,6 @@ public abstract class BaseDataFragment
         if (getActivity() instanceof HasComponent) {
             mComponent = ((HasComponent) getActivity()).getComponent();
         }
-        mComponent.dbManager();
         inject();
         dbManager = mComponent.dbManager();
         subscriber.setConsumer(binder);

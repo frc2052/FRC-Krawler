@@ -65,13 +65,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="View Event" />
-
-                    <Button
-                        android:id="@+id/excel"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:text="CSV File Export" />
                 </LinearLayout>
 
                 <TextView
@@ -133,71 +126,5 @@
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:clipToPadding="false"
-            android:descendantFocusability="beforeDescendants"
-            android:focusableInTouchMode="true"
-            app:cardCornerRadius="2dp"
-            app:cardElevation="2dp"
-            app:contentPaddingTop="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/TextAppearance.AppCompat.Title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="@string/settings" />
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/server_setting_compile_weight"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="4dp">
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Compile Weight"
-                        android:inputType="numberDecimal" />
-                </android.support.design.widget.TextInputLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <Button
-                        android:id="@+id/server_settings_restore_defaults"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Restore Defaults" />
-
-                    <Button
-                        android:id="@+id/server_settings_save"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Save" />
-                </LinearLayout>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
     </LinearLayout>
-
 </com.team2052.frckrawler.views.NonFocusingScrollView>

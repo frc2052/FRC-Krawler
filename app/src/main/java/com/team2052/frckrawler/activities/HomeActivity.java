@@ -64,6 +64,9 @@ public class HomeActivity extends DatabaseActivity {
             case R.id.nav_item_games:
                 fragment = new GamesFragment();
                 break;
+            case R.id.nav_item_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return;
         }
         assert fragment != null;
         fragment.setRetainInstance(true);

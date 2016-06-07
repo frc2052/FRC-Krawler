@@ -1,27 +1,25 @@
 package com.team2052.frckrawler.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.background.DeleteEventTask;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.listeners.RefreshListener;
+import com.team2052.frckrawler.subscribers.KeyValueListSubscriber;
 import com.team2052.frckrawler.util.Util;
 
-/**
- * Created by adam on 6/15/15.
- */
-public class EventInfoFragment extends BaseFragment implements RefreshListener {
+import java.util.Map;
+
+import rx.Observable;
+
+public class EventInfoFragment extends ListViewFragment<Map<String, String>, KeyValueListSubscriber> implements RefreshListener {
     public static final String EVENT_ID = "EVENT_ID";
     private Event mEvent;
 
@@ -37,19 +35,17 @@ public class EventInfoFragment extends BaseFragment implements RefreshListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mEvent = mDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
+        mEvent = dbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_event_info, null);
+    public void inject() {
+        mComponent.inject(this);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //binding = FragmentEventInfoBinding.bind(view);
-        refresh();
+    protected Observable<? extends Map<String, String>> getObservable() {
+        return dbManager.eventInfo(mEvent);
     }
 
     @Override
@@ -97,34 +93,5 @@ public class EventInfoFragment extends BaseFragment implements RefreshListener {
         });
         builder.setNegativeButton("Cancel", null);
         return builder.create();
-    }
-
-    @Override
-    public void refresh() {
-        new LoadEventInfo().execute();
-    }
-
-    public class LoadEventInfo extends AsyncTask<Void, Void, Void> {
-        int numOfTeams = 0;
-        int numOfMatches = 0;
-        int numOfPitData = 0;
-        int numOfMatchData = 0;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            numOfTeams = mDbManager.getEventsTable().getRobotEvents(mEvent).size();
-            numOfMatches = mDbManager.getEventsTable().getMatches(mEvent).size();
-            numOfPitData = mDbManager.getEventsTable().getPitData(mEvent).size();
-            numOfMatchData = mDbManager.getEventsTable().getMatchData(mEvent).size();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            /*binding.setNumOfTeams(numOfTeams);
-            binding.setNumOfMatches(numOfMatches);
-            binding.setNumOfPitData(numOfPitData);
-            binding.setNumOfMatchData(numOfMatchData);*/
-        }
     }
 }

@@ -26,7 +26,8 @@ import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.ScoutUtil;
 import com.team2052.frckrawler.util.SnackbarUtil;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by Adam on 11/24/2015.
@@ -37,7 +38,6 @@ public class ScoutFragment extends Fragment implements View.OnClickListener {
     ScoutSyncHandler scoutSyncHandler;
     View syncView;
     private FragmentComponent mComponent;
-    private boolean isServer;
     private Event mEvent;
     private View syncButton, syncProgressBar;
 
@@ -112,6 +112,7 @@ public class ScoutFragment extends Fragment implements View.OnClickListener {
     }
 
     @SuppressWarnings("unused")
+    @Subscribe
     public void onEvent(ScoutSyncSuccessEvent event) {
         setProgressVisibility(View.GONE);
         SnackbarUtil.make(getView(), "Sync Successful", Snackbar.LENGTH_LONG).show();
@@ -119,11 +120,13 @@ public class ScoutFragment extends Fragment implements View.OnClickListener {
     }
 
     @SuppressWarnings("unused")
+    @Subscribe
     public void onEvent(ScoutSyncCancelledEvent event) {
         setProgressVisibility(View.GONE);
     }
 
     @SuppressWarnings("unused")
+    @Subscribe
     public void onEvent(ScoutSyncErrorEvent event) {
         setProgressVisibility(View.GONE);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -136,6 +139,7 @@ public class ScoutFragment extends Fragment implements View.OnClickListener {
     }
 
     @SuppressWarnings("unused")
+    @Subscribe
     public void onEvent(ScoutSyncStartEvent event) {
         SnackbarUtil.make(getView(), "Starting Sync", Snackbar.LENGTH_SHORT).show();
         setProgressVisibility(View.VISIBLE);

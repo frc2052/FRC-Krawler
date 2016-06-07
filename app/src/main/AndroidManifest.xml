@@ -66,5 +66,8 @@
                 android:value=".activities.HomeActivity" />
         </activity>
         <activity android:name=".activities.MetricActivity" />
+        <activity android:name=".activities.SettingsActivity"
+            android:theme="@style/AppThemeFull"
+            android:label="Settings"/>
     </application>
 </manifest>

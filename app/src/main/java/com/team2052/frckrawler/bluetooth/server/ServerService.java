@@ -19,7 +19,8 @@ import com.team2052.frckrawler.bluetooth.server.events.ServerStateChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestChangeEvent;
 import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class ServerService extends Service {
     public static int SERVER_OPEN_ID = 10;
@@ -32,6 +33,7 @@ public class ServerService extends Service {
      * <p>
      * We carefully time the toggles so the thread doesn't cause any issues when destructing the BluetoothSocket
      */
+    @Subscribe
     public void onEvent(ServerStateRequestChangeEvent stateEvent) {
         if (stateEvent.getRequestedState()) {
             if (stateEvent.getEvent() != null && thread == null) {
@@ -82,10 +84,12 @@ public class ServerService extends Service {
         m.cancel(SERVER_OPEN_ID);
     }
 
+    @Subscribe
     public void onEvent(ServerStateRequestEvent event) {
         EventBus.getDefault().post(new ServerStateChangeEvent(thread != null ? thread.getHostedEvent() : null, thread != null && thread.isOpen));
     }
 
+    @Subscribe
     public void onEvent(ServerQuitEvent event) {
         removeNotification();
         thread = null;
@@ -96,6 +100,7 @@ public class ServerService extends Service {
         stopSelf();
     }
 
+    @Subscribe
     public void onEvent(ServerStartEvent event) {
         showNotification();
     }

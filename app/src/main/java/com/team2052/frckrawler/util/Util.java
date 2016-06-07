@@ -2,6 +2,7 @@ package com.team2052.frckrawler.util;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 import android.util.TypedValue;
 
 /**

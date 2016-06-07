@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.database;
 
+import android.content.Context;
+
 import com.google.common.collect.Lists;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
@@ -7,6 +9,7 @@ import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.util.PreferenceUtil;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -23,7 +26,10 @@ import de.greenrobot.dao.query.QueryBuilder;
  * @since 10/4/2014
  */
 public class ExportUtil {
-    public static File exportEventDataToCSV(Event event, File location, DBManager dbManager, float compileWeight) {
+    public static File exportEventDataToCSV(Context context, Event event, File location) {
+        DBManager dbManager = DBManager.getInstance(context);
+        float compileWeight = PreferenceUtil.compileWeight(context);
+
         Game game = dbManager.getEventsTable().getGame(event);
 
         List<Metric> metrics = game.getMetricList();

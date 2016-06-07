@@ -10,6 +10,7 @@ import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.database.ExportUtil;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.util.PreferenceUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,12 +53,19 @@ public class ExportDialogFragment extends BaseProgressDialog {
         File file = null;
 
         public ExportToFileSystem(Event event) {
-            this.compileWeight = getActivity().getSharedPreferences(Constants.PREFS_FILE_NAME, 0).getFloat(Constants.PREFS_COMPILE_WEIGHT, 1.0f);
+            this.compileWeight = PreferenceUtil.compileWeight(getActivity());
+            System.out.println(compileWeight);
             this.event = event;
         }
 
         @Override
         protected File doInBackground(Void... voids) {
+            try {
+                //Slow down for UX
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             File fileSystem = Environment.getExternalStorageDirectory();
 
             if (event != null) {
@@ -72,7 +80,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
                         e.printStackTrace();
                     }
                     if (file != null) {
-                        return ExportUtil.exportEventDataToCSV(event, file, mDbManager, compileWeight);
+                        return ExportUtil.exportEventDataToCSV(getActivity(), event, file);
                     }
                 }
             }

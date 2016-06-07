@@ -54,4 +54,14 @@ public class SubscriberModule {
     public RobotStringSubscriber provideRobotStringListSubscriber() {
         return new RobotStringSubscriber();
     }
+
+    @Provides
+    public BaseScoutSubscriber provideBaseScoutSubscriber() {
+        return new BaseScoutSubscriber();
+    }
+
+    @Provides
+    public KeyValueListSubscriber provideKeyMapLIstScubsciber() {
+        return new KeyValueListSubscriber();
+    }
 }

@@ -9,11 +9,13 @@ public abstract class BaseDataSubscriber<T, V> implements Observer<T> {
     DataConsumer<V> mConsumer;
     T data;
     V dataToBind;
+    private boolean hasBoundViews;
 
     @Override
     public void onCompleted() {
         AndroidSchedulers.mainThread().createWorker().schedule(() -> {
             if (mConsumer != null) {
+                bindViewsIfNeeded();
                 mConsumer.onCompleted();
             }
         });
@@ -41,6 +43,13 @@ public abstract class BaseDataSubscriber<T, V> implements Observer<T> {
                 mConsumer.updateData(dataToBind);
             }
         });
+    }
+
+    public void bindViewsIfNeeded(){
+        if(!hasBoundViews && mConsumer != null){
+            mConsumer.bindViews();
+            hasBoundViews = true;
+        }
     }
 
     public void setConsumer(DataConsumer<V> mConsumer) {

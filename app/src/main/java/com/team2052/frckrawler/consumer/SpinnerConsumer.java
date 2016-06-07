@@ -27,4 +27,9 @@ public class SpinnerConsumer extends DataConsumer<List<String>> {
         if (noDataHandler != null)
             noDataHandler.showData();
     }
+
+    @Override
+    public void bindViews() {
+
+    }
 }

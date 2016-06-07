@@ -37,6 +37,11 @@ public class ListViewConsumer extends DataConsumer<List<ListItem>> {
 
     }
 
+    @Override
+    public void bindViews() {
+
+    }
+
     public void showNoData(boolean shown) {
         if (shown) {
             noDataImage.setImageResource(noDataParams.getDrawable());

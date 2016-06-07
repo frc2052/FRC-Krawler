@@ -9,7 +9,9 @@ import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
 import com.team2052.frckrawler.consumer.ConsumerModule;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.fragments.EventInfoFragment;
 import com.team2052.frckrawler.fragments.EventsFragment;
+import com.team2052.frckrawler.fragments.GameInfoFragment;
 import com.team2052.frckrawler.fragments.GamesFragment;
 import com.team2052.frckrawler.fragments.MatchListFragment;
 import com.team2052.frckrawler.fragments.MetricsFragment;
@@ -70,4 +72,8 @@ public interface FragmentComponent {
     void inject(ScoutActivity scoutActivity);
 
     void inject(ScoutPitFragment scoutPitFragment);
+
+    void inject(GameInfoFragment gameInfoFragment);
+
+    void inject(EventInfoFragment eventInfoFragment);
 }

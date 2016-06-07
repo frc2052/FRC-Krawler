@@ -14,4 +14,9 @@ public class ConsumerModule {
     public SpinnerConsumer provideSpinnerConsumer() {
         return new SpinnerConsumer();
     }
+
+    @Provides
+    public BaseScoutDataConsumer provideBaseScoutDataConsumer() {
+        return new BaseScoutDataConsumer();
+    }
 }

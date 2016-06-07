@@ -9,33 +9,34 @@
         android:orientation="vertical">
 
         <CheckBox
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Include Team Names" />
 
         <CheckBox
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Include TBA Links" />
 
         <CheckBox
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pit Metrics" />
+            android:text="Pit Metrics"
+            android:id="@+id/checkBox" />
 
         <CheckBox
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Match Metrics" />
 
 
         <CheckBox
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Robot Comments" />
 
         <CheckBox
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Match Comments" />
 

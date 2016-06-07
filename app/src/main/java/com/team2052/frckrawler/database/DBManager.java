@@ -1,12 +1,15 @@
 package com.team2052.frckrawler.database;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.comparators.MatchNumberComparator;
 import com.team2052.frckrawler.comparators.RobotTeamNumberComparator;
 import com.team2052.frckrawler.db.DaoMaster;
@@ -40,6 +43,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Singleton;
 
@@ -269,6 +273,33 @@ public class DBManager {
         });
     }
 
+    public Observable<? extends Map<String, String>> gameInfo(Game mGame) {
+        return Observable.create(subscriber -> {
+            Map<String, String> info = Maps.newLinkedHashMap();
+            mGame.resetEventList();
+            mGame.resetRobotList();
+            Resources resources = context.getResources();
+            info.put(resources.getString(R.string.game_info_num_of_event), Integer.toString(mGame.getEventList().size()));
+            info.put(resources.getString(R.string.game_info_num_of_robots), Integer.toString(mGame.getRobotList().size()));
+            info.put(resources.getString(R.string.game_info_num_of_match_metrics), Integer.toString(getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.MATCH_PERF_METRICS)));
+            info.put(resources.getString(R.string.game_info_num_of_pit_metrics), Integer.toString(getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.ROBOT_METRICS)));
+
+            subscriber.onNext(info);
+        });
+    }
+
+    public Observable<? extends Map<String, String>> eventInfo(Event event) {
+        return Observable.create(subscriber -> {
+            Map<String, String> info = Maps.newLinkedHashMap();
+            Resources resources = context.getResources();
+            info.put(resources.getString(R.string.event_info_num_of_teams), Integer.toString(getEventsTable().getTeamsAtEvent(event).size()));
+            info.put(resources.getString(R.string.event_info_num_of_matches), Integer.toString(getEventsTable().getMatches(event).size()));
+            info.put(resources.getString(R.string.event_info_num_of_pit_data), Integer.toString(getEventsTable().getPitData(event).size()));
+            info.put(resources.getString(R.string.event_info_num_of_match_data), Integer.toString(getEventsTable().getMatchData(event).size()));
+            subscriber.onNext(info);
+        });
+    }
+
     private interface Table<T> {
         T load(long id);
 
@@ -424,6 +455,10 @@ public class DBManager {
             getMatchesTable().delete(getMatches(model));
             DBManager.this.getRobotEvents().delete(getRobotEvents(model));
             eventDao.delete(model);
+        }
+
+        public List<Event> getAllEvents() {
+            return eventDao.loadAll();
         }
     }
 

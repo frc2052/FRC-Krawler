@@ -30,7 +30,9 @@ import com.team2052.frckrawler.subscribers.EventStringSubscriber;
 
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import rx.Observable;
 
 public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, EventStringSubscriber, SpinnerConsumer>
@@ -39,7 +41,6 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
 
     SwitchCompat mHostToggle;
     Spinner mEventSpinner;
-    TextInputLayout mServerSettingCompileWeight;
     View mServerEventContainer, mServerEventsError, mScoutServerCard;
 
     @Override
@@ -53,6 +54,7 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
         return inflater.inflate(R.layout.fragment_server, null, false);
     }
 
+    @Subscribe
     public void onEvent(ServerStateChangeEvent serverStateChangeEvent) {
         mHostToggle.setOnCheckedChangeListener(null);
         mHostToggle.setChecked(serverStateChangeEvent.getState());
@@ -65,26 +67,17 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
         mHostToggle.setOnCheckedChangeListener(this);
 
         mEventSpinner = (Spinner) view.findViewById(R.id.event_spinner);
-        mServerSettingCompileWeight = (TextInputLayout) view.findViewById(R.id.server_setting_compile_weight);
         mServerEventContainer = view.findViewById(R.id.server_event_container);
         mServerEventsError = view.findViewById(R.id.server_events_error);
         mScoutServerCard = view.findViewById(R.id.scout_server_card);
 
         view.findViewById(R.id.view_event).setOnClickListener(this);
-        view.findViewById(R.id.excel).setOnClickListener(this);
-        view.findViewById(R.id.server_settings_save).setOnClickListener(this);
-        view.findViewById(R.id.server_settings_restore_defaults).setOnClickListener(this);
         view.findViewById(R.id.scout_match_button).setOnClickListener(this);
         view.findViewById(R.id.scout_pit_button).setOnClickListener(this);
         view.findViewById(R.id.scout_practice_button).setOnClickListener(this);
 
         binder.mSpinner = mEventSpinner;
         binder.noDataHandler = this;
-
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
-        float compileWeight = sharedPreferences.getFloat(Constants.PREFS_COMPILE_WEIGHT, 1.0f);
-        if (mServerSettingCompileWeight.getEditText() != null)
-            mServerSettingCompileWeight.getEditText().setText(String.valueOf(compileWeight));
 
         EventBus.getDefault().post(new ServerStateRequestEvent());
 
@@ -114,9 +107,6 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
         if (isEventsValid() && getSelectedEvent() != null) {
             switch (view.getId()) {
-                case R.id.excel:
-                    ExportDialogFragment.newInstance(getSelectedEvent()).show(getChildFragmentManager(), "exportDialogProgress");
-                    return;
                 case R.id.view_event:
                     startActivity(EventInfoActivity.newInstance(getActivity(), getSelectedEvent().getId()));
                     return;
@@ -130,17 +120,6 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
                     startActivity(ScoutActivity.newInstance(getActivity(), getSelectedEvent(), ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE));
                     return;
             }
-        }
-        switch (view.getId()) {
-            case R.id.server_settings_save:
-                float compileWeight = Float.parseFloat(mServerSettingCompileWeight.getEditText().getText().toString());
-                mServerSettingCompileWeight.getEditText().setText(String.valueOf(compileWeight));
-                sharedPreferences.edit().putFloat(Constants.PREFS_COMPILE_WEIGHT, compileWeight).apply();
-                break;
-            case R.id.server_settings_restore_defaults:
-                sharedPreferences.edit().putFloat(Constants.PREFS_COMPILE_WEIGHT, 1.0f).apply();
-                mServerSettingCompileWeight.getEditText().setText(String.valueOf(1.0f));
-                break;
         }
     }
 

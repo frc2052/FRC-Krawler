@@ -1,28 +1,27 @@
 package com.team2052.frckrawler.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.background.DeleteGameTask;
-import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.listeners.RefreshListener;
+import com.team2052.frckrawler.subscribers.KeyValueListSubscriber;
 import com.team2052.frckrawler.util.Util;
+
+import java.util.Map;
+
+import rx.Observable;
 
 /**
  * Created by adam on 6/14/15.
  */
-public class GameInfoFragment extends BaseFragment implements RefreshListener {
+public class GameInfoFragment extends ListViewFragment<Map<String, String>, KeyValueListSubscriber> {
     public static final String GAME_ID = "GAME_ID";
 
     private Game mGame;
@@ -38,19 +37,18 @@ public class GameInfoFragment extends BaseFragment implements RefreshListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mGame = dbManager.getGamesTable().load(getArguments().getLong(GAME_ID));
         setHasOptionsMenu(true);
-        mGame = mDbManager.getGamesTable().load(getArguments().getLong(GAME_ID));
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_game_info, null);
+    public void inject() {
+        mComponent.inject(this);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        refresh();
+    protected Observable<? extends Map<String, String>> getObservable() {
+        return dbManager.gameInfo(mGame);
     }
 
     @Override
@@ -99,37 +97,4 @@ public class GameInfoFragment extends BaseFragment implements RefreshListener {
         builder.setNegativeButton("Cancel", null);
         return builder.create();
     }
-
-    @Override
-    public void refresh() {
-        new GetGameInfo().execute();
-    }
-
-    public class GetGameInfo extends AsyncTask<Void, Void, Void> {
-        int numOfMatchMetrics = 0;
-        int numOfPitMetrics = 0;
-        int numOfEvents = 0;
-        int numOfRobots = 0;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            numOfMatchMetrics = mDbManager.getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.MATCH_PERF_METRICS);
-            numOfPitMetrics = mDbManager.getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.ROBOT_METRICS);
-            mGame.resetEventList();
-            mGame.resetRobotList();
-            numOfEvents = mGame.getEventList().size();
-            numOfRobots = mGame.getRobotList().size();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            /*binding.setNumOfEvents(numOfEvents);
-            binding.setNumOfMatchMetrics(numOfMatchMetrics);
-            binding.setNumOfPitMetrics(numOfPitMetrics);
-            binding.setNumOfRobots(numOfRobots);*/
-        }
-    }
-
-
 }
