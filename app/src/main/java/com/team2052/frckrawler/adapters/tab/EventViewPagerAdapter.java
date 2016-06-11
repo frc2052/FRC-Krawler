@@ -13,7 +13,7 @@ import com.team2052.frckrawler.fragments.SummaryFragment;
  * Created by Adam on 11/23/2015.
  */
 public class EventViewPagerAdapter extends InstanceFragmentStatePagerAdapter {
-    public String[] headers = new String[]{"Info", "Metric Summary", "Schedule", "Attending"};
+    public String[] headers = new String[]{"Info", "Metric Summary", "Match Schedule", "Teams Attending"};
     private long event_id;
 
     public EventViewPagerAdapter(FragmentManager fragmentManager, long event_id) {

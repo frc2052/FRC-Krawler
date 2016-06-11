@@ -188,6 +188,25 @@ public class DBManager {
         return mTeams;
     }
 
+    public Observable<Map<String, String>> teamInfo(long team_id) {
+        return Observable.create(subscriber -> {
+            Team team = getTeamsTable().load(team_id);
+            Map<String, String> info = Maps.newLinkedHashMap();
+            info.put("Nickname", team.getName());
+
+            JsonObject data = JSON.getAsJsonObject(team.getData());
+
+            if (data.has("rookie_year") && !data.get("rookie_year").isJsonNull()) {
+               info.put("Rookie Year", data.get("rookie_year").getAsString());
+            }
+
+            if (data.has("long_name") && !data.get("long_name").isJsonNull()) {
+                info.put("Name",data.get("long_name").getAsString());
+            }
+            subscriber.onNext(info);
+        });
+    }
+
     public Users getUsersTable() {
         return mUsers;
     }

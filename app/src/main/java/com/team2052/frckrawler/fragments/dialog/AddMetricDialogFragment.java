@@ -124,7 +124,6 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
         }
 
         mDBManager.getMetricsTable().insert(metricFactory.buildMetric());
-        ((RefreshListener) getParentFragment()).refresh();
         dismiss();
     }
 
