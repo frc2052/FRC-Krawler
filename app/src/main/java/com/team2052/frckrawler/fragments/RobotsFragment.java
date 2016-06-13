@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.team2052.frckrawler.R;
@@ -13,6 +12,7 @@ import com.team2052.frckrawler.activities.RobotActivity;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.dialog.AddTeamToEventDialogFragment;
+import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.subscribers.RobotListSubscriber;
 
@@ -23,7 +23,7 @@ import rx.Observable;
 /**
  * @author Adam
  */
-public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubscriber> {
+public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubscriber> implements FABButtonListener {
     public static final String VIEW_TYPE = "VIEW_TYPE";
     private int mViewType;
     private long mKey;
@@ -54,10 +54,6 @@ public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubsc
         Bundle b = getArguments();
         this.mViewType = b.getInt(VIEW_TYPE, 0);
         mKey = b.getLong(BaseActivity.PARENT_ID);
-
-        if (mViewType == 1) {
-            setHasOptionsMenu(true);
-        }
     }
 
     @Override
@@ -71,26 +67,17 @@ public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubsc
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.add_team_manual, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_team) {
-            Event load = dbManager.getEventsTable().load(mKey);
-            if (load != null) {
-                AddTeamToEventDialogFragment.newInstance(load).show(getChildFragmentManager(), "addTeam");
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mListView.setOnItemClickListener((parent, view1, position, id) ->
                 getActivity().startActivity(RobotActivity.newInstance(getActivity(), Long.parseLong(((ListElement) parent.getAdapter().getItem(position)).getKey()))));
+    }
+
+    @Override
+    public void onFABPressed() {
+        Event load = dbManager.getEventsTable().load(mKey);
+        if (load != null) {
+            AddTeamToEventDialogFragment.newInstance(load).show(getChildFragmentManager(), "addTeam");
+        }
     }
 }

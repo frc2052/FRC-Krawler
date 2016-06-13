@@ -52,7 +52,7 @@ public class EditMetricDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mMetric = mDbSession.getMetricsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
-        AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder b = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
         b.setTitle("Edit Metric");
         b.setView(initViews());
         b.setPositiveButton("Update", (dialog, which) -> {

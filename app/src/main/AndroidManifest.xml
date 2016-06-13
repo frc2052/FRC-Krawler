@@ -36,7 +36,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.HomeActivity" />
         </activity>
-        <activity android:name=".activities.HomeActivity">
+        <activity
+            android:name=".activities.HomeActivity">
 
         </activity>
         <activity
@@ -54,9 +55,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <service android:name=".bluetooth.server.ServerService" />
-
         <activity
             android:name=".activities.ScoutActivity"
             android:parentActivityName=".activities.HomeActivity"
@@ -66,8 +64,13 @@
                 android:value=".activities.HomeActivity" />
         </activity>
         <activity android:name=".activities.MetricActivity" />
-        <activity android:name=".activities.SettingsActivity"
-            android:theme="@style/AppThemeFull"
-            android:label="Settings"/>
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="Settings"
+            android:theme="@style/AppThemeFull" />
+
+        <service
+            android:name=".bluetooth.server.ServerService"
+            android:exported="false" />
     </application>
 </manifest>

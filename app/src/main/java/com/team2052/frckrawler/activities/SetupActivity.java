@@ -22,7 +22,7 @@ import com.team2052.frckrawler.adapters.SetupFragmentAdapter;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.views.DisableSwipeViewPager;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -30,20 +30,20 @@ import butterknife.ButterKnife;
  * @since 12/13/2014.
  */
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final String PREF_SETUP = "PREF_LOADED";
+    private static final String PREF_SETUP = "PREF_LOADED";
     private static final int REQUEST_ENABLE_BT = 1;
     private static final String LOG_TAG = "SetupActivity";
-    @Bind(R.id.view_pager)
+    @BindView(R.id.view_pager)
     protected DisableSwipeViewPager pager;
-    @Bind(R.id.welcome_next_page)
+    @BindView(R.id.welcome_next_page)
     protected View welcomeNextButton;
-    @Bind(R.id.bluetooth_next_page)
+    @BindView(R.id.bluetooth_next_page)
     protected View bluetoothNextButton;
-    @Bind(R.id.enable_bluetooth_button)
+    @BindView(R.id.enable_bluetooth_button)
     protected Button enableBluetoothButton;
-    @Bind(R.id.scout_card)
+    @BindView(R.id.scout_card)
     protected CardView scoutCard;
-    @Bind(R.id.server_card)
+    @BindView(R.id.server_card)
     protected CardView serverCard;
 
     @Override
@@ -60,8 +60,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         ButterKnife.bind(this);
         setupViews();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+        }
     }
 
     private void setupViews() {
@@ -103,6 +104,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.bluetooth_next_page:
             case R.id.enable_bluetooth_button:
+                if (!BluetoothUtil.hasBluetoothAdapter())
+                    setupFinished();
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
                 break;

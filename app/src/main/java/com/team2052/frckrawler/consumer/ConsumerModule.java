@@ -19,4 +19,9 @@ public class ConsumerModule {
     public BaseScoutDataConsumer provideBaseScoutDataConsumer() {
         return new BaseScoutDataConsumer();
     }
+
+    @Provides
+    public ServerFragmentConsumer provideServerFragmentConsumer(){
+        return new ServerFragmentConsumer();
+    }
 }

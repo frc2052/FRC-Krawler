@@ -32,11 +32,11 @@ import org.greenrobot.eventbus.Subscribe;
 /**
  * Created by Adam on 11/24/2015.
  */
-public class ScoutFragment extends Fragment implements View.OnClickListener {
+public class ScoutHomeFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_ENABLE_BT = 1;
     DBManager dbManager;
-    ScoutSyncHandler scoutSyncHandler;
-    View syncView;
+    private ScoutSyncHandler scoutSyncHandler;
+    private View syncView;
     private FragmentComponent mComponent;
     private Event mEvent;
     private View syncButton, syncProgressBar;
@@ -62,7 +62,7 @@ public class ScoutFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_scout_main, null, false);
+        return inflater.inflate(R.layout.fragment_scout_home, null, false);
     }
 
     @Override

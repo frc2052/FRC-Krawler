@@ -16,14 +16,26 @@ import de.greenrobot.dao.internal.DaoConfig;
 public class TeamDao extends AbstractDao<Team, Long> {
 
     public static final String TABLENAME = "TEAM";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity Team.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Number = new Property(0, Long.class, "number", true, "NUMBER");
+        public final static Property Teamkey = new Property(1, String.class, "teamkey", false, "TEAMKEY");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Data = new Property(3, String.class, "data", false, "DATA");
+    }
 
     ;
+
+    private DaoSession daoSession;
+
 
     public TeamDao(DaoConfig config) {
         super(config);
     }
-
 
     public TeamDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
@@ -144,17 +156,6 @@ public class TeamDao extends AbstractDao<Team, Long> {
     @Override
     protected boolean isEntityUpdateable() {
         return true;
-    }
-
-    /**
-     * Properties of entity Team.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties {
-        public final static Property Number = new Property(0, Long.class, "number", true, "NUMBER");
-        public final static Property Teamkey = new Property(1, String.class, "teamkey", false, "TEAMKEY");
-        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
-        public final static Property Data = new Property(3, String.class, "data", false, "DATA");
     }
 
 }

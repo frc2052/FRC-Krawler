@@ -22,11 +22,26 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class MetricDao extends AbstractDao<Metric, Long> {
 
     public static final String TABLENAME = "METRIC";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity Metric.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
+        public final static Property Category = new Property(2, Integer.class, "category", false, "CATEGORY");
+        public final static Property Type = new Property(3, Integer.class, "type", false, "TYPE");
+        public final static Property Data = new Property(4, String.class, "data", false, "DATA");
+        public final static Property Game_id = new Property(5, long.class, "game_id", false, "GAME_ID");
+        public final static Property Enabled = new Property(6, Boolean.class, "enabled", false, "ENABLED");
+    }
 
     ;
+
+    private DaoSession daoSession;
+
     private Query<Metric> game_MetricListQuery;
-    private String selectDeep;
 
     public MetricDao(DaoConfig config) {
         super(config);
@@ -189,6 +204,8 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
@@ -275,26 +292,13 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
     public List<Metric> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity Metric.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Category = new Property(2, Integer.class, "category", false, "CATEGORY");
-        public final static Property Type = new Property(3, Integer.class, "type", false, "TYPE");
-        public final static Property Data = new Property(4, String.class, "data", false, "DATA");
-        public final static Property Game_id = new Property(5, long.class, "game_id", false, "GAME_ID");
-        public final static Property Enabled = new Property(6, Boolean.class, "enabled", false, "ENABLED");
     }
 
 }

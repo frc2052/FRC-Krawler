@@ -17,18 +17,18 @@ import com.team2052.frckrawler.views.metric.MetricWidget;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by Adam on 5/4/2016.
  */
 public class BaseScoutDataConsumer extends DataConsumer<BaseScoutData> {
-    @Bind(R.id.comments)
+    @BindView(R.id.comments)
     public TextInputLayout mComments;
-    @Bind(R.id.robot)
+    @BindView(R.id.robot)
     public Spinner mSpinner;
-    @Bind(R.id.metric_widget_list)
+    @BindView(R.id.metric_widget_list)
     public LinearLayout mMetricList;
 
     private List<Robot> robots;
@@ -55,7 +55,7 @@ public class BaseScoutDataConsumer extends DataConsumer<BaseScoutData> {
         }
 
         setValues(data.getMetricValues());
-        if(mComments.getEditText() != null){
+        if (mComments.getEditText() != null) {
             mComments.getEditText().setText(data.getComment());
         }
     }
@@ -85,8 +85,8 @@ public class BaseScoutDataConsumer extends DataConsumer<BaseScoutData> {
         }
     }
 
-    public String getComment(){
-        if(mComments == null || mComments.getEditText() == null) {
+    public String getComment() {
+        if (mComments == null || mComments.getEditText() == null) {
             return "";
         } else {
             return mComments.getEditText().getText().toString();
@@ -95,7 +95,7 @@ public class BaseScoutDataConsumer extends DataConsumer<BaseScoutData> {
 
     @Nullable
     public Robot getSelectedRobot() {
-        if(robots == null)
+        if (robots == null)
             return null;
         return robots.get(mSpinner.getSelectedItemPosition());
     }

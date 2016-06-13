@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/title"
-            style="@style/TextHeader"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
@@ -28,7 +28,7 @@
 
         <TextView
             android:id="@+id/secondary"
-            style="@style/TextHeaderSub"
+            style="@style/TextAppearance.AppCompat.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"

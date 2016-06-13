@@ -39,7 +39,6 @@ import com.team2052.frckrawler.db.UserDao;
 import com.team2052.frckrawler.tba.JSON;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -197,13 +196,14 @@ public class DBManager {
             JsonObject data = JSON.getAsJsonObject(team.getData());
 
             if (data.has("rookie_year") && !data.get("rookie_year").isJsonNull()) {
-               info.put("Rookie Year", data.get("rookie_year").getAsString());
+                info.put("Rookie Year", data.get("rookie_year").getAsString());
             }
 
             if (data.has("long_name") && !data.get("long_name").isJsonNull()) {
-                info.put("Name",data.get("long_name").getAsString());
+                info.put("Name", data.get("long_name").getAsString());
             }
             subscriber.onNext(info);
+            subscriber.onCompleted();
         });
     }
 
@@ -216,6 +216,8 @@ public class DBManager {
             subscriber.onStart();
             List<Event> events = getEventsTable().getQueryBuilder().where(EventDao.Properties.Game_id.eq(game_id)).list();
             subscriber.onNext(events);
+
+            subscriber.onCompleted();
         });
     }
 
@@ -223,6 +225,8 @@ public class DBManager {
         return Observable.create(subscriber -> {
             List<Event> events = getEventsTable().loadAll();
             subscriber.onNext(events);
+
+            subscriber.onCompleted();
         });
     }
 
@@ -257,6 +261,8 @@ public class DBManager {
             }
             Collections.sort(robots, new RobotTeamNumberComparator());
             subscriber.onNext(robots);
+
+            subscriber.onCompleted();
         });
     }
 
@@ -264,6 +270,8 @@ public class DBManager {
         return Observable.create(subscriber -> {
             List<Game> games = getGamesTable().loadAll();
             subscriber.onNext(games);
+
+            subscriber.onCompleted();
         });
     }
 
@@ -274,6 +282,7 @@ public class DBManager {
                 where.where(MetricDao.Properties.Category.eq(category));
             List<Metric> metrics = where.list();
             subscriber.onNext(metrics);
+            subscriber.onCompleted();
         });
     }
 
@@ -281,6 +290,7 @@ public class DBManager {
         return Observable.create(subscriber -> {
             List<Team> teams = getTeamsTable().getQueryBuilder().orderAsc(TeamDao.Properties.Number).list();
             subscriber.onNext(teams);
+            subscriber.onCompleted();
         });
     }
 
@@ -289,6 +299,7 @@ public class DBManager {
             List<Match> matches = getMatchesTable().getQueryBuilder().where(MatchDao.Properties.Event_id.eq(event_id)).list();
             Collections.sort(matches, new MatchNumberComparator());
             subscriber.onNext(matches);
+            subscriber.onCompleted();
         });
     }
 
@@ -304,6 +315,7 @@ public class DBManager {
             info.put(resources.getString(R.string.game_info_num_of_pit_metrics), Integer.toString(getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.ROBOT_METRICS)));
 
             subscriber.onNext(info);
+            subscriber.onCompleted();
         });
     }
 
@@ -316,6 +328,7 @@ public class DBManager {
             info.put(resources.getString(R.string.event_info_num_of_pit_data), Integer.toString(getEventsTable().getPitData(event).size()));
             info.put(resources.getString(R.string.event_info_num_of_match_data), Integer.toString(getEventsTable().getMatchData(event).size()));
             subscriber.onNext(info);
+            subscriber.onCompleted();
         });
     }
 

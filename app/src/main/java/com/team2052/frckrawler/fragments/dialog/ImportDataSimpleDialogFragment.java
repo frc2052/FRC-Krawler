@@ -76,7 +76,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_import_simple, null);
-        AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder b = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
         b.setPositiveButton("Import", (dialog, which) -> {
             ImportEventDataDialog.newInstance(((ListElement) eventSpinner.getSelectedItem()).getKey(), mGame).show(ImportDataSimpleDialogFragment.this.getFragmentManager(), "importDialog");
         });

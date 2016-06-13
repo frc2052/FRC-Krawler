@@ -16,14 +16,24 @@ import de.greenrobot.dao.internal.DaoConfig;
 public class GameDao extends AbstractDao<Game, Long> {
 
     public static final String TABLENAME = "GAME";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity Game.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
+    }
 
     ;
+
+    private DaoSession daoSession;
+
 
     public GameDao(DaoConfig config) {
         super(config);
     }
-
 
     public GameDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
@@ -128,15 +138,6 @@ public class GameDao extends AbstractDao<Game, Long> {
     @Override
     protected boolean isEntityUpdateable() {
         return true;
-    }
-
-    /**
-     * Properties of entity Game.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
     }
 
 }

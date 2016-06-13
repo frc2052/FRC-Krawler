@@ -6,52 +6,64 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.HomeActivity;
-import com.team2052.frckrawler.bluetooth.server.events.ServerQuitEvent;
-import com.team2052.frckrawler.bluetooth.server.events.ServerStartEvent;
-import com.team2052.frckrawler.bluetooth.server.events.ServerStateChangeEvent;
-import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestChangeEvent;
-import com.team2052.frckrawler.bluetooth.server.events.ServerStateRequestEvent;
+import com.team2052.frckrawler.db.Event;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
+import rx.Observable;
 
 public class ServerService extends Service {
-    public static int SERVER_OPEN_ID = 10;
-    public static String TAG = "ServerService";
-    private ServerThread thread;
+    private static final String TAG = "ServerService";
+    private static int SERVER_OPEN_ID = 10;
+    private final IBinder mBinder = new ServerServiceBinder();
 
-    /**
-     * Any part of the application that wants to change the state of the server should use the
-     * EventBus and post the ServerStateRequestChangeEvent event to it
-     * <p>
-     * We carefully time the toggles so the thread doesn't cause any issues when destructing the BluetoothSocket
-     */
-    @Subscribe
-    public void onEvent(ServerStateRequestChangeEvent stateEvent) {
-        if (stateEvent.getRequestedState()) {
-            if (stateEvent.getEvent() != null && thread == null) {
-                //Start the server thread
-                thread = new ServerThread(this, stateEvent.getEvent());
-                thread.start();
-            }
-        } else {
-            if (thread != null)
-                thread.closeServer();
+    ServerThread serverThread = null;
+
+    public class ServerServiceBinder extends Binder {
+        public ServerService getService() {
+            return ServerService.this;
         }
-        EventBus.getDefault().post(new ServerStateChangeEvent(thread != null ? thread.getHostedEvent() : null, thread != null && thread.isOpen));
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    @Override
+    public void onDestroy() {
+        removeNotification();
+        stopServer();
+        Log.d(TAG, "onDestroy");
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_REDELIVER_INTENT;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    private void startServer(Event event) {
+        serverThread = new ServerThread(getApplicationContext(), event);
+        serverThread.start();
+        showNotification();
+    }
     /**
      * Shows the notification to the user
      */
-    public void showNotification() {
+    private void showNotification() {
         NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         m.notify(SERVER_OPEN_ID, makeNotification());
     }
@@ -79,56 +91,51 @@ public class ServerService extends Service {
     /**
      * Removes the notification
      */
-    public void removeNotification() {
+    private void removeNotification() {
         NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         m.cancel(SERVER_OPEN_ID);
     }
 
-    @Subscribe
-    public void onEvent(ServerStateRequestEvent event) {
-        EventBus.getDefault().post(new ServerStateChangeEvent(thread != null ? thread.getHostedEvent() : null, thread != null && thread.isOpen));
+    private void stopServer(){
+        if(isServerOn()){
+            serverThread.closeServer();
+            serverThread = null;
+        }
+        removeNotification();
     }
 
-    @Subscribe
-    public void onEvent(ServerQuitEvent event) {
-        removeNotification();
-        thread = null;
+    private boolean isServerOn() {
+        return serverThread != null;
+    }
+
+    public Observable<ServerStatus> changeServerStatus(Event event, boolean on){
+        return Observable.create(subscriber -> {
+            //Event is null, so we can assume we want to turn off the server
+            // If the server is on, and we want to turn it off then shut the server down if we want to turn it off
+            if(event == null || (isServerOn() && !on)){
+                stopServer();
+            } else {
+                startServer(event);
+            }
+            subscriber.onNext(new ServerStatus(event, isServerOn()));
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<ServerStatus> getServerStatus(){
+        return Observable.create(subscriber -> {
+            if(serverThread != null) {
+                subscriber.onNext(new ServerStatus(serverThread.getHostedEvent(), isServerOn()));
+            } else {
+                subscriber.onNext(new ServerStatus(null, isServerOn()));
+            }
+            subscriber.onCompleted();
+        });
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        stopSelf();
-    }
-
-    @Subscribe
-    public void onEvent(ServerStartEvent event) {
-        showNotification();
-    }
-
-    @Override
-    public void onCreate() {
-        Log.d(TAG, "onCreate");
-        thread = null;
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_REDELIVER_INTENT;
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d(TAG, "onDestroy");
-        if (thread != null)
-            thread.closeServer();
+        stopServer();
         removeNotification();
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 }

@@ -22,12 +22,24 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class RobotEventDao extends AbstractDao<RobotEvent, Long> {
 
     public static final String TABLENAME = "ROBOT_EVENT";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity RobotEvent.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Robot_id = new Property(1, long.class, "robot_id", false, "ROBOT_ID");
+        public final static Property Event_id = new Property(2, long.class, "event_id", false, "EVENT_ID");
+        public final static Property Data = new Property(3, String.class, "data", false, "DATA");
+    }
 
     ;
+
+    private DaoSession daoSession;
+
     private Query<RobotEvent> event_RobotEventListQuery;
     private Query<RobotEvent> robot_RobotEventListQuery;
-    private String selectDeep;
 
     public RobotEventDao(DaoConfig config) {
         super(config);
@@ -178,6 +190,8 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
@@ -273,23 +287,13 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long> {
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
     public List<RobotEvent> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity RobotEvent.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Robot_id = new Property(1, long.class, "robot_id", false, "ROBOT_ID");
-        public final static Property Event_id = new Property(2, long.class, "event_id", false, "EVENT_ID");
-        public final static Property Data = new Property(3, String.class, "data", false, "DATA");
     }
 
 }

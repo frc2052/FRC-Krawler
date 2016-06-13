@@ -22,14 +22,31 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class MatchDataDao extends AbstractDao<MatchData, Long> {
 
     public static final String TABLENAME = "MATCH_DATA";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity MatchData.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Event_id = new Property(1, long.class, "event_id", false, "EVENT_ID");
+        public final static Property Robot_id = new Property(2, long.class, "robot_id", false, "ROBOT_ID");
+        public final static Property User_id = new Property(3, Long.class, "user_id", false, "USER_ID");
+        public final static Property Metric_id = new Property(4, long.class, "metric_id", false, "METRIC_ID");
+        public final static Property Match_type = new Property(5, int.class, "match_type", false, "MATCH_TYPE");
+        public final static Property Match_number = new Property(6, long.class, "match_number", false, "MATCH_NUMBER");
+        public final static Property Last_updated = new Property(7, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
+        public final static Property Data = new Property(8, String.class, "data", false, "DATA");
+    }
 
     ;
+
+    private DaoSession daoSession;
+
     private Query<MatchData> event_MatchDataListQuery;
     private Query<MatchData> robot_MatchDataListQuery;
     private Query<MatchData> metric_MatchDataListQuery;
     private Query<MatchData> user_MatchDataListQuery;
-    private String selectDeep;
 
     public MatchDataDao(DaoConfig config) {
         super(config);
@@ -240,6 +257,8 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
@@ -351,28 +370,13 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
     public List<MatchData> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity MatchData.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Event_id = new Property(1, long.class, "event_id", false, "EVENT_ID");
-        public final static Property Robot_id = new Property(2, long.class, "robot_id", false, "ROBOT_ID");
-        public final static Property User_id = new Property(3, Long.class, "user_id", false, "USER_ID");
-        public final static Property Metric_id = new Property(4, long.class, "metric_id", false, "METRIC_ID");
-        public final static Property Match_type = new Property(5, int.class, "match_type", false, "MATCH_TYPE");
-        public final static Property Match_number = new Property(6, long.class, "match_number", false, "MATCH_NUMBER");
-        public final static Property Last_updated = new Property(7, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
-        public final static Property Data = new Property(8, String.class, "data", false, "DATA");
     }
 
 }

@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.widget.EditText;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.User;
 import com.team2052.frckrawler.listeners.RefreshListener;
@@ -35,7 +36,7 @@ public class EditUserDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
         final EditText editText = new EditText(getActivity());
         editText.setHint("User Name");
         editText.setText(mUser.getName());

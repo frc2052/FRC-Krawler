@@ -70,7 +70,7 @@ public class GameInfoFragment extends ListViewFragment<Map<String, String>, KeyV
         return super.onOptionsItemSelected(item);
     }
 
-    public AlertDialog buildDeleteDialog() {
+    private AlertDialog buildDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Delete Game?");
         builder.setMessage("Are you sure you want to delete this game?");
@@ -81,7 +81,7 @@ public class GameInfoFragment extends ListViewFragment<Map<String, String>, KeyV
         return builder.create();
     }
 
-    public AlertDialog buildEditDialog() {
+    private AlertDialog buildEditDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         AppCompatEditText name = new AppCompatEditText(getActivity());
         name.setText(mGame.getName());

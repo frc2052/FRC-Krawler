@@ -20,7 +20,7 @@ import com.team2052.frckrawler.tba.HTTP;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.tba.TBA;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
  * @since 3/7/2015.
  */
 public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogFragment implements DialogInterface.OnClickListener {
-    @Bind(R.id.team_number)
+    @BindView(R.id.team_number)
     EditText add_team;
     private Event mEvent;
 
@@ -51,7 +51,7 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_team, null);
         ButterKnife.bind(this, view);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
         builder.setTitle("Add Team");
         builder.setPositiveButton("Add", this);
         builder.setNegativeButton("Cancel", this);

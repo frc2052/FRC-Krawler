@@ -8,7 +8,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.google.common.collect.Lists;
 import com.team2052.frckrawler.R;
@@ -30,8 +29,6 @@ import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Adam on 11/26/2015.
@@ -96,7 +93,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             }
             Collections.sort(robots, new RobotTeamNumberComparator());
 
-            if(robot != null) {
+            if (robot != null) {
                 //Get Metric data
                 final int match_num = getMatchNumber();
                 final int game_type = mMatchType;
@@ -130,7 +127,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v =  inflater.inflate(R.layout.fragment_scouting_match, null, false);
+        View v = inflater.inflate(R.layout.fragment_scouting_match, null, false);
         consumer.setRootView(v);
         subscriber.bindViewsIfNeeded();
         return v;

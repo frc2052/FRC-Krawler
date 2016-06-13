@@ -23,13 +23,12 @@ import com.team2052.frckrawler.subscribers.BaseScoutData;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.SnackbarUtil;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.Collections;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
-
-import org.greenrobot.eventbus.EventBus;
-
 import rx.Observable;
 
 /**

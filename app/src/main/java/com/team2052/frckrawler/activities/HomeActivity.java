@@ -12,19 +12,20 @@ import android.view.Menu;
 
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.bluetooth.server.ServerService;
 import com.team2052.frckrawler.fragments.GamesFragment;
-import com.team2052.frckrawler.fragments.ScoutFragment;
+import com.team2052.frckrawler.fragments.ScoutHomeFragment;
 import com.team2052.frckrawler.fragments.ServerFragment;
 import com.team2052.frckrawler.fragments.TeamsFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends DatabaseActivity {
     private static final String REQUESTED_MODE = "requested_mode";
     private static final String STATE_SELECTED_NAV_ID = "selected_navigation_drawer_position";
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
     private int mCurrentSelectedNavigationItemId;
     private boolean mFromSavedInstanceState = false;
@@ -53,10 +54,11 @@ public class HomeActivity extends DatabaseActivity {
         Fragment fragment = null;
         switch (id) {
             case R.id.nav_item_scout:
-                fragment = new ScoutFragment();
+                fragment = new ScoutHomeFragment();
                 break;
             case R.id.nav_item_server:
                 fragment = new ServerFragment();
+                fragment.setRetainInstance(true);
                 break;
             case R.id.nav_item_teams:
                 fragment = new TeamsFragment();
@@ -106,6 +108,9 @@ public class HomeActivity extends DatabaseActivity {
         } else {
             switchToModeForId(initNavId);
         }
+
+        //Start the service so it keeps in process
+        getApplicationContext().startService(new Intent(this, ServerService.class));
     }
 
     @Override

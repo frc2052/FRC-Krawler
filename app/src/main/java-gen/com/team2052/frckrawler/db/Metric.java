@@ -86,7 +86,8 @@ public class Metric implements java.io.Serializable {
         this.category = category;
     }
 
-    public @MetricHelper.MetricType Integer getType() {
+    @MetricHelper.MetricType
+    public Integer getType() {
         return type;
     }
 

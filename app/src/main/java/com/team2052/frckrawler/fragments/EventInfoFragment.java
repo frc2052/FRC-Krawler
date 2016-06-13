@@ -67,7 +67,7 @@ public class EventInfoFragment extends ListViewFragment<Map<String, String>, Key
         return super.onOptionsItemSelected(item);
     }
 
-    public AlertDialog buildDeleteDialog() {
+    private AlertDialog buildDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Delete Event?");
         builder.setMessage("Are you sure you want to delete this event?");
@@ -78,7 +78,7 @@ public class EventInfoFragment extends ListViewFragment<Map<String, String>, Key
         return builder.create();
     }
 
-    public AlertDialog buildEditDialog() {
+    private AlertDialog buildEditDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         AppCompatEditText name = new AppCompatEditText(getActivity());
         name.setText(mEvent.getName());

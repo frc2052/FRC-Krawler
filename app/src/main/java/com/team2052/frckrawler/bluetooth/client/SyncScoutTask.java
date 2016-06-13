@@ -15,12 +15,12 @@ import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.bluetooth.server.ServerPackage;
 import com.team2052.frckrawler.database.DBManager;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.UUID;
-
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * @author Adam, Charlie

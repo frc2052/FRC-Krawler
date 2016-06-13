@@ -20,7 +20,7 @@ public class AddUserDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_add_user, null);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
         builder.setTitle("Add User");
         builder.setView(view);
         builder.setPositiveButton("Add", (dialog, which) -> {

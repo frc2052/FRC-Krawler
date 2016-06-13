@@ -17,21 +17,6 @@ import de.greenrobot.dao.identityscope.IdentityScopeType;
 public class DaoMaster extends AbstractDaoMaster {
     public static final int SCHEMA_VERSION = 2;
 
-    public DaoMaster(SQLiteDatabase db) {
-        super(db, SCHEMA_VERSION);
-        registerDaoClass(GameDao.class);
-        registerDaoClass(EventDao.class);
-        registerDaoClass(TeamDao.class);
-        registerDaoClass(UserDao.class);
-        registerDaoClass(MetricDao.class);
-        registerDaoClass(MatchDao.class);
-        registerDaoClass(MatchDataDao.class);
-        registerDaoClass(MatchCommentDao.class);
-        registerDaoClass(RobotDao.class);
-        registerDaoClass(RobotEventDao.class);
-        registerDaoClass(PitDataDao.class);
-    }
-
     /**
      * Creates underlying database table using DAOs.
      */
@@ -66,14 +51,6 @@ public class DaoMaster extends AbstractDaoMaster {
         PitDataDao.dropTable(db, ifExists);
     }
 
-    public DaoSession newSession() {
-        return new DaoSession(db, IdentityScopeType.Session, daoConfigMap);
-    }
-
-    public DaoSession newSession(IdentityScopeType type) {
-        return new DaoSession(db, type, daoConfigMap);
-    }
-
     public static abstract class OpenHelper extends SQLiteOpenHelper {
 
         public OpenHelper(Context context, String name, CursorFactory factory) {
@@ -101,6 +78,29 @@ public class DaoMaster extends AbstractDaoMaster {
             dropAllTables(db, true);
             onCreate(db);
         }
+    }
+
+    public DaoMaster(SQLiteDatabase db) {
+        super(db, SCHEMA_VERSION);
+        registerDaoClass(GameDao.class);
+        registerDaoClass(EventDao.class);
+        registerDaoClass(TeamDao.class);
+        registerDaoClass(UserDao.class);
+        registerDaoClass(MetricDao.class);
+        registerDaoClass(MatchDao.class);
+        registerDaoClass(MatchDataDao.class);
+        registerDaoClass(MatchCommentDao.class);
+        registerDaoClass(RobotDao.class);
+        registerDaoClass(RobotEventDao.class);
+        registerDaoClass(PitDataDao.class);
+    }
+
+    public DaoSession newSession() {
+        return new DaoSession(db, IdentityScopeType.Session, daoConfigMap);
+    }
+
+    public DaoSession newSession(IdentityScopeType type) {
+        return new DaoSession(db, type, daoConfigMap);
     }
 
 }

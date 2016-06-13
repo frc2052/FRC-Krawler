@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 
-import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.database.ExportUtil;
 import com.team2052.frckrawler.db.Event;

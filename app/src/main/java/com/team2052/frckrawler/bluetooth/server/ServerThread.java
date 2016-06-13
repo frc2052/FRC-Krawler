@@ -16,12 +16,12 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.util.BluetoothUtil;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.UUID;
-
-import org.greenrobot.eventbus.EventBus;
 
 public class ServerThread extends Thread {
 
@@ -113,11 +113,6 @@ public class ServerThread extends Thread {
                                         e.printStackTrace();
                                     }
 
-                                    if (serverPackage != null) {
-                                        Log.d(TAG, "Saving Data from Scout");
-                                        serverPackage.save(mDbManager);
-                                    }
-
                                     try {
                                         Log.d(TAG, "Sending Data to Scout");
                                         toScoutStream.writeInt(BluetoothInfo.OK);
@@ -126,6 +121,11 @@ public class ServerThread extends Thread {
                                         handler.onSyncCancel();
                                     } catch (IOException e) {
                                         e.printStackTrace();
+                                    }
+
+                                    if (serverPackage != null) {
+                                        Log.d(TAG, "Saving Data from Scout");
+                                        serverPackage.save(mDbManager);
                                     }
                                 }
                             }

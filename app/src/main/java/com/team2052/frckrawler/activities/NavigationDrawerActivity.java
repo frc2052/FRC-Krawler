@@ -1,7 +1,5 @@
 package com.team2052.frckrawler.activities;
 
-import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
@@ -12,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.bluetooth.server.ServerService;
 import com.team2052.frckrawler.fragments.NavigationDrawerFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 import com.team2052.frckrawler.views.ScrimInsetsFrameLayout;
@@ -58,8 +55,6 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Navig
         mContentView = (FrameLayout) findViewById(R.id.content);
 
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
-        Intent serverIntent = new Intent(this, ServerService.class);
-        startService(serverIntent);
     }
 
     @Override
@@ -71,12 +66,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Navig
 
         mNavDrawerFragment.setUp(R.id.navigation_drawer_fragment_container, (DrawerLayout) findViewById(R.id.nav_drawer_layout), mEncourageLearning, mUseActionBarToggle);
 
-        drawerContainer.setOnInsetsCallback(new ScrimInsetsFrameLayout.OnInsetsCallback() {
-            @Override
-            public void onInsetsChanged(Rect insets) {
-                mNavDrawerFragment.onInsetsChanged(insets);
-            }
-        });
+        drawerContainer.setOnInsetsCallback(insets -> mNavDrawerFragment.onInsetsChanged(insets));
         // Restore the state of the navigation drawer on rotation changes
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(IS_DRAWER_OPEN)) {

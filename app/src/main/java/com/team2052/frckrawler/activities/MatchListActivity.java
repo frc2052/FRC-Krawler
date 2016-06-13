@@ -20,16 +20,16 @@ import com.team2052.frckrawler.listitems.items.MatchListItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * @author Adam
  */
 public class MatchListActivity extends BaseActivity {
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.list)
+    @BindView(R.id.list)
     ListView mListView;
     private Event mEvent;
     private ListViewAdapter mAdapter;

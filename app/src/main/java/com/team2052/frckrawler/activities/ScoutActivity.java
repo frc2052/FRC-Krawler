@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 
 import com.team2052.frckrawler.R;
@@ -12,7 +13,7 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -25,7 +26,7 @@ public class ScoutActivity extends DatabaseActivity {
     public static final int PRACTICE_MATCH_SCOUT_TYPE = 2;
     private static final String SCOUT_TYPE_EXTRA = "com.team2052.frckrawler.SCOUT_TYPE_EXTRA";
     private static final String EVENT_ID_EXTRA = "com.team2052.frckrawler.EVENT_ID_EXTRA";
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
     private Fragment fragment;
 
@@ -45,6 +46,8 @@ public class ScoutActivity extends DatabaseActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+        
+        ViewCompat.setElevation(toolbar, getResources().getDimension(R.dimen.toolbar_elevation));
 
         final int scout_type = getIntent().getIntExtra(SCOUT_TYPE_EXTRA, 0);
 

@@ -20,7 +20,7 @@
 
             <TextView
                 android:id="@android:id/text1"
-                style="@style/TextHeader"
+                style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

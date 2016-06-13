@@ -5,7 +5,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
@@ -43,7 +42,7 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
             addPreferencesFromResource(R.xml.preferences);
             int numEvents = DBManager.getInstance(getActivity()).getEventsTable().getAllEvents().size();
 
-            if(numEvents < 1){
+            if (numEvents < 1) {
                 findPreference(EXPORT_PREFERENCE_KEY).setEnabled(false);
             }
 

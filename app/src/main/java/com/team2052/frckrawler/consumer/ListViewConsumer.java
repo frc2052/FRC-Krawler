@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.consumer;
 
-import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.widget.ImageView;

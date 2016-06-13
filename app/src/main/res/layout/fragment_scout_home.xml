@@ -28,7 +28,7 @@
 
                     <TextView
                         android:id="@+id/scout_title"
-                        style="@style/TextHeader"
+                        style="@style/Base.TextAppearance.AppCompat.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -46,17 +46,20 @@
 
                         <Button
                             android:id="@+id/scout_match_button"
-                            style="@style/AppCompatButtonPrimaryStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:text="@string/match_scout" />
 
                         <Button
                             android:id="@+id/scout_pit_button"
-                            style="@style/AppCompatButtonPrimaryStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:text="@string/pit_scout" />
 
                         <Button
                             android:id="@+id/scout_practice_button"
-                            style="@style/AppCompatButtonPrimaryStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:text="@string/practice_match_scout" />
 
                     </LinearLayout>
@@ -78,7 +81,7 @@
 
                     <TextView
                         android:id="@+id/text_sync"
-                        style="@style/TextHeader"
+                        style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"

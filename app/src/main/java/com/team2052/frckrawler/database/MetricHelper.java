@@ -213,11 +213,11 @@ public class MetricHelper {
             data.add("values", jsonElements);
         }
 
-        public void setDataMinMaxInc(int min, int max, Optional<Integer> inc) {
+        public void setDataMinMaxInc(int min, int max, Integer inc) {
             data.addProperty("min", min);
             data.addProperty("max", max);
-            if (inc.isPresent())
-                data.addProperty("inc", inc.get());
+            if (inc != null)
+                data.addProperty("inc", inc);
         }
 
         public void setDescription(String description) {

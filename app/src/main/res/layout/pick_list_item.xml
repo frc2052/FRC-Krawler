@@ -13,7 +13,7 @@
 
     <TextView
         android:id="@+id/pick_list_item_team"
-        style="@style/TextHeader"
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

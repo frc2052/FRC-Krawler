@@ -22,12 +22,27 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
 
     public static final String TABLENAME = "MATCH_COMMENT";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity MatchComment.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Match_number = new Property(1, Long.class, "match_number", false, "MATCH_NUMBER");
+        public final static Property Match_type = new Property(2, Integer.class, "match_type", false, "MATCH_TYPE");
+        public final static Property Robot_id = new Property(3, Long.class, "robot_id", false, "ROBOT_ID");
+        public final static Property Event_id = new Property(4, Long.class, "event_id", false, "EVENT_ID");
+        public final static Property Comment = new Property(5, String.class, "comment", false, "COMMENT");
+        public final static Property Last_updated = new Property(6, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
+    }
 
     ;
+
+    private DaoSession daoSession;
+
     private Query<MatchComment> event_MatchCommentListQuery;
     private Query<MatchComment> robot_MatchCommentListQuery;
-    private String selectDeep;
 
     public MatchCommentDao(DaoConfig config) {
         super(config);
@@ -210,6 +225,8 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
@@ -301,26 +318,13 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
     public List<MatchComment> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity MatchComment.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Match_number = new Property(1, Long.class, "match_number", false, "MATCH_NUMBER");
-        public final static Property Match_type = new Property(2, Integer.class, "match_type", false, "MATCH_TYPE");
-        public final static Property Robot_id = new Property(3, Long.class, "robot_id", false, "ROBOT_ID");
-        public final static Property Event_id = new Property(4, Long.class, "event_id", false, "EVENT_ID");
-        public final static Property Comment = new Property(5, String.class, "comment", false, "COMMENT");
-        public final static Property Last_updated = new Property(6, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
     }
 
 }

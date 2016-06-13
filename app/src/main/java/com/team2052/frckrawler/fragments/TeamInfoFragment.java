@@ -1,13 +1,8 @@
 package com.team2052.frckrawler.fragments;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
-import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.subscribers.KeyValueListSubscriber;
 
 import java.util.Map;

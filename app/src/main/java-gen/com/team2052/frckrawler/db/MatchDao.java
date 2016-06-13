@@ -22,11 +22,25 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class MatchDao extends AbstractDao<Match, Long> {
 
     public static final String TABLENAME = "MATCH";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity Match.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Match_key = new Property(1, String.class, "match_key", false, "MATCH_KEY");
+        public final static Property Match_type = new Property(2, String.class, "match_type", false, "MATCH_TYPE");
+        public final static Property Match_number = new Property(3, Integer.class, "match_number", false, "MATCH_NUMBER");
+        public final static Property Event_id = new Property(4, long.class, "event_id", false, "EVENT_ID");
+        public final static Property Data = new Property(5, String.class, "data", false, "DATA");
+    }
 
     ;
+
+    private DaoSession daoSession;
+
     private Query<Match> event_MatchListQuery;
-    private String selectDeep;
 
     public MatchDao(DaoConfig config) {
         super(config);
@@ -181,6 +195,8 @@ public class MatchDao extends AbstractDao<Match, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
@@ -267,25 +283,13 @@ public class MatchDao extends AbstractDao<Match, Long> {
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
     public List<Match> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity Match.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Match_key = new Property(1, String.class, "match_key", false, "MATCH_KEY");
-        public final static Property Match_type = new Property(2, String.class, "match_type", false, "MATCH_TYPE");
-        public final static Property Match_number = new Property(3, Integer.class, "match_number", false, "MATCH_NUMBER");
-        public final static Property Event_id = new Property(4, long.class, "event_id", false, "EVENT_ID");
-        public final static Property Data = new Property(5, String.class, "data", false, "DATA");
     }
 
 }

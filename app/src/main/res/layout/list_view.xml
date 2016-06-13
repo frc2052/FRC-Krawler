@@ -20,12 +20,13 @@
         <ImageView
             android:id="@+id/no_data_image"
             android:layout_width="100dp"
+            android:tint="@color/primary_light"
             android:layout_marginBottom="16dp"
             android:layout_height="100dp" />
 
         <TextView
             android:id="@+id/no_data_title"
-            style="@style/TextTitle"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nothing to be shown" />

@@ -18,7 +18,7 @@ import com.team2052.frckrawler.listeners.RefreshListener;
 
 import java.util.Date;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
  * @since 12/23/2014.
  */
 public class AddEventDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
-    @Bind(R.id.name)
+    @BindView(R.id.name)
     EditText name;
     private Game mGame;
 
@@ -49,7 +49,7 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_event, null);
         ButterKnife.bind(this, view);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
         builder.setTitle("Add Event");
         builder.setPositiveButton("Add", this);
         builder.setNegativeButton("Cancel", this);

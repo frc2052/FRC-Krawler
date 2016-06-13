@@ -22,14 +22,29 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class PitDataDao extends AbstractDao<PitData, Long> {
 
     public static final String TABLENAME = "PIT_DATA";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity PitData.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Robot_id = new Property(1, long.class, "robot_id", false, "ROBOT_ID");
+        public final static Property Metric_id = new Property(2, long.class, "metric_id", false, "METRIC_ID");
+        public final static Property Event_id = new Property(3, long.class, "event_id", false, "EVENT_ID");
+        public final static Property User_id = new Property(4, Long.class, "user_id", false, "USER_ID");
+        public final static Property Data = new Property(5, String.class, "data", false, "DATA");
+        public final static Property Last_updated = new Property(6, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
+    }
 
     ;
+
+    private DaoSession daoSession;
+
     private Query<PitData> event_PitDataListQuery;
     private Query<PitData> robot_PitDataListQuery;
     private Query<PitData> metric_PitDataListQuery;
     private Query<PitData> user_PitDataListQuery;
-    private String selectDeep;
 
     public PitDataDao(DaoConfig config) {
         super(config);
@@ -232,6 +247,8 @@ public class PitDataDao extends AbstractDao<PitData, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
@@ -343,26 +360,13 @@ public class PitDataDao extends AbstractDao<PitData, Long> {
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
     public List<PitData> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity PitData.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Robot_id = new Property(1, long.class, "robot_id", false, "ROBOT_ID");
-        public final static Property Metric_id = new Property(2, long.class, "metric_id", false, "METRIC_ID");
-        public final static Property Event_id = new Property(3, long.class, "event_id", false, "EVENT_ID");
-        public final static Property User_id = new Property(4, Long.class, "user_id", false, "USER_ID");
-        public final static Property Data = new Property(5, String.class, "data", false, "DATA");
-        public final static Property Last_updated = new Property(6, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
     }
 
 }

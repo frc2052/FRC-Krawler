@@ -22,12 +22,26 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class RobotDao extends AbstractDao<Robot, Long> {
 
     public static final String TABLENAME = "ROBOT";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity Robot.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Team_id = new Property(1, long.class, "team_id", false, "TEAM_ID");
+        public final static Property Game_id = new Property(2, long.class, "game_id", false, "GAME_ID");
+        public final static Property Data = new Property(3, String.class, "data", false, "DATA");
+        public final static Property Comments = new Property(4, String.class, "comments", false, "COMMENTS");
+        public final static Property Last_updated = new Property(5, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
+    }
 
     ;
+
+    private DaoSession daoSession;
+
     private Query<Robot> game_RobotListQuery;
     private Query<Robot> team_RobotListQuery;
-    private String selectDeep;
 
     public RobotDao(DaoConfig config) {
         super(config);
@@ -194,6 +208,8 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
@@ -289,25 +305,13 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
     public List<Robot> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity Robot.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Team_id = new Property(1, long.class, "team_id", false, "TEAM_ID");
-        public final static Property Game_id = new Property(2, long.class, "game_id", false, "GAME_ID");
-        public final static Property Data = new Property(3, String.class, "data", false, "DATA");
-        public final static Property Comments = new Property(4, String.class, "comments", false, "COMMENTS");
-        public final static Property Last_updated = new Property(5, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
     }
 
 }

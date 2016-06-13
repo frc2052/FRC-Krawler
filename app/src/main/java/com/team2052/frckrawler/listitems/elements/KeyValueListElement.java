@@ -23,10 +23,9 @@ public class KeyValueListElement extends ListElement {
 
     @Override
     public View getView(Context c, LayoutInflater inflater, View convertView) {
-        View v = inflater.inflate(R.layout.key_value_list_item, null);
-        ((TextView)v.findViewById(R.id.key_text_view)).setText(entry.getKey());
-
-        ((TextView)v.findViewById(R.id.value_text_view)).setText(entry.getValue());
+        View v = inflater.inflate(R.layout.key_value_list_item, null, false);
+        ((TextView) v.findViewById(R.id.key_text_view)).setText(entry.getKey());
+        ((TextView) v.findViewById(R.id.value_text_view)).setText(entry.getValue());
         return v;
     }
 }

@@ -40,13 +40,14 @@ public abstract class BaseDataSubscriber<T, V> implements Observer<T> {
     public void bindData() {
         AndroidSchedulers.mainThread().createWorker().schedule(() -> {
             if (mConsumer != null) {
+                bindViewsIfNeeded();
                 mConsumer.updateData(dataToBind);
             }
         });
     }
 
-    public void bindViewsIfNeeded(){
-        if(!hasBoundViews && mConsumer != null){
+    public void bindViewsIfNeeded() {
+        if (!hasBoundViews && mConsumer != null) {
             mConsumer.bindViews();
             hasBoundViews = true;
         }

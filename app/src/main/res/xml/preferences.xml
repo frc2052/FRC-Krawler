@@ -5,7 +5,7 @@
         <Preference
             android:summary="Export a CSV/Excel formatted document where all the data is averaged based off the compile weight"
             android:title="Export CSV"
-            android:key="compile_export_preference"/>
+            android:key="compile_export_preference" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Compile Options">

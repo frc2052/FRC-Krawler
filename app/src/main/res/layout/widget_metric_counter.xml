@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/title"
-            style="@style/TextHeader"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -44,7 +44,7 @@
 
             <TextView
                 android:id="@+id/value"
-                style="@style/TextHeader"
+                style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"

@@ -22,11 +22,25 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class EventDao extends AbstractDao<Event, Long> {
 
     public static final String TABLENAME = "EVENT";
-    private DaoSession daoSession;
+
+    /**
+     * Properties of entity Event.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Fmsid = new Property(1, String.class, "fmsid", false, "FMSID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Game_id = new Property(3, long.class, "game_id", false, "GAME_ID");
+        public final static Property Data = new Property(4, String.class, "data", false, "DATA");
+        public final static Property Date = new Property(5, java.util.Date.class, "date", false, "DATE");
+    }
 
     ;
+
+    private DaoSession daoSession;
+
     private Query<Event> game_EventListQuery;
-    private String selectDeep;
 
     public EventDao(DaoConfig config) {
         super(config);
@@ -181,6 +195,8 @@ public class EventDao extends AbstractDao<Event, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
     protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
@@ -267,25 +283,13 @@ public class EventDao extends AbstractDao<Event, Long> {
         }
     }
 
+
     /**
      * A raw-style query where you can pass any WHERE clause and arguments.
      */
     public List<Event> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
-    }
-
-    /**
-     * Properties of entity Event.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Fmsid = new Property(1, String.class, "fmsid", false, "FMSID");
-        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
-        public final static Property Game_id = new Property(3, long.class, "game_id", false, "GAME_ID");
-        public final static Property Data = new Property(4, String.class, "data", false, "DATA");
-        public final static Property Date = new Property(5, java.util.Date.class, "date", false, "DATE");
     }
 
 }

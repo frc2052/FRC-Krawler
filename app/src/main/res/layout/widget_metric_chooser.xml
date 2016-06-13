@@ -18,13 +18,12 @@
 
         <TextView
             android:id="@+id/name"
-            style="@style/TextHeader"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/choooserList"
-            android:singleLine="false"
             android:text="Chooser" />
 
         <Spinner

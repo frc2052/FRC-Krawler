@@ -11,14 +11,12 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.common.base.Optional;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricHelper.MetricFactory;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.views.ListEditor;
 
 /**
@@ -61,7 +59,7 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder b = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
         b.setTitle("Add Metric");
         b.setView(initViews());
         b.setPositiveButton("Add", (dialog, which) -> {
@@ -100,7 +98,7 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
                     metricFactory.setDataMinMaxInc(
                             Integer.parseInt(mMinimum.getText().toString()),
                             Integer.parseInt(mMaximum.getText().toString()),
-                            Optional.of(Integer.parseInt(mIncrementation.getText().toString())));
+                            Integer.parseInt(mIncrementation.getText().toString()));
                 } catch (NumberFormatException e) {
                     Toast.makeText(getActivity(), "Could not create add_button. Make sure you " + "have filled out all of the necessary fields.", Toast.LENGTH_SHORT).show();
                     return;
@@ -111,7 +109,7 @@ public class AddMetricDialogFragment extends DialogFragment implements AdapterVi
                     metricFactory.setDataMinMaxInc(
                             Integer.parseInt(mMinimum.getText().toString()),
                             Integer.parseInt(mMaximum.getText().toString()),
-                            Optional.absent());
+                            null);
                 } catch (NumberFormatException e) {
                     Toast.makeText(getActivity(), "Could not create add_button. Make sure you " + "have filled out all of the necessary fields.", Toast.LENGTH_SHORT).show();
                     return;
