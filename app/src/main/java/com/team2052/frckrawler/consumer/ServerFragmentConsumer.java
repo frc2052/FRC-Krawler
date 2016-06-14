@@ -1,27 +1,72 @@
 package com.team2052.frckrawler.consumer;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.bluetooth.server.ServerService;
+import com.team2052.frckrawler.bluetooth.server.ServerStatus;
+import com.team2052.frckrawler.fragments.ServerFragment;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.Observer;
+import rx.Scheduler;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class ServerFragmentConsumer extends DataConsumer<List<String>> {
-    @BindView(R.id.view_event) Button viewEventButton;
-    @BindView(R.id.scout_match_button) Button scoutMatchButton;
-    @BindView(R.id.scout_pit_button) Button scoutPitButton;
-    @BindView(R.id.scout_practice_button) Button scoutPracticeButton;
-    @BindView(R.id.event_spinner) public Spinner eventSpinner;
+    @BindView(R.id.view_event)
+    Button viewEventButton;
+    @BindView(R.id.scout_match_button)
+    Button scoutMatchButton;
+    @BindView(R.id.scout_pit_button)
+    Button scoutPitButton;
+    @BindView(R.id.scout_practice_button)
+    Button scoutPracticeButton;
+    @BindView(R.id.event_spinner)
+    public Spinner eventSpinner;
 
-    @BindView(R.id.server_event_container) View mServerEventContainer;
-    @BindView(R.id.server_events_error) View mServerEventsError;
-    @BindView(R.id.scout_server_card) View mScoutServerCard;
+    @BindView(R.id.host_toggle)
+    public SwitchCompat mHostToggle;
+
+    @BindView(R.id.server_event_container)
+    View mServerEventContainer;
+    @BindView(R.id.server_events_error)
+    View mServerEventsError;
+    @BindView(R.id.scout_server_card)
+    View mScoutServerCard;
+
+    public ServerService serverService;
+    private boolean mBound = false;
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            serverService = ((ServerService.ServerServiceBinder) service).getService();
+            mBound = true;
+            updateServerStatus();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serverService = null;
+        }
+    };
+    private ServerFragment serverFragment;
+    private int selection;
 
     @Override
     public void updateData(List<String> data) {
@@ -34,11 +79,22 @@ public class ServerFragmentConsumer extends DataConsumer<List<String>> {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_list_item_1, data);
         eventSpinner.setAdapter(adapter);
+        eventSpinner.setSelection(selection);
 
         showData(true);
+
+        updateServerStatus();
+
     }
 
-    private void showData(boolean show){
+    public void updateServerStatus() {
+        if(mBound) {
+            serverService.getServerStatus().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new ServerFragment.ServerStatusObserver(serverFragment));
+        }
+    }
+
+
+    private void showData(boolean show) {
         if (show) {
             mServerEventContainer.setVisibility(View.VISIBLE);
             mScoutServerCard.setVisibility(View.VISIBLE);
@@ -53,5 +109,25 @@ public class ServerFragmentConsumer extends DataConsumer<List<String>> {
     @Override
     public void bindViews() {
         ButterKnife.bind(this, rootView);
+    }
+
+    public void create(){
+        mActivity.getApplicationContext().bindService(new Intent(mActivity, ServerService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    public void destroy(){
+        if(mBound) {
+            mActivity.getApplicationContext().unbindService(mServiceConnection);
+            mBound = false;
+        }
+    }
+
+    public void setServerFragment(ServerFragment serverFragment) {
+        this.serverFragment = serverFragment;
+    }
+
+    public void setSelection(int selection) {
+        this.selection = selection;
+        eventSpinner.setSelection(selection);
     }
 }

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 
+import com.google.common.eventbus.Subscribe;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
@@ -28,6 +29,7 @@ import com.team2052.frckrawler.subscribers.EventStringSubscriber;
 import java.util.List;
 
 import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -41,55 +43,45 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
     private ServerService boundService;
     private boolean mIsBound = false;
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            boundService = ((ServerService.ServerServiceBinder) service).getService();
-            mIsBound = true;
-            boundService.getServerStatus().subscribeOn(AndroidSchedulers.mainThread()).subscribe(serverStatusSubscriber);
+    public static class ServerStatusObserver extends Subscriber<ServerStatus> {
+
+        ServerFragment fragment;
+
+        public ServerStatusObserver(ServerFragment serverFragment) {
+            fragment = serverFragment;
         }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            boundService = null;
-        }
-    };
-
-    private Subscriber<ServerStatus> serverStatusSubscriber = new Subscriber<ServerStatus>() {
         @Override
         public void onCompleted() {
+
         }
 
         @Override
         public void onError(Throwable e) {
+
         }
 
         @Override
         public void onNext(ServerStatus serverStatus) {
-            mHostToggle.setOnCheckedChangeListener(null);
-            mHostToggle.setChecked(serverStatus.getStatus());
-            mHostToggle.setOnCheckedChangeListener(ServerFragment.this);
+            fragment.binder.mHostToggle.setOnCheckedChangeListener(null);
+            fragment.binder.mHostToggle.setChecked(serverStatus.getStatus());
+            fragment.binder.mHostToggle.setOnCheckedChangeListener(fragment);
 
             int index = 0;
             if (serverStatus.getEvent() != null) {
-                for (int i = 0; i < subscriber.getData().size(); i++) {
-                    if (subscriber.getData().get(i).getId() == serverStatus.getEvent().getId()) {
+                for (int i = 0; i < fragment.subscriber.getData().size(); i++) {
+                    if (fragment.subscriber.getData().get(i).getId() == serverStatus.getEvent().getId()) {
                         index = i;
                         break;
                     }
                 }
             }
 
-            binder.eventSpinner.setSelection(index);
+            fragment.binder.setSelection(index);
         }
-    };
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //Bind to the service
-        getActivity().getApplicationContext().bindService(new Intent(getActivity(), ServerService.class), mConnection, Context.BIND_AUTO_CREATE);
     }
+
+    ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -98,8 +90,13 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        if (binder.serverService != null) {
+            binder.serverService.getServerStatus().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new ServerStatusObserver(this));
+        }
         binder.setRootView(view);
-        subscriber.bindViewsIfNeeded();
+        binder.setServerFragment(this);
+        binder.bindViews();
+        binder.create();
 
         mHostToggle = (SwitchCompat) view.findViewById(R.id.host_toggle);
         mHostToggle.setOnCheckedChangeListener(this);
@@ -116,9 +113,7 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
     @Override
     public void onResume() {
         super.onResume();
-        if(mIsBound){
-            boundService.getServerStatus().subscribeOn(AndroidSchedulers.mainThread()).subscribe(serverStatusSubscriber);
-        }
+        binder.destroy();
     }
 
     @Override
@@ -134,7 +129,7 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
             buttonView.setChecked(!isChecked);
             if (isEventsValid() && getSelectedEvent() != null) {
                 Event event = getSelectedEvent();
-                boundService.changeServerStatus(event, isChecked).subscribe(serverStatusSubscriber);
+                binder.serverService.changeServerStatus(event, isChecked).subscribe(new ServerStatusObserver(this));
             }
         }
     }
@@ -160,10 +155,7 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
 
     @Override
     public void onDestroy() {
-        if (mIsBound) {
-            getActivity().getApplicationContext().unbindService(mConnection);
-            mIsBound = false;
-        }
+        binder.destroy();
         super.onDestroy();
     }
 

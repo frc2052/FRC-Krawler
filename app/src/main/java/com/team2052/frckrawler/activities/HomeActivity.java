@@ -58,7 +58,6 @@ public class HomeActivity extends DatabaseActivity {
                 break;
             case R.id.nav_item_server:
                 fragment = new ServerFragment();
-                fragment.setRetainInstance(true);
                 break;
             case R.id.nav_item_teams:
                 fragment = new TeamsFragment();
