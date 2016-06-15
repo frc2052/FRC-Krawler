@@ -21,8 +21,6 @@ import com.team2052.frckrawler.fragments.ServerFragment;
 import com.team2052.frckrawler.fragments.SummaryFragment;
 import com.team2052.frckrawler.fragments.TeamInfoFragment;
 import com.team2052.frckrawler.fragments.TeamsFragment;
-import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
-import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
 import com.team2052.frckrawler.subscribers.SubscriberModule;
 
 import javax.inject.Singleton;
@@ -68,11 +66,7 @@ public interface FragmentComponent {
 
     void inject(ServerFragment serverFragment);
 
-    void inject(ScoutMatchFragment scoutMatchFragment);
-
     void inject(ScoutActivity scoutActivity);
-
-    void inject(ScoutPitFragment scoutPitFragment);
 
     void inject(GameInfoFragment gameInfoFragment);
 

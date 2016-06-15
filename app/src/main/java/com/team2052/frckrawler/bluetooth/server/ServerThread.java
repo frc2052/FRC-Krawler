@@ -10,8 +10,6 @@ import com.google.common.base.Optional;
 import com.team2052.frckrawler.BuildConfig;
 import com.team2052.frckrawler.bluetooth.BluetoothInfo;
 import com.team2052.frckrawler.bluetooth.client.ScoutPackage;
-import com.team2052.frckrawler.bluetooth.server.events.ServerQuitEvent;
-import com.team2052.frckrawler.bluetooth.server.events.ServerStartEvent;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.util.BluetoothUtil;
@@ -49,7 +47,6 @@ public class ServerThread extends Thread {
         Log.d(TAG, "Server Open");
         String deviceName;
         isOpen = true;
-        EventBus.getDefault().post(new ServerStartEvent());
         while (isOpen) {
             try {
                 serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
@@ -156,7 +153,6 @@ public class ServerThread extends Thread {
             }
         }
         Log.d(TAG, "Server Closed");
-        EventBus.getDefault().post(new ServerQuitEvent());
     }
 
     public void closeServer() {

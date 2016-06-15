@@ -1,40 +1,66 @@
 package com.team2052.frckrawler.fragments.scout;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.background.scout.SavePitMetricsTask;
-import com.team2052.frckrawler.comparators.RobotTeamNumberComparator;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.PitData;
-import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.db.RobotEvent;
-import com.team2052.frckrawler.subscribers.BaseScoutData;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.SnackbarUtil;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.Collections;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
- * @author Adam
+ * Created by Adam on 6/15/2016.
  */
+
 public class ScoutPitFragment extends BaseScoutFragment {
+    private static final String TAG = "ScoutPitFragment";
+
+    Observable<List<MetricValue>> metricValueObservable = robotObservable()
+            .map(robot -> {
+                List<MetricValue> metricValues = Lists.newArrayList();
+                final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(MetricHelper.ROBOT_METRICS, null, mEvent.getGame_id(), true);
+                List<Metric> metrics = metricQueryBuilder.list();
+
+                for (int i = 0; i < metrics.size(); i++) {
+                    Metric metric = metrics.get(i);
+                    //Query for existing data
+                    QueryBuilder<PitData> matchDataQueryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), mEvent.getId(), null);
+
+                    PitData currentData = matchDataQueryBuilder.unique();
+                    //Add the metric values
+                    metricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
+                }
+                return metricValues;
+            })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread());
+
+    Observable<String> metricCommentObservable = robotObservable()
+            .flatMap(robot -> Observable.just(Strings.nullToEmpty(robot.getComments())))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread());
+
     public static ScoutPitFragment newInstance(Event event) {
         Bundle args = new Bundle();
         args.putLong(EVENT_ID, event.getId());
@@ -43,86 +69,43 @@ public class ScoutPitFragment extends BaseScoutFragment {
         return fragment;
     }
 
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        scoutType = MetricHelper.ROBOT_METRICS;
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_scouting_pit, null);
     }
 
     @Override
-    protected void inject() {
-        mComponent.inject(this);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        ButterKnife.bind(this, view);
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
-    public Observable<? extends BaseScoutData> getObservable() {
-        return Observable.create(subscriber -> {
-            String comment = "";
-            Robot robot = consumer.getSelectedRobot();
-            List<MetricValue> metricValues = Lists.newArrayList();
-
-            //Get Robots
-            List<RobotEvent> robotEvents = dbManager.getEventsTable().getRobotEvents(mEvent);
-            List<Robot> robots = Lists.newArrayList();
-            for (int i = 0; i < robotEvents.size(); i++) {
-                robots.add(robotEvents.get(i).getRobot());
-            }
-            Collections.sort(robots, new RobotTeamNumberComparator());
-
-            if (robot != null) {
-                final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(scoutType, null, mEvent.getGame_id(), true);
-                List<Metric> metrics = metricQueryBuilder.list();
-
-                for (int i = 0; i < metrics.size(); i++) {
-                    Metric metric = metrics.get(i);
-                    //Query for existing data
-                    QueryBuilder<PitData> matchDataQueryBuilder = dbManager.getPitDataTable()
-                            .query(robot.getId(), metric.getId(), mEvent.getId(), null);
-                    PitData currentData = matchDataQueryBuilder.unique();
-                    //Add the metric values
-                    metricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
-                }
-                comment = robot.getComments();
-            }
-            subscriber.onNext(new BaseScoutData(metricValues, robots, comment));
-        });
+    public boolean filterMetric(Metric metric) {
+        return super.filterMetric(metric) && metric.getCategory() == MetricHelper.ROBOT_METRICS;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_scouting_pit, container, false);
-        consumer.setRootView(v);
-        subscriber.bindViewsIfNeeded();
-        return v;
+    public void updateMetricValues() {
+        subscriptions.add(metricValueObservable.subscribe(this::setMetricValues, onError -> {
+        }));
+        subscriptions.add(metricCommentObservable.subscribe(RxTextView.text(mCommentsView.getEditText()), onError -> {
+        }));
     }
 
-    @Override
-    public void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.scout, menu);
-        menu.removeItem(R.id.action_view_match);
-    }
-
-    @Override
-    protected void saveMetrics() {
-        if (consumer.getSelectedRobot() == null || mEvent == null) {
+    @OnClick(R.id.button_save)
+    protected void saveMetrics(View clickedView) {
+        if (getSelectedRobot() == null || mEvent == null) {
             SnackbarUtil.make(getView(), getActivity().getString(R.string.something_seems_wrong), Snackbar.LENGTH_SHORT).show();
             return;
         }
         new SavePitMetricsTask(
                 this,
                 mEvent,
-                consumer.getSelectedRobot(),
-                consumer.getValues(),
-                consumer.getComment(),
+                getSelectedRobot(),
+                getValues(),
+                mCommentsView.getEditText().getText().toString(),
                 null).execute();
     }
-
-
 }
-

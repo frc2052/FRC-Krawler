@@ -1,99 +1,163 @@
 package com.team2052.frckrawler.fragments.scout;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 
+import com.google.common.base.Optional;
+import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.HasComponent;
-import com.team2052.frckrawler.consumer.BaseScoutDataConsumer;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.MetricHelper;
+import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.di.FragmentComponent;
-import com.team2052.frckrawler.subscribers.BaseScoutData;
-import com.team2052.frckrawler.subscribers.BaseScoutSubscriber;
+import com.team2052.frckrawler.views.metric.MetricWidget;
 
-import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by Adam on 11/26/2015.
+ * Created by Adam on 6/15/2016.
  */
-public abstract class BaseScoutFragment extends Fragment implements View.OnClickListener {
+
+public class BaseScoutFragment extends Fragment {
+    private static final String TAG = "BaseScoutFragment";
     public static final String EVENT_ID = "EVENT_ID";
-
-    @MetricHelper.MetricCategory
-    public int scoutType = 0;
-    protected Event mEvent;
-
-    @Inject
-    protected BaseScoutSubscriber subscriber;
-    @Inject
-    protected BaseScoutDataConsumer consumer;
     protected DBManager dbManager;
-    protected FragmentComponent mComponent;
+    private FragmentComponent mComponent;
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        consumer.mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    CompositeSubscription subscriptions = new CompositeSubscription();
 
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateMetricList();
-            }
+    @BindView(R.id.robot)
+    Spinner mRobotSpinner;
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+    @BindView(R.id.comments)
+    TextInputLayout mCommentsView;
 
-        view.findViewById(R.id.button_save).setOnClickListener(this);
-        super.onViewCreated(view, savedInstanceState);
-    }
+    @BindView(R.id.button_save)
+    FloatingActionButton mSaveButton;
+
+    @BindView(R.id.metric_widget_list)
+    LinearLayout mMetricList;
+
+    private List<Robot> robots;
+    protected Event mEvent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Get Database
         if (getActivity() instanceof HasComponent) {
             mComponent = ((HasComponent) getActivity()).getComponent();
         }
-        inject();
         dbManager = mComponent.dbManager();
+    }
 
-        subscriber.setConsumer(consumer);
-        consumer.setActivity(getActivity());
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        //Bind Views
+        ButterKnife.bind(this, view);
+
+        subscriptions.add(RxAdapterView.itemSelections(mRobotSpinner).debounce(500, TimeUnit.MILLISECONDS).subscribe(onNext -> updateMetricValues()));
 
         mEvent = dbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
-    }
-
-    protected abstract void inject();
-
-    public abstract Observable<? extends BaseScoutData> getObservable();
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateMetricList();
-    }
-
-    protected void updateMetricList() {
-        getObservable()
+        //Load Robots at Event
+        dbManager.robotsAtEvent(getArguments().getLong(EVENT_ID))
                 .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.computation())
-                .subscribe(subscriber);
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(robots -> this.robots = robots, onError -> {
+                }, () -> {
+                    Observable.from(robots)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .flatMap(robot -> Observable.just(robot.getTeam_id() + ", " + robot.getTeam().getName()))
+                            .toList().subscribe(onNext -> {
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, onNext);
+                        mRobotSpinner.setAdapter(adapter);
+                        mRobotSpinner.setSelection(0);
+                    });
+                    updateMetricValues();
+                });
+
+        //Get all metrics
+        Observable.defer(() -> Observable.just(dbManager.getGamesTable().getMetrics(mEvent.getGame())))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(Observable::from)
+                .filter(this::filterMetric)
+                .map(metric -> new MetricValue(metric, null))
+                .toList()
+                .subscribe(this::setMetricValues);
+
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    public boolean filterMetric(Metric metric) {
+        return metric.getEnabled();
+    }
+
+    public void updateMetricValues() {
+
+    }
+
+    protected Observable<Robot> robotObservable() {
+        return Observable.defer(() -> Observable.just(robots.get(mRobotSpinner.getSelectedItemPosition())));
+    }
+
+
+    /**
+     * Please do not use unless you have to
+     */
+    @Deprecated
+    protected Robot getSelectedRobot() {
+        return robots.get(mRobotSpinner.getSelectedItemPosition());
     }
 
     @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.button_save) {
-            saveMetrics();
+    public void onDestroy() {
+        super.onDestroy();
+        subscriptions.unsubscribe();
+    }
+
+    protected void setMetricValues(List<MetricValue> values) {
+        if (values.size() != mMetricList.getChildCount()) {
+            //This shouldn't happen, but just in case
+            mMetricList.removeAllViews();
+            for (int i = 0; i < values.size(); i++) {
+                Optional<MetricWidget> widget = MetricWidget.createWidget(getActivity(), values.get(i));
+                if (widget.isPresent()) {
+                    mMetricList.addView(widget.get());
+                }
+            }
+        } else {
+            for (int i = 0; i < values.size(); i++) {
+                ((MetricWidget) mMetricList.getChildAt(i)).setMetricValue(values.get(i));
+            }
         }
     }
 
-    protected abstract void saveMetrics();
+    public List<MetricValue> getValues() {
+        List<MetricValue> values = new ArrayList<>();
+        for (int i = 0; i < mMetricList.getChildCount(); i++) {
+            values.add(((MetricWidget) mMetricList.getChildAt(i)).getValue());
+        }
+        return values;
+    }
 }

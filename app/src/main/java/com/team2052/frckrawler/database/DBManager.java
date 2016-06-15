@@ -587,7 +587,9 @@ public class DBManager {
             if (robot_id != null)
                 queryBuilder.where(PitDataDao.Properties.Robot_id.eq(robot_id));
             if (metric_id != null)
-                queryBuilder.where(PitDataDao.Properties.Metric_id.eq(event_id));
+                queryBuilder.where(PitDataDao.Properties.Metric_id.eq(metric_id));
+            if(event_id != null)
+                queryBuilder.where(PitDataDao.Properties.Event_id.eq(event_id));
             if (user_id != null)
                 queryBuilder.where(PitDataDao.Properties.User_id.eq(user_id));
             return queryBuilder;

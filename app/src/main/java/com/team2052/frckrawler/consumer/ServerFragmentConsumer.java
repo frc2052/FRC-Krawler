@@ -13,7 +13,7 @@ import android.widget.Spinner;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.server.ServerService;
-import com.team2052.frckrawler.bluetooth.server.ServerStatus;
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.ServerFragment;
 
 import java.util.List;
@@ -21,11 +21,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
-import rx.Observer;
-import rx.Scheduler;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class ServerFragmentConsumer extends DataConsumer<List<String>> {
     @BindView(R.id.view_event)
@@ -49,7 +45,7 @@ public class ServerFragmentConsumer extends DataConsumer<List<String>> {
     @BindView(R.id.scout_server_card)
     View mScoutServerCard;
 
-    public ServerService serverService;
+    private ServerService serverService;
     private boolean mBound = false;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -88,8 +84,8 @@ public class ServerFragmentConsumer extends DataConsumer<List<String>> {
     }
 
     public void updateServerStatus() {
-        if(mBound) {
-            serverService.getServerStatus().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new ServerFragment.ServerStatusObserver(serverFragment));
+        if (mBound && serverService != null) {
+            serverService.getServerStatus().observeOn(AndroidSchedulers.mainThread()).subscribe(new ServerFragment.ServerStatusObserver(serverFragment));
         }
     }
 
@@ -109,14 +105,20 @@ public class ServerFragmentConsumer extends DataConsumer<List<String>> {
     @Override
     public void bindViews() {
         ButterKnife.bind(this, rootView);
+
+        viewEventButton.setOnClickListener(serverFragment);
+        scoutMatchButton.setOnClickListener(serverFragment);
+        scoutPitButton.setOnClickListener(serverFragment);
+        scoutPracticeButton.setOnClickListener(serverFragment);
+        mHostToggle.setOnCheckedChangeListener(serverFragment);
     }
 
-    public void create(){
+    public void create() {
         mActivity.getApplicationContext().bindService(new Intent(mActivity, ServerService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    public void destroy(){
-        if(mBound) {
+    public void destroy() {
+        if (mBound) {
             mActivity.getApplicationContext().unbindService(mServiceConnection);
             mBound = false;
         }
@@ -129,5 +131,11 @@ public class ServerFragmentConsumer extends DataConsumer<List<String>> {
     public void setSelection(int selection) {
         this.selection = selection;
         eventSpinner.setSelection(selection);
+    }
+
+    public void changeServerStatus(Event event, boolean isChecked) {
+        if(serverService != null) {
+            serverService.changeServerStatus(event, isChecked).observeOn(AndroidSchedulers.mainThread()).subscribe(new ServerFragment.ServerStatusObserver(serverFragment));
+        }
     }
 }
