@@ -33,7 +33,7 @@ import rx.schedulers.Schedulers;
  * Created by Adam on 6/15/2016.
  */
 
-public class ScoutPitFragment extends BaseScoutFragment {
+public class  ScoutPitFragment extends BaseScoutFragment {
     private static final String TAG = "ScoutPitFragment";
 
     Observable<List<MetricValue>> metricValueObservable = robotObservable()

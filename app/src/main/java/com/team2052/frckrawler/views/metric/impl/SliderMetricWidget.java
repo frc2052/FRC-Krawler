@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activities.AddMetricActivity;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.tba.JSON;
@@ -24,15 +25,27 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
     public SliderMetricWidget(Context context, MetricValue metricValue) {
         super(context, metricValue);
         inflater.inflate(R.layout.widget_metric_slider, this);
+        seekBar = (AppCompatSeekBar) findViewById(R.id.sliderVal);
+        setMetricValue(metricValue);
+    }
+
+    public SliderMetricWidget(Context context) {
+        super(context);
+        inflater.inflate(R.layout.widget_metric_slider, this);
+        seekBar = (AppCompatSeekBar) findViewById(R.id.sliderVal);
+    }
+
+    @Override
+    public void setMetricValue(MetricValue m) {
         min = 0;
         max = 1;
-        ((TextView) findViewById(R.id.name)).setText(metricValue.getMetric().getName());
+        ((TextView) findViewById(R.id.name)).setText(m.getMetric().getName());
 
-        JsonObject range = JSON.getAsJsonObject(metricValue.getMetric().getData());
+        JsonObject range = JSON.getAsJsonObject(m.getMetric().getData());
         min = range.get("min").getAsInt();
         max = range.get("max").getAsInt();
 
-        seekBar = (AppCompatSeekBar) findViewById(R.id.sliderVal);
+
         seekBar.setMax(max - min);
 
         seekBar.setOnSeekBarChangeListener(this);
@@ -40,11 +53,7 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
         ((TextView) findViewById(R.id.min)).setText(Integer.toString(min));
         ((TextView) findViewById(R.id.max)).setText(Integer.toString(max));
         valueText = (TextView) findViewById(R.id.value);
-        setMetricValue(metricValue);
-    }
 
-    @Override
-    public void setMetricValue(MetricValue m) {
         if (m.getValue() != null && !m.getValue().getAsJsonObject().get("value").isJsonNull())
             value = m.getValue().getAsJsonObject().get("value").getAsInt();
         else
@@ -54,7 +63,6 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
             value = min;
         seekBar.setProgress(value - min);
         valueText.setText(Integer.toString(value));
-
     }
 
     @Override

@@ -14,15 +14,18 @@ import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activities.AddMetricActivity;
 
 import java.util.List;
 
 public class ListEditor extends FrameLayout {
 
     private LinearLayout list;
+    AddMetricActivity activity;
 
-    public ListEditor(Context context) {
+    public ListEditor(AddMetricActivity context) {
         super(context);
+        activity = context;
         init();
     }
 
@@ -63,6 +66,8 @@ public class ListEditor extends FrameLayout {
         ListEditorListItem listEditorListItem = new ListEditorListItem(getContext());
         list.addView(listEditorListItem);
         listEditorListItem.initWithParams(text);
+
+        activity.updateMetric();
     }
 
     public List<String> getValues() {
@@ -74,6 +79,11 @@ public class ListEditor extends FrameLayout {
         }
 
         return values;
+    }
+
+    public void removeFromList(int pos){
+        list.removeViewAt(pos);
+        activity.updateMetric();
     }
 
     public class ListEditorListItem extends FrameLayout {
@@ -105,7 +115,7 @@ public class ListEditor extends FrameLayout {
             textView = (TextView) findViewById(android.R.id.text1);
             textView.setText(text);
 
-            findViewById(R.id.list_editor_remove).setOnClickListener(v -> list.removeViewAt(ListEditorListItem.this.getIndex()));
+            findViewById(R.id.list_editor_remove).setOnClickListener(v -> removeFromList(ListEditorListItem.this.getIndex()));
         }
 
         public int getIndex() {

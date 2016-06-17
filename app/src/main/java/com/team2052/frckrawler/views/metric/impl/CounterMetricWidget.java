@@ -21,10 +21,14 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
     private int increment;
 
     public CounterMetricWidget(Context context, MetricValue metricValue) {
-
         super(context, metricValue);
         inflater.inflate(R.layout.widget_metric_counter, this);
         setMetricValue(metricValue);
+    }
+
+    public CounterMetricWidget(Context context) {
+        super(context);
+        inflater.inflate(R.layout.widget_metric_counter, this);
     }
 
     @Override

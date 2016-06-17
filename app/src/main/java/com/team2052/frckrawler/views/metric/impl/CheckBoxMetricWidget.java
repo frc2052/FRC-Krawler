@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activities.AddMetricActivity;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.util.Tuple2;
@@ -20,14 +21,12 @@ import java.util.List;
  * Created by adam on 3/28/15.
  */
 public class CheckBoxMetricWidget extends MetricWidget {
-    private final LinearLayout values;
+    private LinearLayout values;
 
     public CheckBoxMetricWidget(Context context, MetricValue m) {
         super(context, m);
         inflater.inflate(R.layout.widget_metric_checkbox, this);
         this.values = (LinearLayout) findViewById(R.id.values);
-        TextView name = (TextView) findViewById(R.id.name);
-        name.setText(m.getMetric().getName());
 
         final Optional<List<String>> optionalValues = MetricHelper.getListItemIndexRange(m.getMetric());
         if (!optionalValues.isPresent())
@@ -40,12 +39,19 @@ public class CheckBoxMetricWidget extends MetricWidget {
             checkbox.setText(value);
             this.values.addView(checkbox);
         }
-
         setMetricValue(m);
+    }
+
+    public CheckBoxMetricWidget(Context context) {
+        super(context);
+        inflater.inflate(R.layout.widget_metric_checkbox, this);
     }
 
     @Override
     public void setMetricValue(MetricValue m) {
+        TextView name = (TextView) findViewById(R.id.name);
+        name.setText(m.getMetric().getName());
+
         final Tuple2<List<Integer>, MetricHelper.ReturnResult> preLoadedValuesResult = MetricHelper.getListIndexMetricValue(m);
 
         for (int i = 0; i < values.getChildCount(); i++) {

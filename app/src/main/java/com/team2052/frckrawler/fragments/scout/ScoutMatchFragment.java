@@ -2,6 +2,7 @@ package com.team2052.frckrawler.fragments.scout;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.background.scout.SaveMatchMetricsTask;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
@@ -20,7 +20,9 @@ import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.util.SnackbarUtil;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -54,7 +57,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
     }
 
     Observable<List<MetricValue>> metricValueObservable = Observable
-            .combineLatest(matchNumberObservable(), robotObservable(), (match_num, robot) -> new MetricValueUpdateParams(match_num, robot))
+            .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
                 List<MetricValue> metricValues = Lists.newArrayList();
                 final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, mEvent.getGame_id(), true);
@@ -73,7 +76,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             .observeOn(AndroidSchedulers.mainThread());
 
     Observable<String> metricCommentObservable = Observable
-            .combineLatest(matchNumberObservable(), robotObservable(), (match_num, robot) -> new MetricValueUpdateParams(match_num, robot))
+            .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
                 final QueryBuilder<MatchComment> matchCommentQueryBuilder
                         = dbManager.getMatchComments().query(valueParams.match_num, mMatchType, valueParams.robot.getId(), mEvent.getId());
@@ -145,27 +148,66 @@ public class ScoutMatchFragment extends BaseScoutFragment {
         }));
     }
 
-
     @OnClick(R.id.button_save)
     protected void saveMetrics(View viewClicked) {
-        //TODO: Handle the errors
-        if (!isMatchNumberValid())
-            return;
-        if (getSelectedRobot() == null)
-            return;
-        if (mEvent == null)
-            return;
+        Subscription saveSubscription = Observable.combineLatest(matchNumberObservable(), robotObservable(), Observable.defer(() -> Observable.just(getValues())), Observable.just(mCommentsView.getEditText().getText().toString()), MatchScoutSaveMetric::new)
+                .map(matchScoutSaveMetric -> {
+                    //Insert Metric Data
+                    boolean saved = false;
+                    for (MetricValue metricValue : matchScoutSaveMetric.metricValues) {
+                        MatchData matchData = new MatchData(
+                                null,
+                                mEvent.getId(),
+                                matchScoutSaveMetric.robot.getId(),
+                                null,
+                                metricValue.getMetric().getId(),
+                                mMatchType,
+                                matchScoutSaveMetric.matchNum,
+                                new Date(),
+                                JSON.getGson().toJson(metricValue.getValue()));
+                        if (dbManager.getMatchDataTable().insertMatchData(matchData) && !saved)
+                            saved = true;
+                    }
 
-        new SaveMatchMetricsTask(
-                getActivity(),
-                this,
-                mEvent,
-                getSelectedRobot(),
-                null,
-                getMatchNumber(),
-                mMatchType,
-                getValues(),
-                mCommentsView.getEditText().getText().toString()).execute();
+
+                    if (!Strings.isNullOrEmpty(matchScoutSaveMetric.comment)) {
+                        MatchComment matchComment = new MatchComment(null);
+                        matchComment.setMatch_number((long) matchScoutSaveMetric.matchNum);
+                        matchComment.setMatch_type(mMatchType);
+                        matchComment.setRobot(matchScoutSaveMetric.robot);
+                        matchComment.setEvent(mEvent);
+                        matchComment.setComment(matchScoutSaveMetric.comment);
+                        if (dbManager.getMatchComments().insertMatchComment(matchComment) && !saved)
+                            saved = true;
+                    }
+                    return saved;
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onNext -> {
+                    if (onNext) {
+                        SnackbarUtil.make(getView(), "Save Complete", Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        SnackbarUtil.make(getView(), "Update Complete", Snackbar.LENGTH_SHORT).show();
+                    }
+                }, onError -> {
+                    SnackbarUtil.make(getView(), "Cannot Save, make sure you double check everything and try again", Snackbar.LENGTH_SHORT).show();
+                });
+        subscriptions.add(saveSubscription);
+    }
+
+    public class MatchScoutSaveMetric {
+        Integer matchNum;
+        Robot robot;
+        List<MetricValue> metricValues;
+        String comment;
+
+        public MatchScoutSaveMetric(Integer matchNum, Robot robot, List<MetricValue> metricValues, String comment) {
+            this.matchNum = matchNum;
+            this.robot = robot;
+            this.metricValues = metricValues;
+            this.comment = comment;
+        }
     }
 
     @Deprecated

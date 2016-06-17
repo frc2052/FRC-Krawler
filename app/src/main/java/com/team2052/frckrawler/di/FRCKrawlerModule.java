@@ -35,7 +35,7 @@ public class FRCKrawlerModule {
 
     @Provides
     @Singleton
-    public ScoutSyncHandler getScoutSyncHander() {
+    public ScoutSyncHandler getScoutSyncHandler() {
         return ScoutSyncHandler.getInstance(mApp.getApplicationContext());
     }
 }

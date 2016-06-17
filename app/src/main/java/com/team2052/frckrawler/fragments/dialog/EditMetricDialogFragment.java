@@ -100,7 +100,7 @@ public class EditMetricDialogFragment extends DialogFragment {
                 mMinimum.setVisibility(View.GONE);
                 mMaximum.setVisibility(View.INVISIBLE);
                 mIncrementation.setVisibility(View.GONE);
-                list = new ListEditor(getActivity());
+                //list = new ListEditor(getActivity());
                 mListEditor.removeAllViews();
                 mListEditor.addView(list);
                 mListHeader.setVisibility(View.VISIBLE);
@@ -109,7 +109,7 @@ public class EditMetricDialogFragment extends DialogFragment {
                 mMinimum.setVisibility(View.GONE);
                 mMaximum.setVisibility(View.INVISIBLE);
                 mIncrementation.setVisibility(View.GONE);
-                list = new ListEditor(getActivity());
+                //list = new ListEditor(getActivity());
                 mListEditor.removeAllViews();
                 mListEditor.addView(list);
                 mListHeader.setVisibility(View.VISIBLE);

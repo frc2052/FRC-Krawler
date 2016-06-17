@@ -14,12 +14,17 @@ import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 public class BooleanMetricWidget extends MetricWidget implements OnClickListener {
-    boolean value = false;
+    private boolean value = false;
 
     public BooleanMetricWidget(Context context, MetricValue m) {
         super(context, m);
         inflater.inflate(R.layout.widget_metric_boolean, this);
         setMetricValue(m);
+    }
+
+    public BooleanMetricWidget(Context context) {
+        super(context);
+        inflater.inflate(R.layout.widget_metric_boolean, this);
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activities.AddMetricActivity;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.util.Tuple2;
@@ -26,15 +27,21 @@ public class ChooserMetricWidget extends ListIndexMetricWidget implements OnItem
     public ChooserMetricWidget(Context context, MetricValue metricValue) {
         super(context, metricValue);
         inflater.inflate(R.layout.widget_metric_chooser, this);
-        ((TextView) findViewById(R.id.name)).setText(metricValue.getMetric().getName());
         chooserSpinner = (Spinner) findViewById(R.id.choooserList);
         chooserSpinner.setOnItemSelectedListener(this);
         setMetricValue(metricValue);
     }
 
+    public ChooserMetricWidget(Context context) {
+        super(context);
+        inflater.inflate(R.layout.widget_metric_chooser, this);
+        chooserSpinner = (Spinner) findViewById(R.id.choooserList);
+        chooserSpinner.setOnItemSelectedListener(this);
+    }
+
     @Override
     public void setMetricValue(MetricValue m) {
-
+        ((TextView) findViewById(R.id.name)).setText(m.getMetric().getName());
         final Optional<List<String>> optionalValues = MetricHelper.getListItemIndexRange(m.getMetric());
         if (!optionalValues.isPresent())
             throw new IllegalStateException("Couldn't parse values, cannot proceed");

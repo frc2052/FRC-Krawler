@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.di;
 
+import com.team2052.frckrawler.activities.AddMetricActivity;
 import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.GameInfoActivity;
 import com.team2052.frckrawler.activities.HomeActivity;
@@ -73,4 +74,6 @@ public interface FragmentComponent {
     void inject(EventInfoFragment eventInfoFragment);
 
     void inject(TeamInfoFragment teamInfoFragment);
+
+    void inject(AddMetricActivity addMetricActivity);
 }

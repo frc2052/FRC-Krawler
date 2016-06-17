@@ -16,9 +16,6 @@
         android:label="@string/app_name"
         android:theme="@style/AppBase">
 
-        <activity android:name=".activities.ListTester">
-
-        </activity>
         <activity
             android:name=".activities.MatchListActivity"
             android:parentActivityName=".activities.ScoutActivity">
@@ -36,8 +33,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.HomeActivity" />
         </activity>
-        <activity
-            android:name=".activities.HomeActivity">
+        <activity android:name=".activities.HomeActivity">
 
         </activity>
         <activity
@@ -68,6 +64,7 @@
             android:name=".activities.SettingsActivity"
             android:label="Settings"
             android:theme="@style/AppThemeFull" />
+        <activity android:name=".activities.AddMetricActivity" />
 
         <service
             android:name=".bluetooth.server.ServerService"

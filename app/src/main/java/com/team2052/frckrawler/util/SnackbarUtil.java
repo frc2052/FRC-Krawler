@@ -16,7 +16,7 @@ public class SnackbarUtil {
         return snackbar;
     }
 
-    public static Snackbar make(View view, CharSequence text, @Snackbar.Duration int duration) {
+    public static Snackbar make(View view, CharSequence text, int duration) {
         return makeSnackbarTextWhite(Snackbar.make(view, text, duration));
     }
 }

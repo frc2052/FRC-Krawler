@@ -16,6 +16,10 @@ public abstract class ListIndexMetricWidget extends MetricWidget {
         super(context, m);
     }
 
+    public ListIndexMetricWidget(Context context) {
+        super(context);
+    }
+
     /**
      * @return the values that are valid for compiling ex if a checkbox is checked the index value of that checkbox should be in the list.
      */

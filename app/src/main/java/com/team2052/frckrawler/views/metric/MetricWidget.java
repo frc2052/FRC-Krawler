@@ -21,8 +21,13 @@ public abstract class MetricWidget extends FrameLayout {
     private Metric metric;
 
     protected MetricWidget(Context context, MetricValue m) {
-        super(context);
+        this(context);
         metric = m.getMetric();
+
+    }
+
+    protected MetricWidget(Context context){
+        super(context);
         inflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
     }

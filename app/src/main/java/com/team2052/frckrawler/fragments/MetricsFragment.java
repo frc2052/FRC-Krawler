@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activities.AddMetricActivity;
 import com.team2052.frckrawler.activities.MetricActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.consumer.ListViewConsumer;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.fragments.dialog.AddMetricDialogFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.elements.MetricListElement;
 import com.team2052.frckrawler.subscribers.MetricListSubscriber;
@@ -65,7 +65,8 @@ public class MetricsFragment extends ListViewFragment<List<Metric>, MetricListSu
 
     @Override
     public void onFABPressed() {
-        AddMetricDialogFragment.newInstance(mCategory, mGame_id).show(getChildFragmentManager(), "addMetric");
+        startActivity(AddMetricActivity.newInstance(getActivity(), mGame_id));
+        //AddMetricDialogFragment.newInstance(mCategory, mGame_id).show(getChildFragmentManager(), "addMetric");
     }
 
     @Override
