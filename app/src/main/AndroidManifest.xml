@@ -37,8 +37,7 @@
 
         </activity>
         <activity
-            android:name=".activities.EventInfoActivity"
-            android:parentActivityName=".activities.GameInfoActivity">
+            android:name=".activities.EventInfoActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.GameInfoActivity" />

@@ -65,7 +65,7 @@ public class MetricsFragment extends ListViewFragment<List<Metric>, MetricListSu
 
     @Override
     public void onFABPressed() {
-        startActivity(AddMetricActivity.newInstance(getActivity(), mGame_id));
+        startActivity(AddMetricActivity.newInstance(getActivity(), mGame_id, mCategory));
         //AddMetricDialogFragment.newInstance(mCategory, mGame_id).show(getChildFragmentManager(), "addMetric");
     }
 

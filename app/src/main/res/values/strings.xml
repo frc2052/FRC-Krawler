@@ -103,4 +103,9 @@
     <string name="drawer_close">Drawer Close</string>
     <string name="close">Close</string>
     <string name="not_connected_to_internet">You are not connected to the internet</string>
+
+    <string name="minimum_info">The minimum field changes the minimum value the Spinner or Counter can be at. This is helpful if the minimum value of a metric is something specific or starts at certain value automatically. For example, a robot may have to start with at least two game peices but may have more</string>
+    <string name="maximum_info">The maximum field changes the maximum value the Spinner or Counter can be at. This is helpful when you want to limit the maximum value. For example, limited game pieces scorable</string>
+    <string name="incrementation_info">The incrementation value of a Counter. This field tells the metric to increment by a certain amount. For example, a robot can score points, but points are counted by 3 points</string>
+    <string name="metric_type_prefix">Metric Type:</string>
 </resources>

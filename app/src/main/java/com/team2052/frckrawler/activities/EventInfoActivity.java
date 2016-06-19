@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.team2052.frckrawler.R;
@@ -42,6 +43,7 @@ public class EventInfoActivity extends DatabaseActivity implements View.OnClickL
 
         setSupportActionBar(toolbar);
         setActionBarTitle(getString(R.string.event));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mFab = (FloatingActionButton) findViewById(R.id.floating_action_button);
         mFab.setOnClickListener(this);
@@ -67,6 +69,15 @@ public class EventInfoActivity extends DatabaseActivity implements View.OnClickL
             public void onPageScrollStateChanged(int state) {
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
