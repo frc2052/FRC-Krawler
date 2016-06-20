@@ -6,7 +6,6 @@ import android.view.View;
 
 public abstract class DataConsumer<V> {
     protected Activity mActivity;
-    private OnCompletedListener onCompletedListener;
     protected View rootView;
 
     public abstract void updateData(V data);
@@ -19,12 +18,6 @@ public abstract class DataConsumer<V> {
     }
 
     public void onCompleted() {
-        if (onCompletedListener != null)
-            onCompletedListener.onCompleted();
-    }
-
-    public void setOnCompletedListener(OnCompletedListener onCompletedListener) {
-        this.onCompletedListener = onCompletedListener;
     }
 
     public void setRootView(View rootView) {

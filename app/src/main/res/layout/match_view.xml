@@ -22,7 +22,6 @@
         android:layout_weight="6">
 
         <TableRow
-            android:id="@+id/alliances_and_scores"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:minHeight="40dp">

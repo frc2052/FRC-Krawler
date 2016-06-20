@@ -9,7 +9,6 @@ import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
-import com.team2052.frckrawler.background.DeleteEventTask;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.subscribers.KeyValueListSubscriber;
@@ -18,6 +17,8 @@ import com.team2052.frckrawler.util.Util;
 import java.util.Map;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class EventInfoFragment extends ListViewFragment<Map<String, String>, KeyValueListSubscriber> implements RefreshListener {
     public static final String EVENT_ID = "EVENT_ID";
@@ -71,9 +72,16 @@ public class EventInfoFragment extends ListViewFragment<Map<String, String>, Key
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Delete Event?");
         builder.setMessage("Are you sure you want to delete this event?");
-        builder.setPositiveButton("Ok", (dialog, which) -> {
-            new DeleteEventTask(getActivity(), mEvent, true).execute();
-        });
+        builder.setPositiveButton("Ok", (dialog, which) -> Observable.just(mEvent)
+                .map(event -> {
+                    dbManager.runInTx(() -> dbManager.getEventsTable().delete(event));
+                    return event;
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(onNext -> {
+                    getActivity().finish();
+                }));
         builder.setNegativeButton("Cancel", null);
         return builder.create();
     }

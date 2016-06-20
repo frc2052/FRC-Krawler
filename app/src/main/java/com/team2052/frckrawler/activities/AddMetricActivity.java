@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.util.TimeUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -25,7 +23,6 @@ import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.util.SnackbarUtil;
-import com.team2052.frckrawler.views.ListEditor;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 import com.team2052.frckrawler.views.metric.impl.BooleanMetricWidget;
 import com.team2052.frckrawler.views.metric.impl.CheckBoxMetricWidget;
@@ -84,7 +81,7 @@ public class AddMetricActivity extends DatabaseActivity {
     private Observable<Integer> mIncrementationObservable = Observable.defer(() -> Observable.just(mIncrementation.getEditText().getText().toString())).map(Integer::parseInt).onErrorReturn(ret -> 1);
     private Observable<String> mNameObservable = Observable.defer(() -> Observable.just(mName.getEditText().getText().toString())).map(text -> Strings.isNullOrEmpty(text) ? getResources().getStringArray(R.array.metric_types)[typeSpinner.getSelectedItemPosition()] : text);
     private Observable<String> mDescriptionObservable = Observable.defer(() -> Observable.just(mDescription.getEditText().getText().toString()));
-    private Observable<List<String>> mCommaListObservable = Observable.defer(() -> Observable.just(mCommaSeparatedList.getEditText().getText().toString())).map(text -> Strings.isNullOrEmpty(text) ? Lists.newArrayList() :  Arrays.asList(text.split("\\s*,\\s*")));
+    private Observable<List<String>> mCommaListObservable = Observable.defer(() -> Observable.just(mCommaSeparatedList.getEditText().getText().toString())).map(text -> Strings.isNullOrEmpty(text) ? Lists.newArrayList() : Arrays.asList(text.split("\\s*,\\s*")));
     private Observable<Metric> metricObservable;
 
     public static Intent newInstance(Context context, long gameId, int metricType) {
@@ -223,7 +220,7 @@ public class AddMetricActivity extends DatabaseActivity {
                 .subscribe(onNext -> {
                     if (typeSpinner.getSelectedItemPosition() == MetricHelper.CHECK_BOX) {
                         setMetricWidget(new CheckBoxMetricWidget(AddMetricActivity.this, onNext));
-                    } else {
+                    } else if (currentWidget != null) {
                         currentWidget.setMetricValue(onNext);
                     }
                 }, onError -> {

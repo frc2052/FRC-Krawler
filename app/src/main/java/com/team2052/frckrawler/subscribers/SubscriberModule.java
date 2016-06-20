@@ -56,11 +56,6 @@ public class SubscriberModule {
     }
 
     @Provides
-    public BaseScoutSubscriber provideBaseScoutSubscriber() {
-        return new BaseScoutSubscriber();
-    }
-
-    @Provides
     public KeyValueListSubscriber provideKeyMapLIstScubsciber() {
         return new KeyValueListSubscriber();
     }

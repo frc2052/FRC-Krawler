@@ -21,6 +21,10 @@ import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.fragments.dialog.EditMetricDialogFragment;
 import com.team2052.frckrawler.tba.JSON;
 
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 /**
  * Created by Adam on 6/13/2015.
  */
@@ -118,8 +122,16 @@ public class MetricActivity extends BaseActivity implements CompoundButton.OnChe
             builder.setTitle("Delete Metric?");
             builder.setMessage("Are you sure you want to delete this metric? You will lose all data associated with this metric.");
             builder.setPositiveButton("Delete", (dialog, which) -> {
-                mDbManager.getMetricsTable().delete(metric);
-                finish();
+                Observable.just(metric)
+                        .map(metric -> {
+                            mDbManager.getMetricsTable().delete(metric);
+                            return metric;
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(onNext -> {
+                            finish();
+                        });
             });
             builder.setNegativeButton("Cancel", null);
             builder.create().show();

@@ -19,7 +19,6 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.views.ListEditor;
 
 /**
  * @author Adam
@@ -29,7 +28,6 @@ public class EditMetricDialogFragment extends DialogFragment {
     private Spinner mMetricTypeSpinner;
     private EditText mName, mDescription, mMinimum, mMaximum, mIncrementation;
     private FrameLayout mListEditor;
-    private ListEditor list;
     private View mListHeader;
     private DBManager mDbSession;
     private Metric mMetric;
@@ -102,7 +100,6 @@ public class EditMetricDialogFragment extends DialogFragment {
                 mIncrementation.setVisibility(View.GONE);
                 //list = new ListEditor(getActivity());
                 mListEditor.removeAllViews();
-                mListEditor.addView(list);
                 mListHeader.setVisibility(View.VISIBLE);
                 break;
             case MetricHelper.CHECK_BOX:
@@ -111,7 +108,6 @@ public class EditMetricDialogFragment extends DialogFragment {
                 mIncrementation.setVisibility(View.GONE);
                 //list = new ListEditor(getActivity());
                 mListEditor.removeAllViews();
-                mListEditor.addView(list);
                 mListHeader.setVisibility(View.VISIBLE);
                 break;
             default:
@@ -134,8 +130,8 @@ public class EditMetricDialogFragment extends DialogFragment {
                 break;
             case MetricHelper.CHOOSER:
             case MetricHelper.CHECK_BOX:
-                JsonElement values = JSON.getGson().toJsonTree(list.getValues());
-                data.add("values", values);
+                //JsonElement values = JSON.getGson().toJsonTree(list.getValues());
+                //data.add("values", values);
                 break;
             case MetricHelper.COUNTER:
                 int inc = Integer.parseInt(mIncrementation.getText().toString());
@@ -164,15 +160,6 @@ public class EditMetricDialogFragment extends DialogFragment {
             case MetricHelper.SLIDER:
                 mMinimum.setText(data.get("min").getAsString());
                 mMaximum.setText(data.get("max").getAsString());
-                break;
-            case MetricHelper.CHOOSER:
-            case MetricHelper.CHECK_BOX:
-                JsonArray values = data.get("values").getAsJsonArray();
-                if (list != null) {
-                    for (JsonElement element : values) {
-                        list.addListItem(element.getAsString());
-                    }
-                }
                 break;
         }
     }
