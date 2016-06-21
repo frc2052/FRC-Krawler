@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 
 import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.database.ExportUtil;
@@ -19,6 +20,7 @@ import java.io.IOException;
  * @since 3/10/2015.
  */
 public class ExportDialogFragment extends BaseProgressDialog {
+    private static final String TAG = "ExportDialogFragment";
 
     public static ExportDialogFragment newInstance(Event event) {
         ExportDialogFragment exportDialogFragment = new ExportDialogFragment();
@@ -38,7 +40,10 @@ public class ExportDialogFragment extends BaseProgressDialog {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Event event = mDbManager.getEventsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
-        new ExportToFileSystem(event).execute();
+        ExportUtil.getFullExport(getActivity(), event).subscribe(onNext -> {
+
+        }, Throwable::printStackTrace);
+        //new ExportToFileSystem(event).execute();
     }
 
     @Override
@@ -66,6 +71,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
                 e.printStackTrace();
             }
             File fileSystem = Environment.getExternalStorageDirectory();
+
 
             if (event != null) {
                 if (fileSystem.canWrite()) {

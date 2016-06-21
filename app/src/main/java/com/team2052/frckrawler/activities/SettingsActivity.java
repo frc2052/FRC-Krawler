@@ -31,9 +31,6 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
     }
 
     public static class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
-
-        private static final String TAG = SettingsFragment.class.getSimpleName();
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

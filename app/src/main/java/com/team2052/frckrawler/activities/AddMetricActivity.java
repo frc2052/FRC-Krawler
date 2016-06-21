@@ -76,13 +76,17 @@ public class AddMetricActivity extends DatabaseActivity {
     @MetricHelper.MetricCategory
     private int mMetricCategory;
 
-    private Observable<Integer> mMinimumObservable = Observable.defer(() -> Observable.just(mMinimum.getEditText().getText().toString())).map(Integer::parseInt).onErrorReturn(ret -> 0);
-    private Observable<Integer> mMaximumObservable = Observable.defer(() -> Observable.just(mMaximum.getEditText().getText().toString())).map(Integer::parseInt).onErrorReturn(ret -> 10);
-    private Observable<Integer> mIncrementationObservable = Observable.defer(() -> Observable.just(mIncrementation.getEditText().getText().toString())).map(Integer::parseInt).onErrorReturn(ret -> 1);
-    private Observable<String> mNameObservable = Observable.defer(() -> Observable.just(mName.getEditText().getText().toString())).map(text -> Strings.isNullOrEmpty(text) ? getResources().getStringArray(R.array.metric_types)[typeSpinner.getSelectedItemPosition()] : text);
-    private Observable<String> mDescriptionObservable = Observable.defer(() -> Observable.just(mDescription.getEditText().getText().toString()));
-    private Observable<List<String>> mCommaListObservable = Observable.defer(() -> Observable.just(mCommaSeparatedList.getEditText().getText().toString())).map(text -> Strings.isNullOrEmpty(text) ? Lists.newArrayList() : Arrays.asList(text.split("\\s*,\\s*")));
+    private Observable<Integer> mMinimumObservable;
+    private Observable<Integer> mMaximumObservable;
+    private Observable<Integer> mIncrementationObservable;
+    private Observable<String> mNameObservable;
+    private Observable<String> mDescriptionObservable;
+    private Observable<List<String>> mCommaListObservable;
     private Observable<Metric> metricObservable;
+
+    public AddMetricActivity() {
+
+    }
 
     public static Intent newInstance(Context context, long gameId, int metricType) {
         Intent intent = new Intent(context, AddMetricActivity.class);
@@ -138,13 +142,27 @@ public class AddMetricActivity extends DatabaseActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
+        mCommaListObservable = Observable.defer(() -> Observable.just(mCommaSeparatedList.getEditText().getText().toString()))
+                .map(text -> Strings.isNullOrEmpty(text) ? Lists.newArrayList() : Arrays.asList(text.split("\\s*,\\s*")));
+        mDescriptionObservable = Observable.defer(() -> Observable.just(mDescription.getEditText().getText().toString()));
+        mNameObservable = Observable.defer(() -> Observable.just(mName.getEditText().getText().toString()))
+                .map(text -> Strings.isNullOrEmpty(text) ? getResources().getStringArray(R.array.metric_types)[typeSpinner.getSelectedItemPosition()] : text);
+        mIncrementationObservable = Observable.defer(() -> Observable.just(mIncrementation.getEditText().getText().toString()))
+                .map(Integer::parseInt)
+                .onErrorReturn(ret -> 1);
+        mMaximumObservable = Observable.defer(() -> Observable.just(mMaximum.getEditText().getText().toString()))
+                .map(Integer::parseInt)
+                .onErrorReturn(ret -> 10);
+        mMinimumObservable = Observable.defer(() -> Observable.just(mMinimum.getEditText().getText().toString()))
+                .map(Integer::parseInt)
+                .onErrorReturn(ret -> 0);
+
         setContentView(R.layout.activity_add_metric);
         ButterKnife.bind(this);
 
         subscriptions.add(RxAdapterView.itemSelections(typeSpinner)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::changeSelection));
-
         subscriptions.add(RxTextView.textChanges(mName.getEditText())
                 .debounce(250, TimeUnit.MILLISECONDS)
                 .subscribe(onNext -> updateMetric()));
@@ -215,7 +233,7 @@ public class AddMetricActivity extends DatabaseActivity {
         updateMetric();
     }
 
-    public void updateMetric() {
+    private void updateMetric() {
         subscriptions.add(metricObservable.map(metric -> new MetricValue(metric, null))
                 .subscribe(onNext -> {
                     if (typeSpinner.getSelectedItemPosition() == MetricHelper.CHECK_BOX) {
