@@ -34,7 +34,7 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         public final static Property Type = new Property(3, Integer.class, "type", false, "TYPE");
         public final static Property Data = new Property(4, String.class, "data", false, "DATA");
         public final static Property Game_id = new Property(5, long.class, "game_id", false, "GAME_ID");
-        public final static Property Enabled = new Property(6, Boolean.class, "enabled", false, "ENABLED");
+        public final static Property Enabled = new Property(6, boolean.class, "enabled", false, "ENABLED");
     }
 
     ;
@@ -64,7 +64,7 @@ public class MetricDao extends AbstractDao<Metric, Long> {
                 "\"TYPE\" INTEGER," + // 3: type
                 "\"DATA\" TEXT," + // 4: data
                 "\"GAME_ID\" INTEGER NOT NULL ," + // 5: game_id
-                "\"ENABLED\" INTEGER);"); // 6: enabled
+                "\"ENABLED\" INTEGER NOT NULL );"); // 6: enabled
     }
 
     /**
@@ -107,11 +107,7 @@ public class MetricDao extends AbstractDao<Metric, Long> {
             stmt.bindString(5, data);
         }
         stmt.bindLong(6, entity.getGame_id());
-
-        Boolean enabled = entity.getEnabled();
-        if (enabled != null) {
-            stmt.bindLong(7, enabled ? 1L : 0L);
-        }
+        stmt.bindLong(7, entity.getEnabled() ? 1L : 0L);
     }
 
     @Override
@@ -140,7 +136,7 @@ public class MetricDao extends AbstractDao<Metric, Long> {
                 cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // type
                 cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // data
                 cursor.getLong(offset + 5), // game_id
-                cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0 // enabled
+                cursor.getShort(offset + 6) != 0 // enabled
         );
         return entity;
     }
@@ -156,7 +152,7 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         entity.setType(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
         entity.setData(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setGame_id(cursor.getLong(offset + 5));
-        entity.setEnabled(cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0);
+        entity.setEnabled(cursor.getShort(offset + 6) != 0);
     }
 
     /**

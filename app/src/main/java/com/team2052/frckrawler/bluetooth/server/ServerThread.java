@@ -8,13 +8,11 @@ import android.util.Log;
 
 import com.google.common.base.Optional;
 import com.team2052.frckrawler.BuildConfig;
-import com.team2052.frckrawler.bluetooth.BluetoothInfo;
+import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.client.ScoutPackage;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.util.BluetoothUtil;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -49,7 +47,7 @@ public class ServerThread extends Thread {
         isOpen = true;
         while (isOpen) {
             try {
-                serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothInfo.SERVICE_NAME, UUID.fromString(BluetoothInfo.UUID));
+                serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothConstants.SERVICE_NAME, UUID.fromString(BluetoothConstants.UUID));
             } catch (IOException e) {
                 if (isOpen)
                     e.printStackTrace();
@@ -100,7 +98,7 @@ public class ServerThread extends Thread {
 
                         if (connection_type.isPresent() && validVersion) {
                             switch (connection_type.get()) {
-                                case BluetoothInfo.SCOUT_SYNC: {
+                                case BluetoothConstants.SCOUT_SYNC: {
                                     Log.d(TAG, "Starting sync with Scout");
                                     ServerPackage serverPackage = null;
 
@@ -112,7 +110,7 @@ public class ServerThread extends Thread {
 
                                     try {
                                         Log.d(TAG, "Sending Data to Scout");
-                                        toScoutStream.writeInt(BluetoothInfo.OK);
+                                        toScoutStream.writeInt(BluetoothConstants.OK);
                                         toScoutStream.writeObject(new ScoutPackage(mDbManager, hostedEvent));
                                         toScoutStream.flush();
                                         handler.onSyncCancel();
@@ -128,7 +126,7 @@ public class ServerThread extends Thread {
                             }
                         } else {
                             try {
-                                toScoutStream.writeInt(BluetoothInfo.VERSION_ERROR);
+                                toScoutStream.writeInt(BluetoothConstants.VERSION_ERROR);
                                 toScoutStream.writeObject(BuildConfig.VERSION_NAME);
                                 toScoutStream.flush();
                                 handler.onSyncCancel();

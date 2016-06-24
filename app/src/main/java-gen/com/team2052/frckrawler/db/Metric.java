@@ -19,7 +19,7 @@ public class Metric implements java.io.Serializable {
     private Integer type;
     private String data;
     private long game_id;
-    private Boolean enabled;
+    private boolean enabled;
 
     /**
      * Used to resolve relations
@@ -44,7 +44,7 @@ public class Metric implements java.io.Serializable {
         this.id = id;
     }
 
-    public Metric(Long id, String name, Integer category, Integer type, String data, long game_id, Boolean enabled) {
+    public Metric(Long id, String name, Integer category, Integer type, String data, long game_id, boolean enabled) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -111,11 +111,11 @@ public class Metric implements java.io.Serializable {
         this.game_id = game_id;
     }
 
-    public Boolean getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

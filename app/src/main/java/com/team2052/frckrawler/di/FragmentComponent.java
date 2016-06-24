@@ -8,8 +8,9 @@ import com.team2052.frckrawler.activities.RobotActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
-import com.team2052.frckrawler.consumer.ConsumerModule;
+import com.team2052.frckrawler.binding.BinderModule;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.CompilerManager;
 import com.team2052.frckrawler.fragments.EventInfoFragment;
 import com.team2052.frckrawler.fragments.EventsFragment;
 import com.team2052.frckrawler.fragments.GameInfoFragment;
@@ -32,12 +33,14 @@ import dagger.Component;
 @Component(modules = {
         FRCKrawlerModule.class,
         SubscriberModule.class,
-        ConsumerModule.class,
+        BinderModule.class,
 }, dependencies = ApplicationComponent.class)
 public interface FragmentComponent {
     DBManager dbManager();
 
     ScoutSyncHandler scoutSyncHander();
+
+    CompilerManager compilerManager();
 
     void inject(HomeActivity activity);
 

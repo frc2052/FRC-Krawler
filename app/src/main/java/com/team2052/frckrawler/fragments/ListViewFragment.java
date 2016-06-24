@@ -10,7 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.consumer.ListViewConsumer;
+import com.team2052.frckrawler.binding.ListViewBinder;
 import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.subscribers.BaseDataSubscriber;
@@ -20,7 +20,7 @@ import java.util.List;
 import rx.schedulers.Schedulers;
 
 public abstract class ListViewFragment<T, S extends BaseDataSubscriber<T, List<ListItem>>>
-        extends BaseDataFragment<T, List<ListItem>, S, ListViewConsumer> implements RefreshListener {
+        extends BaseDataFragment<T, List<ListItem>, S, ListViewBinder> implements RefreshListener {
     protected ListView mListView;
     protected ImageView mNoDataImage;
     protected TextView mNoDataTitle;
@@ -60,7 +60,7 @@ public abstract class ListViewFragment<T, S extends BaseDataSubscriber<T, List<L
                 .subscribe(subscriber);
     }
 
-    protected ListViewConsumer.ListViewNoDataParams getNoDataParams() {
-        return new ListViewConsumer.ListViewNoDataParams("No Data Found", R.drawable.ic_no_data);
+    protected ListViewBinder.ListViewNoDataParams getNoDataParams() {
+        return new ListViewBinder.ListViewNoDataParams("No Data Found", R.drawable.ic_no_data);
     }
 }

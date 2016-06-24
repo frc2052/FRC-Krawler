@@ -12,17 +12,15 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
-import static com.team2052.frckrawler.database.MetricHelper.MetricType;
-
 /**
  * @author Adam
  */
 public class CompiledMetricValue {
-    private static final DecimalFormat format = new DecimalFormat("0.0");
+    private static final DecimalFormat format = new DecimalFormat("0.00");
     private final List<MetricValue> metricData;
     private final Robot robot;
     private final
-    @MetricType
+    @MetricHelper.MetricType
     int metricType;
     private final Metric metric;
     private final double compileWeight;
@@ -121,7 +119,7 @@ public class CompiledMetricValue {
                 }
 
                 for (Map.Entry<Integer, Tuple2<String, Double>> entry : compiledVal.entrySet()) {
-                    compiledVal.put(entry.getKey(), entry.getValue().setT2(entry.getValue().t2 / denominator * 100));
+                    compiledVal.put(entry.getKey(), entry.getValue().setT2(Math.round((entry.getValue().t2 / denominator * 100) * 100.0) / 100.0));
                 }
 
                 JsonArray values = JSON.getGson().toJsonTree(Tuple2.yieldValues(compiledVal.values()).toArray()).getAsJsonArray();
@@ -147,7 +145,7 @@ public class CompiledMetricValue {
                 JsonArray values = compiledValue.get("values").getAsJsonArray();
                 String value = "";
                 for (int i = 0; i < names.size(); i++) {
-                    value += String.format("%s:%s%s", names.get(i).getAsString(), values.get(i).getAsDouble(), '%');
+                    value += String.format("%s:%s%s\n", names.get(i).getAsString(), values.get(i).getAsDouble(), '%');
                 }
                 return value;
         }

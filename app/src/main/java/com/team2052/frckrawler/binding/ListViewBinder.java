@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.consumer;
+package com.team2052.frckrawler.binding;
 
 import android.support.annotation.DrawableRes;
 import android.view.View;
@@ -11,7 +11,7 @@ import com.team2052.frckrawler.listitems.ListItem;
 
 import java.util.List;
 
-public class ListViewConsumer extends DataConsumer<List<ListItem>> {
+public class ListViewBinder extends BaseDataBinder<List<ListItem>> {
     public ListView listView;
     public View noDataRootView;
     public ImageView noDataImage;

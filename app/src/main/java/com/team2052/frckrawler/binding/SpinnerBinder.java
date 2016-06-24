@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.consumer;
+package com.team2052.frckrawler.binding;
 
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Adam on 11/24/2015.
  */
-public class SpinnerConsumer extends DataConsumer<List<String>> {
+public class SpinnerBinder extends BaseDataBinder<List<String>> {
     public Spinner mSpinner;
     public NoDataHandler noDataHandler;
 

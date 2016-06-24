@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
+import com.team2052.frckrawler.database.CompilerManager;
 import com.team2052.frckrawler.database.DBManager;
 
 import javax.inject.Singleton;
@@ -31,6 +32,12 @@ public class FRCKrawlerModule {
     @Singleton
     public DBManager getDBManager() {
         return DBManager.getInstance(mApp.getApplicationContext());
+    }
+
+    @Provides
+    @Singleton
+    public CompilerManager getDataManager() {
+        return new CompilerManager(mApp.getApplicationContext(), getDBManager());
     }
 
     @Provides

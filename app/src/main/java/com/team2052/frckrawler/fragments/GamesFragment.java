@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.GameInfoActivity;
-import com.team2052.frckrawler.consumer.ListViewConsumer;
+import com.team2052.frckrawler.binding.ListViewBinder;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragments.dialog.AddGameDialogFragment;
 import com.team2052.frckrawler.listitems.ListElement;
@@ -49,7 +49,7 @@ public class GamesFragment extends ListViewFragment<List<Game>, GameListSubscrib
     }
 
     @Override
-    protected ListViewConsumer.ListViewNoDataParams getNoDataParams() {
-        return new ListViewConsumer.ListViewNoDataParams("No games found", R.drawable.ic_game);
+    protected ListViewBinder.ListViewNoDataParams getNoDataParams() {
+        return new ListViewBinder.ListViewNoDataParams("No games found", R.drawable.ic_game);
     }
 }

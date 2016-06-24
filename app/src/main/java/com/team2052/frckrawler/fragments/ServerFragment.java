@@ -10,23 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
-import com.google.common.base.Optional;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
 import com.team2052.frckrawler.bluetooth.server.ServerStatus;
-import com.team2052.frckrawler.consumer.ServerFragmentConsumer;
-import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.binding.ServerFragmentBinder;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.subscribers.EventStringSubscriber;
-import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
 
-public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, EventStringSubscriber, ServerFragmentConsumer>
+public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, EventStringSubscriber, ServerFragmentBinder>
         implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static final String TAG = "ServerFragment";
     private static final int REQUEST_BT_ENABLED = 1;

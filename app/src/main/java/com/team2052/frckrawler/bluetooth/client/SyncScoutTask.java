@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.team2052.frckrawler.BuildConfig;
-import com.team2052.frckrawler.bluetooth.BluetoothInfo;
+import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;
@@ -59,7 +59,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             BluetoothSocket serverSocket = null;
 
             try {
-                serverSocket = bluetoothDevice.createRfcommSocketToServiceRecord(UUID.fromString(BluetoothInfo.UUID));
+                serverSocket = bluetoothDevice.createRfcommSocketToServiceRecord(UUID.fromString(BluetoothConstants.UUID));
                 serverSocket.connect();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -79,7 +79,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
 
             try {
                 ooStream.writeInt(BuildConfig.VERSION_CODE);
-                ooStream.writeInt(BluetoothInfo.SCOUT_SYNC);
+                ooStream.writeInt(BluetoothConstants.SCOUT_SYNC);
                 ooStream.writeObject(new ServerPackage(mDbManager));
                 ooStream.flush();
             } catch (IOException e) {
@@ -92,9 +92,9 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             ScoutPackage scoutPackage = null;
             try {
                 int code = ioStream.readInt();
-                if (code == BluetoothInfo.OK) {
+                if (code == BluetoothConstants.OK) {
                     scoutPackage = (ScoutPackage) ioStream.readObject();
-                } else if (code == BluetoothInfo.VERSION_ERROR) {
+                } else if (code == BluetoothConstants.VERSION_ERROR) {
                     errorMessage = String.format("The server version is incompatible with your version. You are running %s and the server is running %s", BuildConfig.VERSION_NAME, ioStream.readObject());
                     return SYNC_ERROR;
                 }

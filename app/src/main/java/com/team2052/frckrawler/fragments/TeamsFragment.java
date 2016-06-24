@@ -7,7 +7,7 @@ import android.view.View;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.consumer.ListViewConsumer;
+import com.team2052.frckrawler.binding.ListViewBinder;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.subscribers.TeamListSubscriber;
@@ -49,7 +49,7 @@ public class TeamsFragment extends ListViewFragment<List<Team>, TeamListSubscrib
 
 
     @Override
-    protected ListViewConsumer.ListViewNoDataParams getNoDataParams() {
-        return new ListViewConsumer.ListViewNoDataParams("No teams found", R.drawable.ic_team);
+    protected ListViewBinder.ListViewNoDataParams getNoDataParams() {
+        return new ListViewBinder.ListViewNoDataParams("No teams found", R.drawable.ic_team);
     }
 }

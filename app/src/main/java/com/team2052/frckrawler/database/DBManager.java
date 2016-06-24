@@ -518,7 +518,7 @@ public class DBManager {
             }
         }
 
-        public QueryBuilder<MatchComment> query(Integer match_number, Integer game_type, Long robot_id, Long event_id) {
+        public QueryBuilder<MatchComment> query(Long match_number, Integer game_type, Long robot_id, Long event_id) {
             QueryBuilder<MatchComment> queryBuilder = getQueryBuilder();
             if (match_number != null)
                 queryBuilder.where(MatchCommentDao.Properties.Match_number.eq(match_number));
@@ -582,7 +582,7 @@ public class DBManager {
             }
         }
 
-        public QueryBuilder<PitData> query(Long robot_id, Long metric_id, Long event_id, Long user_id) {
+        public QueryBuilder<PitData> query(Long robot_id, Long metric_id, Long event_id, @Deprecated Long user_id) {
             QueryBuilder<PitData> queryBuilder = getQueryBuilder();
             if (robot_id != null)
                 queryBuilder.where(PitDataDao.Properties.Robot_id.eq(robot_id));
@@ -642,7 +642,7 @@ public class DBManager {
 
             if (count > 0) {
                 MatchData unique = matchDataQueryBuilder.unique();
-                if (unique.getLast_updated().getTime() <= System.currentTimeMillis()) {
+                if (unique.getLast_updated().getTime() <= matchData.getLast_updated().getTime()) {
                     unique.setLast_updated(new Date());
                     unique.setData(matchData.getData());
                     matchDataDao.update(unique);
@@ -655,7 +655,7 @@ public class DBManager {
             }
         }
 
-        public QueryBuilder<MatchData> query(Long robotId, Long metricId, Integer match_number, Integer match_type, Long eventId, Long userId) {
+        public QueryBuilder<MatchData> query(Long robotId, Long metricId, Long match_number, Integer match_type, Long eventId, Long userId) {
             QueryBuilder<MatchData> matchDataQueryBuilder = getQueryBuilder();
             if (robotId != null)
                 matchDataQueryBuilder.where(MatchDataDao.Properties.Robot_id.eq(robotId));
@@ -962,7 +962,7 @@ public class DBManager {
             boolean robot_added = robot != null;
 
             if (!robot_added) {
-                robot = new Robot(null, team.getNumber(), event.getGame_id(), null, null, new Date());
+                robot = new Robot(null, team.getNumber(), event.getGame_id(), null, "", new Date());
                 daoSession.insert(robot);
             }
 

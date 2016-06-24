@@ -7,14 +7,19 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.di.DaggerFragmentComponent;
+import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.fragments.dialog.ExportDialogFragment;
 import com.team2052.frckrawler.fragments.dialog.PickEventDialogFragment;
+import com.team2052.frckrawler.subscribers.SubscriberModule;
 
-public class SettingsActivity extends AppCompatActivity implements PickEventDialogFragment.EventPickedListener {
+public class SettingsActivity extends AppCompatActivity implements PickEventDialogFragment.EventPickedListener, HasComponent {
     private static String EXPORT_PREFERENCE_KEY = "compile_export_preference";
+    private FragmentComponent mComponent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,12 +35,25 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
         ExportDialogFragment.newInstance(event).show(getSupportFragmentManager(), "exportDialogFragment");
     }
 
+    @Override
+    public FragmentComponent getComponent() {
+        if (mComponent == null) {
+            FRCKrawler app = (FRCKrawler) getApplication();
+            mComponent = DaggerFragmentComponent
+                    .builder()
+                    .fRCKrawlerModule(app.getModule())
+                    .subscriberModule(new SubscriberModule(this))
+                    .applicationComponent(app.getComponent())
+                    .build();
+        }
+        return mComponent;
+    }
+
     public static class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
-
             addPreferencesFromResource(R.xml.preferences);
             int numEvents = DBManager.getInstance(getActivity()).getEventsTable().getAllEvents().size();
 

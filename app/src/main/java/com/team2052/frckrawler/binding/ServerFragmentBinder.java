@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.consumer;
+package com.team2052.frckrawler.binding;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,10 +20,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class ServerFragmentConsumer extends DataConsumer<List<String>> {
+public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
     @BindView(R.id.view_event)
     Button viewEventButton;
     @BindView(R.id.scout_match_button)

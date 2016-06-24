@@ -30,7 +30,7 @@
         <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="android:background">@color/primary</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
     <style name="AppThemeFull" parent="Base.Theme.AppCompat.Light.DarkActionBar">

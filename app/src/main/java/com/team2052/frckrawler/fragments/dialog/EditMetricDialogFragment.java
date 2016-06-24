@@ -10,8 +10,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.BaseActivity;
@@ -64,18 +62,7 @@ public class EditMetricDialogFragment extends DialogFragment {
     }
 
     private View initViews() {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_metric, null);
-        mMetricTypeSpinner = (Spinner) view.findViewById(R.id.type);
-        mName = (EditText) view.findViewById(R.id.name);
-        mDescription = (EditText) view.findViewById(R.id.description);
-        mMinimum = (EditText) view.findViewById(R.id.minimum);
-        mMaximum = (EditText) view.findViewById(R.id.maximum);
-        mIncrementation = (EditText) view.findViewById(R.id.incrementation);
-        mListEditor = (FrameLayout) view.findViewById(R.id.list_editor);
-        mListHeader = view.findViewById(R.id.list_header);
-
-        mMetricTypeSpinner.setVisibility(View.GONE);
-        return view;
+        return null;
     }
 
     public void setupEditor(@MetricHelper.MetricType int type) {

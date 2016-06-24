@@ -1,10 +1,10 @@
-package com.team2052.frckrawler.consumer;
+package com.team2052.frckrawler.binding;
 
 /**
  * Created by Adam on 11/24/2015.
  */
 public interface NoDataHandler {
-    void noData(DataConsumer consumer);
+    void noData(BaseDataBinder consumer);
 
     void showData();
 }

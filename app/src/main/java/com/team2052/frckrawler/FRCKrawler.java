@@ -2,7 +2,7 @@ package com.team2052.frckrawler;
 
 import android.app.Application;
 
-import com.team2052.frckrawler.consumer.ConsumerModule;
+import com.team2052.frckrawler.binding.BinderModule;
 import com.team2052.frckrawler.di.ApplicationComponent;
 import com.team2052.frckrawler.di.DaggerApplicationComponent;
 import com.team2052.frckrawler.di.FRCKrawlerModule;
@@ -10,7 +10,7 @@ import com.team2052.frckrawler.di.FRCKrawlerModule;
 public class FRCKrawler extends Application {
     private FRCKrawlerModule mModule;
     private ApplicationComponent mApplicationComponent;
-    private ConsumerModule mConsumerModule;
+    private BinderModule mBinderModule;
 
     public ApplicationComponent getComponent() {
         if (mApplicationComponent == null) {
@@ -29,10 +29,10 @@ public class FRCKrawler extends Application {
         return mModule;
     }
 
-    public ConsumerModule getConsumerModule() {
-        if (mConsumerModule == null) {
-            mConsumerModule = new ConsumerModule();
+    public BinderModule getConsumerModule() {
+        if (mBinderModule == null) {
+            mBinderModule = new BinderModule();
         }
-        return mConsumerModule;
+        return mBinderModule;
     }
 }

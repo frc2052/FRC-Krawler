@@ -84,10 +84,6 @@ public class AddMetricActivity extends DatabaseActivity {
     private Observable<List<String>> mCommaListObservable;
     private Observable<Metric> metricObservable;
 
-    public AddMetricActivity() {
-
-    }
-
     public static Intent newInstance(Context context, long gameId, int metricType) {
         Intent intent = new Intent(context, AddMetricActivity.class);
         intent.putExtra(GAME_ID_EXTRA, gameId);
@@ -109,6 +105,21 @@ public class AddMetricActivity extends DatabaseActivity {
         @MetricHelper.MetricCategory
         int metricCategory = getIntent().getIntExtra(METRIC_CATEGORY_EXTRA, MetricHelper.MATCH_PERF_METRICS);
         this.mMetricCategory = metricCategory;
+
+        mCommaListObservable = Observable.defer(() -> Observable.just(mCommaSeparatedList.getEditText().getText().toString()))
+                .map(text -> Strings.isNullOrEmpty(text) ? Lists.newArrayList() : Arrays.asList(text.split("\\s*,\\s*")));
+        mDescriptionObservable = Observable.defer(() -> Observable.just(mDescription.getEditText().getText().toString()));
+        mNameObservable = Observable.defer(() -> Observable.just(mName.getEditText().getText().toString()))
+                .map(text -> Strings.isNullOrEmpty(text) ? getResources().getStringArray(R.array.metric_types)[typeSpinner.getSelectedItemPosition()] : text);
+        mIncrementationObservable = Observable.defer(() -> Observable.just(mIncrementation.getEditText().getText().toString()))
+                .map(Integer::parseInt)
+                .onErrorReturn(ret -> 1);
+        mMaximumObservable = Observable.defer(() -> Observable.just(mMaximum.getEditText().getText().toString()))
+                .map(Integer::parseInt)
+                .onErrorReturn(ret -> 10);
+        mMinimumObservable = Observable.defer(() -> Observable.just(mMinimum.getEditText().getText().toString()))
+                .map(Integer::parseInt)
+                .onErrorReturn(ret -> 0);
 
         metricObservable = Observable.combineLatest(mNameObservable, mMinimumObservable, mMaximumObservable, mIncrementationObservable, mDescriptionObservable, mCommaListObservable, MetricPreviewParams::new)
                 .map(metricPreviewParams -> {
@@ -141,21 +152,6 @@ public class AddMetricActivity extends DatabaseActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-
-        mCommaListObservable = Observable.defer(() -> Observable.just(mCommaSeparatedList.getEditText().getText().toString()))
-                .map(text -> Strings.isNullOrEmpty(text) ? Lists.newArrayList() : Arrays.asList(text.split("\\s*,\\s*")));
-        mDescriptionObservable = Observable.defer(() -> Observable.just(mDescription.getEditText().getText().toString()));
-        mNameObservable = Observable.defer(() -> Observable.just(mName.getEditText().getText().toString()))
-                .map(text -> Strings.isNullOrEmpty(text) ? getResources().getStringArray(R.array.metric_types)[typeSpinner.getSelectedItemPosition()] : text);
-        mIncrementationObservable = Observable.defer(() -> Observable.just(mIncrementation.getEditText().getText().toString()))
-                .map(Integer::parseInt)
-                .onErrorReturn(ret -> 1);
-        mMaximumObservable = Observable.defer(() -> Observable.just(mMaximum.getEditText().getText().toString()))
-                .map(Integer::parseInt)
-                .onErrorReturn(ret -> 10);
-        mMinimumObservable = Observable.defer(() -> Observable.just(mMinimum.getEditText().getText().toString()))
-                .map(Integer::parseInt)
-                .onErrorReturn(ret -> 0);
 
         setContentView(R.layout.activity_add_metric);
         ButterKnife.bind(this);

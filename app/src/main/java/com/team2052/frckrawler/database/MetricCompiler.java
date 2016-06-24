@@ -69,7 +69,6 @@ public class MetricCompiler {
                 for (MatchData matchData : queryBuilder.list()) {
                     metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), JSON.getAsJsonObject(matchData.getData())));
                 }
-
             } else if (metric.getCategory() == MetricHelper.ROBOT_METRICS) {
                 QueryBuilder<PitData> queryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), event.getId(), null);
 

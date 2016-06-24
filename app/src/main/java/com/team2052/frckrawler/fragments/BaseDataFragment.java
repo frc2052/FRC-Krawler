@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.team2052.frckrawler.activities.HasComponent;
-import com.team2052.frckrawler.consumer.DataConsumer;
+import com.team2052.frckrawler.binding.BaseDataBinder;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.subscribers.BaseDataSubscriber;
@@ -22,7 +22,7 @@ import rx.schedulers.Schedulers;
  * B - Binder Type
  */
 public abstract class BaseDataFragment
-        <T, V, S extends BaseDataSubscriber<T, V>, B extends DataConsumer<V>>
+        <T, V, S extends BaseDataSubscriber<T, V>, B extends BaseDataBinder<V>>
         extends Fragment {
     protected FragmentComponent mComponent;
     protected DBManager dbManager;

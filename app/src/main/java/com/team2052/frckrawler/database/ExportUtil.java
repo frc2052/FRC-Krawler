@@ -12,15 +12,11 @@ import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.util.PreferenceUtil;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
-import au.com.bytecode.opencsv.CSVWriter;
 import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -36,40 +32,67 @@ public class ExportUtil {
 
     public static Observable<List<List<String>>> getFullExport(Context context, Event event) {
         DBManager dbManager = DBManager.getInstance(context);
-        float compileWeight = PreferenceUtil.compileWeight(context);
         final Observable<List<Metric>> matchMetricListObservable = PreferenceUtil.compileMatchMetricsToExport(context) ? dbManager.metricsInGame(event.getGame_id(), MetricHelper.MATCH_PERF_METRICS) : Observable.just(Lists.newArrayList());
         final Observable<List<Metric>> robotMetricListObservable = PreferenceUtil.compilePitMetricsToExport(context) ? dbManager.metricsInGame(event.getGame_id(), MetricHelper.ROBOT_METRICS) : Observable.just(Lists.newArrayList());
         final Observable<List<Metric>> metricsObservable = Observable.merge(matchMetricListObservable, robotMetricListObservable);
         Observable<List<Robot>> robotObservable = dbManager.robotsAtEvent(event.getId());
-        Observable<Float> compileWeightObservable = Observable.defer(() -> Observable.just(PreferenceUtil.compileWeight(context)));
 
+        float compileWeight = PreferenceUtil.compileWeight(context);
+        boolean compileTeamNames = PreferenceUtil.compileTeamNamesToExport(context);
+        boolean compileMatchMetrics = PreferenceUtil.compileMatchMetricsToExport(context);
+        boolean compilePitMetrics = PreferenceUtil.compilePitMetricsToExport(context);
 
-        Observable<Boolean> compileTeamNamesObservable = Observable.defer(() -> Observable.just(PreferenceUtil.compileTeamNamesToExport(context)));
-
-
-        return Observable.combineLatest(Observable.just(event), metricsObservable, robotObservable, compileWeightObservable, compileTeamNamesObservable, FullExportData::new)
+        return Observable.combineLatest(
+                Observable.just(event),
+                metricsObservable,
+                robotObservable,
+                FullExportData::new)
                 .flatMap(fullExportData -> {
                     Observable<List<List<String>>> robotDataObservable = Observable.from(fullExportData.robots)
-                            .flatMap(robotListItem -> Observable.just(robotListItem)
-                                    .map(robot -> buildRecord(dbManager, robot, fullExportData.metrics, fullExportData.event, fullExportData.compileWeight))
-                                    .subscribeOn(Schedulers.computation())).toList();
-                    return robotDataObservable;
+                            .concatMap(robotListItem -> Observable.just(robotListItem)
+                                    .map(robot -> buildRecord(dbManager, robot, fullExportData.metrics, fullExportData.event, compileWeight))
+                                    .subscribeOn(Schedulers.computation())
+                            ).toList();
+                    return Observable.merge(getHeader(context, fullExportData.metrics), robotDataObservable);
                 });
     }
+
+    private static Observable<List<List<String>>> getHeader(Context context, List<Metric> metrics) {
+        List<String> header = Lists.newArrayList();
+
+        header.add("Team Number");
+
+        if (PreferenceUtil.compileTeamNamesToExport(context)) {
+            header.add("Team Names");
+        }
+
+        if (PreferenceUtil.compileMatchMetricsToExport(context)) {
+            header.add("Match Comments");
+        }
+
+        if (PreferenceUtil.compilePitMetricsToExport(context)) {
+            header.add("Robot Comments");
+        }
+
+        for (int i = 0; i < metrics.size(); i++) {
+            Metric metric = metrics.get(i);
+            header.add(metric.getName());
+        }
+
+        return Observable.just(header).toList();
+    }
+
+
 
     public static class FullExportData {
         Event event;
         List<Metric> metrics;
         List<Robot> robots;
-        float compileWeight;
-        boolean compileTeamNames;
 
-        public FullExportData(Event event, List<Metric> metrics, List<Robot> robots, float compileWeight, boolean compileTeamNames) {
+        public FullExportData(Event event, List<Metric> metrics, List<Robot> robots) {
             this.event = event;
             this.metrics = metrics;
             this.robots = robots;
-            this.compileWeight = compileWeight;
-            this.compileTeamNames = compileTeamNames;
         }
     }
 

@@ -2,6 +2,7 @@ package com.team2052.frckrawler.subscribers;
 
 import android.app.Activity;
 
+import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.di.FRCKrawlerModule;
 
 import dagger.Module;
