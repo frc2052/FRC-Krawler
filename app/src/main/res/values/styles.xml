@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppBase" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="AppBase.NoActionBar">
+    <style name="AppTheme.NoActionBar.NoActionBar">
         <item name="android:windowBackground">@color/primary</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppThemeNoActionBarTranslucentStatus" parent="AppBase">
+    <style name="AppThemeNoActionBarTranslucentStatus" parent="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <style name="AppBaseWhite" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@android:color/white</item>
-        <item name="colorAccent">@android:color/white</item>
     </style>
 
     <style name="DefaultToolbarStyle">
@@ -33,14 +28,13 @@
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
-    <style name="AppThemeFull" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.ActionBar" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorPrimary">@color/primary</item>
         <item name="colorAccent">@color/color_accent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:textColor">@color/black</item>
     </style>
-
 
     <style name="AppAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/color_accent</item>

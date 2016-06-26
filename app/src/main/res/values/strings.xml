@@ -93,9 +93,10 @@
 
     <!-- Titles -->
     <string name="summary_title">Summary</string>
-    <string name="event">Event</string>
-    <string name="robot_text">Robot</string>
-    <string name="team">Team</string>
+    <string name="event_title">Event</string>
+    <string name="robot_title">Robot</string>
+    <string name="team_title">Team</string>
+    <string name="game_title">Game</string>
     <!--End Titles-->
 
     <!-- Misc -->

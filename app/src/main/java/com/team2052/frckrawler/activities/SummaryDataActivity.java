@@ -17,6 +17,7 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.CompiledMetricListElement;
+import com.team2052.frckrawler.util.PreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +61,7 @@ public class SummaryDataActivity extends BaseActivity {
         final float compileWeight;
 
         public GetCompiledData() {
-            this.compileWeight = getSharedPreferences(Constants.PREFS_FILE_NAME, 0).getFloat(Constants.PREFS_COMPILE_WEIGHT, 1.0f);
+            this.compileWeight = PreferenceUtil.compileWeight(SummaryDataActivity.this);
         }
 
         @Override

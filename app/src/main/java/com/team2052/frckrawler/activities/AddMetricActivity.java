@@ -2,6 +2,7 @@ package com.team2052.frckrawler.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -101,7 +102,6 @@ public class AddMetricActivity extends DatabaseActivity {
         super.onCreate(savedInstanceState);
         mGame = dbManager.getGamesTable().load(getIntent().getLongExtra(GAME_ID_EXTRA, 0));
 
-
         @MetricHelper.MetricCategory
         int metricCategory = getIntent().getIntExtra(METRIC_CATEGORY_EXTRA, MetricHelper.MATCH_PERF_METRICS);
         this.mMetricCategory = metricCategory;
@@ -150,7 +150,7 @@ public class AddMetricActivity extends DatabaseActivity {
                     factory.setMetricCategory(mMetricCategory);
                     return factory.buildMetric();
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread());
 
         setContentView(R.layout.activity_add_metric);

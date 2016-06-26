@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.database;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -12,8 +11,11 @@ import com.team2052.frckrawler.db.MatchDataDao;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.fragments.dialog.events.ProgressDialogUpdateEvent;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.PreferenceUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -92,16 +94,19 @@ public class CompilerManager {
         final float compileWeight = getCompileWeight();
         final boolean compileTeamNames = PreferenceUtil.compileTeamNamesToExport(context);
         final boolean compileMatchMetric = PreferenceUtil.compileMatchMetricsToExport(context);
-
         final boolean compilePitMetric = PreferenceUtil.compilePitMetricsToExport(context);
 
+        EventBus eventBus = EventBus.getDefault();
+
         final Scheduler scheduler = Schedulers.from(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
+
         return Observable.combineLatest(metricListObservable(event), dbManager.robotsAtEvent(event.getId()), FullExportParams::new)
                 .flatMap(fullExportParams -> {
                     Observable<List<List<String>>> listObservable = Observable.from(fullExportParams.robots)
-                            .concatMap((Func1<Robot, Observable<List<String>>>) robot -> {
+                            .concatMap(robot -> {
+                                eventBus.post(new ProgressDialogUpdateEvent("Compiling Team " + robot.getTeam_id()));
                                 return Observable.from(fullExportParams.metrics)
-                                        .concatMap((Func1<Metric, Observable<String>>) metric -> compiledRobotMetricStringObservable(compiledRobotMetricObservable(event, metric, robot, compileWeight)))
+                                        .concatMap(metric -> compiledRobotMetricStringObservable(compiledRobotMetricObservable(event, metric, robot, compileWeight)))
                                         .toList()
                                         .map(list -> {
                                             if (compileTeamNames) {

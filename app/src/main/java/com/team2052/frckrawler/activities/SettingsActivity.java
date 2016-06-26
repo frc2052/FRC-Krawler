@@ -69,6 +69,8 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
             String key = preference.getKey();
             if (key.equals(EXPORT_PREFERENCE_KEY)) {
                 new PickEventDialogFragment().show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "pickEventDialog");
+            } else {
+
             }
             return false;
         }

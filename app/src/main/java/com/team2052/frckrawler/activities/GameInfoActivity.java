@@ -46,7 +46,6 @@ public class GameInfoActivity extends DatabaseActivity implements View.OnClickLi
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setActionBarTitle("Game");
 
         mAdapter = new GameInfoPagerAdapter(this, getSupportFragmentManager(), getIntent().getLongExtra(PARENT_ID, 0));
         mViewPager.setAdapter(mAdapter);
@@ -83,7 +82,7 @@ public class GameInfoActivity extends DatabaseActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                startActivity(HomeActivity.newInstance(this, R.id.nav_item_games).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

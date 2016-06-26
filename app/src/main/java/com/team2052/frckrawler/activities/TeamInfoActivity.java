@@ -36,7 +36,7 @@ public class TeamInfoActivity extends DatabaseActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        setActionBarTitle(getString(R.string.team));
+        //setActionBarTitle(getString(R.string.team));
         setActionBarSubtitle(String.valueOf(team_id));
     }
 

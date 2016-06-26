@@ -13,7 +13,6 @@ import android.view.View;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.tab.EventViewPagerAdapter;
 import com.team2052.frckrawler.listeners.FABButtonListener;
-import com.team2052.frckrawler.listeners.RefreshListener;
 
 /**
  * @author Adam
@@ -42,7 +41,6 @@ public class EventInfoActivity extends DatabaseActivity implements View.OnClickL
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
-        setActionBarTitle(getString(R.string.event));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mFab = (FloatingActionButton) findViewById(R.id.floating_action_button);
