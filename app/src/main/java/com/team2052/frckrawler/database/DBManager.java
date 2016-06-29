@@ -978,6 +978,10 @@ public class DBManager {
             }
         }
 
+        @Deprecated
+        /**
+         * Please do not use this unless you really need to
+         */
         public void insert(Team team) {
             teamDao.insertOrReplace(team);
         }

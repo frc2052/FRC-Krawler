@@ -3,13 +3,13 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 23
     buildToolsVersion '24.0.0'
 
     defaultConfig {
         applicationId 'com.team2052.frckrawler'
         minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 23
         versionCode 26
         versionName "3.0.5"
     }

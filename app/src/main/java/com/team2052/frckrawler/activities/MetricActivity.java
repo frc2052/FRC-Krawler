@@ -28,7 +28,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Adam on 6/13/2015.
  */
-public class MetricActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
+public class MetricActivity extends DatabaseActivity implements CompoundButton.OnCheckedChangeListener {
     public static final String METRIC_ID = "METRIC_ID";
     TextView mName, mDescription, mRangeMin, mRangeMax, mRangeInc, mType;
     SwitchCompat mEnabled;
@@ -59,9 +59,14 @@ public class MetricActivity extends BaseActivity implements CompoundButton.OnChe
     }
 
     @Override
+    public void inject() {
+        getComponent().inject(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        metric = mDbManager.getMetricsTable().load(getIntent().getExtras().getLong(METRIC_ID));
+        metric = dbManager.getMetricsTable().load(getIntent().getExtras().getLong(METRIC_ID));
         mEnabled.setChecked(metric.getEnabled());
         mEnabled.setOnCheckedChangeListener(this);
         JsonObject data = JSON.getAsJsonObject(metric.getData());
@@ -124,7 +129,7 @@ public class MetricActivity extends BaseActivity implements CompoundButton.OnChe
             builder.setPositiveButton("Delete", (dialog, which) -> {
                 Observable.just(metric)
                         .map(metric -> {
-                            mDbManager.getMetricsTable().delete(metric);
+                            dbManager.getMetricsTable().delete(metric);
                             return metric;
                         })
                         .subscribeOn(Schedulers.io())

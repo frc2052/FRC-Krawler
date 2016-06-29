@@ -17,6 +17,8 @@ import com.team2052.frckrawler.bluetooth.server.ServerStatus;
 import com.team2052.frckrawler.binding.ServerFragmentBinder;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.subscribers.EventStringSubscriber;
+import com.team2052.frckrawler.util.BluetoothUtil;
+import com.team2052.frckrawler.util.SnackbarUtil;
 
 import java.util.List;
 
@@ -84,6 +86,8 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
 
         binder.setRootView(view);
         binder.bindViews();
+
+        binder.mHostToggle.setEnabled(BluetoothUtil.hasBluetoothAdapter());
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -91,7 +95,7 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getId() == R.id.host_toggle) {
             if (BluetoothAdapter.getDefaultAdapter() == null) {
-                Snackbar.make(getView(), "Sorry, your device does not support bluetooth.", Snackbar.LENGTH_LONG).show();
+                SnackbarUtil.make(getView(), "Sorry, your device does not support bluetooth.", Snackbar.LENGTH_LONG).show();
                 return;
             } else if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                 startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_BT_ENABLED);

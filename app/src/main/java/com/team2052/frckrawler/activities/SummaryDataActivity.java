@@ -8,7 +8,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
-import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.MetricsStatsAdapter;
 import com.team2052.frckrawler.database.CompiledMetricValue;
@@ -26,7 +25,7 @@ import java.util.List;
 /**
  * @author Adam
  */
-public class SummaryDataActivity extends BaseActivity {
+public class SummaryDataActivity extends DatabaseActivity {
     public static String EVENT_ID = "EVENT_ID";
     private ListView mListView;
     private Event mEvent;
@@ -35,7 +34,7 @@ public class SummaryDataActivity extends BaseActivity {
 
     public static Intent newInstance(Context context, Metric metric, Event event) {
         Intent intent = new Intent(context, SummaryDataActivity.class);
-        intent.putExtra(PARENT_ID, metric.getId());
+        intent.putExtra(DatabaseActivity.PARENT_ID, metric.getId());
         intent.putExtra(EVENT_ID, event.getId());
         return intent;
     }
@@ -49,11 +48,16 @@ public class SummaryDataActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         ViewCompat.setElevation(toolbar, getResources().getDimension(R.dimen.toolbar_elevation));
         mListView = (ListView) findViewById(R.id.list_layout);
-        mEvent = mDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
-        mMetric = mDbManager.getMetricsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
+        mEvent = dbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
+        mMetric = dbManager.getMetricsTable().load(getIntent().getLongExtra(DatabaseActivity.PARENT_ID, 0));
         setActionBarTitle(getString(R.string.summary_title));
         setActionBarSubtitle(mMetric.getName());
         new GetCompiledData().execute();
+    }
+
+    @Override
+    public void inject() {
+        getComponent().inject(this);
     }
 
 
@@ -66,7 +70,7 @@ public class SummaryDataActivity extends BaseActivity {
 
         @Override
         protected List<CompiledMetricValue> doInBackground(Void... params) {
-            return MetricCompiler.getCompiledMetric(mEvent, mMetric, mDbManager, compileWeight);
+            return MetricCompiler.getCompiledMetric(mEvent, mMetric, dbManager, compileWeight);
         }
 
         @Override

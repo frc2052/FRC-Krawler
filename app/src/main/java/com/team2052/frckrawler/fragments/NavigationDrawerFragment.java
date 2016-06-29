@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -194,7 +195,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     public void onInsetsChanged(Rect insets) {
         if (getView() != null) {
-            RelativeLayout accountDetailsContainer = (RelativeLayout) getView().findViewById(R.id.banner_details_container);
+            LinearLayout accountDetailsContainer = (LinearLayout) getView().findViewById(R.id.banner_details_container);
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) accountDetailsContainer.getLayoutParams();
             lp.topMargin = insets.top;
             accountDetailsContainer.setLayoutParams(lp);

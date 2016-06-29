@@ -148,9 +148,9 @@ public class ScoutMatchFragment extends BaseScoutFragment {
         }));
     }
 
-    @OnClick(R.id.button_save)
-    protected void saveMetrics(View viewClicked) {
-        Subscription saveSubscription = Observable.combineLatest(matchNumberObservable(), robotObservable(), Observable.defer(() -> Observable.just(getValues())), Observable.just(mCommentsView.getEditText().getText().toString()), MatchScoutSaveMetric::new)
+    @Override
+    public Observable<Boolean> getSaveMetricObservable() {
+        return Observable.combineLatest(matchNumberObservable(), robotObservable(), Observable.defer(() -> Observable.just(getValues())), Observable.just(mCommentsView.getEditText().getText().toString()), MatchScoutSaveMetric::new)
                 .map(matchScoutSaveMetric -> {
                     //Insert Metric Data
                     boolean saved = false;
@@ -181,19 +181,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                             saved = true;
                     }
                     return saved;
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext -> {
-                    if (onNext) {
-                        SnackbarUtil.make(getView(), "Save Complete", Snackbar.LENGTH_SHORT).show();
-                    } else {
-                        SnackbarUtil.make(getView(), "Update Complete", Snackbar.LENGTH_SHORT).show();
-                    }
-                }, onError -> {
-                    SnackbarUtil.make(getView(), "Cannot Save, make sure you double check everything and try again", Snackbar.LENGTH_SHORT).show();
                 });
-        subscriptions.add(saveSubscription);
     }
 
     public class MatchScoutSaveMetric {

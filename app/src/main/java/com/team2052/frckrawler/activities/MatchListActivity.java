@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 /**
  * @author Adam
  */
-public class MatchListActivity extends BaseActivity {
+public class MatchListActivity extends DatabaseActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.list)
@@ -36,7 +36,7 @@ public class MatchListActivity extends BaseActivity {
 
     public static Intent newInstance(Context c, Event event) {
         Intent i = new Intent(c, MatchListActivity.class);
-        i.putExtra(PARENT_ID, event.getId());
+        i.putExtra(DatabaseActivity.PARENT_ID, event.getId());
         return i;
     }
 
@@ -46,7 +46,7 @@ public class MatchListActivity extends BaseActivity {
         setContentView(R.layout.card_view_list);
         ButterKnife.bind(this);
 
-        mEvent = mDbManager.getEventsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
+        mEvent = dbManager.getEventsTable().load(getIntent().getLongExtra(DatabaseActivity.PARENT_ID, 0));
 
         toolbar.setTitle("Match Schedule");
         toolbar.setSubtitle(mEvent.getName());
@@ -66,6 +66,11 @@ public class MatchListActivity extends BaseActivity {
     }
 
     @Override
+    public void inject() {
+        getComponent().inject(this);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(this);
@@ -78,7 +83,7 @@ public class MatchListActivity extends BaseActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<Match> matches = mDbManager.getMatchesTable().query(null, null, mEvent.getId(), null).orderAsc(MatchDao.Properties.Match_number).list();
+            List<Match> matches = dbManager.getMatchesTable().query(null, null, mEvent.getId(), null).orderAsc(MatchDao.Properties.Match_number).list();
             List<ListItem> listItems = new ArrayList<>();
             for (Match match : matches) {
                 listItems.add(new MatchListItem(match));

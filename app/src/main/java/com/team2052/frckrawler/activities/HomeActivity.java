@@ -40,13 +40,13 @@ public class HomeActivity extends DatabaseActivity {
     public void onNavDrawerItemClicked(NavDrawerItem item) {
         int id = item.getId();
         if (id != mCurrentSelectedNavigationItemId) {
-            switchToModeForId(id);
+            handler.postDelayed(() -> switchToModeForId(id), DRAWER_CLOSE_ANIMATION_DURATION);
         }
     }
 
     @Override
     public void onCreateNavigationDrawer() {
-        useActionBarToggle();
+        useActionBarToggle(true);
         encourageLearning(!mFromSavedInstanceState);
     }
 

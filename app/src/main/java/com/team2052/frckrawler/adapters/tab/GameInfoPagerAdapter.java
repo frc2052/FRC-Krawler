@@ -16,9 +16,8 @@ import com.team2052.frckrawler.fragments.MetricsFragment;
 public class GameInfoPagerAdapter extends InstanceFragmentStatePagerAdapter {
     private final long mGameId;
     public String[] headers = new String[]{"Info", "Events", "Match Metrics", "Pit Metrics"};
-    private GameInfoActivity gameInfoActivity;
 
-    public GameInfoPagerAdapter(GameInfoActivity gameInfoActivity, FragmentManager fm, long game_id) {
+    public GameInfoPagerAdapter(FragmentManager fm, long game_id) {
         super(fm);
         mGameId = game_id;
     }

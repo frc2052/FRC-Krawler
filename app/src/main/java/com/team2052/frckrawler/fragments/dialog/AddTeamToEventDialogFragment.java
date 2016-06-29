@@ -2,7 +2,6 @@ package com.team2052.frckrawler.fragments.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -11,7 +10,7 @@ import android.widget.EditText;
 
 import com.squareup.okhttp.Response;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Team;
@@ -22,6 +21,9 @@ import com.team2052.frckrawler.tba.TBA;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * @author Adam
@@ -31,11 +33,12 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
     @BindView(R.id.team_number)
     EditText add_team;
     private Event mEvent;
+    private DBManager dbManager;
 
     public static AddTeamToEventDialogFragment newInstance(Event game) {
         AddTeamToEventDialogFragment fragment = new AddTeamToEventDialogFragment();
         Bundle b = new Bundle();
-        b.putLong(BaseActivity.PARENT_ID, game.getId());
+        b.putLong(DatabaseActivity.PARENT_ID, game.getId());
         fragment.setArguments(b);
         return fragment;
     }
@@ -43,7 +46,8 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mEvent = DBManager.getInstance(getActivity()).getEventsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
+        dbManager = DBManager.getInstance(getActivity());
+        this.mEvent = DBManager.getInstance(getActivity()).getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override
@@ -62,39 +66,27 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            new SaveTeamTask(Integer.parseInt(add_team.getText().toString())).execute();
+            Observable.defer(() -> Observable.just(Integer.parseInt(add_team.getText().toString())))
+                    .map(teamNumber -> String.format(TBA.TEAM, teamNumber))
+                    .map(HTTP::getResponse)
+                    .filter(Response::isSuccessful)
+                    .map(HTTP::dataFromResponse)
+                    .map(responseString -> JSON.getAsJsonObject(responseString))
+                    .map(jsonObject -> JSON.getGson().fromJson(jsonObject, Team.class))
+                    .map(team -> {
+                        dbManager.getTeamsTable().insertNew(team, mEvent);
+                        return true;
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(onNext -> {
+                        if(getParentFragment() instanceof RefreshListener) {
+                            ((RefreshListener) getParentFragment()).refresh();
+                        }
+                    }, onError -> {
+                    }, () -> {
+                    });
         } else {
-            dismiss();
-        }
-    }
-
-    public class SaveTeamTask extends AsyncTask<Void, Void, Void> {
-
-        private final int teamNumber;
-
-        public SaveTeamTask(int teamNumber) {
-            this.teamNumber = teamNumber;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            DBManager dbManager = DBManager.getInstance(getActivity());
-            //Team doesn't exist nor does robot and robotevent (most likely)
-            String url = String.format(TBA.TEAM, teamNumber);
-            //Query Team from TBA :)
-            Response response = HTTP.getResponse(url);
-            if (response.isSuccessful()) {
-                String responseString = HTTP.dataFromResponse(response);
-                Team team = JSON.getGson().fromJson(JSON.getAsJsonObject(responseString), Team.class);
-                dbManager.getTeamsTable().insertNew(team, mEvent);
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            ((RefreshListener) getParentFragment()).refresh();
             dismiss();
         }
     }

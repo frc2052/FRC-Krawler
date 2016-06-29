@@ -12,7 +12,7 @@ import android.widget.Spinner;
 
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
@@ -33,7 +33,7 @@ public class EditMetricDialogFragment extends DialogFragment {
     public static EditMetricDialogFragment newInstance(Metric metric) {
         EditMetricDialogFragment fragment = new EditMetricDialogFragment();
         Bundle args = new Bundle();
-        args.putLong(BaseActivity.PARENT_ID, metric.getId());
+        args.putLong(DatabaseActivity.PARENT_ID, metric.getId());
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,7 +47,7 @@ public class EditMetricDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mMetric = mDbSession.getMetricsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
+        mMetric = mDbSession.getMetricsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
         b.setTitle("Edit Metric");
         b.setView(initViews());
@@ -103,6 +103,8 @@ public class EditMetricDialogFragment extends DialogFragment {
                 mIncrementation.setVisibility(View.GONE);
                 mListEditor.removeAllViews();
                 mListHeader.setVisibility(View.GONE);
+                break;
+            case MetricHelper.BOOLEAN:
                 break;
         }
     }

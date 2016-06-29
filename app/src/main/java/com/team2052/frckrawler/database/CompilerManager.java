@@ -1,9 +1,13 @@
 package com.team2052.frckrawler.database;
 
 import android.content.Context;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchData;
@@ -21,6 +25,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -152,12 +157,8 @@ public class CompilerManager {
                 });
     }
 
-    public Observable<File> writeFullExportToFile(Event event, File file) {
-        return writeToFile(fullExportObservable(event), file);
-    }
-
-    public Observable<File> writeToFile(Observable<List<List<String>>> listObservable, File file) {
-        return listObservable.map(lists -> {
+    public Observable<File> writeToFile(Observable<List<List<String>>> listObservable, Observable<File> fileObservable) {
+        return listObservable.flatMap(lists -> fileObservable.map(file -> {
             CSVWriter writer;
             try {
                 writer = new CSVWriter(new FileWriter(file), ',');
@@ -172,7 +173,7 @@ public class CompilerManager {
                 throw new RuntimeException(e);
             }
             return file;
-        });
+        }));
     }
 
     private Observable<List<String>> getHeader(List<Metric> metrics) {
@@ -217,42 +218,121 @@ public class CompilerManager {
         return Observable.just(event.getId()).flatMap(eventId -> {
             final List<Metric> metrics = dbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, event.getGame_id(), null).list();
             return dbManager.robotsAtEvent(eventId)
-                    .flatMap((Func1<List<Robot>, Observable<Robot>>) Observable::from)
-                    .flatMap((Func1<Robot, Observable<List<String>>>) robot -> {
-                        return Observable.defer(() -> Observable.just(dbManager.getMatchDataTable().query(robot.getId(), null, null, null, eventId, null).list()))
-                                .map(matchDatas -> {
-                                    List<Long> matchNumbers = Lists.newArrayListWithExpectedSize(10);
-                                    for (int i = 0; i < matchDatas.size(); i++) {
-                                        MatchData matchData = matchDatas.get(i);
-                                        if (!matchNumbers.contains(matchData.getMatch_number())) {
-                                            matchNumbers.add(matchData.getMatch_number());
-                                        }
+                    .flatMap(Observable::from)
+                    .concatMap(robot -> Observable.defer(() -> Observable.just(dbManager.getMatchDataTable().query(robot.getId(), null, null, null, eventId, null).list()))
+                            .map(matchDatas -> {
+                                List<Long> matchNumbers = Lists.newArrayListWithExpectedSize(10);
+                                for (int i = 0; i < matchDatas.size(); i++) {
+                                    MatchData matchData = matchDatas.get(i);
+                                    if (!matchNumbers.contains(matchData.getMatch_number())) {
+                                        matchNumbers.add(matchData.getMatch_number());
                                     }
-                                    return matchNumbers;
-                                })
-                                .flatMap(Observable::from)
-                                .flatMap(matchNumber ->
-                                        Observable.from(metrics)
-                                                .map(metric -> dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), matchNumber, null, eventId, null).unique())
-                                                .map(matchData -> {
-                                                    if (matchData != null) {
-                                                        return matchData.getData();
+                                }
+                                Collections.sort(matchNumbers);
+                                return matchNumbers;
+                            })
+                            .concatMap(Observable::from)
+                            .concatMap(matchNumber ->
+                                    Observable.from(metrics)
+                                            .map(metric -> {
+                                                MatchData matchData = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), matchNumber, null, eventId, null).unique();
+                                                if (matchData == null) {
+                                                    return "";
+                                                }
+
+                                                JsonObject data = JSON.getAsJsonObject(matchData.getData());
+
+                                                if (metric.getType() < 3) {
+                                                    return data.get("value").toString();
+                                                } else {
+                                                    JsonObject metricData = JSON.getAsJsonObject(metric.getData());
+                                                    JsonArray dataIndexes = data.getAsJsonArray("values");
+                                                    JsonArray valueArray = metricData.getAsJsonArray("values");
+                                                    List<String> selected = Lists.newArrayListWithExpectedSize(dataIndexes.size());
+                                                    for (int i = 0; i < dataIndexes.size(); i++) {
+                                                        int dataIndex = dataIndexes.get(i).getAsInt();
+                                                        selected.add(valueArray.get(dataIndex).toString());
                                                     }
-                                                    return "No Data";
-                                                })
-                                                .toList()
-                                                .map(record -> {
-                                                    record.add(0, String.valueOf(matchNumber));
-                                                    record.add(0, String.valueOf(robot.getTeam_id()));
-                                                    MatchComment comment = dbManager.getMatchComments().query(matchNumber, null, robot.getId(), eventId).unique();
-                                                    if (comment != null) {
-                                                        record.add(comment.getComment());
-                                                    }
-                                                    return record;
-                                                })
-                                ).subscribeOn(scheduler);
-                    }).toList();
+                                                    return Joiner.on(", ").join(selected);
+                                                }
+                                            })
+                                            .toList()
+                                            .map(record -> {
+                                                record.add(0, String.valueOf(matchNumber));
+                                                record.add(0, String.valueOf(robot.getTeam_id()));
+                                                MatchComment comment = dbManager.getMatchComments().query(matchNumber, null, robot.getId(), eventId).unique();
+                                                if (comment != null) {
+                                                    record.add(comment.getComment());
+                                                }
+                                                return record;
+                                            })
+                            )
+                            .subscribeOn(scheduler))
+                    .toList()
+                    .map(lists -> {
+                        List<String> header = Lists.newArrayList();
+
+                        header.add("Team Number");
+                        header.add("Match Number");
+
+                        for (int i = 0; i < metrics.size(); i++) {
+                            Metric metric = metrics.get(i);
+                            header.add(metric.getName());
+                        }
+
+                        header.add("Match Comment");
+                        lists.add(0, header);
+                        return lists;
+                    });
         });
+    }
+
+    public Observable<File> getSummaryFile(@NonNull Event event) {
+        return Observable.just(event)
+                .map(event1 -> {
+                    File fileSystem = Environment.getExternalStorageDirectory();
+                    File file = null;
+                    if (fileSystem.canWrite()) {
+                        File directory = new File(fileSystem, "/FRCKrawler/Summaries/" + event.getGame().getName() + "/");
+                        if (!directory.exists()) {
+                            directory.mkdirs();
+                        }
+                        try {
+                            file = File.createTempFile(
+                                    dbManager.getGamesTable().load(event.getGame_id()).getName() + "_" + event.getName() + "_" + "Summary",  /* prefix */
+                                    ".csv",         /* suffix */
+                                    directory      /* directory */
+                            );
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    return file;
+                });
+    }
+
+    public Observable<File> getRawExportFile(@NonNull Event event) {
+        return Observable.just(event)
+                .map(event1 -> {
+                    File fileSystem = Environment.getExternalStorageDirectory();
+                    File file = null;
+                    if (fileSystem.canWrite()) {
+                        File directory = new File(fileSystem, "/FRCKrawler/RawExport/" + event.getGame().getName() + "/");
+                        if (!directory.exists()) {
+                            directory.mkdirs();
+                        }
+                        try {
+                            file = File.createTempFile(
+                                    dbManager.getGamesTable().load(event.getGame_id()).getName() + "_" + event.getName() + "_" + "RawExport",  /* prefix */
+                                    ".csv",         /* suffix */
+                                    directory      /* directory */
+                            );
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    return file;
+                });
     }
 
     private static class FullExportParams {

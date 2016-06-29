@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
@@ -26,7 +26,7 @@ public class SummaryFragment extends ListViewFragment<List<Metric>, MetricListSu
     public static SummaryFragment newInstance(long event_id) {
         SummaryFragment fragment = new SummaryFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(BaseActivity.PARENT_ID, event_id);
+        bundle.putLong(DatabaseActivity.PARENT_ID, event_id);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -34,7 +34,7 @@ public class SummaryFragment extends ListViewFragment<List<Metric>, MetricListSu
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mEvent = dbManager.getEventsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
+        mEvent = dbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         mListView.setOnItemClickListener((adapterView, view1, i, l) -> {
             Metric metric = dbManager.getMetricsTable().load(Long.parseLong(((ListElement) adapterView.getAdapter().getItem(i)).getKey()));
             startActivity(SummaryDataActivity.newInstance(getActivity(), metric, mEvent));

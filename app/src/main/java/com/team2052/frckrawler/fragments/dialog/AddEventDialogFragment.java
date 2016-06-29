@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
@@ -33,7 +33,7 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
     public static AddEventDialogFragment newInstance(Game game) {
         AddEventDialogFragment fragment = new AddEventDialogFragment();
         Bundle b = new Bundle();
-        b.putLong(BaseActivity.PARENT_ID, game.getId());
+        b.putLong(DatabaseActivity.PARENT_ID, game.getId());
         fragment.setArguments(b);
         return fragment;
     }
@@ -41,7 +41,7 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mGame = DBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
+        this.mGame = DBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override

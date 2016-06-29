@@ -11,15 +11,16 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.background.scout.SavePitMetricsTask;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.SnackbarUtil;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -32,8 +33,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Adam on 6/15/2016.
  */
-
-public class  ScoutPitFragment extends BaseScoutFragment {
+public class ScoutPitFragment extends BaseScoutFragment {
     private static final String TAG = "ScoutPitFragment";
 
     Observable<List<MetricValue>> metricValueObservable = robotObservable()
@@ -94,18 +94,44 @@ public class  ScoutPitFragment extends BaseScoutFragment {
         }));
     }
 
-    @OnClick(R.id.button_save)
-    protected void saveMetrics(View clickedView) {
-        if (getSelectedRobot() == null || mEvent == null) {
-            SnackbarUtil.make(getView(), getActivity().getString(R.string.something_seems_wrong), Snackbar.LENGTH_SHORT).show();
-            return;
+    @Override
+    public Observable<Boolean> getSaveMetricObservable() {
+        return Observable.combineLatest(
+                robotObservable(),
+                Observable.defer(() -> Observable.just(getValues())),
+                metricCommentObservable,
+                PitScoutSaveMetric::new)
+                .map(pitScoutSaveMetric -> {
+                    boolean saved = false;
+                    Robot robot = pitScoutSaveMetric.robot;
+                    for (MetricValue widget : pitScoutSaveMetric.metricValues) {
+                        PitData pitData = new PitData(null);
+                        pitData.setRobot(robot);
+                        pitData.setMetric(widget.getMetric());
+                        pitData.setEvent(mEvent);
+                        //pitData.setUser_id(user != null ? user.getId() : null); NOOP
+                        pitData.setData(JSON.getGson().toJson(widget.getValue()));
+                        if (dbManager.getPitDataTable().insert(pitData) && !saved)
+                            saved = true;
+                    }
+
+                    robot.setComments(pitScoutSaveMetric.comment);
+                    robot.setLast_updated(new Date());
+                    robot.update();
+
+                    return saved;
+                });
+    }
+
+    public static class PitScoutSaveMetric {
+        Robot robot;
+        List<MetricValue> metricValues;
+        private String comment;
+
+        public PitScoutSaveMetric(Robot robot, List<MetricValue> metricValues, String comment) {
+            this.robot = robot;
+            this.metricValues = metricValues;
+            this.comment = comment;
         }
-        new SavePitMetricsTask(
-                this,
-                mEvent,
-                getSelectedRobot(),
-                getValues(),
-                mCommentsView.getEditText().getText().toString(),
-                null).execute();
     }
 }

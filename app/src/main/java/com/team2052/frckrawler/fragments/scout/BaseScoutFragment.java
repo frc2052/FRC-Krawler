@@ -2,6 +2,7 @@ package com.team2052.frckrawler.fragments.scout;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -10,24 +11,32 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.HasComponent;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.MatchComment;
+import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.di.FragmentComponent;
+import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.util.SnackbarUtil;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -36,7 +45,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by Adam on 6/15/2016.
  */
 
-public class BaseScoutFragment extends Fragment {
+public abstract class BaseScoutFragment extends Fragment {
     private static final String TAG = "BaseScoutFragment";
     public static final String EVENT_ID = "EVENT_ID";
     protected DBManager dbManager;
@@ -121,7 +130,24 @@ public class BaseScoutFragment extends Fragment {
         return Observable.defer(() -> Observable.just(robots.get(mRobotSpinner.getSelectedItemPosition())));
     }
 
+    public abstract Observable<Boolean> getSaveMetricObservable();
 
+    @OnClick(R.id.button_save)
+    protected void saveMetrics(View viewClicked) {
+        Subscription saveSubscription = getSaveMetricObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onNext -> {
+                    if (onNext) {
+                        SnackbarUtil.make(getView(), "Save Complete", Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        SnackbarUtil.make(getView(), "Update Complete", Snackbar.LENGTH_SHORT).show();
+                    }
+                }, onError -> {
+                    SnackbarUtil.make(getView(), "Cannot Save, make sure you double check everything and try again", Snackbar.LENGTH_SHORT).show();
+                });
+        subscriptions.add(saveSubscription);
+    }
     /**
      * Please do not use unless you have to
      */

@@ -6,12 +6,11 @@ import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions.RxPermissions;
-import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.HasComponent;
 import com.team2052.frckrawler.database.CompilerManager;
 import com.team2052.frckrawler.db.Event;
@@ -22,8 +21,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.List;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -33,11 +33,18 @@ import rx.schedulers.Schedulers;
  */
 public class ExportDialogFragment extends BaseProgressDialog {
     private static final String TAG = "ExportDialogFragment";
+    private static final String EXPORT_TYPE = "EXPORT_TYPE_EXTRA";
+    public static final int EXPORT_TYPE_RAW = 1;
+    public static final int EXPORT_TYPE_NORMAL = 0;
 
-    public static ExportDialogFragment newInstance(Event event) {
+    private CompilerManager compilerManager;
+    private Event event;
+
+    public static ExportDialogFragment newInstance(Event event, int export_type) {
         ExportDialogFragment exportDialogFragment = new ExportDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(BaseActivity.PARENT_ID, event.getId());
+        bundle.putLong(DatabaseActivity.PARENT_ID, event.getId());
+        bundle.putInt(EXPORT_TYPE, export_type);
         exportDialogFragment.setArguments(bundle);
         return exportDialogFragment;
     }
@@ -45,53 +52,88 @@ public class ExportDialogFragment extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        event = mDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+
         EventBus.getDefault().register(this);
 
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
         if (getActivity() instanceof HasComponent) {
-            RxPermissions.getInstance(getActivity()).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(granted -> {
-                if (granted) {
-                    FragmentComponent component = ((HasComponent) getActivity()).getComponent();
-                    CompilerManager compilerManager = component.compilerManager();
-                    Event event = mDbManager.getEventsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
-                    //Event is null, should not continue
-                    if (event == null) {
-                        dismiss();
-                    }
+            FragmentComponent component = ((HasComponent) getActivity()).getComponent();
+            compilerManager = component.compilerManager();
 
-                    File file = getFile(event);
-
-                    //Something went wrong trying to create a file, should not continue
-                    if (file == null) {
-                        dismiss();
-                    }
-
-                    compilerManager.writeToFile(compilerManager.fullExportObservable(event), file)
-                            .subscribeOn(Schedulers.computation())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(onNext -> {
-                                MediaScannerConnection.scanFile(getActivity(), new String[]{onNext.getAbsolutePath()}, null, null);
-                                Intent shareIntent = new Intent();
-                                shareIntent.setAction(Intent.ACTION_SEND);
-                                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(onNext));
-                                shareIntent.setType("file/csv");
-                                startActivity(Intent.createChooser(shareIntent, "Share CSV with..."));
-                                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                                dismiss();
-                            }, Throwable::printStackTrace);
-                } else {
-                    Toast.makeText(getActivity(), "Cannot export file, please grant permission", Toast.LENGTH_LONG).show();
-                    dismiss();
-                }
-            });
+            checkPermissionAndDoExport();
         } else {
             dismiss();
         }
     }
 
+    private void checkPermissionAndDoExport() {
+        RxPermissions.getInstance(getActivity())
+                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(granted -> {
+                    if (granted) {
+                        doExport();
+                    } else {
+                        Toast.makeText(getActivity(), "Cannot export file, please grant permission", Toast.LENGTH_LONG).show();
+                        dismiss();
+                    }
+                });
+    }
+
+    private void doExport() {
+        final int exportType = getArguments().getInt(EXPORT_TYPE);
+        Observable<List<List<String>>> exportObservable = getExportObservable(exportType);
+        Observable<File> summaryFile = getExportFile(exportType);
+
+        keepScreenOn(true);
+        compilerManager.writeToFile(exportObservable, summaryFile)
+                .observeOn(Schedulers.computation())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::shareFile, onError -> {
+                    onError.printStackTrace();
+                    dismiss();
+                }, this::dismiss);
+    }
+
+    private void shareFile(File file) {
+        MediaScannerConnection.scanFile(getActivity(), new String[]{file.getAbsolutePath()}, null, null);
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        shareIntent.setType("file/csv");
+        startActivity(Intent.createChooser(shareIntent, "Share CSV with..."));
+        keepScreenOn(false);
+        dismiss();
+    }
+
+    private void keepScreenOn(boolean on) {
+        if (on) {
+            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else {
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+    }
+
+    private Observable<List<List<String>>> getExportObservable(int type) {
+        switch (type) {
+            case 1:
+                return compilerManager.getRawExport(event);
+            default:
+                return compilerManager.fullExportObservable(event);
+        }
+    }
+
+    private Observable<File> getExportFile(int type) {
+        switch (type) {
+            case 1:
+                return compilerManager.getRawExportFile(event);
+            default:
+                return compilerManager.getSummaryFile(event);
+        }
+    }
+
     @Subscribe
-    public void onEvent(ProgressDialogUpdateEvent event){
+    public void onEvent(ProgressDialogUpdateEvent event) {
         ((ProgressDialog) getDialog()).setMessage(event.message);
     }
 
@@ -101,26 +143,6 @@ public class ExportDialogFragment extends BaseProgressDialog {
         super.onDestroy();
     }
 
-    private File getFile(Event event) {
-        File fileSystem = Environment.getExternalStorageDirectory();
-        File file = null;
-        if (fileSystem.canWrite()) {
-            File directory = new File(fileSystem, "/FRCKrawler/Summaries/" + event.getGame().getName() + "/");
-            if(!directory.exists()){
-                directory.mkdirs();
-            }
-            try {
-                file = File.createTempFile(
-                        mDbManager.getGamesTable().load(event.getGame_id()).getName() + "_" + event.getName() + "_" + "Summary",  /* prefix */
-                        ".csv",         /* suffix */
-                        directory      /* directory */
-                );
-            } catch (IOException e) {
-                dismiss();
-            }
-        }
-        return file;
-    }
 
     @Override
     public CharSequence getMessage() {

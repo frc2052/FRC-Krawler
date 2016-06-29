@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
@@ -30,7 +30,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
         ImportEventDataDialog importDataDialog = new ImportEventDataDialog();
         Bundle bundle = new Bundle();
         bundle.putString("eventKey", eventKey);
-        bundle.putLong(BaseActivity.PARENT_ID, game.getId());
+        bundle.putLong(DatabaseActivity.PARENT_ID, game.getId());
         importDataDialog.setArguments(bundle);
         return importDataDialog;
     }
@@ -38,7 +38,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Game game = mDbManager.getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
+        Game game = mDbManager.getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         String mEventKey = getArguments().getString("eventKey");
         new ImportEvent(mEventKey, game).execute();
     }

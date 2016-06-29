@@ -4,13 +4,16 @@ import com.team2052.frckrawler.activities.AddMetricActivity;
 import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.GameInfoActivity;
 import com.team2052.frckrawler.activities.HomeActivity;
+import com.team2052.frckrawler.activities.MatchListActivity;
+import com.team2052.frckrawler.activities.MetricActivity;
 import com.team2052.frckrawler.activities.RobotActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
+import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
-import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
 import com.team2052.frckrawler.binding.BinderModule;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
 import com.team2052.frckrawler.database.CompilerManager;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.fragments.EventInfoFragment;
 import com.team2052.frckrawler.fragments.EventsFragment;
 import com.team2052.frckrawler.fragments.GameInfoFragment;
@@ -79,4 +82,10 @@ public interface FragmentComponent {
     void inject(TeamInfoFragment teamInfoFragment);
 
     void inject(AddMetricActivity addMetricActivity);
+
+    void inject(MatchListActivity matchListActivity);
+
+    void inject(MetricActivity metricActivity);
+
+    void inject(SummaryDataActivity summaryDataActivity);
 }

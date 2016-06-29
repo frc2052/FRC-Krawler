@@ -36,7 +36,7 @@ public class RobotActivity extends DatabaseActivity {
         setSupportActionBar(toolbar);
 
 
-        mRobot = mDbManager.getRobotsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
+        mRobot = dbManager.getRobotsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
         setActionBarSubtitle(String.valueOf(mRobot.getTeam_id()));
 
         viewPager.setAdapter(new RobotViewPagerAdapter(this, getSupportFragmentManager(), mRobot.getId()));

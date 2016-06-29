@@ -15,7 +15,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
@@ -56,7 +56,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     public static ImportDataSimpleDialogFragment newInstance(long game_id) {
         ImportDataSimpleDialogFragment fragment = new ImportDataSimpleDialogFragment();
         Bundle b = new Bundle();
-        b.putLong(BaseActivity.PARENT_ID, game_id);
+        b.putLong(DatabaseActivity.PARENT_ID, game_id);
         fragment.setArguments(b);
         return fragment;
     }
@@ -64,7 +64,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mGame = DBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
+        this.mGame = DBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         isConnected = ConnectionChecker.isConnectedToInternet(getActivity());
         yearDropDownItems = new String[Constants.MAX_COMP_YEAR - Constants.FIRST_COMP_YEAR + 1];
         for (int i = 0; i < yearDropDownItems.length; i++) {

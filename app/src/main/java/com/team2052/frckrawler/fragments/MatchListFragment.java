@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.fragments.dialog.UpdateMatchesProcessDialog;
 import com.team2052.frckrawler.subscribers.MatchListSubscriber;
@@ -28,7 +28,7 @@ public class MatchListFragment extends ListViewFragment<List<Match>, MatchListSu
     public static MatchListFragment newInstance(long event_id) {
         MatchListFragment fragment = new MatchListFragment();
         Bundle b = new Bundle();
-        b.putLong(BaseActivity.PARENT_ID, event_id);
+        b.putLong(DatabaseActivity.PARENT_ID, event_id);
         fragment.setArguments(b);
         return fragment;
     }
@@ -58,7 +58,7 @@ public class MatchListFragment extends ListViewFragment<List<Match>, MatchListSu
         mListView.setFocusableInTouchMode(false);
 
         setHasOptionsMenu(true);
-        mEvent_id = getArguments().getLong(BaseActivity.PARENT_ID);
+        mEvent_id = getArguments().getLong(DatabaseActivity.PARENT_ID);
     }
 
     @Override

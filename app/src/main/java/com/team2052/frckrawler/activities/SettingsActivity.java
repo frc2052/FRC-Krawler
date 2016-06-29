@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -18,8 +20,11 @@ import com.team2052.frckrawler.fragments.dialog.PickEventDialogFragment;
 import com.team2052.frckrawler.subscribers.SubscriberModule;
 
 public class SettingsActivity extends AppCompatActivity implements PickEventDialogFragment.EventPickedListener, HasComponent {
-    private static String EXPORT_PREFERENCE_KEY = "compile_export_preference";
+    private static final String EXPORT_PREFERENCE_KEY = "compile_export_preference";
+    private static final String EXPORT_RAW_PREFERENCE_KEY = "compile_raw_export";
     private FragmentComponent mComponent;
+
+    private int clickedPreference = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
 
     @Override
     public void pickedEvent(Event event) {
-        ExportDialogFragment.newInstance(event).show(getSupportFragmentManager(), "exportDialogFragment");
+        ExportDialogFragment.newInstance(event, clickedPreference).show(getSupportFragmentManager(), "exportDialogFragment");
     }
 
     @Override
@@ -49,7 +54,7 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
         return mComponent;
     }
 
-    public static class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+    public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -57,20 +62,34 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
             addPreferencesFromResource(R.xml.preferences);
             int numEvents = DBManager.getInstance(getActivity()).getEventsTable().getAllEvents().size();
 
-            if (numEvents < 1) {
-                findPreference(EXPORT_PREFERENCE_KEY).setEnabled(false);
-            }
+            findPreference(EXPORT_PREFERENCE_KEY).setEnabled(numEvents >= 1);
+            findPreference(EXPORT_RAW_PREFERENCE_KEY).setEnabled(numEvents >= 1);
+
+            Preference teamWebsite = findPreference("team_website");
+            teamWebsite.setIntent(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.team2052.com/")));
+
+            Preference githubLink = findPreference("github_link");
+            githubLink.setIntent(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/frc2052/FRC-Krawler")));
+
+            Preference learnMoreLink = findPreference("learn_more_link");
+            learnMoreLink.setIntent(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.team2052.com/frckrawler/")));
 
             findPreference(EXPORT_PREFERENCE_KEY).setOnPreferenceClickListener(this);
+            findPreference(EXPORT_RAW_PREFERENCE_KEY).setOnPreferenceClickListener(this);
         }
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
             String key = preference.getKey();
-            if (key.equals(EXPORT_PREFERENCE_KEY)) {
+            if (key.equals(EXPORT_PREFERENCE_KEY) || key.equals(EXPORT_RAW_PREFERENCE_KEY)) {
                 new PickEventDialogFragment().show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "pickEventDialog");
-            } else {
+            }
 
+            switch (key) {
+                case EXPORT_PREFERENCE_KEY:
+                    clickedPreference = 0;
+                case EXPORT_RAW_PREFERENCE_KEY:
+                    clickedPreference = 1;
             }
             return false;
         }

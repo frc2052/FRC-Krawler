@@ -16,7 +16,7 @@ public class ServerCallbackHandler {
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
         b.setSmallIcon(android.R.drawable.ic_popup_sync);
         b.setContentTitle("Syncing");
-        b.setContentText("FRC Krawler is syncing with " + deviceName);
+        b.setContentText("FRC krawler_logo is syncing with " + deviceName);
         b.setDefaults(0);
         b.setOngoing(true);
         NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -33,7 +33,7 @@ public class ServerCallbackHandler {
         NotificationCompat.Builder b = new NotificationCompat.Builder(context);
         b.setSmallIcon(android.R.drawable.ic_dialog_alert);
         b.setContentTitle("Sync Error");
-        b.setContentText("FRC Krawler encountered an error when syncing with " + deviceName);
+        b.setContentText("FRC krawler_logo encountered an error when syncing with " + deviceName);
         m.notify(0, b.build());
     }
 }

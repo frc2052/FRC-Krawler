@@ -47,7 +47,7 @@ public class GameInfoActivity extends DatabaseActivity implements View.OnClickLi
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mAdapter = new GameInfoPagerAdapter(this, getSupportFragmentManager(), getIntent().getLongExtra(PARENT_ID, 0));
+        mAdapter = new GameInfoPagerAdapter(getSupportFragmentManager(), getIntent().getLongExtra(PARENT_ID, 0));
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
 

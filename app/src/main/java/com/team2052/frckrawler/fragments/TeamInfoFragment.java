@@ -2,7 +2,7 @@ package com.team2052.frckrawler.fragments;
 
 import android.os.Bundle;
 
-import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.subscribers.KeyValueListSubscriber;
 
 import java.util.Map;
@@ -17,7 +17,7 @@ public class TeamInfoFragment extends ListViewFragment<Map<String, String>, KeyV
     public static TeamInfoFragment newInstance(long team_id) {
         TeamInfoFragment fragment = new TeamInfoFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(BaseActivity.PARENT_ID, team_id);
+        bundle.putLong(DatabaseActivity.PARENT_ID, team_id);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -29,6 +29,6 @@ public class TeamInfoFragment extends ListViewFragment<Map<String, String>, KeyV
 
     @Override
     protected Observable<? extends Map<String, String>> getObservable() {
-        return dbManager.teamInfo(getArguments().getLong(BaseActivity.PARENT_ID));
+        return dbManager.teamInfo(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 }

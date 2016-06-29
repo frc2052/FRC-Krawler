@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.listeners.RefreshListener;
@@ -24,7 +24,7 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
     public static UpdateMatchesProcessDialog newInstance(long event_id) {
         UpdateMatchesProcessDialog updateMatchesProcessDialog = new UpdateMatchesProcessDialog();
         Bundle bundle = new Bundle();
-        bundle.putLong(BaseActivity.PARENT_ID, event_id);
+        bundle.putLong(DatabaseActivity.PARENT_ID, event_id);
         updateMatchesProcessDialog.setArguments(bundle);
         return updateMatchesProcessDialog;
     }
@@ -32,7 +32,7 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Event event = mDbManager.getEventsTable().load(getArguments().getLong(BaseActivity.PARENT_ID));
+        Event event = mDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         new UpdateMatchSchedule(event).execute();
     }
 

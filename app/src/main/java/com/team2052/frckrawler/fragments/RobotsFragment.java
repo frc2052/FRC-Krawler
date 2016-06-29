@@ -2,12 +2,9 @@ package com.team2052.frckrawler.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 
-import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.RobotActivity;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
@@ -33,7 +30,7 @@ public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubsc
         RobotsFragment fragment = new RobotsFragment();
         Bundle b = new Bundle();
         b.putInt(VIEW_TYPE, 0);
-        b.putLong(BaseActivity.PARENT_ID, team_id);
+        b.putLong(DatabaseActivity.PARENT_ID, team_id);
         fragment.setArguments(b);
         return fragment;
     }
@@ -42,7 +39,7 @@ public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubsc
         RobotsFragment fragment = new RobotsFragment();
         Bundle b = new Bundle();
         b.putInt(VIEW_TYPE, 1);
-        b.putLong(BaseActivity.PARENT_ID, event_id);
+        b.putLong(DatabaseActivity.PARENT_ID, event_id);
         fragment.setArguments(b);
         return fragment;
     }
@@ -53,7 +50,7 @@ public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubsc
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
         this.mViewType = b.getInt(VIEW_TYPE, 0);
-        mKey = b.getLong(BaseActivity.PARENT_ID);
+        mKey = b.getLong(DatabaseActivity.PARENT_ID);
     }
 
     @Override

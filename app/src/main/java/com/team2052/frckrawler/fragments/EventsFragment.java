@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.BaseActivity;
+import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.binding.ListViewBinder;
 import com.team2052.frckrawler.db.Event;
@@ -26,7 +26,7 @@ public class EventsFragment extends ListViewFragment<List<Event>, EventListSubsc
     public static EventsFragment newInstance(long game_id) {
         EventsFragment fragment = new EventsFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(BaseActivity.PARENT_ID, game_id);
+        bundle.putLong(DatabaseActivity.PARENT_ID, game_id);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -38,7 +38,7 @@ public class EventsFragment extends ListViewFragment<List<Event>, EventListSubsc
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mGame_id = getArguments().getLong(BaseActivity.PARENT_ID, 0);
+        mGame_id = getArguments().getLong(DatabaseActivity.PARENT_ID, 0);
         super.onCreate(savedInstanceState);
     }
 

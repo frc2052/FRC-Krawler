@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Event;
@@ -41,12 +42,12 @@ public class ScoutActivity extends DatabaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Event event = mDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID_EXTRA, 0));
+        Event event = dbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID_EXTRA, 0));
         setContentView(R.layout.activity_scout);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        
+
         ViewCompat.setElevation(toolbar, getResources().getDimension(R.dimen.toolbar_elevation));
 
         final int scout_type = getIntent().getIntExtra(SCOUT_TYPE_EXTRA, 0);
@@ -78,6 +79,14 @@ public class ScoutActivity extends DatabaseActivity {
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_holder, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
