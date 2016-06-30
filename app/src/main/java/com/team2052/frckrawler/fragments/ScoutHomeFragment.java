@@ -36,7 +36,6 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     private static final int REQUEST_ENABLE_BT = 1;
     DBManager dbManager;
     private ScoutSyncHandler scoutSyncHandler;
-    private View syncView;
     private FragmentComponent mComponent;
     private Event mEvent;
     private View syncButton, syncProgressBar;
@@ -49,6 +48,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         }
         dbManager = mComponent.dbManager();
         scoutSyncHandler = mComponent.scoutSyncHander();
+        setCurrentEvent(ScoutUtil.getScoutEvent(getContext()));
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
     }
@@ -75,7 +75,6 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         syncButton = view.findViewById(R.id.sync_button);
         syncProgressBar = view.findViewById(R.id.sync_progress_bar);
 
-        syncView = view.findViewById(R.id.scout_sync_container);
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -103,6 +102,10 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
                         startActivity(ScoutActivity.newInstance(getActivity(), mEvent, ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE));
                         break;
                 }
+            } else {
+                SnackbarUtil.make(getView(), "Unable to find event", Snackbar.LENGTH_LONG).show();
+                //Try to reload the event
+                setCurrentEvent(ScoutUtil.getScoutEvent(getContext()));
             }
         }
     }
