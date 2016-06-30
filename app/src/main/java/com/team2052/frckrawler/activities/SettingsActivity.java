@@ -88,8 +88,10 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
             switch (key) {
                 case EXPORT_PREFERENCE_KEY:
                     clickedPreference = 0;
+                    break;
                 case EXPORT_RAW_PREFERENCE_KEY:
                     clickedPreference = 1;
+                    break;
             }
             return false;
         }
