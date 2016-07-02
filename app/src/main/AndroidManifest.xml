@@ -38,8 +38,9 @@
         <activity
             android:name=".activities.GameInfoActivity"
             android:label="@string/game_title" />
-        <activity android:name=".activities.HomeActivity"
-            android:launchMode="singleTop"/>
+        <activity
+            android:name=".activities.HomeActivity"
+            android:launchMode="singleTop" />
         <activity
             android:name=".activities.EventInfoActivity"
             android:label="@string/event_title" />
@@ -53,8 +54,14 @@
             android:label="Settings"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBar" />
+
         <service
             android:name=".bluetooth.server.ServerService"
             android:exported="false" />
+
+        <activity
+            android:name=".activities.ImportMetricsActivity"
+            android:theme="@style/AppTheme.ActionBar"
+            android:label="Import Metrics"/>
     </application>
 </manifest>

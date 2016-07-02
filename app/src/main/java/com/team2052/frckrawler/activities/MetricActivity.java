@@ -18,7 +18,6 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.fragments.dialog.EditMetricDialogFragment;
 import com.team2052.frckrawler.tba.JSON;
 
 import rx.Observable;
@@ -120,9 +119,10 @@ public class MetricActivity extends DatabaseActivity implements CompoundButton.O
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_edit) {
+        /*if (item.getItemId() == R.id.menu_edit) {
             EditMetricDialogFragment.newInstance(metric).show(getSupportFragmentManager(), "editMetric");
-        } else if (item.getItemId() == R.id.menu_delete) {
+        } else*/
+        if (item.getItemId() == R.id.menu_delete) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Delete Metric?");
             builder.setMessage("Are you sure you want to delete this metric? You will lose all data associated with this metric.");

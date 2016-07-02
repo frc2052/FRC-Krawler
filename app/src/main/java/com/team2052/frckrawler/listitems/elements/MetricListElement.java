@@ -28,7 +28,8 @@ public class MetricListElement extends ListElement {
         this.metric = metric;
         JsonObject data = JSON.getAsJsonObject(metric.getData());
 
-        if (!Strings.isNullOrEmpty(data.get("description").getAsString())) {
+
+        if (data.has("description") && !Strings.isNullOrEmpty(data.get("description").getAsString())) {
             descriptionString = data.get("description").getAsString();
         }
 

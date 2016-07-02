@@ -185,7 +185,7 @@ public class MetricHelper {
     }
 
     public static class MetricFactory {
-        final Game game;
+        final Long game_id;
         @MetricCategory
         int metricCategory;
         @MetricType
@@ -193,10 +193,10 @@ public class MetricHelper {
         String name;
         JsonObject data = new JsonObject();
 
-        public MetricFactory(Game game, String name) {
-            if (game == null || name.isEmpty())
+        public MetricFactory(Long game_id, String name) {
+            if (game_id == null || name.isEmpty())
                 throw new IllegalStateException("Couldn't create MetricFactory");
-            this.game = game;
+            this.game_id = game_id;
             this.name = name;
         }
 
@@ -257,6 +257,18 @@ public class MetricHelper {
             }
         }
 
+        public void setDataRaw(String string) {
+            if (string.startsWith("\"")) {
+                string = string.substring(1);
+            }
+
+            if (string.endsWith("\"")) {
+                string = string.substring(0, string.length() - 1);
+            }
+
+            data = JSON.getAsJsonObject(string);
+        }
+
         public Metric buildMetric() {
             clean();
             return new Metric(
@@ -265,7 +277,7 @@ public class MetricHelper {
                     metricCategory,
                     metricType,
                     JSON.getGson().toJson(data),
-                    game.getId(),
+                    game_id,
                     true);
         }
     }

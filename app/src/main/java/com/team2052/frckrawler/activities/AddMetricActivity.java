@@ -2,7 +2,6 @@ package com.team2052.frckrawler.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -16,6 +15,7 @@ import android.widget.Spinner;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
@@ -123,7 +123,7 @@ public class AddMetricActivity extends DatabaseActivity {
 
         metricObservable = Observable.combineLatest(mNameObservable, mMinimumObservable, mMaximumObservable, mIncrementationObservable, mDescriptionObservable, mCommaListObservable, MetricPreviewParams::new)
                 .map(metricPreviewParams -> {
-                    MetricHelper.MetricFactory factory = new MetricHelper.MetricFactory(mGame, metricPreviewParams.name);
+                    MetricHelper.MetricFactory factory = new MetricHelper.MetricFactory(mGame.getId(), metricPreviewParams.name);
                     @MetricHelper.MetricType
                     int pos = typeSpinner.getSelectedItemPosition();
                     factory.setMetricType(pos);
@@ -238,6 +238,7 @@ public class AddMetricActivity extends DatabaseActivity {
                         currentWidget.setMetricValue(onNext);
                     }
                 }, onError -> {
+                    FirebaseCrash.report(onError);
                     Log.e(TAG, "updateMetric: ", onError);
                 }));
     }
@@ -289,6 +290,7 @@ public class AddMetricActivity extends DatabaseActivity {
                                 finish();
                             }));
         }, onError -> {
+            FirebaseCrash.report(onError);
             SnackbarUtil.make(findViewById(R.id.root), "Unable to Save Metric", Snackbar.LENGTH_SHORT).show();
         }));
     }

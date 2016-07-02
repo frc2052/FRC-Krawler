@@ -22,6 +22,7 @@ import com.team2052.frckrawler.tba.JSON;
  * @author Adam
  * @since 12/22/2014.
  */
+//TODO: UPDATE
 public class EditMetricDialogFragment extends DialogFragment {
     private Spinner mMetricTypeSpinner;
     private EditText mName, mDescription, mMinimum, mMaximum, mIncrementation;

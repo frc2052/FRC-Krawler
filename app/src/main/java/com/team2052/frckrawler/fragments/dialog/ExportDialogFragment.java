@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.HasComponent;
@@ -91,6 +92,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::shareFile, onError -> {
                     onError.printStackTrace();
+                    FirebaseCrash.report(onError);
                     dismiss();
                 }, this::dismiss);
     }

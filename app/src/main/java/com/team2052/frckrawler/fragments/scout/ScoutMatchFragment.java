@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.MetricHelper;
@@ -142,10 +143,8 @@ public class ScoutMatchFragment extends BaseScoutFragment {
 
     @Override
     public void updateMetricValues() {
-        subscriptions.add(metricValueObservable.subscribe(this::setMetricValues, onError -> {
-        }));
-        subscriptions.add(metricCommentObservable.subscribe(RxTextView.text(mCommentsView.getEditText()), onError -> {
-        }));
+        subscriptions.add(metricValueObservable.subscribe(this::setMetricValues, FirebaseCrash::report));
+        subscriptions.add(metricCommentObservable.subscribe(RxTextView.text(mCommentsView.getEditText()), FirebaseCrash::report));
     }
 
     @Override

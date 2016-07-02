@@ -11,24 +11,20 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Strings;
+import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.HasComponent;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.database.MetricValue;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.MatchComment;
-import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.di.FragmentComponent;
-import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.SnackbarUtil;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -91,8 +87,7 @@ public abstract class BaseScoutFragment extends Fragment {
         dbManager.robotsAtEvent(getArguments().getLong(EVENT_ID))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(robots -> this.robots = robots, onError -> {
-                }, () -> {
+                .subscribe(robots -> this.robots = robots, FirebaseCrash::report, () -> {
                     Observable.from(robots)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -144,6 +139,7 @@ public abstract class BaseScoutFragment extends Fragment {
                         SnackbarUtil.make(getView(), "Update Complete", Snackbar.LENGTH_SHORT).show();
                     }
                 }, onError -> {
+                    FirebaseCrash.report(onError);
                     SnackbarUtil.make(getView(), "Cannot Save, make sure you double check everything and try again", Snackbar.LENGTH_SHORT).show();
                 });
         subscriptions.add(saveSubscription);
