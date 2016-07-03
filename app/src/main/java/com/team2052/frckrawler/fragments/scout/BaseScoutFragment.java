@@ -139,6 +139,7 @@ public abstract class BaseScoutFragment extends Fragment {
                         SnackbarUtil.make(getView(), "Update Complete", Snackbar.LENGTH_SHORT).show();
                     }
                 }, onError -> {
+                    FirebaseCrash.log("Error Saving Metrics");
                     FirebaseCrash.report(onError);
                     SnackbarUtil.make(getView(), "Cannot Save, make sure you double check everything and try again", Snackbar.LENGTH_SHORT).show();
                 });

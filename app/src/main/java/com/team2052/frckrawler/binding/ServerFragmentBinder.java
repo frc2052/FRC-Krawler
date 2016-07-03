@@ -12,9 +12,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.bluetooth.server.ServerService;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.ServerFragment;
+import com.team2052.frckrawler.services.ServerService;
 
 import java.util.List;
 

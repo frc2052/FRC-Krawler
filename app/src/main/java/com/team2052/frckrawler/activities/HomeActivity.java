@@ -12,12 +12,12 @@ import android.view.Menu;
 
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.bluetooth.server.ServerService;
 import com.team2052.frckrawler.fragments.GamesFragment;
 import com.team2052.frckrawler.fragments.ScoutHomeFragment;
 import com.team2052.frckrawler.fragments.ServerFragment;
 import com.team2052.frckrawler.fragments.TeamsFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
+import com.team2052.frckrawler.services.ServerService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

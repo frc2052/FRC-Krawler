@@ -2,9 +2,6 @@ package com.team2052.frckrawler;
 
 import android.app.Application;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.binding.BinderModule;
 import com.team2052.frckrawler.di.ApplicationComponent;
 import com.team2052.frckrawler.di.DaggerApplicationComponent;

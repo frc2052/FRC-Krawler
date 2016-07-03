@@ -33,7 +33,6 @@ import au.com.bytecode.opencsv.CSVWriter;
 import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
 import rx.Scheduler;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class CompilerManager {

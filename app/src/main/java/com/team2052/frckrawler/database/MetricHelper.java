@@ -9,7 +9,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.Tuple2;

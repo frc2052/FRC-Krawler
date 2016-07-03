@@ -7,7 +7,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.common.base.Optional;
-import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.BuildConfig;
 import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.client.ScoutPackage;

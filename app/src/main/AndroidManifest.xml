@@ -54,14 +54,12 @@
             android:label="Settings"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBar" />
-
-        <service
-            android:name=".bluetooth.server.ServerService"
-            android:exported="false" />
-
         <activity
             android:name=".activities.ImportMetricsActivity"
             android:theme="@style/AppTheme.ActionBar"
             android:label="Import Metrics"/>
+        <service
+            android:name=".services.ServerService"
+            android:exported="false" />
     </application>
 </manifest>

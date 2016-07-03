@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.bluetooth.server;
+package com.team2052.frckrawler.services;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -15,6 +15,8 @@ import android.util.Log;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.HomeActivity;
+import com.team2052.frckrawler.bluetooth.server.ServerStatus;
+import com.team2052.frckrawler.bluetooth.server.ServerThread;
 import com.team2052.frckrawler.db.Event;
 
 import rx.Observable;

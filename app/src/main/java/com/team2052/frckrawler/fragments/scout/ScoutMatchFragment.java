@@ -2,7 +2,6 @@ package com.team2052.frckrawler.fragments.scout;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.SnackbarUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -29,10 +27,8 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -143,8 +139,22 @@ public class ScoutMatchFragment extends BaseScoutFragment {
 
     @Override
     public void updateMetricValues() {
-        subscriptions.add(metricValueObservable.subscribe(this::setMetricValues, FirebaseCrash::report));
-        subscriptions.add(metricCommentObservable.subscribe(RxTextView.text(mCommentsView.getEditText()), FirebaseCrash::report));
+        subscriptions.add(metricValueObservable.subscribe(this::setMetricValues, onError -> {
+            //Most likely part of the robot observable not being initiated, no big deal
+            if(onError instanceof ArrayIndexOutOfBoundsException){
+                return;
+            }
+            FirebaseCrash.log("Match: Error Updating Metric Values");
+            FirebaseCrash.report(onError);
+        }));
+        subscriptions.add(metricCommentObservable.subscribe(RxTextView.text(mCommentsView.getEditText()), onError -> {
+            //Most likely part of the robot observable not being initiated, no big deal
+            if(onError instanceof ArrayIndexOutOfBoundsException){
+                return;
+            }
+            FirebaseCrash.log("Match: Error Updating Comments");
+            FirebaseCrash.report(onError);
+        }));
     }
 
     @Override
