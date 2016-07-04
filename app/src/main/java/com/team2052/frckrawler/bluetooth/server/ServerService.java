@@ -75,7 +75,7 @@ public class ServerService extends Service {
         NotificationCompat.Builder b = new NotificationCompat.Builder(this);
         b.setSmallIcon(R.drawable.ic_stat_knightkrawler);
         b.setContentTitle("Server open");
-        b.setContentText("The FRC krawler_logo server is open for scouts to sync");
+        b.setContentText("The FRC krawler server is open for scouts to sync");
         b.setOngoing(true);
         b.setColor(0x5B0000);
 
