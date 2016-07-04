@@ -66,6 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/grey_900"
         android:src="@drawable/ic_content_save"
         app:layout_anchor="@id/scroll_view"
         app:layout_anchorGravity="bottom|right|end"

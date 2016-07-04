@@ -12,8 +12,8 @@
         <LinearLayout
             android:id="@+id/banner_details_container"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="104dp">
+            android:layout_height="104dp"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/profile_image"
@@ -53,12 +53,12 @@
 
     </FrameLayout>
 
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ListView
         android:id="@+id/left_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#303030"
         android:layout_below="@+id/banner_container"
-        android:background="@color/nav_drawer_background"
         android:choiceMode="singleChoice"
         android:divider="@null"
         android:fitsSystemWindows="true" />

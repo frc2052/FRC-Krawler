@@ -33,9 +33,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        android:padding="8dp"
-                        android:text="@string/scout"
-                        android:textColor="@color/primary" />
+                        android:padding="16dp"
+                        android:text="@string/scout" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -87,8 +86,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
                         android:padding="8dp"
-                        android:text="Sync"
-                        android:textColor="@color/primary" />
+                        android:text="Sync" />
 
                     <ProgressBar
                         android:id="@+id/sync_progress_bar"
@@ -106,6 +104,7 @@
                         android:layout_height="100dp"
                         android:layout_below="@+id/text_sync"
                         android:layout_centerHorizontal="true"
+                        android:tint="@color/color_accent"
                         android:layout_margin="16dp"
                         android:src="@drawable/ic_sync_100dp" />
                 </RelativeLayout>

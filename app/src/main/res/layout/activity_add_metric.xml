@@ -61,8 +61,7 @@
                             style="@style/Base.TextAppearance.AppCompat.Body1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/metric_type_prefix"
-                            android:textColor="@color/black" />
+                            android:text="@string/metric_type_prefix" />
 
                         <Spinner
                             android:id="@+id/type"
@@ -175,6 +174,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/grey_900"
         android:src="@drawable/ic_check_white_24dp"
         app:layout_behavior="com.team2052.frckrawler.util.ScrollAwareFABBehavior" />
 </android.support.design.widget.CoordinatorLayout>

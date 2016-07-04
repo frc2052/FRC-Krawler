@@ -25,6 +25,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 
 /**
@@ -102,7 +103,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         shareIntent.setType("file/csv");
         startActivity(Intent.createChooser(shareIntent, "Share CSV with..."));
-        keepScreenOn(false);
+        AndroidSchedulers.mainThread().createWorker().schedule(() -> keepScreenOn(false));
         dismiss();
     }
 
@@ -134,7 +135,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
 
     @Subscribe
     public void onEvent(ProgressDialogUpdateEvent event) {
-        ((ProgressDialog) getDialog()).setMessage(event.message);
+        AndroidSchedulers.mainThread().createWorker().schedule(() -> ((ProgressDialog) getDialog()).setMessage(event.message));
     }
 
     @Override

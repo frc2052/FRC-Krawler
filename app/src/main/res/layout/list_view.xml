@@ -24,7 +24,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginBottom="16dp"
-            android:tint="@color/primary_light" />
+            android:tint="@color/color_accent" />
 
         <TextView
             android:id="@+id/no_data_title"

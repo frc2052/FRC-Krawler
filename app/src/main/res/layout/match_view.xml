@@ -44,40 +44,36 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="#fdd"
+                        android:background="@color/red_800"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Red 1"
-                        android:textColor="@color/black" />
+                        android:text="Red 1" />
 
                     <TextView
                         android:id="@+id/red2"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="#fdd"
+                        android:background="@color/red_800"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Red 2"
-                        android:textColor="@color/black" />
+                        android:text="Red 2" />
 
                     <TextView
                         android:id="@+id/red3"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="#fdd"
+                        android:background="@color/red_800"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Red 3"
-                        android:textColor="@color/black" />
+                        android:text="Red 3" />
 
                     <TextView
                         android:id="@+id/red_score"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1.5"
-                        android:background="#fdd"
+                        android:background="@color/red_900"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Red Score"
-                        android:textColor="@color/black"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -93,40 +89,36 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="#ddf"
+                        android:background="@color/blue_800"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Blue 1"
-                        android:textColor="@color/black" />
+                        android:text="Blue 1" />
 
                     <TextView
                         android:id="@+id/blue2"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="#ddf"
+                        android:background="@color/blue_800"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Blue 2"
-                        android:textColor="@color/black" />
+                        android:text="Blue 2" />
 
                     <TextView
                         android:id="@+id/blue3"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="#ddf"
+                        android:background="@color/blue_800"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Blue 3"
-                        android:textColor="@color/black" />
+                        android:text="Blue 3" />
 
                     <TextView
                         android:id="@+id/blue_score"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1.5"
-                        android:background="#ddf"
+                        android:background="@color/blue_900"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Blue Score"
-                        android:textColor="@color/black"
                         android:textStyle="bold" />
 
                 </LinearLayout>
