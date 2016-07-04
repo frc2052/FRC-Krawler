@@ -1,18 +1,13 @@
 package com.team2052.frckrawler.fragments;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.AddMetricActivity;
-import com.team2052.frckrawler.activities.ImportMetricsActivity;
-import com.team2052.frckrawler.activities.MetricActivity;
+import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.binding.ListViewBinder;
-import com.team2052.frckrawler.database.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.elements.MetricListElement;
@@ -47,7 +42,7 @@ public class MetricsFragment extends ListViewFragment<List<Metric>, MetricListSu
         mListView.setOnItemClickListener((parent, view1, position, id) -> {
             long metric_id = Long.parseLong(((MetricListElement) ((ListViewAdapter) parent.getAdapter()).getItem(position)).getKey());
             Metric metric = dbManager.getMetricsTable().load(metric_id);
-            startActivity(MetricActivity.newInstance(getActivity(), metric));
+            startActivity(MetricInfoActivity.newInstance(getActivity(), metric));
         });
     }
 
@@ -56,24 +51,6 @@ public class MetricsFragment extends ListViewFragment<List<Metric>, MetricListSu
         super.onCreate(savedInstanceState);
         mGame_id = getArguments().getLong(GAME_ID, 0);
         mCategory = getArguments().getInt(CATEGORY_EXTRA);
-
-        if(mCategory == MetricHelper.MATCH_PERF_METRICS) {
-            setHasOptionsMenu(true);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.import_metrics_menu) {
-            startActivity(ImportMetricsActivity.newInstance(getContext(), mGame_id, mCategory));
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.metric_import_firebase, menu);
     }
 
     @Override

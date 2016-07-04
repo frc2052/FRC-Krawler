@@ -56,7 +56,8 @@
             android:name=".activities.ScoutActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.MetricActivity"
+            android:name=".activities.MetricInfoActivity"
+            android:label="Metric"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.SettingsActivity"
