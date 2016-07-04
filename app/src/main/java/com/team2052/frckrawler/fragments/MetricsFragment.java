@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.AddMetricActivity;
-import com.team2052.frckrawler.activities.MetricActivity;
+import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.binding.ListViewBinder;
 import com.team2052.frckrawler.db.Metric;
@@ -42,7 +42,7 @@ public class MetricsFragment extends ListViewFragment<List<Metric>, MetricListSu
         mListView.setOnItemClickListener((parent, view1, position, id) -> {
             long metric_id = Long.parseLong(((MetricListElement) ((ListViewAdapter) parent.getAdapter()).getItem(position)).getKey());
             Metric metric = dbManager.getMetricsTable().load(metric_id);
-            startActivity(MetricActivity.newInstance(getActivity(), metric));
+            startActivity(MetricInfoActivity.newInstance(getActivity(), metric));
         });
     }
 

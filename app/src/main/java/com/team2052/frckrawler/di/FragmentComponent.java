@@ -5,7 +5,7 @@ import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.GameInfoActivity;
 import com.team2052.frckrawler.activities.HomeActivity;
 import com.team2052.frckrawler.activities.MatchListActivity;
-import com.team2052.frckrawler.activities.MetricActivity;
+import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.activities.RobotActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
@@ -19,6 +19,7 @@ import com.team2052.frckrawler.fragments.EventsFragment;
 import com.team2052.frckrawler.fragments.GameInfoFragment;
 import com.team2052.frckrawler.fragments.GamesFragment;
 import com.team2052.frckrawler.fragments.MatchListFragment;
+import com.team2052.frckrawler.fragments.MetricInfoFragment;
 import com.team2052.frckrawler.fragments.MetricsFragment;
 import com.team2052.frckrawler.fragments.RobotAttendingEventsFragment;
 import com.team2052.frckrawler.fragments.RobotsFragment;
@@ -85,7 +86,9 @@ public interface FragmentComponent {
 
     void inject(MatchListActivity matchListActivity);
 
-    void inject(MetricActivity metricActivity);
+    void inject(MetricInfoActivity metricInfoActivity);
 
     void inject(SummaryDataActivity summaryDataActivity);
+
+    void inject(MetricInfoFragment metricInfoFragment);
 }

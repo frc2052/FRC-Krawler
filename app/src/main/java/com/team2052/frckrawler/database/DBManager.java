@@ -5,6 +5,10 @@ import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
+import com.facebook.stetho.common.StringUtil;
+import com.google.common.base.CaseFormat;
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
@@ -332,6 +336,33 @@ public class DBManager {
         });
     }
 
+    public Observable<? extends Map<String, String>> metricInfo(long metricId) {
+        return Observable.just(metricId)
+                .map(metricDao::load)
+                .map(metric -> {
+                    Map<String, String> info = Maps.newLinkedHashMap();
+                    info.put("Enabled",
+                            CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, String.valueOf(metric.getEnabled())));
+
+                    final JsonObject data = JSON.getAsJsonObject(metric.getData());
+                    switch (metric.getType()) {
+                        case MetricHelper.BOOLEAN:
+                            break;
+                        case MetricHelper.CHOOSER:
+                        case MetricHelper.CHECK_BOX:
+                            final String values = Joiner.on(", ").join(data.get("values").getAsJsonArray());
+                            info.put("Comma Separated List", Strings.isNullOrEmpty(values) ? "No Values" : values);
+                            break;
+                        case MetricHelper.COUNTER:
+                            info.put("Incrementation", data.get("inc").toString());
+                        case MetricHelper.SLIDER:
+                            info.put("Minimum", data.get("min").toString());
+                            info.put("Maximum", data.get("max").toString());
+                    }
+                    return info;
+                });
+    }
+
     private interface Table<T> {
         T load(long id);
 
@@ -588,7 +619,7 @@ public class DBManager {
                 queryBuilder.where(PitDataDao.Properties.Robot_id.eq(robot_id));
             if (metric_id != null)
                 queryBuilder.where(PitDataDao.Properties.Metric_id.eq(metric_id));
-            if(event_id != null)
+            if (event_id != null)
                 queryBuilder.where(PitDataDao.Properties.Event_id.eq(event_id));
             if (user_id != null)
                 queryBuilder.where(PitDataDao.Properties.User_id.eq(user_id));
