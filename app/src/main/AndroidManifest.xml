@@ -62,9 +62,10 @@
             android:name=".activities.SettingsActivity"
             android:label="Settings"
             android:screenOrientation="portrait" />
+        <activity android:name=".activities.ImportMetricsActivity" />
 
         <service
-            android:name=".bluetooth.server.ServerService"
+            android:name=".services.ServerService"
             android:exported="false" />
     </application>
 </manifest>
