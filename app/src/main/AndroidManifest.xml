@@ -62,7 +62,9 @@
             android:name=".activities.SettingsActivity"
             android:label="Settings"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.ImportMetricsActivity" />
+        <activity
+            android:name=".activities.ImportMetricsActivity"
+            android:label="Import Metrics" />
 
         <service
             android:name=".services.ServerService"
