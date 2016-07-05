@@ -51,6 +51,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.AddMetricActivity"
+            android:label="Add Metric"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.ScoutActivity"

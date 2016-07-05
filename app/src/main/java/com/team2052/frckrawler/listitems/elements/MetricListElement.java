@@ -51,7 +51,11 @@ public class MetricListElement extends ListElement {
                     comma = ", ";
                 }
                 rangeString = sb.toString();
-                typeString = "Chooser";
+                if(metric.getType() == MetricHelper.CHOOSER) {
+                    typeString = "Chooser";
+                } else {
+                    typeString = "Checkbox";
+                }
                 break;
             case MetricHelper.SLIDER:
                 rangeString = data.get("min").getAsString() + " to " + data.get("max").getAsString();

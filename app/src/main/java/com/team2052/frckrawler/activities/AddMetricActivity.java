@@ -182,7 +182,6 @@ public class AddMetricActivity extends DatabaseActivity {
         //Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Add Metric");
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
 
         ViewCompat.setElevation(toolbar, getResources().getDimension(R.dimen.toolbar_elevation));

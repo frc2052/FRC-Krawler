@@ -3,5 +3,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:color="@color/color_accent" android:state_pressed="true" />
     <item android:color="@color/color_accent" android:state_activated="true" />
-    <item android:color="#4DFFFFFF" />
+    <item android:color="#C0FFFFFF" />
 </selector>
