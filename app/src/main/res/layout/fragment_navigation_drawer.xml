@@ -7,7 +7,8 @@
         android:id="@+id/banner_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_accent">
+        android:elevation="8dp"
+        android:background="@color/grey_900">
 
         <LinearLayout
             android:id="@+id/banner_details_container"

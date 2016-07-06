@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.tab.RobotViewPagerAdapter;
@@ -35,6 +36,8 @@ public class RobotActivity extends DatabaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         mRobot = dbManager.getRobotsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
         setActionBarSubtitle(String.valueOf(mRobot.getTeam_id()));
@@ -46,6 +49,14 @@ public class RobotActivity extends DatabaseActivity {
     @Override
     public void inject() {
         getComponent().inject(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

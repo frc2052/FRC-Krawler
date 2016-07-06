@@ -13,8 +13,8 @@ import android.widget.CompoundButton;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
-import com.team2052.frckrawler.bluetooth.server.ServerStatus;
 import com.team2052.frckrawler.binding.ServerFragmentBinder;
+import com.team2052.frckrawler.bluetooth.server.ServerStatus;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.subscribers.EventStringSubscriber;
 import com.team2052.frckrawler.util.BluetoothUtil;
@@ -29,44 +29,6 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
         implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static final String TAG = "ServerFragment";
     private static final int REQUEST_BT_ENABLED = 1;
-
-    public static class ServerStatusObserver extends Subscriber<ServerStatus> {
-
-        ServerFragment fragment;
-
-        public ServerStatusObserver(ServerFragment serverFragment) {
-            fragment = serverFragment;
-        }
-
-        @Override
-        public void onCompleted() {
-
-        }
-
-        @Override
-        public void onError(Throwable e) {
-
-        }
-
-        @Override
-        public void onNext(ServerStatus serverStatus) {
-            fragment.binder.mHostToggle.setOnCheckedChangeListener(null);
-            fragment.binder.mHostToggle.setChecked(serverStatus.getStatus());
-            fragment.binder.mHostToggle.setOnCheckedChangeListener(fragment);
-
-            int index = 0;
-            if (serverStatus.getEvent() != null) {
-                for (int i = 0; i < fragment.subscriber.getData().size(); i++) {
-                    if (fragment.subscriber.getData().get(i).getId() == serverStatus.getEvent().getId()) {
-                        index = i;
-                        break;
-                    }
-                }
-            }
-
-            fragment.binder.setSelection(index);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -153,6 +115,44 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
 
     private boolean isEventsValid() {
         return subscriber.getData() != null && !subscriber.getData().isEmpty();
+    }
+
+    public static class ServerStatusObserver extends Subscriber<ServerStatus> {
+
+        ServerFragment fragment;
+
+        public ServerStatusObserver(ServerFragment serverFragment) {
+            fragment = serverFragment;
+        }
+
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onNext(ServerStatus serverStatus) {
+            fragment.binder.mHostToggle.setOnCheckedChangeListener(null);
+            fragment.binder.mHostToggle.setChecked(serverStatus.getStatus());
+            fragment.binder.mHostToggle.setOnCheckedChangeListener(fragment);
+
+            int index = 0;
+            if (serverStatus.getEvent() != null) {
+                for (int i = 0; i < fragment.subscriber.getData().size(); i++) {
+                    if (fragment.subscriber.getData().get(i).getId() == serverStatus.getEvent().getId()) {
+                        index = i;
+                        break;
+                    }
+                }
+            }
+
+            fragment.binder.setSelection(index);
+        }
     }
 
 

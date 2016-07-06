@@ -18,21 +18,16 @@ import com.team2052.frckrawler.views.ScrimInsetsFrameLayout;
 public abstract class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerListener {
 
-    private static final String IS_DRAWER_OPEN = "is_drawer_open";
-
     protected static final int DRAWER_CLOSE_ANIMATION_DURATION = 600;
-
+    private static final String IS_DRAWER_OPEN = "is_drawer_open";
+    protected Handler handler;
     private NavigationDrawerFragment mNavDrawerFragment;
     private DrawerLayout mDrawerLayout;
     private FrameLayout mContentView;
     private ScrimInsetsFrameLayout mDrawerContainer;
-
     private String mActionBarTitle;
-
     private boolean mUseActionBarToggle = false;
     private boolean mEncourageLearning = false;
-
-    protected Handler handler;
 
     /**
      * Tells the activity whether or not to use the action bar toggle for the navigation drawer.

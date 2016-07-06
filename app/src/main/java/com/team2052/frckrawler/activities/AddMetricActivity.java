@@ -144,6 +144,8 @@ public class AddMetricActivity extends DatabaseActivity {
                             factory.setDataListIndexValue(metricPreviewParams.commaList);
                             break;
 
+                        case MetricHelper.BOOLEAN:
+                            break;
                     }
                     factory.setDescription(metricPreviewParams.description);
                     factory.setMetricCategory(mMetricCategory);
@@ -247,24 +249,6 @@ public class AddMetricActivity extends DatabaseActivity {
         ((FrameLayout) findViewById(R.id.metric_preview_container)).addView(currentWidget);
     }
 
-    private class MetricPreviewParams {
-        String name;
-        Integer mMin;
-        Integer mMax;
-        Integer mInc;
-        String description;
-        private List<String> commaList;
-
-        MetricPreviewParams(String name, Integer mMin, Integer mMax, Integer mInc, String description, List<String> commaList) {
-            this.name = name;
-            this.mMin = mMin;
-            this.mMax = mMax;
-            this.mInc = mInc;
-            this.description = description;
-            this.commaList = commaList;
-        }
-    }
-
     @Override
     protected void onDestroy() {
         if (!subscriptions.isUnsubscribed()) {
@@ -298,5 +282,23 @@ public class AddMetricActivity extends DatabaseActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class MetricPreviewParams {
+        String name;
+        Integer mMin;
+        Integer mMax;
+        Integer mInc;
+        String description;
+        private List<String> commaList;
+
+        MetricPreviewParams(String name, Integer mMin, Integer mMax, Integer mInc, String description, List<String> commaList) {
+            this.name = name;
+            this.mMin = mMin;
+            this.mMax = mMax;
+            this.mInc = mInc;
+            this.description = description;
+            this.commaList = commaList;
+        }
     }
 }

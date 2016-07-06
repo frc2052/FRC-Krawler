@@ -34,7 +34,7 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Event event = mDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
-        if(Strings.isNullOrEmpty(event.getFmsid())){
+        if (Strings.isNullOrEmpty(event.getFmsid())) {
             dismiss();
             return;
         }

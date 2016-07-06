@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
-import com.team2052.frckrawler.database.metric.CompilerManager;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.metric.CompilerManager;
 
 import javax.inject.Singleton;
 

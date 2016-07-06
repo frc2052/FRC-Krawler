@@ -26,8 +26,6 @@ public class UserDao extends AbstractDao<User, Long> {
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
     }
 
-    ;
-
     private DaoSession daoSession;
 
 

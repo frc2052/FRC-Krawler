@@ -39,8 +39,6 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         public final static Property Data = new Property(8, String.class, "data", false, "DATA");
     }
 
-    ;
-
     private DaoSession daoSession;
 
     private Query<MatchData> event_MatchDataListQuery;

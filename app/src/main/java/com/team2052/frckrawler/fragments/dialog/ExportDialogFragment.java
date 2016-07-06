@@ -32,11 +32,10 @@ import rx.schedulers.Schedulers;
  * @since 3/10/2015.
  */
 public class ExportDialogFragment extends BaseProgressDialog {
-    private static final String TAG = "ExportDialogFragment";
-    private static final String EXPORT_TYPE = "EXPORT_TYPE_EXTRA";
     public static final int EXPORT_TYPE_RAW = 1;
     public static final int EXPORT_TYPE_NORMAL = 0;
-
+    private static final String TAG = "ExportDialogFragment";
+    private static final String EXPORT_TYPE = "EXPORT_TYPE_EXTRA";
     private CompilerManager compilerManager;
     private Event event;
 

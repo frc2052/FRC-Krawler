@@ -36,8 +36,6 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         public final static Property Last_updated = new Property(5, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
     }
 
-    ;
-
     private DaoSession daoSession;
 
     private Query<Robot> game_RobotListQuery;

@@ -23,6 +23,10 @@ import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
+    @BindView(R.id.event_spinner)
+    public Spinner eventSpinner;
+    @BindView(R.id.host_toggle)
+    public SwitchCompat mHostToggle;
     @BindView(R.id.view_event)
     Button viewEventButton;
     @BindView(R.id.scout_match_button)
@@ -31,12 +35,6 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
     Button scoutPitButton;
     @BindView(R.id.scout_practice_button)
     Button scoutPracticeButton;
-    @BindView(R.id.event_spinner)
-    public Spinner eventSpinner;
-
-    @BindView(R.id.host_toggle)
-    public SwitchCompat mHostToggle;
-
     @BindView(R.id.server_event_container)
     View mServerEventContainer;
     @BindView(R.id.server_events_error)
@@ -46,7 +44,7 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
 
     private ServerService serverService;
     private boolean mBound = false;
-
+    private ServerFragment serverFragment;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -60,7 +58,6 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
             serverService = null;
         }
     };
-    private ServerFragment serverFragment;
     private int selection;
 
     @Override
@@ -133,7 +130,7 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
     }
 
     public void changeServerStatus(Event event, boolean isChecked) {
-        if(serverService != null) {
+        if (serverService != null) {
             serverService.changeServerStatus(event, isChecked).observeOn(AndroidSchedulers.mainThread()).subscribe(new ServerFragment.ServerStatusObserver(serverFragment));
         }
     }

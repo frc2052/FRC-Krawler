@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
+import com.team2052.frckrawler.binding.ListViewBinder;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.fragments.dialog.UpdateMatchesProcessDialog;
 import com.team2052.frckrawler.subscribers.MatchListSubscriber;
@@ -69,5 +70,10 @@ public class MatchListFragment extends ListViewFragment<List<Match>, MatchListSu
     @Override
     protected Observable<? extends List<Match>> getObservable() {
         return dbManager.matchesAtEvent(mEvent_id);
+    }
+
+    @Override
+    protected ListViewBinder.ListViewNoDataParams getNoDataParams() {
+        return new ListViewBinder.ListViewNoDataParams("No matches found", R.drawable.ic_schedule_black_24dp);
     }
 }

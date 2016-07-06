@@ -28,8 +28,6 @@ public class TeamDao extends AbstractDao<Team, Long> {
         public final static Property Data = new Property(3, String.class, "data", false, "DATA");
     }
 
-    ;
-
     private DaoSession daoSession;
 
 

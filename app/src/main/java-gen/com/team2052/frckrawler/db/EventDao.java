@@ -36,8 +36,6 @@ public class EventDao extends AbstractDao<Event, Long> {
         public final static Property Date = new Property(5, java.util.Date.class, "date", false, "DATE");
     }
 
-    ;
-
     private DaoSession daoSession;
 
     private Query<Event> game_EventListQuery;

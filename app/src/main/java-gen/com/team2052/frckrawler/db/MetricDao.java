@@ -37,8 +37,6 @@ public class MetricDao extends AbstractDao<Metric, Long> {
         public final static Property Enabled = new Property(6, boolean.class, "enabled", false, "ENABLED");
     }
 
-    ;
-
     private DaoSession daoSession;
 
     private Query<Metric> game_MetricListQuery;
