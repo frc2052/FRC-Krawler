@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.MetricHelper;
-import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.metric.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.util.Tuple2;
 import com.team2052.frckrawler.views.metric.ListIndexMetricWidget;
 

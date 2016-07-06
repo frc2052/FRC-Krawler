@@ -25,8 +25,6 @@ public class SimpleListElement extends ListElement {
         }
         //Set the name based on the key
         TextView text = (TextView) convertView.findViewById(android.R.id.text1);
-        text.setMinHeight(48);
-        text.setPadding(16, 16, 16, 16);
         text.setText(name);
         return convertView;
     }

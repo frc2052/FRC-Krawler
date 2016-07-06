@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.Schedule;
+import com.team2052.frckrawler.bluetooth.Schedule;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Match;

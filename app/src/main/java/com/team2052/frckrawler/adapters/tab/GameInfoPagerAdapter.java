@@ -3,9 +3,8 @@ package com.team2052.frckrawler.adapters.tab;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.team2052.frckrawler.activities.GameInfoActivity;
 import com.team2052.frckrawler.adapters.InstanceFragmentStatePagerAdapter;
-import com.team2052.frckrawler.database.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.fragments.EventsFragment;
 import com.team2052.frckrawler.fragments.GameInfoFragment;
 import com.team2052.frckrawler.fragments.MetricsFragment;

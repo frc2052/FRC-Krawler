@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.CompiledMetricValue;
+import com.team2052.frckrawler.database.metric.CompiledMetricValue;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.listitems.ListElement;

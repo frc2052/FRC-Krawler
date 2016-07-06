@@ -11,24 +11,19 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Strings;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.HasComponent;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.MatchComment;
-import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.di.FragmentComponent;
-import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.SnackbarUtil;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 

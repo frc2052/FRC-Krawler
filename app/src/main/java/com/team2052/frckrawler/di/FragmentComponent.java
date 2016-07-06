@@ -12,7 +12,7 @@ import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.binding.BinderModule;
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
-import com.team2052.frckrawler.database.CompilerManager;
+import com.team2052.frckrawler.database.metric.CompilerManager;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.fragments.EventInfoFragment;
 import com.team2052.frckrawler.fragments.EventsFragment;

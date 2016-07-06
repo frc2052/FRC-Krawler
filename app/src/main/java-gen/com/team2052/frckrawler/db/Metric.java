@@ -1,6 +1,6 @@
 package com.team2052.frckrawler.db;
 
-import com.team2052.frckrawler.database.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricHelper;
 
 import java.util.List;
 

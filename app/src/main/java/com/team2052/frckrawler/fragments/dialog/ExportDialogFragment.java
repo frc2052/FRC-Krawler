@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.HasComponent;
-import com.team2052.frckrawler.database.CompilerManager;
+import com.team2052.frckrawler.database.metric.CompilerManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.fragments.dialog.events.ProgressDialogUpdateEvent;
@@ -25,7 +25,6 @@ import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 
 /**

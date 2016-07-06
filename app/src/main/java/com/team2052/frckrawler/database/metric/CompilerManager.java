@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.database;
+package com.team2052.frckrawler.database.metric;
 
 import android.content.Context;
 import android.os.Environment;
@@ -8,6 +8,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchData;
@@ -33,7 +34,6 @@ import au.com.bytecode.opencsv.CSVWriter;
 import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
 import rx.Scheduler;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class CompilerManager {

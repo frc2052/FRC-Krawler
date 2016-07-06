@@ -3,8 +3,8 @@ package com.team2052.frckrawler.views.metric;
 import android.content.Context;
 
 import com.google.gson.JsonElement;
-import com.team2052.frckrawler.database.MetricHelper;
-import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.metric.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricValue;
 
 import java.util.List;
 

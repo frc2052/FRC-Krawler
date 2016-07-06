@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
-import com.facebook.stetho.common.StringUtil;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
@@ -14,8 +13,10 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.bluetooth.RobotComment;
 import com.team2052.frckrawler.comparators.MatchNumberComparator;
 import com.team2052.frckrawler.comparators.RobotTeamNumberComparator;
+import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;

@@ -1,5 +1,6 @@
-package com.team2052.frckrawler.database;
+package com.team2052.frckrawler.database.metric;
 
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.MatchDataDao;
@@ -14,9 +15,6 @@ import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
 
-/**
- * Created by Adam on 5/2/2015.
- */
 public class MetricCompiler {
     /**
      * Used to compile data based on ATTENDING TEAMS and METRIC
@@ -38,37 +36,6 @@ public class MetricCompiler {
                     metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), JSON.getAsJsonObject(matchData.getData())));
                 }
 
-            } else if (metric.getCategory() == MetricHelper.ROBOT_METRICS) {
-                QueryBuilder<PitData> queryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), event.getId(), null);
-
-                for (PitData pitData : queryBuilder.list()) {
-                    metricData.add(new MetricValue(dbManager.getPitDataTable().getMetric(pitData), JSON.getAsJsonObject(pitData.getData())));
-                }
-            }
-            compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, compileWeight));
-        }
-        return compiledMetricValues;
-    }
-
-    /**
-     * Used to export to CSV by ROW based on PER ROBOT
-     *
-     * @param event
-     * @param robot
-     * @return
-     */
-    public static List<CompiledMetricValue> getCompiledRobot(Event event, Robot robot, DBManager dbManager, float compileWeight) {
-        //Load all the metrics
-        final List<Metric> metrics = dbManager.getMetricsTable().query(null, null, event.getGame_id(), null).list();
-        final List<CompiledMetricValue> compiledMetricValues = new ArrayList<>();
-        for (Metric metric : metrics) {
-            List<MetricValue> metricData = new ArrayList<>();
-            if (metric.getCategory() == MetricHelper.MATCH_PERF_METRICS) {
-                QueryBuilder<MatchData> queryBuilder = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), null, 0, event.getId(), null).orderAsc(MatchDataDao.Properties.Match_number);
-
-                for (MatchData matchData : queryBuilder.list()) {
-                    metricData.add(new MetricValue(dbManager.getMatchDataTable().getMetric(matchData), JSON.getAsJsonObject(matchData.getData())));
-                }
             } else if (metric.getCategory() == MetricHelper.ROBOT_METRICS) {
                 QueryBuilder<PitData> queryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), event.getId(), null);
 

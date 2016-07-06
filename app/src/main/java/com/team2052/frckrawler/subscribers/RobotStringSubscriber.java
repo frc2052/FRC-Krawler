@@ -5,9 +5,6 @@ import com.team2052.frckrawler.db.Robot;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Adam on 11/26/2015.
- */
 public class RobotStringSubscriber extends BaseDataSubscriber<List<Robot>, List<String>> {
     @Override
     public void parseData() {

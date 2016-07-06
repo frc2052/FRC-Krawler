@@ -15,6 +15,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.database.DBManager;
@@ -50,7 +51,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     /**
      * Used to create the dialog. To import the event to the game
      *
-     * @param game the game that the event will eventually be imported to.
+     * @param game_id the game that the event will eventually be imported to.
      * @return The fragment with the specific arguments to run the dialog
      */
     public static ImportDataSimpleDialogFragment newInstance(long game_id) {
