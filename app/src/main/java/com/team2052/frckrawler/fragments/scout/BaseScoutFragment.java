@@ -16,7 +16,7 @@ import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.HasComponent;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
@@ -42,11 +42,10 @@ import rx.subscriptions.CompositeSubscription;
  */
 
 public abstract class BaseScoutFragment extends Fragment {
-    private static final String TAG = "BaseScoutFragment";
     public static final String EVENT_ID = "EVENT_ID";
+    private static final String TAG = "BaseScoutFragment";
     protected DBManager dbManager;
-    private FragmentComponent mComponent;
-
+    protected Event mEvent;
     CompositeSubscription subscriptions = new CompositeSubscription();
 
     @BindView(R.id.robot)
@@ -60,9 +59,8 @@ public abstract class BaseScoutFragment extends Fragment {
 
     @BindView(R.id.metric_widget_list)
     LinearLayout mMetricList;
-
+    private FragmentComponent mComponent;
     private List<Robot> robots;
-    protected Event mEvent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,6 +143,7 @@ public abstract class BaseScoutFragment extends Fragment {
                 });
         subscriptions.add(saveSubscription);
     }
+
     /**
      * Please do not use unless you have to
      */

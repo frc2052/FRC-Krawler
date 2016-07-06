@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.RobotActivity;
+import com.team2052.frckrawler.binding.ListViewBinder;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.fragments.dialog.AddTeamToEventDialogFragment;
@@ -76,5 +78,10 @@ public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubsc
         if (load != null) {
             AddTeamToEventDialogFragment.newInstance(load).show(getChildFragmentManager(), "addTeam");
         }
+    }
+
+    @Override
+    protected ListViewBinder.ListViewNoDataParams getNoDataParams() {
+        return new ListViewBinder.ListViewNoDataParams("No teams found", R.drawable.ic_team);
     }
 }

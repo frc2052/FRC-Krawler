@@ -50,7 +50,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     /**
      * Used to create the dialog. To import the event to the game
      *
-     * @param game the game that the event will eventually be imported to.
+     * @param game_id the game that the event will eventually be imported to.
      * @return The fragment with the specific arguments to run the dialog
      */
     public static ImportDataSimpleDialogFragment newInstance(long game_id) {

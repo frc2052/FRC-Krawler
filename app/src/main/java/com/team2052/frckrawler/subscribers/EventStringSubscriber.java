@@ -5,9 +5,6 @@ import com.team2052.frckrawler.db.Event;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Adam on 11/24/2015.
- */
 public class EventStringSubscriber extends BaseDataSubscriber<List<Event>, List<String>> {
     @Override
     public void parseData() {

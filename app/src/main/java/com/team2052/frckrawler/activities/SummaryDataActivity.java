@@ -4,14 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.MetricsStatsAdapter;
-import com.team2052.frckrawler.database.CompiledMetricValue;
-import com.team2052.frckrawler.database.MetricCompiler;
+import com.team2052.frckrawler.database.metric.CompiledMetricValue;
+import com.team2052.frckrawler.database.metric.MetricCompiler;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListItem;

@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.team2052.frckrawler.fragments.MetricInfoFragment;
 
 public class MetricInfoPagerAdapter extends FragmentPagerAdapter {
-    public String[] headers = new String[]{"Info"};
     final long metricId;
+    public String[] headers = new String[]{"Info"};
 
     public MetricInfoPagerAdapter(FragmentManager fragmentManager, long metricId) {
         super(fragmentManager);

@@ -14,7 +14,7 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.tba.JSON;
 

@@ -3,6 +3,7 @@ package com.team2052.frckrawler.fragments.dialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.activities.DatabaseActivity;
@@ -33,6 +34,10 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Event event = mDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        if (Strings.isNullOrEmpty(event.getFmsid())) {
+            dismiss();
+            return;
+        }
         new UpdateMatchSchedule(event).execute();
     }
 

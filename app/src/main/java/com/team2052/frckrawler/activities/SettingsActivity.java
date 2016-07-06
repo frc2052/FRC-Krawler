@@ -54,6 +54,16 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
         return mComponent;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
         @Override
@@ -95,15 +105,5 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
             }
             return false;
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            this.finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

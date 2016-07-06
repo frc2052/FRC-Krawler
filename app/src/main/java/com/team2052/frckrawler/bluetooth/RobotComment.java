@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.database;
+package com.team2052.frckrawler.bluetooth;
 
 import java.io.Serializable;
 

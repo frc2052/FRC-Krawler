@@ -7,9 +7,6 @@ import com.team2052.frckrawler.listitems.items.MatchListItem;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Adam on 11/23/2015.
- */
 public class MatchListSubscriber extends BaseDataSubscriber<List<Match>, List<ListItem>> {
     @Override
     public void parseData() {

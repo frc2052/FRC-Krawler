@@ -1,8 +1,5 @@
 package com.team2052.frckrawler.listitems;
 
-/**
- * @author Adam
- */
 public abstract class ListElement implements ListItem {
     protected final String key;
 

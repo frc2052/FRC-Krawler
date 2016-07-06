@@ -28,12 +28,6 @@ public class ServerService extends Service {
 
     ServerThread serverThread = null;
 
-    public class ServerServiceBinder extends Binder {
-        public ServerService getService() {
-            return ServerService.this;
-        }
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -62,6 +56,7 @@ public class ServerService extends Service {
         serverThread.start();
         showNotification();
     }
+
     /**
      * Shows the notification to the user
      */
@@ -98,8 +93,8 @@ public class ServerService extends Service {
         m.cancel(SERVER_OPEN_ID);
     }
 
-    private void stopServer(){
-        if(isServerOn()){
+    private void stopServer() {
+        if (isServerOn()) {
             serverThread.closeServer();
             serverThread = null;
         }
@@ -110,11 +105,11 @@ public class ServerService extends Service {
         return serverThread != null;
     }
 
-    public Observable<ServerStatus> changeServerStatus(Event event, boolean on){
+    public Observable<ServerStatus> changeServerStatus(Event event, boolean on) {
         return Observable.create(subscriber -> {
             //Event is null, so we can assume we want to turn off the server
             // If the server is on, and we want to turn it off then shut the server down if we want to turn it off
-            if(event == null || (isServerOn() && !on)){
+            if (event == null || (isServerOn() && !on)) {
                 stopServer();
             } else {
                 startServer(event);
@@ -124,9 +119,9 @@ public class ServerService extends Service {
         });
     }
 
-    public Observable<ServerStatus> getServerStatus(){
+    public Observable<ServerStatus> getServerStatus() {
         return Observable.create(subscriber -> {
-            if(serverThread != null) {
+            if (serverThread != null) {
                 subscriber.onNext(new ServerStatus(serverThread.getHostedEvent(), isServerOn()));
             } else {
                 subscriber.onNext(new ServerStatus(null, isServerOn()));
@@ -139,5 +134,11 @@ public class ServerService extends Service {
     public void onTaskRemoved(Intent rootIntent) {
         stopServer();
         removeNotification();
+    }
+
+    public class ServerServiceBinder extends Binder {
+        public ServerService getService() {
+            return ServerService.this;
+        }
     }
 }

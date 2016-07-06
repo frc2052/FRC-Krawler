@@ -7,9 +7,6 @@ import com.team2052.frckrawler.listitems.elements.MetricListElement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by adam on 11/18/15.
- */
 public class MetricListSubscriber extends BaseDataSubscriber<List<Metric>, List<ListItem>> {
     @Override
     public void parseData() {

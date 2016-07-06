@@ -26,8 +26,6 @@ public class GameDao extends AbstractDao<Game, Long> {
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
     }
 
-    ;
-
     private DaoSession daoSession;
 
 

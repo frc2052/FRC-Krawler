@@ -6,8 +6,8 @@ import android.widget.FrameLayout;
 
 import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
-import com.team2052.frckrawler.database.MetricHelper;
-import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.metric.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.views.metric.impl.BooleanMetricWidget;
 import com.team2052.frckrawler.views.metric.impl.CheckBoxMetricWidget;
@@ -26,7 +26,7 @@ public abstract class MetricWidget extends FrameLayout {
 
     }
 
-    protected MetricWidget(Context context){
+    protected MetricWidget(Context context) {
         super(context);
         inflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);

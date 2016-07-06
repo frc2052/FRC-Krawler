@@ -34,8 +34,6 @@ public class RobotEventDao extends AbstractDao<RobotEvent, Long> {
         public final static Property Data = new Property(3, String.class, "data", false, "DATA");
     }
 
-    ;
-
     private DaoSession daoSession;
 
     private Query<RobotEvent> event_RobotEventListQuery;

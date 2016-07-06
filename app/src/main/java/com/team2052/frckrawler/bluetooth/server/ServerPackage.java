@@ -1,7 +1,7 @@
 package com.team2052.frckrawler.bluetooth.server;
 
+import com.team2052.frckrawler.bluetooth.RobotComment;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.RobotComment;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.PitData;

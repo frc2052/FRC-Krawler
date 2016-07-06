@@ -12,8 +12,8 @@ import com.google.common.collect.Lists;
 import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.MetricHelper;
-import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.metric.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchData;
@@ -34,25 +34,13 @@ import rx.schedulers.Schedulers;
 
 
 public class ScoutMatchFragment extends BaseScoutFragment {
-    private static final String TAG = "ScoutMatchFragment";
     public static final int MATCH_GAME_TYPE = 0;
     public static final int MATCH_PRACTICE_TYPE = 1;
+    private static final String TAG = "ScoutMatchFragment";
     private static String MATCH_TYPE = "MATCH_TYPE";
-    private int mMatchType;
-
     @BindView(R.id.match_number_input)
     TextInputLayout mMatchNumberInput;
-
-    private static class MetricValueUpdateParams {
-        Integer match_num;
-        Robot robot;
-
-        public MetricValueUpdateParams(Integer match_num, Robot robot) {
-            this.match_num = match_num;
-            this.robot = robot;
-        }
-    }
-
+    private int mMatchType;
     Observable<List<MetricValue>> metricValueObservable = Observable
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
@@ -71,7 +59,6 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread());
-
     Observable<String> metricCommentObservable = Observable
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
@@ -193,20 +180,6 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                 });
     }
 
-    public class MatchScoutSaveMetric {
-        Integer matchNum;
-        Robot robot;
-        List<MetricValue> metricValues;
-        String comment;
-
-        public MatchScoutSaveMetric(Integer matchNum, Robot robot, List<MetricValue> metricValues, String comment) {
-            this.matchNum = matchNum;
-            this.robot = robot;
-            this.metricValues = metricValues;
-            this.comment = comment;
-        }
-    }
-
     @Deprecated
     private int getMatchNumber() {
         try {
@@ -219,5 +192,29 @@ public class ScoutMatchFragment extends BaseScoutFragment {
     @Deprecated
     private boolean isMatchNumberValid() {
         return getMatchNumber() != -1;
+    }
+
+    private static class MetricValueUpdateParams {
+        Integer match_num;
+        Robot robot;
+
+        public MetricValueUpdateParams(Integer match_num, Robot robot) {
+            this.match_num = match_num;
+            this.robot = robot;
+        }
+    }
+
+    public class MatchScoutSaveMetric {
+        Integer matchNum;
+        Robot robot;
+        List<MetricValue> metricValues;
+        String comment;
+
+        public MatchScoutSaveMetric(Integer matchNum, Robot robot, List<MetricValue> metricValues, String comment) {
+            this.matchNum = matchNum;
+            this.robot = robot;
+            this.metricValues = metricValues;
+            this.comment = comment;
+        }
     }
 }

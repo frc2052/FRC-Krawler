@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.database;
+package com.team2052.frckrawler.database.metric;
 
 import android.support.annotation.IntDef;
 

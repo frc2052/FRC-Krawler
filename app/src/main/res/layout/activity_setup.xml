@@ -22,7 +22,7 @@
 
                 <TextView
                     android:id="@+id/welcome_welcome_to"
-                    style="@style/TextAppearance.AppCompat.Large.Inverse"
+                    style="@style/TextAppearance.AppCompat.Large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -32,7 +32,7 @@
 
                 <TextView
                     android:id="@+id/welcome_frc_krawler"
-                    style="@style/TextAppearance.AppCompat.Large.Inverse"
+                    style="@style/TextAppearance.AppCompat.Large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/welcome_welcome_to"

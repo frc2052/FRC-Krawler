@@ -37,8 +37,6 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         public final static Property Last_updated = new Property(6, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
     }
 
-    ;
-
     private DaoSession daoSession;
 
     private Query<MatchComment> event_MatchCommentListQuery;

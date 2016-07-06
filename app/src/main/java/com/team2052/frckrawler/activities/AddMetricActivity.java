@@ -19,8 +19,8 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.MetricHelper;
-import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.metric.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.util.SnackbarUtil;
@@ -145,6 +145,8 @@ public class AddMetricActivity extends DatabaseActivity {
                             factory.setDataListIndexValue(metricPreviewParams.commaList);
                             break;
 
+                        case MetricHelper.BOOLEAN:
+                            break;
                     }
                     factory.setDescription(metricPreviewParams.description);
                     factory.setMetricCategory(mMetricCategory);
@@ -248,24 +250,6 @@ public class AddMetricActivity extends DatabaseActivity {
         ((FrameLayout) findViewById(R.id.metric_preview_container)).addView(currentWidget);
     }
 
-    private class MetricPreviewParams {
-        String name;
-        Integer mMin;
-        Integer mMax;
-        Integer mInc;
-        String description;
-        private List<String> commaList;
-
-        MetricPreviewParams(String name, Integer mMin, Integer mMax, Integer mInc, String description, List<String> commaList) {
-            this.name = name;
-            this.mMin = mMin;
-            this.mMax = mMax;
-            this.mInc = mInc;
-            this.description = description;
-            this.commaList = commaList;
-        }
-    }
-
     @Override
     protected void onDestroy() {
         if (!subscriptions.isUnsubscribed()) {
@@ -300,5 +284,23 @@ public class AddMetricActivity extends DatabaseActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class MetricPreviewParams {
+        String name;
+        Integer mMin;
+        Integer mMax;
+        Integer mInc;
+        String description;
+        private List<String> commaList;
+
+        MetricPreviewParams(String name, Integer mMin, Integer mMax, Integer mInc, String description, List<String> commaList) {
+            this.name = name;
+            this.mMin = mMin;
+            this.mMax = mMax;
+            this.mInc = mInc;
+            this.description = description;
+            this.commaList = commaList;
+        }
     }
 }

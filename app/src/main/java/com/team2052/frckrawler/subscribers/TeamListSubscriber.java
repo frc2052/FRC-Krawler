@@ -7,9 +7,6 @@ import com.team2052.frckrawler.listitems.elements.TeamListElement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Adam on 11/20/2015.
- */
 public class TeamListSubscriber extends BaseDataSubscriber<List<Team>, List<ListItem>> {
     @Override
     public void parseData() {
