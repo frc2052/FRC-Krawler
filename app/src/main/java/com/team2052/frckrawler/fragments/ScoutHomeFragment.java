@@ -48,7 +48,6 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         }
         dbManager = mComponent.dbManager();
         scoutSyncHandler = mComponent.scoutSyncHander();
-        setCurrentEvent(ScoutUtil.getScoutEvent(getContext()));
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
     }
@@ -71,6 +70,8 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         view.findViewById(R.id.scout_pit_button).setOnClickListener(this);
         view.findViewById(R.id.scout_practice_button).setOnClickListener(this);
         view.findViewById(R.id.sync_button).setOnClickListener(this);
+
+        setCurrentEvent(ScoutUtil.getScoutEvent(getContext()));
 
         syncButton = view.findViewById(R.id.sync_button);
         syncProgressBar = view.findViewById(R.id.sync_progress_bar);
@@ -110,13 +111,24 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         }
     }
 
+    public void enableButtons(boolean enabled) {
+        if (getView() == null) {
+            return;
+        }
+        getView().findViewById(R.id.scout_match_button).setEnabled(enabled);
+        getView().findViewById(R.id.scout_pit_button).setEnabled(enabled);
+        getView().findViewById(R.id.scout_practice_button).setEnabled(enabled);
+    }
+
     private void setCurrentEvent(Event scoutEvent) {
         mEvent = scoutEvent;
+        enableButtons(mEvent != null);
     }
 
     @SuppressWarnings("unused")
     @Subscribe
     public void onEvent(ScoutSyncSuccessEvent event) {
+        enableButtons(true);
         setProgressVisibility(View.GONE);
         SnackbarUtil.make(getView(), "Sync Successful", Snackbar.LENGTH_LONG).show();
         setCurrentEvent(ScoutUtil.getScoutEvent(getActivity()));
@@ -125,12 +137,14 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     @SuppressWarnings("unused")
     @Subscribe
     public void onEvent(ScoutSyncCancelledEvent event) {
+        enableButtons(true);
         setProgressVisibility(View.GONE);
     }
 
     @SuppressWarnings("unused")
     @Subscribe
     public void onEvent(ScoutSyncErrorEvent event) {
+        enableButtons(true);
         setProgressVisibility(View.GONE);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getActivity().getString(R.string.sync_error_title));
@@ -144,6 +158,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     @SuppressWarnings("unused")
     @Subscribe
     public void onEvent(ScoutSyncStartEvent event) {
+        enableButtons(false);
         SnackbarUtil.make(getView(), "Starting Sync", Snackbar.LENGTH_SHORT).show();
         setProgressVisibility(View.VISIBLE);
     }

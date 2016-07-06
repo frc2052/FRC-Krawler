@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.firebasemodels;
+package com.team2052.frckrawler.firebase.models;
 
 public class FirebaseMetric {
     public String name;

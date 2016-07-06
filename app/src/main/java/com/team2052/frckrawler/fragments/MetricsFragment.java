@@ -12,7 +12,7 @@ import com.team2052.frckrawler.activities.ImportMetricsActivity;
 import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.binding.ListViewBinder;
-import com.team2052.frckrawler.database.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.elements.MetricListElement;

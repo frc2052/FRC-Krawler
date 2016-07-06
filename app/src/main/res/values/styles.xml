@@ -13,7 +13,6 @@
     </style>
 
     <style name="AppTheme.NoActionBar.NoActionBar">
-        <item name="android:windowBackground">@color/primary</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
