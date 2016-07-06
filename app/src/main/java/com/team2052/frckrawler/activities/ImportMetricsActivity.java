@@ -17,7 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.firebasemodels.MetricImportModel;
 
 import rx.Observable;
