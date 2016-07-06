@@ -48,7 +48,7 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
                 .map(HTTP::getResponse)
                 .filter(Response::isSuccessful)
                 .map(HTTP::dataFromResponse)
-                .map(responseString -> JSON.getAsJsonObject(responseString))
+                .map(JSON::getAsJsonObject)
                 .map(jsonObject -> JSON.getGson().fromJson(jsonObject, Team.class))
                 .map(team -> {
                     AndroidSchedulers.mainThread().createWorker().schedule(() ->

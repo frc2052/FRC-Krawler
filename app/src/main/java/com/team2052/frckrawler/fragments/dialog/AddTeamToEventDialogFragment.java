@@ -90,7 +90,7 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
-        builder.setTitle("Add Team");
+        builder.setTitle("Add Team(s)");
         builder.setPositiveButton("Add", this);
         builder.setNegativeButton("Cancel", this);
         builder.setView(view);
