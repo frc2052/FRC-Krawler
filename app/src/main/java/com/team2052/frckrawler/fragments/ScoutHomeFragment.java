@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.HasComponent;
+import com.team2052.frckrawler.activities.NavigationDrawerActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncCancelledEvent;
@@ -76,6 +77,10 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         syncButton = view.findViewById(R.id.sync_button);
         syncProgressBar = view.findViewById(R.id.sync_progress_bar);
 
+        if (ScoutUtil.getDeviceIsScout(getContext()) && getActivity() instanceof NavigationDrawerActivity) {
+            ((NavigationDrawerActivity) getActivity()).setNavigationDrawerEnabled(false);
+        }
+
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -129,6 +134,9 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     @Subscribe
     public void onEvent(ScoutSyncSuccessEvent event) {
         enableButtons(true);
+        if (getActivity() instanceof NavigationDrawerActivity) {
+            ((NavigationDrawerActivity) getActivity()).setNavigationDrawerEnabled(false);
+        }
         setProgressVisibility(View.GONE);
         SnackbarUtil.make(getView(), "Sync Successful", Snackbar.LENGTH_LONG).show();
         setCurrentEvent(ScoutUtil.getScoutEvent(getActivity()));
