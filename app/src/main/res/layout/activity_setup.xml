@@ -44,10 +44,12 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="72dp"
                     android:layout_above="@+id/welcome_message"
                     android:layout_below="@+id/welcome_frc_krawler"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/ic_10th_logo_transparent" />
+                    android:tint="@color/color_accent"
+                    android:src="@drawable/setup_screen_logo" />
 
                 <TextView
                     android:id="@+id/welcome_message"
@@ -63,7 +65,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/primary_dark"
+                android:background="@color/grey_900"
                 android:minHeight="56dp">
 
                 <LinearLayout
@@ -151,7 +153,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/primary_dark"
+                android:background="@color/grey_900"
                 android:elevation="4dp"
                 android:minHeight="56dp">
 
@@ -299,7 +301,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/primary_dark"
+                android:background="@color/grey_900"
                 android:elevation="4dp" />
 
         </RelativeLayout>

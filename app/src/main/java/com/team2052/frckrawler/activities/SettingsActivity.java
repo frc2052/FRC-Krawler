@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.DBManager;
@@ -64,11 +65,19 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
         return super.onOptionsItemSelected(item);
     }
 
-    public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+    @SuppressWarnings("WeakerAccess")
+    public static class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            if (!(getActivity() instanceof SettingsActivity)) {
+                FirebaseCrash.report(new IllegalStateException("ServerFragment must have a parent activity of SettingsActivity"));
+                getActivity().finish();
+                return;
+            }
+
             addPreferencesFromResource(R.xml.preferences);
             int numEvents = DBManager.getInstance(getActivity()).getEventsTable().getAllEvents().size();
 
@@ -97,10 +106,10 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
 
             switch (key) {
                 case EXPORT_PREFERENCE_KEY:
-                    clickedPreference = 0;
+                    ((SettingsActivity) getActivity()).clickedPreference = 0;
                     break;
                 case EXPORT_RAW_PREFERENCE_KEY:
-                    clickedPreference = 1;
+                    ((SettingsActivity) getActivity()).clickedPreference = 1;
                     break;
             }
             return false;

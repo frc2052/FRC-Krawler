@@ -14,11 +14,11 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.metric.MetricHelper;
-import com.team2052.frckrawler.firebasemodels.MetricImportModel;
+import com.team2052.frckrawler.firebase.FirebaseUtil;
+import com.team2052.frckrawler.firebase.models.MetricImportModel;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -49,7 +49,7 @@ public class ImportMetricsActivity extends DatabaseActivity implements AdapterVi
         metric_category = getIntent().getIntExtra(METRIC_CATEGORY_EXTRA, MetricHelper.MATCH_PERF_METRICS);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("match_perf");
+        databaseReference = FirebaseUtil.getFirebaseDatabase().getReference().child("match_perf");
 
         adapter = new FirebaseListAdapter<MetricImportModel>(this, MetricImportModel.class, R.layout.list_item_metrics_import, databaseReference) {
             @Override
