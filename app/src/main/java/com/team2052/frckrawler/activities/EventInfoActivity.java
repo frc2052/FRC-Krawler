@@ -2,59 +2,64 @@ package com.team2052.frckrawler.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.adapters.InstanceFragmentStatePagerAdapter;
-import com.team2052.frckrawler.databinding.LayoutTabBinding;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.fragments.event.EventInfoFragment;
-import com.team2052.frckrawler.fragments.match.MatchListFragment;
-import com.team2052.frckrawler.fragments.metric.SummaryFragment;
-import com.team2052.frckrawler.fragments.team.RobotsFragment;
-import com.team2052.frckrawler.listeners.ListUpdateListener;
+import com.team2052.frckrawler.adapters.tab.EventViewPagerAdapter;
+import com.team2052.frckrawler.listeners.FABButtonListener;
 
 /**
  * @author Adam
  * @since 10/16/2014
  */
-public class EventInfoActivity extends BaseActivity {
-    private Event mEvent;
-    private LayoutTabBinding binding;
-    private EventViewPagerAdapter mAdapter;
+public class EventInfoActivity extends DatabaseActivity implements View.OnClickListener {
+    ViewPager mViewPager;
+    TabLayout mTabLayout;
 
-    public static Intent newInstance(Context context, Event event) {
+    private EventViewPagerAdapter mAdapter;
+    private FloatingActionButton mFab;
+
+    public static Intent newInstance(Context context, long event_id) {
         Intent intent = new Intent(context, EventInfoActivity.class);
-        intent.putExtra(PARENT_ID, event.getId());
+        intent.putExtra(PARENT_ID, event_id);
         return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mEvent = mDbManager.getEventsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
+        long mEvent_id = getIntent().getLongExtra(PARENT_ID, 0);
+        setContentView(R.layout.layout_tab_fab);
+        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        if (mEvent == null) {
-            finish();
-        }
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.layout_tab);
-        binding.viewPager.setAdapter(mAdapter = new EventViewPagerAdapter());
-        binding.tabLayout.setupWithViewPager(binding.viewPager);
+        mFab = (FloatingActionButton) findViewById(R.id.floating_action_button);
+        mFab.setOnClickListener(this);
 
-        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.setAdapter(mAdapter = new EventViewPagerAdapter(getSupportFragmentManager(), mEvent_id));
+        mTabLayout.setupWithViewPager(mViewPager);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 0) {
-                    ((ListUpdateListener) mAdapter.getRegisteredFragment(0)).updateList();
+                if (position < 3) {
+                    mFab.hide();
+                } else {
+                    mFab.show();
                 }
             }
 
@@ -62,51 +67,28 @@ public class EventInfoActivity extends BaseActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
-
-        setSupportActionBar(binding.toolbar);
-        setActionBarTitle(getString(R.string.event));
-        setActionBarSubtitle(mEvent.getName());
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public class EventViewPagerAdapter extends InstanceFragmentStatePagerAdapter {
-        public String[] headers = new String[]{"Info", "Metric Summary", "Schedule", "Attending"};
-
-        public EventViewPagerAdapter() {
-            super(getSupportFragmentManager());
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return EventInfoFragment.newInstance(mEvent);
-                case 1:
-                    return SummaryFragment.newInstance(mEvent);
-                case 2:
-                    return MatchListFragment.newInstance(mEvent);
-                case 3:
-                    return RobotsFragment.newInstance(mEvent);
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return headers.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return headers[position];
-        }
+    @Override
+    public void inject() {
+        getComponent().inject(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.floating_action_button) {
+            if (mAdapter.getRegisteredFragment(mViewPager.getCurrentItem()) instanceof FABButtonListener) {
+                ((FABButtonListener) mAdapter.getRegisteredFragment(mViewPager.getCurrentItem())).onFABPressed();
+            }
+        }
+    }
 }

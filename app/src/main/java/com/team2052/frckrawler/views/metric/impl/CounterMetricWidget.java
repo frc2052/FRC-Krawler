@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
@@ -20,11 +20,19 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
     private int min;
     private int increment;
 
-    public CounterMetricWidget(Context context, MetricValue m) {
-
-        super(context, m);
+    public CounterMetricWidget(Context context, MetricValue metricValue) {
+        super(context, metricValue);
         inflater.inflate(R.layout.widget_metric_counter, this);
+        setMetricValue(metricValue);
+    }
 
+    public CounterMetricWidget(Context context) {
+        super(context);
+        inflater.inflate(R.layout.widget_metric_counter, this);
+    }
+
+    @Override
+    public void setMetricValue(MetricValue m) {
         ((TextView) findViewById(R.id.title)).setText(m.getMetric().getName());
 
         findViewById(R.id.plus).setOnClickListener(this);

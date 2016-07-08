@@ -4,24 +4,24 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.BuildConfig;
-import com.team2052.frckrawler.bluetooth.BluetoothInfo;
-import com.team2052.frckrawler.bluetooth.ServerPackage;
+import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncSuccessEvent;
+import com.team2052.frckrawler.bluetooth.server.ServerPackage;
 import com.team2052.frckrawler.database.DBManager;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.UUID;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * @author Adam, Charlie
@@ -60,10 +60,11 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             BluetoothSocket serverSocket = null;
 
             try {
-                serverSocket = bluetoothDevice.createRfcommSocketToServiceRecord(UUID.fromString(BluetoothInfo.UUID));
+                serverSocket = bluetoothDevice.createRfcommSocketToServiceRecord(UUID.fromString(BluetoothConstants.UUID));
                 serverSocket.connect();
             } catch (IOException e) {
-                e.printStackTrace();
+                FirebaseCrash.log("Error Syncing: Could not connect bluetooth socket");
+                FirebaseCrash.report(e);
                 //Server is most likely off
                 return SYNC_ERROR;
             }
@@ -75,16 +76,20 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
                 ooStream = new ObjectOutputStream(serverSocket.getOutputStream());
             } catch (IOException e) {
                 e.printStackTrace();
+                FirebaseCrash.log("Error Syncing: Could not get the streams");
+                FirebaseCrash.report(e);
                 return SYNC_ERROR;
             }
 
             try {
                 ooStream.writeInt(BuildConfig.VERSION_CODE);
-                ooStream.writeInt(BluetoothInfo.ConnectionType.SCOUT_SYNC.ordinal());
+                ooStream.writeInt(BluetoothConstants.SCOUT_SYNC);
                 ooStream.writeObject(new ServerPackage(mDbManager));
                 ooStream.flush();
             } catch (IOException e) {
                 e.printStackTrace();
+                FirebaseCrash.log("Error Syncing: Could not flush stream");
+                FirebaseCrash.report(e);
                 return SYNC_ERROR;
             }
 
@@ -93,14 +98,15 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             ScoutPackage scoutPackage = null;
             try {
                 int code = ioStream.readInt();
-                if(code == BluetoothInfo.OK){
+                if (code == BluetoothConstants.OK) {
                     scoutPackage = (ScoutPackage) ioStream.readObject();
-                } else if(code == BluetoothInfo.VERSION_ERROR){
+                } else if (code == BluetoothConstants.VERSION_ERROR) {
                     errorMessage = String.format("The server version is incompatible with your version. You are running %s and the server is running %s", BuildConfig.VERSION_NAME, ioStream.readObject());
                     return SYNC_ERROR;
                 }
             } catch (ClassNotFoundException | IOException e) {
                 e.printStackTrace();
+                FirebaseCrash.report(e);
                 return SYNC_ERROR;
             }
 
@@ -111,6 +117,8 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             try {
                 serverSocket.close();
             } catch (IOException e) {
+                FirebaseCrash.log("Error Syncing: Could not close bluetooth socket");
+                FirebaseCrash.report(e);
                 e.printStackTrace();
             }
         }

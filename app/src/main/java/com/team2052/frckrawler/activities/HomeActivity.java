@@ -5,25 +5,27 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
-import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.fragments.game.GamesFragment;
-import com.team2052.frckrawler.fragments.server.ServerFragment;
-import com.team2052.frckrawler.fragments.team.TeamsFragment;
-import com.team2052.frckrawler.fragments.user.UsersFragment;
+import com.team2052.frckrawler.fragments.GamesFragment;
+import com.team2052.frckrawler.fragments.ScoutHomeFragment;
+import com.team2052.frckrawler.fragments.ServerFragment;
+import com.team2052.frckrawler.fragments.TeamsFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
+import com.team2052.frckrawler.services.ServerService;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends DatabaseActivity {
     private static final String REQUESTED_MODE = "requested_mode";
     private static final String STATE_SELECTED_NAV_ID = "selected_navigation_drawer_position";
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
     private int mCurrentSelectedNavigationItemId;
     private boolean mFromSavedInstanceState = false;
@@ -38,13 +40,13 @@ public class HomeActivity extends BaseActivity {
     public void onNavDrawerItemClicked(NavDrawerItem item) {
         int id = item.getId();
         if (id != mCurrentSelectedNavigationItemId) {
-            switchToModeForId(id);
+            handler.postDelayed(() -> switchToModeForId(id), DRAWER_CLOSE_ANIMATION_DURATION);
         }
     }
 
     @Override
     public void onCreateNavigationDrawer() {
-        useActionBarToggle();
+        useActionBarToggle(true);
         encourageLearning(!mFromSavedInstanceState);
     }
 
@@ -52,22 +54,20 @@ public class HomeActivity extends BaseActivity {
         Fragment fragment = null;
         switch (id) {
             case R.id.nav_item_scout:
-                mCurrentSelectedNavigationItemId = id;
-                startActivity(new Intent(this, ScoutMainActivity.class));
-                finish();
-                return;
+                fragment = new ScoutHomeFragment();
+                break;
             case R.id.nav_item_server:
                 fragment = new ServerFragment();
                 break;
             case R.id.nav_item_teams:
                 fragment = new TeamsFragment();
                 break;
-            case R.id.nav_item_users:
-                fragment = new UsersFragment();
-                break;
             case R.id.nav_item_games:
                 fragment = new GamesFragment();
                 break;
+            case R.id.nav_item_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return;
         }
         assert fragment != null;
         fragment.setRetainInstance(true);
@@ -84,8 +84,10 @@ public class HomeActivity extends BaseActivity {
 
         setSupportActionBar(toolbar);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
-        boolean mIsScout = sharedPreferences.getBoolean(GlobalValues.IS_SCOUT_PREF, false);
+        ViewCompat.setElevation(toolbar, getResources().getDimension(R.dimen.toolbar_elevation));
+
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
+        boolean mIsScout = sharedPreferences.getBoolean(Constants.IS_SCOUT_PREF, false);
         int initNavId = mIsScout ? R.id.nav_item_scout : R.id.nav_item_server;
 
         //Used to switch to a different fragment if it came from a separate activity
@@ -105,6 +107,14 @@ public class HomeActivity extends BaseActivity {
         } else {
             switchToModeForId(initNavId);
         }
+
+        //Start the service so it keeps in process
+        getApplicationContext().startService(new Intent(this, ServerService.class));
+    }
+
+    @Override
+    public void inject() {
+        getComponent().inject(this);
     }
 
     @Override
@@ -130,9 +140,6 @@ public class HomeActivity extends BaseActivity {
                     break;
                 case R.id.nav_item_teams:
                     bar.setTitle("Teams");
-                    break;
-                case R.id.nav_item_users:
-                    bar.setTitle("Users");
                     break;
                 case R.id.nav_item_games:
                     bar.setTitle("Games");

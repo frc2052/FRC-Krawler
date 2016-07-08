@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/root"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="8dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <EditText
         android:id="@+id/name"
@@ -16,7 +16,7 @@
         android:hint="Name"
         android:inputType="textPersonName">
 
-        <requestFocus/>
+        <requestFocus />
     </EditText>
 
 </RelativeLayout>

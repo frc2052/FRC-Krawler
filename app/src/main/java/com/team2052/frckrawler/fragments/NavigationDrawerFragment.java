@@ -3,6 +3,7 @@ package com.team2052.frckrawler.fragments;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -11,17 +12,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.NavDrawerAdataper;
 import com.team2052.frckrawler.listitems.ListItem;
@@ -137,15 +136,15 @@ public class NavigationDrawerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences scoutPrefs = getActivity().getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        SharedPreferences scoutPrefs = getActivity().getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
         //Deny the scout to access all the items
         NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, getActivity().getString(R.string.scout), R.drawable.ic_assignment_black_24dp));
 
-        if (!scoutPrefs.getBoolean(GlobalValues.IS_SCOUT_PREF, false)) {
+        if (!scoutPrefs.getBoolean(Constants.IS_SCOUT_PREF, false)) {
             NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, getActivity().getString(R.string.server), R.drawable.ic_bluetooth_black_24dp));
             NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, getActivity().getString(R.string.teams), R.drawable.ic_group_black_24dp));
-            //TODO: NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_users, getActivity().getString(R.string.users), R.drawable.ic_person_black_24dp));
             NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, getActivity().getString(R.string.games), R.drawable.ic_games_black_24dp));
+            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_settings, getActivity().getString(R.string.settings), R.drawable.ic_settings_black_24dp));
         }
 
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
@@ -157,12 +156,11 @@ public class NavigationDrawerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mDrawerContainer = (RelativeLayout) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         mDrawerListView = (ListView) mDrawerContainer.findViewById(R.id.left_drawer);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mDrawerListView.setSelector(R.drawable.list_item_selector);
+            mDrawerListView.setDrawSelectorOnTop(true);
+        }
+        mDrawerListView.setOnItemClickListener((parent, view, position, id) -> selectItem(position));
         mDrawerListView.setAdapter(navAdapter);
         return mDrawerContainer;
     }
@@ -201,7 +199,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     public void onInsetsChanged(Rect insets) {
         if (getView() != null) {
-            RelativeLayout accountDetailsContainer = (RelativeLayout) getView().findViewById(R.id.banner_details_container);
+            LinearLayout accountDetailsContainer = (LinearLayout) getView().findViewById(R.id.banner_details_container);
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) accountDetailsContainer.getLayoutParams();
             lp.topMargin = insets.top;
             accountDetailsContainer.setLayoutParams(lp);

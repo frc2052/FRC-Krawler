@@ -11,9 +11,11 @@ import android.view.View;
  * Created by Adam on 10/15/2015.
  */
 public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
+
     public ScrollAwareFABBehavior(Context context, AttributeSet attributeSet) {
         super();
     }
+
     @Override
     public boolean onStartNestedScroll(final CoordinatorLayout coordinatorLayout, final FloatingActionButton child, final View directTargetChild, final View target, final int nestedScrollAxes) {
         // Ensure we react to vertical scrolling

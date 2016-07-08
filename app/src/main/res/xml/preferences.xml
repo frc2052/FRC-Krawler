@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Export">
+        <Preference
+            android:summary="Export a CSV/Excel formatted document where all the data is averaged based off the compile weight"
+            android:title="Export Summary"
+            android:key="compile_export_preference" />
+        <Preference
+            android:summary="Export a CSV/Excel formatted document where the data provides a match by match summary of each team \n(This process may take a while)"
+            android:title="Export Raw"
+            android:key="compile_raw_export"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Compile Options">
+        <!--<ListPreference
+            android:defaultValue="qual"
+            android:entries="@array/compile_practice_qualification_list_preference_entries"
+            android:entryValues="@array/compile_practice_qualification_list_preference_values"
+            android:title="Compile Match Data"
+            android:summary="Choose to how to compile match data. Choose either to compile data together or separately."
+            android:key="compile_practice_qualification_list_preference" />-->
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="compile_team_name_preference"
+            android:title="Add Team Names"
+            android:summary="Add team names in the export" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="Add Match Metrics"
+            android:key="compile_match_metrics_preference"
+            android:summary="Compile match data to export" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="Add Pit Metrics"
+            android:summary="Compile pit data to export"
+            android:key="compile_pit_metric_preference" />
+        <!--<CheckBoxPreference
+            android:defaultValue="false"
+            android:title="Clean up Data"
+            android:key="compile_clean_up_data_preference"
+            android:summary="Cleans up data that is useless \n(Not implemented yet)" />-->
+        <EditTextPreference
+            android:defaultValue="1.0"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:inputType="numberDecimal"
+            android:title="Compile Weight"
+            android:key="compile_weight_preference"
+            android:summary="The weight for compiled data is how many times a match's data is worth in the averaging process, compared to the previous match. Values greater than 1 make later matches more valuable, and values less than 1 make earlier matches more valuable. A value of 1 makes all matches equal." />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="About">
+        <Preference
+            android:title="Team 2052 Website"
+            android:key="team_website"
+            android:summary="Visit www.team2052.com"/>
+
+        <Preference
+            android:title="Learn more about FRC Krawler"
+            android:key="learn_more_link"
+            android:summary="Learn more about FRC Krawler and how to use it"/>
+
+        <Preference
+            android:title="FRC Krawler is Open Source"
+            android:key="github_link"
+            android:summary="View project on GitHub"/>
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -10,10 +10,11 @@ public class FRCKrawlerDaoGenerator {
     public static final String jsonElementType = "com.google.gson.JsonElement";
 
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(1, "com.team2052.frckrawler.db");
+        Schema schema = new Schema(2, "com.team2052.frckrawler.db");
 
         Entity game = schema.addEntity("Game");
         Entity event = schema.addEntity("Event");
+        Entity team = schema.addEntity("Team");
         Entity user = schema.addEntity("User");
         Entity metric = schema.addEntity("Metric");
         Entity match = schema.addEntity("Match");
@@ -130,6 +131,8 @@ public class FRCKrawlerDaoGenerator {
         robot.addStringProperty("comments");
         robot.addDateProperty("last_updated");
 
+        robot.addToOne(game, robot_game_id);
+        robot.addToOne(team, robot_team_id);
         robot.addToMany(robotEvent, robot_event_robot_id);
         robot.addToMany(matchData, match_data_robot_id);
         robot.addToMany(pitData, pit_data_robot_id);
@@ -146,6 +149,7 @@ public class FRCKrawlerDaoGenerator {
         metric.addStringProperty("data");
         Property metric_game_id = metric.addLongProperty("game_id").notNull().getProperty();
         metric.addToOne(game, metric_game_id);
+        metric.addBooleanProperty("enabled").notNull();
 
         //Games
         game.implementsSerializable();
@@ -156,7 +160,7 @@ public class FRCKrawlerDaoGenerator {
         game.addStringProperty("name");
 
         //Team
-        Entity team = schema.addEntity("Team");
+
         team.implementsSerializable();
         team.addLongProperty("number").unique().primaryKey();
         team.addStringProperty("teamkey").unique();

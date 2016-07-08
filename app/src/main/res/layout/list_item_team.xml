@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:padding="16dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/list_item_team_number"
-        style="@style/TextTitle"
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:text="2052"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/list_item_team_name"
-        style="@style/TextTitle"
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="72dp"
-        android:text="KnightKrawler"/>
+        android:text="KnightKrawler" />
 
     <TextView
         android:id="@+id/list_item_team_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-
+        android:layout_marginTop="16dp"
         android:layout_below="@+id/list_item_team_name"
-        android:text="Location"/>
+        android:text="Location" />
 </RelativeLayout>

@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="48dp">
 
     <com.team2052.frckrawler.views.NavDrawerImageView
         android:id="@+id/icon"
@@ -9,7 +9,7 @@
         android:layout_height="24dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dp"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/title"
@@ -21,5 +21,5 @@
         android:paddingBottom="16sp"
         android:paddingTop="16dp"
         android:textColor="@color/nav_text_selected_color"
-        android:textSize="14sp"/>
+        android:textSize="14sp" />
 </RelativeLayout>

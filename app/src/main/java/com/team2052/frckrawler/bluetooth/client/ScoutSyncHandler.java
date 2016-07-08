@@ -3,7 +3,6 @@ package com.team2052.frckrawler.bluetooth.client;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -14,15 +13,16 @@ import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.ScoutUtil;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.Set;
 
-import de.greenrobot.event.EventBus;
 
 /**
  * @author Adam
  * @since 12/11/2014.
  */
-@SuppressWarnings("unused")
 public class ScoutSyncHandler extends ContextWrapper {
     static ScoutSyncHandler instance;
 
@@ -68,7 +68,7 @@ public class ScoutSyncHandler extends ContextWrapper {
         return syncAsScoutTask != null;
     }
 
-    @SuppressWarnings("unused")
+    @Subscribe
     public void onEvent(ScoutSyncSuccessEvent event) {
         //Reset task because it isn't running
         syncAsScoutTask = null;

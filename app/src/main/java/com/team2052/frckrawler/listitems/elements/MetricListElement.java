@@ -9,7 +9,7 @@ import com.google.common.base.Strings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.tba.JSON;
@@ -28,21 +28,22 @@ public class MetricListElement extends ListElement {
         this.metric = metric;
         JsonObject data = JSON.getAsJsonObject(metric.getData());
 
-        if (!Strings.isNullOrEmpty(data.get("description").getAsString())) {
+
+        if (data.has("description") && !Strings.isNullOrEmpty(data.get("description").getAsString())) {
             descriptionString = data.get("description").getAsString();
         }
 
-        switch (MetricHelper.MetricType.values()[metric.getType()]) {
-            case BOOLEAN:
+        switch (metric.getType()) {
+            case MetricHelper.BOOLEAN:
                 typeString = "Boolean";
                 rangeString = "Not Applicable";
                 break;
-            case COUNTER:
+            case MetricHelper.COUNTER:
                 typeString = "Counter";
                 rangeString = data.get("min").getAsString() + " to " + data.get("max").getAsString() + " Incrementing by " + data.get("inc").getAsString();
                 break;
-            case CHECK_BOX:
-            case CHOOSER:
+            case MetricHelper.CHECK_BOX:
+            case MetricHelper.CHOOSER:
                 StringBuilder sb = new StringBuilder();
                 String comma = "";
                 for (JsonElement value : data.get("values").getAsJsonArray()) {
@@ -50,9 +51,13 @@ public class MetricListElement extends ListElement {
                     comma = ", ";
                 }
                 rangeString = sb.toString();
-                typeString = "Chooser";
+                if(metric.getType() == MetricHelper.CHOOSER) {
+                    typeString = "Chooser";
+                } else {
+                    typeString = "Checkbox";
+                }
                 break;
-            case SLIDER:
+            case MetricHelper.SLIDER:
                 rangeString = data.get("min").getAsString() + " to " + data.get("max").getAsString();
                 typeString = "Slider";
                 break;

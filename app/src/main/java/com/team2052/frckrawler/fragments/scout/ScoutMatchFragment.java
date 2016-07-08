@@ -2,74 +2,76 @@ package com.team2052.frckrawler.fragments.scout;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import com.google.firebase.crash.FirebaseCrash;
+import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.MatchListActivity;
-import com.team2052.frckrawler.background.scout.PopulateMatchMetricsTask;
-import com.team2052.frckrawler.background.scout.PopulateMatchScoutTask;
-import com.team2052.frckrawler.background.scout.SaveMatchMetricsTask;
-import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.metric.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.MatchComment;
+import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.fragments.BaseFragment;
-import com.team2052.frckrawler.views.metric.MetricWidget;
+import com.team2052.frckrawler.tba.JSON;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.greenrobot.dao.query.QueryBuilder;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
-/**
- * @author Adam
- */
-public class ScoutMatchFragment extends BaseFragment implements View.OnClickListener {
+
+public class ScoutMatchFragment extends BaseScoutFragment {
     public static final int MATCH_GAME_TYPE = 0;
     public static final int MATCH_PRACTICE_TYPE = 1;
-    public static final String MATCH_TYPE = "MATCH_TYPE";
-    public static final String EVENT_ID = "EVENT_ID";
-
-    public static final String LOG_TAG = "ScoutMatchFragment";
-
-    @Bind(R.id.match_number_input)
-    public TextInputLayout mMatchNumberInput;
-
-    @Bind(R.id.metric_widget_list)
-    public LinearLayout mMetricList;
-
-    @Bind(R.id.comments)
-    public TextInputLayout mComments;
-
-    @Bind(R.id.robot)
-    public Spinner mRobotAutoComplete;
-
-    @Bind(R.id.button_save)
-    public FloatingActionButton mSaveButton;
-
-    public Robot selectedRobot;
-    public List<String> mRobotNames;
-    private List<Robot> mRobots;
-    private Event mEvent;
-    private PopulateMatchScoutTask mPopulateTask;
-    private PopulateMatchMetricsTask mPopulateMatchTask;
-    private SaveMatchMetricsTask mSaveTask;
-
-    private int mType;
-    private List<MetricWidget> mWidgets;
+    private static final String TAG = "ScoutMatchFragment";
+    private static String MATCH_TYPE = "MATCH_TYPE";
+    @BindView(R.id.match_number_input)
+    TextInputLayout mMatchNumberInput;
+    private int mMatchType;
+    Observable<List<MetricValue>> metricValueObservable = Observable
+            .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
+            .map(valueParams -> {
+                List<MetricValue> metricValues = Lists.newArrayList();
+                final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, mEvent.getGame_id(), true);
+                List<Metric> metrics = metricQueryBuilder.list();
+                for (int i = 0; i < metrics.size(); i++) {
+                    Metric metric = metrics.get(i);
+                    //Query for existing data
+                    QueryBuilder<MatchData> matchDataQueryBuilder = dbManager.getMatchDataTable().query(valueParams.robot.getId(), metric.getId(), Long.valueOf(valueParams.match_num), mMatchType, mEvent.getId(), null);
+                    MatchData currentData = matchDataQueryBuilder.unique();
+                    //Add the metric values
+                    metricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
+                }
+                return metricValues;
+            })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread());
+    Observable<String> metricCommentObservable = Observable
+            .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
+            .map(valueParams -> {
+                final QueryBuilder<MatchComment> matchCommentQueryBuilder
+                        = dbManager.getMatchComments().query(Long.valueOf(valueParams.match_num), mMatchType, valueParams.robot.getId(), mEvent.getId());
+                MatchComment mMatchComment = matchCommentQueryBuilder.unique();
+                String comment = null;
+                if (mMatchComment != null)
+                    comment = mMatchComment.getComment();
+                return Strings.nullToEmpty(comment);
+            })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread());
 
     public static ScoutMatchFragment newInstance(Event event, int type) {
         ScoutMatchFragment scoutMatchFragment = new ScoutMatchFragment();
@@ -83,156 +85,102 @@ public class ScoutMatchFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        setRetainInstance(true);
-
-        mEvent = mDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
-        mType = getArguments().getInt(MATCH_TYPE, 0);
+        mMatchType = getArguments().getInt(MATCH_TYPE);
     }
 
-
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_scouting_match, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_scouting_match, null);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         ButterKnife.bind(this, view);
-        mSaveButton.setOnClickListener(this);
-        mMatchNumberInput.getEditText().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                try {
-                    int value = Integer.parseInt(s.toString());
-                    if (value == 0) {
-                        mMatchNumberInput.setErrorEnabled(true);
-                        mMatchNumberInput.setError("You must be an engineer!");
-                    } else if (value == 2052) {
-                        mMatchNumberInput.setErrorEnabled(true);
-                        mMatchNumberInput.setError("That's a good tem");
-                    } else if (value > 9000) {
-                        mMatchNumberInput.setErrorEnabled(true);
-                        mMatchNumberInput.setError("It's over 9000!");
-                    } else {
-                        mMatchNumberInput.setError("");
+        subscriptions.add(RxTextView.afterTextChangeEvents(mMatchNumberInput.getEditText())
+                .filter(event -> {
+                    try {
+                        Integer.parseInt(event.editable().toString());
                         mMatchNumberInput.setErrorEnabled(false);
+                        mMatchNumberInput.setError("");
+                    } catch (NumberFormatException e1) {
+                        mMatchNumberInput.setErrorEnabled(true);
+                        mMatchNumberInput.setError("Invalid Number");
+                        return false;
                     }
-                    updateMetricValues();
-                } catch (NumberFormatException e) {
-                    mMatchNumberInput.setErrorEnabled(true);
-                    mMatchNumberInput.setError("Invalid Number");
-                }
-
-            }
-        });
-
-        mComments.getEditText().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!isCommentValid()) {
-                    mComments.setError("You had one job");
-                } else {
-
-                    mComments.setError("");
-                    mComments.setErrorEnabled(false);
-                }
-            }
-        });
-        mRobotAutoComplete.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!(mRobots.size() < position))
-                    selectedRobot = mRobots.get(position);
-                updateMetricValues();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {/*NOOP*/}
-        });
-        mPopulateTask = new PopulateMatchScoutTask(this, mEvent);
-        mPopulateTask.execute();
+                    return true;
+                }).debounce(500, TimeUnit.MILLISECONDS).subscribe(onNext -> updateMetricValues()));
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.scout, menu);
-        if (mType == MATCH_PRACTICE_TYPE) {
-            menu.removeItem(R.id.action_view_match);
-        }
+    public boolean filterMetric(Metric metric) {
+        return super.filterMetric(metric) && metric.getCategory() == MetricHelper.MATCH_PERF_METRICS;
+    }
+
+    private Observable<Integer> matchNumberObservable() {
+        return Observable.defer(() -> Observable.just(Integer.parseInt(mMatchNumberInput.getEditText().getText().toString())));
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_view_match) {
-            startActivity(MatchListActivity.newInstance(getActivity(), mEvent));
-        }
-        return false;
-    }
-
-    private boolean isMatchNumberValid() {
-        try {
-            Integer.parseInt(mMatchNumberInput.getEditText().getText().toString());
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    private List<MetricValue> getMetricValues() {
-        List<MetricValue> list = new ArrayList<>();
-        for (int i = 0; i < mMetricList.getChildCount(); i++) {
-            list.add(((MetricWidget) mMetricList.getChildAt(i)).getValue());
-        }
-        return list;
-    }
-
-    private boolean isCommentValid() {
-        String comment = getComment().toLowerCase();
-        //Some people.... some people
-        return !(comment.contains("no comment") || comment.contains("nocomment"));
-    }
-
-    private String getComment() {
-        return mComments.getEditText().getText().toString();
-    }
-
-    public void setComment(String comment) {
-        mComments.getEditText().setText(comment);
-    }
-
     public void updateMetricValues() {
-        if (getSelectedRobot() != null) {
-            mPopulateMatchTask = new PopulateMatchMetricsTask(
-                    this,
-                    mEvent,
-                    getSelectedRobot(),
-                    getMatchNumber(),
-                    mType);
-            mPopulateMatchTask.execute();
-        }
+        subscriptions.add(metricValueObservable.subscribe(this::setMetricValues, onError -> {
+            //Most likely part of the robot observable not being initiated, no big deal
+            if(onError instanceof ArrayIndexOutOfBoundsException){
+                return;
+            }
+            FirebaseCrash.log("Match: Error Updating Metric Values");
+            FirebaseCrash.report(onError);
+        }));
+        subscriptions.add(metricCommentObservable.subscribe(RxTextView.text(mCommentsView.getEditText()), onError -> {
+            //Most likely part of the robot observable not being initiated, no big deal
+            if(onError instanceof ArrayIndexOutOfBoundsException){
+                return;
+            }
+            FirebaseCrash.log("Match: Error Updating Comments");
+            FirebaseCrash.report(onError);
+        }));
     }
 
+    @Override
+    public Observable<Boolean> getSaveMetricObservable() {
+        return Observable.combineLatest(matchNumberObservable(), robotObservable(), Observable.defer(() -> Observable.just(getValues())), Observable.just(mCommentsView.getEditText().getText().toString()), MatchScoutSaveMetric::new)
+                .map(matchScoutSaveMetric -> {
+                    //Insert Metric Data
+                    boolean saved = false;
+                    for (MetricValue metricValue : matchScoutSaveMetric.metricValues) {
+                        MatchData matchData = new MatchData(
+                                null,
+                                mEvent.getId(),
+                                matchScoutSaveMetric.robot.getId(),
+                                null,
+                                metricValue.getMetric().getId(),
+                                mMatchType,
+                                matchScoutSaveMetric.matchNum,
+                                new Date(),
+                                JSON.getGson().toJson(metricValue.getValue()));
+                        if (dbManager.getMatchDataTable().insertMatchData(matchData) && !saved)
+                            saved = true;
+                    }
+
+
+                    if (!Strings.isNullOrEmpty(matchScoutSaveMetric.comment)) {
+                        MatchComment matchComment = new MatchComment(null);
+                        matchComment.setMatch_number((long) matchScoutSaveMetric.matchNum);
+                        matchComment.setMatch_type(mMatchType);
+                        matchComment.setRobot(matchScoutSaveMetric.robot);
+                        matchComment.setEvent(mEvent);
+                        matchComment.setComment(matchScoutSaveMetric.comment);
+                        if (dbManager.getMatchComments().insertMatchComment(matchComment) && !saved)
+                            saved = true;
+                    }
+                    return saved;
+                });
+    }
+
+    @Deprecated
     private int getMatchNumber() {
         try {
             return Integer.parseInt(mMatchNumberInput.getEditText().getText().toString());
@@ -241,48 +189,32 @@ public class ScoutMatchFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-    @Nullable
-    public Robot getSelectedRobot() {
-        return selectedRobot;
+    @Deprecated
+    private boolean isMatchNumberValid() {
+        return getMatchNumber() != -1;
     }
 
-    public void setWidgets(List<MetricWidget> widgets) {
-        mWidgets = widgets;
-        for (MetricWidget metricWidget : widgets) {
-            mMetricList.addView(metricWidget);
+    private static class MetricValueUpdateParams {
+        Integer match_num;
+        Robot robot;
+
+        public MetricValueUpdateParams(Integer match_num, Robot robot) {
+            this.match_num = match_num;
+            this.robot = robot;
         }
     }
 
-    public List<Robot> getRobots() {
-        return mRobots;
-    }
+    public class MatchScoutSaveMetric {
+        Integer matchNum;
+        Robot robot;
+        List<MetricValue> metricValues;
+        String comment;
 
-    public void setRobots(List<Robot> mRobots) {
-        this.mRobots = mRobots;
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.button_save) {
-            if (mEvent != null && getSelectedRobot() != null && isMatchNumberValid()) {
-                mSaveTask = new SaveMatchMetricsTask(
-                        getActivity(),
-                        this,
-                        mEvent,
-                        getSelectedRobot(),
-                        /*TODO: USER*/ null,
-                        getMatchNumber(),
-                        mType,
-                        getMetricValues(),
-                        getComment());
-                mSaveTask.execute();
-            } else if (getSelectedRobot() == null) {
-                Snackbar.make(getView(), "Please select a robot", Snackbar.LENGTH_SHORT).show();
-            } else if (!isMatchNumberValid()) {
-                Snackbar.make(getView(), "Match Number is Invalid", Snackbar.LENGTH_SHORT).show();
-            } else {
-                Snackbar.make(getView(), getActivity().getString(R.string.something_seems_wrong), Snackbar.LENGTH_SHORT).show();
-            }
+        public MatchScoutSaveMetric(Integer matchNum, Robot robot, List<MetricValue> metricValues, String comment) {
+            this.matchNum = matchNum;
+            this.robot = robot;
+            this.metricValues = metricValues;
+            this.comment = comment;
         }
     }
 }

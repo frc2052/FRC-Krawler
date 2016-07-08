@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:baselineAligned="false"
-              android:orientation="horizontal"
-              android:padding="16dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/match_title"
-        style="@style/TextTitle"
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_weight="1.5"
-        android:gravity="center|center_horizontal|center_vertical"/>
+        android:gravity="center|center_horizontal|center_vertical" />
 
     <TableLayout
         android:layout_width="0dp"
@@ -22,7 +22,6 @@
         android:layout_weight="6">
 
         <TableRow
-            android:id="@+id/alliances_and_scores"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:minHeight="40dp">
@@ -45,41 +44,37 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="#fdd"
+                        android:background="@color/red_800"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Red 1"
-                        android:textColor="@color/black"/>
+                        android:text="Red 1" />
 
                     <TextView
                         android:id="@+id/red2"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="#fdd"
+                        android:background="@color/red_800"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Red 2"
-                        android:textColor="@color/black"/>
+                        android:text="Red 2" />
 
                     <TextView
                         android:id="@+id/red3"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="#fdd"
+                        android:background="@color/red_800"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Red 3"
-                        android:textColor="@color/black"/>
+                        android:text="Red 3" />
 
                     <TextView
                         android:id="@+id/red_score"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1.5"
-                        android:background="#fdd"
+                        android:background="@color/red_900"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Red Score"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -94,41 +89,37 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="#ddf"
+                        android:background="@color/blue_800"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Blue 1"
-                        android:textColor="@color/black"/>
+                        android:text="Blue 1" />
 
                     <TextView
                         android:id="@+id/blue2"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="#ddf"
+                        android:background="@color/blue_800"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Blue 2"
-                        android:textColor="@color/black"/>
+                        android:text="Blue 2" />
 
                     <TextView
                         android:id="@+id/blue3"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="#ddf"
+                        android:background="@color/blue_800"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Blue 3"
-                        android:textColor="@color/black"/>
+                        android:text="Blue 3" />
 
                     <TextView
                         android:id="@+id/blue_score"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1.5"
-                        android:background="#ddf"
+                        android:background="@color/blue_900"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Blue Score"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                 </LinearLayout>
             </LinearLayout>

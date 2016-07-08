@@ -5,29 +5,35 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
+import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.di.DaggerFragmentComponent;
+import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
+import com.team2052.frckrawler.subscribers.SubscriberModule;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
  * Created by adam on 5/2/15.
  */
-public class ScoutActivity extends BaseActivity {
+public class ScoutActivity extends AppCompatActivity implements HasComponent {
 
     public static final int MATCH_SCOUT_TYPE = 0;
     public static final int PIT_SCOUT_TYPE = 1;
     public static final int PRACTICE_MATCH_SCOUT_TYPE = 2;
     private static final String SCOUT_TYPE_EXTRA = "com.team2052.frckrawler.SCOUT_TYPE_EXTRA";
     private static final String EVENT_ID_EXTRA = "com.team2052.frckrawler.EVENT_ID_EXTRA";
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+
     private Fragment fragment;
+    private DBManager dbManager;
+    private FragmentComponent mComponent;
 
     public static Intent newInstance(Context context, Event event, int type) {
         Intent intent = new Intent(context, ScoutActivity.class);
@@ -40,11 +46,12 @@ public class ScoutActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Event event = mDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID_EXTRA, 0));
+
+        dbManager = DBManager.getInstance(this);
+
+        Event event = dbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID_EXTRA, 0));
         setContentView(R.layout.activity_scout);
         ButterKnife.bind(this);
-
-        setSupportActionBar(toolbar);
 
         final int scout_type = getIntent().getIntExtra(SCOUT_TYPE_EXTRA, 0);
 
@@ -71,9 +78,30 @@ public class ScoutActivity extends BaseActivity {
             }
         }
 
-
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_holder, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public FragmentComponent getComponent() {
+        if (mComponent == null) {
+            FRCKrawler app = (FRCKrawler) getApplication();
+            mComponent = DaggerFragmentComponent
+                    .builder()
+                    .fRCKrawlerModule(app.getModule())
+                    .subscriberModule(new SubscriberModule(this))
+                    .applicationComponent(app.getComponent())
+                    .build();
+        }
+        return mComponent;
     }
 }

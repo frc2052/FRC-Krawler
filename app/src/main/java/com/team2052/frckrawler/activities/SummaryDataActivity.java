@@ -4,18 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
-import com.team2052.frckrawler.GlobalValues;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.MetricsStatsAdapter;
-import com.team2052.frckrawler.database.CompiledMetricValue;
-import com.team2052.frckrawler.database.MetricCompiler;
+import com.team2052.frckrawler.database.metric.CompiledMetricValue;
+import com.team2052.frckrawler.database.metric.MetricCompiler;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.CompiledMetricListElement;
+import com.team2052.frckrawler.util.PreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +23,7 @@ import java.util.List;
 /**
  * @author Adam
  */
-public class SummaryDataActivity extends BaseActivity {
+public class SummaryDataActivity extends DatabaseActivity {
     public static String EVENT_ID = "EVENT_ID";
     private ListView mListView;
     private Event mEvent;
@@ -33,7 +32,7 @@ public class SummaryDataActivity extends BaseActivity {
 
     public static Intent newInstance(Context context, Metric metric, Event event) {
         Intent intent = new Intent(context, SummaryDataActivity.class);
-        intent.putExtra(PARENT_ID, metric.getId());
+        intent.putExtra(DatabaseActivity.PARENT_ID, metric.getId());
         intent.putExtra(EVENT_ID, event.getId());
         return intent;
     }
@@ -41,32 +40,32 @@ public class SummaryDataActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        useActionBarToggle();
         setContentView(R.layout.activity_list_view);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         mListView = (ListView) findViewById(R.id.list_layout);
-        mEvent = mDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
-        mMetric = mDbManager.getMetricsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
-        setActionBarTitle(getString(R.string.Summary));
+        mEvent = dbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
+        mMetric = dbManager.getMetricsTable().load(getIntent().getLongExtra(DatabaseActivity.PARENT_ID, 0));
+        setActionBarTitle(getString(R.string.summary_title));
         setActionBarSubtitle(mMetric.getName());
         new GetCompiledData().execute();
     }
 
+    @Override
+    public void inject() {
+        getComponent().inject(this);
+    }
+
 
     public class GetCompiledData extends AsyncTask<Void, Void, List<CompiledMetricValue>> {
-
         final float compileWeight;
 
         public GetCompiledData() {
-            this.compileWeight = getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0).getFloat(GlobalValues.PREFS_COMPILE_WEIGHT, 1.0f);
-
+            this.compileWeight = PreferenceUtil.compileWeight(SummaryDataActivity.this);
         }
 
         @Override
         protected List<CompiledMetricValue> doInBackground(Void... params) {
-            return MetricCompiler.getCompiledMetric(mEvent, mMetric, mDbManager, compileWeight);
+            return MetricCompiler.getCompiledMetric(mEvent, mMetric, dbManager, compileWeight);
         }
 
         @Override

@@ -9,8 +9,7 @@
     app:cardCornerRadius="2dp"
     app:cardElevation="2dp">
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,12 +18,11 @@
 
         <TextView
             android:id="@+id/name"
-            style="@style/TextHeader"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:singleLine="false"
             android:layout_toLeftOf="@+id/choooserList"
             android:text="Chooser" />
 
@@ -33,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

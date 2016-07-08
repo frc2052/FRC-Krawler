@@ -2,23 +2,23 @@ package com.team2052.frckrawler.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.databinding.LayoutTabBinding;
+import com.team2052.frckrawler.adapters.tab.RobotViewPagerAdapter;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.fragments.event.RobotAttendingEventsFragment;
 
 /**
  * @author Adam
  */
-public class RobotActivity extends BaseActivity {
+public class RobotActivity extends DatabaseActivity {
+    ViewPager viewPager;
+    TabLayout tabLayout;
     private Robot mRobot;
-    private LayoutTabBinding binding;
 
     public static Intent newInstance(Context context, long rKey) {
         Intent intent = new Intent(context, RobotActivity.class);
@@ -29,45 +29,34 @@ public class RobotActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.layout_tab);
-        setSupportActionBar(binding.toolbar);
+        setContentView(R.layout.layout_tab);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
-        mRobot = mDbManager.getRobotsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
-        setActionBarTitle(getString(R.string.robot_text));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        mRobot = dbManager.getRobotsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
         setActionBarSubtitle(String.valueOf(mRobot.getTeam_id()));
 
-        binding.viewPager.setAdapter(new RobotViewPagerAdapter(getSupportFragmentManager()));
-        binding.tabLayout.setupWithViewPager(binding.viewPager);
+        viewPager.setAdapter(new RobotViewPagerAdapter(this, getSupportFragmentManager(), mRobot.getId()));
+        tabLayout.setupWithViewPager(viewPager);
     }
 
-    public class RobotViewPagerAdapter extends FragmentPagerAdapter {
-        private String[] HEADERS = getResources().getStringArray(R.array.robot_tab_titles);
-
-        public RobotViewPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                /*case 0:
-                    return new NeedSyncFragment();*/
-                case 0:
-                    return RobotAttendingEventsFragment.newInstance(mRobot);
-                /*case 1:
-                    return PhotosFragment.newInstance(mRobot);*/
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return HEADERS.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return HEADERS[position];
-        }
+    @Override
+    public void inject() {
+        getComponent().inject(this);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

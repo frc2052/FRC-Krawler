@@ -25,13 +25,11 @@ public class SimpleListElement extends ListElement {
         }
         //Set the name based on the key
         TextView text = (TextView) convertView.findViewById(android.R.id.text1);
-        text.setMinHeight(48);
-        text.setPadding(16, 16, 16, 16);
         text.setText(name);
         return convertView;
     }
 
-    //No Idea why a spinner does to string instead of get view -- quick fix
+    //No Idea why a mSpinner does to string instead of get view -- quick fix
     @Override
     public String toString() {
         return name;

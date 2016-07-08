@@ -22,7 +22,7 @@
 
                 <TextView
                     android:id="@+id/welcome_welcome_to"
-                    style="@style/TextAppearance.AppCompat.Large.Inverse"
+                    style="@style/TextAppearance.AppCompat.Large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -32,7 +32,7 @@
 
                 <TextView
                     android:id="@+id/welcome_frc_krawler"
-                    style="@style/TextAppearance.AppCompat.Large.Inverse"
+                    style="@style/TextAppearance.AppCompat.Large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/welcome_welcome_to"
@@ -42,9 +42,10 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/welcome_logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_above="@+id/welcome_message"
+                    android:layout_below="@+id/welcome_frc_krawler"
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_10th_logo_transparent" />
 
@@ -76,7 +77,6 @@
                     android:padding="16dp">
 
                     <TextView
-                        android:id="@+id/next_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -86,7 +86,6 @@
                         android:textSize="16sp" />
 
                     <ImageView
-                        android:id="@+id/navigation_arrow_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -107,7 +106,6 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/bluetooth_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -137,7 +135,6 @@
                     android:text="Enable Bluetooth" />
 
                 <TextView
-                    android:id="@+id/bluetooth_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
@@ -167,7 +164,6 @@
                     android:padding="16dp">
 
                     <TextView
-                        android:id="@+id/next_text_bluetooth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -177,7 +173,6 @@
                         android:textSize="16sp" />
 
                     <ImageView
-                        android:id="@+id/navigation_arrow_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -210,7 +205,6 @@
                 android:layout_below="@+id/title_setup_role">
 
                 <LinearLayout
-                    android:id="@+id/linearLayout2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -245,7 +239,6 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/scout_desc"
                                 style="@style/TextAppearance.AppCompat.Body1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -287,7 +280,6 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/server_desc"
                                 style="@style/TextAppearance.AppCompat.Body1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

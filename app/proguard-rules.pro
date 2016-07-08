@@ -15,14 +15,66 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keep class butterknife.** { *; }
--dontwarn butterknife.internal.**
--keep class **$$ViewBinder { *; }
+-dontobfuscate
+-dontwarn
 
--keepclasseswithmembernames class * {
-    @butterknife.* <fields>;
+-keep,includedescriptorclasses class com.team2052.** { *; }
+-keepnames class com.team2052.** { *; }
+
+-dontwarn sun.misc.Unsafe
+-dontwarn java.lang.invoke**
+-dontwarn java.lang.invoke.*
+-dontwarn java.nio.**
+-dontwarn com.squareup.okhttp.**
+-dontwarn java.beans.**
+-keep,includedescriptorclasses class okhttp3.** { *; }
+-keep,includedescriptorclasses class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+-keepattributes *Annotation*
+
+#Keep event bus methods
+-keepclassmembers class ** {
+    public void onEvent*(**);
 }
 
--keepclasseswithmembernames class * {
-    @butterknife.* <methods>;
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
 }
+
+#Remove Log.d statements
+-assumenosideeffects class android.util.Log {
+public static *** d(...);
+}
+
+# Configuration for Guava 18.0
+#
+# disagrees with instructions provided by Guava project: https://code.google.com/p/guava-libraries/wiki/UsingProGuardWithGuava
+-keep class com.google.common.io.Resources {
+    public static <methods>;
+}
+-keep class com.google.common.collect.Lists {
+    public static ** reverse(**);
+}
+-keep class com.google.common.base.Charsets {
+    public static <fields>;
+}
+
+-keep class com.google.common.base.Joiner {
+    public static com.google.common.base.Joiner on(java.lang.String);
+    public ** join(...);
+}
+
+-keep class com.google.common.collect.MapMakerInternalMap$ReferenceEntry
+-keep class com.google.common.cache.LocalCache$ReferenceEntry
+
+# http://stackoverflow.com/questions/9120338/proguard-configuration-for-guava-with-obfuscation-and-optimization
+-dontwarn javax.annotation.**
+-dontwarn javax.inject.**
+-dontwarn sun.misc.Unsafe
+
+# Guava 19.0
+-dontwarn java.lang.ClassValue
+-dontwarn com.google.j2objc.annotations.Weak
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement

@@ -9,16 +9,26 @@ import android.widget.TextView;
 import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.MetricHelper;
-import com.team2052.frckrawler.database.MetricValue;
+import com.team2052.frckrawler.database.metric.MetricHelper;
+import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 public class BooleanMetricWidget extends MetricWidget implements OnClickListener {
-    boolean value = false;
+    private boolean value = false;
 
     public BooleanMetricWidget(Context context, MetricValue m) {
         super(context, m);
         inflater.inflate(R.layout.widget_metric_boolean, this);
+        setMetricValue(m);
+    }
+
+    public BooleanMetricWidget(Context context) {
+        super(context);
+        inflater.inflate(R.layout.widget_metric_boolean, this);
+    }
+
+    @Override
+    public void setMetricValue(MetricValue m) {
         ((TextView) findViewById(R.id.name)).setText(m.getMetric().getName());
         findViewById(R.id.yes).setOnClickListener(this);
         findViewById(R.id.no).setOnClickListener(this);

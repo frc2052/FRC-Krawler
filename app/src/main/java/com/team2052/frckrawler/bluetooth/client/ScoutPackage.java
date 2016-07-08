@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.team2052.frckrawler.GlobalValues;
+import com.team2052.frckrawler.Constants;
+import com.team2052.frckrawler.bluetooth.Schedule;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.Schedule;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Match;
@@ -90,9 +90,9 @@ public class ScoutPackage implements Serializable {
                 }
         );
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(GlobalValues.PREFS_FILE_NAME, 0);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(GlobalValues.CURRENT_SCOUT_EVENT_ID, event.getId());
+        editor.putLong(Constants.CURRENT_SCOUT_EVENT_ID, event.getId());
         editor.apply();
     }
 

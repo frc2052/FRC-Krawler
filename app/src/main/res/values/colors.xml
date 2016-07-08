@@ -1,25 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <color name="off_white">#eee</color>
-    <color name="nav_drawer_background">#f7f7f7</color>
-    <color name="red">#F00</color>
-    <color name="blue">#00F</color>
-    <color name="item_default_color">#EEEEEE</color>
-    <color name="item_pressed_color">#CCCCCC</color>
-    <color name="item_activated_color">?attr/colorAccent</color>
-    <color name="body_text_1">#de000000</color>
-    <color name="body_text_2">#8a000000</color>
-    <color name="body_text_3">#60000000</color>
-    <color name="body_text_disabled">#44000000</color>
+    <color name="nav_drawer_background">#303030</color>
 
     <!--Material Colors-->
-    <color name="primary_light">#9a2828</color>
-    <color name="primary">#720000</color>
-    <color name="primary_dark">#5b0000</color>
-    <color name="color_accent">#FFC400</color>
-    <color name="color_accent_darker">#ffeab200</color>
-    <color name="color_accent_ripple">#ffffd500</color>
+    <color name="primary_light">#500000</color>
+    <color name="primary">#450000</color>
+    <color name="primary_dark">#330000</color>
+    <color name="color_accent">#ffd740</color>
 
-    <color name="color_action_mode_bg">@color/color_accent</color>
+    <color name="color_accent_icon_color">#61000000</color>
 </resources>

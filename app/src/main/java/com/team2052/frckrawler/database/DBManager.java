@@ -1,12 +1,22 @@
 package com.team2052.frckrawler.database;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
+import com.google.common.base.CaseFormat;
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.bluetooth.RobotComment;
+import com.team2052.frckrawler.comparators.MatchNumberComparator;
+import com.team2052.frckrawler.comparators.RobotTeamNumberComparator;
+import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
 import com.team2052.frckrawler.db.Event;
@@ -37,8 +47,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import javax.inject.Singleton;
 
 import de.greenrobot.dao.query.QueryBuilder;
+import rx.Observable;
 
 /**
  * Used to keep a clean database
@@ -47,6 +61,7 @@ import de.greenrobot.dao.query.QueryBuilder;
  * @author Adam
  * @since 10/7/2014
  */
+@Singleton
 public class DBManager {
     private static DBManager instance;
     private final Games mGames;
@@ -81,7 +96,7 @@ public class DBManager {
     private DBManager(Context context) {
         this.context = context;
 
-        DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(context, "frc-krawler-database-v3", null);
+        DaoMaster.OpenHelper helper = new DatabaseHelper(context, "frc-krawler-database-v3", null);
 
         SQLiteDatabase db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
@@ -177,8 +192,176 @@ public class DBManager {
         return mTeams;
     }
 
+    public Observable<Map<String, String>> teamInfo(long team_id) {
+        return Observable.create(subscriber -> {
+            Team team = getTeamsTable().load(team_id);
+            Map<String, String> info = Maps.newLinkedHashMap();
+            info.put("Nickname", team.getName());
+
+            JsonObject data = JSON.getAsJsonObject(team.getData());
+
+            if (data.has("rookie_year") && !data.get("rookie_year").isJsonNull()) {
+                info.put("Rookie Year", data.get("rookie_year").getAsString());
+            }
+
+            if (data.has("long_name") && !data.get("long_name").isJsonNull()) {
+                info.put("Name", data.get("long_name").getAsString());
+            }
+            subscriber.onNext(info);
+            subscriber.onCompleted();
+        });
+    }
+
     public Users getUsersTable() {
         return mUsers;
+    }
+
+    public Observable<List<Event>> eventsByGame(long game_id) {
+        return Observable.create(subscriber -> {
+            subscriber.onStart();
+            List<Event> events = getEventsTable().getQueryBuilder().where(EventDao.Properties.Game_id.eq(game_id)).list();
+            subscriber.onNext(events);
+
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<List<Event>> allEvents() {
+        return Observable.create(subscriber -> {
+            List<Event> events = getEventsTable().loadAll();
+            subscriber.onNext(events);
+
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<List<Event>> robotAtEvents(long robot_id) {
+        return Observable.create(subscriber -> {
+            List<Event> events = new ArrayList<>();
+            Robot load = getRobotsTable().load(robot_id);
+            List<RobotEvent> robotEventList = load.getRobotEventList();
+            for (int i = 0; i < robotEventList.size(); i++) {
+                events.add(robotEventList.get(i).getEvent());
+            }
+            subscriber.onNext(events);
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<List<Robot>> robotsWithTeam(long team_id) {
+        return Observable.create(subscriber -> {
+            List<Robot> robots = getRobotsTable().getQueryBuilder().where(RobotDao.Properties.Team_id.eq(team_id)).list();
+            subscriber.onNext(robots);
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<List<Robot>> robotsAtEvent(long event_id) {
+        return Observable.create(subscriber -> {
+            Event event = getEventsTable().load(event_id);
+            List<RobotEvent> robotEvents = getEventsTable().getRobotEvents(event);
+            List<Robot> robots = new ArrayList<>();
+            for (int i = 0; i < robotEvents.size(); i++) {
+                robots.add(robotEvents.get(i).getRobot());
+            }
+            Collections.sort(robots, new RobotTeamNumberComparator());
+            subscriber.onNext(robots);
+
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<List<Game>> allGames() {
+        return Observable.create(subscriber -> {
+            List<Game> games = getGamesTable().loadAll();
+            subscriber.onNext(games);
+
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<List<Metric>> metricsInGame(long game_id, Integer category) {
+        return Observable.create(subscriber -> {
+            QueryBuilder<Metric> where = getMetricsTable().getQueryBuilder().where(MetricDao.Properties.Game_id.eq(game_id));
+            if (category != null)
+                where.where(MetricDao.Properties.Category.eq(category));
+            List<Metric> metrics = where.list();
+            subscriber.onNext(metrics);
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<List<Team>> allTeams() {
+        return Observable.create(subscriber -> {
+            List<Team> teams = getTeamsTable().getQueryBuilder().orderAsc(TeamDao.Properties.Number).list();
+            subscriber.onNext(teams);
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<List<Match>> matchesAtEvent(long event_id) {
+        return Observable.create(subscriber -> {
+            List<Match> matches = getMatchesTable().getQueryBuilder().where(MatchDao.Properties.Event_id.eq(event_id)).list();
+            Collections.sort(matches, new MatchNumberComparator());
+            subscriber.onNext(matches);
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<? extends Map<String, String>> gameInfo(Game mGame) {
+        return Observable.create(subscriber -> {
+            Map<String, String> info = Maps.newLinkedHashMap();
+            mGame.resetEventList();
+            mGame.resetRobotList();
+            Resources resources = context.getResources();
+            info.put(resources.getString(R.string.game_info_num_of_event), Integer.toString(mGame.getEventList().size()));
+            info.put(resources.getString(R.string.game_info_num_of_robots), Integer.toString(mGame.getRobotList().size()));
+            info.put(resources.getString(R.string.game_info_num_of_match_metrics), Integer.toString(getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.MATCH_PERF_METRICS)));
+            info.put(resources.getString(R.string.game_info_num_of_pit_metrics), Integer.toString(getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.ROBOT_METRICS)));
+
+            subscriber.onNext(info);
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<? extends Map<String, String>> eventInfo(Event event) {
+        return Observable.create(subscriber -> {
+            Map<String, String> info = Maps.newLinkedHashMap();
+            Resources resources = context.getResources();
+            info.put(resources.getString(R.string.event_info_num_of_teams), Integer.toString(getEventsTable().getTeamsAtEvent(event).size()));
+            info.put(resources.getString(R.string.event_info_num_of_matches), Integer.toString(getEventsTable().getMatches(event).size()));
+            info.put(resources.getString(R.string.event_info_num_of_pit_data), Integer.toString(getEventsTable().getPitData(event).size()));
+            info.put(resources.getString(R.string.event_info_num_of_match_data), Integer.toString(getEventsTable().getMatchData(event).size()));
+            subscriber.onNext(info);
+            subscriber.onCompleted();
+        });
+    }
+
+    public Observable<? extends Map<String, String>> metricInfo(long metricId) {
+        return Observable.just(metricId)
+                .map(metricDao::load)
+                .map(metric -> {
+                    Map<String, String> info = Maps.newLinkedHashMap();
+                    info.put("Enabled",
+                            CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, String.valueOf(metric.getEnabled())));
+
+                    final JsonObject data = JSON.getAsJsonObject(metric.getData());
+                    switch (metric.getType()) {
+                        case MetricHelper.BOOLEAN:
+                            break;
+                        case MetricHelper.CHOOSER:
+                        case MetricHelper.CHECK_BOX:
+                            final String values = Joiner.on(", ").join(data.get("values").getAsJsonArray());
+                            info.put("Comma Separated List", Strings.isNullOrEmpty(values) ? "No Values" : values);
+                            break;
+                        case MetricHelper.COUNTER:
+                            info.put("Incrementation", data.get("inc").toString());
+                        case MetricHelper.SLIDER:
+                            info.put("Minimum", data.get("min").toString());
+                            info.put("Maximum", data.get("max").toString());
+                    }
+                    return info;
+                });
     }
 
     private interface Table<T> {
@@ -242,8 +425,6 @@ public class DBManager {
             DBManager.this.getRobotsTable().delete(game.getRobotList());
             gameDao.delete(game);
         }
-
-
     }
 
     public class Events implements Table<Event> {
@@ -339,6 +520,10 @@ public class DBManager {
             DBManager.this.getRobotEvents().delete(getRobotEvents(model));
             eventDao.delete(model);
         }
+
+        public List<Event> getAllEvents() {
+            return eventDao.loadAll();
+        }
     }
 
     public class MatchComments implements Table<MatchComment> {
@@ -365,7 +550,7 @@ public class DBManager {
             }
         }
 
-        public QueryBuilder<MatchComment> query(Integer match_number, Integer game_type, Long robot_id, Long event_id) {
+        public QueryBuilder<MatchComment> query(Long match_number, Integer game_type, Long robot_id, Long event_id) {
             QueryBuilder<MatchComment> queryBuilder = getQueryBuilder();
             if (match_number != null)
                 queryBuilder.where(MatchCommentDao.Properties.Match_number.eq(match_number));
@@ -429,12 +614,14 @@ public class DBManager {
             }
         }
 
-        public QueryBuilder<PitData> query(Long robot_id, Long metric_id, Long event_id, Long user_id) {
+        public QueryBuilder<PitData> query(Long robot_id, Long metric_id, Long event_id, @Deprecated Long user_id) {
             QueryBuilder<PitData> queryBuilder = getQueryBuilder();
             if (robot_id != null)
                 queryBuilder.where(PitDataDao.Properties.Robot_id.eq(robot_id));
             if (metric_id != null)
-                queryBuilder.where(PitDataDao.Properties.Metric_id.eq(event_id));
+                queryBuilder.where(PitDataDao.Properties.Metric_id.eq(metric_id));
+            if (event_id != null)
+                queryBuilder.where(PitDataDao.Properties.Event_id.eq(event_id));
             if (user_id != null)
                 queryBuilder.where(PitDataDao.Properties.User_id.eq(user_id));
             return queryBuilder;
@@ -487,7 +674,7 @@ public class DBManager {
 
             if (count > 0) {
                 MatchData unique = matchDataQueryBuilder.unique();
-                if (unique.getLast_updated().getTime() <= System.currentTimeMillis()) {
+                if (unique.getLast_updated().getTime() <= matchData.getLast_updated().getTime()) {
                     unique.setLast_updated(new Date());
                     unique.setData(matchData.getData());
                     matchDataDao.update(unique);
@@ -500,7 +687,7 @@ public class DBManager {
             }
         }
 
-        public QueryBuilder<MatchData> query(Long robotId, Long metricId, Integer match_number, Integer match_type, Long eventId, Long userId) {
+        public QueryBuilder<MatchData> query(Long robotId, Long metricId, Long match_number, Integer match_type, Long eventId, Long userId) {
             QueryBuilder<MatchData> matchDataQueryBuilder = getQueryBuilder();
             if (robotId != null)
                 matchDataQueryBuilder.where(MatchDataDao.Properties.Robot_id.eq(robotId));
@@ -560,7 +747,7 @@ public class DBManager {
             return (int) metricQueryBuilder.count();
         }
 
-        public QueryBuilder<Metric> query(Integer category, Integer type, Long game_id) {
+        public QueryBuilder<Metric> query(@MetricHelper.MetricCategory Integer category, Integer type, Long game_id, Boolean enabled) {
             QueryBuilder<Metric> queryBuilder = getQueryBuilder();
             if (category != null)
                 queryBuilder.where(MetricDao.Properties.Category.eq(category));
@@ -568,6 +755,8 @@ public class DBManager {
                 queryBuilder.where(MetricDao.Properties.Type.eq(type));
             if (game_id != null)
                 queryBuilder.where(MetricDao.Properties.Game_id.eq(game_id));
+            if (enabled != null)
+                queryBuilder.where(MetricDao.Properties.Enabled.eq(enabled));
             return queryBuilder;
         }
 
@@ -805,7 +994,7 @@ public class DBManager {
             boolean robot_added = robot != null;
 
             if (!robot_added) {
-                robot = new Robot(null, team.getNumber(), event.getGame_id(), null, null, new Date());
+                robot = new Robot(null, team.getNumber(), event.getGame_id(), null, "", new Date());
                 daoSession.insert(robot);
             }
 
@@ -821,6 +1010,10 @@ public class DBManager {
             }
         }
 
+        @Deprecated
+        /**
+         * Please do not use this unless you really need to
+         */
         public void insert(Team team) {
             teamDao.insertOrReplace(team);
         }

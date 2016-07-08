@@ -7,3 +7,5 @@
 .idea/
 *.apk
 *.iml
+/app/src/debug/google-services.json
+/app/src/main/google-services.json

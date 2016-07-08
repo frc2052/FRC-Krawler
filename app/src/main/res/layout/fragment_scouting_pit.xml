@@ -27,11 +27,11 @@
                     android:id="@+id/robot"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp" />
             </android.support.v7.widget.CardView>
 
             <LinearLayout
-                android:id="@+id/metricWidgetList"
+                android:id="@+id/metric_widget_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
@@ -54,7 +54,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="Comments"
-                        android:inputType="textMultiLine" />
+                        android:inputType="textCapSentences|textMultiLine" />
                 </android.support.design.widget.TextInputLayout>
 
             </android.support.v7.widget.CardView>
@@ -62,12 +62,13 @@
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-        android:layout_margin="@dimen/fab_margin"
         android:id="@+id/button_save"
-        app:layout_anchor="@id/scroll_view"
-        android:src="@drawable/ic_content_save"
-        app:layout_behavior="com.team2052.frckrawler.util.ScrollAwareFABBehavior"
-        app:layout_anchorGravity="bottom|right|end"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/grey_900"
+        android:src="@drawable/ic_content_save"
+        app:layout_anchor="@id/scroll_view"
+        app:layout_anchorGravity="bottom|right|end"
+        app:layout_behavior="com.team2052.frckrawler.util.ScrollAwareFABBehavior" />
 </android.support.design.widget.CoordinatorLayout>

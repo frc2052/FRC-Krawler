@@ -2,24 +2,22 @@ package com.team2052.frckrawler.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.databinding.LayoutTabFabBinding;
+import com.team2052.frckrawler.adapters.tab.ViewTeamPagerAdapter;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.fragments.team.RobotsFragment;
-import com.team2052.frckrawler.fragments.team.TeamInfoFragment;
 
 /**
  * @author Adam
  */
-public class TeamInfoActivity extends BaseActivity {
-    private Team mTeam;
-    private LayoutTabFabBinding binding;
+public class TeamInfoActivity extends DatabaseActivity {
+    ViewPager viewPager;
+    TabLayout tabLayout;
 
     public static Intent newInstance(Context context, Team team) {
         Intent intent = new Intent(context, TeamInfoActivity.class);
@@ -30,46 +28,29 @@ public class TeamInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.layout_tab_fab);
-        mTeam = mDbManager.getTeamsTable().load(getIntent().getLongExtra(PARENT_ID, 0));
-        setSupportActionBar(binding.toolbar);
+        setContentView(R.layout.layout_tab);
+        long team_id = getIntent().getLongExtra(PARENT_ID, 0);
 
-        binding.viewPager.setAdapter(new ViewTeamPagerAdapter(getSupportFragmentManager()));
-        binding.tabLayout.setupWithViewPager(binding.viewPager);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        viewPager.setAdapter(new ViewTeamPagerAdapter(this, getSupportFragmentManager(), team_id));
+        tabLayout.setupWithViewPager(viewPager);
 
-        setActionBarTitle(getString(R.string.team));
-        setActionBarSubtitle(String.valueOf(mTeam.getNumber()));
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setActionBarSubtitle(String.valueOf(team_id));
     }
 
-    public class ViewTeamPagerAdapter extends FragmentPagerAdapter {
-        public final String[] headers = getResources().getStringArray(R.array.team_tab_titles);
+    @Override
+    public void inject() {
+        getComponent().inject(this);
+    }
 
-        public ViewTeamPagerAdapter(FragmentManager fm) {
-            super(fm);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
         }
-
-        @Override
-        public Fragment getItem(int position) {
-            Fragment fragment = null;
-            switch (position) {
-                case 0:
-                    fragment = TeamInfoFragment.newInstance(mTeam);
-                    break;
-                case 1:
-                    fragment = RobotsFragment.newInstance(mTeam);
-                    break;
-            }
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return headers.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return headers[position];
-        }
+        return super.onOptionsItemSelected(item);
     }
 }
