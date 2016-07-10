@@ -65,7 +65,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         setupViews();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.grey_900));
         }
     }
 
@@ -103,7 +103,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 if (permission != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                 } else {
-                    pager.goToNextPage();
+                    if (BluetoothUtil.isBluetoothEnabled()) {
+                        setupFinished();
+                    } else {
+                        pager.goToNextPage();
+                    }
                 }
                 break;
             case R.id.bluetooth_next_page:

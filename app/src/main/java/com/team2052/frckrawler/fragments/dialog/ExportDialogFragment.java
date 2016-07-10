@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -39,6 +40,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
     private static final String EXPORT_TYPE = "EXPORT_TYPE_EXTRA";
     private CompilerManager compilerManager;
     private Event event;
+    private Subscription subscription;
 
     public static ExportDialogFragment newInstance(Event event, int export_type) {
         ExportDialogFragment exportDialogFragment = new ExportDialogFragment();
@@ -86,7 +88,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
         Observable<File> summaryFile = getExportFile(exportType);
 
         keepScreenOn(true);
-        compilerManager.writeToFile(exportObservable, summaryFile)
+        subscription = compilerManager.writeToFile(exportObservable, summaryFile)
                 .observeOn(Schedulers.computation())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::shareFile, onError -> {
@@ -141,6 +143,9 @@ public class ExportDialogFragment extends BaseProgressDialog {
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
+        if(subscription != null){
+            subscription.unsubscribe();
+        }
         super.onDestroy();
     }
 

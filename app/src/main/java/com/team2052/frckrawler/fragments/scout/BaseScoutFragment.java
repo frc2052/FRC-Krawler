@@ -85,29 +85,18 @@ public abstract class BaseScoutFragment extends Fragment {
         dbManager.robotsAtEvent(getArguments().getLong(EVENT_ID))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(robots -> this.robots = robots, FirebaseCrash::report, () -> {
-                    Observable.from(robots)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .flatMap(robot -> Observable.just(robot.getTeam_id() + ", " + robot.getTeam().getName()))
-                            .toList().subscribe(onNext -> {
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, onNext);
-                        mRobotSpinner.setAdapter(adapter);
-                        mRobotSpinner.setSelection(0);
-                    });
-                    updateMetricValues();
-                });
-
-        //Get all metrics
-        Observable.defer(() -> Observable.just(dbManager.getGamesTable().getMetrics(mEvent.getGame())))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(Observable::from)
-                .filter(this::filterMetric)
-                .map(metric -> new MetricValue(metric, null))
+                .flatMap(robots1 -> {
+                    this.robots = robots1;
+                    return Observable.from(robots1);
+                })
+                .map(robot -> String.format("%d, %s", robot.getTeam_id(), robot.getTeam().getName()))
                 .toList()
-                .subscribe(this::setMetricValues);
-
+                .subscribe(onNext -> {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, onNext);
+                    mRobotSpinner.setAdapter(adapter);
+                    mRobotSpinner.setSelection(0);
+                    updateMetricValues();
+                }, FirebaseCrash::report);
         super.onViewCreated(view, savedInstanceState);
     }
 

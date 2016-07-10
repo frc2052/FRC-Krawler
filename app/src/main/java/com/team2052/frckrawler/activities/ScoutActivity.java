@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 /**
  * Created by adam on 5/2/15.
  */
-public class ScoutActivity extends AppCompatActivity implements HasComponent {
+public class ScoutActivity extends DatabaseActivity implements HasComponent {
 
     public static final int MATCH_SCOUT_TYPE = 0;
     public static final int PIT_SCOUT_TYPE = 1;
@@ -32,8 +32,6 @@ public class ScoutActivity extends AppCompatActivity implements HasComponent {
     private static final String EVENT_ID_EXTRA = "com.team2052.frckrawler.EVENT_ID_EXTRA";
 
     private Fragment fragment;
-    private DBManager dbManager;
-    private FragmentComponent mComponent;
 
     public static Intent newInstance(Context context, Event event, int type) {
         Intent intent = new Intent(context, ScoutActivity.class);
@@ -46,10 +44,15 @@ public class ScoutActivity extends AppCompatActivity implements HasComponent {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        dbManager = DBManager.getInstance(this);
+        setNavigationDrawerEnabled(false);
 
         Event event = dbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID_EXTRA, 0));
+
+        if (event == null) {
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_scout);
         ButterKnife.bind(this);
 
@@ -92,16 +95,7 @@ public class ScoutActivity extends AppCompatActivity implements HasComponent {
     }
 
     @Override
-    public FragmentComponent getComponent() {
-        if (mComponent == null) {
-            FRCKrawler app = (FRCKrawler) getApplication();
-            mComponent = DaggerFragmentComponent
-                    .builder()
-                    .fRCKrawlerModule(app.getModule())
-                    .subscriberModule(new SubscriberModule(this))
-                    .applicationComponent(app.getComponent())
-                    .build();
-        }
-        return mComponent;
+    public void inject() {
+        getComponent().inject(this);
     }
 }

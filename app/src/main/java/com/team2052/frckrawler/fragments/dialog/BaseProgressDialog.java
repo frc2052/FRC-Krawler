@@ -18,6 +18,7 @@ public class BaseProgressDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mDbManager = DBManager.getInstance(getActivity());
+        setRetainInstance(true);
         super.onCreate(savedInstanceState);
     }
 
@@ -34,4 +35,12 @@ public class BaseProgressDialog extends DialogFragment {
     public CharSequence getMessage() {
         return "Loading";
     }
+
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null && getRetainInstance())
+            getDialog().setDismissMessage(null);
+        super.onDestroyView();
+    }
+
 }

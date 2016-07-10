@@ -156,10 +156,6 @@ public class NavigationDrawerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mDrawerContainer = (RelativeLayout) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         mDrawerListView = (ListView) mDrawerContainer.findViewById(R.id.left_drawer);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mDrawerListView.setSelector(R.drawable.list_item_selector);
-            mDrawerListView.setDrawSelectorOnTop(true);
-        }
         mDrawerListView.setOnItemClickListener((parent, view, position, id) -> selectItem(position));
         mDrawerListView.setAdapter(navAdapter);
         return mDrawerContainer;
