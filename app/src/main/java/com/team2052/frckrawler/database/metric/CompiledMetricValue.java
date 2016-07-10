@@ -19,9 +19,8 @@ public class CompiledMetricValue {
     private static final DecimalFormat format = new DecimalFormat("0.00");
     private final List<MetricValue> metricData;
     private final Robot robot;
-    private final
     @MetricHelper.MetricType
-    int metricType;
+    private final int metricType;
     private final Metric metric;
     private final double compileWeight;
     private final JsonObject compiledValue = new JsonObject();

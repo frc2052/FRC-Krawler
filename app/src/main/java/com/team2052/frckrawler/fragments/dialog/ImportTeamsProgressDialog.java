@@ -15,6 +15,7 @@ import com.team2052.frckrawler.tba.TBA;
 import java.util.Arrays;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -23,6 +24,7 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
 
     public static String TEAMS_ARGUMENT = "TEAMS";
     public static String EVENT_ID_ARGUMENT = "EVENT_ID";
+    private Subscription subscription;
 
 
     public static ImportTeamsProgressDialog newInstance(String teams, long event_id) {
@@ -40,7 +42,7 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
         String teams = getArguments().getString(TEAMS_ARGUMENT);
         Event event = mDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID_ARGUMENT));
 
-        Observable.just(teams)
+        subscription = Observable.just(teams)
                 .map(teamsString -> Arrays.asList(teamsString.split("\\s*,\\s*")))
                 .flatMap(Observable::from)
                 .map(Integer::parseInt)
@@ -51,8 +53,12 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
                 .map(JSON::getAsJsonObject)
                 .map(jsonObject -> JSON.getGson().fromJson(jsonObject, Team.class))
                 .map(team -> {
-                    AndroidSchedulers.mainThread().createWorker().schedule(() ->
-                            ((ProgressDialog) getDialog()).setMessage("Inserting Team " + team.getNumber()));
+                    AndroidSchedulers.mainThread().createWorker().schedule(() -> {
+                                if (getDialog() != null) {
+                                    ((ProgressDialog) getDialog()).setMessage("Inserting Team " + team.getNumber());
+                                }
+                            }
+                    );
                     mDbManager.getTeamsTable().insertNew(team, event);
                     return true;
                 })
@@ -68,5 +74,13 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
                     Log.e(TAG, "onCreate: ", onError);
                     dismiss();
                 });
+    }
+
+    @Override
+    public void onDestroy() {
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
+        super.onDestroy();
     }
 }
