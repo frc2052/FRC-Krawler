@@ -4,10 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-/**
- * Created by Adam on 5/31/2016.
- */
-
 public class PreferenceUtil {
     public static String COMPILE_TEAM_NAME_PREFERENCE = "compile_team_name_preference",
             COMPILE_MATCH_METRICS_PREFERENCE = "compile_match_metrics_preference",
@@ -41,6 +37,13 @@ public class PreferenceUtil {
 
     private static float getFloatPreference(Context context, String key, String default_value) {
         SharedPreferences sharedPreferences = getPreferences(context);
-        return Float.parseFloat(sharedPreferences.getString(key, default_value));
+        float floatRet;
+        //If float fails to parse in any way, return 'default_value'
+        try {
+            floatRet = Float.parseFloat(sharedPreferences.getString(key, default_value));
+        } catch (Exception e) {
+            floatRet = Float.parseFloat(default_value);
+        }
+        return floatRet;
     }
 }
