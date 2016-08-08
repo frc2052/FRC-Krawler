@@ -106,27 +106,22 @@ public class ServerService extends Service {
     }
 
     public Observable<ServerStatus> changeServerStatus(Event event, boolean on) {
-        return Observable.create(subscriber -> {
-            //Event is null, so we can assume we want to turn off the server
-            // If the server is on, and we want to turn it off then shut the server down if we want to turn it off
+        return Observable.defer(() -> {
             if (event == null || (isServerOn() && !on)) {
                 stopServer();
             } else {
                 startServer(event);
             }
-            subscriber.onNext(new ServerStatus(event, isServerOn()));
-            subscriber.onCompleted();
+            return getServerStatus();
         });
     }
 
     public Observable<ServerStatus> getServerStatus() {
-        return Observable.create(subscriber -> {
+        return Observable.defer(() -> {
             if (serverThread != null) {
-                subscriber.onNext(new ServerStatus(serverThread.getHostedEvent(), isServerOn()));
-            } else {
-                subscriber.onNext(new ServerStatus(null, isServerOn()));
+                return Observable.just(new ServerStatus(serverThread.getHostedEvent(), isServerOn()));
             }
-            subscriber.onCompleted();
+            return Observable.just(new ServerStatus(null, isServerOn()));
         });
     }
 
