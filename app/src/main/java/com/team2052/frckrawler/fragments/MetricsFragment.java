@@ -70,7 +70,7 @@ public class MetricsFragment extends ListViewFragment<List<Metric>, MetricListSu
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.import_metrics_menu){
+        if (item.getItemId() == R.id.import_metrics_menu) {
             startActivity(ImportMetricsActivity.newInstance(getContext(), mGame_id, mCategory));
         }
         return super.onOptionsItemSelected(item);

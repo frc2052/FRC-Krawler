@@ -143,7 +143,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        if(subscription != null){
+        if (subscription != null) {
             subscription.unsubscribe();
         }
         super.onDestroy();

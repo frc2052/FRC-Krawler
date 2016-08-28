@@ -11,8 +11,8 @@ public class FirebaseUtil {
     /**
      * Use this or the app may crash
      */
-    public static FirebaseDatabase getFirebaseDatabase(){
-        if(_firebaseDatabase == null){
+    public static FirebaseDatabase getFirebaseDatabase() {
+        if (_firebaseDatabase == null) {
             _firebaseDatabase = FirebaseDatabase.getInstance();
             _firebaseDatabase.setPersistenceEnabled(true);
         }

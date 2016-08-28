@@ -51,7 +51,7 @@ public class MetricListElement extends ListElement {
                     comma = ", ";
                 }
                 rangeString = sb.toString();
-                if(metric.getType() == MetricHelper.CHOOSER) {
+                if (metric.getType() == MetricHelper.CHOOSER) {
                     typeString = "Chooser";
                 } else {
                     typeString = "Checkbox";

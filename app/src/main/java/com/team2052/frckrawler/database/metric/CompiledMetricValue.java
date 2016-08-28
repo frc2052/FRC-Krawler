@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  * @author Adam
- * Compiled metric value, this object takes data and compiles it for you. Compiles all data on the thread it was instantiated on.
+ *         Compiled metric value, this object takes data and compiles it for you. Compiles all data on the thread it was instantiated on.
  */
 public class CompiledMetricValue {
     private static final DecimalFormat format = new DecimalFormat("0.00");
@@ -27,9 +27,9 @@ public class CompiledMetricValue {
     private final JsonObject compiledValue = new JsonObject();
 
     /**
-     * @param robot The robot you are compiling
-     * @param metric The metric you are compiling
-     * @param metricData The data you are compiling
+     * @param robot         The robot you are compiling
+     * @param metric        The metric you are compiling
+     * @param metricData    The data you are compiling
      * @param compileWeight The 'raw' compile weight from settings or another place
      */
     public CompiledMetricValue(Robot robot, Metric metric, List<MetricValue> metricData, float compileWeight) {

@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Model for a set of metrics for the Firebase application
- *
+ * <p>
  * This model is used to keep sets of metrics with a name and description value
  */
 public class MetricImportModel {
