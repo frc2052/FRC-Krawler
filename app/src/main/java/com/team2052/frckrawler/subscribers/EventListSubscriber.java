@@ -11,6 +11,8 @@ public class EventListSubscriber extends BaseDataSubscriber<List<Event>, List<Li
     @Override
     public void parseData() {
         dataToBind = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) dataToBind.add(new EventListElement(data.get(i)));
+        for (int i = 0; i < data.size(); i++) {
+            dataToBind.add(new EventListElement(data.get(i)));
+        }
     }
 }

@@ -121,7 +121,8 @@ public class AddMetricActivity extends DatabaseActivity {
                 .map(Integer::parseInt)
                 .onErrorReturn(ret -> 0);
 
-        metricObservable = Observable.combineLatest(mNameObservable, mMinimumObservable, mMaximumObservable, mIncrementationObservable, mDescriptionObservable, mCommaListObservable, MetricPreviewParams::new)
+        metricObservable = Observable
+                .zip(mNameObservable, mMinimumObservable, mMaximumObservable, mIncrementationObservable, mDescriptionObservable, mCommaListObservable, MetricPreviewParams::new)
                 .map(metricPreviewParams -> {
                     MetricHelper.MetricFactory factory = new MetricHelper.MetricFactory(mGame.getId(), metricPreviewParams.name);
                     @MetricHelper.MetricType
@@ -161,21 +162,12 @@ public class AddMetricActivity extends DatabaseActivity {
         subscriptions.add(RxAdapterView.itemSelections(typeSpinner)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::changeSelection));
-        subscriptions.add(RxTextView.textChanges(mName.getEditText())
-                .debounce(250, TimeUnit.MILLISECONDS)
-                .subscribe(onNext -> updateMetric()));
-        subscriptions.add(RxTextView.textChanges(mIncrementation.getEditText())
-                .debounce(250, TimeUnit.MILLISECONDS)
-                .subscribe(onNext -> updateMetric()));
-        subscriptions.add(RxTextView.textChanges(mMinimum.getEditText())
-                .debounce(250, TimeUnit.MILLISECONDS)
-                .subscribe(onNext -> updateMetric()));
-        subscriptions.add(RxTextView.textChanges(mMaximum.getEditText())
-                .debounce(250, TimeUnit.MILLISECONDS)
-                .subscribe(onNext -> updateMetric()));
-        subscriptions.add(RxTextView.textChanges(mCommaSeparatedList.getEditText())
-                .debounce(250, TimeUnit.MILLISECONDS)
-                .subscribe(onNext -> updateMetric()));
+
+        addObservableToUpdateMetric(RxTextView.textChanges(mName.getEditText()));
+        addObservableToUpdateMetric(RxTextView.textChanges(mIncrementation.getEditText()));
+        addObservableToUpdateMetric(RxTextView.textChanges(mMinimum.getEditText()));
+        addObservableToUpdateMetric(RxTextView.textChanges(mMaximum.getEditText()));
+        addObservableToUpdateMetric(RxTextView.textChanges(mCommaSeparatedList.getEditText()));
 
         mMinimum.getEditText().setText("1");
         mMaximum.getEditText().setText("10");
@@ -187,6 +179,17 @@ public class AddMetricActivity extends DatabaseActivity {
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
 
         ViewCompat.setElevation(toolbar, getResources().getDimension(R.dimen.toolbar_elevation));
+    }
+
+    public void addObservableToUpdateMetric(Observable<?> observable, boolean debounce) {
+        if (debounce) {
+            observable = observable.debounce(250, TimeUnit.MILLISECONDS);
+        }
+        subscriptions.add(observable.subscribe(onNext -> updateMetric()));
+    }
+
+    public void addObservableToUpdateMetric(Observable<?> observable) {
+        addObservableToUpdateMetric(observable, true);
     }
 
     private void changeSelection(int position) {

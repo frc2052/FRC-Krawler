@@ -43,6 +43,8 @@ import com.team2052.frckrawler.db.User;
 import com.team2052.frckrawler.db.UserDao;
 import com.team2052.frckrawler.tba.JSON;
 
+import org.greenrobot.greendao.query.QueryBuilder;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -51,7 +53,6 @@ import java.util.Map;
 
 import javax.inject.Singleton;
 
-import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
 
 /**
@@ -217,43 +218,28 @@ public class DBManager {
     }
 
     public Observable<List<Event>> eventsByGame(long game_id) {
-        return Observable.create(subscriber -> {
-            subscriber.onStart();
-            List<Event> events = getEventsTable().getQueryBuilder().where(EventDao.Properties.Game_id.eq(game_id)).list();
-            subscriber.onNext(events);
-
-            subscriber.onCompleted();
-        });
+        return getEventsTable().query(null, game_id).rx().list();
     }
 
     public Observable<List<Event>> allEvents() {
-        return Observable.create(subscriber -> {
-            List<Event> events = getEventsTable().loadAll();
-            subscriber.onNext(events);
-
-            subscriber.onCompleted();
-        });
+        return getEventsTable().query(null, null).rx().list();
     }
 
     public Observable<List<Event>> robotAtEvents(long robot_id) {
-        return Observable.create(subscriber -> {
-            List<Event> events = new ArrayList<>();
-            Robot load = getRobotsTable().load(robot_id);
-            List<RobotEvent> robotEventList = load.getRobotEventList();
-            for (int i = 0; i < robotEventList.size(); i++) {
-                events.add(robotEventList.get(i).getEvent());
-            }
-            subscriber.onNext(events);
-            subscriber.onCompleted();
-        });
+        return getRobotsTable()
+                .query(robot_id, null, null)
+                .rx()
+                .unique()
+                .concatMap(robot -> {
+                    robot.resetRobotEventList();
+                    return Observable.from(robot.getRobotEventList());
+                })
+                .map(RobotEvent::getEvent)
+                .toList();
     }
 
     public Observable<List<Robot>> robotsWithTeam(long team_id) {
-        return Observable.create(subscriber -> {
-            List<Robot> robots = getRobotsTable().getQueryBuilder().where(RobotDao.Properties.Team_id.eq(team_id)).list();
-            subscriber.onNext(robots);
-            subscriber.onCompleted();
-        });
+        return getRobotsTable().query(null, team_id, null).rx().list();
     }
 
     public Observable<List<Robot>> robotsAtEvent(long event_id) {
@@ -826,12 +812,14 @@ public class DBManager {
             return new RobotComment(robot.getId(), robot.getComments());
         }
 
-        public QueryBuilder<Robot> query(@Nullable Long team_number, @Nullable Long game_id) {
+        public QueryBuilder<Robot> query(@Nullable Long id, @Nullable Long team_number, @Nullable Long game_id) {
             QueryBuilder<Robot> robotQueryBuilder = getRobotsTable().getQueryBuilder();
             if (team_number != null)
                 robotQueryBuilder.where(RobotDao.Properties.Team_id.eq(team_number));
             if (game_id != null)
                 robotQueryBuilder.where(RobotDao.Properties.Game_id.eq(game_id));
+            if (id != null)
+                robotQueryBuilder.where(RobotDao.Properties.Id.eq(id));
             return robotQueryBuilder;
         }
 

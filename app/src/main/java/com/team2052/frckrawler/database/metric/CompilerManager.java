@@ -21,6 +21,7 @@ import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.PreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -31,7 +32,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;

@@ -133,14 +133,6 @@ public abstract class BaseScoutFragment extends Fragment {
         subscriptions.add(saveSubscription);
     }
 
-    /**
-     * Please do not use unless you have to
-     */
-    @Deprecated
-    protected Robot getSelectedRobot() {
-        return robots.get(mRobotSpinner.getSelectedItemPosition());
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();

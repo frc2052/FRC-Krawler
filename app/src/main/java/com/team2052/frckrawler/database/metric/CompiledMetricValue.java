@@ -14,6 +14,7 @@ import java.util.Map;
 
 /**
  * @author Adam
+ * Compiled metric value, this object takes data and compiles it for you. Compiles all data on the thread it was instantiated on.
  */
 public class CompiledMetricValue {
     private static final DecimalFormat format = new DecimalFormat("0.00");
@@ -25,6 +26,12 @@ public class CompiledMetricValue {
     private final double compileWeight;
     private final JsonObject compiledValue = new JsonObject();
 
+    /**
+     * @param robot The robot you are compiling
+     * @param metric The metric you are compiling
+     * @param metricData The data you are compiling
+     * @param compileWeight The 'raw' compile weight from settings or another place
+     */
     public CompiledMetricValue(Robot robot, Metric metric, List<MetricValue> metricData, float compileWeight) {
         this.robot = robot;
         this.metric = metric;
@@ -132,6 +139,9 @@ public class CompiledMetricValue {
         return compiledValue;
     }
 
+    /**
+     * @return Takes the @link[getCompiledValueJson] and parses it to a readable String
+     */
     public String getCompiledValue() {
         switch (metricType) {
             case MetricHelper.COUNTER:
@@ -151,6 +161,9 @@ public class CompiledMetricValue {
         return "Error";
     }
 
+    /**
+     * Get the weight for the current data
+     */
     private double getCompileWeightForMatchNumber(MetricValue metricValue) {
         return Math.pow(compileWeight, metricData.indexOf(metricValue) + 1);
     }

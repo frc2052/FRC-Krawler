@@ -2,6 +2,9 @@ package com.team2052.frckrawler.firebase;
 
 import com.google.firebase.database.FirebaseDatabase;
 
+/**
+ * Utility class for Firebase this holds commonly used code for Firebase
+ */
 public class FirebaseUtil {
     private static FirebaseDatabase _firebaseDatabase;
 

@@ -92,7 +92,6 @@ public class GameInfoFragment extends ListViewFragment<Map<String, String>, KeyV
         builder.setPositiveButton("Ok", (dialog, which) -> {
             mGame.setName(name.getText().toString());
             mGame.update();
-            ((BaseActivity) getActivity()).setActionBarSubtitle(mGame.getName());
         });
         builder.setNegativeButton("Cancel", null);
         return builder.create();

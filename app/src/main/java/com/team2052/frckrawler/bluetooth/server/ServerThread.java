@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import rx.Observable;
 
 public class ServerThread extends Thread {
 
@@ -45,6 +48,7 @@ public class ServerThread extends Thread {
         Log.d(TAG, "Server Open");
         String deviceName;
         isOpen = true;
+
         while (isOpen) {
             try {
                 serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothConstants.SERVICE_NAME, UUID.fromString(BluetoothConstants.UUID));

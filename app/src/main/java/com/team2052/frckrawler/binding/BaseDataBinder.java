@@ -11,6 +11,7 @@ public abstract class BaseDataBinder<V> {
     public abstract void updateData(V data);
 
     public void onError(Throwable e) {
+        e.printStackTrace();
     }
 
     public void setActivity(Activity activity) {

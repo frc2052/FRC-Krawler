@@ -19,11 +19,12 @@ import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
 
+import org.greenrobot.greendao.query.QueryBuilder;
+
 import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
