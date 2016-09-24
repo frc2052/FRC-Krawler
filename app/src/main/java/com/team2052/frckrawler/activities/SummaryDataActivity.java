@@ -42,7 +42,7 @@ public class SummaryDataActivity extends DatabaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view);
 
-        mListView = (ListView) findViewById(R.id.list_layout);
+        mListView = (ListView) findViewById(R.id.list);
         mEvent = dbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
         mMetric = dbManager.getMetricsTable().load(getIntent().getLongExtra(DatabaseActivity.PARENT_ID, 0));
         setActionBarTitle(getString(R.string.summary_title));

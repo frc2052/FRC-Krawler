@@ -6,7 +6,7 @@ import android.view.View;
 
 public abstract class BaseDataBinder<V> {
     protected Activity mActivity;
-    protected View rootView;
+    protected View mRootView;
 
     public abstract void updateData(V data);
 
@@ -21,8 +21,8 @@ public abstract class BaseDataBinder<V> {
     public void onCompleted() {
     }
 
-    public void setRootView(View rootView) {
-        this.rootView = rootView;
+    public void setmRootView(View mRootView) {
+        this.mRootView = mRootView;
     }
 
     @UiThread

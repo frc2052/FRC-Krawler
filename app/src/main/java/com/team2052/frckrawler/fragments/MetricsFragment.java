@@ -11,7 +11,7 @@ import com.team2052.frckrawler.activities.AddMetricActivity;
 import com.team2052.frckrawler.activities.ImportMetricsActivity;
 import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.binding.ListViewBinder;
+import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.FABButtonListener;
@@ -92,7 +92,7 @@ public class MetricsFragment extends ListViewFragment<List<Metric>, MetricListSu
     }
 
     @Override
-    protected ListViewBinder.ListViewNoDataParams getNoDataParams() {
-        return new ListViewBinder.ListViewNoDataParams("No metrics found", R.drawable.ic_metric);
+    protected ListViewNoDataParams getNoDataParams() {
+        return new ListViewNoDataParams("No metrics found", R.drawable.ic_metric);
     }
 }

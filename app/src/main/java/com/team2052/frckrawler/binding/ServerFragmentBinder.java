@@ -100,7 +100,7 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
 
     @Override
     public void bindViews() {
-        ButterKnife.bind(this, rootView);
+        ButterKnife.bind(this, mRootView);
 
         viewEventButton.setOnClickListener(serverFragment);
         scoutMatchButton.setOnClickListener(serverFragment);

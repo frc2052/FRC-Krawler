@@ -5,26 +5,25 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.binding.ListViewBinder;
+import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.subscribers.BaseDataSubscriber;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.schedulers.Schedulers;
 
 public abstract class ListViewFragment<T, S extends BaseDataSubscriber<T, List<ListItem>>>
         extends BaseDataFragment<T, List<ListItem>, S, ListViewBinder> implements RefreshListener {
+    @BindView(R.id.list)
     protected ListView mListView;
-    protected ImageView mNoDataImage;
-    protected TextView mNoDataTitle;
-    protected View mNoDataRootView;
 
     @Nullable
     @Override
@@ -41,16 +40,8 @@ public abstract class ListViewFragment<T, S extends BaseDataSubscriber<T, List<L
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mListView = (ListView) view.findViewById(R.id.list_layout);
-        mNoDataImage = (ImageView) view.findViewById(R.id.no_data_image);
-        mNoDataTitle = (TextView) view.findViewById(R.id.no_data_title);
-        mNoDataRootView = view.findViewById(R.id.no_data_root_view);
-
-        binder.listView = mListView;
-        binder.noDataImage = mNoDataImage;
-        binder.noDataTitle = mNoDataTitle;
-        binder.noDataRootView = mNoDataRootView;
+        ButterKnife.bind(this, view);
+        binder.setmRootView(view);
     }
 
     @Override
@@ -60,7 +51,7 @@ public abstract class ListViewFragment<T, S extends BaseDataSubscriber<T, List<L
                 .subscribe(subscriber);
     }
 
-    protected ListViewBinder.ListViewNoDataParams getNoDataParams() {
-        return new ListViewBinder.ListViewNoDataParams("No Data Found", R.drawable.ic_no_data);
+    protected ListViewNoDataParams getNoDataParams() {
+        return new ListViewNoDataParams("No Data Found", R.drawable.ic_no_data);
     }
 }

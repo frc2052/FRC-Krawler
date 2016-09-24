@@ -6,7 +6,7 @@ import android.view.View;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.EventInfoActivity;
-import com.team2052.frckrawler.binding.ListViewBinder;
+import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
@@ -62,7 +62,7 @@ public class EventsFragment extends ListViewFragment<List<Event>, EventListSubsc
     }
 
     @Override
-    protected ListViewBinder.ListViewNoDataParams getNoDataParams() {
-        return new ListViewBinder.ListViewNoDataParams("No events found", R.drawable.ic_event);
+    protected ListViewNoDataParams getNoDataParams() {
+        return new ListViewNoDataParams("No events found", R.drawable.ic_event);
     }
 }

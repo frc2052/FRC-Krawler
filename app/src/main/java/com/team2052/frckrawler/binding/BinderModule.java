@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.binding;
 
+import android.support.v7.widget.RecyclerView;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -18,5 +20,10 @@ public class BinderModule {
     @Provides
     public ServerFragmentBinder provideServerFragmentConsumer() {
         return new ServerFragmentBinder();
+    }
+
+    @Provides
+    public RecyclerViewBinder provideRecyclerViewBinder() {
+        return new RecyclerViewBinder();
     }
 }

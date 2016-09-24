@@ -30,7 +30,9 @@ import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.tba.TBA;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,6 +68,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         super.onCreate(savedInstanceState);
         this.mGame = DBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         isConnected = ConnectionChecker.isConnectedToInternet(getActivity());
+
         yearDropDownItems = new String[Constants.MAX_COMP_YEAR - Constants.FIRST_COMP_YEAR + 1];
         for (int i = 0; i < yearDropDownItems.length; i++) {
             yearDropDownItems[i] = Integer.toString(Constants.MAX_COMP_YEAR - i);

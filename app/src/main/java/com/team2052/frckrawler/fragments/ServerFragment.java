@@ -46,7 +46,7 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         binder.updateServerStatus();
 
-        binder.setRootView(view);
+        binder.setmRootView(view);
         binder.bindViews();
 
         binder.mHostToggle.setEnabled(BluetoothUtil.hasBluetoothAdapter());

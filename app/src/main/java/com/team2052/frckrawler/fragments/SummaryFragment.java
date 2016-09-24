@@ -8,7 +8,7 @@ import android.view.View;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
-import com.team2052.frckrawler.binding.ListViewBinder;
+import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListElement;
@@ -54,7 +54,7 @@ public class SummaryFragment extends ListViewFragment<List<Metric>, MetricListSu
     }
 
     @Override
-    protected ListViewBinder.ListViewNoDataParams getNoDataParams() {
-        return new ListViewBinder.ListViewNoDataParams("No metrics found", R.drawable.ic_metric);
+    protected ListViewNoDataParams getNoDataParams() {
+        return new ListViewNoDataParams("No metrics found", R.drawable.ic_metric);
     }
 }

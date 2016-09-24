@@ -58,7 +58,7 @@ public class ImportMetricsActivity extends DatabaseActivity implements AdapterVi
                 ((TextView) v.findViewById(android.R.id.text2)).setText(model.description);
             }
         };
-        mListView = (ListView) findViewById(R.id.list_layout);
+        mListView = (ListView) findViewById(R.id.list);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(this);
     }

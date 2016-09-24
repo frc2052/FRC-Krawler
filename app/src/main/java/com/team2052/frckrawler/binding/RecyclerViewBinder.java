@@ -1,22 +1,25 @@
 package com.team2052.frckrawler.binding;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.listitems.ListItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.nlopez.smartadapters.SmartAdapter;
+import io.nlopez.smartadapters.adapters.RecyclerMultiAdapter;
 
-public class ListViewBinder extends BaseDataBinder<List<ListItem>> {
+public class RecyclerViewBinder extends BaseDataBinder<List<Object>> {
+    RecyclerViewAdapterCreatorProvider mProvider;
+
     @BindView(R.id.list)
-    public ListView listView;
+    RecyclerView mRecyclerView;
     @BindView(R.id.no_data_root_view)
     public View noDataRootView;
     @BindView(R.id.no_data_image)
@@ -24,23 +27,23 @@ public class ListViewBinder extends BaseDataBinder<List<ListItem>> {
     @BindView(R.id.no_data_title)
     public TextView noDataTitle;
 
-    ListViewNoDataParams noDataParams;
+    RecyclerMultiAdapter mAdapter;
+    private ListViewNoDataParams noDataParams;
 
     @Override
-    public void updateData(List<ListItem> data) {
-        if (data == null || listView == null || data.isEmpty()) {
+    public void updateData(List<Object> data) {
+        if (data == null || data.isEmpty()) {
             showNoData(true);
             return;
         }
-        ListViewAdapter adapter = new ListViewAdapter(mActivity, data);
-        listView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        SmartAdapter.MultiAdaptersCreator creator = SmartAdapter.items(new ArrayList<>(data));
+        mProvider.provideAdapterCreator(creator);
+        mAdapter = creator.into(mRecyclerView);
         showNoData(false);
     }
 
-    @Override
-    public void onError(Throwable e) {
-
+    public void setRecyclerViewAdapterCreatorProvider(RecyclerViewAdapterCreatorProvider mProvider) {
+        this.mProvider = mProvider;
     }
 
     @Override
@@ -53,16 +56,19 @@ public class ListViewBinder extends BaseDataBinder<List<ListItem>> {
             noDataImage.setImageResource(noDataParams.getDrawable());
             noDataTitle.setText(noDataParams.getTitle());
 
-            listView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
             noDataRootView.setVisibility(View.VISIBLE);
         } else {
-            listView.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
             noDataRootView.setVisibility(View.GONE);
         }
+    }
+
+    public interface RecyclerViewAdapterCreatorProvider {
+        void provideAdapterCreator(SmartAdapter.MultiAdaptersCreator creator);
     }
 
     public void setNoDataParams(ListViewNoDataParams noDataParams) {
         this.noDataParams = noDataParams;
     }
-
 }

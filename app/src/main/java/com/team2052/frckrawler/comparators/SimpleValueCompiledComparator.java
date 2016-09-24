@@ -5,9 +5,6 @@ import com.team2052.frckrawler.listitems.elements.CompiledMetricListElement;
 
 import java.util.Comparator;
 
-/**
- * Created by Adam on 10/16/2015.
- */
 public class SimpleValueCompiledComparator implements Comparator<ListItem> {
     private boolean desc;
 
