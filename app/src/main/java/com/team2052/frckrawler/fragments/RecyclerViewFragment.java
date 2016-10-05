@@ -12,14 +12,14 @@ import com.team2052.frckrawler.DividerItemDecoration;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.binding.RecyclerViewBinder;
+import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.subscribers.BaseDataSubscriber;
 
 import java.util.List;
 
-import io.nlopez.smartadapters.SmartAdapter;
-import rx.Observable;
+import rx.schedulers.Schedulers;
 
-public abstract class RecyclerViewFragment<T, S extends BaseDataSubscriber<T, List<Object>>, B extends RecyclerViewBinder> extends BaseDataFragment<T, List<Object>, S, B> implements RecyclerViewBinder.RecyclerViewAdapterCreatorProvider {
+public abstract class RecyclerViewFragment<T, S extends BaseDataSubscriber<T, List<Object>>, B extends RecyclerViewBinder> extends BaseDataFragment<T, List<Object>, S, B> implements RecyclerViewBinder.RecyclerViewAdapterCreatorProvider, RefreshListener {
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -49,9 +49,18 @@ public abstract class RecyclerViewFragment<T, S extends BaseDataSubscriber<T, Li
         super.onViewCreated(view, savedInstanceState);
     }
 
-    protected abstract ListViewNoDataParams getNoDataParams();
+    protected ListViewNoDataParams getNoDataParams() {
+        return new ListViewNoDataParams("No Data Found", R.drawable.ic_no_data);
+    }
 
-    protected boolean showDividers(){
+    protected boolean showDividers() {
         return true;
+    }
+
+    @Override
+    public void refresh() {
+        getObservable().subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .subscribe(subscriber);
     }
 }

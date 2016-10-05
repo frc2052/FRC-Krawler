@@ -16,17 +16,15 @@ import io.nlopez.smartadapters.SmartAdapter;
 import io.nlopez.smartadapters.adapters.RecyclerMultiAdapter;
 
 public class RecyclerViewBinder extends BaseDataBinder<List<Object>> {
-    RecyclerViewAdapterCreatorProvider mProvider;
-
-    @BindView(R.id.list)
-    RecyclerView mRecyclerView;
     @BindView(R.id.no_data_root_view)
     public View noDataRootView;
     @BindView(R.id.no_data_image)
     public ImageView noDataImage;
     @BindView(R.id.no_data_title)
     public TextView noDataTitle;
-
+    RecyclerViewAdapterCreatorProvider mProvider;
+    @BindView(R.id.list)
+    RecyclerView mRecyclerView;
     RecyclerMultiAdapter mAdapter;
     private ListViewNoDataParams noDataParams;
 
@@ -64,11 +62,11 @@ public class RecyclerViewBinder extends BaseDataBinder<List<Object>> {
         }
     }
 
-    public interface RecyclerViewAdapterCreatorProvider {
-        void provideAdapterCreator(SmartAdapter.MultiAdaptersCreator creator);
-    }
-
     public void setNoDataParams(ListViewNoDataParams noDataParams) {
         this.noDataParams = noDataParams;
+    }
+
+    public interface RecyclerViewAdapterCreatorProvider {
+        void provideAdapterCreator(SmartAdapter.MultiAdaptersCreator creator);
     }
 }

@@ -5,18 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.di.DaggerFragmentComponent;
-import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
-import com.team2052.frckrawler.subscribers.SubscriberModule;
 
 import butterknife.ButterKnife;
 

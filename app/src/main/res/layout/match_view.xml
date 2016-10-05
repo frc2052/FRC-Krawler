@@ -1,130 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:baselineAligned="false"
-    android:orientation="horizontal"
-    android:padding="16dp">
+    android:minHeight="48dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp">
 
-    <TextView
-        android:id="@+id/match_title"
-        style="@style/TextAppearance.AppCompat.Title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_weight="1.5"
-        android:gravity="center|center_horizontal|center_vertical" />
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-    <TableLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="6">
+        <TextView
+            android:id="@+id/match_title"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="1.5"
+            android:gravity="center|center_horizontal|center_vertical" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:minHeight="40dp">
+        <TableLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/red_alliance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/red1"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:background="@color/red_800"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="Red 1" />
-
-                    <TextView
-                        android:id="@+id/red2"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:background="@color/red_800"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="Red 2" />
-
-                    <TextView
-                        android:id="@+id/red3"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:background="@color/red_800"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="Red 3" />
-
-                    <TextView
-                        android:id="@+id/red_score"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1.5"
-                        android:background="@color/red_900"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="Red Score"
-                        android:textStyle="bold" />
-                </LinearLayout>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:minHeight="40dp">
 
                 <LinearLayout
-                    android:id="@+id/blue_alliance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:orientation="horizontal">
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/blue1"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:background="@color/blue_800"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="Blue 1" />
+                    <LinearLayout
+                        android:id="@+id/red_alliance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="40dp"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/blue2"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:background="@color/blue_800"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="Blue 2" />
+                        <TextView
+                            android:id="@+id/red1"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:background="@color/red_800"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:text="Red 1" />
 
-                    <TextView
-                        android:id="@+id/blue3"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:background="@color/blue_800"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="Blue 3" />
+                        <TextView
+                            android:id="@+id/red2"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:background="@color/red_800"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:text="Red 2" />
 
-                    <TextView
-                        android:id="@+id/blue_score"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1.5"
-                        android:background="@color/blue_900"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="Blue Score"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/red3"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:background="@color/red_800"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:text="Red 3" />
 
+                        <TextView
+                            android:id="@+id/red_score"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1.5"
+                            android:background="@color/red_900"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:text="Red Score"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/blue_alliance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="40dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/blue1"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:background="@color/blue_800"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:text="Blue 1" />
+
+                        <TextView
+                            android:id="@+id/blue2"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:background="@color/blue_800"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:text="Blue 2" />
+
+                        <TextView
+                            android:id="@+id/blue3"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:background="@color/blue_800"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:text="Blue 3" />
+
+                        <TextView
+                            android:id="@+id/blue_score"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1.5"
+                            android:background="@color/blue_900"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:text="Blue Score"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-        </TableRow>
-    </TableLayout>
-    <!--Inspired by TBA :)-->
-</LinearLayout>
+            </TableRow>
+        </TableLayout>
+        <!--Inspired by TBA :)-->
+    </LinearLayout>
+</android.support.v7.widget.CardView>
+
 

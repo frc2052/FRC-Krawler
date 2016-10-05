@@ -13,9 +13,9 @@ import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragments.dialog.AddGameDialogFragment;
-import com.team2052.frckrawler.subscribers.GameListSubscriber;
-import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
 import com.team2052.frckrawler.listitems.smart.GameItemView;
+import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
+import com.team2052.frckrawler.subscribers.GameListSubscriber;
 
 import java.util.List;
 
@@ -60,7 +60,7 @@ public class GamesFragment extends RecyclerViewFragment<List<Game>, GameListSubs
     public void provideAdapterCreator(SmartAdapter.MultiAdaptersCreator creator) {
         creator.map(Game.class, GameItemView.class);
         creator.listener((actionId, item, position, view) -> {
-            if(actionId == SmartAdapterInteractions.EVENT_CLICKED && item instanceof Game){
+            if (actionId == SmartAdapterInteractions.EVENT_CLICKED && item instanceof Game) {
                 Game game = (Game) item;
                 startActivity(GameInfoActivity.newInstance(getActivity(), game.getId()));
             }

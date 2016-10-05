@@ -10,19 +10,21 @@ import android.view.View;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.binding.ListViewNoDataParams;
+import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.fragments.dialog.UpdateMatchesProcessDialog;
+import com.team2052.frckrawler.listitems.smart.MatchItemView;
 import com.team2052.frckrawler.subscribers.MatchListSubscriber;
-import com.team2052.frckrawler.util.Util;
 
 import java.util.List;
 
+import io.nlopez.smartadapters.SmartAdapter;
 import rx.Observable;
 
 /**
  * @author Adam
  */
-public class MatchListFragment extends ListViewFragment<List<Match>, MatchListSubscriber> {
+public class MatchListFragment extends RecyclerViewFragment<List<Match>, MatchListSubscriber, RecyclerViewBinder> {
 
     private long mEvent_id;
 
@@ -51,15 +53,13 @@ public class MatchListFragment extends ListViewFragment<List<Match>, MatchListSu
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mListView.setClipToPadding(false);
-        mListView.setPadding(0, Util.getPixelsFromDp(getActivity(), 4), 0, 0);
-        mListView.setDivider(null);
-        mListView.setFocusable(false);
-        mListView.setFocusableInTouchMode(false);
-
         setHasOptionsMenu(true);
         mEvent_id = getArguments().getLong(DatabaseActivity.PARENT_ID);
+    }
+
+    @Override
+    protected boolean showDividers() {
+        return false;
     }
 
     @Override
@@ -75,5 +75,10 @@ public class MatchListFragment extends ListViewFragment<List<Match>, MatchListSu
     @Override
     protected ListViewNoDataParams getNoDataParams() {
         return new ListViewNoDataParams("No matches found", R.drawable.ic_schedule_black_24dp);
+    }
+
+    @Override
+    public void provideAdapterCreator(SmartAdapter.MultiAdaptersCreator creator) {
+        creator.map(Match.class, MatchItemView.class);
     }
 }

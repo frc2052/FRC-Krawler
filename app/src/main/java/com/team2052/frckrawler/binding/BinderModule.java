@@ -1,7 +1,5 @@
 package com.team2052.frckrawler.binding;
 
-import android.support.v7.widget.RecyclerView;
-
 import dagger.Module;
 import dagger.Provides;
 

@@ -3,18 +3,21 @@ package com.team2052.frckrawler.fragments;
 import android.os.Bundle;
 
 import com.team2052.frckrawler.activities.DatabaseActivity;
+import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.listitems.smart.EventItemView;
 import com.team2052.frckrawler.subscribers.EventListSubscriber;
 
 import java.util.List;
 
+import io.nlopez.smartadapters.SmartAdapter;
 import rx.Observable;
 
 /**
  * @author Adam
  * @since 11/24/2014
  */
-public class RobotAttendingEventsFragment extends ListViewFragment<List<Event>, EventListSubscriber> {
+public class RobotAttendingEventsFragment extends RecyclerViewFragment<List<Event>, EventListSubscriber, RecyclerViewBinder> {
 
     private long robot_id;
 
@@ -40,5 +43,10 @@ public class RobotAttendingEventsFragment extends ListViewFragment<List<Event>, 
     @Override
     protected Observable<? extends List<Event>> getObservable() {
         return dbManager.robotAtEvents(robot_id);
+    }
+
+    @Override
+    public void provideAdapterCreator(SmartAdapter.MultiAdaptersCreator creator) {
+        creator.map(Event.class, EventItemView.class);
     }
 }

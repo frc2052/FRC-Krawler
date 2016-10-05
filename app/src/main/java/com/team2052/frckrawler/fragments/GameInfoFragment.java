@@ -8,7 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.BaseActivity;
 import com.team2052.frckrawler.background.DeleteGameTask;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.subscribers.KeyValueListSubscriber;

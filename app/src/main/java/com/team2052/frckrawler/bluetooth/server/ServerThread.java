@@ -18,9 +18,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
-import rx.Observable;
 
 public class ServerThread extends Thread {
 

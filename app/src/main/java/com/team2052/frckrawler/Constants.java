@@ -1,7 +1,5 @@
 package com.team2052.frckrawler;
 
-import java.util.Calendar;
-
 public class Constants {
     /**
      * SharedPreferences file name
