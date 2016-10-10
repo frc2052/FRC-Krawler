@@ -13,6 +13,7 @@ import android.view.View;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.tab.EventViewPagerAdapter;
 import com.team2052.frckrawler.listeners.FABButtonListener;
+import com.team2052.frckrawler.views.LockableFloatingActionButton;
 
 /**
  * @author Adam
@@ -23,7 +24,7 @@ public class EventInfoActivity extends DatabaseActivity implements View.OnClickL
     TabLayout mTabLayout;
 
     private EventViewPagerAdapter mAdapter;
-    private FloatingActionButton mFab;
+    private LockableFloatingActionButton mFab;
 
     public static Intent newInstance(Context context, long event_id) {
         Intent intent = new Intent(context, EventInfoActivity.class);
@@ -43,7 +44,7 @@ public class EventInfoActivity extends DatabaseActivity implements View.OnClickL
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mFab = (FloatingActionButton) findViewById(R.id.floating_action_button);
+        mFab = (LockableFloatingActionButton) findViewById(R.id.floating_action_button);
         mFab.setOnClickListener(this);
 
         mViewPager.setAdapter(mAdapter = new EventViewPagerAdapter(getSupportFragmentManager(), mEvent_id));
@@ -58,7 +59,9 @@ public class EventInfoActivity extends DatabaseActivity implements View.OnClickL
             public void onPageSelected(int position) {
                 if (position < 3) {
                     mFab.hide();
+                    mFab.setLocked(true);
                 } else {
+                    mFab.setLocked(false);
                     mFab.show();
                 }
             }

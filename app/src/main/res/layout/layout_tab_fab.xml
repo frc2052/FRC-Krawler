@@ -34,13 +34,14 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.team2052.frckrawler.views.LockableFloatingActionButton
         android:id="@+id/floating_action_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/fab_margin"
         android:tint="@color/grey_900"
-        android:src="@drawable/ic_add_white_24dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_behavior="com.team2052.frckrawler.util.ScrollAwareFABBehavior"
+        app:srcCompat="@drawable/ic_add_white_24dp" />
 </android.support.design.widget.CoordinatorLayout>

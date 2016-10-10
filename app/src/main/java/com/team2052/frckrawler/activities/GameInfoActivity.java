@@ -14,6 +14,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.tab.GameInfoPagerAdapter;
 import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listeners.RefreshListener;
+import com.team2052.frckrawler.views.LockableFloatingActionButton;
 
 /**
  * @author Adam
@@ -23,7 +24,7 @@ public class GameInfoActivity extends DatabaseActivity implements View.OnClickLi
 
     ViewPager mViewPager;
     TabLayout mTabLayout;
-    FloatingActionButton mFab;
+    LockableFloatingActionButton mFab;
 
     private GameInfoPagerAdapter mAdapter;
 
@@ -40,7 +41,7 @@ public class GameInfoActivity extends DatabaseActivity implements View.OnClickLi
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
 
-        mFab = (FloatingActionButton) findViewById(R.id.floating_action_button);
+        mFab = (LockableFloatingActionButton) findViewById(R.id.floating_action_button);
         mFab.setOnClickListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -62,8 +63,10 @@ public class GameInfoActivity extends DatabaseActivity implements View.OnClickLi
             public void onPageSelected(int position) {
                 if (position == 0) {
                     mFab.hide();
+                    mFab.setLocked(true);
                     ((RefreshListener) mAdapter.getRegisteredFragment(0)).refresh();
                 } else {
+                    mFab.setLocked(false);
                     mFab.show();
                 }
             }
