@@ -7,10 +7,9 @@ import com.team2052.frckrawler.listitems.elements.TeamListElement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeamListSubscriber extends BaseDataSubscriber<List<Team>, List<ListItem>> {
+public class TeamListSubscriber extends BaseDataSubscriber<List<Team>, List<Object>> {
     @Override
     public void parseData() {
-        dataToBind = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) dataToBind.add(new TeamListElement(data.get(i)));
+        dataToBind = new ArrayList<>(data);
     }
 }

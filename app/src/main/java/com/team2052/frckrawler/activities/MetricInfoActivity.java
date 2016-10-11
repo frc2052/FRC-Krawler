@@ -28,9 +28,9 @@ public class MetricInfoActivity extends DatabaseActivity {
     private ViewPager mViewPager;
     private MetricInfoPagerAdapter mAdapter;
 
-    public static Intent newInstance(Context context, Metric metric) {
+    public static Intent newInstance(Context context, long metric_id) {
         Intent intent = new Intent(context, MetricInfoActivity.class);
-        intent.putExtra(METRIC_ID, metric.getId());
+        intent.putExtra(METRIC_ID, metric_id);
         return intent;
     }
 

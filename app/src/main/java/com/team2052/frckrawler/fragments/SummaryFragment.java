@@ -7,22 +7,26 @@ import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
+import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.binding.ListViewNoDataParams;
+import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.listitems.ListElement;
+import com.team2052.frckrawler.listitems.smart.MetricItemView;
+import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
 import com.team2052.frckrawler.subscribers.MetricListSubscriber;
 
 import java.util.List;
 
+import io.nlopez.smartadapters.SmartAdapter;
 import rx.Observable;
 
 /**
  * @author Adam
  * @since 10/16/2014
  */
-public class SummaryFragment extends ListViewFragment<List<Metric>, MetricListSubscriber> {
+public class SummaryFragment extends RecyclerViewFragment<List<Metric>, MetricListSubscriber, RecyclerViewBinder> {
     private Event mEvent;
 
     public static SummaryFragment newInstance(long event_id) {
@@ -37,10 +41,10 @@ public class SummaryFragment extends ListViewFragment<List<Metric>, MetricListSu
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mEvent = dbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
-        mListView.setOnItemClickListener((adapterView, view1, i, l) -> {
+        /*mListView.setOnItemClickListener((adapterView, view1, i, l) -> {
             Metric metric = dbManager.getMetricsTable().load(Long.parseLong(((ListElement) adapterView.getAdapter().getItem(i)).getKey()));
             startActivity(SummaryDataActivity.newInstance(getActivity(), metric, mEvent));
-        });
+        });*/
     }
 
     @Override
@@ -56,5 +60,16 @@ public class SummaryFragment extends ListViewFragment<List<Metric>, MetricListSu
     @Override
     protected ListViewNoDataParams getNoDataParams() {
         return new ListViewNoDataParams("No metrics found", R.drawable.ic_metric);
+    }
+
+    @Override
+    public void provideAdapterCreator(SmartAdapter.MultiAdaptersCreator creator) {
+        creator.map(Metric.class, MetricItemView.class);
+        creator.listener((actionId, item, position, view) -> {
+            if (actionId == SmartAdapterInteractions.EVENT_CLICKED && item instanceof Metric) {
+                Metric metric = (Metric) item;
+                startActivity(SummaryDataActivity.newInstance(getActivity(), metric.getId(), mEvent.getId()));
+            }
+        });
     }
 }

@@ -8,25 +8,31 @@ import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.AddMetricActivity;
+import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.ImportMetricsActivity;
 import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.binding.ListViewNoDataParams;
+import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.database.metric.MetricHelper;
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.elements.MetricListElement;
+import com.team2052.frckrawler.listitems.smart.MetricItemView;
+import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
 import com.team2052.frckrawler.subscribers.MetricListSubscriber;
 
 import java.util.List;
 
+import io.nlopez.smartadapters.SmartAdapter;
 import rx.Observable;
 
 /**
  * @author Adam
  * @since 10/15/2014
  */
-public class MetricsFragment extends ListViewFragment<List<Metric>, MetricListSubscriber> implements FABButtonListener {
+public class MetricsFragment extends RecyclerViewFragment<List<Metric>, MetricListSubscriber, RecyclerViewBinder> implements FABButtonListener {
     private static final String CATEGORY_EXTRA = "CATEGORY_EXTRA";
     private static final String GAME_ID = "GAME_ID";
     private long mGame_id;
@@ -44,11 +50,11 @@ public class MetricsFragment extends ListViewFragment<List<Metric>, MetricListSu
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mListView.setOnItemClickListener((parent, view1, position, id) -> {
+        /*mListView.setOnItemClickListener((parent, view1, position, id) -> {
             long metric_id = Long.parseLong(((MetricListElement) ((ListViewAdapter) parent.getAdapter()).getItem(position)).getKey());
             Metric metric = dbManager.getMetricsTable().load(metric_id);
             startActivity(MetricInfoActivity.newInstance(getActivity(), metric));
-        });
+        });*/
     }
 
     @Override
@@ -94,5 +100,16 @@ public class MetricsFragment extends ListViewFragment<List<Metric>, MetricListSu
     @Override
     protected ListViewNoDataParams getNoDataParams() {
         return new ListViewNoDataParams("No metrics found", R.drawable.ic_metric);
+    }
+
+    @Override
+    public void provideAdapterCreator(SmartAdapter.MultiAdaptersCreator creator) {
+        creator.map(Metric.class, MetricItemView.class);
+        creator.listener((actionId, item, position, view) -> {
+            if (actionId == SmartAdapterInteractions.EVENT_CLICKED && item instanceof Metric) {
+                Metric metric = (Metric) item;
+                startActivity(MetricInfoActivity.newInstance(getActivity(), metric.getId()));
+            }
+        });
     }
 }

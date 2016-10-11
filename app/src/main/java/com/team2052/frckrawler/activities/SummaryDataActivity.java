@@ -30,13 +30,6 @@ public class SummaryDataActivity extends DatabaseActivity {
     private Metric mMetric;
     private MetricsStatsAdapter mAdapter;
 
-    public static Intent newInstance(Context context, Metric metric, Event event) {
-        Intent intent = new Intent(context, SummaryDataActivity.class);
-        intent.putExtra(DatabaseActivity.PARENT_ID, metric.getId());
-        intent.putExtra(EVENT_ID, event.getId());
-        return intent;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +41,13 @@ public class SummaryDataActivity extends DatabaseActivity {
         setActionBarTitle(getString(R.string.summary_title));
         setActionBarSubtitle(mMetric.getName());
         new GetCompiledData().execute();
+    }
+
+    public static Intent newInstance(Context context, long metric_id, long event_id) {
+        Intent intent = new Intent(context, SummaryDataActivity.class);
+        intent.putExtra(DatabaseActivity.PARENT_ID, metric_id);
+        intent.putExtra(EVENT_ID, event_id);
+        return intent;
     }
 
     @Override

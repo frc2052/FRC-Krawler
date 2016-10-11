@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.tab.ViewTeamPagerAdapter;
-import com.team2052.frckrawler.db.Team;
 
 /**
  * @author Adam
@@ -19,9 +18,9 @@ public class TeamInfoActivity extends DatabaseActivity {
     ViewPager viewPager;
     TabLayout tabLayout;
 
-    public static Intent newInstance(Context context, Team team) {
+    public static Intent newInstance(Context context, long team_number) {
         Intent intent = new Intent(context, TeamInfoActivity.class);
-        intent.putExtra(PARENT_ID, team.getNumber());
+        intent.putExtra(PARENT_ID, team_number);
         return intent;
     }
 

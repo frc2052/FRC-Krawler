@@ -70,8 +70,6 @@ public class MetricListElement extends ListElement {
     public View getView(final Context c, LayoutInflater inflater, View convertView) {
         convertView = inflater.inflate(R.layout.list_item_metric, null);
         ((TextView) convertView.findViewById(R.id.metric_list_name)).setText(metric.getName());
-        ((TextView) convertView.findViewById(R.id.metric_list_description)).setText(descriptionString);
-        ((TextView) convertView.findViewById(R.id.metric_list_range)).setText(rangeString);
         ((TextView) convertView.findViewById(R.id.metric_list_type)).setText(typeString);
         return convertView;
     }
