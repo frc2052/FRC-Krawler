@@ -5,5 +5,6 @@ public class BluetoothConstants {
     public static final String SERVICE_NAME = "FRCKrawler";
     public static final int OK = 1;
     public static final int VERSION_ERROR = -1;
+    public static final int EVENT_MATCH_ERROR = -2;
     public static final int SCOUT_SYNC = 1;
 }

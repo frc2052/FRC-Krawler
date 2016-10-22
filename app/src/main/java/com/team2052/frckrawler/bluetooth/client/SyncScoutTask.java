@@ -15,6 +15,7 @@ import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.bluetooth.server.ServerPackage;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.util.ScoutUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -84,7 +85,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             try {
                 ooStream.writeInt(BuildConfig.VERSION_CODE);
                 ooStream.writeInt(BluetoothConstants.SCOUT_SYNC);
-                ooStream.writeObject(new ServerPackage(mDbManager));
+                ooStream.writeObject(new ServerPackage(mDbManager, ScoutUtil.getScoutEvent(context)));
                 ooStream.flush();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -102,6 +103,9 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
                     scoutPackage = (ScoutPackage) ioStream.readObject();
                 } else if (code == BluetoothConstants.VERSION_ERROR) {
                     errorMessage = String.format("The server version is incompatible with your version. You are running %s and the server is running %s", BuildConfig.VERSION_NAME, ioStream.readObject());
+                    return SYNC_ERROR;
+                } else if(code == BluetoothConstants.EVENT_MATCH_ERROR){
+                    errorMessage = "This device's data did not match up with the server tablet. The data from this tablet was lost.";
                     return SYNC_ERROR;
                 }
             } catch (ClassNotFoundException | IOException e) {

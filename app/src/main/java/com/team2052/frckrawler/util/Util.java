@@ -7,6 +7,9 @@ import android.util.TypedValue;
 
 import com.team2052.frckrawler.R;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
 /**
  * @author Adam
  * @since 12/27/14.
@@ -27,4 +30,8 @@ public class Util {
     }
 
 
+    public static String generateUniqueHash(){
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(128, random).toString(32);
+    }
 }

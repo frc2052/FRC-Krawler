@@ -7,12 +7,14 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.team2052.frckrawler.BuildConfig;
 import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.client.ScoutPackage;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.util.BluetoothUtil;
+import com.team2052.frckrawler.util.Util;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -45,6 +47,12 @@ public class ServerThread extends Thread {
         Log.d(TAG, "Server Open");
         String deviceName;
         isOpen = true;
+
+        //If even't doesn't has a unique hash, generate one
+        if (Strings.isNullOrEmpty(hostedEvent.getUnique_hash())) {
+            hostedEvent.setUnique_hash(Util.generateUniqueHash());
+            hostedEvent.update();
+        }
 
         while (isOpen) {
             try {
@@ -110,18 +118,38 @@ public class ServerThread extends Thread {
                                     }
 
                                     try {
-                                        Log.d(TAG, "Sending Data to Scout");
-                                        toScoutStream.writeInt(BluetoothConstants.OK);
-                                        toScoutStream.writeObject(new ScoutPackage(mDbManager, hostedEvent));
-                                        toScoutStream.flush();
-                                        handler.onSyncCancel();
+                                        boolean hashPass = true;
+                                        if (serverPackage != null) {
+                                            Log.d(TAG, "Checking Event Hashes");
+                                            Event scoutEvent = serverPackage.getScoutEvent();
+
+                                            if (scoutEvent != null) {
+                                                Event serverEvent = mDbManager.getEventsTable().load(scoutEvent.getId());
+
+                                                if (Strings.isNullOrEmpty(scoutEvent.getUnique_hash()) || !scoutEvent.getUnique_hash().equals(serverEvent.getUnique_hash())) {
+                                                    Log.d(TAG, "Hash does not pass, sending error back");
+                                                    toScoutStream.writeInt(BluetoothConstants.EVENT_MATCH_ERROR);
+                                                    toScoutStream.flush();
+                                                    handler.onSyncCancel();
+                                                    hashPass = false;
+                                                }
+                                            }
+
+                                            if (hashPass) {
+                                                Log.d(TAG, "Sending Data to Scout");
+                                                toScoutStream.writeInt(BluetoothConstants.OK);
+                                                toScoutStream.writeObject(new ScoutPackage(mDbManager, hostedEvent));
+                                                toScoutStream.flush();
+                                                handler.onSyncCancel();
+                                            }
+
+                                            if(hashPass) {
+                                                Log.d(TAG, "Saving Data from Scout");
+                                                serverPackage.save(mDbManager);
+                                            }
+                                        }
                                     } catch (IOException e) {
                                         e.printStackTrace();
-                                    }
-
-                                    if (serverPackage != null) {
-                                        Log.d(TAG, "Saving Data from Scout");
-                                        serverPackage.save(mDbManager);
                                     }
                                 }
                             }

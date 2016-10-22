@@ -24,5 +24,9 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
             //All current metrics should be enabled by default
             db.execSQL("ALTER TABLE 'METRIC' ADD COLUMN ENABLED INTEGER DEFAULT 1");
         }
+
+        if (oldSchemaVer < 3) {
+            db.execSQL("ALTER TABLE 'EVENT' ADD COLUMN UNIQUE_HASH TEXT");
+        }
     }
 }

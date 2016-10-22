@@ -33,6 +33,7 @@ public class EventDao extends AbstractDao<Event, Long> {
         public final static Property Game_id = new Property(3, long.class, "game_id", false, "GAME_ID");
         public final static Property Data = new Property(4, String.class, "data", false, "DATA");
         public final static Property Date = new Property(5, java.util.Date.class, "date", false, "DATE");
+        public final static Property Unique_hash = new Property(6, String.class, "unique_hash", false, "UNIQUE_HASH");
     }
 
     private DaoSession daoSession;
@@ -57,7 +58,8 @@ public class EventDao extends AbstractDao<Event, Long> {
                 "\"NAME\" TEXT," + // 2: name
                 "\"GAME_ID\" INTEGER NOT NULL ," + // 3: game_id
                 "\"DATA\" TEXT," + // 4: data
-                "\"DATE\" INTEGER);"); // 5: date
+                "\"DATE\" INTEGER," + // 5: date
+                "\"UNIQUE_HASH\" TEXT);"); // 6: unique_hash
     }
 
     /** Drops the underlying database table. */
@@ -95,6 +97,11 @@ public class EventDao extends AbstractDao<Event, Long> {
         if (date != null) {
             stmt.bindLong(6, date.getTime());
         }
+ 
+        String unique_hash = entity.getUnique_hash();
+        if (unique_hash != null) {
+            stmt.bindString(7, unique_hash);
+        }
     }
 
     @Override
@@ -126,6 +133,11 @@ public class EventDao extends AbstractDao<Event, Long> {
         if (date != null) {
             stmt.bindLong(6, date.getTime());
         }
+ 
+        String unique_hash = entity.getUnique_hash();
+        if (unique_hash != null) {
+            stmt.bindString(7, unique_hash);
+        }
     }
 
     @Override
@@ -147,7 +159,8 @@ public class EventDao extends AbstractDao<Event, Long> {
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
             cursor.getLong(offset + 3), // game_id
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // data
-            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)) // date
+            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)), // date
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // unique_hash
         );
         return entity;
     }
@@ -160,6 +173,7 @@ public class EventDao extends AbstractDao<Event, Long> {
         entity.setGame_id(cursor.getLong(offset + 3));
         entity.setData(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setDate(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
+        entity.setUnique_hash(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
      }
     
     @Override

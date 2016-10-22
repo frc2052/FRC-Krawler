@@ -22,6 +22,7 @@ public class Event implements java.io.Serializable {
     private long game_id;
     private String data;
     private java.util.Date date;
+    private String unique_hash;
 
     /** Used to resolve relations */
     @Generated
@@ -71,13 +72,14 @@ public class Event implements java.io.Serializable {
     }
 
     @Generated
-    public Event(Long id, String fmsid, String name, long game_id, String data, java.util.Date date) {
+    public Event(Long id, String fmsid, String name, long game_id, String data, java.util.Date date, String unique_hash) {
         this.id = id;
         this.fmsid = fmsid;
         this.name = name;
         this.game_id = game_id;
         this.data = data;
         this.date = date;
+        this.unique_hash = unique_hash;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -133,6 +135,14 @@ public class Event implements java.io.Serializable {
 
     public void setDate(java.util.Date date) {
         this.date = date;
+    }
+
+    public String getUnique_hash() {
+        return unique_hash;
+    }
+
+    public void setUnique_hash(String unique_hash) {
+        this.unique_hash = unique_hash;
     }
 
     /** To-one relationship, resolved on first access. */
