@@ -1,11 +1,14 @@
 package com.team2052.frckrawler.bluetooth.server;
 
+import com.google.common.base.Strings;
 import com.team2052.frckrawler.bluetooth.RobotComment;
 import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.util.ScoutUtil;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,13 +28,15 @@ public class ServerPackage implements Serializable {
     private final List<PitData> metricPitData;
     private final List<MatchComment> matchComments;
     private final List<RobotComment> robotComments;
+    private Event scoutEvent;
 
 
-    public ServerPackage(DBManager manager) {
+    public ServerPackage(DBManager manager, Event scoutEvent) {
         metricMatchData = manager.getMatchDataTable().loadAll();
         metricPitData = manager.getPitDataTable().loadAll();
         matchComments = manager.getMatchComments().loadAll();
         robotComments = manager.getRobotsTable().getRobotComments();
+        this.scoutEvent = scoutEvent;
     }
 
     /**
@@ -64,5 +69,9 @@ public class ServerPackage implements Serializable {
                 }
             }
         });
+    }
+
+    public Event getScoutEvent() {
+        return scoutEvent;
     }
 }

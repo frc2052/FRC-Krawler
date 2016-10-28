@@ -57,9 +57,6 @@ public class AddMetricActivity extends DatabaseActivity {
     @BindView(R.id.type)
     Spinner typeSpinner;
 
-    @BindView(R.id.description)
-    TextInputLayout mDescription;
-
     @BindView(R.id.minimum)
     TextInputLayout mMinimum;
 
@@ -81,7 +78,6 @@ public class AddMetricActivity extends DatabaseActivity {
     private Observable<Integer> mMaximumObservable;
     private Observable<Integer> mIncrementationObservable;
     private Observable<String> mNameObservable;
-    private Observable<String> mDescriptionObservable;
     private Observable<List<String>> mCommaListObservable;
     private Observable<Metric> metricObservable;
 
@@ -108,7 +104,6 @@ public class AddMetricActivity extends DatabaseActivity {
 
         mCommaListObservable = Observable.defer(() -> Observable.just(mCommaSeparatedList.getEditText().getText().toString()))
                 .map(text -> Strings.isNullOrEmpty(text) ? Lists.newArrayList() : Arrays.asList(text.split("\\s*,\\s*")));
-        mDescriptionObservable = Observable.defer(() -> Observable.just(mDescription.getEditText().getText().toString()));
         mNameObservable = Observable.defer(() -> Observable.just(mName.getEditText().getText().toString()))
                 .map(text -> Strings.isNullOrEmpty(text) ? getResources().getStringArray(R.array.metric_types)[typeSpinner.getSelectedItemPosition()] : text);
         mIncrementationObservable = Observable.defer(() -> Observable.just(mIncrementation.getEditText().getText().toString()))
@@ -122,7 +117,7 @@ public class AddMetricActivity extends DatabaseActivity {
                 .onErrorReturn(ret -> 0);
 
         metricObservable = Observable
-                .zip(mNameObservable, mMinimumObservable, mMaximumObservable, mIncrementationObservable, mDescriptionObservable, mCommaListObservable, MetricPreviewParams::new)
+                .zip(mNameObservable, mMinimumObservable, mMaximumObservable, mIncrementationObservable, mCommaListObservable, MetricPreviewParams::new)
                 .map(metricPreviewParams -> {
                     MetricHelper.MetricFactory factory = new MetricHelper.MetricFactory(mGame.getId(), metricPreviewParams.name);
                     @MetricHelper.MetricType
@@ -149,7 +144,6 @@ public class AddMetricActivity extends DatabaseActivity {
                         case MetricHelper.BOOLEAN:
                             break;
                     }
-                    factory.setDescription(metricPreviewParams.description);
                     factory.setMetricCategory(mMetricCategory);
                     return factory.buildMetric();
                 })
@@ -294,15 +288,13 @@ public class AddMetricActivity extends DatabaseActivity {
         Integer mMin;
         Integer mMax;
         Integer mInc;
-        String description;
         private List<String> commaList;
 
-        MetricPreviewParams(String name, Integer mMin, Integer mMax, Integer mInc, String description, List<String> commaList) {
+        MetricPreviewParams(String name, Integer mMin, Integer mMax, Integer mInc, List<String> commaList) {
             this.name = name;
             this.mMin = mMin;
             this.mMax = mMax;
             this.mInc = mInc;
-            this.description = description;
             this.commaList = commaList;
         }
     }
