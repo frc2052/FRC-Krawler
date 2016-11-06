@@ -4,21 +4,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.AddMetricActivity;
-import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.ImportMetricsActivity;
 import com.team2052.frckrawler.activities.MetricInfoActivity;
-import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.database.metric.MetricHelper;
-import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.FABButtonListener;
-import com.team2052.frckrawler.listitems.elements.MetricListElement;
 import com.team2052.frckrawler.listitems.smart.MetricItemView;
 import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
 import com.team2052.frckrawler.subscribers.MetricListSubscriber;
@@ -45,16 +40,6 @@ public class MetricsFragment extends RecyclerViewFragment<List<Metric>, MetricLi
         bundle.putInt(CATEGORY_EXTRA, category);
         fragment.setArguments(bundle);
         return fragment;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        /*mListView.setOnItemClickListener((parent, view1, position, id) -> {
-            long metric_id = Long.parseLong(((MetricListElement) ((ListViewAdapter) parent.getAdapter()).getItem(position)).getKey());
-            Metric metric = dbManager.getMetricsTable().load(metric_id);
-            startActivity(MetricInfoActivity.newInstance(getActivity(), metric));
-        });*/
     }
 
     @Override

@@ -154,7 +154,7 @@ public class CompiledMetricValue {
                 JsonArray values = compiledValue.get("values").getAsJsonArray();
                 String value = "";
                 for (int i = 0; i < names.size(); i++) {
-                    value += String.format("%s:%s%s\n", names.get(i).getAsString(), values.get(i).getAsDouble(), '%');
+                    value += String.format("%s - %s%s" + (i == names.size() - 1 ? "" : "\n"), names.get(i).getAsString(), values.get(i).getAsDouble(), '%');
                 }
                 return value;
         }

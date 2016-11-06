@@ -3,9 +3,11 @@ package com.team2052.frckrawler.fragments;
 import android.os.Bundle;
 
 import com.team2052.frckrawler.activities.DatabaseActivity;
+import com.team2052.frckrawler.activities.RobotEventActivity;
 import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.listitems.smart.EventItemView;
+import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
 import com.team2052.frckrawler.subscribers.EventListSubscriber;
 
 import java.util.List;
@@ -48,5 +50,11 @@ public class RobotAttendingEventsFragment extends RecyclerViewFragment<List<Even
     @Override
     public void provideAdapterCreator(SmartAdapter.MultiAdaptersCreator creator) {
         creator.map(Event.class, EventItemView.class);
+        creator.listener((actionId, item, position, view) -> {
+            if (actionId == SmartAdapterInteractions.EVENT_CLICKED && item instanceof Event) {
+                Event event = (Event) item;
+                startActivity(RobotEventActivity.newInstance(getContext(), robot_id, event.getId()));
+            }
+        });
     }
 }

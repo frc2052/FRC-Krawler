@@ -8,13 +8,14 @@ import com.team2052.frckrawler.activities.ImportMetricsActivity;
 import com.team2052.frckrawler.activities.MatchListActivity;
 import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.activities.RobotActivity;
+import com.team2052.frckrawler.activities.RobotEventActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.binding.BinderModule;
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.metric.CompilerManager;
+import com.team2052.frckrawler.database.metric.Compiler;
 import com.team2052.frckrawler.fragments.EventInfoFragment;
 import com.team2052.frckrawler.fragments.EventsFragment;
 import com.team2052.frckrawler.fragments.GameInfoFragment;
@@ -23,6 +24,8 @@ import com.team2052.frckrawler.fragments.MatchListFragment;
 import com.team2052.frckrawler.fragments.MetricInfoFragment;
 import com.team2052.frckrawler.fragments.MetricsFragment;
 import com.team2052.frckrawler.fragments.RobotAttendingEventsFragment;
+import com.team2052.frckrawler.fragments.RobotEventSummaryFragment;
+import com.team2052.frckrawler.fragments.RobotSummaryFragment;
 import com.team2052.frckrawler.fragments.RobotsFragment;
 import com.team2052.frckrawler.fragments.ServerFragment;
 import com.team2052.frckrawler.fragments.SummaryFragment;
@@ -45,7 +48,7 @@ public interface FragmentComponent {
 
     ScoutSyncHandler scoutSyncHander();
 
-    CompilerManager compilerManager();
+    Compiler compilerManager();
 
     void inject(HomeActivity activity);
 
@@ -94,4 +97,10 @@ public interface FragmentComponent {
     void inject(MetricInfoFragment metricInfoFragment);
 
     void inject(ImportMetricsActivity importMetricsActivity);
+
+    void inject(RobotSummaryFragment robotSummaryFragment);
+
+    void inject(RobotEventActivity robotEventActivity);
+
+    void inject(RobotEventSummaryFragment robotEventSummaryFragment);
 }

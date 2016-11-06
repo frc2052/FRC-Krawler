@@ -6,29 +6,30 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.fragments.RobotAttendingEventsFragment;
-import com.team2052.frckrawler.fragments.RobotSummaryFragment;
+import com.team2052.frckrawler.fragments.RobotEventSummaryFragment;
 
 /**
- * Created by Adam on 11/23/2015.
+ * Created by Acorp on 11/2/2016.
  */
-public class RobotViewPagerAdapter extends FragmentPagerAdapter {
+
+public class RobotEventPagerAdapter extends FragmentPagerAdapter {
     private String[] HEADERS;
     private long robot_id;
+    private long event_id;
 
-    public RobotViewPagerAdapter(Context context, FragmentManager fm, long robot_id) {
+
+    public RobotEventPagerAdapter(Context context, FragmentManager fm, long robot_id, long event_id) {
         super(fm);
         this.robot_id = robot_id;
-        HEADERS = context.getResources().getStringArray(R.array.robot_tab_titles);
+        this.event_id = event_id;
+        HEADERS = context.getResources().getStringArray(R.array.robot_event_tab_titles);
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return RobotAttendingEventsFragment.newInstance(robot_id);
-            case 1:
-                return RobotSummaryFragment.newInstance(robot_id);
+                return RobotEventSummaryFragment.newInstance(robot_id, event_id);
         }
         return null;
     }

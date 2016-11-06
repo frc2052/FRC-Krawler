@@ -13,7 +13,8 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.HasComponent;
-import com.team2052.frckrawler.database.metric.CompilerManager;
+import com.team2052.frckrawler.database.metric.CompileUtil;
+import com.team2052.frckrawler.database.metric.Compiler;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.fragments.dialog.events.ProgressDialogUpdateEvent;
@@ -38,7 +39,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
     public static final int EXPORT_TYPE_NORMAL = 0;
     private static final String TAG = "ExportDialogFragment";
     private static final String EXPORT_TYPE = "EXPORT_TYPE_EXTRA";
-    private CompilerManager compilerManager;
+    private Compiler compiler;
     private Event event;
     private Subscription subscription;
 
@@ -61,7 +62,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
 
         if (getActivity() instanceof HasComponent) {
             FragmentComponent component = ((HasComponent) getActivity()).getComponent();
-            compilerManager = component.compilerManager();
+            compiler = component.compilerManager();
 
             checkPermissionAndDoExport();
         } else {
@@ -88,7 +89,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
         Observable<File> summaryFile = getExportFile(exportType);
 
         keepScreenOn(true);
-        subscription = compilerManager.writeToFile(exportObservable, summaryFile)
+        subscription = CompileUtil.writeToFile(exportObservable, summaryFile)
                 .observeOn(Schedulers.computation())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::shareFile, onError -> {
@@ -120,18 +121,18 @@ public class ExportDialogFragment extends BaseProgressDialog {
     private Observable<List<List<String>>> getExportObservable(int type) {
         switch (type) {
             case 1:
-                return compilerManager.getRawExport(event);
+                return compiler.getRawExport(event);
             default:
-                return compilerManager.fullExportObservable(event);
+                return compiler.getSummaryExport(event);
         }
     }
 
     private Observable<File> getExportFile(int type) {
         switch (type) {
             case 1:
-                return compilerManager.getRawExportFile(event);
+                return CompileUtil.getRawExportFile(event);
             default:
-                return compilerManager.getSummaryFile(event);
+                return CompileUtil.getSummaryFile(event);
         }
     }
 
