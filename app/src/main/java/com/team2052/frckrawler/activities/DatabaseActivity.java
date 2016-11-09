@@ -10,9 +10,6 @@ import com.team2052.frckrawler.subscribers.SubscriberModule;
 
 import javax.inject.Inject;
 
-/**
- * Created by Acorp on 11/17/2015.
- */
 public abstract class DatabaseActivity extends BaseActivity implements HasComponent {
     public static final String PARENT_ID = "PARENT_ID";
     FragmentComponent mComponent;

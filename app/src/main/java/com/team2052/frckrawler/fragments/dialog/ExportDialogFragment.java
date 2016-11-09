@@ -89,7 +89,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
         Observable<File> summaryFile = getExportFile(exportType);
 
         keepScreenOn(true);
-        subscription = CompileUtil.writeToFile(exportObservable, summaryFile)
+        subscription = summaryFile.zipWith(exportObservable, CompileUtil.writeToFile)
                 .observeOn(Schedulers.computation())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::shareFile, onError -> {

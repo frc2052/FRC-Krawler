@@ -88,11 +88,10 @@ public class DBManager {
     private final RobotDao robotDao;
     private final DaoMaster daoMaster;
     private final EventDao eventDao;
+    private final TeamDao teamDao;
 
     private Context context;
     private DaoSession daoSession;
-
-    private TeamDao teamDao;
 
     private DBManager(Context context) {
         this.context = context;
@@ -193,9 +192,13 @@ public class DBManager {
         return mTeams;
     }
 
+
+    public Users getUsersTable() {
+        return mUsers;
+    }
+
     public Observable<Map<String, String>> teamInfo(long team_id) {
-        return Observable.create(subscriber -> {
-            Team team = getTeamsTable().load(team_id);
+        return teamDao.rx().load(team_id).map(team -> {
             Map<String, String> info = Maps.newLinkedHashMap();
             info.put("Nickname", team.getName());
 
@@ -208,13 +211,8 @@ public class DBManager {
             if (data.has("long_name") && !data.get("long_name").isJsonNull()) {
                 info.put("Name", data.get("long_name").getAsString());
             }
-            subscriber.onNext(info);
-            subscriber.onCompleted();
+            return info;
         });
-    }
-
-    public Users getUsersTable() {
-        return mUsers;
     }
 
     public Observable<List<Event>> eventsByGame(long game_id) {
@@ -243,55 +241,54 @@ public class DBManager {
     }
 
     public Observable<List<Robot>> robotsAtEvent(long event_id) {
-        return Observable.create(subscriber -> {
-            Event event = getEventsTable().load(event_id);
-            List<RobotEvent> robotEvents = getEventsTable().getRobotEvents(event);
-            List<Robot> robots = new ArrayList<>();
+        return eventDao.rx().load(event_id).map(event -> getEventsTable().getRobotEvents(event)).map(robotEvents -> {
+            List<Robot> robots = Lists.newArrayListWithCapacity(robotEvents.size());
             for (int i = 0; i < robotEvents.size(); i++) {
                 robots.add(robotEvents.get(i).getRobot());
             }
             Collections.sort(robots, new RobotTeamNumberComparator());
-            subscriber.onNext(robots);
-
-            subscriber.onCompleted();
+            return robots;
         });
+    }
+
+    public Observable<List<Long>> getRobotDataMatchNumbers(@Nullable Long event_id, long robot_id) {
+        return Observable.defer(() -> Observable.just(getMatchDataTable().query(robot_id, null, null, null, event_id, null).list()))
+                .map(matchDatas -> {
+                    List<Long> matchNumbers = Lists.newArrayListWithExpectedSize(10);
+                    for (int i = 0; i < matchDatas.size(); i++) {
+                        MatchData matchData = matchDatas.get(i);
+                        if (!matchNumbers.contains(matchData.getMatch_number())) {
+                            matchNumbers.add(matchData.getMatch_number());
+                        }
+                    }
+                    Collections.sort(matchNumbers);
+                    return matchNumbers;
+                });
     }
 
     public Observable<List<Game>> allGames() {
-        return Observable.create(subscriber -> {
-            List<Game> games = getGamesTable().loadAll();
-            subscriber.onNext(games);
-
-            subscriber.onCompleted();
-        });
+        return gameDao.rx().loadAll();
     }
 
-    public Observable<List<Metric>> metricsInGame(long game_id, Integer category) {
-        return Observable.create(subscriber -> {
-            QueryBuilder<Metric> where = getMetricsTable().getQueryBuilder().where(MetricDao.Properties.Game_id.eq(game_id));
-            if (category != null)
-                where.where(MetricDao.Properties.Category.eq(category));
-            List<Metric> metrics = where.list();
-            subscriber.onNext(metrics);
-            subscriber.onCompleted();
-        });
+    public Observable<List<Metric>> metricsInGame(long game_id, @Nullable Integer category) {
+        QueryBuilder<Metric> query = getMetricsTable().getQueryBuilder().where(MetricDao.Properties.Game_id.eq(game_id));
+        if (category != null)
+            query.where(MetricDao.Properties.Category.eq(category));
+        return query.rx().list();
     }
 
     public Observable<List<Team>> allTeams() {
-        return Observable.create(subscriber -> {
-            List<Team> teams = getTeamsTable().getQueryBuilder().orderAsc(TeamDao.Properties.Number).list();
-            subscriber.onNext(teams);
-            subscriber.onCompleted();
-        });
+        return teamDao.rx().loadAll();
     }
 
     public Observable<List<Match>> matchesAtEvent(long event_id) {
-        return Observable.create(subscriber -> {
-            List<Match> matches = getMatchesTable().getQueryBuilder().where(MatchDao.Properties.Event_id.eq(event_id)).list();
-            Collections.sort(matches, new MatchNumberComparator());
-            subscriber.onNext(matches);
-            subscriber.onCompleted();
-        });
+        QueryBuilder<Match> query = getMatchesTable().getQueryBuilder().where(MatchDao.Properties.Event_id.eq(event_id));
+
+        return query.rx().list()
+                .map(matches -> {
+                    Collections.sort(matches, new MatchNumberComparator());
+                    return matches;
+                });
     }
 
     public Observable<? extends Map<String, String>> gameInfo(Game mGame) {
@@ -395,7 +392,6 @@ public class DBManager {
                 delete(game);
             }
         }
-
 
         @Override
         public QueryBuilder<Game> getQueryBuilder() {
