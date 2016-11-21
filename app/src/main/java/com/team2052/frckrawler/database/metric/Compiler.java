@@ -35,8 +35,6 @@ import rx.schedulers.Schedulers;
  * Main Compiler functions for summaries, raw data, etc.
  */
 public class Compiler {
-    private static final String TAG = "Compiler";
-
     private Context context;
     public Func2<List<List<String>>, List<Metric>, List<List<String>>> summaryHeaderFunc = (data, metrics) -> {
         List<String> header = Lists.newArrayList();
@@ -180,7 +178,7 @@ public class Compiler {
         return Observable.just(robot_id)
                 .map(robot_id1 -> dbManager.getRobotsTable().load(robot_id1))
                 .concatMap(robot -> getMetrics(robot.getGame_id())
-                        .concatMap((iterable) -> Observable.from(iterable))
+                        .concatMap(Observable::from)
                         .concatMap(metric -> getRobotMetricSummary(event_id, metric, robot))
                         .toList());
     }

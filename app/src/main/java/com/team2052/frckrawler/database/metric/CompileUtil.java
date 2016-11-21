@@ -19,6 +19,7 @@ import java.util.Map;
 import au.com.bytecode.opencsv.CSVWriter;
 import rx.Observable;
 import rx.functions.Func1;
+import rx.functions.Func2;
 
 public class CompileUtil {
 
@@ -36,28 +37,25 @@ public class CompileUtil {
     };
 
     public static Func1<CompiledMetricValue, String> compiledMetricValueToString = CompiledMetricValue::getCompiledValue;
+    public static Func2<File, List<List<String>>, File> writeToFile = (file, lists) -> {
+        CSVWriter writer;
+        try {
+            writer = new CSVWriter(new FileWriter(file), ',');
+
+            for (int i = 0; i < lists.size(); i++) {
+                List<String> record = lists.get(i);
+                writer.writeNext(Arrays.copyOf(record.toArray(), record.size(), String[].class));
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return file;
+    };
 
     public static Func1<List<MetricValue>, CompiledMetricValue> metricValuesToCompiledValue(Robot robot, Metric metric, float compileWeight) {
         return metricValues -> new CompiledMetricValue(robot, metric, metricValues, compileWeight);
-    }
-
-    public static Observable<File> writeToFile(Observable<List<List<String>>> listObservable, Observable<File> fileObservable) {
-        return listObservable.flatMap(lists -> fileObservable.map(file -> {
-            CSVWriter writer;
-            try {
-                writer = new CSVWriter(new FileWriter(file), ',');
-
-                for (int i = 0; i < lists.size(); i++) {
-                    List<String> record = lists.get(i);
-                    writer.writeNext(Arrays.copyOf(record.toArray(), record.size(), String[].class));
-                }
-
-                writer.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            return file;
-        }));
     }
 
     public static Observable<File> getSummaryFile(@NonNull Event event) {
