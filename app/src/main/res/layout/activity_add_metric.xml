@@ -12,7 +12,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            style="@style/DefaultToolbarStyle"
+            style="@style/AccentToolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -20,8 +20,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primary_light"
-            android:elevation="2dp">
+            android:background="@color/amber_500"
+            android:elevation="4dp">
 
             <FrameLayout
                 android:id="@+id/metric_preview_container"
@@ -82,9 +82,9 @@
                         android:hint="Name">
 
                         <EditText
-                            android:inputType="textCapWords"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapWords" />
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
@@ -144,9 +144,9 @@
                         android:hint="Comma Separated List">
 
                         <EditText
-                            android:inputType="textCapWords"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapWords" />
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
@@ -160,7 +160,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/fab_margin"
-        android:tint="@color/grey_900"
         android:src="@drawable/ic_check_white_24dp"
+        android:tint="@color/grey_900"
         app:layout_behavior="com.team2052.frckrawler.util.ScrollAwareFABBehavior" />
 </android.support.design.widget.CoordinatorLayout>

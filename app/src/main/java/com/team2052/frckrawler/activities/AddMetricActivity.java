@@ -74,11 +74,13 @@ public class AddMetricActivity extends DatabaseActivity {
     @MetricHelper.MetricCategory
     private int mMetricCategory;
 
-    private Observable<Integer> mMinimumObservable;
-    private Observable<Integer> mMaximumObservable;
-    private Observable<Integer> mIncrementationObservable;
-    private Observable<String> mNameObservable;
-    private Observable<List<String>> mCommaListObservable;
+    private Observable<Integer> mMinimumObservable = createNumberDefaultValueObservable(mMinimum, MetricHelper.MINIMUM_DEFAULT_VALUE);
+    private Observable<Integer> mMaximumObservable = createNumberDefaultValueObservable(mMaximum, MetricHelper.MAXIMUM_DEFAULT_VALUE);
+    private Observable<Integer> mIncrementationObservable = createNumberDefaultValueObservable(mIncrementation, MetricHelper.INCREMENTATION_DEFAULT_VALUE);
+    private Observable<String> mNameObservable = Observable.defer(() -> Observable.just(mName.getEditText().getText().toString()))
+            .map(text -> Strings.isNullOrEmpty(text) ? getResources().getStringArray(R.array.metric_types)[typeSpinner.getSelectedItemPosition()] : text);
+    private Observable<List<String>> mCommaListObservable = Observable.defer(() -> Observable.just(mCommaSeparatedList.getEditText().getText().toString()))
+            .map(text -> Strings.isNullOrEmpty(text) ? Lists.newArrayList() : Arrays.asList(text.split("\\s*,\\s*")));
     private Observable<Metric> metricObservable;
 
     public static Intent newInstance(Context context, long gameId, int metricType) {
@@ -86,6 +88,12 @@ public class AddMetricActivity extends DatabaseActivity {
         intent.putExtra(GAME_ID_EXTRA, gameId);
         intent.putExtra(METRIC_CATEGORY_EXTRA, metricType);
         return intent;
+    }
+
+    public static Observable<Integer> createNumberDefaultValueObservable(TextInputLayout textInputLayout, int defaultValue) {
+        return Observable.defer(() -> Observable.just(textInputLayout.getEditText().getText().toString()))
+                .map(Integer::parseInt)
+                .onErrorReturn(ret -> defaultValue);
     }
 
     @Override
@@ -97,24 +105,11 @@ public class AddMetricActivity extends DatabaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mGame = dbManager.getGamesTable().load(getIntent().getLongExtra(GAME_ID_EXTRA, 0));
+        setStatusBarColor(R.color.amber_700);
 
         @MetricHelper.MetricCategory
         int metricCategory = getIntent().getIntExtra(METRIC_CATEGORY_EXTRA, MetricHelper.MATCH_PERF_METRICS);
         this.mMetricCategory = metricCategory;
-
-        mCommaListObservable = Observable.defer(() -> Observable.just(mCommaSeparatedList.getEditText().getText().toString()))
-                .map(text -> Strings.isNullOrEmpty(text) ? Lists.newArrayList() : Arrays.asList(text.split("\\s*,\\s*")));
-        mNameObservable = Observable.defer(() -> Observable.just(mName.getEditText().getText().toString()))
-                .map(text -> Strings.isNullOrEmpty(text) ? getResources().getStringArray(R.array.metric_types)[typeSpinner.getSelectedItemPosition()] : text);
-        mIncrementationObservable = Observable.defer(() -> Observable.just(mIncrementation.getEditText().getText().toString()))
-                .map(Integer::parseInt)
-                .onErrorReturn(ret -> 1);
-        mMaximumObservable = Observable.defer(() -> Observable.just(mMaximum.getEditText().getText().toString()))
-                .map(Integer::parseInt)
-                .onErrorReturn(ret -> 10);
-        mMinimumObservable = Observable.defer(() -> Observable.just(mMinimum.getEditText().getText().toString()))
-                .map(Integer::parseInt)
-                .onErrorReturn(ret -> 0);
 
         metricObservable = Observable
                 .zip(mNameObservable, mMinimumObservable, mMaximumObservable, mIncrementationObservable, mCommaListObservable, MetricPreviewParams::new)
@@ -163,9 +158,9 @@ public class AddMetricActivity extends DatabaseActivity {
         addObservableToUpdateMetric(RxTextView.textChanges(mMaximum.getEditText()));
         addObservableToUpdateMetric(RxTextView.textChanges(mCommaSeparatedList.getEditText()));
 
-        mMinimum.getEditText().setText("1");
-        mMaximum.getEditText().setText("10");
-        mIncrementation.getEditText().setText("1");
+        mMinimum.getEditText().setText(Integer.toString(MetricHelper.MINIMUM_DEFAULT_VALUE));
+        mMaximum.getEditText().setText(Integer.toString(MetricHelper.MAXIMUM_DEFAULT_VALUE));
+        mIncrementation.getEditText().setText(Integer.toString(MetricHelper.INCREMENTATION_DEFAULT_VALUE));
 
         //Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

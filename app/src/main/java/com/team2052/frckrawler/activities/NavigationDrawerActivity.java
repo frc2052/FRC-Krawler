@@ -60,6 +60,12 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity
         handler = new Handler();
     }
 
+    public void setStatusBarColor(int color_id) {
+        if (mDrawerLayout == null)
+            return;
+        mDrawerLayout.setStatusBarBackground(color_id);
+    }
+
     /**
      * We set up the nav drawer here to give child activities a chance to set the window's Action
      * Bar if they're using a Toolbar instead of the default Action Bar.

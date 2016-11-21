@@ -22,6 +22,10 @@ public class MetricHelper {
     public static final int MATCH_PERF_METRICS = 0, ROBOT_METRICS = 1;
     public static final int BOOLEAN = 0, COUNTER = 1, SLIDER = 2, CHOOSER = 3, CHECK_BOX = 4;
 
+    public static final int MINIMUM_DEFAULT_VALUE = 1;
+    public static final int MAXIMUM_DEFAULT_VALUE = 10;
+    public static final int INCREMENTATION_DEFAULT_VALUE = 1;
+
     private static Type listType = new TypeToken<List<Integer>>() {
     }.getType();
 

@@ -2,13 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="Export">
         <Preference
+            android:key="compile_export_preference"
             android:summary="Export a CSV/Excel formatted document where all the data is averaged based off the compile weight"
-            android:title="Export Summary"
-            android:key="compile_export_preference" />
+            android:title="Export Summary" />
         <Preference
+            android:key="compile_raw_export"
             android:summary="Export a CSV/Excel formatted document where the data provides a match by match summary of each team \n(This process may take a while)"
-            android:title="Export Raw"
-            android:key="compile_raw_export"/>
+            android:title="Export Raw" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Compile Options">
@@ -22,18 +22,18 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="compile_team_name_preference"
-            android:title="Add Team Names"
-            android:summary="Add team names in the export" />
+            android:summary="Add team names in the export"
+            android:title="Add Team Names" />
         <CheckBoxPreference
             android:defaultValue="true"
-            android:title="Add Match Metrics"
             android:key="compile_match_metrics_preference"
-            android:summary="Compile match data to export" />
+            android:summary="Compile match data within app and exports"
+            android:title="Add Match Metrics" />
         <CheckBoxPreference
             android:defaultValue="true"
-            android:title="Add Pit Metrics"
-            android:summary="Compile pit data to export"
-            android:key="compile_pit_metric_preference" />
+            android:key="compile_pit_metric_preference"
+            android:summary="Compile pit data within app and exports"
+            android:title="Add Pit Metrics" />
         <!--<CheckBoxPreference
             android:defaultValue="false"
             android:title="Clean up Data"
@@ -41,28 +41,28 @@
             android:summary="Cleans up data that is useless \n(Not implemented yet)" />-->
         <EditTextPreference
             android:defaultValue="1.0"
+            android:inputType="numberDecimal"
+            android:key="compile_weight_preference"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:inputType="numberDecimal"
-            android:title="Compile Weight"
-            android:key="compile_weight_preference"
-            android:summary="The weight for compiled data is how many times a match's data is worth in the averaging process, compared to the previous match. Values greater than 1 make later matches more valuable, and values less than 1 make earlier matches more valuable. A value of 1 makes all matches equal." />
+            android:summary="The weight for compiled data is how many times a match's data is worth in the averaging process, compared to the previous match. Values greater than 1 make later matches more valuable, and values less than 1 make earlier matches more valuable. A value of 1 makes all matches equal."
+            android:title="Compile Weight" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="About">
         <Preference
-            android:title="Team 2052 Website"
             android:key="team_website"
-            android:summary="Visit www.team2052.com"/>
+            android:summary="Visit www.team2052.com"
+            android:title="Team 2052 Website" />
 
         <Preference
-            android:title="Learn more about FRC Krawler"
             android:key="learn_more_link"
-            android:summary="Learn more about FRC Krawler and how to use it"/>
+            android:summary="Learn more about FRC Krawler and how to use it"
+            android:title="Learn more about FRC Krawler" />
 
         <Preference
-            android:title="FRC Krawler is Open Source"
             android:key="github_link"
-            android:summary="View project on GitHub"/>
+            android:summary="View project on GitHub"
+            android:title="FRC Krawler is Open Source" />
     </PreferenceCategory>
 </PreferenceScreen>

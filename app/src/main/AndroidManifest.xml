@@ -73,5 +73,17 @@
         <service
             android:name=".services.ServerService"
             android:exported="false" />
+        <service android:name=".services.FRCKrawlerFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_knightkrawler" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/primary" />
     </application>
 </manifest>
