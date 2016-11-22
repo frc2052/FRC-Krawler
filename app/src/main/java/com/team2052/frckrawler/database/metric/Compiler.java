@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.database.DBManager;
@@ -21,13 +22,14 @@ import com.team2052.frckrawler.util.PreferenceUtil;
 import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.AbstractMap;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 
 import rx.Observable;
 import rx.Scheduler;
+import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
@@ -35,6 +37,29 @@ import rx.schedulers.Schedulers;
  * Main Compiler functions for summaries, raw data, etc.
  */
 public class Compiler {
+    private static final String TAG = "Compiler";
+    public Func1<MatchData, String> convertMatchDataToStringFunc = matchData -> {
+        Metric metric = matchData.getMetric();
+        if (matchData == null) {
+            return "";
+        }
+
+        JsonObject data = JSON.getAsJsonObject(matchData.getData());
+
+        if (metric.getType() < 3) {
+            return data.get("value").toString();
+        } else {
+            JsonObject metricData = JSON.getAsJsonObject(metric.getData());
+            JsonArray dataIndexes = data.getAsJsonArray("values");
+            JsonArray valueArray = metricData.getAsJsonArray("values");
+            List<String> selected = Lists.newArrayListWithExpectedSize(dataIndexes.size());
+            for (int i = 0; i < dataIndexes.size(); i++) {
+                int dataIndex = dataIndexes.get(i).getAsInt();
+                selected.add(valueArray.get(dataIndex).toString());
+            }
+            return Joiner.on(", ").join(selected);
+        }
+    };
     private Context context;
     public Func2<List<List<String>>, List<Metric>, List<List<String>>> summaryHeaderFunc = (data, metrics) -> {
         List<String> header = Lists.newArrayList();
@@ -141,6 +166,22 @@ public class Compiler {
         return comments;
     }
 
+    public Observable<List<Long>> getMatchNumbers(Event event, Robot robot) {
+        return dbManager.getMatchDataTable().query(robot.getId(), null, null, null, event.getId(), null)
+                .orderAsc(MatchDataDao.Properties.Match_number)
+                .rx()
+                .list()
+                .map(matchDataList -> {
+                    Set<Long> matchNumbers = Sets.newHashSet();
+                    for (int i = 0; i < matchDataList.size(); i++) {
+                        matchNumbers.add(matchDataList.get(i).getMatch_number());
+                    }
+                    return matchNumbers;
+                })
+                .concatMap(Observable::from)
+                .toSortedList();
+    }
+
     public Observable<List<List<String>>> getSummaryExport(Event event) {
         final float compileWeight = getCompileWeight();
         final boolean compileTeamNames = PreferenceUtil.compileTeamNamesToExport(context);
@@ -183,7 +224,6 @@ public class Compiler {
                         .toList());
     }
 
-
     public Observable<AbstractMap.SimpleEntry<String, String>> getCompiledMetricValueKayValue(Observable<CompiledMetricValue> compiledMetricValueObservable) {
         return compiledMetricValueObservable.map(CompileUtil.mapCompiledMetricValueToKeyValue);
     }
@@ -211,43 +251,12 @@ public class Compiler {
             final List<Metric> metrics = dbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, event.getGame_id(), null).list();
             return dbManager.robotsAtEvent(eventId)
                     .flatMap(Observable::from)
-                    .concatMap(robot -> Observable.defer(() -> Observable.just(dbManager.getMatchDataTable().query(robot.getId(), null, null, null, eventId, null).list()))
-                            .map(matchDatas -> {
-                                List<Long> matchNumbers = Lists.newArrayListWithExpectedSize(10);
-                                for (int i = 0; i < matchDatas.size(); i++) {
-                                    MatchData matchData = matchDatas.get(i);
-                                    if (!matchNumbers.contains(matchData.getMatch_number())) {
-                                        matchNumbers.add(matchData.getMatch_number());
-                                    }
-                                }
-                                Collections.sort(matchNumbers);
-                                return matchNumbers;
-                            })
+                    .concatMap(robot -> getMatchNumbers(event, robot)
                             .concatMap(Observable::from)
                             .concatMap(matchNumber ->
                                     Observable.from(metrics)
-                                            .map(metric -> {
-                                                MatchData matchData = dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), matchNumber, null, eventId, null).unique();
-                                                if (matchData == null) {
-                                                    return "";
-                                                }
-
-                                                JsonObject data = JSON.getAsJsonObject(matchData.getData());
-
-                                                if (metric.getType() < 3) {
-                                                    return data.get("value").toString();
-                                                } else {
-                                                    JsonObject metricData = JSON.getAsJsonObject(metric.getData());
-                                                    JsonArray dataIndexes = data.getAsJsonArray("values");
-                                                    JsonArray valueArray = metricData.getAsJsonArray("values");
-                                                    List<String> selected = Lists.newArrayListWithExpectedSize(dataIndexes.size());
-                                                    for (int i = 0; i < dataIndexes.size(); i++) {
-                                                        int dataIndex = dataIndexes.get(i).getAsInt();
-                                                        selected.add(valueArray.get(dataIndex).toString());
-                                                    }
-                                                    return Joiner.on(", ").join(selected);
-                                                }
-                                            })
+                                            .map(metric -> dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), matchNumber, null, eventId, null).unique())
+                                            .map(convertMatchDataToStringFunc)
                                             .toList()
                                             .map(record -> {
                                                 record.add(0, String.valueOf(matchNumber));
