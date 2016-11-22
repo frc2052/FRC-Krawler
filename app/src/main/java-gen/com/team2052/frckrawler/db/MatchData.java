@@ -18,7 +18,6 @@ public class MatchData implements java.io.Serializable {
     private Long id;
     private long event_id;
     private long robot_id;
-    private Long user_id;
     private long metric_id;
     private int match_type;
     private long match_number;
@@ -49,12 +48,6 @@ public class MatchData implements java.io.Serializable {
     @Generated
     private transient Long robot__resolvedKey;
 
-    @ToOne(joinProperty = "user_id")
-    private User user;
-
-    @Generated
-    private transient Long user__resolvedKey;
-
     @ToOne(joinProperty = "metric_id")
     private Metric metric;
 
@@ -70,11 +63,10 @@ public class MatchData implements java.io.Serializable {
     }
 
     @Generated
-    public MatchData(Long id, long event_id, long robot_id, Long user_id, long metric_id, int match_type, long match_number, java.util.Date last_updated, String data) {
+    public MatchData(Long id, long event_id, long robot_id, long metric_id, int match_type, long match_number, java.util.Date last_updated, String data) {
         this.id = id;
         this.event_id = event_id;
         this.robot_id = robot_id;
-        this.user_id = user_id;
         this.metric_id = metric_id;
         this.match_type = match_type;
         this.match_number = match_number;
@@ -113,14 +105,6 @@ public class MatchData implements java.io.Serializable {
 
     public void setRobot_id(long robot_id) {
         this.robot_id = robot_id;
-    }
-
-    public Long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
     }
 
     public long getMetric_id() {
@@ -220,33 +204,6 @@ public class MatchData implements java.io.Serializable {
             this.robot = robot;
             robot_id = robot.getId();
             robot__resolvedKey = robot_id;
-        }
-    }
-
-    /**
-     * To-one relationship, resolved on first access.
-     */
-    @Generated
-    public User getUser() {
-        Long __key = this.user_id;
-        if (user__resolvedKey == null || !user__resolvedKey.equals(__key)) {
-            __throwIfDetached();
-            UserDao targetDao = daoSession.getUserDao();
-            User userNew = targetDao.load(__key);
-            synchronized (this) {
-                user = userNew;
-                user__resolvedKey = __key;
-            }
-        }
-        return user;
-    }
-
-    @Generated
-    public void setUser(User user) {
-        synchronized (this) {
-            this.user = user;
-            user_id = user == null ? null : user.getId();
-            user__resolvedKey = user_id;
         }
     }
 

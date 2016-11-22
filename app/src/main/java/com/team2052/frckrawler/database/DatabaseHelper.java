@@ -28,5 +28,9 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         if (oldSchemaVer < 3) {
             db.execSQL("ALTER TABLE 'EVENT' ADD COLUMN UNIQUE_HASH TEXT");
         }
+
+        if (oldSchemaVer < 4) {
+            db.execSQL("DROP TABLE IF EXISTS 'USER'");
+        }
     }
 }

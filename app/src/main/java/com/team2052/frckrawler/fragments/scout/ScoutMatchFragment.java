@@ -51,7 +51,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                 for (int i = 0; i < metrics.size(); i++) {
                     Metric metric = metrics.get(i);
                     //Query for existing data
-                    QueryBuilder<MatchData> matchDataQueryBuilder = dbManager.getMatchDataTable().query(valueParams.robot.getId(), metric.getId(), Long.valueOf(valueParams.match_num), mMatchType, mEvent.getId(), null);
+                    QueryBuilder<MatchData> matchDataQueryBuilder = dbManager.getMatchDataTable().query(valueParams.robot.getId(), metric.getId(), Long.valueOf(valueParams.match_num), mMatchType, mEvent.getId());
                     MatchData currentData = matchDataQueryBuilder.unique();
                     //Add the metric values
                     metricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
@@ -156,7 +156,6 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                                 null,
                                 mEvent.getId(),
                                 matchScoutSaveMetric.robot.getId(),
-                                null,
                                 metricValue.getMetric().getId(),
                                 mMatchType,
                                 matchScoutSaveMetric.matchNum,

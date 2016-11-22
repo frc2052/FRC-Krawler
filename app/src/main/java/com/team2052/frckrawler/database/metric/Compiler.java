@@ -132,14 +132,14 @@ public class Compiler {
             Observable<List<MetricValue>> metricValueListObservable = Observable.empty();
             if (metric.getCategory() == MetricHelper.MATCH_PERF_METRICS) {
                 QueryBuilder<MatchData> queryBuilder = dbManager.getMatchDataTable()
-                        .query(robot.getId(), metric.getId(), null, 0, event_id, null)
+                        .query(robot.getId(), metric.getId(), null, 0, event_id)
                         .orderAsc(MatchDataDao.Properties.Match_number);
 
                 metricValueListObservable = Observable.from(queryBuilder.list())
                         .map(matchData -> new MetricValue(metric, JSON.getAsJsonObject(matchData.getData())))
                         .toList();
             } else if (metric.getCategory() == MetricHelper.ROBOT_METRICS) {
-                QueryBuilder<PitData> queryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), event_id, null);
+                QueryBuilder<PitData> queryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), event_id);
 
                 metricValueListObservable = Observable.from(queryBuilder.list())
                         .map(pitData -> new MetricValue(metric, JSON.getAsJsonObject(pitData.getData())))
@@ -167,7 +167,7 @@ public class Compiler {
     }
 
     public Observable<List<Long>> getMatchNumbers(Event event, Robot robot) {
-        return dbManager.getMatchDataTable().query(robot.getId(), null, null, null, event.getId(), null)
+        return dbManager.getMatchDataTable().query(robot.getId(), null, null, null, event.getId())
                 .orderAsc(MatchDataDao.Properties.Match_number)
                 .rx()
                 .list()
@@ -255,7 +255,7 @@ public class Compiler {
                             .concatMap(Observable::from)
                             .concatMap(matchNumber ->
                                     Observable.from(metrics)
-                                            .map(metric -> dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), matchNumber, null, eventId, null).unique())
+                                            .map(metric -> dbManager.getMatchDataTable().query(robot.getId(), metric.getId(), matchNumber, null, eventId).unique())
                                             .map(convertMatchDataToStringFunc)
                                             .toList()
                                             .map(record -> {

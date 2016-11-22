@@ -44,7 +44,7 @@ public class ScoutPitFragment extends BaseScoutFragment {
                 for (int i = 0; i < metrics.size(); i++) {
                     Metric metric = metrics.get(i);
                     //Query for existing data
-                    QueryBuilder<PitData> matchDataQueryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), mEvent.getId(), null);
+                    QueryBuilder<PitData> matchDataQueryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), mEvent.getId());
 
                     PitData currentData = matchDataQueryBuilder.unique();
                     //Add the metric values

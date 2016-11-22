@@ -19,7 +19,6 @@ public class PitData implements java.io.Serializable {
     private long robot_id;
     private long metric_id;
     private long event_id;
-    private Long user_id;
     private String data;
     private java.util.Date last_updated;
 
@@ -53,12 +52,6 @@ public class PitData implements java.io.Serializable {
     @Generated
     private transient Long event__resolvedKey;
 
-    @ToOne(joinProperty = "user_id")
-    private User user;
-
-    @Generated
-    private transient Long user__resolvedKey;
-
     @Generated
     public PitData() {
     }
@@ -68,12 +61,11 @@ public class PitData implements java.io.Serializable {
     }
 
     @Generated
-    public PitData(Long id, long robot_id, long metric_id, long event_id, Long user_id, String data, java.util.Date last_updated) {
+    public PitData(Long id, long robot_id, long metric_id, long event_id, String data, java.util.Date last_updated) {
         this.id = id;
         this.robot_id = robot_id;
         this.metric_id = metric_id;
         this.event_id = event_id;
-        this.user_id = user_id;
         this.data = data;
         this.last_updated = last_updated;
     }
@@ -117,14 +109,6 @@ public class PitData implements java.io.Serializable {
 
     public void setEvent_id(long event_id) {
         this.event_id = event_id;
-    }
-
-    public Long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
     }
 
     public String getData() {
@@ -230,33 +214,6 @@ public class PitData implements java.io.Serializable {
             this.event = event;
             event_id = event.getId();
             event__resolvedKey = event_id;
-        }
-    }
-
-    /**
-     * To-one relationship, resolved on first access.
-     */
-    @Generated
-    public User getUser() {
-        Long __key = this.user_id;
-        if (user__resolvedKey == null || !user__resolvedKey.equals(__key)) {
-            __throwIfDetached();
-            UserDao targetDao = daoSession.getUserDao();
-            User userNew = targetDao.load(__key);
-            synchronized (this) {
-                user = userNew;
-                user__resolvedKey = __key;
-            }
-        }
-        return user;
-    }
-
-    @Generated
-    public void setUser(User user) {
-        synchronized (this) {
-            this.user = user;
-            user_id = user == null ? null : user.getId();
-            user__resolvedKey = user_id;
         }
     }
 

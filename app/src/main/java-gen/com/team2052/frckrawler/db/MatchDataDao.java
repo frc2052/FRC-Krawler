@@ -27,7 +27,6 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
     private Query<MatchData> event_MatchDataListQuery;
     private Query<MatchData> robot_MatchDataListQuery;
     private Query<MatchData> metric_MatchDataListQuery;
-    private Query<MatchData> user_MatchDataListQuery;
     private String selectDeep;
 
     public MatchDataDao(DaoConfig config) {
@@ -48,12 +47,11 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"EVENT_ID\" INTEGER NOT NULL ," + // 1: event_id
                 "\"ROBOT_ID\" INTEGER NOT NULL ," + // 2: robot_id
-                "\"USER_ID\" INTEGER," + // 3: user_id
-                "\"METRIC_ID\" INTEGER NOT NULL ," + // 4: metric_id
-                "\"MATCH_TYPE\" INTEGER NOT NULL ," + // 5: match_type
-                "\"MATCH_NUMBER\" INTEGER NOT NULL ," + // 6: match_number
-                "\"LAST_UPDATED\" INTEGER," + // 7: last_updated
-                "\"DATA\" TEXT);"); // 8: data
+                "\"METRIC_ID\" INTEGER NOT NULL ," + // 3: metric_id
+                "\"MATCH_TYPE\" INTEGER NOT NULL ," + // 4: match_type
+                "\"MATCH_NUMBER\" INTEGER NOT NULL ," + // 5: match_number
+                "\"LAST_UPDATED\" INTEGER," + // 6: last_updated
+                "\"DATA\" TEXT);"); // 7: data
     }
 
     /**
@@ -74,23 +72,18 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         }
         stmt.bindLong(2, entity.getEvent_id());
         stmt.bindLong(3, entity.getRobot_id());
-
-        Long user_id = entity.getUser_id();
-        if (user_id != null) {
-            stmt.bindLong(4, user_id);
-        }
-        stmt.bindLong(5, entity.getMetric_id());
-        stmt.bindLong(6, entity.getMatch_type());
-        stmt.bindLong(7, entity.getMatch_number());
+        stmt.bindLong(4, entity.getMetric_id());
+        stmt.bindLong(5, entity.getMatch_type());
+        stmt.bindLong(6, entity.getMatch_number());
 
         java.util.Date last_updated = entity.getLast_updated();
         if (last_updated != null) {
-            stmt.bindLong(8, last_updated.getTime());
+            stmt.bindLong(7, last_updated.getTime());
         }
 
         String data = entity.getData();
         if (data != null) {
-            stmt.bindString(9, data);
+            stmt.bindString(8, data);
         }
     }
 
@@ -104,23 +97,18 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         }
         stmt.bindLong(2, entity.getEvent_id());
         stmt.bindLong(3, entity.getRobot_id());
-
-        Long user_id = entity.getUser_id();
-        if (user_id != null) {
-            stmt.bindLong(4, user_id);
-        }
-        stmt.bindLong(5, entity.getMetric_id());
-        stmt.bindLong(6, entity.getMatch_type());
-        stmt.bindLong(7, entity.getMatch_number());
+        stmt.bindLong(4, entity.getMetric_id());
+        stmt.bindLong(5, entity.getMatch_type());
+        stmt.bindLong(6, entity.getMatch_number());
 
         java.util.Date last_updated = entity.getLast_updated();
         if (last_updated != null) {
-            stmt.bindLong(8, last_updated.getTime());
+            stmt.bindLong(7, last_updated.getTime());
         }
 
         String data = entity.getData();
         if (data != null) {
-            stmt.bindString(9, data);
+            stmt.bindString(8, data);
         }
     }
 
@@ -141,12 +129,11 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
                 cursor.getLong(offset + 1), // event_id
                 cursor.getLong(offset + 2), // robot_id
-                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // user_id
-                cursor.getLong(offset + 4), // metric_id
-                cursor.getInt(offset + 5), // match_type
-                cursor.getLong(offset + 6), // match_number
-                cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // last_updated
-                cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // data
+                cursor.getLong(offset + 3), // metric_id
+                cursor.getInt(offset + 4), // match_type
+                cursor.getLong(offset + 5), // match_number
+                cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // last_updated
+                cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // data
         );
         return entity;
     }
@@ -156,12 +143,11 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setEvent_id(cursor.getLong(offset + 1));
         entity.setRobot_id(cursor.getLong(offset + 2));
-        entity.setUser_id(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
-        entity.setMetric_id(cursor.getLong(offset + 4));
-        entity.setMatch_type(cursor.getInt(offset + 5));
-        entity.setMatch_number(cursor.getLong(offset + 6));
-        entity.setLast_updated(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
-        entity.setData(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setMetric_id(cursor.getLong(offset + 3));
+        entity.setMatch_type(cursor.getInt(offset + 4));
+        entity.setMatch_number(cursor.getLong(offset + 5));
+        entity.setLast_updated(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
+        entity.setData(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
     }
 
     @Override
@@ -237,22 +223,6 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         return query.list();
     }
 
-    /**
-     * Internal query to resolve the "matchDataList" to-many relationship of User.
-     */
-    public List<MatchData> _queryUser_MatchDataList(Long user_id) {
-        synchronized (this) {
-            if (user_MatchDataListQuery == null) {
-                QueryBuilder<MatchData> queryBuilder = queryBuilder();
-                queryBuilder.where(Properties.User_id.eq(null));
-                user_MatchDataListQuery = queryBuilder.build();
-            }
-        }
-        Query<MatchData> query = user_MatchDataListQuery.forCurrentThread();
-        query.setParameter(0, user_id);
-        return query.list();
-    }
-
     protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
@@ -262,14 +232,11 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
             builder.append(',');
             SqlUtils.appendColumns(builder, "T1", daoSession.getRobotDao().getAllColumns());
             builder.append(',');
-            SqlUtils.appendColumns(builder, "T2", daoSession.getUserDao().getAllColumns());
-            builder.append(',');
-            SqlUtils.appendColumns(builder, "T3", daoSession.getMetricDao().getAllColumns());
+            SqlUtils.appendColumns(builder, "T2", daoSession.getMetricDao().getAllColumns());
             builder.append(" FROM MATCH_DATA T");
             builder.append(" LEFT JOIN EVENT T0 ON T.\"EVENT_ID\"=T0.\"_id\"");
             builder.append(" LEFT JOIN ROBOT T1 ON T.\"ROBOT_ID\"=T1.\"_id\"");
-            builder.append(" LEFT JOIN USER T2 ON T.\"USER_ID\"=T2.\"_id\"");
-            builder.append(" LEFT JOIN METRIC T3 ON T.\"METRIC_ID\"=T3.\"_id\"");
+            builder.append(" LEFT JOIN METRIC T2 ON T.\"METRIC_ID\"=T2.\"_id\"");
             builder.append(' ');
             selectDeep = builder.toString();
         }
@@ -291,10 +258,6 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
             entity.setRobot(robot);
         }
         offset += daoSession.getRobotDao().getAllColumns().length;
-
-        User user = loadCurrentOther(daoSession.getUserDao(), cursor, offset);
-        entity.setUser(user);
-        offset += daoSession.getUserDao().getAllColumns().length;
 
         Metric metric = loadCurrentOther(daoSession.getMetricDao(), cursor, offset);
         if (metric != null) {
@@ -380,12 +343,11 @@ public class MatchDataDao extends AbstractDao<MatchData, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Event_id = new Property(1, long.class, "event_id", false, "EVENT_ID");
         public final static Property Robot_id = new Property(2, long.class, "robot_id", false, "ROBOT_ID");
-        public final static Property User_id = new Property(3, Long.class, "user_id", false, "USER_ID");
-        public final static Property Metric_id = new Property(4, long.class, "metric_id", false, "METRIC_ID");
-        public final static Property Match_type = new Property(5, int.class, "match_type", false, "MATCH_TYPE");
-        public final static Property Match_number = new Property(6, long.class, "match_number", false, "MATCH_NUMBER");
-        public final static Property Last_updated = new Property(7, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
-        public final static Property Data = new Property(8, String.class, "data", false, "DATA");
+        public final static Property Metric_id = new Property(3, long.class, "metric_id", false, "METRIC_ID");
+        public final static Property Match_type = new Property(4, int.class, "match_type", false, "MATCH_TYPE");
+        public final static Property Match_number = new Property(5, long.class, "match_number", false, "MATCH_NUMBER");
+        public final static Property Last_updated = new Property(6, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
+        public final static Property Data = new Property(7, String.class, "data", false, "DATA");
     }
 
 }

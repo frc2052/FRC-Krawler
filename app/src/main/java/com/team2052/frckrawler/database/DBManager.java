@@ -39,8 +39,6 @@ import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.db.TeamDao;
-import com.team2052.frckrawler.db.User;
-import com.team2052.frckrawler.db.UserDao;
 import com.team2052.frckrawler.tba.JSON;
 
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -75,7 +73,6 @@ public class DBManager {
     private final PitDatas mPitDatas;
     private final Matches mMatches;
     private final Teams mTeams;
-    private final Users mUsers;
 
     private final MatchDataDao matchDataDao;
     private final PitDataDao pitDataDao;
@@ -84,7 +81,6 @@ public class DBManager {
     private final RobotEventDao robotEventDao;
     private final MatchDao matchDao;
     private final MetricDao metricDao;
-    private final UserDao userDao;
     private final RobotDao robotDao;
     private final DaoMaster daoMaster;
     private final EventDao eventDao;
@@ -110,7 +106,6 @@ public class DBManager {
         matchDao = daoSession.getMatchDao();
         metricDao = daoSession.getMetricDao();
         teamDao = daoSession.getTeamDao();
-        userDao = daoSession.getUserDao();
         gameDao = daoSession.getGameDao();
         eventDao = daoSession.getEventDao();
         robotDao = daoSession.getRobotDao();
@@ -125,7 +120,6 @@ public class DBManager {
         mPitDatas = new PitDatas();
         mMatches = new Matches();
         mTeams = new Teams();
-        mUsers = new Users();
     }
 
     public static synchronized DBManager getInstance(Context context) {
@@ -147,7 +141,6 @@ public class DBManager {
         robotEventDao.deleteAll();
         matchDao.deleteAll();
         metricDao.deleteAll();
-        userDao.deleteAll();
         robotDao.deleteAll();
         eventDao.deleteAll();
     }
@@ -190,11 +183,6 @@ public class DBManager {
 
     public Teams getTeamsTable() {
         return mTeams;
-    }
-
-
-    public Users getUsersTable() {
-        return mUsers;
     }
 
     public Observable<Map<String, String>> teamInfo(long team_id) {
@@ -252,7 +240,7 @@ public class DBManager {
     }
 
     public Observable<List<Long>> getRobotDataMatchNumbers(@Nullable Long event_id, long robot_id) {
-        return Observable.defer(() -> Observable.just(getMatchDataTable().query(robot_id, null, null, null, event_id, null).list()))
+        return Observable.defer(() -> Observable.just(getMatchDataTable().query(robot_id, null, null, null, event_id).list()))
                 .map(matchDatas -> {
                     List<Long> matchNumbers = Lists.newArrayListWithExpectedSize(10);
                     for (int i = 0; i < matchDatas.size(); i++) {
@@ -596,7 +584,7 @@ public class DBManager {
             }
         }
 
-        public QueryBuilder<PitData> query(Long robot_id, Long metric_id, Long event_id, @Deprecated Long user_id) {
+        public QueryBuilder<PitData> query(Long robot_id, Long metric_id, Long event_id) {
             QueryBuilder<PitData> queryBuilder = getQueryBuilder();
             if (robot_id != null)
                 queryBuilder.where(PitDataDao.Properties.Robot_id.eq(robot_id));
@@ -604,8 +592,6 @@ public class DBManager {
                 queryBuilder.where(PitDataDao.Properties.Metric_id.eq(metric_id));
             if (event_id != null)
                 queryBuilder.where(PitDataDao.Properties.Event_id.eq(event_id));
-            if (user_id != null)
-                queryBuilder.where(PitDataDao.Properties.User_id.eq(user_id));
             return queryBuilder;
         }
 
@@ -669,7 +655,7 @@ public class DBManager {
             }
         }
 
-        public QueryBuilder<MatchData> query(Long robotId, Long metricId, Long match_number, Integer match_type, Long eventId, Long userId) {
+        public QueryBuilder<MatchData> query(Long robotId, Long metricId, Long match_number, Integer match_type, Long eventId) {
             QueryBuilder<MatchData> matchDataQueryBuilder = getQueryBuilder();
             if (robotId != null)
                 matchDataQueryBuilder.where(MatchDataDao.Properties.Robot_id.eq(robotId));
@@ -681,8 +667,6 @@ public class DBManager {
                 matchDataQueryBuilder.where(MatchDataDao.Properties.Match_type.eq(match_type));
             if (eventId != null)
                 matchDataQueryBuilder.where(MatchDataDao.Properties.Event_id.eq(eventId));
-            if (userId != null)
-                matchDataQueryBuilder.where(MatchDataDao.Properties.User_id.eq(userId));
             return matchDataQueryBuilder;
         }
 
@@ -1022,40 +1006,6 @@ public class DBManager {
         @Override
         public QueryBuilder<Team> getQueryBuilder() {
             return teamDao.queryBuilder();
-        }
-    }
-
-    public class Users implements Table<User> {
-
-        public List<User> loadAll() {
-            return userDao.loadAll();
-        }
-
-        public void insert(User user) {
-            userDao.insertOrReplace(user);
-        }
-
-        @Override
-        public User load(long id) {
-            return userDao.load(id);
-        }
-
-
-        @Override
-        public void delete(User model) {
-            userDao.delete(model);
-        }
-
-        @Override
-        public void delete(List<User> models) {
-            for (User model : models) {
-                delete(model);
-            }
-        }
-
-        @Override
-        public QueryBuilder<User> getQueryBuilder() {
-            return userDao.queryBuilder();
         }
     }
 }

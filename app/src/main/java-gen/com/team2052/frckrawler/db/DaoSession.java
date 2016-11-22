@@ -20,7 +20,6 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig gameDaoConfig;
     private final DaoConfig eventDaoConfig;
     private final DaoConfig teamDaoConfig;
-    private final DaoConfig userDaoConfig;
     private final DaoConfig metricDaoConfig;
     private final DaoConfig matchDaoConfig;
     private final DaoConfig matchDataDaoConfig;
@@ -32,7 +31,6 @@ public class DaoSession extends AbstractDaoSession {
     private final GameDao gameDao;
     private final EventDao eventDao;
     private final TeamDao teamDao;
-    private final UserDao userDao;
     private final MetricDao metricDao;
     private final MatchDao matchDao;
     private final MatchDataDao matchDataDao;
@@ -53,9 +51,6 @@ public class DaoSession extends AbstractDaoSession {
 
         teamDaoConfig = daoConfigMap.get(TeamDao.class).clone();
         teamDaoConfig.initIdentityScope(type);
-
-        userDaoConfig = daoConfigMap.get(UserDao.class).clone();
-        userDaoConfig.initIdentityScope(type);
 
         metricDaoConfig = daoConfigMap.get(MetricDao.class).clone();
         metricDaoConfig.initIdentityScope(type);
@@ -81,7 +76,6 @@ public class DaoSession extends AbstractDaoSession {
         gameDao = new GameDao(gameDaoConfig, this);
         eventDao = new EventDao(eventDaoConfig, this);
         teamDao = new TeamDao(teamDaoConfig, this);
-        userDao = new UserDao(userDaoConfig, this);
         metricDao = new MetricDao(metricDaoConfig, this);
         matchDao = new MatchDao(matchDaoConfig, this);
         matchDataDao = new MatchDataDao(matchDataDaoConfig, this);
@@ -93,7 +87,6 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(Game.class, gameDao);
         registerDao(Event.class, eventDao);
         registerDao(Team.class, teamDao);
-        registerDao(User.class, userDao);
         registerDao(Metric.class, metricDao);
         registerDao(Match.class, matchDao);
         registerDao(MatchData.class, matchDataDao);
@@ -107,7 +100,6 @@ public class DaoSession extends AbstractDaoSession {
         gameDaoConfig.clearIdentityScope();
         eventDaoConfig.clearIdentityScope();
         teamDaoConfig.clearIdentityScope();
-        userDaoConfig.clearIdentityScope();
         metricDaoConfig.clearIdentityScope();
         matchDaoConfig.clearIdentityScope();
         matchDataDaoConfig.clearIdentityScope();
@@ -127,10 +119,6 @@ public class DaoSession extends AbstractDaoSession {
 
     public TeamDao getTeamDao() {
         return teamDao;
-    }
-
-    public UserDao getUserDao() {
-        return userDao;
     }
 
     public MetricDao getMetricDao() {

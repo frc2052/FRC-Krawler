@@ -14,7 +14,6 @@ import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.db.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ public class ScoutPackage implements Serializable {
     private final ArrayList<Team> teams = new ArrayList<>();
     private final Schedule schedule;
     private final List<Metric> metrics;
-    private final List<User> users;
     private final List<RobotEvent> robot_events;
     private final List<Robot> robots = new ArrayList<>();
     private final Event event;
@@ -41,7 +39,6 @@ public class ScoutPackage implements Serializable {
     public ScoutPackage(DBManager dbManager, Event event) {
         this.game = dbManager.getGamesTable().load(event.getGame_id());
         this.event = event;
-        users = dbManager.getUsersTable().loadAll();
         game.resetMetricList();
         metrics = game.getMetricList();
 
@@ -63,10 +60,6 @@ public class ScoutPackage implements Serializable {
         dbManager.runInTx(() -> {
                     for (Metric metric : metrics) {
                         dbManager.getMetricsTable().insert(metric);
-                    }
-
-                    for (User user : users) {
-                        dbManager.getUsersTable().insert(user);
                     }
 
                     for (RobotEvent robotEvent : robot_events) {

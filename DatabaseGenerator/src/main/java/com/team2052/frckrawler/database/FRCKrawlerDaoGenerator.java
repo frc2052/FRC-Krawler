@@ -11,12 +11,11 @@ public class FRCKrawlerDaoGenerator {
     public static final String jsonElementType = "com.google.gson.JsonElement";
 
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(3, "com.team2052.frckrawler.db");
+        Schema schema = new Schema(4, "com.team2052.frckrawler.db");
 
         Entity game = schema.addEntity("Game");
         Entity event = schema.addEntity("Event");
         Entity team = schema.addEntity("Team");
-        Entity user = schema.addEntity("User");
         Entity metric = schema.addEntity("Metric");
         Entity match = schema.addEntity("Match");
         Entity matchData = schema.addEntity("MatchData");
@@ -34,9 +33,6 @@ public class FRCKrawlerDaoGenerator {
 
         Property match_data_robot_id = matchData.addLongProperty("robot_id").notNull().getProperty();
         matchData.addToOne(robot, match_data_robot_id);
-
-        Property match_data_user_id = matchData.addLongProperty("user_id").getProperty();
-        matchData.addToOne(user, match_data_user_id);
 
         Property match_data_metric_id = matchData.addLongProperty("metric_id").notNull().getProperty();
         matchData.addToOne(metric, match_data_metric_id);
@@ -59,12 +55,8 @@ public class FRCKrawlerDaoGenerator {
         Property pit_data_event_id = pitData.addLongProperty("event_id").notNull().getProperty();
         pitData.addToOne(event, pit_data_event_id);
 
-        Property pit_data_user_id = pitData.addLongProperty("user_id").getProperty();
-        pitData.addToOne(user, pit_data_user_id);
-
         pitData.addStringProperty("data");
         pitData.addDateProperty("last_updated");
-
 
         //Match Comment
         matchComment.implementsSerializable();
@@ -169,13 +161,6 @@ public class FRCKrawlerDaoGenerator {
         team.addStringProperty("name");
         team.addToMany(robot, robot_team_id);
         team.addStringProperty("data");
-
-        //User
-        user.implementsSerializable();
-        user.addIdProperty().autoincrement().unique();
-        user.addToMany(matchData, match_data_user_id);
-        user.addToMany(pitData, pit_data_user_id);
-        user.addStringProperty("name");
 
         new DaoGenerator().generateAll(schema, args[0]);
     }
