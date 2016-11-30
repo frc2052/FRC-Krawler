@@ -14,7 +14,6 @@ import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.MatchDataDao;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.PreferenceUtil;
@@ -60,6 +59,7 @@ public class Compiler {
             return Joiner.on(", ").join(selected);
         }
     };
+
     private Context context;
     public Func2<List<List<String>>, List<Metric>, List<List<String>>> summaryHeaderFunc = (data, metrics) -> {
         List<String> header = Lists.newArrayList();
@@ -131,17 +131,19 @@ public class Compiler {
         return Observable.defer(() -> {
             Observable<List<MetricValue>> metricValueListObservable = Observable.empty();
             if (metric.getCategory() == MetricHelper.MATCH_PERF_METRICS) {
-                QueryBuilder<MatchData> queryBuilder = dbManager.getMatchDataTable()
+                metricValueListObservable = dbManager.getMatchDataTable()
                         .query(robot.getId(), metric.getId(), null, 0, event_id)
-                        .orderAsc(MatchDataDao.Properties.Match_number);
-
-                metricValueListObservable = Observable.from(queryBuilder.list())
+                        .orderAsc(MatchDataDao.Properties.Match_number)
+                        .rx()
+                        .list()
+                        .concatMap(Observable::from)
                         .map(matchData -> new MetricValue(metric, JSON.getAsJsonObject(matchData.getData())))
                         .toList();
             } else if (metric.getCategory() == MetricHelper.ROBOT_METRICS) {
-                QueryBuilder<PitData> queryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), event_id);
-
-                metricValueListObservable = Observable.from(queryBuilder.list())
+                metricValueListObservable = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), event_id)
+                        .rx()
+                        .list()
+                        .concatMap(Observable::from)
                         .map(pitData -> new MetricValue(metric, JSON.getAsJsonObject(pitData.getData())))
                         .toList();
             }

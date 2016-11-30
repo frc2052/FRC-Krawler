@@ -74,17 +74,17 @@ public class DBManager {
     private final Matches mMatches;
     private final Teams mTeams;
 
-    private final MatchDataDao matchDataDao;
-    private final PitDataDao pitDataDao;
-    private final GameDao gameDao;
-    private final MatchCommentDao matchCommentDao;
-    private final RobotEventDao robotEventDao;
-    private final MatchDao matchDao;
-    private final MetricDao metricDao;
-    private final RobotDao robotDao;
-    private final DaoMaster daoMaster;
-    private final EventDao eventDao;
-    private final TeamDao teamDao;
+    public final MatchDataDao matchDataDao;
+    public final PitDataDao pitDataDao;
+    public final GameDao gameDao;
+    public final MatchCommentDao matchCommentDao;
+    public final RobotEventDao robotEventDao;
+    public final MatchDao matchDao;
+    public final MetricDao metricDao;
+    public final RobotDao robotDao;
+    public final DaoMaster daoMaster;
+    public final EventDao eventDao;
+    public final TeamDao teamDao;
 
     private Context context;
     private DaoSession daoSession;

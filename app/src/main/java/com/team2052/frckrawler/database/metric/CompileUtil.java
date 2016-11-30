@@ -23,9 +23,7 @@ import rx.functions.Func2;
 
 public class CompileUtil {
 
-    public static Func1<CompiledMetricValue, AbstractMap.SimpleEntry<String, String>> mapCompiledMetricValueToKeyValue = compiledMetricValue -> {
-        return new AbstractMap.SimpleEntry<>(compiledMetricValue.getMetric().getName(), compiledMetricValue.getCompiledValue());
-    };
+    public static Func1<CompiledMetricValue, AbstractMap.SimpleEntry<String, String>> mapCompiledMetricValueToKeyValue = compiledMetricValue -> new AbstractMap.SimpleEntry<>(compiledMetricValue.getMetric().getName(), compiledMetricValue.getCompiledValue());
 
     public static Func1<List<AbstractMap.SimpleEntry<String, String>>, Map<String, String>> mapEntriesToMap = simpleEntries -> {
         Map<String, String> map = new LinkedHashMap<>();
