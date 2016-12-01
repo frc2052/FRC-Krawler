@@ -80,7 +80,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
                         Toast.makeText(getActivity(), "Cannot export file, please grant permission", Toast.LENGTH_LONG).show();
                         dismiss();
                     }
-                });
+                }, FirebaseCrash::report);
     }
 
     private void doExport() {
@@ -120,7 +120,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
 
     private Observable<List<List<String>>> getExportObservable(int type) {
         switch (type) {
-            case 1:
+            case EXPORT_TYPE_RAW:
                 return compiler.getRawExport(event);
             default:
                 return compiler.getSummaryExport(event);
@@ -129,7 +129,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
 
     private Observable<File> getExportFile(int type) {
         switch (type) {
-            case 1:
+            case EXPORT_TYPE_RAW:
                 return CompileUtil.getRawExportFile(event);
             default:
                 return CompileUtil.getSummaryFile(event);
