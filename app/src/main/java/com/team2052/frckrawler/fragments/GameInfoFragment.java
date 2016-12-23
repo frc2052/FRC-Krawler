@@ -7,8 +7,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.background.DeleteGameTask;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.subscribers.KeyValueListSubscriber;
 import com.team2052.frckrawler.util.Util;
@@ -16,6 +16,8 @@ import com.team2052.frckrawler.util.Util;
 import java.util.Map;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by adam on 6/14/15.
@@ -36,7 +38,7 @@ public class GameInfoFragment extends ListViewFragment<Map<String, String>, KeyV
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mGame = dbManager.getGamesTable().load(getArguments().getLong(GAME_ID));
+        mGame = rxDbManager.getGamesTable().load(getArguments().getLong(GAME_ID));
         setHasOptionsMenu(true);
     }
 
@@ -47,7 +49,7 @@ public class GameInfoFragment extends ListViewFragment<Map<String, String>, KeyV
 
     @Override
     protected Observable<? extends Map<String, String>> getObservable() {
-        return dbManager.gameInfo(mGame);
+        return rxDbManager.gameInfo(mGame);
     }
 
     @Override
@@ -74,7 +76,18 @@ public class GameInfoFragment extends ListViewFragment<Map<String, String>, KeyV
         builder.setTitle("Delete Game?");
         builder.setMessage("Are you sure you want to delete this game?");
         builder.setPositiveButton("Delete", (dialog, which) -> {
-            new DeleteGameTask(getActivity(), mGame, true).execute();
+            Observable.just(mGame)
+                    .map(game -> {
+                        rxDbManager.getGamesTable().delete(game);
+                        return game;
+                    })
+                    .observeOn(Schedulers.computation())
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe(onNext -> {
+                    }, onError -> {
+                        onError.printStackTrace();
+                        FirebaseCrash.report(onError);
+                    }, () -> getActivity().finish());
         });
         builder.setNegativeButton("Cancel", null);
         return builder.create();

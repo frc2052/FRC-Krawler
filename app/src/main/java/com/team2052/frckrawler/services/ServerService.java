@@ -108,7 +108,8 @@ public class ServerService extends Service {
 
     public Observable<ServerStatus> changeServerStatus(Event event, boolean on) {
         return Observable.defer(() -> {
-            if (event == null || (isServerOn() && !on)) {
+            boolean requestedOff = (isServerOn() && !on);
+            if (event == null || requestedOff) {
                 stopServer();
             } else {
                 startServer(event);
@@ -119,10 +120,10 @@ public class ServerService extends Service {
 
     public Observable<ServerStatus> getServerStatus() {
         return Observable.defer(() -> {
-            if (serverThread != null) {
+            if (isServerOn()) {
                 return Observable.just(new ServerStatus(serverThread.getHostedEvent(), isServerOn()));
             }
-            return Observable.just(new ServerStatus(null, isServerOn()));
+            return Observable.just(new ServerStatus(null, false));
         });
     }
 

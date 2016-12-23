@@ -56,7 +56,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        event = mDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        event = mRxDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
 
         EventBus.getDefault().register(this);
 

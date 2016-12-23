@@ -1,14 +1,12 @@
 package com.team2052.frckrawler.bluetooth.server;
 
-import com.google.common.base.Strings;
 import com.team2052.frckrawler.bluetooth.RobotComment;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.util.ScoutUtil;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -31,7 +29,7 @@ public class ServerPackage implements Serializable {
     private Event scoutEvent;
 
 
-    public ServerPackage(DBManager manager, Event scoutEvent) {
+    public ServerPackage(RxDBManager manager, Event scoutEvent) {
         metricMatchData = manager.getMatchDataTable().loadAll();
         metricPitData = manager.getPitDataTable().loadAll();
         matchComments = manager.getMatchComments().loadAll();
@@ -43,29 +41,34 @@ public class ServerPackage implements Serializable {
      * To save the data that is contained in the object
      * To be only ran on the server instance
      */
-    public void save(final DBManager dbManager) {
-        dbManager.runInTx(() -> {
+    public void save(final RxDBManager rxDbManager) {
+        rxDbManager.runInTx(() -> {
             //Save all the data
             for (int i = 0; i < metricMatchData.size(); i++) {
-                dbManager.getMatchDataTable().insertMatchData(metricMatchData.get(i));
+                rxDbManager.getMatchDataTable().insertMatchData(metricMatchData.get(i));
             }
 
             for (int i = 0; i < metricPitData.size(); i++) {
-                dbManager.getPitDataTable().insert(metricPitData.get(i));
+                rxDbManager.getPitDataTable().insert(metricPitData.get(i));
             }
 
             for (int i = 0; i < matchComments.size(); i++) {
-                dbManager.getMatchComments().insertMatchComment(matchComments.get(i));
+                rxDbManager.getMatchComments().insertMatchComment(matchComments.get(i));
             }
 
             for (int i = 0; i < robotComments.size(); i++) {
                 RobotComment robotComment = robotComments.get(i);
-                Robot robot = dbManager.getRobotsTable().load(robotComment.getRobotId());
+                Robot robot = rxDbManager.getRobotsTable().load(robotComment.getRobotId());
+
+                if (robot.getLast_updated() == null) {
+                    robot.setLast_updated(new Date());
+                }
+
                 if (robot.getLast_updated().getTime() <= new Date().getTime()) {
                     robot.setLast_updated(new Date());
                     robot.setComments(robotComment.getComment());
                     robot.update();
-                    dbManager.getRobotsTable().update(robot);
+                    rxDbManager.getRobotsTable().update(robot);
                 }
             }
         });

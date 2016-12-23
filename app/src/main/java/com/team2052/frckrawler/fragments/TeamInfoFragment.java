@@ -29,6 +29,6 @@ public class TeamInfoFragment extends ListViewFragment<Map<String, String>, KeyV
 
     @Override
     protected Observable<? extends Map<String, String>> getObservable() {
-        return dbManager.teamInfo(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        return rxDbManager.teamInfo(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 }

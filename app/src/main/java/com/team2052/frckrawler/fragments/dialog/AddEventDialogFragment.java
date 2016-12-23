@@ -11,7 +11,7 @@ import android.widget.EditText;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.listeners.RefreshListener;
@@ -41,7 +41,7 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mGame = DBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        this.mGame = RxDBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
             event.setGame(mGame);
             event.setFmsid(null);
             event.setDate(new Date());
-            DBManager.getInstance(getContext()).getEventsTable().insert(event);
+            RxDBManager.getInstance(getContext()).getEventsTable().insert(event);
         } else {
             dismiss();
         }

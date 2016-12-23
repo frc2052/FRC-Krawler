@@ -44,7 +44,7 @@ public class RobotAttendingEventsFragment extends RecyclerViewFragment<List<Even
 
     @Override
     protected Observable<? extends List<Event>> getObservable() {
-        return dbManager.robotAtEvents(robot_id);
+        return rxDbManager.robotAtEvents(robot_id);
     }
 
     @Override

@@ -56,13 +56,15 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getId() == R.id.host_toggle) {
-            if (BluetoothAdapter.getDefaultAdapter() == null) {
+
+            if (!BluetoothUtil.hasBluetoothAdapter()) {
                 SnackbarUtil.make(getView(), "Sorry, your device does not support bluetooth.", Snackbar.LENGTH_LONG).show();
                 return;
             } else if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                 startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_BT_ENABLED);
                 return;
             }
+
             buttonView.setChecked(!isChecked);
             if (isEventsValid() && getSelectedEvent() != null) {
                 Event event = getSelectedEvent();
@@ -103,7 +105,7 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
 
     @Override
     protected Observable<? extends List<Event>> getObservable() {
-        return dbManager.allEvents();
+        return rxDbManager.allEvents();
     }
 
     private Event getSelectedEvent() {

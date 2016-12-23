@@ -40,7 +40,7 @@ public class HTTP {
     public static String dataFromResponse(Response response) {
         try {
             return response.body().string();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

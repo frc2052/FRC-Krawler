@@ -5,7 +5,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 
 /**
  * @author Adam
@@ -13,11 +13,11 @@ import com.team2052.frckrawler.database.DBManager;
  */
 public class BaseProgressDialog extends DialogFragment {
 
-    protected DBManager mDbManager;
+    protected RxDBManager mRxDbManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mDbManager = DBManager.getInstance(getActivity());
+        mRxDbManager = RxDBManager.getInstance(getActivity());
         setRetainInstance(true);
         super.onCreate(savedInstanceState);
     }

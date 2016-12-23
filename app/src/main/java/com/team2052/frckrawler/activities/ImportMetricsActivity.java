@@ -16,9 +16,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.firebase.FirebaseUtil;
 import com.team2052.frckrawler.firebase.models.MetricImportModel;
+import com.team2052.frckrawler.util.MetricHelper;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -101,7 +101,7 @@ public class ImportMetricsActivity extends DatabaseActivity implements AdapterVi
                             return metricFactory.buildMetric();
                         })
                         .map(metric -> {
-                            dbManager.getMetricsTable().insert(metric);
+                            rxDbManager.getMetricsTable().insert(metric);
                             return metric;
                         })
                         .toList()

@@ -8,6 +8,9 @@ import com.google.firebase.database.FirebaseDatabase;
 public class FirebaseUtil {
     private static FirebaseDatabase _firebaseDatabase;
 
+    private FirebaseUtil() {
+    }
+
     /**
      * Use this or the app may crash
      */

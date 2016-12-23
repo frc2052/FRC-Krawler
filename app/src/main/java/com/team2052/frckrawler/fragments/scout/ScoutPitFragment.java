@@ -11,13 +11,13 @@ import com.google.common.collect.Lists;
 import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.util.MetricHelper;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -38,13 +38,13 @@ public class ScoutPitFragment extends BaseScoutFragment {
     Observable<List<MetricValue>> metricValueObservable = robotObservable()
             .map(robot -> {
                 List<MetricValue> metricValues = Lists.newArrayList();
-                final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(MetricHelper.ROBOT_METRICS, null, mEvent.getGame_id(), true);
+                final QueryBuilder<Metric> metricQueryBuilder = rxDbManager.getMetricsTable().query(MetricHelper.ROBOT_METRICS, null, mEvent.getGame_id(), true);
                 List<Metric> metrics = metricQueryBuilder.list();
 
                 for (int i = 0; i < metrics.size(); i++) {
                     Metric metric = metrics.get(i);
                     //Query for existing data
-                    QueryBuilder<PitData> matchDataQueryBuilder = dbManager.getPitDataTable().query(robot.getId(), metric.getId(), mEvent.getId());
+                    QueryBuilder<PitData> matchDataQueryBuilder = rxDbManager.getPitDataTable().query(robot.getId(), metric.getId(), mEvent.getId());
 
                     PitData currentData = matchDataQueryBuilder.unique();
                     //Add the metric values
@@ -122,7 +122,7 @@ public class ScoutPitFragment extends BaseScoutFragment {
                         pitData.setEvent(mEvent);
                         //pitData.setUser_id(user != null ? user.getId() : null); NOOP
                         pitData.setData(JSON.getGson().toJson(widget.getValue()));
-                        if (dbManager.getPitDataTable().insert(pitData) && !saved)
+                        if (rxDbManager.getPitDataTable().insertWithSaved(pitData) && !saved)
                             saved = true;
                     }
 

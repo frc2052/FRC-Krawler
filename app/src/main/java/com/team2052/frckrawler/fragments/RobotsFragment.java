@@ -62,7 +62,7 @@ public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubsc
 
     @Override
     protected Observable<? extends List<Robot>> getObservable() {
-        return mViewType == 0 ? dbManager.robotsWithTeam(mKey) : dbManager.robotsAtEvent(mKey);
+        return mViewType == 0 ? rxDbManager.robotsWithTeam(mKey) : rxDbManager.robotsAtEvent(mKey);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubsc
 
     @Override
     public void onFABPressed() {
-        Event load = dbManager.getEventsTable().load(mKey);
+        Event load = rxDbManager.getEventsTable().load(mKey);
         if (load != null) {
             AddTeamToEventDialogFragment.newInstance(load).show(getChildFragmentManager(), "addTeam");
         }

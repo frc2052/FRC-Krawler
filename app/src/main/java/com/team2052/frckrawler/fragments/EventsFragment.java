@@ -46,7 +46,7 @@ public class EventsFragment extends RecyclerViewFragment<List<Event>, EventListS
 
     @Override
     protected Observable<? extends List<Event>> getObservable() {
-        return dbManager.eventsByGame(mGame_id);
+        return rxDbManager.eventsByGame(mGame_id);
     }
 
     @Override

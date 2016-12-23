@@ -131,7 +131,9 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
 
     public void changeServerStatus(Event event, boolean isChecked) {
         if (serverService != null) {
-            serverService.changeServerStatus(event, isChecked).observeOn(AndroidSchedulers.mainThread()).subscribe(new ServerFragment.ServerStatusObserver(serverFragment));
+            serverService.changeServerStatus(event, isChecked)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new ServerFragment.ServerStatusObserver(serverFragment));
         }
     }
 }

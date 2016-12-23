@@ -2,18 +2,20 @@ package com.team2052.frckrawler.views.metric.impl;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatSeekBar;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.jakewharton.rxbinding.widget.RxSeekBar;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.util.MetricHelper;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
-public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBarChangeListener {
+import rx.android.schedulers.AndroidSchedulers;
+
+public class SliderMetricWidget extends MetricWidget {
 
     private final AppCompatSeekBar seekBar;
     int value;
@@ -32,6 +34,12 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
         super(context);
         inflater.inflate(R.layout.widget_metric_slider, this);
         seekBar = (AppCompatSeekBar) findViewById(R.id.sliderVal);
+        valueText = (TextView) findViewById(R.id.value);
+
+        RxSeekBar.userChanges(seekBar).subscribeOn(AndroidSchedulers.mainThread()).subscribe(seekValue -> {
+            valueText.setText(Integer.toString(seekValue));
+            value = seekValue + min;
+        });
     }
 
     @Override
@@ -44,14 +52,10 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
         min = range.get("min").getAsInt();
         max = range.get("max").getAsInt();
 
-
         seekBar.setMax(max - min);
-
-        seekBar.setOnSeekBarChangeListener(this);
 
         ((TextView) findViewById(R.id.min)).setText(Integer.toString(min));
         ((TextView) findViewById(R.id.max)).setText(Integer.toString(max));
-        valueText = (TextView) findViewById(R.id.value);
 
         if (m.getValue() != null && !m.getValue().getAsJsonObject().get("value").isJsonNull())
             value = m.getValue().getAsJsonObject().get("value").getAsInt();
@@ -61,24 +65,6 @@ public class SliderMetricWidget extends MetricWidget implements SeekBar.OnSeekBa
         if (value < min || value > max)
             value = min;
         seekBar.setProgress(value - min);
-        valueText.setText(Integer.toString(value));
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        value = seekBar.getProgress() + min;
-        valueText.setText(Integer.toString(value));
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-        value = seekBar.getProgress() + min;
-        valueText.setText(Integer.toString(value));
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        value = seekBar.getProgress() + min;
         valueText.setText(Integer.toString(value));
     }
 

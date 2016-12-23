@@ -36,7 +36,7 @@ public class EventInfoFragment extends ListViewFragment<Map<String, String>, Key
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mEvent = dbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
+        mEvent = rxDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class EventInfoFragment extends ListViewFragment<Map<String, String>, Key
 
     @Override
     protected Observable<? extends Map<String, String>> getObservable() {
-        return dbManager.eventInfo(mEvent);
+        return rxDbManager.eventInfo(mEvent);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class EventInfoFragment extends ListViewFragment<Map<String, String>, Key
         builder.setMessage("Are you sure you want to delete this event?");
         builder.setPositiveButton("Ok", (dialog, which) -> Observable.just(mEvent)
                 .map(event -> {
-                    dbManager.runInTx(() -> dbManager.getEventsTable().delete(event));
+                    rxDbManager.runInTx(() -> rxDbManager.getEventsTable().delete(event));
                     return event;
                 })
                 .observeOn(AndroidSchedulers.mainThread())

@@ -46,7 +46,7 @@ public class MatchListActivity extends DatabaseActivity {
         setContentView(R.layout.card_view_list);
         ButterKnife.bind(this);
 
-        mEvent = dbManager.getEventsTable().load(getIntent().getLongExtra(DatabaseActivity.PARENT_ID, 0));
+        mEvent = rxDbManager.getEventsTable().load(getIntent().getLongExtra(DatabaseActivity.PARENT_ID, 0));
 
         toolbar.setTitle("Match Schedule");
         toolbar.setSubtitle(mEvent.getName());
@@ -83,7 +83,7 @@ public class MatchListActivity extends DatabaseActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<Match> matches = dbManager.getMatchesTable().query(null, null, mEvent.getId(), null).orderAsc(MatchDao.Properties.Match_number).list();
+            List<Match> matches = rxDbManager.getMatchesTable().query(null, null, mEvent.getId(), null).orderAsc(MatchDao.Properties.Match_number).list();
             List<ListItem> listItems = new ArrayList<>();
             for (Match match : matches) {
                 listItems.add(new MatchListItem(match));

@@ -14,7 +14,7 @@ import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.bluetooth.server.ServerPackage;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.util.ScoutUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -32,7 +32,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     private static final int SYNC_CANCELLED = 3;
     private static final int SYNC_ERROR = 4;
     private static int tasksRunning = 0;
-    private final DBManager mDbManager;
+    private final RxDBManager mRxDbManager;
     private final String TAG = SyncScoutTask.class.getSimpleName();
 
     private String errorMessage = null;
@@ -44,7 +44,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     public SyncScoutTask(Context c) {
         deviceName = "device";
         context = c.getApplicationContext();
-        mDbManager = DBManager.getInstance(context);
+        mRxDbManager = RxDBManager.getInstance(context);
     }
 
     public static boolean isTaskRunning() {
@@ -85,7 +85,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             try {
                 ooStream.writeInt(BuildConfig.VERSION_CODE);
                 ooStream.writeInt(BluetoothConstants.SCOUT_SYNC);
-                ooStream.writeObject(new ServerPackage(mDbManager, ScoutUtil.getScoutEvent(context)));
+                ooStream.writeObject(new ServerPackage(mRxDbManager, ScoutUtil.getScoutEvent(context)));
                 ooStream.flush();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -115,7 +115,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
             }
 
             if (scoutPackage != null) {
-                scoutPackage.save(mDbManager, context);
+                scoutPackage.save(mRxDbManager, context);
             }
 
             try {
@@ -148,6 +148,6 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
     }
 
     public void deleteAllData() {
-        mDbManager.runInTx(mDbManager::deleteAll);
+        mRxDbManager.runInTx(mRxDbManager::deleteAll);
     }
 }

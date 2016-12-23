@@ -8,7 +8,7 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Match;
@@ -38,7 +38,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Game game = mDbManager.getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        Game game = mRxDbManager.getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         String mEventKey = getArguments().getString("eventKey");
         new ImportEvent(mEventKey, game).execute();
     }
@@ -56,7 +56,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
         @Override
         protected Void doInBackground(Void... params) {
             final long startTime = System.currentTimeMillis();
-            final DBManager daoSession = DBManager.getInstance(getActivity());
+            final RxDBManager daoSession = RxDBManager.getInstance(getActivity());
             //Get all data from TBA ready to parse
 
             publishProgress("Downloading Data");
@@ -75,7 +75,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                 for (JsonElement element : jTeams) {
                     //Convert json element to team
                     Team team = JSON.getGson().fromJson(element, Team.class);
-                    mDbManager.getTeamsTable().insertNew(team, event);
+                    mRxDbManager.getTeamsTable().insertNew(team, event);
                 }
                 ImportEvent.this.publishProgress("Saving Matches");
                 JSON.set_daoSession(daoSession);

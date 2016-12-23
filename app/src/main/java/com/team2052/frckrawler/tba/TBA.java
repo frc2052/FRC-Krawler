@@ -8,6 +8,8 @@ import com.team2052.frckrawler.db.Team;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+
 /**
  * @author Adam
  */
@@ -18,6 +20,16 @@ public class TBA {
     public static String EVENT = BASE_TBA_API_URL + "event/%s";
     public static String TEAM = BASE_TBA_API_URL + "team/frc%d";
     public static String TEAM_EVENTS = BASE_TBA_API_URL + "team/%s/%d/events";
+
+    public static Observable<List<Event>> requestEventsYear(int year) {
+        return Observable.just(String.format(TBA.EVENT_BY_YEAR, year))
+                .map(HTTP::getResponse)
+                .map(HTTP::dataFromResponse)
+                .map(JSON::getAsJsonArray)
+                .flatMap(Observable::from)
+                .map(jsonElement -> JSON.getGson().fromJson(jsonElement, Event.class))
+                .toSortedList((event, event2) -> Double.compare(event.getDate().getTime(), event2.getDate().getTime()));
+    }
 
     public Team request_team(long team_number) {
         return JSON.getGson().fromJson(HTTP.dataFromResponse(HTTP.getResponse(String.format(TEAM, team_number))), Team.class);

@@ -40,8 +40,7 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String teams = getArguments().getString(TEAMS_ARGUMENT);
-        Event event = mDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID_ARGUMENT));
-
+        Event event = mRxDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID_ARGUMENT));
         subscription = Observable.just(teams)
                 .map(teamsString -> Arrays.asList(teamsString.split("\\s*,\\s*")))
                 .flatMap(Observable::from)
@@ -52,6 +51,8 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
                 .map(HTTP::dataFromResponse)
                 .map(JSON::getAsJsonObject)
                 .map(jsonObject -> JSON.getGson().fromJson(jsonObject, Team.class))
+                .toList()
+                .flatMap(Observable::from)
                 .map(team -> {
                     AndroidSchedulers.mainThread().createWorker().schedule(() -> {
                                 if (getDialog() != null) {
@@ -59,7 +60,7 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
                                 }
                             }
                     );
-                    mDbManager.getTeamsTable().insertNew(team, event);
+                    mRxDbManager.getTeamsTable().insertNew(team, event);
                     return true;
                 })
                 .subscribeOn(Schedulers.io())
@@ -74,6 +75,12 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
                     Log.e(TAG, "onCreate: ", onError);
                     dismiss();
                 });
+
+    }
+
+    @Override
+    public CharSequence getMessage() {
+        return "Downloading Data...";
     }
 
     @Override

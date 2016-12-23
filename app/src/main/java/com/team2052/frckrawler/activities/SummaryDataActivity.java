@@ -9,6 +9,7 @@ import android.widget.ListView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.MetricsStatsAdapter;
 import com.team2052.frckrawler.database.metric.CompiledMetricValue;
+import com.team2052.frckrawler.database.metric.Compiler;
 import com.team2052.frckrawler.database.metric.MetricCompiler;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
@@ -29,25 +30,26 @@ public class SummaryDataActivity extends DatabaseActivity {
     private Event mEvent;
     private Metric mMetric;
     private MetricsStatsAdapter mAdapter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_view);
-
-        mListView = (ListView) findViewById(R.id.list);
-        mEvent = dbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
-        mMetric = dbManager.getMetricsTable().load(getIntent().getLongExtra(DatabaseActivity.PARENT_ID, 0));
-        setActionBarTitle(getString(R.string.summary_title));
-        setActionBarSubtitle(mMetric.getName());
-        new GetCompiledData().execute();
-    }
+    private Compiler mCompiler;
 
     public static Intent newInstance(Context context, long metric_id, long event_id) {
         Intent intent = new Intent(context, SummaryDataActivity.class);
         intent.putExtra(DatabaseActivity.PARENT_ID, metric_id);
         intent.putExtra(EVENT_ID, event_id);
         return intent;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_list_view);
+        mCompiler = getComponent().compilerManager();
+        mListView = (ListView) findViewById(R.id.list);
+        mEvent = rxDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
+        mMetric = rxDbManager.getMetricsTable().load(getIntent().getLongExtra(DatabaseActivity.PARENT_ID, 0));
+        setActionBarTitle(getString(R.string.summary_title));
+        setActionBarSubtitle(mMetric.getName());
+        new GetCompiledData().execute();
     }
 
     @Override
@@ -65,7 +67,7 @@ public class SummaryDataActivity extends DatabaseActivity {
 
         @Override
         protected List<CompiledMetricValue> doInBackground(Void... params) {
-            return MetricCompiler.getCompiledMetric(mEvent, mMetric, dbManager, compileWeight);
+            return MetricCompiler.getCompiledMetric(mEvent, mMetric, rxDbManager, compileWeight);
         }
 
         @Override

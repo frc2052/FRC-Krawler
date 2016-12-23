@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.binding.RecyclerViewBinder;
@@ -40,11 +39,7 @@ public class SummaryFragment extends RecyclerViewFragment<List<Metric>, MetricLi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mEvent = dbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
-        /*mListView.setOnItemClickListener((adapterView, view1, i, l) -> {
-            Metric metric = dbManager.getMetricsTable().load(Long.parseLong(((ListElement) adapterView.getAdapter().getItem(i)).getKey()));
-            startActivity(SummaryDataActivity.newInstance(getActivity(), metric, mEvent));
-        });*/
+        mEvent = rxDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override
@@ -54,7 +49,7 @@ public class SummaryFragment extends RecyclerViewFragment<List<Metric>, MetricLi
 
     @Override
     protected Observable<? extends List<Metric>> getObservable() {
-        return dbManager.metricsInGame(mEvent.getGame_id(), null);
+        return rxDbManager.metricsInGame(mEvent.getGame_id(), null);
     }
 
     @Override

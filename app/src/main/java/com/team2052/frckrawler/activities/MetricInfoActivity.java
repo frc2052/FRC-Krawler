@@ -41,7 +41,7 @@ public class MetricInfoActivity extends DatabaseActivity {
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
 
-        mMetirc = dbManager.getMetricsTable().load(getIntent().getLongExtra(METRIC_ID, 0));
+        mMetirc = rxDbManager.getMetricsTable().load(getIntent().getLongExtra(METRIC_ID, 0));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -80,7 +80,7 @@ public class MetricInfoActivity extends DatabaseActivity {
             builder.setPositiveButton("Delete", (dialog, which) -> {
                 Observable.just(mMetirc)
                         .map(metric -> {
-                            dbManager.getMetricsTable().delete(metric);
+                            rxDbManager.getMetricsTable().delete(metric);
                             return metric;
                         })
                         .subscribeOn(Schedulers.io())

@@ -33,7 +33,7 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Event event = mDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        Event event = mRxDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         if (Strings.isNullOrEmpty(event.getFmsid())) {
             dismiss();
             return;
@@ -59,20 +59,20 @@ public class UpdateMatchesProcessDialog extends BaseProgressDialog {
         @Override
         protected Void doInBackground(Void... params) {
             //Delete all match data
-            List<Match> data = mDbManager.getMatchesTable().query(null, null, event.getId(), null).list();
+            List<Match> data = mRxDbManager.getMatchesTable().query(null, null, event.getId(), null).list();
 
-            mDbManager.runInTx(() -> mDbManager.getMatchesTable().delete(data));
+            mRxDbManager.runInTx(() -> mRxDbManager.getMatchesTable().delete(data));
 
             final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
 
-            JSON.set_daoSession(mDbManager);
-            mDbManager.runInTx(() -> {
+            JSON.set_daoSession(mRxDbManager);
+            mRxDbManager.runInTx(() -> {
                 for (JsonElement element : jMatches) {
                     //Save all the matches and alliances
                     Match match = JSON.getGson().fromJson(element, Match.class);
                     //Only save Qualifications
                     if (match.getMatch_type().contains("qm")) {
-                        mDbManager.getMatchesTable().insert(match);
+                        mRxDbManager.getMatchesTable().insert(match);
                     }
                 }
             });

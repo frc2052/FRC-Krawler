@@ -13,10 +13,10 @@ import android.widget.Spinner;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.metric.MetricHelper;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.util.MetricHelper;
 
 /**
  * @author Adam
@@ -28,7 +28,7 @@ public class EditMetricDialogFragment extends DialogFragment {
     private EditText mName, mDescription, mMinimum, mMaximum, mIncrementation;
     private FrameLayout mListEditor;
     private View mListHeader;
-    private DBManager mDbSession;
+    private RxDBManager mDbSession;
     private Metric mMetric;
 
     public static EditMetricDialogFragment newInstance(Metric metric) {
@@ -41,7 +41,7 @@ public class EditMetricDialogFragment extends DialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mDbSession = DBManager.getInstance(getActivity());
+        mDbSession = RxDBManager.getInstance(getActivity());
         super.onCreate(savedInstanceState);
     }
 

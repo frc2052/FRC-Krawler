@@ -8,10 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.fragments.RobotEventSummaryFragment;
 
-/**
- * Created by Acorp on 11/2/2016.
- */
-
 public class RobotEventPagerAdapter extends FragmentPagerAdapter {
     private String[] HEADERS;
     private long robot_id;

@@ -16,7 +16,6 @@ public class FRCKrawler extends Application {
         if (mApplicationComponent == null) {
             mApplicationComponent = DaggerApplicationComponent
                     .builder()
-                    .fRCKrawlerModule(getModule())
                     .build();
         }
         return mApplicationComponent;

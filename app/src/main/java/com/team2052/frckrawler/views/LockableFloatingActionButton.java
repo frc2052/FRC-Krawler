@@ -4,10 +4,6 @@ import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 
-/**
- * Created by Adam on 10/10/2016.
- */
-
 public class LockableFloatingActionButton extends FloatingActionButton {
     boolean locked = false;
 

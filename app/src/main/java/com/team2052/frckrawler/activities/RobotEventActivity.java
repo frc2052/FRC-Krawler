@@ -50,7 +50,7 @@ public class RobotEventActivity extends DatabaseActivity {
         long robot_id = getIntent().getLongExtra(PARENT_ID, 0);
         long event_id = getIntent().getLongExtra(EVENT_ID, 0);
 
-        setTitle(String.format("%d@%s", dbManager.getRobotsTable().load(robot_id).getTeam_id(), dbManager.getEventsTable().load(event_id).getName()));
+        setTitle(String.format("%d@%s", rxDbManager.getRobotsTable().load(robot_id).getTeam_id(), rxDbManager.getEventsTable().load(event_id).getName()));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

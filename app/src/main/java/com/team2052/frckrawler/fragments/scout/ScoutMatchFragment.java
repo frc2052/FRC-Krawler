@@ -12,7 +12,6 @@ import com.google.common.collect.Lists;
 import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchComment;
@@ -20,6 +19,7 @@ import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.util.MetricHelper;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -35,8 +35,6 @@ import rx.schedulers.Schedulers;
 
 
 public class ScoutMatchFragment extends BaseScoutFragment {
-    public static final int MATCH_GAME_TYPE = 0;
-    public static final int MATCH_PRACTICE_TYPE = 1;
     private static final String TAG = "ScoutMatchFragment";
     private static String MATCH_TYPE = "MATCH_TYPE";
     @BindView(R.id.match_number_input)
@@ -46,12 +44,12 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
                 List<MetricValue> metricValues = Lists.newArrayList();
-                final QueryBuilder<Metric> metricQueryBuilder = dbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, mEvent.getGame_id(), true);
+                final QueryBuilder<Metric> metricQueryBuilder = rxDbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, mEvent.getGame_id(), true);
                 List<Metric> metrics = metricQueryBuilder.list();
                 for (int i = 0; i < metrics.size(); i++) {
                     Metric metric = metrics.get(i);
                     //Query for existing data
-                    QueryBuilder<MatchData> matchDataQueryBuilder = dbManager.getMatchDataTable().query(valueParams.robot.getId(), metric.getId(), Long.valueOf(valueParams.match_num), mMatchType, mEvent.getId());
+                    QueryBuilder<MatchData> matchDataQueryBuilder = rxDbManager.getMatchDataTable().query(valueParams.robot.getId(), metric.getId(), Long.valueOf(valueParams.match_num), mMatchType, mEvent.getId());
                     MatchData currentData = matchDataQueryBuilder.unique();
                     //Add the metric values
                     metricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
@@ -64,7 +62,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
                 final QueryBuilder<MatchComment> matchCommentQueryBuilder
-                        = dbManager.getMatchComments().query(Long.valueOf(valueParams.match_num), mMatchType, valueParams.robot.getId(), mEvent.getId());
+                        = rxDbManager.getMatchComments().query(Long.valueOf(valueParams.match_num), mMatchType, valueParams.robot.getId(), mEvent.getId());
                 MatchComment mMatchComment = matchCommentQueryBuilder.unique();
                 String comment = null;
                 if (mMatchComment != null)
@@ -161,7 +159,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                                 matchScoutSaveMetric.matchNum,
                                 new Date(),
                                 JSON.getGson().toJson(metricValue.getValue()));
-                        if (dbManager.getMatchDataTable().insertMatchData(matchData) && !saved)
+                        if (rxDbManager.getMatchDataTable().insertMatchData(matchData) && !saved)
                             saved = true;
                     }
 
@@ -173,7 +171,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                         matchComment.setRobot(matchScoutSaveMetric.robot);
                         matchComment.setEvent(mEvent);
                         matchComment.setComment(matchScoutSaveMetric.comment);
-                        if (dbManager.getMatchComments().insertMatchComment(matchComment) && !saved)
+                        if (rxDbManager.getMatchComments().insertMatchComment(matchComment) && !saved)
                             saved = true;
                     }
                     return saved;

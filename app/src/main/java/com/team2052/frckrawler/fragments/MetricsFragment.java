@@ -11,12 +11,12 @@ import com.team2052.frckrawler.activities.ImportMetricsActivity;
 import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.binding.RecyclerViewBinder;
-import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.smart.MetricItemView;
 import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
 import com.team2052.frckrawler.subscribers.MetricListSubscriber;
+import com.team2052.frckrawler.util.MetricHelper;
 
 import java.util.List;
 
@@ -74,7 +74,7 @@ public class MetricsFragment extends RecyclerViewFragment<List<Metric>, MetricLi
 
     @Override
     protected Observable<? extends List<Metric>> getObservable() {
-        return dbManager.metricsInGame(mGame_id, mCategory);
+        return rxDbManager.metricsInGame(mGame_id, mCategory);
     }
 
     @Override

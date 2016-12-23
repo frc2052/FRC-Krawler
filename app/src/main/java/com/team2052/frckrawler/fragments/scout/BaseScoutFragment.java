@@ -15,7 +15,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.HasComponent;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
@@ -44,7 +44,7 @@ import rx.subscriptions.CompositeSubscription;
 public abstract class BaseScoutFragment extends Fragment {
     public static final String EVENT_ID = "EVENT_ID";
     private static final String TAG = "BaseScoutFragment";
-    protected DBManager dbManager;
+    protected RxDBManager rxDbManager;
     protected Event mEvent;
     CompositeSubscription subscriptions = new CompositeSubscription();
 
@@ -70,7 +70,7 @@ public abstract class BaseScoutFragment extends Fragment {
         if (getActivity() instanceof HasComponent) {
             mComponent = ((HasComponent) getActivity()).getComponent();
         }
-        dbManager = mComponent.dbManager();
+        rxDbManager = mComponent.dbManager();
     }
 
     @Override
@@ -80,9 +80,9 @@ public abstract class BaseScoutFragment extends Fragment {
 
         subscriptions.add(RxAdapterView.itemSelections(mRobotSpinner).debounce(500, TimeUnit.MILLISECONDS).subscribe(onNext -> updateMetricValues()));
 
-        mEvent = dbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
+        mEvent = rxDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
         //Load Robots at Event
-        dbManager.robotsAtEvent(getArguments().getLong(EVENT_ID))
+        rxDbManager.robotsAtEvent(getArguments().getLong(EVENT_ID))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(robots1 -> {

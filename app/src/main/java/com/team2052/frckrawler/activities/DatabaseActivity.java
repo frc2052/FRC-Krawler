@@ -3,7 +3,7 @@ package com.team2052.frckrawler.activities;
 import android.os.Bundle;
 
 import com.team2052.frckrawler.FRCKrawler;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.di.DaggerFragmentComponent;
 import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.subscribers.SubscriberModule;
@@ -14,7 +14,7 @@ public abstract class DatabaseActivity extends BaseActivity implements HasCompon
     public static final String PARENT_ID = "PARENT_ID";
     FragmentComponent mComponent;
     @Inject
-    DBManager dbManager;
+    RxDBManager rxDbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,8 +1,5 @@
 package com.team2052.frckrawler.util;
 
-/**
- * Created by Adam on 7/20/2015.
- */
 public class Tuple3<T1, T2, T3> {
     public final T1 t1;
     public final T2 t2;

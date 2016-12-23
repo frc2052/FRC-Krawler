@@ -11,7 +11,7 @@ import com.google.common.base.Strings;
 import com.team2052.frckrawler.BuildConfig;
 import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.client.ScoutPackage;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.Util;
@@ -28,14 +28,14 @@ public class ServerThread extends Thread {
     private final ServerCallbackHandler handler;
     public boolean isOpen = true;
 
-    private DBManager mDbManager = null;
+    private RxDBManager mRxDbManager = null;
     private Context context;
     private Event hostedEvent;
     private BluetoothServerSocket serverSocket;
 
     public ServerThread(Context context, Event event) {
         this.context = context;
-        mDbManager = DBManager.getInstance(context);
+        mRxDbManager = RxDBManager.getInstance(context);
         hostedEvent = event;
         serverSocket = null;
         mBluetoothAdapter = BluetoothUtil.getBluetoothAdapter();
@@ -124,7 +124,7 @@ public class ServerThread extends Thread {
                                             Event scoutEvent = serverPackage.getScoutEvent();
 
                                             if (scoutEvent != null) {
-                                                Event serverEvent = mDbManager.getEventsTable().load(scoutEvent.getId());
+                                                Event serverEvent = mRxDbManager.getEventsTable().load(scoutEvent.getId());
 
                                                 if (Strings.isNullOrEmpty(scoutEvent.getUnique_hash()) || !scoutEvent.getUnique_hash().equals(serverEvent.getUnique_hash())) {
                                                     Log.d(TAG, "Hash does not pass, sending error back");
@@ -138,14 +138,14 @@ public class ServerThread extends Thread {
                                             if (hashPass) {
                                                 Log.d(TAG, "Sending Data to Scout");
                                                 toScoutStream.writeInt(BluetoothConstants.OK);
-                                                toScoutStream.writeObject(new ScoutPackage(mDbManager, hostedEvent));
+                                                toScoutStream.writeObject(new ScoutPackage(mRxDbManager, hostedEvent));
                                                 toScoutStream.flush();
                                                 handler.onSyncCancel();
                                             }
 
                                             if(hashPass) {
                                                 Log.d(TAG, "Saving Data from Scout");
-                                                serverPackage.save(mDbManager);
+                                                serverPackage.save(mRxDbManager);
                                             }
                                         }
                                     } catch (IOException e) {

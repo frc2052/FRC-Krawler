@@ -11,6 +11,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
+import com.team2052.frckrawler.util.MetricHelper;
 
 import butterknife.ButterKnife;
 
@@ -40,7 +41,7 @@ public class ScoutActivity extends DatabaseActivity implements HasComponent {
         super.onCreate(savedInstanceState);
         setNavigationDrawerEnabled(false);
 
-        Event event = dbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID_EXTRA, 0));
+        Event event = rxDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID_EXTRA, 0));
 
         if (event == null) {
             finish();
@@ -62,12 +63,12 @@ public class ScoutActivity extends DatabaseActivity implements HasComponent {
                     break;
                 case PRACTICE_MATCH_SCOUT_TYPE:
                     titleResId = R.string.practice_match_scout;
-                    fragment = ScoutMatchFragment.newInstance(event, ScoutMatchFragment.MATCH_PRACTICE_TYPE);
+                    fragment = ScoutMatchFragment.newInstance(event, MetricHelper.MATCH_PRACTICE_TYPE);
                     break;
                 case MATCH_SCOUT_TYPE:
                 default:
                     titleResId = R.string.match_scout;
-                    fragment = ScoutMatchFragment.newInstance(event, ScoutMatchFragment.MATCH_GAME_TYPE);
+                    fragment = ScoutMatchFragment.newInstance(event, MetricHelper.MATCH_GAME_TYPE);
             }
 
             if (getSupportActionBar() != null) {

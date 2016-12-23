@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.listeners.RefreshListener;
 
@@ -18,13 +18,13 @@ import com.team2052.frckrawler.listeners.RefreshListener;
  */
 public class AddGameDialogFragment extends DialogFragment {
     private RefreshListener listener;
-    private DBManager mDbSession;
+    private RxDBManager mDbSession;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         listener = (RefreshListener) getParentFragment();
-        mDbSession = DBManager.getInstance(getActivity());
+        mDbSession = RxDBManager.getInstance(getActivity());
     }
 
     @Override

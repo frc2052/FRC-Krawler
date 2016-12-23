@@ -48,7 +48,7 @@ public class GamesFragment extends RecyclerViewFragment<List<Game>, GameListSubs
 
     @Override
     protected Observable<? extends List<Game>> getObservable() {
-        return dbManager.allGames();
+        return rxDbManager.allGames();
     }
 
     @Override

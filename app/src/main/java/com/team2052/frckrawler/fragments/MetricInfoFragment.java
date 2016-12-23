@@ -42,7 +42,7 @@ public class MetricInfoFragment extends ListViewFragment<Map<String, String>, Ke
         mListView.setOnItemClickListener((parent, view1, position, id) -> {
             if (id == 0) {
                 Observable.just(metricId)
-                        .map(metricId -> dbManager.getMetricsTable().load(metricId))
+                        .map(metricId -> rxDbManager.getMetricsTable().load(metricId))
                         .map(metric -> {
                             metric.setEnabled(!metric.getEnabled());
                             metric.update();
@@ -61,6 +61,6 @@ public class MetricInfoFragment extends ListViewFragment<Map<String, String>, Ke
 
     @Override
     protected Observable<? extends Map<String, String>> getObservable() {
-        return dbManager.metricInfo(metricId);
+        return rxDbManager.metricInfo(metricId);
     }
 }

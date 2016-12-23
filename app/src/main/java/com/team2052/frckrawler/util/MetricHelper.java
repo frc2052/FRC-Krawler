@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.database.metric;
+package com.team2052.frckrawler.util;
 
 import android.support.annotation.IntDef;
 
@@ -9,14 +9,18 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.team2052.frckrawler.database.metric.MetricValue;
+import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.PitData;
 import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.Tuple2;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Type;
 import java.util.List;
+
+import rx.functions.Func1;
 
 public class MetricHelper {
     public static final int MATCH_PERF_METRICS = 0, ROBOT_METRICS = 1;
@@ -25,6 +29,11 @@ public class MetricHelper {
     public static final int MINIMUM_DEFAULT_VALUE = 1;
     public static final int MAXIMUM_DEFAULT_VALUE = 10;
     public static final int INCREMENTATION_DEFAULT_VALUE = 1;
+    public static final int MATCH_GAME_TYPE = 0;
+    public static final int MATCH_PRACTICE_TYPE = 1;
+
+    public static Func1<PitData, MetricValue> mapPitDataToMetricValue = pitData -> new MetricValue(pitData.getMetric(), JSON.getAsJsonObject(pitData.getData()));
+    public static Func1<MatchData, MetricValue> mapMatchDataToMetricValue = matchData -> new MetricValue(matchData.getMetric(), JSON.getAsJsonObject(matchData.getData()));
 
     private static Type listType = new TypeToken<List<Integer>>() {
     }.getType();
@@ -45,7 +54,7 @@ public class MetricHelper {
         return Optional.of(JSON.getAsJsonObject(metric.getData()));
     }
 
-    public static Tuple2<Boolean, ReturnResult> compileBooleanMetricValue(MetricValue metricValue) {
+    public static Tuple2<Boolean, ReturnResult> getBooleanMetricValue(MetricValue metricValue) {
         if (metricValue.getMetric().getType() != BOOLEAN)
             return new Tuple2<>(false, ReturnResult.WRONG_METRIC_TYPE);
 

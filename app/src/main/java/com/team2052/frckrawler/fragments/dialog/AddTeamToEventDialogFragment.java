@@ -14,7 +14,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 
 import java.util.Arrays;
@@ -34,7 +34,7 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
     @BindView(R.id.team_number)
     TextInputLayout add_team;
     private Event mEvent;
-    private DBManager dbManager;
+    private RxDBManager rxDbManager;
 
     public static AddTeamToEventDialogFragment newInstance(Event game) {
         AddTeamToEventDialogFragment fragment = new AddTeamToEventDialogFragment();
@@ -47,8 +47,8 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbManager = DBManager.getInstance(getActivity());
-        this.mEvent = DBManager.getInstance(getActivity()).getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        rxDbManager = RxDBManager.getInstance(getActivity());
+        this.mEvent = RxDBManager.getInstance(getActivity()).getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
     }
 
     @Override

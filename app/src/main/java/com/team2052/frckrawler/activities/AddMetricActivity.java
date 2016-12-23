@@ -19,10 +19,10 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.util.MetricHelper;
 import com.team2052.frckrawler.util.SnackbarUtil;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 import com.team2052.frckrawler.views.metric.impl.BooleanMetricWidget;
@@ -74,9 +74,7 @@ public class AddMetricActivity extends DatabaseActivity {
     @MetricHelper.MetricCategory
     private int mMetricCategory;
 
-    private Observable<Integer> mMinimumObservable = createNumberDefaultValueObservable(mMinimum, MetricHelper.MINIMUM_DEFAULT_VALUE);
-    private Observable<Integer> mMaximumObservable = createNumberDefaultValueObservable(mMaximum, MetricHelper.MAXIMUM_DEFAULT_VALUE);
-    private Observable<Integer> mIncrementationObservable = createNumberDefaultValueObservable(mIncrementation, MetricHelper.INCREMENTATION_DEFAULT_VALUE);
+    private Observable<Integer> mMinimumObservable, mMaximumObservable, mIncrementationObservable;
     private Observable<String> mNameObservable = Observable.defer(() -> Observable.just(mName.getEditText().getText().toString()))
             .map(text -> Strings.isNullOrEmpty(text) ? getResources().getStringArray(R.array.metric_types)[typeSpinner.getSelectedItemPosition()] : text);
     private Observable<List<String>> mCommaListObservable = Observable.defer(() -> Observable.just(mCommaSeparatedList.getEditText().getText().toString()))
@@ -104,12 +102,33 @@ public class AddMetricActivity extends DatabaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mGame = dbManager.getGamesTable().load(getIntent().getLongExtra(GAME_ID_EXTRA, 0));
+        mGame = rxDbManager.getGamesTable().load(getIntent().getLongExtra(GAME_ID_EXTRA, 0));
         setStatusBarColor(R.color.amber_700);
 
         @MetricHelper.MetricCategory
         int metricCategory = getIntent().getIntExtra(METRIC_CATEGORY_EXTRA, MetricHelper.MATCH_PERF_METRICS);
         this.mMetricCategory = metricCategory;
+
+        setContentView(R.layout.activity_add_metric);
+        ButterKnife.bind(this);
+
+        mMinimumObservable = createNumberDefaultValueObservable(mMinimum, MetricHelper.MINIMUM_DEFAULT_VALUE);
+        mMaximumObservable = createNumberDefaultValueObservable(mMaximum, MetricHelper.MAXIMUM_DEFAULT_VALUE);
+        mIncrementationObservable = createNumberDefaultValueObservable(mIncrementation, MetricHelper.INCREMENTATION_DEFAULT_VALUE);
+
+        subscriptions.add(RxAdapterView.itemSelections(typeSpinner)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::changeSelection));
+
+        addObservableToUpdateMetric(RxTextView.textChanges(mName.getEditText()));
+        addObservableToUpdateMetric(RxTextView.textChanges(mIncrementation.getEditText()));
+        addObservableToUpdateMetric(RxTextView.textChanges(mMinimum.getEditText()));
+        addObservableToUpdateMetric(RxTextView.textChanges(mMaximum.getEditText()));
+        addObservableToUpdateMetric(RxTextView.textChanges(mCommaSeparatedList.getEditText()));
+
+        mMinimum.getEditText().setText(Integer.toString(MetricHelper.MINIMUM_DEFAULT_VALUE));
+        mMaximum.getEditText().setText(Integer.toString(MetricHelper.MAXIMUM_DEFAULT_VALUE));
+        mIncrementation.getEditText().setText(Integer.toString(MetricHelper.INCREMENTATION_DEFAULT_VALUE));
 
         metricObservable = Observable
                 .zip(mNameObservable, mMinimumObservable, mMaximumObservable, mIncrementationObservable, mCommaListObservable, MetricPreviewParams::new)
@@ -144,23 +163,6 @@ public class AddMetricActivity extends DatabaseActivity {
                 })
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread());
-
-        setContentView(R.layout.activity_add_metric);
-        ButterKnife.bind(this);
-
-        subscriptions.add(RxAdapterView.itemSelections(typeSpinner)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::changeSelection));
-
-        addObservableToUpdateMetric(RxTextView.textChanges(mName.getEditText()));
-        addObservableToUpdateMetric(RxTextView.textChanges(mIncrementation.getEditText()));
-        addObservableToUpdateMetric(RxTextView.textChanges(mMinimum.getEditText()));
-        addObservableToUpdateMetric(RxTextView.textChanges(mMaximum.getEditText()));
-        addObservableToUpdateMetric(RxTextView.textChanges(mCommaSeparatedList.getEditText()));
-
-        mMinimum.getEditText().setText(Integer.toString(MetricHelper.MINIMUM_DEFAULT_VALUE));
-        mMaximum.getEditText().setText(Integer.toString(MetricHelper.MAXIMUM_DEFAULT_VALUE));
-        mIncrementation.getEditText().setText(Integer.toString(MetricHelper.INCREMENTATION_DEFAULT_VALUE));
 
         //Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -223,17 +225,18 @@ public class AddMetricActivity extends DatabaseActivity {
     }
 
     private void updateMetric() {
-        subscriptions.add(metricObservable.map(metric -> new MetricValue(metric, null))
-                .subscribe(onNext -> {
-                    if (typeSpinner.getSelectedItemPosition() == MetricHelper.CHECK_BOX) {
-                        setMetricWidget(new CheckBoxMetricWidget(AddMetricActivity.this, onNext));
-                    } else if (currentWidget != null) {
-                        currentWidget.setMetricValue(onNext);
-                    }
-                }, onError -> {
-                    FirebaseCrash.report(onError);
-                    Log.e(TAG, "updateMetric: ", onError);
-                }));
+        subscriptions.add(
+                metricObservable.map(metric -> new MetricValue(metric, null))
+                        .subscribe(onNext -> {
+                            if (typeSpinner.getSelectedItemPosition() == MetricHelper.CHECK_BOX) {
+                                setMetricWidget(new CheckBoxMetricWidget(AddMetricActivity.this, onNext));
+                            } else if (currentWidget != null) {
+                                currentWidget.setMetricValue(onNext);
+                            }
+                        }, onError -> {
+                            FirebaseCrash.report(onError);
+                            Log.e(TAG, "updateMetric: ", onError);
+                        }));
     }
 
     private void setMetricWidget(MetricWidget widget) {
@@ -253,7 +256,7 @@ public class AddMetricActivity extends DatabaseActivity {
     @OnClick(R.id.button_save)
     protected void saveButtonClicked(View view) {
         subscriptions.add(metricObservable.subscribe(onNext -> {
-            dbManager.getMetricsTable().insert(onNext);
+            rxDbManager.getMetricsTable().insert(onNext);
 
             SnackbarUtil.make(findViewById(R.id.root), "Metric Saved", Snackbar.LENGTH_SHORT).show();
             //Show a snackbar for a second

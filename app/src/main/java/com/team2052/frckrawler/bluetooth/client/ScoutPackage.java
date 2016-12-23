@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.bluetooth.Schedule;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Match;
@@ -36,8 +36,8 @@ public class ScoutPackage implements Serializable {
     private final Game game;
     private final String TAG = ScoutPackage.class.getSimpleName();
 
-    public ScoutPackage(DBManager dbManager, Event event) {
-        this.game = dbManager.getGamesTable().load(event.getGame_id());
+    public ScoutPackage(RxDBManager rxDbManager, Event event) {
+        this.game = rxDbManager.getGamesTable().load(event.getGame_id());
         this.event = event;
         game.resetMetricList();
         metrics = game.getMetricList();
@@ -45,41 +45,41 @@ public class ScoutPackage implements Serializable {
         robot_events = event.getRobotEventList();
 
         for (RobotEvent robotEvent : robot_events) {
-            robots.add(dbManager.getRobotEvents().getRobot(robotEvent));
+            robots.add(rxDbManager.getRobotEvents().getRobot(robotEvent));
         }
 
         schedule = new Schedule(event);
 
         for (RobotEvent robotEvent : robot_events) {
-            teams.add(dbManager.getRobotEvents().getTeam(robotEvent));
+            teams.add(rxDbManager.getRobotEvents().getTeam(robotEvent));
         }
     }
 
-    public void save(final DBManager dbManager, Context context) {
+    public void save(final RxDBManager rxDbManager, Context context) {
         Log.d(TAG, "Saving");
-        dbManager.runInTx(() -> {
+        rxDbManager.runInTx(() -> {
                     for (Metric metric : metrics) {
-                        dbManager.getMetricsTable().insert(metric);
+                        rxDbManager.getMetricsTable().insert(metric);
                     }
 
                     for (RobotEvent robotEvent : robot_events) {
-                        dbManager.getRobotEvents().insert(robotEvent);
+                        rxDbManager.getRobotEvents().insert(robotEvent);
                     }
 
                     for (Robot robot : robots) {
-                        dbManager.getRobotsTable().insert(robot);
+                        rxDbManager.getRobotsTable().insert(robot);
                     }
 
                     for (Team team : teams) {
-                        dbManager.getTeamsTable().insert(team);
+                        rxDbManager.getTeamsTable().insert(team);
                     }
 
                     for (Match match : schedule.matches) {
-                        dbManager.getMatchesTable().insert(match);
+                        rxDbManager.getMatchesTable().insert(match);
                     }
 
-                    dbManager.getEventsTable().insert(event);
-                    dbManager.getGamesTable().insert(game);
+            rxDbManager.getEventsTable().insert(event);
+            rxDbManager.getGamesTable().insert(game);
                 }
         );
 

@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.adapters.tab.ViewTeamPagerAdapter;
+import com.team2052.frckrawler.adapters.tab.TeamInfoPagerAdapter;
 
 /**
  * @author Adam
@@ -32,7 +32,7 @@ public class TeamInfoActivity extends DatabaseActivity {
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        viewPager.setAdapter(new ViewTeamPagerAdapter(this, getSupportFragmentManager(), team_id));
+        viewPager.setAdapter(new TeamInfoPagerAdapter(this, getSupportFragmentManager(), team_id));
         tabLayout.setupWithViewPager(viewPager);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));

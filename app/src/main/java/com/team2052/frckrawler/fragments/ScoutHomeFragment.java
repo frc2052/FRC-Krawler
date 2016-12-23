@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jakewharton.rxbinding.view.RxView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.HasComponent;
 import com.team2052.frckrawler.activities.NavigationDrawerActivity;
@@ -20,7 +21,7 @@ import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncSuccessEvent;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.util.BluetoothUtil;
@@ -30,12 +31,14 @@ import com.team2052.frckrawler.util.SnackbarUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import rx.functions.Action1;
+
 /**
  * Created by Adam on 11/24/2015.
  */
 public class ScoutHomeFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_ENABLE_BT = 1;
-    DBManager dbManager;
+    RxDBManager rxDbManager;
     private ScoutSyncHandler scoutSyncHandler;
     private FragmentComponent mComponent;
     private Event mEvent;
@@ -47,7 +50,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         if (getActivity() instanceof HasComponent) {
             mComponent = ((HasComponent) getActivity()).getComponent();
         }
-        dbManager = mComponent.dbManager();
+        rxDbManager = mComponent.dbManager();
         scoutSyncHandler = mComponent.scoutSyncHander();
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
@@ -65,16 +68,38 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         return inflater.inflate(R.layout.fragment_scout_home, null, false);
     }
 
+    public Action1<Void> startScoutingActivity(int type) {
+        return aVoid -> {
+            if (mEvent != null) {
+                startActivity(ScoutActivity.newInstance(getActivity(), mEvent, type));
+            } else {
+                SnackbarUtil.make(getView(), "Unable to find event", Snackbar.LENGTH_LONG).show();
+                setCurrentEvent(ScoutUtil.getScoutEvent(getContext()));
+            }
+        };
+    }
+
     @Override
+
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        view.findViewById(R.id.scout_match_button).setOnClickListener(this);
-        view.findViewById(R.id.scout_pit_button).setOnClickListener(this);
-        view.findViewById(R.id.scout_practice_button).setOnClickListener(this);
+        RxView.clicks(view.findViewById(R.id.scout_match_button)).doOnNext(startScoutingActivity(ScoutActivity.MATCH_SCOUT_TYPE)).subscribe();
+        RxView.clicks(view.findViewById(R.id.scout_pit_button)).doOnNext(startScoutingActivity(ScoutActivity.PIT_SCOUT_TYPE)).subscribe();
+        RxView.clicks(view.findViewById(R.id.scout_practice_button)).doOnNext(startScoutingActivity(ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE)).subscribe();
         view.findViewById(R.id.sync_button).setOnClickListener(this);
 
         setCurrentEvent(ScoutUtil.getScoutEvent(getContext()));
 
         syncButton = view.findViewById(R.id.sync_button);
+
+        RxView.clicks(syncButton).map(aVoid -> {
+            if (!BluetoothUtil.hasBluetoothAdapter()) {
+                throw new RuntimeException("Bluetooth is not supported");
+            }
+
+            return aVoid;
+        });
+
+
         syncProgressBar = view.findViewById(R.id.sync_progress_bar);
 
         if (ScoutUtil.getDeviceIsScout(getContext()) && getActivity() instanceof NavigationDrawerActivity) {
@@ -94,24 +119,6 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
                 } else {
                     scoutSyncHandler.startScoutSync(getContext());
                 }
-            }
-        } else {
-            if (mEvent != null) {
-                switch (v.getId()) {
-                    case R.id.scout_match_button:
-                        startActivity(ScoutActivity.newInstance(getActivity(), mEvent, ScoutActivity.MATCH_SCOUT_TYPE));
-                        break;
-                    case R.id.scout_pit_button:
-                        startActivity(ScoutActivity.newInstance(getActivity(), mEvent, ScoutActivity.PIT_SCOUT_TYPE));
-                        break;
-                    case R.id.scout_practice_button:
-                        startActivity(ScoutActivity.newInstance(getActivity(), mEvent, ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE));
-                        break;
-                }
-            } else {
-                SnackbarUtil.make(getView(), "Unable to find event", Snackbar.LENGTH_LONG).show();
-                //Try to reload the event
-                setCurrentEvent(ScoutUtil.getScoutEvent(getContext()));
             }
         }
     }
@@ -157,9 +164,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getActivity().getString(R.string.sync_error_title));
         builder.setMessage(event.message == null ? getActivity().getString(R.string.sync_error_message) : event.message);
-        builder.setNeutralButton(getString(R.string.close), (dialog, which) -> {
-            dialog.dismiss();
-        });
+        builder.setNeutralButton(getString(R.string.close), (dialog, which) -> dialog.dismiss());
         builder.show();
     }
 

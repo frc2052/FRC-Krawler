@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.util.MetricHelper;
 import com.team2052.frckrawler.util.Tuple2;
 
 import java.text.DecimalFormat;
@@ -55,7 +56,7 @@ public class CompiledMetricValue {
                 }
 
                 for (MetricValue metricValue : metricData) {
-                    Tuple2<Boolean, MetricHelper.ReturnResult> result = MetricHelper.compileBooleanMetricValue(metricValue);
+                    Tuple2<Boolean, MetricHelper.ReturnResult> result = MetricHelper.getBooleanMetricValue(metricValue);
 
                     if (result.t2.isError)
                         continue;

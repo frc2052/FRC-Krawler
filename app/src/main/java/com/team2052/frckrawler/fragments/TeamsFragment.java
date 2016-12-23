@@ -1,19 +1,12 @@
 package com.team2052.frckrawler.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.GameInfoActivity;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
-import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.binding.RecyclerViewBinder;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
 import com.team2052.frckrawler.listitems.smart.TeamItemView;
 import com.team2052.frckrawler.subscribers.TeamListSubscriber;
@@ -22,8 +15,6 @@ import java.util.List;
 
 import io.nlopez.smartadapters.SmartAdapter;
 import rx.Observable;
-
-import static com.team2052.frckrawler.R.id.game;
 
 public class TeamsFragment extends RecyclerViewFragment<List<Team>, TeamListSubscriber, RecyclerViewBinder> {
     @Override
@@ -44,7 +35,7 @@ public class TeamsFragment extends RecyclerViewFragment<List<Team>, TeamListSubs
 
     @Override
     protected Observable<? extends List<Team>> getObservable() {
-        return dbManager.allTeams();
+        return rxDbManager.allTeams();
     }
 
     @Override

@@ -83,13 +83,12 @@ public class ScoutSyncHandler extends ContextWrapper {
             return;
         }
 
-
         BluetoothDevice bluetoothDevice = ScoutUtil.getSyncDevice(context);
         if (bluetoothDevice != null) {
             startSync(bluetoothDevice, context);
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            Set<BluetoothDevice> devices = ScoutUtil.getAllBluetoothDevices();
+            Set<BluetoothDevice> devices = BluetoothUtil.getAllBluetoothDevices();
             if (devices != null) {
                 if (devices.isEmpty()) {
                     builder.setTitle("No Devices are paired with this device");
@@ -98,8 +97,8 @@ public class ScoutSyncHandler extends ContextWrapper {
                     });
                 } else {
                     builder.setTitle("Select Server Device");
-                    builder.setItems(ScoutUtil.getDeviceNames(devices), (dialog, which) -> {
-                        BluetoothDevice[] allBluetoothDevicesArray = ScoutUtil.getAllBluetoothDevicesArray();
+                    builder.setItems(BluetoothUtil.getDeviceNames(devices), (dialog, which) -> {
+                        BluetoothDevice[] allBluetoothDevicesArray = BluetoothUtil.getAllBluetoothDevicesArray();
                         if (allBluetoothDevicesArray != null) {
                             ScoutSyncHandler.this.startSync(allBluetoothDevicesArray[which], context);
                         }

@@ -3,9 +3,15 @@ package com.team2052.frckrawler.database.metric;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.MatchData;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.tba.JSON;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -50,6 +56,29 @@ public class CompileUtil {
             throw new RuntimeException(e);
         }
         return file;
+    };
+
+    public static Func1<MatchData, String> convertMatchDataToStringFunc = matchData -> {
+        Metric metric = matchData.getMetric();
+        if (matchData == null) {
+            return "";
+        }
+
+        JsonObject data = JSON.getAsJsonObject(matchData.getData());
+
+        if (metric.getType() < 3) {
+            return data.get("value").toString();
+        } else {
+            JsonObject metricData = JSON.getAsJsonObject(metric.getData());
+            JsonArray dataIndexes = data.getAsJsonArray("values");
+            JsonArray valueArray = metricData.getAsJsonArray("values");
+            List<String> selected = Lists.newArrayListWithExpectedSize(dataIndexes.size());
+            for (int i = 0; i < dataIndexes.size(); i++) {
+                int dataIndex = dataIndexes.get(i).getAsInt();
+                selected.add(valueArray.get(dataIndex).toString());
+            }
+            return Joiner.on(", ").join(selected);
+        }
     };
 
     public static Func1<List<MetricValue>, CompiledMetricValue> metricValuesToCompiledValue(Robot robot, Metric metric, float compileWeight) {

@@ -2,7 +2,6 @@ package com.team2052.frckrawler.fragments.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -11,27 +10,26 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.SimpleListElement;
 import com.team2052.frckrawler.tba.ConnectionChecker;
-import com.team2052.frckrawler.tba.HTTP;
-import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.tba.TBA;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Calendar;
+
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Used to import a event to a game in the most simple way for the user.
@@ -44,8 +42,8 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     private Spinner yearSpinner;
     private Spinner eventSpinner;
     private Game mGame;
-    private LoadAllEventsByYear eventsByYear;
     private boolean isConnected;
+    private Subscription eventSubscription;
 
     /**
      * Used to create the dialog. To import the event to the game
@@ -64,12 +62,25 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mGame = DBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        this.mGame = RxDBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
         isConnected = ConnectionChecker.isConnectedToInternet(getActivity());
 
-        yearDropDownItems = new String[Constants.MAX_COMP_YEAR - Constants.FIRST_COMP_YEAR + 1];
+        // Get year
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+
+        //TBA usually updates events around october
+        if (calendar.get(Calendar.MONTH) > Calendar.SEPTEMBER) {
+            year += 1;
+        }
+
+        if (year < Constants.FIRST_COMP_YEAR) {
+            year = Constants.MAX_COMP_YEAR;
+        }
+
+        yearDropDownItems = new String[year - Constants.FIRST_COMP_YEAR + 1];
         for (int i = 0; i < yearDropDownItems.length; i++) {
-            yearDropDownItems[i] = Integer.toString(Constants.MAX_COMP_YEAR - i);
+            yearDropDownItems[i] = Integer.toString(year - i);
         }
     }
 
@@ -103,9 +114,10 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        if (eventsByYear != null && !eventsByYear.isCancelled()) {
-            eventsByYear.cancel(false);
+        if (eventSubscription != null && !eventSubscription.isUnsubscribed()) {
+            eventSubscription.unsubscribe();
         }
+
         if (getParentFragment() != null && getParentFragment() instanceof RefreshListener) {
             ((RefreshListener) getParentFragment()).refresh();
         }
@@ -115,57 +127,29 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (isConnected) {
-            eventsByYear = new LoadAllEventsByYear(Integer.parseInt((String) yearSpinner.getSelectedItem()));
             eventSpinner.setVisibility(View.GONE);
+
             getDialog().findViewById(R.id.progress).setVisibility(View.VISIBLE);
-            eventsByYear.execute();
+            eventSubscription = TBA.requestEventsYear(Integer.parseInt((String) yearSpinner.getSelectedItem()))
+                    .flatMap(Observable::from)
+                    .map(event -> (ListItem) new SimpleListElement(event.getName(), event.getFmsid()))
+                    .toList()
+                    .map(simpleListElements -> new ListViewAdapter(getActivity(), simpleListElements))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(listViewAdapter -> eventSpinner.setAdapter(listViewAdapter),
+                            throwable -> {
+                                throwable.printStackTrace();
+                                FirebaseCrash.report(throwable);
+                            }, () -> {
+                                eventSpinner.setVisibility(View.VISIBLE);
+                                getDialog().findViewById(R.id.progress).setVisibility(View.GONE);
+                            });
         }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-    }
-
-    /**
-     * Used to load all events and post it to a mSpinner list
-     *
-     * @author Adam
-     */
-    private class LoadAllEventsByYear extends AsyncTask<Void, Void, List<Event>> {
-        private final String url;
-
-        public LoadAllEventsByYear(int year) {
-            this.url = String.format(TBA.EVENT_BY_YEAR, year);
-        }
-
-        @Override
-        protected List<Event> doInBackground(Void... params) {
-            //Get the response for the events by year
-            JsonArray jsonArray = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url)));
-            //Create an array for events
-            List<Event> events = new ArrayList<>();
-            for (JsonElement element : jsonArray) {
-                //Add the events to the list
-                events.add(JSON.getGson().fromJson(element, Event.class));
-            }
-            //Sort the event by date
-            Collections.sort(events, (event, event2) -> Double.compare(event.getDate().getTime(), event2.getDate().getTime()));
-            return events;
-        }
-
-        @Override
-        protected void onPostExecute(List<Event> events) {
-            //Create listitems so the UI can read it
-            ArrayList<ListItem> listItems = new ArrayList<>();
-            for (Event event : events) {
-                listItems.add(new SimpleListElement(event.getName(), event.getFmsid()));
-            }
-            //Set the adapter for the events mSpinner
-            ListViewAdapter adapter = new ListViewAdapter(getActivity(), listItems);
-            eventSpinner.setAdapter(adapter);
-            getDialog().findViewById(R.id.progress).setVisibility(View.GONE);
-            eventSpinner.setVisibility(View.VISIBLE);
-        }
     }
 }
 

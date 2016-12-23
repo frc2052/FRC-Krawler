@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.di.DaggerFragmentComponent;
 import com.team2052.frckrawler.di.FragmentComponent;
@@ -79,7 +79,7 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
             }
 
             addPreferencesFromResource(R.xml.preferences);
-            int numEvents = DBManager.getInstance(getActivity()).getEventsTable().getAllEvents().size();
+            int numEvents = RxDBManager.getInstance(getActivity()).getEventsTable().getAllEvents().size();
 
             findPreference(EXPORT_PREFERENCE_KEY).setEnabled(numEvents >= 1);
             findPreference(EXPORT_RAW_PREFERENCE_KEY).setEnabled(numEvents >= 1);

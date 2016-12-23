@@ -10,10 +10,6 @@ import com.team2052.frckrawler.R;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
-/**
- * @author Adam
- * @since 12/27/14.
- */
 public class Util {
     public static int getPixelsFromDp(Context c, int dipValue) {
         Resources r = c.getResources();

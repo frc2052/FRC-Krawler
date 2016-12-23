@@ -69,7 +69,7 @@ public class MatchListFragment extends RecyclerViewFragment<List<Match>, MatchLi
 
     @Override
     protected Observable<? extends List<Match>> getObservable() {
-        return dbManager.matchesAtEvent(mEvent_id);
+        return rxDbManager.matchesAtEvent(mEvent_id);
     }
 
     @Override

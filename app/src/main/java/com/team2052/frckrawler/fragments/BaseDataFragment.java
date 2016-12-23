@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 
 import com.team2052.frckrawler.activities.HasComponent;
 import com.team2052.frckrawler.binding.BaseDataBinder;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.subscribers.BaseDataSubscriber;
 
@@ -25,7 +25,7 @@ public abstract class BaseDataFragment
         <T, V, S extends BaseDataSubscriber<T, V>, B extends BaseDataBinder<V>>
         extends Fragment {
     protected FragmentComponent mComponent;
-    protected DBManager dbManager;
+    protected RxDBManager rxDbManager;
     @Inject
     protected S subscriber;
     @Inject
@@ -38,7 +38,7 @@ public abstract class BaseDataFragment
             mComponent = ((HasComponent) getActivity()).getComponent();
         }
         inject();
-        dbManager = mComponent.dbManager();
+        rxDbManager = mComponent.dbManager();
         subscriber.setConsumer(binder);
         binder.setActivity(getActivity());
     }

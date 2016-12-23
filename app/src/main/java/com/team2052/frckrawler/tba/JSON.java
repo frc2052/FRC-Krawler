@@ -6,7 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.Team;
@@ -18,7 +18,7 @@ import com.team2052.frckrawler.tba.types.TeamDeserializer;
  * @author Adam
  */
 public class JSON {
-    private static DBManager _daoSession = null;
+    private static RxDBManager _daoSession = null;
     private static Gson gson;
     private static JsonParser parser;
 
@@ -58,11 +58,11 @@ public class JSON {
         return getParser().parse(in).getAsJsonArray();
     }
 
-    public static DBManager get_daoSession() {
+    public static RxDBManager get_daoSession() {
         return _daoSession;
     }
 
-    public static void set_daoSession(DBManager dbManager) {
-        JSON._daoSession = dbManager;
+    public static void set_daoSession(RxDBManager rxDbManager) {
+        JSON._daoSession = rxDbManager;
     }
 }

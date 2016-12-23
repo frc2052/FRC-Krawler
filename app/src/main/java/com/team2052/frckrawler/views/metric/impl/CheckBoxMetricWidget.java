@@ -8,8 +8,8 @@ import android.widget.TextView;
 import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.database.metric.MetricValue;
+import com.team2052.frckrawler.util.MetricHelper;
 import com.team2052.frckrawler.util.Tuple2;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 

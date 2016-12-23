@@ -6,9 +6,9 @@ import android.widget.FrameLayout;
 
 import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
-import com.team2052.frckrawler.database.metric.MetricHelper;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.util.MetricHelper;
 import com.team2052.frckrawler.views.metric.impl.BooleanMetricWidget;
 import com.team2052.frckrawler.views.metric.impl.CheckBoxMetricWidget;
 import com.team2052.frckrawler.views.metric.impl.ChooserMetricWidget;

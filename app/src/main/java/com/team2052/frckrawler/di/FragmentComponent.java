@@ -14,7 +14,7 @@ import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.binding.BinderModule;
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
-import com.team2052.frckrawler.database.DBManager;
+import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.database.metric.Compiler;
 import com.team2052.frckrawler.fragments.EventInfoFragment;
 import com.team2052.frckrawler.fragments.EventsFragment;
@@ -45,7 +45,7 @@ import dagger.Component;
         BinderModule.class,
 }, dependencies = ApplicationComponent.class)
 public interface FragmentComponent {
-    DBManager dbManager();
+    RxDBManager dbManager();
 
     ScoutSyncHandler scoutSyncHander();
 
