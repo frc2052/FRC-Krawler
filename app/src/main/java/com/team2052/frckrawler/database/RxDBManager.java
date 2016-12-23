@@ -157,7 +157,7 @@ public class RxDBManager extends DBManager {
     }
 
     public Observable<? extends Map<String, String>> gameInfo(Game mGame) {
-        return Observable.create(subscriber -> {
+        return Observable.just(mGame).map(game -> {
             Map<String, String> info = Maps.newLinkedHashMap();
             mGame.resetEventList();
             mGame.resetRobotList();
@@ -166,22 +166,19 @@ public class RxDBManager extends DBManager {
             info.put(resources.getString(R.string.game_info_num_of_robots), Integer.toString(mGame.getRobotList().size()));
             info.put(resources.getString(R.string.game_info_num_of_match_metrics), Integer.toString(getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.MATCH_PERF_METRICS)));
             info.put(resources.getString(R.string.game_info_num_of_pit_metrics), Integer.toString(getMetricsTable().getNumberOfMetrics(mGame, MetricHelper.ROBOT_METRICS)));
-
-            subscriber.onNext(info);
-            subscriber.onCompleted();
+            return info;
         });
     }
 
-    public Observable<? extends Map<String, String>> eventInfo(Event event) {
-        return Observable.create(subscriber -> {
+    public Observable<? extends Map<String, String>> eventInfo(Event event_) {
+        return Observable.just(event_).map(event -> {
             Map<String, String> info = Maps.newLinkedHashMap();
             Resources resources = context.getResources();
-            info.put(resources.getString(R.string.event_info_num_of_teams), Integer.toString(getEventsTable().getTeamsAtEvent(event).size()));
-            info.put(resources.getString(R.string.event_info_num_of_matches), Integer.toString(getEventsTable().getMatches(event).size()));
-            info.put(resources.getString(R.string.event_info_num_of_pit_data), Integer.toString(getEventsTable().getPitData(event).size()));
-            info.put(resources.getString(R.string.event_info_num_of_match_data), Integer.toString(getEventsTable().getMatchData(event).size()));
-            subscriber.onNext(info);
-            subscriber.onCompleted();
+            info.put(resources.getString(R.string.event_info_num_of_teams), Integer.toString(getEventsTable().getTeamsAtEvent(event_).size()));
+            info.put(resources.getString(R.string.event_info_num_of_matches), Integer.toString(getEventsTable().getMatches(event_).size()));
+            info.put(resources.getString(R.string.event_info_num_of_pit_data), Integer.toString(getEventsTable().getPitData(event_).size()));
+            info.put(resources.getString(R.string.event_info_num_of_match_data), Integer.toString(getEventsTable().getMatchData(event_).size()));
+            return info;
         });
     }
 
