@@ -2,10 +2,10 @@ package com.team2052.frckrawler.database.metric;
 
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.MatchData;
-import com.team2052.frckrawler.db.MatchDataDao;
+import com.team2052.frckrawler.db.MatchDatum;
+import com.team2052.frckrawler.db.MatchDatumDao;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.PitDatum;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.tba.JSON;
@@ -30,19 +30,19 @@ public class MetricCompiler {
         List<CompiledMetricValue> compiledMetricValues = new ArrayList<>();
         for (RobotEvent robotEvents : robotEventses) {
             List<MetricValue> metricData = new ArrayList<>();
-            Robot robot = rxDbManager.getRobotEvents().getRobot(robotEvents);
+            Robot robot = rxDbManager.getRobotEventsTable().getRobot(robotEvents);
             if (metric.getCategory() == MetricHelper.MATCH_PERF_METRICS) {
-                QueryBuilder<MatchData> queryBuilder = rxDbManager.getMatchDataTable().query(robot.getId(), metric.getId(), null, 0, event.getId()).orderAsc(MatchDataDao.Properties.Match_number);
+                QueryBuilder<MatchDatum> queryBuilder = rxDbManager.getMatchDataTable().query(robot.getId(), metric.getId(), null, 0, event.getId()).orderAsc(MatchDatumDao.Properties.Match_number);
 
-                for (MatchData matchData : queryBuilder.list()) {
-                    metricData.add(new MetricValue(rxDbManager.getMatchDataTable().getMetric(matchData), JSON.getAsJsonObject(matchData.getData())));
+                for (MatchDatum matchDatum : queryBuilder.list()) {
+                    metricData.add(new MetricValue(rxDbManager.getMatchDataTable().getMetric(matchDatum), JSON.getAsJsonObject(matchDatum.getData())));
                 }
 
             } else if (metric.getCategory() == MetricHelper.ROBOT_METRICS) {
-                QueryBuilder<PitData> queryBuilder = rxDbManager.getPitDataTable().query(robot.getId(), metric.getId(), event.getId());
+                QueryBuilder<PitDatum> queryBuilder = rxDbManager.getPitDataTable().query(robot.getId(), metric.getId(), event.getId());
 
-                for (PitData pitData : queryBuilder.list()) {
-                    metricData.add(new MetricValue(rxDbManager.getPitDataTable().getMetric(pitData), JSON.getAsJsonObject(pitData.getData())));
+                for (PitDatum pitDatum : queryBuilder.list()) {
+                    metricData.add(new MetricValue(rxDbManager.getPitDataTable().getMetric(pitDatum), JSON.getAsJsonObject(pitDatum.getData())));
                 }
             }
             compiledMetricValues.add(new CompiledMetricValue(robot, metric, metricData, compileWeight));

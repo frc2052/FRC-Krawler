@@ -33,15 +33,13 @@ public class GameDao extends AbstractDao<Game, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"GAME\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
                 "\"NAME\" TEXT);"); // 1: name
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"GAME\"";
         db.execSQL(sql);
@@ -101,14 +99,14 @@ public class GameDao extends AbstractDao<Game, Long> {
     public void readEntity(Cursor cursor, Game entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-    }
-
+     }
+     
     @Override
     protected final Long updateKeyAfterInsert(Game entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-
+    
     @Override
     public Long getKey(Game entity) {
         if (entity != null) {
@@ -117,7 +115,7 @@ public class GameDao extends AbstractDao<Game, Long> {
             return null;
         }
     }
-
+    
     @Override
     public boolean hasKey(Game entity) {
         return entity.getId() != null;
@@ -136,5 +134,5 @@ public class GameDao extends AbstractDao<Game, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
     }
-
+    
 }

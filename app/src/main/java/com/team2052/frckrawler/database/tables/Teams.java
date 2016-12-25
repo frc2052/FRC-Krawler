@@ -43,7 +43,7 @@ public class Teams extends Table<Team, TeamDao> {
             dbManager.getRobotsTable().insert(robot);
         }
 
-        QueryBuilder<RobotEvent> robotEventQueryBuilder = dbManager.getRobotEvents().getQueryBuilder();
+        QueryBuilder<RobotEvent> robotEventQueryBuilder = dbManager.getRobotEventsTable().getQueryBuilder();
         robotEventQueryBuilder.where(RobotEventDao.Properties.Event_id.eq(event.getId()));
         robotEventQueryBuilder.where(RobotEventDao.Properties.Robot_id.eq(robot.getId()));
         RobotEvent robotEvent = robotEventQueryBuilder.unique();
@@ -51,7 +51,7 @@ public class Teams extends Table<Team, TeamDao> {
 
         if (!robot_event_exists) {
             robotEvent = new RobotEvent(null, robot.getId(), event.getId(), null);
-            dbManager.getRobotEvents().insert(robotEvent);
+            dbManager.getRobotEventsTable().insert(robotEvent);
         }
     }
 

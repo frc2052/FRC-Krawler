@@ -2,10 +2,10 @@ package com.team2052.frckrawler.database.tables;
 
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDatum;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.MetricDao;
-import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.PitDatum;
 import com.team2052.frckrawler.util.MetricHelper;
 
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -42,9 +42,9 @@ public class Metrics extends Table<Metric, MetricDao> {
         dao.insertOrReplace(metric);
     }
 
-    public List<MatchData> getMatchDataList(Metric metric) {
-        metric.resetMatchDataList();
-        return metric.getMatchDataList();
+    public List<MatchDatum> getMatchDataList(Metric metric) {
+        metric.resetMatchDatumList();
+        return metric.getMatchDatumList();
     }
 
     @Override
@@ -52,18 +52,18 @@ public class Metrics extends Table<Metric, MetricDao> {
         return dao.load(id);
     }
 
-    public List<PitData> getPitDataList(Metric metric) {
-        metric.resetPitDataList();
-        return metric.getPitDataList();
+    public List<PitDatum> getPitDataList(Metric metric) {
+        metric.resetPitDatumList();
+        return metric.getPitDatumList();
     }
 
     @Override
     public void delete(Metric metric) {
-        metric.resetMatchDataList();
-        metric.resetPitDataList();
+        metric.resetMatchDatumList();
+        metric.resetPitDatumList();
 
-        dbManager.getPitDataTable().getDao().deleteInTx(metric.getPitDataList());
-        dbManager.getMatchDataTable().getDao().deleteInTx(metric.getMatchDataList());
+        dbManager.getPitDataTable().getDao().deleteInTx(metric.getPitDatumList());
+        dbManager.getMatchDataTable().getDao().deleteInTx(metric.getMatchDatumList());
         dao.delete(metric);
     }
 }

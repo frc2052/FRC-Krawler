@@ -41,7 +41,7 @@ public class RobotDao extends AbstractDao<Robot, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"ROBOT\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
                 "\"TEAM_ID\" INTEGER NOT NULL ," + // 1: team_id
@@ -51,9 +51,7 @@ public class RobotDao extends AbstractDao<Robot, Long> {
                 "\"LAST_UPDATED\" INTEGER);"); // 5: last_updated
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"ROBOT\"";
         db.execSQL(sql);
@@ -62,24 +60,24 @@ public class RobotDao extends AbstractDao<Robot, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, Robot entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getTeam_id());
         stmt.bindLong(3, entity.getGame_id());
-
+ 
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(4, data);
         }
-
+ 
         String comments = entity.getComments();
         if (comments != null) {
             stmt.bindString(5, comments);
         }
-
+ 
         java.util.Date last_updated = entity.getLast_updated();
         if (last_updated != null) {
             stmt.bindLong(6, last_updated.getTime());
@@ -89,24 +87,24 @@ public class RobotDao extends AbstractDao<Robot, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, Robot entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getTeam_id());
         stmt.bindLong(3, entity.getGame_id());
-
+ 
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(4, data);
         }
-
+ 
         String comments = entity.getComments();
         if (comments != null) {
             stmt.bindString(5, comments);
         }
-
+ 
         java.util.Date last_updated = entity.getLast_updated();
         if (last_updated != null) {
             stmt.bindLong(6, last_updated.getTime());
@@ -122,7 +120,7 @@ public class RobotDao extends AbstractDao<Robot, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     @Override
     public Robot readEntity(Cursor cursor, int offset) {
@@ -136,7 +134,7 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         );
         return entity;
     }
-
+     
     @Override
     public void readEntity(Cursor cursor, Robot entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -145,14 +143,14 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         entity.setData(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setComments(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setLast_updated(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
-    }
-
+     }
+    
     @Override
     protected final Long updateKeyAfterInsert(Robot entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-
+    
     @Override
     public Long getKey(Robot entity) {
         if (entity != null) {
@@ -172,9 +170,7 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         return true;
     }
 
-    /**
-     * Internal query to resolve the "robotList" to-many relationship of Game.
-     */
+    /** Internal query to resolve the "robotList" to-many relationship of Game. */
     public List<Robot> _queryGame_RobotList(long game_id) {
         synchronized (this) {
             if (game_RobotListQuery == null) {
@@ -188,9 +184,7 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         return query.list();
     }
 
-    /**
-     * Internal query to resolve the "robotList" to-many relationship of Team.
-     */
+    /** Internal query to resolve the "robotList" to-many relationship of Team. */
     public List<Robot> _queryTeam_RobotList(long team_id) {
         synchronized (this) {
             if (team_RobotListQuery == null) {
@@ -238,7 +232,7 @@ public class RobotDao extends AbstractDao<Robot, Long> {
 
         return entity;
     }
-
+    
     public Robot loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
@@ -250,7 +244,7 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
         String sql = builder.toString();
 
-        String[] keyArray = new String[]{key.toString()};
+        String[] keyArray = new String[]{key.toString() };
         Cursor cursor = db.rawQuery(sql, keyArray);
 
         try {
@@ -266,9 +260,7 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         }
     }
 
-    /**
-     * Reads all available rows from the given cursor and returns a list of new ImageTO objects.
-     */
+    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
     public List<Robot> loadAllDeepFromCursor(Cursor cursor) {
         int count = cursor.getCount();
         List<Robot> list = new ArrayList<Robot>(count);
@@ -290,7 +282,7 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         }
         return list;
     }
-
+    
     protected List<Robot> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
@@ -299,14 +291,12 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         }
     }
 
-    /**
-     * A raw-style query where you can pass any WHERE clause and arguments.
-     */
+    /** A raw-style query where you can pass any WHERE clause and arguments. */
     public List<Robot> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
     }
-
+    
     /**
      * Properties of entity Robot.<br/>
      * Can be used for QueryBuilder and for referencing column names.
@@ -319,5 +309,5 @@ public class RobotDao extends AbstractDao<Robot, Long> {
         public final static Property Comments = new Property(4, String.class, "comments", false, "COMMENTS");
         public final static Property Last_updated = new Property(5, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
     }
-
+ 
 }

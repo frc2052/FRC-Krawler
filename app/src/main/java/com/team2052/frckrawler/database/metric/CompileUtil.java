@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDatum;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
@@ -58,7 +58,7 @@ public class CompileUtil {
         return file;
     };
 
-    public static Func1<MatchData, String> convertMatchDataToStringFunc = matchData -> {
+    public static Func1<MatchDatum, String> convertMatchDataToStringFunc = matchData -> {
         Metric metric = matchData.getMetric();
         if (matchData == null) {
             return "";

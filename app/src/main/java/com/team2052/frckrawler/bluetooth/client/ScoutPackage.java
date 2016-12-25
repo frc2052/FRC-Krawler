@@ -45,13 +45,13 @@ public class ScoutPackage implements Serializable {
         robot_events = event.getRobotEventList();
 
         for (RobotEvent robotEvent : robot_events) {
-            robots.add(rxDbManager.getRobotEvents().getRobot(robotEvent));
+            robots.add(rxDbManager.getRobotEventsTable().getRobot(robotEvent));
         }
 
         schedule = new Schedule(event);
 
         for (RobotEvent robotEvent : robot_events) {
-            teams.add(rxDbManager.getRobotEvents().getTeam(robotEvent));
+            teams.add(rxDbManager.getRobotEventsTable().getTeam(robotEvent));
         }
     }
 
@@ -63,7 +63,7 @@ public class ScoutPackage implements Serializable {
                     }
 
                     for (RobotEvent robotEvent : robot_events) {
-                        rxDbManager.getRobotEvents().insert(robotEvent);
+                        rxDbManager.getRobotEventsTable().insert(robotEvent);
                     }
 
                     for (Robot robot : robots) {

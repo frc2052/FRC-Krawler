@@ -40,7 +40,7 @@ public class MatchDao extends AbstractDao<Match, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"MATCH\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"MATCH_KEY\" TEXT UNIQUE ," + // 1: match_key
@@ -50,9 +50,7 @@ public class MatchDao extends AbstractDao<Match, Long> {
                 "\"DATA\" TEXT);"); // 5: data
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"MATCH\"";
         db.execSQL(sql);
@@ -61,28 +59,28 @@ public class MatchDao extends AbstractDao<Match, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, Match entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
-
+ 
         String match_key = entity.getMatch_key();
         if (match_key != null) {
             stmt.bindString(2, match_key);
         }
-
+ 
         String match_type = entity.getMatch_type();
         if (match_type != null) {
             stmt.bindString(3, match_type);
         }
-
+ 
         Integer match_number = entity.getMatch_number();
         if (match_number != null) {
             stmt.bindLong(4, match_number);
         }
         stmt.bindLong(5, entity.getEvent_id());
-
+ 
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(6, data);
@@ -92,28 +90,28 @@ public class MatchDao extends AbstractDao<Match, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, Match entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
-
+ 
         String match_key = entity.getMatch_key();
         if (match_key != null) {
             stmt.bindString(2, match_key);
         }
-
+ 
         String match_type = entity.getMatch_type();
         if (match_type != null) {
             stmt.bindString(3, match_type);
         }
-
+ 
         Integer match_number = entity.getMatch_number();
         if (match_number != null) {
             stmt.bindLong(4, match_number);
         }
         stmt.bindLong(5, entity.getEvent_id());
-
+ 
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(6, data);
@@ -129,7 +127,7 @@ public class MatchDao extends AbstractDao<Match, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     @Override
     public Match readEntity(Cursor cursor, int offset) {
@@ -143,7 +141,7 @@ public class MatchDao extends AbstractDao<Match, Long> {
         );
         return entity;
     }
-
+     
     @Override
     public void readEntity(Cursor cursor, Match entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -152,14 +150,14 @@ public class MatchDao extends AbstractDao<Match, Long> {
         entity.setMatch_number(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
         entity.setEvent_id(cursor.getLong(offset + 4));
         entity.setData(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-    }
-
+     }
+    
     @Override
     protected final Long updateKeyAfterInsert(Match entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-
+    
     @Override
     public Long getKey(Match entity) {
         if (entity != null) {
@@ -179,9 +177,7 @@ public class MatchDao extends AbstractDao<Match, Long> {
         return true;
     }
 
-    /**
-     * Internal query to resolve the "matchList" to-many relationship of Event.
-     */
+    /** Internal query to resolve the "matchList" to-many relationship of Event. */
     public List<Match> _queryEvent_MatchList(long event_id) {
         synchronized (this) {
             if (event_MatchListQuery == null) {
@@ -220,7 +216,7 @@ public class MatchDao extends AbstractDao<Match, Long> {
 
         return entity;
     }
-
+    
     public Match loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
@@ -232,7 +228,7 @@ public class MatchDao extends AbstractDao<Match, Long> {
         SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
         String sql = builder.toString();
 
-        String[] keyArray = new String[]{key.toString()};
+        String[] keyArray = new String[]{key.toString() };
         Cursor cursor = db.rawQuery(sql, keyArray);
 
         try {
@@ -248,9 +244,7 @@ public class MatchDao extends AbstractDao<Match, Long> {
         }
     }
 
-    /**
-     * Reads all available rows from the given cursor and returns a list of new ImageTO objects.
-     */
+    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
     public List<Match> loadAllDeepFromCursor(Cursor cursor) {
         int count = cursor.getCount();
         List<Match> list = new ArrayList<Match>(count);
@@ -272,7 +266,7 @@ public class MatchDao extends AbstractDao<Match, Long> {
         }
         return list;
     }
-
+    
     protected List<Match> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
@@ -281,14 +275,12 @@ public class MatchDao extends AbstractDao<Match, Long> {
         }
     }
 
-    /**
-     * A raw-style query where you can pass any WHERE clause and arguments.
-     */
+    /** A raw-style query where you can pass any WHERE clause and arguments. */
     public List<Match> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
     }
-
+    
     /**
      * Properties of entity Match.<br/>
      * Can be used for QueryBuilder and for referencing column names.
@@ -301,5 +293,5 @@ public class MatchDao extends AbstractDao<Match, Long> {
         public final static Property Event_id = new Property(4, long.class, "event_id", false, "EVENT_ID");
         public final static Property Data = new Property(5, String.class, "data", false, "DATA");
     }
-
+ 
 }

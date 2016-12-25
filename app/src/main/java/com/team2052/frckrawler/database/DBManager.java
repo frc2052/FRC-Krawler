@@ -6,10 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import com.team2052.frckrawler.database.tables.Events;
 import com.team2052.frckrawler.database.tables.Games;
 import com.team2052.frckrawler.database.tables.MatchComments;
-import com.team2052.frckrawler.database.tables.MatchDatas;
+import com.team2052.frckrawler.database.tables.MatchData;
 import com.team2052.frckrawler.database.tables.Matches;
 import com.team2052.frckrawler.database.tables.Metrics;
-import com.team2052.frckrawler.database.tables.PitDatas;
+import com.team2052.frckrawler.database.tables.PitData;
 import com.team2052.frckrawler.database.tables.RobotEvents;
 import com.team2052.frckrawler.database.tables.Robots;
 import com.team2052.frckrawler.database.tables.Teams;
@@ -33,8 +33,8 @@ public class DBManager {
     private final Metrics mMetrics;
     private final RobotEvents mRobotEvents;
     private final MatchComments mMatchComments;
-    private final MatchDatas mMatchDatas;
-    private final PitDatas mPitDatas;
+    private final MatchData mMatchData;
+    private final PitData mPitDatas;
     private final Matches mMatches;
     private final Teams mTeams;
     protected Context context;
@@ -54,8 +54,8 @@ public class DBManager {
         mMetrics = new Metrics(daoSession.getMetricDao(), this);
         mRobotEvents = new RobotEvents(daoSession.getRobotEventDao(), this);
         mMatchComments = new MatchComments(daoSession.getMatchCommentDao(), this);
-        mMatchDatas = new MatchDatas(daoSession.getMatchDataDao(), this);
-        mPitDatas = new PitDatas(daoSession.getPitDataDao(), this);
+        mMatchData = new MatchData(daoSession.getMatchDatumDao(), this);
+        mPitDatas = new PitData(daoSession.getPitDatumDao(), this);
         mMatches = new Matches(daoSession.getMatchDao(), this);
         mTeams = new Teams(daoSession.getTeamDao(), this);
     }
@@ -76,19 +76,19 @@ public class DBManager {
         return mMetrics;
     }
 
-    public RobotEvents getRobotEvents() {
+    public RobotEvents getRobotEventsTable() {
         return mRobotEvents;
     }
 
-    public MatchComments getMatchComments() {
+    public MatchComments getMatchCommentsTable() {
         return mMatchComments;
     }
 
-    public MatchDatas getMatchDataTable() {
-        return mMatchDatas;
+    public MatchData getMatchDataTable() {
+        return mMatchData;
     }
 
-    public PitDatas getPitDataTable() {
+    public PitData getPitDataTable() {
         return mPitDatas;
     }
 

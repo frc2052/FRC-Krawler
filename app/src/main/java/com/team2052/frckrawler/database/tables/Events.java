@@ -2,13 +2,12 @@ package com.team2052.frckrawler.database.tables;
 
 import com.google.common.collect.Lists;
 import com.team2052.frckrawler.database.DBManager;
-import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.EventDao;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.MatchComment;
-import com.team2052.frckrawler.db.MatchData;
-import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.MatchDatum;
+import com.team2052.frckrawler.db.PitDatum;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.Team;
@@ -20,8 +19,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class Events extends Table<Event, EventDao> {
-    private RxDBManager rxDbManager;
-
     public Events(EventDao dao, DBManager dbManager) {
         super(dao, dbManager);
     }
@@ -29,7 +26,7 @@ public class Events extends Table<Event, EventDao> {
     public List<Robot> getRobots(Event event) {
         List<Robot> robots = new ArrayList<>();
         for (RobotEvent robotEvent : getRobotEvents(event)) {
-            robots.add(rxDbManager.getRobotEvents().getRobot(robotEvent));
+            robots.add(dbManager.getRobotEventsTable().getRobot(robotEvent));
         }
         return robots;
     }
@@ -50,11 +47,11 @@ public class Events extends Table<Event, EventDao> {
 
     @Override
     public void delete(Event model) {
-        rxDbManager.getMatchDataTable().delete(getMatchData(model));
-        rxDbManager.getPitDataTable().delete(getPitData(model));
-        rxDbManager.getMatchComments().delete(getMatchComments(model));
-        rxDbManager.getMatchesTable().delete(getMatches(model));
-        rxDbManager.getRobotEvents().delete(getRobotEvents(model));
+        dbManager.getMatchDataTable().delete(getMatchData(model));
+        dbManager.getPitDataTable().delete(getPitData(model));
+        dbManager.getMatchCommentsTable().delete(getMatchComments(model));
+        dbManager.getMatchesTable().delete(getMatches(model));
+        dbManager.getRobotEventsTable().delete(getRobotEvents(model));
         dao.delete(model);
     }
 
@@ -68,14 +65,14 @@ public class Events extends Table<Event, EventDao> {
         return event.getMatchList();
     }
 
-    public List<MatchData> getMatchData(Event event) {
-        event.resetMatchDataList();
-        return event.getMatchDataList();
+    public List<MatchDatum> getMatchData(Event event) {
+        event.resetMatchDatumList();
+        return event.getMatchDatumList();
     }
 
-    public List<PitData> getPitData(Event event) {
-        event.resetPitDataList();
-        return event.getPitDataList();
+    public List<PitDatum> getPitData(Event event) {
+        event.resetPitDatumList();
+        return event.getPitDatumList();
     }
 
     public List<MatchComment> getMatchComments(Event event) {
@@ -96,7 +93,7 @@ public class Events extends Table<Event, EventDao> {
         List<RobotEvent> robotEventList = event.getRobotEventList();
         List<Team> teams = Lists.newArrayList();
         for (RobotEvent robotEvent : robotEventList) {
-            teams.add(rxDbManager.getRobotEvents().getTeam(robotEvent));
+            teams.add(dbManager.getRobotEventsTable().getTeam(robotEvent));
         }
         Collections.sort(teams, (lhs, rhs) -> Double.compare(lhs.getNumber(), rhs.getNumber()));
         return teams;

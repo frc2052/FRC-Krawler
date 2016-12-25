@@ -39,11 +39,6 @@ public class ListViewBinder extends BaseDataBinder<List<ListItem>> {
     }
 
     @Override
-    public void onError(Throwable e) {
-
-    }
-
-    @Override
     public void bindViews() {
         ButterKnife.bind(this, mRootView);
     }

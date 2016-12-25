@@ -10,9 +10,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.team2052.frckrawler.database.metric.MetricValue;
-import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDatum;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.PitDatum;
 import com.team2052.frckrawler.tba.JSON;
 
 import java.lang.annotation.Retention;
@@ -32,8 +32,8 @@ public class MetricHelper {
     public static final int MATCH_GAME_TYPE = 0;
     public static final int MATCH_PRACTICE_TYPE = 1;
 
-    public static Func1<PitData, MetricValue> mapPitDataToMetricValue = pitData -> new MetricValue(pitData.getMetric(), JSON.getAsJsonObject(pitData.getData()));
-    public static Func1<MatchData, MetricValue> mapMatchDataToMetricValue = matchData -> new MetricValue(matchData.getMetric(), JSON.getAsJsonObject(matchData.getData()));
+    public static Func1<PitDatum, MetricValue> mapPitDataToMetricValue = pitData -> new MetricValue(pitData.getMetric(), JSON.getAsJsonObject(pitData.getData()));
+    public static Func1<MatchDatum, MetricValue> mapMatchDataToMetricValue = matchData -> new MetricValue(matchData.getMetric(), JSON.getAsJsonObject(matchData.getData()));
 
     private static Type listType = new TypeToken<List<Integer>>() {
     }.getType();

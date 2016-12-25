@@ -32,5 +32,10 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         if (oldSchemaVer < 4) {
             db.execSQL("DROP TABLE IF EXISTS 'USER'");
         }
+
+        if (oldSchemaVer < 5) {
+            db.execSQL("ALTER TABLE 'MATCH_DATA' RENAME TO 'MATCH_DATUM'");
+            db.execSQL("ALTER TABLE 'PIT_DATA' RENAME TO 'PIT_DATUM'");
+        }
     }
 }

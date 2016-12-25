@@ -7,7 +7,10 @@ import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.List;
 
+import rx.functions.Func1;
+
 abstract class Table<T, D extends AbstractDao<T, Long>> {
+    public Func1<Long, T> mapIdToModel = this::load;
     protected DBManager dbManager;
     D dao;
 

@@ -14,7 +14,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.PitData;
+import com.team2052.frckrawler.db.PitDatum;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.MetricHelper;
@@ -44,9 +44,9 @@ public class ScoutPitFragment extends BaseScoutFragment {
                 for (int i = 0; i < metrics.size(); i++) {
                     Metric metric = metrics.get(i);
                     //Query for existing data
-                    QueryBuilder<PitData> matchDataQueryBuilder = rxDbManager.getPitDataTable().query(robot.getId(), metric.getId(), mEvent.getId());
+                    QueryBuilder<PitDatum> matchDataQueryBuilder = rxDbManager.getPitDataTable().query(robot.getId(), metric.getId(), mEvent.getId());
 
-                    PitData currentData = matchDataQueryBuilder.unique();
+                    PitDatum currentData = matchDataQueryBuilder.unique();
                     //Add the metric values
                     metricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
                 }
@@ -116,13 +116,13 @@ public class ScoutPitFragment extends BaseScoutFragment {
                     boolean saved = false;
                     Robot robot = pitScoutSaveMetric.robot;
                     for (MetricValue widget : pitScoutSaveMetric.metricValues) {
-                        PitData pitData = new PitData(null);
-                        pitData.setRobot(robot);
-                        pitData.setMetric(widget.getMetric());
-                        pitData.setEvent(mEvent);
-                        //pitData.setUser_id(user != null ? user.getId() : null); NOOP
-                        pitData.setData(JSON.getGson().toJson(widget.getValue()));
-                        if (rxDbManager.getPitDataTable().insertWithSaved(pitData) && !saved)
+                        PitDatum pitDatum = new PitDatum(null);
+                        pitDatum.setRobot(robot);
+                        pitDatum.setMetric(widget.getMetric());
+                        pitDatum.setEvent(mEvent);
+                        //pitDatum.setUser_id(user != null ? user.getId() : null); NOOP
+                        pitDatum.setData(JSON.getGson().toJson(widget.getValue()));
+                        if (rxDbManager.getPitDataTable().insertWithSaved(pitDatum) && !saved)
                             saved = true;
                     }
 

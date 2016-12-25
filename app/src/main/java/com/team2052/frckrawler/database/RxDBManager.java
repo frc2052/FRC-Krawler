@@ -17,7 +17,7 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.MatchDao;
-import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDatum;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.Robot;
@@ -35,6 +35,7 @@ import java.util.Map;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 @Singleton
 /**
@@ -43,6 +44,9 @@ import rx.Observable;
  */
 public class RxDBManager extends DBManager {
     private static RxDBManager instance;
+    public Func1<Robot, Team> mapRobotToTeam = Robot::getTeam;
+    public Func1<Robot, Game> mapRobotToGame = Robot::getGame;
+    public Func1<Robot, List<RobotEvent>> mapRobotToRobotEvents = Robot::getRobotEventList;
 
     protected RxDBManager(Context context) {
         super(context);
@@ -121,9 +125,9 @@ public class RxDBManager extends DBManager {
                 .map(matchDatas -> {
                     List<Long> matchNumbers = Lists.newArrayListWithExpectedSize(10);
                     for (int i = 0; i < matchDatas.size(); i++) {
-                        MatchData matchData = matchDatas.get(i);
-                        if (!matchNumbers.contains(matchData.getMatch_number())) {
-                            matchNumbers.add(matchData.getMatch_number());
+                        MatchDatum matchDatum = matchDatas.get(i);
+                        if (!matchNumbers.contains(matchDatum.getMatch_number())) {
+                            matchNumbers.add(matchDatum.getMatch_number());
                         }
                     }
                     Collections.sort(matchNumbers);
@@ -174,10 +178,10 @@ public class RxDBManager extends DBManager {
         return Observable.just(event_).map(event -> {
             Map<String, String> info = Maps.newLinkedHashMap();
             Resources resources = context.getResources();
-            info.put(resources.getString(R.string.event_info_num_of_teams), Integer.toString(getEventsTable().getTeamsAtEvent(event_).size()));
-            info.put(resources.getString(R.string.event_info_num_of_matches), Integer.toString(getEventsTable().getMatches(event_).size()));
-            info.put(resources.getString(R.string.event_info_num_of_pit_data), Integer.toString(getEventsTable().getPitData(event_).size()));
-            info.put(resources.getString(R.string.event_info_num_of_match_data), Integer.toString(getEventsTable().getMatchData(event_).size()));
+            info.put(resources.getString(R.string.event_info_num_of_teams), Integer.toString(getEventsTable().getTeamsAtEvent(event).size()));
+            info.put(resources.getString(R.string.event_info_num_of_matches), Integer.toString(getEventsTable().getMatches(event).size()));
+            info.put(resources.getString(R.string.event_info_num_of_pit_data), Integer.toString(getEventsTable().getPitData(event).size()));
+            info.put(resources.getString(R.string.event_info_num_of_match_data), Integer.toString(getEventsTable().getMatchData(event).size()));
             return info;
         });
     }
@@ -208,5 +212,4 @@ public class RxDBManager extends DBManager {
                     return info;
                 });
     }
-
 }

@@ -5,12 +5,10 @@ import android.support.annotation.Nullable;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchComment;
-import com.team2052.frckrawler.db.MatchData;
-import com.team2052.frckrawler.db.MatchDataDao;
+import com.team2052.frckrawler.db.MatchDatumDao;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.util.MetricHelper;
@@ -22,12 +20,10 @@ import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Executors;
 
 import rx.Observable;
 import rx.Scheduler;
-import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
@@ -109,7 +105,7 @@ public class Compiler {
             if (metric.getCategory() == MetricHelper.MATCH_PERF_METRICS) {
                 metricValueListObservable = rxDbManager.getMatchDataTable()
                         .query(robot.getId(), metric.getId(), null, MetricHelper.MATCH_GAME_TYPE, event_id)
-                        .orderAsc(MatchDataDao.Properties.Match_number)
+                        .orderAsc(MatchDatumDao.Properties.Match_number)
                         .rx()
                         .list()
                         .concatMap(Observable::from)
@@ -137,7 +133,7 @@ public class Compiler {
 
     public List<String> getRobotMatchComments(Event event, Robot robot) {
         List<String> comments = Lists.newArrayList();
-        QueryBuilder<MatchComment> matchCommentQueryBuilder = rxDbManager.getMatchComments().query(null, null, robot.getId(), event.getId());
+        QueryBuilder<MatchComment> matchCommentQueryBuilder = rxDbManager.getMatchCommentsTable().query(null, null, robot.getId(), event.getId());
         for (MatchComment matchComment : matchCommentQueryBuilder.list()) {
             comments.add(matchComment.getMatch_number() + ": " + matchComment.getComment());
         }
@@ -146,19 +142,10 @@ public class Compiler {
 
     public Observable<List<Long>> getMatchNumbers(Event event, Robot robot) {
         return rxDbManager.getMatchDataTable().query(robot.getId(), null, null, null, event.getId())
-                .orderAsc(MatchDataDao.Properties.Match_number)
+                .orderAsc(MatchDatumDao.Properties.Match_number)
                 .rx()
                 .list()
-                .map(new Func1<List<MatchData>, Set<Long>>() {
-                    @Override
-                    public Set<Long> call(List<MatchData> matchDataList) {
-                        Set<Long> matchNumbers = Sets.newHashSet();
-                        for (int i = 0; i < matchDataList.size(); i++) {
-                            matchNumbers.add(matchDataList.get(i).getMatch_number());
-                        }
-                        return matchNumbers;
-                    }
-                })
+                .map(rxDbManager.getMatchDataTable().mapMatchDataToMatchNumbers)
                 .concatMap(Observable::from)
                 .toSortedList();
     }
@@ -202,7 +189,7 @@ public class Compiler {
 
     public Observable<List<CompiledMetricValue>> getCompiledRobotSummary(long robot_id, Long event_id) {
         return Observable.just(robot_id)
-                .map(robot_id1 -> rxDbManager.getRobotsTable().load(robot_id1))
+                .map(rxDbManager.getRobotsTable().mapIdToModel)
                 .concatMap(robot -> getMetrics(robot.getGame_id())
                         .concatMap(Observable::from)
                         .concatMap(metric -> getRobotMetricSummary(event_id, metric, robot))
@@ -246,7 +233,7 @@ public class Compiler {
                                             .map(record -> {
                                                 record.add(0, String.valueOf(matchNumber));
                                                 record.add(0, String.valueOf(robot.getTeam_id()));
-                                                MatchComment comment = rxDbManager.getMatchComments().query(matchNumber, null, robot.getId(), eventId).unique();
+                                                MatchComment comment = rxDbManager.getMatchCommentsTable().query(matchNumber, null, robot.getId(), eventId).unique();
                                                 if (comment != null) {
                                                     record.add(comment.getComment());
                                                 }

@@ -15,7 +15,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.MatchComment;
-import com.team2052.frckrawler.db.MatchData;
+import com.team2052.frckrawler.db.MatchDatum;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
@@ -49,8 +49,8 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                 for (int i = 0; i < metrics.size(); i++) {
                     Metric metric = metrics.get(i);
                     //Query for existing data
-                    QueryBuilder<MatchData> matchDataQueryBuilder = rxDbManager.getMatchDataTable().query(valueParams.robot.getId(), metric.getId(), Long.valueOf(valueParams.match_num), mMatchType, mEvent.getId());
-                    MatchData currentData = matchDataQueryBuilder.unique();
+                    QueryBuilder<MatchDatum> matchDataQueryBuilder = rxDbManager.getMatchDataTable().query(valueParams.robot.getId(), metric.getId(), Long.valueOf(valueParams.match_num), mMatchType, mEvent.getId());
+                    MatchDatum currentData = matchDataQueryBuilder.unique();
                     //Add the metric values
                     metricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
                 }
@@ -62,7 +62,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
                 final QueryBuilder<MatchComment> matchCommentQueryBuilder
-                        = rxDbManager.getMatchComments().query(Long.valueOf(valueParams.match_num), mMatchType, valueParams.robot.getId(), mEvent.getId());
+                        = rxDbManager.getMatchCommentsTable().query(Long.valueOf(valueParams.match_num), mMatchType, valueParams.robot.getId(), mEvent.getId());
                 MatchComment mMatchComment = matchCommentQueryBuilder.unique();
                 String comment = null;
                 if (mMatchComment != null)
@@ -152,7 +152,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                     //Insert Metric Data
                     boolean saved = false;
                     for (MetricValue metricValue : matchScoutSaveMetric.metricValues) {
-                        MatchData matchData = new MatchData(
+                        MatchDatum matchDatum = new MatchDatum(
                                 null,
                                 mEvent.getId(),
                                 matchScoutSaveMetric.robot.getId(),
@@ -161,7 +161,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                                 matchScoutSaveMetric.matchNum,
                                 new Date(),
                                 JSON.getGson().toJson(metricValue.getValue()));
-                        if (rxDbManager.getMatchDataTable().insertMatchData(matchData) && !saved)
+                        if (rxDbManager.getMatchDataTable().insertMatchData(matchDatum) && !saved)
                             saved = true;
                     }
 
@@ -173,7 +173,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                         matchComment.setRobot(matchScoutSaveMetric.robot);
                         matchComment.setEvent(mEvent);
                         matchComment.setComment(matchScoutSaveMetric.comment);
-                        if (rxDbManager.getMatchComments().insertMatchComment(matchComment) && !saved)
+                        if (rxDbManager.getMatchCommentsTable().insertMatchComment(matchComment) && !saved)
                             saved = true;
                     }
                     return saved;

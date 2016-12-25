@@ -34,9 +34,7 @@ public class Robot implements java.io.Serializable {
     @Generated
     private transient DaoSession daoSession;
 
-    /**
-     * Used for active entity operations.
-     */
+    /** Used for active entity operations. */
     @Generated
     private transient RobotDao myDao;
 
@@ -60,12 +58,12 @@ public class Robot implements java.io.Serializable {
     @ToMany(joinProperties = {
             @JoinProperty(name = "id", referencedName = "robot_id")
     })
-    private List<MatchData> matchDataList;
+    private List<MatchDatum> matchDatumList;
 
     @ToMany(joinProperties = {
             @JoinProperty(name = "id", referencedName = "robot_id")
     })
-    private List<PitData> pitDataList;
+    private List<PitDatum> pitDatumList;
 
     @ToMany(joinProperties = {
             @JoinProperty(name = "id", referencedName = "robot_id")
@@ -90,9 +88,7 @@ public class Robot implements java.io.Serializable {
         this.last_updated = last_updated;
     }
 
-    /**
-     * called by internal mechanisms, do not call yourself.
-     */
+    /** called by internal mechanisms, do not call yourself. */
     @Generated
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
@@ -147,9 +143,7 @@ public class Robot implements java.io.Serializable {
         this.last_updated = last_updated;
     }
 
-    /**
-     * To-one relationship, resolved on first access.
-     */
+    /** To-one relationship, resolved on first access. */
     @Generated
     public Game getGame() {
         long __key = this.game_id;
@@ -177,9 +171,7 @@ public class Robot implements java.io.Serializable {
         }
     }
 
-    /**
-     * To-one relationship, resolved on first access.
-     */
+    /** To-one relationship, resolved on first access. */
     @Generated
     public Team getTeam() {
         long __key = this.team_id;
@@ -207,9 +199,7 @@ public class Robot implements java.io.Serializable {
         }
     }
 
-    /**
-     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
-     */
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
     @Generated
     public List<RobotEvent> getRobotEventList() {
         if (robotEventList == null) {
@@ -225,69 +215,57 @@ public class Robot implements java.io.Serializable {
         return robotEventList;
     }
 
-    /**
-     * Resets a to-many relationship, making the next get call to query for a fresh result.
-     */
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     @Generated
     public synchronized void resetRobotEventList() {
         robotEventList = null;
     }
 
-    /**
-     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
-     */
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
     @Generated
-    public List<MatchData> getMatchDataList() {
-        if (matchDataList == null) {
+    public List<MatchDatum> getMatchDatumList() {
+        if (matchDatumList == null) {
             __throwIfDetached();
-            MatchDataDao targetDao = daoSession.getMatchDataDao();
-            List<MatchData> matchDataListNew = targetDao._queryRobot_MatchDataList(id);
+            MatchDatumDao targetDao = daoSession.getMatchDatumDao();
+            List<MatchDatum> matchDatumListNew = targetDao._queryRobot_MatchDatumList(id);
             synchronized (this) {
-                if (matchDataList == null) {
-                    matchDataList = matchDataListNew;
+                if (matchDatumList == null) {
+                    matchDatumList = matchDatumListNew;
                 }
             }
         }
-        return matchDataList;
+        return matchDatumList;
     }
 
-    /**
-     * Resets a to-many relationship, making the next get call to query for a fresh result.
-     */
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     @Generated
-    public synchronized void resetMatchDataList() {
-        matchDataList = null;
+    public synchronized void resetMatchDatumList() {
+        matchDatumList = null;
     }
 
-    /**
-     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
-     */
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
     @Generated
-    public List<PitData> getPitDataList() {
-        if (pitDataList == null) {
+    public List<PitDatum> getPitDatumList() {
+        if (pitDatumList == null) {
             __throwIfDetached();
-            PitDataDao targetDao = daoSession.getPitDataDao();
-            List<PitData> pitDataListNew = targetDao._queryRobot_PitDataList(id);
+            PitDatumDao targetDao = daoSession.getPitDatumDao();
+            List<PitDatum> pitDatumListNew = targetDao._queryRobot_PitDatumList(id);
             synchronized (this) {
-                if (pitDataList == null) {
-                    pitDataList = pitDataListNew;
+                if (pitDatumList == null) {
+                    pitDatumList = pitDatumListNew;
                 }
             }
         }
-        return pitDataList;
+        return pitDatumList;
     }
 
-    /**
-     * Resets a to-many relationship, making the next get call to query for a fresh result.
-     */
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     @Generated
-    public synchronized void resetPitDataList() {
-        pitDataList = null;
+    public synchronized void resetPitDatumList() {
+        pitDatumList = null;
     }
 
-    /**
-     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
-     */
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
     @Generated
     public List<MatchComment> getMatchCommentList() {
         if (matchCommentList == null) {
@@ -303,9 +281,7 @@ public class Robot implements java.io.Serializable {
         return matchCommentList;
     }
 
-    /**
-     * Resets a to-many relationship, making the next get call to query for a fresh result.
-     */
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     @Generated
     public synchronized void resetMatchCommentList() {
         matchCommentList = null;
@@ -314,7 +290,7 @@ public class Robot implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
      * Entity must attached to an entity context.
-     */
+    */
     @Generated
     public void delete() {
         __throwIfDetached();
@@ -324,7 +300,7 @@ public class Robot implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
      * Entity must attached to an entity context.
-     */
+    */
     @Generated
     public void update() {
         __throwIfDetached();
@@ -334,7 +310,7 @@ public class Robot implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
      * Entity must attached to an entity context.
-     */
+    */
     @Generated
     public void refresh() {
         __throwIfDetached();
