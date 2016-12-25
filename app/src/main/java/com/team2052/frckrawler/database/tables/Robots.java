@@ -7,6 +7,7 @@ import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotDao;
+import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.Team;
 
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -14,7 +15,13 @@ import org.greenrobot.greendao.query.QueryBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.functions.Func1;
+
 public class Robots extends Table<Robot, RobotDao> {
+    public Func1<Robot, Team> mapRobotToTeam = Robot::getTeam;
+    public Func1<Robot, Game> mapRobotToGame = Robot::getGame;
+    public Func1<Robot, List<RobotEvent>> mapRobotToRobotEvents = Robot::getRobotEventList;
+
     public Robots(RobotDao dao, DBManager dbManager) {
         super(dao, dbManager);
     }
@@ -77,6 +84,4 @@ public class Robots extends Table<Robot, RobotDao> {
     public void delete(Robot robot) {
         dao.delete(robot);
     }
-
-
 }

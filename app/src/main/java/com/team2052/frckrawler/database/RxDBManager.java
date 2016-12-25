@@ -35,7 +35,6 @@ import java.util.Map;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.functions.Func1;
 
 @Singleton
 /**
@@ -44,9 +43,6 @@ import rx.functions.Func1;
  */
 public class RxDBManager extends DBManager {
     private static RxDBManager instance;
-    public Func1<Robot, Team> mapRobotToTeam = Robot::getTeam;
-    public Func1<Robot, Game> mapRobotToGame = Robot::getGame;
-    public Func1<Robot, List<RobotEvent>> mapRobotToRobotEvents = Robot::getRobotEventList;
 
     protected RxDBManager(Context context) {
         super(context);

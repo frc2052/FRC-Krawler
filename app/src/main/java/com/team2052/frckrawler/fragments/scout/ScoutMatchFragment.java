@@ -116,11 +116,6 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                 }).debounce(500, TimeUnit.MILLISECONDS).subscribe(onNext -> updateMetricValues()));
     }
 
-    @Override
-    public boolean filterMetric(Metric metric) {
-        return super.filterMetric(metric) && metric.getCategory() == MetricHelper.MATCH_PERF_METRICS;
-    }
-
     private Observable<Integer> matchNumberObservable() {
         return Observable.defer(() -> Observable.just(Integer.parseInt(mMatchNumberInput.getEditText().getText().toString())));
     }

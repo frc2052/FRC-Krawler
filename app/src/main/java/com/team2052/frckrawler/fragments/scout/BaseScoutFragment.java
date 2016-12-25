@@ -18,7 +18,6 @@ import com.team2052.frckrawler.activities.HasComponent;
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.util.SnackbarUtil;
@@ -98,10 +97,6 @@ public abstract class BaseScoutFragment extends Fragment {
                     updateMetricValues();
                 }, FirebaseCrash::report);
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    public boolean filterMetric(Metric metric) {
-        return metric.getEnabled();
     }
 
     public void updateMetricValues() {
