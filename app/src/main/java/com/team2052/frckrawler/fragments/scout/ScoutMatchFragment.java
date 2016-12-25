@@ -99,6 +99,8 @@ public class ScoutMatchFragment extends BaseScoutFragment {
 
         ButterKnife.bind(this, view);
 
+        mMatchNumberInput.getEditText().setText("1");
+
         subscriptions.add(RxTextView.afterTextChangeEvents(mMatchNumberInput.getEditText())
                 .filter(event -> {
                     try {
