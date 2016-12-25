@@ -81,11 +81,6 @@ public class ScoutPitFragment extends BaseScoutFragment {
     }
 
     @Override
-    public boolean filterMetric(Metric metric) {
-        return super.filterMetric(metric) && metric.getCategory() == MetricHelper.ROBOT_METRICS;
-    }
-
-    @Override
     public void updateMetricValues() {
         subscriptions.add(metricValueObservable.subscribe(this::setMetricValues, onError -> {
             //Most likely part of the robot observable not being initiated, no big deal
