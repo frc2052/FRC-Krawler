@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.tba.JSON;
+import com.team2052.frckrawler.util.MetricHelper;
 import com.team2052.frckrawler.views.metric.MetricWidget;
 
 
@@ -76,8 +77,6 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
 
     @Override
     public JsonElement getData() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("value", value);
-        return jsonObject;
+        return MetricHelper.buildNumberMetricValue(value);
     }
 }
