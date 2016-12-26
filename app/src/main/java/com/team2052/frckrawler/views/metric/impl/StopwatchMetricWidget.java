@@ -104,9 +104,11 @@ public class StopwatchMetricWidget extends MetricWidget {
     }
 
     private void reset() {
+        if (!running) {
+            findViewById(R.id.reset).setVisibility(View.GONE);
+        }
         value = 0.0;
         startTime = System.currentTimeMillis();
-        findViewById(R.id.reset).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.value)).setText(decimalFormat.format(value));
     }
 
