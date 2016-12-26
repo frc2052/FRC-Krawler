@@ -19,7 +19,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class StopwatchMetricWidget extends MetricWidget {
-    private static DecimalFormat decimalFormat = new DecimalFormat("0.00s");
+    private static DecimalFormat decimalFormat = new DecimalFormat("0.0s");
 
     public long startTime = System.currentTimeMillis();
     public boolean running;
@@ -114,7 +114,7 @@ public class StopwatchMetricWidget extends MetricWidget {
     }
 
     public Observable<Long> timerObservable() {
-        return Observable.timer(150, TimeUnit.MILLISECONDS).repeat().observeOn(AndroidSchedulers.mainThread());
+        return Observable.timer(100, TimeUnit.MILLISECONDS).repeat().observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
