@@ -95,4 +95,7 @@
     <string name="close">Close</string>
 
     <string name="metric_type_prefix">Metric Type:</string>
+
+    <string name="server_open">Server Open</string>
+    <string name="server_open_description">The FRC Krawler server is open for scouts to sync</string>
 </resources>

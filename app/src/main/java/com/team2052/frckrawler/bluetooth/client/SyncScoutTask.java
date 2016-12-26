@@ -104,7 +104,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
                 } else if (code == BluetoothConstants.VERSION_ERROR) {
                     errorMessage = String.format("The server version is incompatible with your version. You are running %s and the server is running %s", BuildConfig.VERSION_NAME, ioStream.readObject());
                     return SYNC_ERROR;
-                } else if(code == BluetoothConstants.EVENT_MATCH_ERROR){
+                } else if (code == BluetoothConstants.EVENT_MATCH_ERROR) {
                     errorMessage = "This device's data did not match up with the server tablet. The data from this tablet was lost.";
                     return SYNC_ERROR;
                 }

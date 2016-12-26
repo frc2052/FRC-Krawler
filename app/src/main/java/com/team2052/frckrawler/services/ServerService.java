@@ -71,10 +71,10 @@ public class ServerService extends Service {
     private Notification makeNotification() {
         NotificationCompat.Builder b = new NotificationCompat.Builder(this);
         b.setSmallIcon(R.drawable.ic_stat_knightkrawler);
-        b.setContentTitle("Server open");
-        b.setContentText("The FRC Krawler server is open for scouts to sync");
+        b.setContentTitle(getResources().getString(R.string.server_open));
+        b.setContentText(getResources().getString(R.string.server_open_description));
+        b.setColor(getResources().getColor(R.color.primary));
         b.setOngoing(true);
-        b.setColor(0x5B0000);
 
         Intent resultIntent = HomeActivity.newInstance(this, R.id.nav_item_server);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

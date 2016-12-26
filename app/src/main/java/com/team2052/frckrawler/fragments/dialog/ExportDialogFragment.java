@@ -25,6 +25,8 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.File;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -39,7 +41,10 @@ public class ExportDialogFragment extends BaseProgressDialog {
     public static final int EXPORT_TYPE_NORMAL = 0;
     private static final String TAG = "ExportDialogFragment";
     private static final String EXPORT_TYPE = "EXPORT_TYPE_EXTRA";
-    private Compiler compiler;
+
+    @Inject
+    Compiler compiler;
+
     private Event event;
     private Subscription subscription;
 
@@ -62,8 +67,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
 
         if (getActivity() instanceof HasComponent) {
             FragmentComponent component = ((HasComponent) getActivity()).getComponent();
-            compiler = component.compilerManager();
-
+            component.inject(this);
             checkPermissionAndDoExport();
         } else {
             dismiss();

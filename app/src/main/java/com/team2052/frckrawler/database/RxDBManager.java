@@ -17,7 +17,6 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.MatchDao;
-import com.team2052.frckrawler.db.MatchDatum;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.Robot;
@@ -114,21 +113,6 @@ public class RxDBManager extends DBManager {
             Collections.sort(robots, new RobotTeamNumberComparator());
             return robots;
         });
-    }
-
-    public Observable<List<Long>> getRobotDataMatchNumbers(@Nullable Long event_id, long robot_id) {
-        return Observable.defer(() -> Observable.just(getMatchDataTable().query(robot_id, null, null, null, event_id).list()))
-                .map(matchDatas -> {
-                    List<Long> matchNumbers = Lists.newArrayListWithExpectedSize(10);
-                    for (int i = 0; i < matchDatas.size(); i++) {
-                        MatchDatum matchDatum = matchDatas.get(i);
-                        if (!matchNumbers.contains(matchDatum.getMatch_number())) {
-                            matchNumbers.add(matchDatum.getMatch_number());
-                        }
-                    }
-                    Collections.sort(matchNumbers);
-                    return matchNumbers;
-                });
     }
 
     public Observable<List<Game>> allGames() {

@@ -133,16 +133,16 @@ public class HomeActivity extends DatabaseActivity {
 
             switch (mCurrentSelectedNavigationItemId) {
                 case R.id.nav_item_scout:
-                    bar.setTitle("Scout");
+                    bar.setTitle(R.string.scout);
                     break;
                 case R.id.nav_item_server:
-                    bar.setTitle("Server");
+                    bar.setTitle(R.string.server);
                     break;
                 case R.id.nav_item_teams:
-                    bar.setTitle("Teams");
+                    bar.setTitle(R.string.teams);
                     break;
                 case R.id.nav_item_games:
-                    bar.setTitle("Games");
+                    bar.setTitle(R.string.games);
                     break;
             }
         }

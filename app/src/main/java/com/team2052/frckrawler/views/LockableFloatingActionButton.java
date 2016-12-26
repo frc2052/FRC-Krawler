@@ -25,7 +25,7 @@ public class LockableFloatingActionButton extends FloatingActionButton {
 
     @Override
     public void hide() {
-        if(locked)
+        if (locked)
             return;
         super.hide();
     }

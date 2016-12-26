@@ -26,7 +26,7 @@ public class Util {
     }
 
 
-    public static String generateUniqueHash(){
+    public static String generateUniqueHash() {
         SecureRandom random = new SecureRandom();
         return new BigInteger(128, random).toString(32);
     }

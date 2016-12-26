@@ -143,7 +143,7 @@ public class ServerThread extends Thread {
                                                 handler.onSyncCancel();
                                             }
 
-                                            if(hashPass) {
+                                            if (hashPass) {
                                                 Log.d(TAG, "Saving Data from Scout");
                                                 serverPackage.save(mRxDbManager);
                                             }

@@ -33,6 +33,7 @@ import com.team2052.frckrawler.fragments.ServerFragment;
 import com.team2052.frckrawler.fragments.SummaryFragment;
 import com.team2052.frckrawler.fragments.TeamInfoFragment;
 import com.team2052.frckrawler.fragments.TeamsFragment;
+import com.team2052.frckrawler.fragments.dialog.ExportDialogFragment;
 import com.team2052.frckrawler.subscribers.SubscriberModule;
 
 import javax.inject.Singleton;
@@ -54,13 +55,31 @@ public interface FragmentComponent {
 
     void inject(HomeActivity activity);
 
-    void inject(GamesFragment gamesFragment);
-
     void inject(GameInfoActivity gameInfoActivity);
 
-    void inject(EventsFragment eventsNewFragment);
-
     void inject(EventInfoActivity eventInfoActivity);
+
+    void inject(TeamInfoActivity teamInfoActivity);
+
+    void inject(ScoutActivity scoutActivity);
+
+    void inject(RobotActivity robotActivity);
+
+    void inject(AddMetricActivity addMetricActivity);
+
+    void inject(MatchListActivity matchListActivity);
+
+    void inject(MetricInfoActivity metricInfoActivity);
+
+    void inject(ImportMetricsActivity importMetricsActivity);
+
+    void inject(RobotEventActivity robotEventActivity);
+
+    void inject(SummaryDataActivity summaryDataActivity);
+
+    void inject(GamesFragment gamesFragment);
+
+    void inject(EventsFragment eventsNewFragment);
 
     void inject(MetricsFragment metricsFragment);
 
@@ -74,13 +93,7 @@ public interface FragmentComponent {
 
     void inject(SummaryFragment summaryFragment);
 
-    void inject(TeamInfoActivity teamInfoActivity);
-
-    void inject(RobotActivity robotActivity);
-
     void inject(ServerFragment serverFragment);
-
-    void inject(ScoutActivity scoutActivity);
 
     void inject(GameInfoFragment gameInfoFragment);
 
@@ -88,25 +101,15 @@ public interface FragmentComponent {
 
     void inject(TeamInfoFragment teamInfoFragment);
 
-    void inject(AddMetricActivity addMetricActivity);
-
-    void inject(MatchListActivity matchListActivity);
-
-    void inject(MetricInfoActivity metricInfoActivity);
-
     void inject(MetricInfoFragment metricInfoFragment);
 
-    void inject(ImportMetricsActivity importMetricsActivity);
-
     void inject(RobotSummaryFragment robotSummaryFragment);
-
-    void inject(RobotEventActivity robotEventActivity);
 
     void inject(RobotEventSummaryFragment robotEventSummaryFragment);
 
     void inject(MetricSummaryFragment metricSummaryFragment);
 
-    void inject(SummaryDataActivity summaryDataActivity);
-
     void inject(ScoutHomeFragment scoutHomeFragment);
+
+    void inject(ExportDialogFragment exportDialogFragment);
 }
