@@ -1,6 +1,8 @@
 package com.team2052.frckrawler.di;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
@@ -44,5 +46,11 @@ public class FRCKrawlerModule {
     @Singleton
     public ScoutSyncHandler getScoutSyncHandler() {
         return ScoutSyncHandler.getInstance(mApp.getApplicationContext());
+    }
+
+    @Provides
+    @Singleton
+    public SharedPreferences provideSharedPreferences(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 }

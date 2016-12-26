@@ -86,7 +86,7 @@ public class Compiler {
         return Observable.just(event)
                 .flatMap(event1 -> Observable.from(rxDbManager.getEventsTable().getRobots(event1)))
                 .concatMap(robot -> getRobotMetricSummary(event.getId(), metric, robot, compileWeight).subscribeOn(Schedulers.computation()))
-                .toList();
+                .toSortedList((cmv, cmv1) -> Double.compare(cmv.getRobot().getTeam_id(), cmv1.getRobot().getTeam_id()));
     }
 
     /**

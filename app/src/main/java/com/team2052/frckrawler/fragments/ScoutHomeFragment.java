@@ -31,6 +31,8 @@ import com.team2052.frckrawler.util.SnackbarUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import javax.inject.Inject;
+
 import rx.functions.Action1;
 
 /**
@@ -38,8 +40,12 @@ import rx.functions.Action1;
  */
 public class ScoutHomeFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_ENABLE_BT = 1;
+
+    @Inject
     RxDBManager rxDbManager;
-    private ScoutSyncHandler scoutSyncHandler;
+    @Inject
+    ScoutSyncHandler scoutSyncHandler;
+
     private FragmentComponent mComponent;
     private Event mEvent;
     private View syncButton, syncProgressBar;
@@ -50,8 +56,8 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         if (getActivity() instanceof HasComponent) {
             mComponent = ((HasComponent) getActivity()).getComponent();
         }
-        rxDbManager = mComponent.dbManager();
-        scoutSyncHandler = mComponent.scoutSyncHander();
+        mComponent.inject(this);
+
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
     }

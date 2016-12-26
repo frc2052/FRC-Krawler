@@ -28,6 +28,7 @@ import com.team2052.frckrawler.fragments.RobotAttendingEventsFragment;
 import com.team2052.frckrawler.fragments.RobotEventSummaryFragment;
 import com.team2052.frckrawler.fragments.RobotSummaryFragment;
 import com.team2052.frckrawler.fragments.RobotsFragment;
+import com.team2052.frckrawler.fragments.ScoutHomeFragment;
 import com.team2052.frckrawler.fragments.ServerFragment;
 import com.team2052.frckrawler.fragments.SummaryFragment;
 import com.team2052.frckrawler.fragments.TeamInfoFragment;
@@ -93,8 +94,6 @@ public interface FragmentComponent {
 
     void inject(MetricInfoActivity metricInfoActivity);
 
-    void inject(SummaryDataActivity summaryDataActivity);
-
     void inject(MetricInfoFragment metricInfoFragment);
 
     void inject(ImportMetricsActivity importMetricsActivity);
@@ -106,4 +105,8 @@ public interface FragmentComponent {
     void inject(RobotEventSummaryFragment robotEventSummaryFragment);
 
     void inject(MetricSummaryFragment metricSummaryFragment);
+
+    void inject(SummaryDataActivity summaryDataActivity);
+
+    void inject(ScoutHomeFragment scoutHomeFragment);
 }
