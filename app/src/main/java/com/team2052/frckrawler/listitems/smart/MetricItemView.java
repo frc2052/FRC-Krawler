@@ -52,6 +52,9 @@ public class MetricItemView extends BindableFrameLayout<Metric> {
             case MetricHelper.SLIDER:
                 typeString = "Slider";
                 break;
+            case MetricHelper.STOP_WATCH:
+                typeString = "Stop Watch";
+                break;
             default:
                 typeString = "Unknown";
         }
