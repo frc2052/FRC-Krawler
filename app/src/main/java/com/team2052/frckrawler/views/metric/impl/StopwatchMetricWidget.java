@@ -31,26 +31,17 @@ public class StopwatchMetricWidget extends MetricWidget {
     public StopwatchMetricWidget(Context context, MetricValue m) {
         super(context, m);
         inflater.inflate(R.layout.widget_metric_stopwatch, this);
-        startResumeButton = (AppCompatImageButton) findViewById(R.id.start_resume);
-
-        findViewById(R.id.reset).setOnClickListener(v -> reset());
-        findViewById(R.id.reset).setVisibility(View.GONE);
-        startResumeButton.setOnClickListener(v -> {
-            if (!running) {
-                startResumeButton.setImageResource(R.drawable.ic_pause_black_48dp);
-                start();
-            } else {
-                startResumeButton.setImageResource(R.drawable.ic_play_arrow_black_48dp);
-                stop();
-            }
-        });
+        initViews();
     }
 
     public StopwatchMetricWidget(Context context) {
         super(context);
         inflater.inflate(R.layout.widget_metric_stopwatch, this);
-        startResumeButton = (AppCompatImageButton) findViewById(R.id.start_resume);
+        initViews();
+    }
 
+    private void initViews() {
+        startResumeButton = (AppCompatImageButton) findViewById(R.id.start_resume);
         findViewById(R.id.reset).setOnClickListener(v -> reset());
         findViewById(R.id.reset).setVisibility(View.GONE);
         startResumeButton.setOnClickListener(v -> {
@@ -74,7 +65,7 @@ public class StopwatchMetricWidget extends MetricWidget {
         ((TextView) findViewById(R.id.value)).setText(decimalFormat.format(value));
     }
 
-    public void start() {
+    private void start() {
         running = true;
 
         if (value == 0.0) {
@@ -94,32 +85,32 @@ public class StopwatchMetricWidget extends MetricWidget {
         findViewById(R.id.reset).setVisibility(View.VISIBLE);
     }
 
-    public void unsubscribe() {
+    private void unsubscribe() {
         if (subscription != null && !subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
     }
 
-    public void updateTime() {
+    private void updateTime() {
         if (!running)
             return;
         value = (System.currentTimeMillis() - startTime) / 1000.0;
     }
 
-    public void stop() {
+    private void stop() {
         unsubscribe();
         updateTime();
         running = false;
     }
 
-    public void reset() {
+    private void reset() {
         value = 0.0;
         startTime = System.currentTimeMillis();
         findViewById(R.id.reset).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.value)).setText(decimalFormat.format(value));
     }
 
-    public Observable<Long> timerObservable() {
+    private Observable<Long> timerObservable() {
         return Observable.timer(100, TimeUnit.MILLISECONDS).repeat().observeOn(AndroidSchedulers.mainThread());
     }
 
