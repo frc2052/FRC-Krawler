@@ -2,6 +2,7 @@ package com.team2052.frckrawler.views.metric.impl;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageButton;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
@@ -33,6 +34,7 @@ public class StopwatchMetricWidget extends MetricWidget {
         startResumeButton = (AppCompatImageButton) findViewById(R.id.start_resume);
 
         findViewById(R.id.reset).setOnClickListener(v -> reset());
+        findViewById(R.id.reset).setVisibility(View.GONE);
         startResumeButton.setOnClickListener(v -> {
             if (!running) {
                 startResumeButton.setImageResource(R.drawable.ic_pause_black_48dp);
@@ -50,6 +52,7 @@ public class StopwatchMetricWidget extends MetricWidget {
         startResumeButton = (AppCompatImageButton) findViewById(R.id.start_resume);
 
         findViewById(R.id.reset).setOnClickListener(v -> reset());
+        findViewById(R.id.reset).setVisibility(View.GONE);
         startResumeButton.setOnClickListener(v -> {
             if (!running) {
                 startResumeButton.setImageResource(R.drawable.ic_pause_black_48dp);
@@ -87,6 +90,8 @@ public class StopwatchMetricWidget extends MetricWidget {
             ((TextView) findViewById(R.id.value)).setText(onNext);
         }, onError -> {
         });
+
+        findViewById(R.id.reset).setVisibility(View.VISIBLE);
     }
 
     public void unsubscribe() {
@@ -110,6 +115,7 @@ public class StopwatchMetricWidget extends MetricWidget {
     public void reset() {
         value = 0.0;
         startTime = System.currentTimeMillis();
+        findViewById(R.id.reset).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.value)).setText(decimalFormat.format(value));
     }
 
