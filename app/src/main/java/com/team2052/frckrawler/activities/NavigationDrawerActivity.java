@@ -18,7 +18,7 @@ import com.team2052.frckrawler.views.ScrimInsetsFrameLayout;
 public abstract class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerListener {
 
-    protected static final int DRAWER_CLOSE_ANIMATION_DURATION = 600;
+    protected static final int DRAWER_CLOSE_ANIMATION_DURATION = 300;
     private static final String IS_DRAWER_OPEN = "is_drawer_open";
     protected Handler handler;
     private NavigationDrawerFragment mNavDrawerFragment;
