@@ -32,33 +32,34 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true">
 
-            <Button
-                android:id="@+id/minus"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:background="?attr/selectableItemBackground"
-                android:text="-"
-                android:textColor="@color/color_accent"
-                android:textSize="@dimen/text_size_xlarge" />
-
             <TextView
                 android:id="@+id/value"
                 style="@style/TextAppearance.AppCompat.Title"
-                android:layout_width="48dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_gravity="center_vertical"
                 android:text="0"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
-            <Button
-                android:id="@+id/plus"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/start_resume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:background="?attr/selectableItemBackground"
-                android:text="+"
-                android:textColor="@color/color_accent"
-                android:textSize="@dimen/text_size_xlarge" />
+                android:src="@drawable/ic_play_arrow_black_48dp"
+                android:text="Play/Pause"
+                android:tint="@color/color_accent" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/ic_replay_black_48dp"
+                android:text="Play/Pause"
+                android:tint="@color/color_accent" />
         </LinearLayout>
 
 

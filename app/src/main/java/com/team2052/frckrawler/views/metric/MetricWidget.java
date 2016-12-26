@@ -14,6 +14,7 @@ import com.team2052.frckrawler.views.metric.impl.CheckBoxMetricWidget;
 import com.team2052.frckrawler.views.metric.impl.ChooserMetricWidget;
 import com.team2052.frckrawler.views.metric.impl.CounterMetricWidget;
 import com.team2052.frckrawler.views.metric.impl.SliderMetricWidget;
+import com.team2052.frckrawler.views.metric.impl.StopwatchMetricWidget;
 
 public abstract class MetricWidget extends FrameLayout {
 
@@ -51,6 +52,8 @@ public abstract class MetricWidget extends FrameLayout {
                 return Optional.of(new SliderMetricWidget(c, m));
             case MetricHelper.CHECK_BOX:
                 return Optional.of(new CheckBoxMetricWidget(c, m));
+            case MetricHelper.STOP_WATCH:
+                return Optional.of(new StopwatchMetricWidget(c, m));
             default:
                 return Optional.absent();
         }

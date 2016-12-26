@@ -70,6 +70,6 @@ public class SliderMetricWidget extends MetricWidget {
 
     @Override
     public JsonElement getData() {
-        return MetricHelper.buildIntMetricValue(value);
+        return MetricHelper.buildNumberMetricValue(value);
     }
 }

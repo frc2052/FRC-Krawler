@@ -24,7 +24,7 @@ import rx.functions.Func1;
 
 public class MetricHelper {
     public static final int MATCH_PERF_METRICS = 0, ROBOT_METRICS = 1;
-    public static final int BOOLEAN = 0, COUNTER = 1, SLIDER = 2, CHOOSER = 3, CHECK_BOX = 4;
+    public static final int BOOLEAN = 0, COUNTER = 1, SLIDER = 2, CHOOSER = 3, CHECK_BOX = 4, STOP_WATCH = 5;
 
     public static final int MINIMUM_DEFAULT_VALUE = 1;
     public static final int MAXIMUM_DEFAULT_VALUE = 10;
@@ -92,6 +92,25 @@ public class MetricHelper {
         return new Tuple2<>(-1, ReturnResult.OTHER_ERROR);
     }
 
+    public static Tuple2<Double, ReturnResult> getDoubleMetricValue(MetricValue metricValue) {
+        if (metricValue.getMetric().getType() != STOP_WATCH)
+            return new Tuple2<>(-1.0, ReturnResult.WRONG_METRIC_TYPE);
+
+        final Optional<JsonElement> optional = getMetricValue(metricValue);
+        if (!optional.isPresent())
+            return new Tuple2<>(-1.0, ReturnResult.ABSENT_VALUE);
+
+        JsonObject value = optional.get().getAsJsonObject();
+        if (value.has("value") && !value.get("value").isJsonNull()) {
+            try {
+                return new Tuple2<>(value.get("value").getAsDouble(), ReturnResult.SUCCEED);
+            } catch (ClassCastException e) {
+                return new Tuple2<>(-1.0, ReturnResult.WRONG_TYPE_VALUE);
+            }
+        }
+        return new Tuple2<>(-1.0, ReturnResult.OTHER_ERROR);
+    }
+
     public static Tuple2<List<Integer>, ReturnResult> getListIndexMetricValue(MetricValue metricValue) {
         if (metricValue.getMetric().getType() != CHECK_BOX && metricValue.getMetric().getType() != CHOOSER)
             return new Tuple2<>(Lists.newArrayList(), ReturnResult.WRONG_METRIC_TYPE);
@@ -115,7 +134,7 @@ public class MetricHelper {
         return json;
     }
 
-    public static JsonObject buildIntMetricValue(int value) {
+    public static JsonObject buildNumberMetricValue(Number value) {
         JsonObject data = new JsonObject();
         data.addProperty("value", value);
         return data;
@@ -186,7 +205,7 @@ public class MetricHelper {
         }
     }
 
-    @IntDef({BOOLEAN, COUNTER, SLIDER, CHOOSER, CHECK_BOX})
+    @IntDef({BOOLEAN, COUNTER, SLIDER, CHOOSER, CHECK_BOX, STOP_WATCH})
     @Retention(RetentionPolicy.SOURCE)
     public @interface MetricType {
     }

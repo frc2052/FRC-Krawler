@@ -30,6 +30,7 @@ import com.team2052.frckrawler.views.metric.impl.CheckBoxMetricWidget;
 import com.team2052.frckrawler.views.metric.impl.ChooserMetricWidget;
 import com.team2052.frckrawler.views.metric.impl.CounterMetricWidget;
 import com.team2052.frckrawler.views.metric.impl.SliderMetricWidget;
+import com.team2052.frckrawler.views.metric.impl.StopwatchMetricWidget;
 
 import java.util.Arrays;
 import java.util.List;
@@ -211,6 +212,13 @@ public class AddMetricActivity extends DatabaseActivity {
                 } else {
                     newWidget = new CheckBoxMetricWidget(this);
                 }
+                break;
+            case MetricHelper.STOP_WATCH:
+                mMinimum.setVisibility(View.GONE);
+                mMaximum.setVisibility(View.GONE);
+                mIncrementation.setVisibility(View.GONE);
+                mCommaSeparatedList.setVisibility(View.GONE);
+                newWidget = new StopwatchMetricWidget(this);
                 break;
             default:
                 mMinimum.setVisibility(View.GONE);

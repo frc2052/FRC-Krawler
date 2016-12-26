@@ -21,7 +21,6 @@ public class CompiledMetricValue {
     private static final DecimalFormat format = new DecimalFormat("0.00");
     private final List<MetricValue> metricData;
     private final Robot robot;
-    @MetricHelper.MetricType
     private final int metricType;
     private final Metric metric;
     private final double compileWeight;
@@ -133,6 +132,25 @@ public class CompiledMetricValue {
                 compiledValue.add("names", possible_values);
                 compiledValue.add("values", values);
                 break;
+            case MetricHelper.STOP_WATCH:
+                if (metricData.isEmpty()) {
+                    compiledValue.addProperty("value", 0.0);
+                    break;
+                }
+
+                for (MetricValue metricValue : metricData) {
+                    final Tuple2<Double, MetricHelper.ReturnResult> result = MetricHelper.getDoubleMetricValue(metricValue);
+
+                    if (result.t2.isError)
+                        continue;
+
+                    weight = getCompileWeightForMatchNumber(metricValue);
+                    numerator += result.t1 * weight;
+                    denominator += weight;
+                }
+
+                value = format.format(numerator / denominator);
+                compiledValue.addProperty("value", value);
         }
     }
 
@@ -149,6 +167,8 @@ public class CompiledMetricValue {
             case MetricHelper.SLIDER:
             case MetricHelper.BOOLEAN:
                 return String.valueOf(compiledValue.get("value").getAsDouble());
+            case MetricHelper.STOP_WATCH:
+                return String.format("%ss", String.valueOf(compiledValue.get("value").getAsDouble()));
             case MetricHelper.CHOOSER:
             case MetricHelper.CHECK_BOX:
                 JsonArray names = compiledValue.get("names").getAsJsonArray();

@@ -78,6 +78,7 @@
         <item>Slider</item>
         <item>Chooser</item>
         <item>Checkbox</item>
+        <item>Stop Watch</item>
     </string-array>
     <!--End Metrics-->
 
