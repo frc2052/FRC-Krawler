@@ -13,9 +13,6 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-/**
- * @author Adam
- */
 public class EventDeserializer implements JsonDeserializer<Event> {
     public static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 

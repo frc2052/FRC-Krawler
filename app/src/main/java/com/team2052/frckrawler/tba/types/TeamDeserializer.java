@@ -10,9 +10,6 @@ import com.team2052.frckrawler.tba.JSON;
 
 import java.lang.reflect.Type;
 
-/**
- * @author Adam
- */
 public class TeamDeserializer implements JsonDeserializer<Team> {
     @Override
     public Team deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

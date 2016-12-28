@@ -16,7 +16,6 @@ import com.team2052.frckrawler.util.PreferenceUtil;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
-import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -145,9 +144,7 @@ public class Compiler {
                 .orderAsc(MatchDatumDao.Properties.Match_number)
                 .rx()
                 .list()
-                .map(rxDbManager.getMatchDataTable().mapMatchDataToMatchNumbers)
-                .concatMap(Observable::from)
-                .toSortedList();
+                .map(rxDbManager.getMatchDataTable().mapMatchDataToMatchNumbers);
     }
 
     public Observable<List<List<String>>> getSummaryExport(Event event) {
@@ -194,10 +191,6 @@ public class Compiler {
                         .concatMap(Observable::from)
                         .concatMap(metric -> getRobotMetricSummary(event_id, metric, robot))
                         .toList());
-    }
-
-    public Observable<AbstractMap.SimpleEntry<String, String>> getCompiledMetricValueKayValue(Observable<CompiledMetricValue> compiledMetricValueObservable) {
-        return compiledMetricValueObservable.map(CompileUtil.mapCompiledMetricValueToKeyValue);
     }
 
     public Observable<Map<String, String>> getCompiledMetricToHashMap(Observable<List<CompiledMetricValue>> metricValueObservable) {

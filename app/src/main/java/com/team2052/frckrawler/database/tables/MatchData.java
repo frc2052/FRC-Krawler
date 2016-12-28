@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.database.tables;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.MatchDatum;
@@ -8,6 +9,8 @@ import com.team2052.frckrawler.db.Metric;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -15,12 +18,14 @@ import java.util.Set;
 import rx.functions.Func1;
 
 public class MatchData extends Table<MatchDatum, MatchDatumDao> {
-    public Func1<List<MatchDatum>, Set<Long>> mapMatchDataToMatchNumbers = matchData -> {
+    public Func1<List<MatchDatum>, List<Long>> mapMatchDataToMatchNumbers = matchData -> {
         Set<Long> matchNumbers = Sets.newHashSet();
         for (int i = 0; i < matchData.size(); i++) {
             matchNumbers.add(matchData.get(i).getMatch_number());
         }
-        return matchNumbers;
+        ArrayList<Long> listMatchNumbers = Lists.newArrayList(matchNumbers);
+        Collections.sort(listMatchNumbers);
+        return listMatchNumbers;
     };
 
     public MatchData(MatchDatumDao dao, DBManager dbManager) {
