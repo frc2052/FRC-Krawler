@@ -79,6 +79,7 @@
         <item>Chooser</item>
         <item>Checkbox</item>
         <item>Stopwatch</item>
+        <item>Text Field</item>
     </string-array>
     <!--End Metrics-->
 

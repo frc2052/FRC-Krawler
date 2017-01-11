@@ -8,7 +8,7 @@ import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.Date;
 
-public class MatchComments extends Table<MatchComment, MatchCommentDao> {
+public class MatchComments extends AbstractTable<MatchComment, MatchCommentDao> {
     public MatchComments(MatchCommentDao dao, DBManager dbManager) {
         super(dao, dbManager);
     }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
+import com.google.common.base.Optional;
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
@@ -28,13 +29,13 @@ public class ScoutUtil {
         prefsEditor.apply();
     }
 
-    public static BluetoothDevice getSyncDevice(Context context) {
+    public static Optional<BluetoothDevice> getSyncDevice(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
         String address = prefs.getString(Constants.MAC_ADDRESS_PREF, "null");
         if (address.equals("null")) {
-            return null;
+            return Optional.absent();
         }
-        return BluetoothUtil.getDevice(address);
+        return Optional.of(BluetoothUtil.getDevice(address));
     }
 
     @Nullable

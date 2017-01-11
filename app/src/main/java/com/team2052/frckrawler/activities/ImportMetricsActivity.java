@@ -92,8 +92,9 @@ public class ImportMetricsActivity extends DatabaseActivity implements AdapterVi
                 final MetricImportModel value = dataSnapshot.getValue(MetricImportModel.class);
                 Observable.from(value.metrics)
                         .map(firebaseMetric -> {
-                            final MetricHelper.MetricFactory metricFactory = new MetricHelper.MetricFactory(game_id, firebaseMetric.name);
+                            final MetricHelper.MetricFactory metricFactory = new MetricHelper.MetricFactory(firebaseMetric.name);
                             metricFactory.setDataRaw(firebaseMetric.data);
+                            metricFactory.setGameId(game_id);
                             @MetricHelper.MetricType
                             int type = firebaseMetric.type.intValue();
                             metricFactory.setMetricType(type);

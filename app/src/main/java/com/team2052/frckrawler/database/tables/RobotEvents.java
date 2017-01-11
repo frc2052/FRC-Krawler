@@ -6,7 +6,7 @@ import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
 
-public class RobotEvents extends Table<RobotEvent, RobotEventDao> {
+public class RobotEvents extends AbstractTable<RobotEvent, RobotEventDao> {
 
     public RobotEvents(RobotEventDao dao, DBManager dbManager) {
         super(dao, dbManager);

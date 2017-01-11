@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.views.metric.impl;
+package com.team2052.frckrawler.metrics.view.impl;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageButton;
@@ -10,7 +10,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.util.MetricHelper;
 import com.team2052.frckrawler.util.Tuple2;
-import com.team2052.frckrawler.views.metric.MetricWidget;
+import com.team2052.frckrawler.metrics.view.MetricWidget;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +32,7 @@ public class StopwatchMetricWidget extends MetricWidget {
         super(context, m);
         inflater.inflate(R.layout.widget_metric_stopwatch, this);
         initViews();
+        setMetricValue(m);
     }
 
     public StopwatchMetricWidget(Context context) {
@@ -61,6 +62,8 @@ public class StopwatchMetricWidget extends MetricWidget {
         Tuple2<Double, MetricHelper.ReturnResult> doubleMetricValue = MetricHelper.getDoubleMetricValue(m);
         if (!doubleMetricValue.t2.isError) {
             value = doubleMetricValue.t1;
+        } else {
+            value = 0.0;
         }
         ((TextView) findViewById(R.id.value)).setText(decimalFormat.format(value));
     }

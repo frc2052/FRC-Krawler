@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.views.metric.impl;
+package com.team2052.frckrawler.metrics.view.impl;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -11,7 +11,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.util.MetricHelper;
 import com.team2052.frckrawler.util.Tuple2;
-import com.team2052.frckrawler.views.metric.MetricWidget;
+import com.team2052.frckrawler.metrics.view.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.List;

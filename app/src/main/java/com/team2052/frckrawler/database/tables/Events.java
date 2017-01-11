@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Events extends Table<Event, EventDao> {
+public class Events extends AbstractTable<Event, EventDao> {
     public Events(EventDao dao, DBManager dbManager) {
         super(dao, dbManager);
     }

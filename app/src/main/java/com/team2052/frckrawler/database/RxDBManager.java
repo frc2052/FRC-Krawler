@@ -22,6 +22,8 @@ import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.metric.MetricTypeEntry;
+import com.team2052.frckrawler.metric.MetricTypeEntryHandler;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.MetricHelper;
 
@@ -171,23 +173,10 @@ public class RxDBManager extends DBManager {
                 .map(id -> getMetricsTable().load(id))
                 .map(metric -> {
                     Map<String, String> info = Maps.newLinkedHashMap();
-                    info.put("Enabled",
-                            CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, String.valueOf(metric.getEnabled())));
-
-                    final JsonObject data = JSON.getAsJsonObject(metric.getData());
-                    switch (metric.getType()) {
-                        case MetricHelper.BOOLEAN:
-                            break;
-                        case MetricHelper.CHOOSER:
-                        case MetricHelper.CHECK_BOX:
-                            final String values = Joiner.on(", ").join(data.get("values").getAsJsonArray());
-                            info.put("Comma Separated List", Strings.isNullOrEmpty(values) ? "No Values" : values);
-                            break;
-                        case MetricHelper.COUNTER:
-                            info.put("Incrementation", data.get("inc").toString());
-                        case MetricHelper.SLIDER:
-                            info.put("Minimum", data.get("min").toString());
-                            info.put("Maximum", data.get("max").toString());
+                    info.put("Enabled", CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, String.valueOf(metric.getEnabled())));
+                    MetricTypeEntry<?> typeEntry = MetricTypeEntryHandler.INSTANCE.getTypeEntry(metric.getType());
+                    if (typeEntry != null) {
+                        typeEntry.addInfo(metric, info);
                     }
                     return info;
                 });

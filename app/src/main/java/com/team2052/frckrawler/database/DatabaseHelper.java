@@ -26,7 +26,7 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         }
 
         if (oldSchemaVer < 3) {
-            db.execSQL("ALTER TABLE 'EVENT' ADD COLUMN UNIQUE_HASH TEXT");
+            db.execSQL("ALTER TABLE 'EVENT' ADD COLUMN UNIQUE_HASH TEXT_FIELD");
         }
 
         if (oldSchemaVer < 4) {

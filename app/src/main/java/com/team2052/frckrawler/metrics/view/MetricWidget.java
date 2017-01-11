@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.views.metric;
+package com.team2052.frckrawler.metrics.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,13 +8,7 @@ import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.util.MetricHelper;
-import com.team2052.frckrawler.views.metric.impl.BooleanMetricWidget;
-import com.team2052.frckrawler.views.metric.impl.CheckBoxMetricWidget;
-import com.team2052.frckrawler.views.metric.impl.ChooserMetricWidget;
-import com.team2052.frckrawler.views.metric.impl.CounterMetricWidget;
-import com.team2052.frckrawler.views.metric.impl.SliderMetricWidget;
-import com.team2052.frckrawler.views.metric.impl.StopwatchMetricWidget;
+import com.team2052.frckrawler.metric.MetricTypeEntryHandler;
 
 public abstract class MetricWidget extends FrameLayout {
 
@@ -40,23 +34,7 @@ public abstract class MetricWidget extends FrameLayout {
     public static Optional<MetricWidget> createWidget(Context c, MetricValue m) {
         if (m == null)
             return Optional.absent();
-
-        switch (m.getMetric().getType()) {
-            case MetricHelper.BOOLEAN:
-                return Optional.of(new BooleanMetricWidget(c, m));
-            case MetricHelper.CHOOSER:
-                return Optional.of(new ChooserMetricWidget(c, m));
-            case MetricHelper.COUNTER:
-                return Optional.of(new CounterMetricWidget(c, m));
-            case MetricHelper.SLIDER:
-                return Optional.of(new SliderMetricWidget(c, m));
-            case MetricHelper.CHECK_BOX:
-                return Optional.of(new CheckBoxMetricWidget(c, m));
-            case MetricHelper.STOP_WATCH:
-                return Optional.of(new StopwatchMetricWidget(c, m));
-            default:
-                return Optional.absent();
-        }
+        return Optional.of(MetricTypeEntryHandler.INSTANCE.getTypeEntry(m.getMetric().getType()).getWidget(c, m));
     }
 
     public abstract void setMetricValue(MetricValue m);

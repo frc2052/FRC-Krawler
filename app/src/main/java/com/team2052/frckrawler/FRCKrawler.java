@@ -6,11 +6,18 @@ import com.team2052.frckrawler.binding.BinderModule;
 import com.team2052.frckrawler.di.ApplicationComponent;
 import com.team2052.frckrawler.di.DaggerApplicationComponent;
 import com.team2052.frckrawler.di.FRCKrawlerModule;
+import com.team2052.frckrawler.metric.MetricTypeEntryHandler;
 
 public class FRCKrawler extends Application {
     private FRCKrawlerModule mModule;
     private ApplicationComponent mApplicationComponent;
     private BinderModule mBinderModule;
+
+    @Override
+    public void onCreate() {
+        MetricTypeEntryHandler.INSTANCE.init();
+        super.onCreate();
+    }
 
     public ApplicationComponent getComponent() {
         if (mApplicationComponent == null) {

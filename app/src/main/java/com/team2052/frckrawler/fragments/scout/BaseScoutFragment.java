@@ -21,7 +21,7 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.util.SnackbarUtil;
-import com.team2052.frckrawler.views.metric.MetricWidget;
+import com.team2052.frckrawler.metrics.view.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.List;

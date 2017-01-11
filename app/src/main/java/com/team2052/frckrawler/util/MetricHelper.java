@@ -24,7 +24,17 @@ import rx.functions.Func1;
 
 public class MetricHelper {
     public static final int MATCH_PERF_METRICS = 0, ROBOT_METRICS = 1;
-    public static final int BOOLEAN = 0, COUNTER = 1, SLIDER = 2, CHOOSER = 3, CHECK_BOX = 4, STOP_WATCH = 5;
+
+    /**
+     * Statics for Id's Cannot be truly dynamic yet
+     **/
+    public static final int BOOLEAN = 0,
+            COUNTER = 1,
+            SLIDER = 2,
+            CHOOSER = 3,
+            CHECK_BOX = 4,
+            STOP_WATCH = 5,
+            TEXT_FIELD = 6;
 
     public static final int MINIMUM_DEFAULT_VALUE = 1;
     public static final int MAXIMUM_DEFAULT_VALUE = 10;
@@ -33,7 +43,12 @@ public class MetricHelper {
     public static final int MATCH_PRACTICE_TYPE = 1;
 
     public static Func1<PitDatum, MetricValue> mapPitDataToMetricValue = pitData -> new MetricValue(pitData.getMetric(), JSON.getAsJsonObject(pitData.getData()));
-    public static Func1<MatchDatum, MetricValue> mapMatchDataToMetricValue = matchData -> new MetricValue(matchData.getMetric(), JSON.getAsJsonObject(matchData.getData()));
+    public static Func1<MatchDatum, MetricValue> mapMatchDataToMetricValue = matchDatum -> {
+        JsonObject value = JSON.getAsJsonObject(matchDatum.getData());
+        //Add match number for compiling purposes
+        value.addProperty("match_number", matchDatum.getMatch_number());
+        return new MetricValue(matchDatum.getMetric(), value);
+    };
 
     private static Type listType = new TypeToken<List<Integer>>() {
     }.getType();
@@ -92,6 +107,22 @@ public class MetricHelper {
         return new Tuple2<>(-1, ReturnResult.OTHER_ERROR);
     }
 
+    public static Tuple2<Integer, ReturnResult> getMatchNumberFromMetricValue(MetricValue metricValue) {
+        final Optional<JsonElement> optional = getMetricValue(metricValue);
+        if (!optional.isPresent())
+            return new Tuple2<>(-1, ReturnResult.ABSENT_VALUE);
+
+        JsonObject value = optional.get().getAsJsonObject();
+        if (value.has("match_number") && !value.get("match_number").isJsonNull()) {
+            try {
+                return new Tuple2<>(value.get("match_number").getAsInt(), ReturnResult.SUCCEED);
+            } catch (ClassCastException e) {
+                return new Tuple2<>(-1, ReturnResult.WRONG_TYPE_VALUE);
+            }
+        }
+        return new Tuple2<>(-1, ReturnResult.OTHER_ERROR);
+    }
+
     public static Tuple2<Double, ReturnResult> getDoubleMetricValue(MetricValue metricValue) {
         if (metricValue.getMetric().getType() != STOP_WATCH)
             return new Tuple2<>(-1.0, ReturnResult.WRONG_METRIC_TYPE);
@@ -128,11 +159,35 @@ public class MetricHelper {
         return new Tuple2<>(Lists.newArrayList(), ReturnResult.OTHER_ERROR);
     }
 
+    public static Tuple2<String, ReturnResult> getStringMetricValue(MetricValue metricValue) {
+        if (metricValue.getMetric().getType() != TEXT_FIELD)
+            return new Tuple2<>(null, ReturnResult.WRONG_METRIC_TYPE);
+
+        final Optional<JsonElement> optionalValue = getMetricValue(metricValue);
+        if (!optionalValue.isPresent())
+            return new Tuple2<>(null, ReturnResult.ABSENT_VALUE);
+
+        List<Integer> array = null;
+        final JsonObject valueJson = optionalValue.get().getAsJsonObject();
+        if (valueJson.has("value") && !valueJson.get("value").isJsonNull()) {
+            String text = valueJson.get("value").getAsString();
+            return new Tuple2<>(text, ReturnResult.SUCCEED);
+        }
+        return new Tuple2<>(null, ReturnResult.OTHER_ERROR);
+    }
+
     public static JsonObject buildBooleanMetricValue(boolean value) {
         JsonObject json = new JsonObject();
         json.addProperty("value", value);
         return json;
     }
+
+    public static JsonObject buildStringMetricValue(String value) {
+        JsonObject json = new JsonObject();
+        json.addProperty("value", value);
+        return json;
+    }
+
 
     public static JsonObject buildNumberMetricValue(Number value) {
         JsonObject data = new JsonObject();
@@ -205,7 +260,7 @@ public class MetricHelper {
         }
     }
 
-    @IntDef({BOOLEAN, COUNTER, SLIDER, CHOOSER, CHECK_BOX, STOP_WATCH})
+    @IntDef({BOOLEAN, COUNTER, SLIDER, CHOOSER, CHECK_BOX, STOP_WATCH, TEXT_FIELD})
     @Retention(RetentionPolicy.SOURCE)
     public @interface MetricType {
     }
@@ -216,7 +271,7 @@ public class MetricHelper {
     }
 
     public static class MetricFactory {
-        final Long game_id;
+        private Long game_id = 0L;
         @MetricCategory
         int metricCategory;
         @MetricType
@@ -224,14 +279,13 @@ public class MetricHelper {
         String name;
         JsonObject data = new JsonObject();
 
-        public MetricFactory(Long game_id, String name) {
-            if (game_id == null || name.isEmpty())
+        public MetricFactory(String name) {
+            if (name.isEmpty())
                 throw new IllegalStateException("Couldn't create MetricFactory");
-            this.game_id = game_id;
             this.name = name;
         }
 
-        public void setMetricType(@MetricType int metricType) {
+        public void setMetricType(int metricType) {
             this.metricType = metricType;
         }
 
@@ -261,6 +315,8 @@ public class MetricHelper {
                 data.addProperty("description", "");
 
             switch (metricType) {
+                case TEXT_FIELD:
+                case STOP_WATCH:
                 case BOOLEAN:
                     if (data.has("values"))
                         data.remove("values");
@@ -298,6 +354,10 @@ public class MetricHelper {
             }
 
             data = JSON.getAsJsonObject(string);
+        }
+
+        public void setGameId(Long game_id) {
+            this.game_id = game_id;
         }
 
         public Metric buildMetric() {

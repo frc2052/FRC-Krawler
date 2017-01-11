@@ -9,7 +9,7 @@ import com.team2052.frckrawler.db.Robot;
 
 import java.util.List;
 
-public class Games extends Table<Game, GameDao> {
+public class Games extends AbstractTable<Game, GameDao> {
     public Games(GameDao dao, DBManager dbManager) {
         super(dao, dbManager);
     }

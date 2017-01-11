@@ -22,15 +22,12 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.metric.MetricTypeEntry;
+import com.team2052.frckrawler.metric.MetricTypeEntryHandler;
 import com.team2052.frckrawler.util.MetricHelper;
 import com.team2052.frckrawler.util.SnackbarUtil;
-import com.team2052.frckrawler.views.metric.MetricWidget;
-import com.team2052.frckrawler.views.metric.impl.BooleanMetricWidget;
-import com.team2052.frckrawler.views.metric.impl.CheckBoxMetricWidget;
-import com.team2052.frckrawler.views.metric.impl.ChooserMetricWidget;
-import com.team2052.frckrawler.views.metric.impl.CounterMetricWidget;
-import com.team2052.frckrawler.views.metric.impl.SliderMetricWidget;
-import com.team2052.frckrawler.views.metric.impl.StopwatchMetricWidget;
+import com.team2052.frckrawler.metrics.view.MetricWidget;
+import com.team2052.frckrawler.metrics.view.impl.CheckBoxMetricWidget;
 
 import java.util.Arrays;
 import java.util.List;
@@ -134,33 +131,15 @@ public class AddMetricActivity extends DatabaseActivity {
         metricObservable = Observable
                 .zip(mNameObservable, mMinimumObservable, mMaximumObservable, mIncrementationObservable, mCommaListObservable, MetricPreviewParams::new)
                 .map(metricPreviewParams -> {
-                    MetricHelper.MetricFactory factory = new MetricHelper.MetricFactory(mGame.getId(), metricPreviewParams.name);
-                    @MetricHelper.MetricType
-                    int pos = typeSpinner.getSelectedItemPosition();
-                    factory.setMetricType(pos);
-                    switch (pos) {
-                        case MetricHelper.COUNTER:
-                            factory.setDataMinMaxInc(
+                    MetricHelper.MetricFactory metricFactory = MetricTypeEntryHandler.INSTANCE.getTypeEntry(typeSpinner.getSelectedItemPosition())
+                            .buildMetric(metricPreviewParams.name,
                                     metricPreviewParams.mMin,
                                     metricPreviewParams.mMax,
-                                    metricPreviewParams.mInc);
-                            break;
-                        case MetricHelper.SLIDER:
-                            factory.setDataMinMaxInc(
-                                    metricPreviewParams.mMin,
-                                    metricPreviewParams.mMax,
-                                    null);
-                            break;
-                        case MetricHelper.CHOOSER:
-                        case MetricHelper.CHECK_BOX:
-                            factory.setDataListIndexValue(metricPreviewParams.commaList);
-                            break;
-
-                        case MetricHelper.BOOLEAN:
-                            break;
-                    }
-                    factory.setMetricCategory(mMetricCategory);
-                    return factory.buildMetric();
+                                    metricPreviewParams.mInc,
+                                    metricPreviewParams.commaList);
+                    metricFactory.setMetricCategory(metricCategory);
+                    metricFactory.setGameId(mGame.getId());
+                    return metricFactory.buildMetric();
                 })
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -186,48 +165,21 @@ public class AddMetricActivity extends DatabaseActivity {
 
     private void changeSelection(int position) {
         MetricWidget newWidget;
-        switch (position) {
-            case MetricHelper.COUNTER:
-                mMinimum.setVisibility(View.VISIBLE);
-                mMaximum.setVisibility(View.VISIBLE);
-                mIncrementation.setVisibility(View.VISIBLE);
-                mCommaSeparatedList.setVisibility(View.GONE);
-                newWidget = new CounterMetricWidget(this);
-                break;
-            case MetricHelper.SLIDER:
-                mMinimum.setVisibility(View.VISIBLE);
-                mMaximum.setVisibility(View.VISIBLE);
-                mIncrementation.setVisibility(View.GONE);
-                mCommaSeparatedList.setVisibility(View.GONE);
-                newWidget = new SliderMetricWidget(this);
-                break;
-            case MetricHelper.CHOOSER:
-            case MetricHelper.CHECK_BOX:
-                mMinimum.setVisibility(View.GONE);
-                mMaximum.setVisibility(View.GONE);
-                mIncrementation.setVisibility(View.GONE);
-                mCommaSeparatedList.setVisibility(View.VISIBLE);
-                if (position == MetricHelper.CHOOSER) {
-                    newWidget = new ChooserMetricWidget(this);
-                } else {
-                    newWidget = new CheckBoxMetricWidget(this);
-                }
-                break;
-            case MetricHelper.STOP_WATCH:
-                mMinimum.setVisibility(View.GONE);
-                mMaximum.setVisibility(View.GONE);
-                mIncrementation.setVisibility(View.GONE);
-                mCommaSeparatedList.setVisibility(View.GONE);
-                newWidget = new StopwatchMetricWidget(this);
-                break;
-            default:
-                mMinimum.setVisibility(View.GONE);
-                mMaximum.setVisibility(View.GONE);
-                mIncrementation.setVisibility(View.GONE);
-                mCommaSeparatedList.setVisibility(View.GONE);
-                newWidget = new BooleanMetricWidget(this);
-                break;
-        }
+
+        MetricTypeEntry<?> typeEntry = MetricTypeEntryHandler.INSTANCE.getTypeEntry(position);
+        if (typeEntry == null)
+            typeEntry = MetricTypeEntryHandler.INSTANCE.getBooleanMetricTypeWidget();
+
+        //noinspection ResourceType
+        mMinimum.setVisibility(typeEntry.minimumVisibility());
+        //noinspection ResourceType
+        mMaximum.setVisibility(typeEntry.maximumVisibility());
+        //noinspection ResourceType
+        mIncrementation.setVisibility(typeEntry.incrementationVisibility());
+        //noinspection ResourceType
+        mCommaSeparatedList.setVisibility(typeEntry.commaListVisibility());
+        newWidget = typeEntry.getWidget(this);
+
         setMetricWidget(newWidget);
         updateMetric();
     }
@@ -236,7 +188,7 @@ public class AddMetricActivity extends DatabaseActivity {
         subscriptions.add(
                 metricObservable.map(metric -> new MetricValue(metric, null))
                         .subscribe(onNext -> {
-                            if (typeSpinner.getSelectedItemPosition() == MetricHelper.CHECK_BOX) {
+                            if (typeSpinner.getSelectedItemPosition() == MetricTypeEntryHandler.INSTANCE.getCheckBoxMetricTypeWidget().getTypeId()) {
                                 setMetricWidget(new CheckBoxMetricWidget(AddMetricActivity.this, onNext));
                             } else if (currentWidget != null) {
                                 currentWidget.setMetricValue(onNext);

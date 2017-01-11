@@ -70,7 +70,7 @@ public class MetricInfoActivity extends DatabaseActivity {
             return true;
         }
 
-        /*if (item.getItemId() == R.id.menu_edit) {
+        /*if (item.getItemId() == R.typeId.menu_edit) {
             EditMetricDialogFragment.newInstance(metric).show(getSupportFragmentManager(), "editMetric");
         } else*/
         if (item.getItemId() == R.id.menu_delete) {

@@ -17,7 +17,7 @@ import java.util.List;
 
 import rx.functions.Func1;
 
-public class Robots extends Table<Robot, RobotDao> {
+public class Robots extends AbstractTable<Robot, RobotDao> {
     public Func1<Robot, Team> mapRobotToTeam = Robot::getTeam;
     public Func1<Robot, Game> mapRobotToGame = Robot::getGame;
     public Func1<Robot, List<RobotEvent>> mapRobotToRobotEvents = Robot::getRobotEventList;

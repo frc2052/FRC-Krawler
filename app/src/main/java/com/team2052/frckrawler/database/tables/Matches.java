@@ -13,7 +13,7 @@ import org.greenrobot.greendao.query.QueryBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Matches extends Table<Match, MatchDao> {
+public class Matches extends AbstractTable<Match, MatchDao> {
     public Matches(MatchDao dao, DBManager dbManager) {
         super(dao, dbManager);
     }

@@ -13,7 +13,7 @@ import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.Date;
 
-public class Teams extends Table<Team, TeamDao> {
+public class Teams extends AbstractTable<Team, TeamDao> {
     public Teams(TeamDao dao, DBManager dbManager) {
         super(dao, dbManager);
     }

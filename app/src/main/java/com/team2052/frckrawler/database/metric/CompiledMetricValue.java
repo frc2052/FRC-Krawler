@@ -1,30 +1,26 @@
 package com.team2052.frckrawler.database.metric;
 
-import com.google.common.collect.Maps;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.MetricHelper;
-import com.team2052.frckrawler.util.Tuple2;
+import com.team2052.frckrawler.metric.MetricTypeEntry;
+import com.team2052.frckrawler.metric.MetricTypeEntryHandler;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Adam
  *         Compiled metric value, this object takes data and compiles it for you. Compiles all data on the thread it was instantiated on.
  */
 public class CompiledMetricValue {
-    private static final DecimalFormat format = new DecimalFormat("0.00");
+    public static final DecimalFormat format = new DecimalFormat("0.00");
     private final List<MetricValue> metricData;
     private final Robot robot;
     private final int metricType;
     private final Metric metric;
     private final double compileWeight;
-    private final JsonObject compiledValue = new JsonObject();
+    private JsonObject compiledValue = new JsonObject();
 
     /**
      * @param robot         The robot you are compiling
@@ -39,119 +35,7 @@ public class CompiledMetricValue {
         this.metricType = metric.getType();
         //Compute the compile weight
         this.compileWeight = compileWeight;
-        compileMetricValues();
-    }
-
-    private void compileMetricValues() {
-        String value;
-        double numerator = 0;
-        double denominator = 0;
-        double weight;
-        switch (metricType) {
-            case MetricHelper.BOOLEAN:
-                if (metricData.isEmpty()) {
-                    compiledValue.addProperty("value", 0.0);
-                    break;
-                }
-
-                for (MetricValue metricValue : metricData) {
-                    Tuple2<Boolean, MetricHelper.ReturnResult> result = MetricHelper.getBooleanMetricValue(metricValue);
-
-                    if (result.t2.isError)
-                        continue;
-
-                    weight = getCompileWeightForMatchNumber(metricValue);
-
-                    if (result.t1) {
-                        numerator += weight;
-                    } else {
-                        denominator += weight;
-                    }
-                }
-
-                value = format.format((numerator / (numerator + denominator)) * 100);
-                compiledValue.addProperty("value", value);
-                break;
-            //Do the same for slider and counter
-            case MetricHelper.SLIDER:
-            case MetricHelper.COUNTER:
-                if (metricData.isEmpty()) {
-                    compiledValue.addProperty("value", 0.0);
-                    break;
-                }
-
-                for (MetricValue metricValue : metricData) {
-                    final Tuple2<Integer, MetricHelper.ReturnResult> result = MetricHelper.getIntMetricValue(metricValue);
-
-                    if (result.t2.isError)
-                        continue;
-
-                    weight = getCompileWeightForMatchNumber(metricValue);
-                    numerator += result.t1 * weight;
-                    denominator += weight;
-                }
-
-                value = format.format(numerator / denominator);
-                compiledValue.addProperty("value", value);
-                break;
-            case MetricHelper.CHOOSER:
-            case MetricHelper.CHECK_BOX:
-                JsonArray possible_values = JSON.getAsJsonObject(metric.getData()).get("values").getAsJsonArray();
-                Map<Integer, Tuple2<String, Double>> compiledVal = Maps.newTreeMap();
-
-                for (int i = 0; i < possible_values.size(); i++) {
-                    compiledVal.put(i, new Tuple2<>(possible_values.get(i).getAsString(), 0.0));
-                }
-
-                if (metricData.isEmpty()) {
-                    JsonArray values = JSON.getGson().toJsonTree(Tuple2.yieldValues(compiledVal.values()).toArray()).getAsJsonArray();
-                    compiledValue.add("names", possible_values);
-                    compiledValue.add("values", values);
-                    break;
-                }
-
-
-                for (MetricValue metricValue : metricData) {
-                    final Tuple2<List<Integer>, MetricHelper.ReturnResult> result = MetricHelper.getListIndexMetricValue(metricValue);
-                    if (result.t2.isError)
-                        continue;
-
-                    weight = getCompileWeightForMatchNumber(metricValue);
-
-                    for (Integer index : result.t1)
-                        compiledVal.put(index, compiledVal.get(index).setT2(compiledVal.get(index).t2 + weight));
-
-                    denominator += weight;
-                }
-
-                for (Map.Entry<Integer, Tuple2<String, Double>> entry : compiledVal.entrySet()) {
-                    compiledVal.put(entry.getKey(), entry.getValue().setT2(Math.round((entry.getValue().t2 / denominator * 100) * 100.0) / 100.0));
-                }
-
-                JsonArray values = JSON.getGson().toJsonTree(Tuple2.yieldValues(compiledVal.values()).toArray()).getAsJsonArray();
-                compiledValue.add("names", possible_values);
-                compiledValue.add("values", values);
-                break;
-            case MetricHelper.STOP_WATCH:
-                if (metricData.isEmpty()) {
-                    compiledValue.addProperty("value", 0.0);
-                    break;
-                }
-
-                for (MetricValue metricValue : metricData) {
-                    final Tuple2<Double, MetricHelper.ReturnResult> result = MetricHelper.getDoubleMetricValue(metricValue);
-
-                    if (result.t2.isError)
-                        continue;
-
-                    weight = getCompileWeightForMatchNumber(metricValue);
-                    numerator += result.t1 * weight;
-                    denominator += weight;
-                }
-
-                value = format.format(numerator / denominator);
-                compiledValue.addProperty("value", value);
-        }
+        compiledValue = MetricTypeEntryHandler.INSTANCE.getTypeEntry(metricType).compileValues(robot, metric, metricData, compileWeight);
     }
 
     public JsonObject getCompiledValueJson() {
@@ -162,22 +46,9 @@ public class CompiledMetricValue {
      * @return Takes the @link[getCompiledValueJson] and parses it to a readable String
      */
     public String getCompiledValue() {
-        switch (metricType) {
-            case MetricHelper.COUNTER:
-            case MetricHelper.SLIDER:
-            case MetricHelper.BOOLEAN:
-                return String.valueOf(compiledValue.get("value").getAsDouble());
-            case MetricHelper.STOP_WATCH:
-                return String.format("%ss", String.valueOf(compiledValue.get("value").getAsDouble()));
-            case MetricHelper.CHOOSER:
-            case MetricHelper.CHECK_BOX:
-                JsonArray names = compiledValue.get("names").getAsJsonArray();
-                JsonArray values = compiledValue.get("values").getAsJsonArray();
-                String value = "";
-                for (int i = 0; i < names.size(); i++) {
-                    value += String.format("%s - %s%s" + (i == names.size() - 1 ? "" : "\n"), names.get(i).getAsString(), values.get(i).getAsDouble(), '%');
-                }
-                return value;
+        MetricTypeEntry<?> entry = MetricTypeEntryHandler.INSTANCE.getTypeEntry(metricType);
+        if (entry != null) {
+            return entry.convertValueToString(getCompiledValueJson());
         }
         return "Error";
     }
@@ -185,7 +56,7 @@ public class CompiledMetricValue {
     /**
      * Get the weight for the current data
      */
-    private double getCompileWeightForMatchNumber(MetricValue metricValue) {
+    public static double getCompileWeightForMatchNumber(MetricValue metricValue, List<MetricValue> metricData, double compileWeight) {
         return Math.pow(compileWeight, metricData.indexOf(metricValue) + 1);
     }
 

@@ -36,27 +36,12 @@ public class MetricItemView extends BindableFrameLayout<Metric> {
 
         String typeString;
 
-        switch (metric.getType()) {
-            case MetricHelper.BOOLEAN:
-                typeString = "Boolean";
-                break;
-            case MetricHelper.COUNTER:
-                typeString = "Counter";
-                break;
-            case MetricHelper.CHECK_BOX:
-                typeString = "Checkbox";
-                break;
-            case MetricHelper.CHOOSER:
-                typeString = "Chooser";
-                break;
-            case MetricHelper.SLIDER:
-                typeString = "Slider";
-                break;
-            case MetricHelper.STOP_WATCH:
-                typeString = "Stopwatch";
-                break;
-            default:
-                typeString = "Unknown";
+        String[] metricTypes = getContext().getResources().getStringArray(R.array.metric_types);
+
+        if(metric.getType() >= metricTypes.length){
+            typeString = "Unknown";
+        } else {
+            typeString = metricTypes[metric.getType()];
         }
 
         mType.setText(typeString);

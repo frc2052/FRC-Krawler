@@ -17,7 +17,7 @@ import java.util.Set;
 
 import rx.functions.Func1;
 
-public class MatchData extends Table<MatchDatum, MatchDatumDao> {
+public class MatchData extends AbstractTable<MatchDatum, MatchDatumDao> {
     public Func1<List<MatchDatum>, List<Long>> mapMatchDataToMatchNumbers = matchData -> {
         Set<Long> matchNumbers = Sets.newHashSet();
         for (int i = 0; i < matchData.size(); i++) {

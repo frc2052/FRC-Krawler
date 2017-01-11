@@ -9,7 +9,7 @@ import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.Date;
 
-public class PitData extends Table<PitDatum, PitDatumDao> {
+public class PitData extends AbstractTable<PitDatum, PitDatumDao> {
     public PitData(PitDatumDao dao, DBManager dbManager) {
         super(dao, dbManager);
     }

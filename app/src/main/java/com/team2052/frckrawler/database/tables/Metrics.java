@@ -12,7 +12,7 @@ import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.List;
 
-public class Metrics extends Table<Metric, MetricDao> {
+public class Metrics extends AbstractTable<Metric, MetricDao> {
     public Metrics(MetricDao dao, DBManager dbManager) {
         super(dao, dbManager);
     }
