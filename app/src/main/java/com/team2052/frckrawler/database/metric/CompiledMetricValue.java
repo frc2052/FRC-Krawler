@@ -38,6 +38,13 @@ public class CompiledMetricValue {
         compiledValue = MetricTypeEntryHandler.INSTANCE.getTypeEntry(metricType).compileValues(robot, metric, metricData, compileWeight);
     }
 
+    /**
+     * Get the weight for the current data
+     */
+    public static double getCompileWeightForMatchNumber(MetricValue metricValue, List<MetricValue> metricData, double compileWeight) {
+        return Math.pow(compileWeight, metricData.indexOf(metricValue) + 1);
+    }
+
     public JsonObject getCompiledValueJson() {
         return compiledValue;
     }
@@ -51,13 +58,6 @@ public class CompiledMetricValue {
             return entry.convertValueToString(getCompiledValueJson());
         }
         return "Error";
-    }
-
-    /**
-     * Get the weight for the current data
-     */
-    public static double getCompileWeightForMatchNumber(MetricValue metricValue, List<MetricValue> metricData, double compileWeight) {
-        return Math.pow(compileWeight, metricData.indexOf(metricValue) + 1);
     }
 
     public Metric getMetric() {

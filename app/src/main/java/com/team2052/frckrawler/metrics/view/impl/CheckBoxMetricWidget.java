@@ -6,12 +6,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.common.base.Optional;
-import com.google.gson.JsonElement;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.metric.MetricValue;
+import com.team2052.frckrawler.metrics.view.ListIndexMetricWidget;
 import com.team2052.frckrawler.util.MetricHelper;
 import com.team2052.frckrawler.util.Tuple2;
-import com.team2052.frckrawler.metrics.view.MetricWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
 /**
  * Created by adam on 3/28/15.
  */
-public class CheckBoxMetricWidget extends MetricWidget {
+public class CheckBoxMetricWidget extends ListIndexMetricWidget {
     private LinearLayout values;
 
     public CheckBoxMetricWidget(Context context, MetricValue m) {
@@ -62,12 +61,7 @@ public class CheckBoxMetricWidget extends MetricWidget {
         }
     }
 
-
     @Override
-    public JsonElement getData() {
-        return MetricHelper.buildListIndexValue(getIndexValues());
-    }
-
     public List<Integer> getIndexValues() {
         ArrayList<Integer> index_values = new ArrayList<>();
 

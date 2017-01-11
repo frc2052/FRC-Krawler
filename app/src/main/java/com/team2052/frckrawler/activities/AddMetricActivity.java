@@ -24,10 +24,10 @@ import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.metric.MetricTypeEntry;
 import com.team2052.frckrawler.metric.MetricTypeEntryHandler;
-import com.team2052.frckrawler.util.MetricHelper;
-import com.team2052.frckrawler.util.SnackbarUtil;
 import com.team2052.frckrawler.metrics.view.MetricWidget;
 import com.team2052.frckrawler.metrics.view.impl.CheckBoxMetricWidget;
+import com.team2052.frckrawler.util.MetricHelper;
+import com.team2052.frckrawler.util.SnackbarUtil;
 
 import java.util.Arrays;
 import java.util.List;

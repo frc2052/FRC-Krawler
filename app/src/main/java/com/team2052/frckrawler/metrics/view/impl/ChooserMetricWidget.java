@@ -12,9 +12,9 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.metric.MetricValue;
+import com.team2052.frckrawler.metrics.view.ListIndexMetricWidget;
 import com.team2052.frckrawler.util.MetricHelper;
 import com.team2052.frckrawler.util.Tuple2;
-import com.team2052.frckrawler.metrics.view.ListIndexMetricWidget;
 
 import java.util.List;
 

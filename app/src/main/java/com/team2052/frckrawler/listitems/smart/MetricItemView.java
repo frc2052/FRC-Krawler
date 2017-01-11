@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.util.MetricHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +37,7 @@ public class MetricItemView extends BindableFrameLayout<Metric> {
 
         String[] metricTypes = getContext().getResources().getStringArray(R.array.metric_types);
 
-        if(metric.getType() >= metricTypes.length){
+        if (metric.getType() >= metricTypes.length) {
             typeString = "Unknown";
         } else {
             typeString = metricTypes[metric.getType()];

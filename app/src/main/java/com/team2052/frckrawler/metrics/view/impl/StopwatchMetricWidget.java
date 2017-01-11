@@ -8,9 +8,9 @@ import android.widget.TextView;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.metric.MetricValue;
+import com.team2052.frckrawler.metrics.view.MetricWidget;
 import com.team2052.frckrawler.util.MetricHelper;
 import com.team2052.frckrawler.util.Tuple2;
-import com.team2052.frckrawler.metrics.view.MetricWidget;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;

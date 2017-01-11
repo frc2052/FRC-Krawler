@@ -271,13 +271,13 @@ public class MetricHelper {
     }
 
     public static class MetricFactory {
-        private Long game_id = 0L;
         @MetricCategory
         int metricCategory;
         @MetricType
         int metricType;
         String name;
         JsonObject data = new JsonObject();
+        private Long game_id = 0L;
 
         public MetricFactory(String name) {
             if (name.isEmpty())
