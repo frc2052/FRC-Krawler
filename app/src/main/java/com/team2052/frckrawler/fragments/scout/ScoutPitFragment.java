@@ -105,7 +105,7 @@ public class ScoutPitFragment extends BaseScoutFragment {
         return Observable.combineLatest(
                 robotObservable(),
                 Observable.defer(() -> Observable.just(getValues())),
-                metricCommentObservable,
+                Observable.just(mCommentsView.getEditText().getText().toString()),
                 PitScoutSaveMetric::new)
                 .map(pitScoutSaveMetric -> {
                     boolean saved = false;
