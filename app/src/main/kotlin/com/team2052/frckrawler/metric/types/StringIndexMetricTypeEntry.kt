@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.metric.types
 
+import android.view.View
 import com.google.common.base.Joiner
 import com.google.common.base.Strings
 import com.google.common.collect.Maps
@@ -9,10 +10,10 @@ import com.team2052.frckrawler.database.metric.MetricValue
 import com.team2052.frckrawler.db.Metric
 import com.team2052.frckrawler.db.Robot
 import com.team2052.frckrawler.metric.MetricTypeEntry
+import com.team2052.frckrawler.metrics.view.MetricWidget
 import com.team2052.frckrawler.tba.JSON
 import com.team2052.frckrawler.util.MetricHelper
 import com.team2052.frckrawler.util.Tuple2
-import com.team2052.frckrawler.metrics.view.MetricWidget
 
 open class StringIndexMetricTypeEntry<out W : MetricWidget>(widgetType: Class<W>) : MetricTypeEntry<W>(widgetType) {
     override fun convertValueToString(value: JsonObject): String {
@@ -78,4 +79,6 @@ open class StringIndexMetricTypeEntry<out W : MetricWidget>(widgetType: Class<W>
         metricFactory.setDataListIndexValue(commaList)
         return metricFactory
     }
+
+    override fun commaListVisibility(): Int = View.VISIBLE
 }
