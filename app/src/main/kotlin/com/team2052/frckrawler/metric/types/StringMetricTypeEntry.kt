@@ -7,14 +7,14 @@ import com.team2052.frckrawler.database.metric.MetricValue
 import com.team2052.frckrawler.db.Metric
 import com.team2052.frckrawler.db.Robot
 import com.team2052.frckrawler.metric.MetricTypeEntry
+import com.team2052.frckrawler.metrics.view.MetricWidget
 import com.team2052.frckrawler.tba.JSON
 import com.team2052.frckrawler.util.MetricHelper
-import com.team2052.frckrawler.metrics.view.MetricWidget
 
 class StringMetricTypeEntry<out W : MetricWidget>(widgetType: Class<W>) : MetricTypeEntry<W>(widgetType) {
     override fun compileValues(robot: Robot, metric: Metric, metricData: List<MetricValue>, compileWeight: Double): JsonObject {
         val json = JsonObject()
-        if (metricData.size <= 1) {
+        if (metricData.size == 1) {
             val value = MetricHelper.getStringMetricValue(metricData[0])
             val number = MetricHelper.getMatchNumberFromMetricValue(metricData[0])
             if (value.t2.isError) {

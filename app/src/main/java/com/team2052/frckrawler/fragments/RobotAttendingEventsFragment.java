@@ -33,8 +33,8 @@ public class RobotAttendingEventsFragment extends RecyclerViewFragment<List<Even
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         robot_id = getArguments().getLong(DatabaseActivity.PARENT_ID);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
