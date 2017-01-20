@@ -12,6 +12,9 @@ public class Constants {
      * most recently connected server
      */
     public static final String MAC_ADDRESS_PREF = "MACAddress";
-    public static final int MAX_COMP_YEAR = 2017;
     public static final int FIRST_COMP_YEAR = 1992;
+    /**
+     * Fallback year in case device has their date and time screwed up
+     */
+    public static final int MAX_COMP_YEAR = 2017;
 }
