@@ -16,5 +16,5 @@ public class Constants {
     /**
      * Fallback year in case device has their date and time screwed up
      */
-    public static final int MAX_COMP_YEAR = 2017;
+    public static int MAX_COMP_YEAR = 2017;
 }
