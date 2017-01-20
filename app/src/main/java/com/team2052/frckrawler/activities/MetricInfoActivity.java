@@ -21,6 +21,11 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Adam on 6/13/2015.
  */
+
+/**
+ * Edited by Brandan Schmitz on 1/19/2017
+ */
+
 public class MetricInfoActivity extends DatabaseActivity {
     public static final String METRIC_ID = "METRIC_ID";
     private Metric mMetirc;
@@ -28,9 +33,9 @@ public class MetricInfoActivity extends DatabaseActivity {
     private ViewPager mViewPager;
     private MetricInfoPagerAdapter mAdapter;
 
-    public static Intent newInstance(Context context, long metric_id) {
+    public static Intent newInstance(Context context, Metric metric) {
         Intent intent = new Intent(context, MetricInfoActivity.class);
-        intent.putExtra(METRIC_ID, metric_id);
+        intent.putExtra(METRIC_ID, metric.getId());
         return intent;
     }
 
@@ -41,7 +46,7 @@ public class MetricInfoActivity extends DatabaseActivity {
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
 
-        mMetirc = rxDbManager.getMetricsTable().load(getIntent().getLongExtra(METRIC_ID, 0));
+        mMetirc = dbManager.getMetricsTable().load(getIntent().getLongExtra(METRIC_ID, 0));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -69,15 +74,15 @@ public class MetricInfoActivity extends DatabaseActivity {
             finish();
             return true;
         }
-        
+
         if (item.getItemId() == R.id.menu_delete) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Delete Metric?");
             builder.setMessage("Are you sure you want to delete this metric? You will lose all data associated with this metric.");
-            builder.setPositiveButton("Delete", (dialog, which) -> {
+            builder.setNegativeButton("Delete", (dialog, which) -> {
                 Observable.just(mMetirc)
                         .map(metric -> {
-                            rxDbManager.getMetricsTable().delete(metric);
+                            dbManager.getMetricsTable().delete(metric);
                             return metric;
                         })
                         .subscribeOn(Schedulers.io())
@@ -86,15 +91,11 @@ public class MetricInfoActivity extends DatabaseActivity {
                             finish();
                         });
             });
-            builder.setNegativeButton("Cancel", null);
+            builder.setPositiveButton("Cancel", null);
             builder.create().show();
         }
-        
-        /*
-            Added a user prompt to edit the metrics when that is corrected. I also added a messages stating that the edit
-            feature is currently under development to aviod the question of why is it not working.
-        */
-         if (item.getItemId() == R.id.menu_edit) {
+
+        if (item.getItemId() == R.id.menu_edit) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Edit Metric");
             builder.setMessage("Are you sure you want to edit this metric?");
@@ -103,9 +104,6 @@ public class MetricInfoActivity extends DatabaseActivity {
                 builder2.setTitle("Please have patience...");
                 builder2.setMessage("This feature is currently under active development. It will be working in a future release. Thank you for your patience.");
                 builder2.create().show();
-                /*
-                Replace lines 102-105 with the content of line 109
-                */
                 //EditMetricDialogFragment.newInstance(mMetirc).show(getSupportFragmentManager(), "editMetric");
             });
             builder.setPositiveButton("Cancel", null);
