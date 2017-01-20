@@ -69,10 +69,7 @@ public class MetricInfoActivity extends DatabaseActivity {
             finish();
             return true;
         }
-
-        /*if (item.getItemId() == R.typeId.menu_edit) {
-            EditMetricDialogFragment.newInstance(metric).show(getSupportFragmentManager(), "editMetric");
-        } else*/
+        
         if (item.getItemId() == R.id.menu_delete) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Delete Metric?");
@@ -90,6 +87,28 @@ public class MetricInfoActivity extends DatabaseActivity {
                         });
             });
             builder.setNegativeButton("Cancel", null);
+            builder.create().show();
+        }
+        
+        /*
+            Added a user prompt to edit the metrics when that is corrected. I also added a messages stating that the edit
+            feature is currently under development to aviod the question of why is it not working.
+        */
+         if (item.getItemId() == R.id.menu_edit) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Edit Metric");
+            builder.setMessage("Are you sure you want to edit this metric?");
+            builder.setNegativeButton("Edit", (dialog, which) -> {
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+                builder2.setTitle("Please have patience...");
+                builder2.setMessage("This feature is currently under active development. It will be working in a future release. Thank you for your patience.");
+                builder2.create().show();
+                /*
+                Replace lines 102-105 with the content of line 109
+                */
+                //EditMetricDialogFragment.newInstance(mMetirc).show(getSupportFragmentManager(), "editMetric");
+            });
+            builder.setPositiveButton("Cancel", null);
             builder.create().show();
         }
         return super.onOptionsItemSelected(item);
