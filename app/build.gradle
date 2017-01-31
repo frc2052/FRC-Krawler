@@ -11,8 +11,8 @@ android {
         applicationId 'com.team2052.frckrawler'
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 29
-        versionName "3.1.1"
+        versionCode 30
+        versionName "3.2.0"
         multiDexEnabled true
 
         // Needed for support lib 23.2.0+ on pre-L devices
@@ -42,6 +42,7 @@ android {
     }
 
     lintOptions {
+        checkReleaseBuilds false
         abortOnError false
     }
 
@@ -72,7 +73,7 @@ dependencies {
     compile 'com.facebook.stetho:stetho-okhttp:1.1.1'
 
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.google.guava:guava:20.0'
+    compile 'com.google.guava:guava:19.0'
     compile 'com.google.dagger:dagger:2.6.1'
     apt 'com.google.dagger:dagger-compiler:2.6.1'
 
