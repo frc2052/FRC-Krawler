@@ -16,10 +16,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.firebase.database.FirebaseDatabase;
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.SetupFragmentAdapter;
+import com.team2052.frckrawler.firebase.FirebaseUtil;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.views.DisableSwipeViewPager;
 
@@ -50,8 +50,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
+        FirebaseUtil.getFirebaseDatabase();
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
 
