@@ -115,6 +115,9 @@ public class ExportDialogFragment extends BaseProgressDialog {
     }
 
     private void keepScreenOn(boolean on) {
+        if (getActivity() == null || getActivity().getWindow() == null)
+            return;
+
         if (on) {
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         } else {
