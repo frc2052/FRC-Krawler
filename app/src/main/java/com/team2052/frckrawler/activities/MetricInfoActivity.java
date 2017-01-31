@@ -60,6 +60,8 @@ public class MetricInfoActivity extends DatabaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.edit_delete_menu, menu);
+        //Remove edit menu item so we don't confuse our users for the time being
+        menu.removeItem(R.id.menu_edit);
         return super.onCreateOptionsMenu(menu);
     }
 
