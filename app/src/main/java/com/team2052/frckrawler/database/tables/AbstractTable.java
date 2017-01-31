@@ -42,4 +42,8 @@ abstract class AbstractTable<T, D extends AbstractDao<T, Long>> {
     }
 
     public abstract void insert(T model);
+
+    public void deleteAll() {
+        dao.deleteAll();
+    }
 }

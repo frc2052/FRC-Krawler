@@ -59,6 +59,15 @@ public class RxDBManager extends DBManager {
     }
 
     public void deleteAll() {
+        getMatchDataTable().deleteAll();
+        getPitDataTable().deleteAll();
+        getGamesTable().deleteAll();
+        getMatchCommentsTable().deleteAll();
+        getRobotEventsTable().deleteAll();
+        getMatchDataTable().deleteAll();
+        getMetricsTable().deleteAll();
+        getRobotsTable().deleteAll();
+        getEventsTable().deleteAll();
     }
 
     public Observable<Map<String, String>> teamInfo(long team_id) {
