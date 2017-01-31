@@ -185,9 +185,19 @@ public class Compiler {
     }
 
     public Observable<List<CompiledMetricValue>> getCompiledRobotSummary(long robot_id, Long event_id) {
+        return getCompiledRobotSummary(
+                robot_id,
+                event_id,
+                Observable.just(robot_id)
+                        .map(rxDbManager.getRobotsTable().mapIdToModel)
+                        .concatMap(robot -> getMetrics(robot.getGame_id()))
+        );
+    }
+
+    public Observable<List<CompiledMetricValue>> getCompiledRobotSummary(long robot_id, Long event_id, final Observable<List<Metric>> metricListObservable) {
         return Observable.just(robot_id)
                 .map(rxDbManager.getRobotsTable().mapIdToModel)
-                .concatMap(robot -> getMetrics(robot.getGame_id())
+                .concatMap(robot -> metricListObservable
                         .concatMap(Observable::from)
                         .concatMap(metric -> getRobotMetricSummary(event_id, metric, robot))
                         .toList());
