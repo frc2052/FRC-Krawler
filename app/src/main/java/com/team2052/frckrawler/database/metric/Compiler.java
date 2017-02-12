@@ -230,7 +230,9 @@ public class Compiler {
                             .concatMap(Observable::from)
                             .concatMap(matchNumber ->
                                     Observable.from(metrics)
-                                            .map(metric -> rxDbManager.getMatchDataTable().query(robot.getId(), metric.getId(), matchNumber, null, eventId).unique())
+                                            .map(metric -> {
+                                                return rxDbManager.getMatchDataTable().query(robot.getId(), metric.getId(), matchNumber, null, eventId).unique();
+                                            })
                                             .map(CompileUtil.convertMatchDataToStringFunc)
                                             .toList()
                                             .map(record -> {

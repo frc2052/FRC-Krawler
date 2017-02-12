@@ -59,6 +59,10 @@ public class CompileUtil {
     };
 
     public static Func1<MatchDatum, String> convertMatchDataToStringFunc = matchData -> {
+        if (matchData == null) {
+            //Data doesn't exist
+            return "";
+        }
         Metric metric = matchData.getMetric();
         if (matchData == null) {
             return "";
@@ -66,7 +70,7 @@ public class CompileUtil {
 
         JsonObject data = JSON.getAsJsonObject(matchData.getData());
 
-        if (metric.getType() < 3) {
+        if (data.has("value")) {
             return data.get("value").toString();
         } else {
             JsonObject metricData = JSON.getAsJsonObject(metric.getData());
