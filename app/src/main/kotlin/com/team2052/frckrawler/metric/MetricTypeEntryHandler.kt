@@ -4,8 +4,8 @@ import android.view.View
 import com.google.common.collect.Lists
 import com.team2052.frckrawler.db.Metric
 import com.team2052.frckrawler.metric.types.*
-import com.team2052.frckrawler.tba.JSON
 import com.team2052.frckrawler.metrics.view.impl.*
+import com.team2052.frckrawler.tba.JSON
 
 object MetricTypeEntryHandler {
     var booleanMetricTypeWidget: MetricTypeEntry<*>? = null
@@ -23,7 +23,7 @@ object MetricTypeEntryHandler {
 
     fun getId(typeEntry: MetricTypeEntry<*>): Int = metricTypeEntryList.indexOf(typeEntry)
 
-    fun getTypeEntry(type: Int): MetricTypeEntry<*>? = metricTypeEntryList[type]
+    fun getTypeEntry(type: Int): MetricTypeEntry<*> = metricTypeEntryList[type]
 
     fun init() {
         booleanMetricTypeWidget = BooleanMetricTypeEntry()
@@ -41,5 +41,14 @@ object MetricTypeEntryHandler {
         checkBoxMetricTypeWidget = StringIndexMetricTypeEntry(CheckBoxMetricWidget::class.java)
         stopWatchMetricTypeWidget = DoubleMetricTypeEntry(StopwatchMetricWidget::class.java)
         textInputMetricTypeWidget = StringMetricTypeEntry(TextFieldMetricWidget::class.java)
+
+        addMetricEntry(booleanMetricTypeWidget!!)
+        addMetricEntry(counterMetricTypeWidget!!)
+        addMetricEntry(sliderMetricTypeWidget!!)
+        addMetricEntry(chooserMetricTypeWidget!!)
+        addMetricEntry(checkBoxMetricTypeWidget!!)
+        addMetricEntry(stopWatchMetricTypeWidget!!)
+        addMetricEntry(textInputMetricTypeWidget!!)
+
     }
 }

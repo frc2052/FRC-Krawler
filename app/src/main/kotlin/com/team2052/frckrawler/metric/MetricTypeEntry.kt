@@ -6,14 +6,10 @@ import com.google.gson.JsonObject
 import com.team2052.frckrawler.database.metric.MetricValue
 import com.team2052.frckrawler.db.Metric
 import com.team2052.frckrawler.db.Robot
-import com.team2052.frckrawler.util.MetricHelper
 import com.team2052.frckrawler.metrics.view.MetricWidget
+import com.team2052.frckrawler.util.MetricHelper
 
 abstract class MetricTypeEntry<out W : MetricWidget> internal constructor(private val widgetType: Class<W>) {
-
-    init {
-        MetricTypeEntryHandler.addMetricEntry(this)
-    }
 
     fun getWidget(c: Context, v: MetricValue): W? {
         try {
