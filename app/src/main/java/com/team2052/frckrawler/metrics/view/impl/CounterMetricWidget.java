@@ -20,24 +20,20 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
     private int max;
     private int min;
     private int increment;
+    private TextView nameText, valueText;
 
     public CounterMetricWidget(Context context, MetricValue metricValue) {
         super(context, metricValue);
-        inflater.inflate(R.layout.widget_metric_counter, this);
         setMetricValue(metricValue);
     }
 
     public CounterMetricWidget(Context context) {
         super(context);
-        inflater.inflate(R.layout.widget_metric_counter, this);
     }
 
     @Override
     public void setMetricValue(MetricValue m) {
         ((TextView) findViewById(R.id.title)).setText(m.getMetric().getName());
-
-        findViewById(R.id.plus).setOnClickListener(this);
-        findViewById(R.id.minus).setOnClickListener(this);
 
         JsonObject o = JSON.getAsJsonObject(m.getMetric().getData());
 
@@ -50,7 +46,16 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
         else
             value = min;
 
-        ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));
+        valueText.setText(Integer.toString(value));
+    }
+
+    @Override
+    public void initViews() {
+        inflater.inflate(R.layout.widget_metric_counter, this);
+        findViewById(R.id.plus).setOnClickListener(this);
+        findViewById(R.id.minus).setOnClickListener(this);
+        nameText = (TextView) findViewById(R.id.title);
+        valueText = (TextView) findViewById(R.id.value);
     }
 
 

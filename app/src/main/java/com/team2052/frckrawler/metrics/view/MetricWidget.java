@@ -18,13 +18,13 @@ public abstract class MetricWidget extends FrameLayout {
     protected MetricWidget(Context context, MetricValue m) {
         this(context);
         metric = m.getMetric();
-
     }
 
     protected MetricWidget(Context context) {
         super(context);
         inflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
+        initViews();
     }
 
     public static Optional<MetricWidget> createWidget(Context c, Metric m) {
@@ -38,6 +38,8 @@ public abstract class MetricWidget extends FrameLayout {
     }
 
     public abstract void setMetricValue(MetricValue m);
+
+    public abstract void initViews();
 
     public MetricValue getValue() {
         return new MetricValue(getMetric(), getData());

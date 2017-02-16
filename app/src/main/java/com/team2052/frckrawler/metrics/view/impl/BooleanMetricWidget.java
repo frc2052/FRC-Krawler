@@ -15,19 +15,16 @@ import com.team2052.frckrawler.util.MetricHelper;
 
 public class BooleanMetricWidget extends MetricWidget implements OnClickListener {
     TextView name;
+    RadioButton yesRadioButton, noRadioButton;
     private boolean value = false;
 
     public BooleanMetricWidget(Context context, MetricValue m) {
         super(context, m);
-        inflater.inflate(R.layout.widget_metric_boolean, this);
-        name = (TextView) findViewById(R.id.name);
         setMetricValue(m);
     }
 
     public BooleanMetricWidget(Context context) {
         super(context);
-        inflater.inflate(R.layout.widget_metric_boolean, this);
-        name = (TextView) findViewById(R.id.name);
     }
 
     @Override
@@ -43,10 +40,19 @@ public class BooleanMetricWidget extends MetricWidget implements OnClickListener
             setValue(false);
     }
 
+    @Override
+    public void initViews() {
+        inflater.inflate(R.layout.widget_metric_boolean, this);
+        name = (TextView) findViewById(R.id.name);
+        yesRadioButton = (RadioButton) findViewById(R.id.yes);
+        noRadioButton = (RadioButton) findViewById(R.id.no);
+    }
+
     public void setValue(boolean value) {
         this.value = value;
-        ((RadioButton) findViewById(R.id.yes)).setChecked(value);
-        ((RadioButton) findViewById(R.id.no)).setChecked(!value);
+
+        yesRadioButton.setChecked(value);
+        noRadioButton.setChecked(!value);
     }
 
     @Override

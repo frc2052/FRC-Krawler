@@ -20,22 +20,16 @@ import java.util.List;
 
 public class ChooserMetricWidget extends ListIndexMetricWidget implements OnItemSelectedListener {
 
-    private final Spinner chooserSpinner;
     int value;
+    private Spinner chooserSpinner;
 
     public ChooserMetricWidget(Context context, MetricValue metricValue) {
         super(context, metricValue);
-        inflater.inflate(R.layout.widget_metric_chooser, this);
-        chooserSpinner = (Spinner) findViewById(R.id.choooserList);
-        chooserSpinner.setOnItemSelectedListener(this);
         setMetricValue(metricValue);
     }
 
     public ChooserMetricWidget(Context context) {
         super(context);
-        inflater.inflate(R.layout.widget_metric_chooser, this);
-        chooserSpinner = (Spinner) findViewById(R.id.choooserList);
-        chooserSpinner.setOnItemSelectedListener(this);
     }
 
     @Override
@@ -57,6 +51,13 @@ public class ChooserMetricWidget extends ListIndexMetricWidget implements OnItem
 
         if (!adapter.isEmpty())
             chooserSpinner.setSelection(selectedPos);
+    }
+
+    @Override
+    public void initViews() {
+        inflater.inflate(R.layout.widget_metric_chooser, this);
+        chooserSpinner = (Spinner) findViewById(R.id.choooserList);
+        chooserSpinner.setOnItemSelectedListener(this);
     }
 
     @Override

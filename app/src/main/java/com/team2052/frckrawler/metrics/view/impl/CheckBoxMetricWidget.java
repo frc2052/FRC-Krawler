@@ -20,11 +20,10 @@ import java.util.List;
  */
 public class CheckBoxMetricWidget extends ListIndexMetricWidget {
     private LinearLayout values;
+    private TextView name;
 
     public CheckBoxMetricWidget(Context context, MetricValue m) {
         super(context, m);
-        inflater.inflate(R.layout.widget_metric_checkbox, this);
-        this.values = (LinearLayout) findViewById(R.id.values);
 
         final Optional<List<String>> optionalValues = MetricHelper.getListItemIndexRange(m.getMetric());
         if (!optionalValues.isPresent())
@@ -35,19 +34,25 @@ public class CheckBoxMetricWidget extends ListIndexMetricWidget {
             String value = rangeValues.get(i);
             AppCompatCheckBox checkbox = new AppCompatCheckBox(getContext());
             checkbox.setText(value);
-            this.values.addView(checkbox);
+            values.addView(checkbox);
         }
+
         setMetricValue(m);
     }
 
     public CheckBoxMetricWidget(Context context) {
         super(context);
+    }
+
+    @Override
+    public void initViews() {
         inflater.inflate(R.layout.widget_metric_checkbox, this);
+        name = (TextView) findViewById(R.id.name);
+        values = (LinearLayout) findViewById(R.id.values);
     }
 
     @Override
     public void setMetricValue(MetricValue m) {
-        TextView name = (TextView) findViewById(R.id.name);
         name.setText(m.getMetric().getName());
 
         final Tuple2<List<Integer>, MetricHelper.ReturnResult> preLoadedValuesResult = MetricHelper.getListIndexMetricValue(m);

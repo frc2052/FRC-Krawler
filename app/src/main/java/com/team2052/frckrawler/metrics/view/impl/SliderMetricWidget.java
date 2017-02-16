@@ -17,36 +17,26 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class SliderMetricWidget extends MetricWidget {
 
-    private final AppCompatSeekBar seekBar;
     int value;
     private int min;
     private int max;
-    private TextView valueText;
+    private AppCompatSeekBar seekBar;
+    private TextView valueText, nameText, minText, maxText;
 
     public SliderMetricWidget(Context context, MetricValue metricValue) {
         super(context, metricValue);
-        inflater.inflate(R.layout.widget_metric_slider, this);
-        seekBar = (AppCompatSeekBar) findViewById(R.id.sliderVal);
         setMetricValue(metricValue);
     }
 
     public SliderMetricWidget(Context context) {
         super(context);
-        inflater.inflate(R.layout.widget_metric_slider, this);
-        seekBar = (AppCompatSeekBar) findViewById(R.id.sliderVal);
-        valueText = (TextView) findViewById(R.id.value);
-
-        RxSeekBar.userChanges(seekBar).subscribeOn(AndroidSchedulers.mainThread()).subscribe(seekValue -> {
-            valueText.setText(Integer.toString(seekValue));
-            value = seekValue + min;
-        });
     }
 
     @Override
     public void setMetricValue(MetricValue m) {
         min = 0;
         max = 1;
-        ((TextView) findViewById(R.id.name)).setText(m.getMetric().getName());
+        nameText.setText(m.getMetric().getName());
 
         JsonObject range = JSON.getAsJsonObject(m.getMetric().getData());
         min = range.get("min").getAsInt();
@@ -54,8 +44,8 @@ public class SliderMetricWidget extends MetricWidget {
 
         seekBar.setMax(max - min);
 
-        ((TextView) findViewById(R.id.min)).setText(Integer.toString(min));
-        ((TextView) findViewById(R.id.max)).setText(Integer.toString(max));
+        minText.setText(Integer.toString(min));
+        maxText.setText(Integer.toString(max));
 
         if (m.getValue() != null && !m.getValue().getAsJsonObject().get("value").isJsonNull())
             value = m.getValue().getAsJsonObject().get("value").getAsInt();
@@ -66,6 +56,21 @@ public class SliderMetricWidget extends MetricWidget {
             value = min;
         seekBar.setProgress(value - min);
         valueText.setText(Integer.toString(value));
+    }
+
+    @Override
+    public void initViews() {
+        inflater.inflate(R.layout.widget_metric_slider, this);
+        seekBar = (AppCompatSeekBar) findViewById(R.id.sliderVal);
+        valueText = (TextView) findViewById(R.id.value);
+        nameText = ((TextView) findViewById(R.id.name));
+        minText = ((TextView) findViewById(R.id.min));
+        maxText = ((TextView) findViewById(R.id.max));
+
+        RxSeekBar.userChanges(seekBar).subscribeOn(AndroidSchedulers.mainThread()).subscribe(seekValue -> {
+            valueText.setText(Integer.toString(seekValue));
+            value = seekValue + min;
+        });
     }
 
     @Override

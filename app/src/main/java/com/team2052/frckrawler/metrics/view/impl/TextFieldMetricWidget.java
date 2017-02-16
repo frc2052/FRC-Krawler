@@ -28,7 +28,8 @@ public class TextFieldMetricWidget extends MetricWidget {
         initViews();
     }
 
-    private void initViews() {
+    @Override
+    public void initViews() {
         editText = (EditText) findViewById(R.id.text_input);
         textView = (TextView) findViewById(R.id.title);
     }
