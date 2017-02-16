@@ -39,6 +39,7 @@ public class StopwatchMetricWidget extends MetricWidget {
 
     @Override
     public void initViews() {
+        inflater.inflate(R.layout.widget_metric_stopwatch, this);
         startResumeButton = (AppCompatImageButton) findViewById(R.id.start_resume);
         findViewById(R.id.reset).setOnClickListener(v -> reset());
         findViewById(R.id.reset).setVisibility(View.GONE);
