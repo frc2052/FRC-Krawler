@@ -65,8 +65,12 @@ public class MatchData extends AbstractTable<MatchDatum, MatchDatumDao> {
             matchDataQueryBuilder.where(MatchDatumDao.Properties.Metric_id.eq(metricId));
         if (match_number != null)
             matchDataQueryBuilder.where(MatchDatumDao.Properties.Match_number.eq(match_number));
-        if (match_type != null)
+        if (match_type != null) {
             matchDataQueryBuilder.where(MatchDatumDao.Properties.Match_type.eq(match_type));
+        } else {
+            // Default to normal match data
+            matchDataQueryBuilder.where(MatchDatumDao.Properties.Match_type.eq(0));
+        }
         if (eventId != null)
             matchDataQueryBuilder.where(MatchDatumDao.Properties.Event_id.eq(eventId));
         return matchDataQueryBuilder;
