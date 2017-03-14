@@ -79,6 +79,7 @@ public class SyncScoutTask extends AsyncTask<BluetoothDevice, Void, Integer> {
                 e.printStackTrace();
                 FirebaseCrash.log("Error Syncing: Could not get the streams");
                 FirebaseCrash.report(e);
+                errorMessage = "This device had an error communicating with the server. Make sure the server is on.";
                 return SYNC_ERROR;
             }
 

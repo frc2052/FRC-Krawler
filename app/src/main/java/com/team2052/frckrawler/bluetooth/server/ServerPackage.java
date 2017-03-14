@@ -60,11 +60,11 @@ public class ServerPackage implements Serializable {
                 RobotComment robotComment = robotComments.get(i);
                 Robot robot = rxDbManager.getRobotsTable().load(robotComment.getRobotId());
 
-                if (robot.getLast_updated() == null) {
-                    robot.setLast_updated(new Date());
-                }
+                //If robot is null ignore
+                if (robot == null)
+                    continue;
 
-                if (robot.getLast_updated().getTime() <= new Date().getTime()) {
+                if (robot.getLast_updated() == null || robot.getLast_updated().getTime() <= new Date().getTime()) {
                     robot.setLast_updated(new Date());
                     robot.setComments(robotComment.getComment());
                     robot.update();

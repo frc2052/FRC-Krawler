@@ -97,7 +97,10 @@ public class CompileUtil {
                     if (fileSystem.canWrite()) {
                         File directory = new File(fileSystem, "/FRCKrawler/Summaries/" + event.getGame().getName() + "/");
                         if (!directory.exists()) {
-                            directory.mkdirs();
+                            boolean created = directory.mkdirs();
+                            if (!created) {
+                                directory = new File(fileSystem, "/");
+                            }
                         }
                         try {
                             file = File.createTempFile(
@@ -121,7 +124,10 @@ public class CompileUtil {
                     if (fileSystem.canWrite()) {
                         File directory = new File(fileSystem, "/FRCKrawler/RawExport/" + event.getGame().getName() + "/");
                         if (!directory.exists()) {
-                            directory.mkdirs();
+                            boolean created = directory.mkdirs();
+                            if (!created) {
+                                directory = new File(fileSystem, "/");
+                            }
                         }
                         try {
                             file = File.createTempFile(

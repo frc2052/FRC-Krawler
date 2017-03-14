@@ -50,8 +50,9 @@ open class StringIndexMetricTypeEntry<out W : MetricWidget>(widgetType: Class<W>
 
             val weight = CompiledMetricValue.getCompileWeightForMatchNumber(metricValue, metricData, compileWeight)
 
-            for (index in result.t1)
-                compiledVal.put(index, compiledVal[index]!!.setT2(compiledVal[index]!!.t2 + weight))
+            result.t1
+                    .filter { compiledVal.containsKey(it) }
+                    .forEach { compiledVal.put(it, compiledVal[it]!!.setT2(compiledVal[it]!!.t2 + weight)) }
 
             denominator += weight
         }
