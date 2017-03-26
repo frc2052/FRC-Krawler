@@ -62,7 +62,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
                 final QueryBuilder<MatchComment> matchCommentQueryBuilder
-                        = rxDbManager.getMatchCommentsTable().query(Long.valueOf(valueParams.match_num), mMatchType, valueParams.robot.getId(), mEvent.getId());
+                        = rxDbManager.getMatchCommentsTable().query(Long.valueOf(valueParams.match_num), mMatchType, valueParams.robot.getId(), mEvent.getId(), null);
                 MatchComment mMatchComment = matchCommentQueryBuilder.unique();
                 String comment = null;
                 if (mMatchComment != null)

@@ -90,7 +90,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         RxView.clicks(view.findViewById(R.id.scout_match_button)).doOnNext(startScoutingActivity(ScoutActivity.MATCH_SCOUT_TYPE)).subscribe();
         RxView.clicks(view.findViewById(R.id.scout_pit_button)).doOnNext(startScoutingActivity(ScoutActivity.PIT_SCOUT_TYPE)).subscribe();
-        RxView.clicks(view.findViewById(R.id.scout_practice_button)).doOnNext(startScoutingActivity(ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE)).subscribe();
+        //RxView.clicks(view.findViewById(R.id.scout_practice_button)).doOnNext(startScoutingActivity(ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE)).subscribe();
         view.findViewById(R.id.sync_button).setOnClickListener(this);
 
         setCurrentEvent(ScoutUtil.getScoutEvent(getContext()));
@@ -135,7 +135,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         }
         getView().findViewById(R.id.scout_match_button).setEnabled(enabled);
         getView().findViewById(R.id.scout_pit_button).setEnabled(enabled);
-        getView().findViewById(R.id.scout_practice_button).setEnabled(enabled);
+        //getView().findViewById(R.id.scout_practice_button).setEnabled(enabled);
     }
 
     private void setCurrentEvent(Event scoutEvent) {

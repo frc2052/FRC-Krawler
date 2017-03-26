@@ -86,8 +86,8 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
                 case R.id.scout_pit_button:
                     startActivity(ScoutActivity.newInstance(getActivity(), getSelectedEvent(), ScoutActivity.PIT_SCOUT_TYPE));
                     return;
-                case R.id.scout_practice_button:
-                    startActivity(ScoutActivity.newInstance(getActivity(), getSelectedEvent(), ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE));
+//                case R.id.scout_practice_button:
+//                    startActivity(ScoutActivity.newInstance(getActivity(), getSelectedEvent(), ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE));
             }
         }
     }

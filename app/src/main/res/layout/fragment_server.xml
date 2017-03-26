@@ -47,8 +47,8 @@
                         <Spinner
                             android:id="@+id/event_spinner"
                             android:layout_width="match_parent"
-                            android:layout_weight="2"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2" />
 
                         <android.support.v7.widget.SwitchCompat
                             android:id="@+id/host_toggle"
@@ -118,11 +118,11 @@
                         android:layout_height="58dp"
                         android:text="@string/pit_scout" />
 
-                    <Button
+                    <!--<Button
                         android:id="@+id/scout_practice_button"
                         android:layout_width="match_parent"
                         android:layout_height="58dp"
-                        android:text="@string/practice_match_scout" />
+                        android:text="@string/practice_match_scout" />-->
 
                 </LinearLayout>
             </LinearLayout>

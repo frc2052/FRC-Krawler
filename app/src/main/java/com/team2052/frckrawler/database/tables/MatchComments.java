@@ -3,6 +3,7 @@ package com.team2052.frckrawler.database.tables;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchCommentDao;
+import com.team2052.frckrawler.util.MetricHelper;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -36,16 +37,25 @@ public class MatchComments extends AbstractTable<MatchComment, MatchCommentDao> 
         }
     }
 
-    public QueryBuilder<MatchComment> query(Long match_number, Integer game_type, Long robot_id, Long event_id) {
+    public QueryBuilder<MatchComment> query(Long match_number, Integer game_type, Long robot_id, Long event_id, Long match_type) {
         QueryBuilder<MatchComment> queryBuilder = getQueryBuilder();
         if (match_number != null)
             queryBuilder.where(MatchCommentDao.Properties.Match_number.eq(match_number));
-        if (game_type != null)
+        if (game_type != null) {
             queryBuilder.where(MatchCommentDao.Properties.Match_type.eq(game_type));
+        }
         if (robot_id != null)
             queryBuilder.where(MatchCommentDao.Properties.Robot_id.eq(robot_id));
         if (event_id != null)
             queryBuilder.where(MatchCommentDao.Properties.Event_id.eq(event_id));
+
+        //Default to match game type
+        if (match_type != null) {
+            queryBuilder.where(MatchCommentDao.Properties.Match_type.eq(match_type));
+        } else {
+            queryBuilder.where(MatchCommentDao.Properties.Match_type.eq(MetricHelper.MATCH_GAME_TYPE));
+        }
+
         return queryBuilder;
     }
 

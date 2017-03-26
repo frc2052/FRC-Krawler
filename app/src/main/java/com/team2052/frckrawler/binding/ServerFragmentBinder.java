@@ -33,8 +33,8 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
     Button scoutMatchButton;
     @BindView(R.id.scout_pit_button)
     Button scoutPitButton;
-    @BindView(R.id.scout_practice_button)
-    Button scoutPracticeButton;
+    //    @BindView(R.id.scout_practice_button)
+//    Button scoutPracticeButton;
     @BindView(R.id.server_event_container)
     View mServerEventContainer;
     @BindView(R.id.server_events_error)
@@ -105,7 +105,7 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
         viewEventButton.setOnClickListener(serverFragment);
         scoutMatchButton.setOnClickListener(serverFragment);
         scoutPitButton.setOnClickListener(serverFragment);
-        scoutPracticeButton.setOnClickListener(serverFragment);
+        //scoutPracticeButton.setOnClickListener(serverFragment);
         mHostToggle.setOnCheckedChangeListener(serverFragment);
     }
 

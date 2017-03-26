@@ -56,12 +56,12 @@
                             android:layout_height="wrap_content"
                             android:text="@string/pit_scout" />
 
-                        <Button
+                        <!--<Button
                             android:id="@+id/scout_practice_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/practice_match_scout" />
-
+-->
                     </LinearLayout>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>

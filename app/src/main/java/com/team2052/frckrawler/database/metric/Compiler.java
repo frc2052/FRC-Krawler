@@ -132,7 +132,7 @@ public class Compiler {
 
     public List<String> getRobotMatchComments(Event event, Robot robot) {
         List<String> comments = Lists.newArrayList();
-        QueryBuilder<MatchComment> matchCommentQueryBuilder = rxDbManager.getMatchCommentsTable().query(null, null, robot.getId(), event.getId());
+        QueryBuilder<MatchComment> matchCommentQueryBuilder = rxDbManager.getMatchCommentsTable().query(null, null, robot.getId(), event.getId(), null);
         for (MatchComment matchComment : matchCommentQueryBuilder.list()) {
             comments.add(matchComment.getMatch_number() + ": " + matchComment.getComment());
         }
@@ -238,7 +238,7 @@ public class Compiler {
                                             .map(record -> {
                                                 record.add(0, String.valueOf(matchNumber));
                                                 record.add(0, String.valueOf(robot.getTeam_id()));
-                                                MatchComment comment = rxDbManager.getMatchCommentsTable().query(matchNumber, null, robot.getId(), eventId).unique();
+                                                MatchComment comment = rxDbManager.getMatchCommentsTable().query(matchNumber, null, robot.getId(), eventId, null).unique();
                                                 if (comment != null) {
                                                     record.add(comment.getComment());
                                                 }
