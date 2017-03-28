@@ -35,7 +35,9 @@ public class Metric implements java.io.Serializable {
     @Generated
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated
     private transient MetricDao myDao;
 
@@ -74,7 +76,9 @@ public class Metric implements java.io.Serializable {
         this.enabled = enabled;
     }
 
-    /** called by internal mechanisms, do not call yourself. */
+    /**
+     * called by internal mechanisms, do not call yourself.
+     */
     @Generated
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
@@ -137,7 +141,9 @@ public class Metric implements java.io.Serializable {
         this.enabled = enabled;
     }
 
-    /** To-one relationship, resolved on first access. */
+    /**
+     * To-one relationship, resolved on first access.
+     */
     @Generated
     public Game getGame() {
         long __key = this.game_id;
@@ -165,7 +171,9 @@ public class Metric implements java.io.Serializable {
         }
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<MatchDatum> getMatchDatumList() {
         if (matchDatumList == null) {
@@ -181,13 +189,17 @@ public class Metric implements java.io.Serializable {
         return matchDatumList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetMatchDatumList() {
         matchDatumList = null;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<PitDatum> getPitDatumList() {
         if (pitDatumList == null) {
@@ -203,7 +215,9 @@ public class Metric implements java.io.Serializable {
         return pitDatumList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetPitDatumList() {
         pitDatumList = null;
@@ -212,7 +226,7 @@ public class Metric implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
      * Entity must attached to an entity context.
-    */
+     */
     @Generated
     public void delete() {
         __throwIfDetached();
@@ -222,7 +236,7 @@ public class Metric implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
      * Entity must attached to an entity context.
-    */
+     */
     @Generated
     public void update() {
         __throwIfDetached();
@@ -232,7 +246,7 @@ public class Metric implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
      * Entity must attached to an entity context.
-    */
+     */
     @Generated
     public void refresh() {
         __throwIfDetached();

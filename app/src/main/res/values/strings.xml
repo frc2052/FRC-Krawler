@@ -100,4 +100,7 @@
 
     <string name="server_open">Server Open</string>
     <string name="server_open_description">The FRC Krawler server is open for scouts to sync</string>
+
+    <string name="server_status_on">The server is on and ready to sync</string>
+    <string name="server_status_off">The server is off</string>
 </resources>

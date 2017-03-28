@@ -41,7 +41,7 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
+        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "\"MATCH_COMMENT\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"MATCH_NUMBER\" INTEGER," + // 1: match_number
@@ -52,7 +52,9 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
                 "\"LAST_UPDATED\" INTEGER);"); // 6: last_updated
     }
 
-    /** Drops the underlying database table. */
+    /**
+     * Drops the underlying database table.
+     */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"MATCH_COMMENT\"";
         db.execSQL(sql);
@@ -61,37 +63,37 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, MatchComment entity) {
         stmt.clearBindings();
- 
+
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
- 
+
         Long match_number = entity.getMatch_number();
         if (match_number != null) {
             stmt.bindLong(2, match_number);
         }
- 
+
         Integer match_type = entity.getMatch_type();
         if (match_type != null) {
             stmt.bindLong(3, match_type);
         }
- 
+
         Long robot_id = entity.getRobot_id();
         if (robot_id != null) {
             stmt.bindLong(4, robot_id);
         }
- 
+
         Long event_id = entity.getEvent_id();
         if (event_id != null) {
             stmt.bindLong(5, event_id);
         }
- 
+
         String comment = entity.getComment();
         if (comment != null) {
             stmt.bindString(6, comment);
         }
- 
+
         java.util.Date last_updated = entity.getLast_updated();
         if (last_updated != null) {
             stmt.bindLong(7, last_updated.getTime());
@@ -101,37 +103,37 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, MatchComment entity) {
         stmt.clearBindings();
- 
+
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
- 
+
         Long match_number = entity.getMatch_number();
         if (match_number != null) {
             stmt.bindLong(2, match_number);
         }
- 
+
         Integer match_type = entity.getMatch_type();
         if (match_type != null) {
             stmt.bindLong(3, match_type);
         }
- 
+
         Long robot_id = entity.getRobot_id();
         if (robot_id != null) {
             stmt.bindLong(4, robot_id);
         }
- 
+
         Long event_id = entity.getEvent_id();
         if (event_id != null) {
             stmt.bindLong(5, event_id);
         }
- 
+
         String comment = entity.getComment();
         if (comment != null) {
             stmt.bindString(6, comment);
         }
- 
+
         java.util.Date last_updated = entity.getLast_updated();
         if (last_updated != null) {
             stmt.bindLong(7, last_updated.getTime());
@@ -147,7 +149,7 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }    
+    }
 
     @Override
     public MatchComment readEntity(Cursor cursor, int offset) {
@@ -162,7 +164,7 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         );
         return entity;
     }
-     
+
     @Override
     public void readEntity(Cursor cursor, MatchComment entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -172,14 +174,14 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         entity.setEvent_id(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
         entity.setComment(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setLast_updated(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
-     }
-    
+    }
+
     @Override
     protected final Long updateKeyAfterInsert(MatchComment entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-    
+
     @Override
     public Long getKey(MatchComment entity) {
         if (entity != null) {
@@ -199,7 +201,9 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         return true;
     }
 
-    /** Internal query to resolve the "matchCommentList" to-many relationship of Event. */
+    /**
+     * Internal query to resolve the "matchCommentList" to-many relationship of Event.
+     */
     public List<MatchComment> _queryEvent_MatchCommentList(Long event_id) {
         synchronized (this) {
             if (event_MatchCommentListQuery == null) {
@@ -213,7 +217,9 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         return query.list();
     }
 
-    /** Internal query to resolve the "matchCommentList" to-many relationship of Robot. */
+    /**
+     * Internal query to resolve the "matchCommentList" to-many relationship of Robot.
+     */
     public List<MatchComment> _queryRobot_MatchCommentList(Long robot_id) {
         synchronized (this) {
             if (robot_MatchCommentListQuery == null) {
@@ -257,7 +263,7 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
 
         return entity;
     }
-    
+
     public MatchComment loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
@@ -269,7 +275,7 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
         String sql = builder.toString();
 
-        String[] keyArray = new String[]{key.toString() };
+        String[] keyArray = new String[]{key.toString()};
         Cursor cursor = db.rawQuery(sql, keyArray);
 
         try {
@@ -285,7 +291,9 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         }
     }
 
-    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
+    /**
+     * Reads all available rows from the given cursor and returns a list of new ImageTO objects.
+     */
     public List<MatchComment> loadAllDeepFromCursor(Cursor cursor) {
         int count = cursor.getCount();
         List<MatchComment> list = new ArrayList<MatchComment>(count);
@@ -307,7 +315,7 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         }
         return list;
     }
-    
+
     protected List<MatchComment> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
@@ -316,12 +324,14 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         }
     }
 
-    /** A raw-style query where you can pass any WHERE clause and arguments. */
+    /**
+     * A raw-style query where you can pass any WHERE clause and arguments.
+     */
     public List<MatchComment> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
     }
-    
+
     /**
      * Properties of entity MatchComment.<br/>
      * Can be used for QueryBuilder and for referencing column names.
@@ -335,5 +345,5 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         public final static Property Comment = new Property(5, String.class, "comment", false, "COMMENT");
         public final static Property Last_updated = new Property(6, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
     }
- 
+
 }

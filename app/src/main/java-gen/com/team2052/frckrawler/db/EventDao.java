@@ -40,7 +40,7 @@ public class EventDao extends AbstractDao<Event, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
+        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "\"EVENT\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"FMSID\" TEXT UNIQUE ," + // 1: fmsid
@@ -51,7 +51,9 @@ public class EventDao extends AbstractDao<Event, Long> {
                 "\"UNIQUE_HASH\" TEXT);"); // 6: unique_hash
     }
 
-    /** Drops the underlying database table. */
+    /**
+     * Drops the underlying database table.
+     */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"EVENT\"";
         db.execSQL(sql);
@@ -60,33 +62,33 @@ public class EventDao extends AbstractDao<Event, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, Event entity) {
         stmt.clearBindings();
- 
+
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
- 
+
         String fmsid = entity.getFmsid();
         if (fmsid != null) {
             stmt.bindString(2, fmsid);
         }
- 
+
         String name = entity.getName();
         if (name != null) {
             stmt.bindString(3, name);
         }
         stmt.bindLong(4, entity.getGame_id());
- 
+
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(5, data);
         }
- 
+
         java.util.Date date = entity.getDate();
         if (date != null) {
             stmt.bindLong(6, date.getTime());
         }
- 
+
         String unique_hash = entity.getUnique_hash();
         if (unique_hash != null) {
             stmt.bindString(7, unique_hash);
@@ -96,33 +98,33 @@ public class EventDao extends AbstractDao<Event, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, Event entity) {
         stmt.clearBindings();
- 
+
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
- 
+
         String fmsid = entity.getFmsid();
         if (fmsid != null) {
             stmt.bindString(2, fmsid);
         }
- 
+
         String name = entity.getName();
         if (name != null) {
             stmt.bindString(3, name);
         }
         stmt.bindLong(4, entity.getGame_id());
- 
+
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(5, data);
         }
- 
+
         java.util.Date date = entity.getDate();
         if (date != null) {
             stmt.bindLong(6, date.getTime());
         }
- 
+
         String unique_hash = entity.getUnique_hash();
         if (unique_hash != null) {
             stmt.bindString(7, unique_hash);
@@ -138,7 +140,7 @@ public class EventDao extends AbstractDao<Event, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }    
+    }
 
     @Override
     public Event readEntity(Cursor cursor, int offset) {
@@ -153,7 +155,7 @@ public class EventDao extends AbstractDao<Event, Long> {
         );
         return entity;
     }
-     
+
     @Override
     public void readEntity(Cursor cursor, Event entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -163,14 +165,14 @@ public class EventDao extends AbstractDao<Event, Long> {
         entity.setData(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setDate(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
         entity.setUnique_hash(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-     }
-    
+    }
+
     @Override
     protected final Long updateKeyAfterInsert(Event entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-    
+
     @Override
     public Long getKey(Event entity) {
         if (entity != null) {
@@ -190,7 +192,9 @@ public class EventDao extends AbstractDao<Event, Long> {
         return true;
     }
 
-    /** Internal query to resolve the "eventList" to-many relationship of Game. */
+    /**
+     * Internal query to resolve the "eventList" to-many relationship of Game.
+     */
     public List<Event> _queryGame_EventList(long game_id) {
         synchronized (this) {
             if (game_EventListQuery == null) {
@@ -229,7 +233,7 @@ public class EventDao extends AbstractDao<Event, Long> {
 
         return entity;
     }
-    
+
     public Event loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
@@ -241,7 +245,7 @@ public class EventDao extends AbstractDao<Event, Long> {
         SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
         String sql = builder.toString();
 
-        String[] keyArray = new String[]{key.toString() };
+        String[] keyArray = new String[]{key.toString()};
         Cursor cursor = db.rawQuery(sql, keyArray);
 
         try {
@@ -257,7 +261,9 @@ public class EventDao extends AbstractDao<Event, Long> {
         }
     }
 
-    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
+    /**
+     * Reads all available rows from the given cursor and returns a list of new ImageTO objects.
+     */
     public List<Event> loadAllDeepFromCursor(Cursor cursor) {
         int count = cursor.getCount();
         List<Event> list = new ArrayList<Event>(count);
@@ -279,7 +285,7 @@ public class EventDao extends AbstractDao<Event, Long> {
         }
         return list;
     }
-    
+
     protected List<Event> loadDeepAllAndCloseCursor(Cursor cursor) {
         try {
             return loadAllDeepFromCursor(cursor);
@@ -288,12 +294,14 @@ public class EventDao extends AbstractDao<Event, Long> {
         }
     }
 
-    /** A raw-style query where you can pass any WHERE clause and arguments. */
+    /**
+     * A raw-style query where you can pass any WHERE clause and arguments.
+     */
     public List<Event> queryDeep(String where, String... selectionArg) {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
     }
-    
+
     /**
      * Properties of entity Event.<br/>
      * Can be used for QueryBuilder and for referencing column names.
@@ -307,5 +315,5 @@ public class EventDao extends AbstractDao<Event, Long> {
         public final static Property Date = new Property(5, java.util.Date.class, "date", false, "DATE");
         public final static Property Unique_hash = new Property(6, String.class, "unique_hash", false, "UNIQUE_HASH");
     }
- 
+
 }

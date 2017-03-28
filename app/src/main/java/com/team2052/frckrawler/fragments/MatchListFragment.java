@@ -14,7 +14,6 @@ import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.fragments.dialog.UpdateMatchesProcessDialog;
 import com.team2052.frckrawler.listitems.smart.MatchItemView;
-import com.team2052.frckrawler.subscribers.MatchListSubscriber;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ import rx.Observable;
 /**
  * @author Adam
  */
-public class MatchListFragment extends RecyclerViewFragment<List<Match>, MatchListSubscriber, RecyclerViewBinder> {
+public class MatchListFragment extends RecyclerViewFragment<List<Match>, RecyclerViewBinder> {
 
     private long mEvent_id;
 

@@ -2,6 +2,7 @@ package com.team2052.frckrawler.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,19 +11,51 @@ import android.view.ViewGroup;
 
 import com.team2052.frckrawler.DividerItemDecoration;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.activities.HasComponent;
 import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.binding.RecyclerViewBinder;
+import com.team2052.frckrawler.database.RxDBManager;
+import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.subscribers.BaseDataSubscriber;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import rx.Observable;
 import rx.schedulers.Schedulers;
 
-public abstract class RecyclerViewFragment<T, S extends BaseDataSubscriber<T, List<Object>>, B extends RecyclerViewBinder> extends BaseDataFragment<T, List<Object>, S, B> implements RecyclerViewBinder.RecyclerViewAdapterCreatorProvider, RefreshListener {
+public abstract class RecyclerViewFragment<T extends List, B extends RecyclerViewBinder> extends Fragment implements RecyclerViewBinder.RecyclerViewAdapterCreatorProvider, RefreshListener {
 
+    protected FragmentComponent mComponent;
+    protected RxDBManager rxDbManager;
+    @Inject
+    protected B binder;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
+    private BaseDataSubscriber<T, List<Object>> subscriber;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getActivity() instanceof HasComponent) {
+            mComponent = ((HasComponent) getActivity()).getComponent();
+        }
+
+        subscriber = new BaseDataSubscriber<T, List<Object>>() {
+            @Override
+            public void parseData() {
+                dataToBind = new ArrayList<>(data);
+            }
+        };
+        inject();
+        rxDbManager = mComponent.dbManager();
+        subscriber.setConsumer(binder);
+        binder.setActivity(getActivity());
+    }
 
     @Nullable
     @Override
@@ -58,9 +91,19 @@ public abstract class RecyclerViewFragment<T, S extends BaseDataSubscriber<T, Li
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        refresh();
+    }
+
+    @Override
     public void refresh() {
         getObservable().subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .subscribe(subscriber);
     }
+
+    public abstract void inject();
+
+    protected abstract Observable<? extends T> getObservable();
 }

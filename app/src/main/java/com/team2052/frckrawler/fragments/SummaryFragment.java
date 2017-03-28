@@ -14,7 +14,6 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.smart.MetricItemView;
 import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
-import com.team2052.frckrawler.subscribers.MetricListSubscriber;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ import rx.Observable;
  * @author Adam
  * @since 10/16/2014
  */
-public class SummaryFragment extends RecyclerViewFragment<List<Metric>, MetricListSubscriber, RecyclerViewBinder> {
+public class SummaryFragment extends RecyclerViewFragment<List<Metric>, RecyclerViewBinder> {
     private Event mEvent;
 
     public static SummaryFragment newInstance(long event_id) {

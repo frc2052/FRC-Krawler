@@ -15,7 +15,6 @@ import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.smart.MetricItemView;
 import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
-import com.team2052.frckrawler.subscribers.MetricListSubscriber;
 import com.team2052.frckrawler.util.MetricHelper;
 
 import java.util.List;
@@ -27,7 +26,7 @@ import rx.Observable;
  * @author Adam
  * @since 10/15/2014
  */
-public class MetricsFragment extends RecyclerViewFragment<List<Metric>, MetricListSubscriber, RecyclerViewBinder> implements FABButtonListener {
+public class MetricsFragment extends RecyclerViewFragment<List<Metric>, RecyclerViewBinder> implements FABButtonListener {
     private static final String CATEGORY_EXTRA = "CATEGORY_EXTRA";
     private static final String GAME_ID = "GAME_ID";
     private long mGame_id;

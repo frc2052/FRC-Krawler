@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="48dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginLeft="8dp"
+    android:layout_marginBottom="4dp"
     android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp">
+    android:minHeight="48dp"
+    app:cardCornerRadius="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:baselineAligned="false"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/match_title"
@@ -53,7 +53,7 @@
                             android:layout_width="0dp"
                             android:layout_height="fill_parent"
                             android:layout_weight="1"
-                            android:background="@color/red_800"
+                            android:background="@drawable/rounded_upper_red_alliance"
                             android:gravity="center_vertical|center_horizontal"
                             android:text="Red 1" />
 
@@ -80,7 +80,7 @@
                             android:layout_width="0dp"
                             android:layout_height="fill_parent"
                             android:layout_weight="1.5"
-                            android:background="@color/red_900"
+                            android:background="@drawable/rounded_upper_right_red_alliance"
                             android:gravity="center_vertical|center_horizontal"
                             android:text="Red Score"
                             android:textStyle="bold" />
@@ -98,7 +98,7 @@
                             android:layout_width="0dp"
                             android:layout_height="fill_parent"
                             android:layout_weight="1"
-                            android:background="@color/blue_800"
+                            android:background="@drawable/rounded_lower_left_blue_alliance"
                             android:gravity="center_vertical|center_horizontal"
                             android:text="Blue 1" />
 
@@ -125,7 +125,7 @@
                             android:layout_width="0dp"
                             android:layout_height="fill_parent"
                             android:layout_weight="1.5"
-                            android:background="@color/blue_900"
+                            android:background="@drawable/rounded_lower_right_blue_alliance"
                             android:gravity="center_vertical|center_horizontal"
                             android:text="Blue Score"
                             android:textStyle="bold" />

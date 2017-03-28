@@ -29,7 +29,9 @@ public class Game implements java.io.Serializable {
     @Generated
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated
     private transient GameDao myDao;
 
@@ -62,7 +64,9 @@ public class Game implements java.io.Serializable {
         this.name = name;
     }
 
-    /** called by internal mechanisms, do not call yourself. */
+    /**
+     * called by internal mechanisms, do not call yourself.
+     */
     @Generated
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
@@ -85,7 +89,9 @@ public class Game implements java.io.Serializable {
         this.name = name;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<Event> getEventList() {
         if (eventList == null) {
@@ -101,13 +107,17 @@ public class Game implements java.io.Serializable {
         return eventList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetEventList() {
         eventList = null;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<Robot> getRobotList() {
         if (robotList == null) {
@@ -123,13 +133,17 @@ public class Game implements java.io.Serializable {
         return robotList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetRobotList() {
         robotList = null;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<Metric> getMetricList() {
         if (metricList == null) {
@@ -145,7 +159,9 @@ public class Game implements java.io.Serializable {
         return metricList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetMetricList() {
         metricList = null;
@@ -154,7 +170,7 @@ public class Game implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
      * Entity must attached to an entity context.
-    */
+     */
     @Generated
     public void delete() {
         __throwIfDetached();
@@ -164,7 +180,7 @@ public class Game implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
      * Entity must attached to an entity context.
-    */
+     */
     @Generated
     public void update() {
         __throwIfDetached();
@@ -174,7 +190,7 @@ public class Game implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
      * Entity must attached to an entity context.
-    */
+     */
     @Generated
     public void refresh() {
         __throwIfDetached();

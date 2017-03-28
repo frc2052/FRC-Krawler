@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * {@inheritDoc}
- * 
+ *
  * @see org.greenrobot.greendao.AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
@@ -27,6 +27,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig robotDaoConfig;
     private final DaoConfig robotEventDaoConfig;
     private final DaoConfig pitDatumDaoConfig;
+    private final DaoConfig serverLogEntryDaoConfig;
 
     private final GameDao gameDao;
     private final EventDao eventDao;
@@ -38,6 +39,7 @@ public class DaoSession extends AbstractDaoSession {
     private final RobotDao robotDao;
     private final RobotEventDao robotEventDao;
     private final PitDatumDao pitDatumDao;
+    private final ServerLogEntryDao serverLogEntryDao;
 
     public DaoSession(Database db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
@@ -73,6 +75,9 @@ public class DaoSession extends AbstractDaoSession {
         pitDatumDaoConfig = daoConfigMap.get(PitDatumDao.class).clone();
         pitDatumDaoConfig.initIdentityScope(type);
 
+        serverLogEntryDaoConfig = daoConfigMap.get(ServerLogEntryDao.class).clone();
+        serverLogEntryDaoConfig.initIdentityScope(type);
+
         gameDao = new GameDao(gameDaoConfig, this);
         eventDao = new EventDao(eventDaoConfig, this);
         teamDao = new TeamDao(teamDaoConfig, this);
@@ -83,6 +88,7 @@ public class DaoSession extends AbstractDaoSession {
         robotDao = new RobotDao(robotDaoConfig, this);
         robotEventDao = new RobotEventDao(robotEventDaoConfig, this);
         pitDatumDao = new PitDatumDao(pitDatumDaoConfig, this);
+        serverLogEntryDao = new ServerLogEntryDao(serverLogEntryDaoConfig, this);
 
         registerDao(Game.class, gameDao);
         registerDao(Event.class, eventDao);
@@ -94,6 +100,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(Robot.class, robotDao);
         registerDao(RobotEvent.class, robotEventDao);
         registerDao(PitDatum.class, pitDatumDao);
+        registerDao(ServerLogEntry.class, serverLogEntryDao);
     }
 
     public void clear() {
@@ -107,6 +114,7 @@ public class DaoSession extends AbstractDaoSession {
         robotDaoConfig.clearIdentityScope();
         robotEventDaoConfig.clearIdentityScope();
         pitDatumDaoConfig.clearIdentityScope();
+        serverLogEntryDaoConfig.clearIdentityScope();
     }
 
     public GameDao getGameDao() {
@@ -147,6 +155,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public PitDatumDao getPitDatumDao() {
         return pitDatumDao;
+    }
+
+    public ServerLogEntryDao getServerLogEntryDao() {
+        return serverLogEntryDao;
     }
 
 }

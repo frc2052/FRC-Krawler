@@ -6,9 +6,9 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
 public abstract class BaseDataSubscriber<T, V> implements Observer<T> {
+    protected T data;
+    protected V dataToBind;
     BaseDataBinder<V> mConsumer;
-    T data;
-    V dataToBind;
     private boolean hasBoundViews;
 
     @Override

@@ -15,14 +15,13 @@ import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.fragments.dialog.AddGameDialogFragment;
 import com.team2052.frckrawler.listitems.smart.GameItemView;
 import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
-import com.team2052.frckrawler.subscribers.GameListSubscriber;
 
 import java.util.List;
 
 import io.nlopez.smartadapters.SmartAdapter;
 import rx.Observable;
 
-public class GamesFragment extends RecyclerViewFragment<List<Game>, GameListSubscriber, RecyclerViewBinder> {
+public class GamesFragment extends RecyclerViewFragment<List<Game>, RecyclerViewBinder> {
     protected FloatingActionButton mFab;
 
     @Nullable

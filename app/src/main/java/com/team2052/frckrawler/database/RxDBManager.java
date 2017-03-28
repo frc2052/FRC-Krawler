@@ -19,6 +19,8 @@ import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
+import com.team2052.frckrawler.db.ServerLogEntry;
+import com.team2052.frckrawler.db.ServerLogEntryDao;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.metric.MetricTypeEntry;
 import com.team2052.frckrawler.metric.MetricTypeEntryHandler;
@@ -187,5 +189,12 @@ public class RxDBManager extends DBManager {
                     }
                     return info;
                 });
+    }
+
+    public Observable<List<ServerLogEntry>> serverLog() {
+        return Observable.defer(() -> {
+            List<ServerLogEntry> list = getServerLogEntries().getQueryBuilder().orderDesc(ServerLogEntryDao.Properties.Time).list();
+            return Observable.just(list);
+        });
     }
 }

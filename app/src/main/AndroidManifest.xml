@@ -71,14 +71,22 @@
         <activity
             android:name=".activities.RobotEventActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <service
             android:name=".services.ServerService"
             android:exported="false" />
+
+        <activity
+            android:name=".activities.ServerLogActivity"
+            android:exported="true"
+            android:label="Server Log" />
+
         <service android:name=".services.FRCKrawlerFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_stat_knightkrawler" />
