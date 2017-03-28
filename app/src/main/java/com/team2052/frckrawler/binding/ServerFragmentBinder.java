@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Event;
@@ -27,6 +28,8 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
     public Spinner eventSpinner;
     @BindView(R.id.host_toggle)
     public SwitchCompat mHostToggle;
+    @BindView(R.id.server_status)
+    public TextView mServerStatus;
     @BindView(R.id.view_event)
     Button viewEventButton;
     @BindView(R.id.scout_match_button)
@@ -35,12 +38,14 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
     Button scoutPitButton;
     //    @BindView(R.id.scout_practice_button)
 //    Button scoutPracticeButton;
-    @BindView(R.id.server_event_container)
-    View mServerEventContainer;
+    //@BindView(R.id.server_event_container)
+    //View mServerEventContainer;
     @BindView(R.id.server_events_error)
     View mServerEventsError;
-    @BindView(R.id.scout_server_card)
-    View mScoutServerCard;
+    @BindView(R.id.view_logs)
+    Button viewLogsButton;
+    @BindView(R.id.view_game)
+    Button viewGameButton;
 
     private ServerService serverService;
     private boolean mBound = false;
@@ -87,14 +92,21 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
 
 
     private void showData(boolean show) {
+        viewLogsButton.setEnabled(show);
+        viewEventButton.setEnabled(show);
+        viewGameButton.setEnabled(show);
+        scoutMatchButton.setEnabled(show);
+        scoutPitButton.setEnabled(show);
+
+        eventSpinner.setEnabled(show);
+        mHostToggle.setEnabled(show);
+
         if (show) {
-            mServerEventContainer.setVisibility(View.VISIBLE);
-            mScoutServerCard.setVisibility(View.VISIBLE);
             mServerEventsError.setVisibility(View.GONE);
+            eventSpinner.setVisibility(View.VISIBLE);
         } else {
-            mServerEventContainer.setVisibility(View.GONE);
-            mScoutServerCard.setVisibility(View.GONE);
             mServerEventsError.setVisibility(View.VISIBLE);
+            eventSpinner.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -105,6 +117,8 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
         viewEventButton.setOnClickListener(serverFragment);
         scoutMatchButton.setOnClickListener(serverFragment);
         scoutPitButton.setOnClickListener(serverFragment);
+        viewLogsButton.setOnClickListener(serverFragment);
+        viewGameButton.setOnClickListener(serverFragment);
         //scoutPracticeButton.setOnClickListener(serverFragment);
         mHostToggle.setOnCheckedChangeListener(serverFragment);
     }

@@ -9,14 +9,13 @@ import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
 import com.team2052.frckrawler.listitems.smart.TeamItemView;
-import com.team2052.frckrawler.subscribers.TeamListSubscriber;
 
 import java.util.List;
 
 import io.nlopez.smartadapters.SmartAdapter;
 import rx.Observable;
 
-public class TeamsFragment extends RecyclerViewFragment<List<Team>, TeamListSubscriber, RecyclerViewBinder> {
+public class TeamsFragment extends RecyclerViewFragment<List<Team>, RecyclerViewBinder> {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

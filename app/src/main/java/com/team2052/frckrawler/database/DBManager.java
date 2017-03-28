@@ -12,6 +12,7 @@ import com.team2052.frckrawler.database.tables.Metrics;
 import com.team2052.frckrawler.database.tables.PitData;
 import com.team2052.frckrawler.database.tables.RobotEvents;
 import com.team2052.frckrawler.database.tables.Robots;
+import com.team2052.frckrawler.database.tables.ServerLogEntries;
 import com.team2052.frckrawler.database.tables.Teams;
 import com.team2052.frckrawler.db.DaoMaster;
 import com.team2052.frckrawler.db.DaoSession;
@@ -37,6 +38,7 @@ public class DBManager {
     private final PitData mPitDatas;
     private final Matches mMatches;
     private final Teams mTeams;
+    private final ServerLogEntries mServerLogEntries;
     protected Context context;
 
     DBManager(Context context) {
@@ -58,6 +60,8 @@ public class DBManager {
         mPitDatas = new PitData(daoSession.getPitDatumDao(), this);
         mMatches = new Matches(daoSession.getMatchDao(), this);
         mTeams = new Teams(daoSession.getTeamDao(), this);
+        mServerLogEntries = new ServerLogEntries(daoSession.getServerLogEntryDao(), this);
+
     }
 
     public Games getGamesTable() {
@@ -98,5 +102,10 @@ public class DBManager {
 
     public Teams getTeamsTable() {
         return mTeams;
+    }
+
+
+    public ServerLogEntries getServerLogEntries() {
+        return mServerLogEntries;
     }
 }

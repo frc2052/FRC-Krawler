@@ -46,7 +46,6 @@ public class SummaryDataActivity extends DatabaseActivity {
         setActionBarTitle(getString(R.string.summary_title));
         setActionBarSubtitle(mMetric.getName());
 
-
         subscription = mCompiler.getMetricEventSummary(mEvent, mMetric)
                 .flatMap(Observable::from)
                 .map(compiledMetricValue -> (ListItem) new CompiledMetricListElement(compiledMetricValue))

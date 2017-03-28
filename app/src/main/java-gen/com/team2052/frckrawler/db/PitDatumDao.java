@@ -52,7 +52,9 @@ public class PitDatumDao extends AbstractDao<PitDatum, Long> {
                 "\"LAST_UPDATED\" INTEGER);"); // 5: last_updated
     }
 
-    /** Drops the underlying database table. */
+    /**
+     * Drops the underlying database table.
+     */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"PIT_DATUM\"";
         db.execSQL(sql);
@@ -61,7 +63,7 @@ public class PitDatumDao extends AbstractDao<PitDatum, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, PitDatum entity) {
         stmt.clearBindings();
- 
+
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
@@ -69,12 +71,12 @@ public class PitDatumDao extends AbstractDao<PitDatum, Long> {
         stmt.bindLong(2, entity.getRobot_id());
         stmt.bindLong(3, entity.getMetric_id());
         stmt.bindLong(4, entity.getEvent_id());
- 
+
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(5, data);
         }
- 
+
         java.util.Date last_updated = entity.getLast_updated();
         if (last_updated != null) {
             stmt.bindLong(6, last_updated.getTime());
@@ -84,7 +86,7 @@ public class PitDatumDao extends AbstractDao<PitDatum, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, PitDatum entity) {
         stmt.clearBindings();
- 
+
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
@@ -92,12 +94,12 @@ public class PitDatumDao extends AbstractDao<PitDatum, Long> {
         stmt.bindLong(2, entity.getRobot_id());
         stmt.bindLong(3, entity.getMetric_id());
         stmt.bindLong(4, entity.getEvent_id());
- 
+
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(5, data);
         }
- 
+
         java.util.Date last_updated = entity.getLast_updated();
         if (last_updated != null) {
             stmt.bindLong(6, last_updated.getTime());
@@ -136,7 +138,7 @@ public class PitDatumDao extends AbstractDao<PitDatum, Long> {
         entity.setEvent_id(cursor.getLong(offset + 3));
         entity.setData(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setLast_updated(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
-     }
+    }
 
     @Override
     protected final Long updateKeyAfterInsert(PitDatum entity, long rowId) {
@@ -236,25 +238,25 @@ public class PitDatumDao extends AbstractDao<PitDatum, Long> {
         int offset = getAllColumns().length;
 
         Robot robot = loadCurrentOther(daoSession.getRobotDao(), cursor, offset);
-         if(robot != null) {
+        if (robot != null) {
             entity.setRobot(robot);
         }
         offset += daoSession.getRobotDao().getAllColumns().length;
 
         Metric metric = loadCurrentOther(daoSession.getMetricDao(), cursor, offset);
-         if(metric != null) {
+        if (metric != null) {
             entity.setMetric(metric);
         }
         offset += daoSession.getMetricDao().getAllColumns().length;
 
         Event event = loadCurrentOther(daoSession.getEventDao(), cursor, offset);
-         if(event != null) {
+        if (event != null) {
             entity.setEvent(event);
-         }
+        }
 
         return entity;
     }
-    
+
     public PitDatum loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
@@ -266,7 +268,7 @@ public class PitDatumDao extends AbstractDao<PitDatum, Long> {
         SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
         String sql = builder.toString();
 
-        String[] keyArray = new String[] { key.toString() };
+        String[] keyArray = new String[]{key.toString()};
         Cursor cursor = db.rawQuery(sql, keyArray);
 
         try {
@@ -322,7 +324,7 @@ public class PitDatumDao extends AbstractDao<PitDatum, Long> {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
     }
-    
+
     /**
      * Properties of entity PitDatum.<br/>
      * Can be used for QueryBuilder and for referencing column names.
@@ -335,5 +337,5 @@ public class PitDatumDao extends AbstractDao<PitDatum, Long> {
         public final static Property Data = new Property(4, String.class, "data", false, "DATA");
         public final static Property Last_updated = new Property(5, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
     }
- 
+
 }

@@ -29,7 +29,9 @@ public class MatchComment implements java.io.Serializable {
     @Generated
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated
     private transient MatchCommentDao myDao;
 
@@ -64,7 +66,9 @@ public class MatchComment implements java.io.Serializable {
         this.last_updated = last_updated;
     }
 
-    /** called by internal mechanisms, do not call yourself. */
+    /**
+     * called by internal mechanisms, do not call yourself.
+     */
     @Generated
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
@@ -127,7 +131,9 @@ public class MatchComment implements java.io.Serializable {
         this.last_updated = last_updated;
     }
 
-    /** To-one relationship, resolved on first access. */
+    /**
+     * To-one relationship, resolved on first access.
+     */
     @Generated
     public Robot getRobot() {
         Long __key = this.robot_id;
@@ -152,7 +158,9 @@ public class MatchComment implements java.io.Serializable {
         }
     }
 
-    /** To-one relationship, resolved on first access. */
+    /**
+     * To-one relationship, resolved on first access.
+     */
     @Generated
     public Event getEvent() {
         Long __key = this.event_id;
@@ -180,7 +188,7 @@ public class MatchComment implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
      * Entity must attached to an entity context.
-    */
+     */
     @Generated
     public void delete() {
         __throwIfDetached();
@@ -190,7 +198,7 @@ public class MatchComment implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
      * Entity must attached to an entity context.
-    */
+     */
     @Generated
     public void update() {
         __throwIfDetached();
@@ -200,7 +208,7 @@ public class MatchComment implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
      * Entity must attached to an entity context.
-    */
+     */
     @Generated
     public void refresh() {
         __throwIfDetached();

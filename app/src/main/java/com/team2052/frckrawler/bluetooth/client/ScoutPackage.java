@@ -78,8 +78,8 @@ public class ScoutPackage implements Serializable {
                         rxDbManager.getMatchesTable().insert(match);
                     }
 
-            rxDbManager.getEventsTable().insert(event);
-            rxDbManager.getGamesTable().insert(game);
+                    rxDbManager.getEventsTable().insert(event);
+                    rxDbManager.getGamesTable().insert(game);
                 }
         );
 

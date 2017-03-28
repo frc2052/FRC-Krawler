@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.team2052.frckrawler.db.DaoMaster;
+import com.team2052.frckrawler.db.ServerLogEntryDao;
 
 /**
  * @author Adam
@@ -36,6 +37,10 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         if (oldSchemaVer < 5) {
             db.execSQL("ALTER TABLE 'MATCH_DATA' RENAME TO 'MATCH_DATUM'");
             db.execSQL("ALTER TABLE 'PIT_DATA' RENAME TO 'PIT_DATUM'");
+        }
+
+        if (oldSchemaVer < 6) {
+            ServerLogEntryDao.createTable(wrap(db), false);
         }
     }
 }

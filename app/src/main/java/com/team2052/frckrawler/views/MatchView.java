@@ -84,10 +84,10 @@ public class MatchView extends FrameLayout {
             redScore.setVisibility(GONE);
         } else {
             if (red_score > blue_score) {
-                redAlliance.setBackgroundResource(R.drawable.alliance_border);
+                redAlliance.setBackgroundResource(R.drawable.alliance_border_top);
                 blueAlliance.setBackgroundResource(R.drawable.no_border);
             } else if (blue_score > red_score) {
-                blueAlliance.setBackgroundResource(R.drawable.alliance_border);
+                blueAlliance.setBackgroundResource(R.drawable.alliance_border_bottom);
                 redAlliance.setBackgroundResource(R.drawable.no_border);
             } else {
                 redAlliance.setBackgroundResource(R.drawable.no_border);

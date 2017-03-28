@@ -11,7 +11,7 @@ public class FRCKrawlerDaoGenerator {
     public static final String jsonElementType = "com.google.gson.JsonElement";
 
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(5, "com.team2052.frckrawler.db");
+        Schema schema = new Schema(6, "com.team2052.frckrawler.db");
 
         Entity game = schema.addEntity("Game");
         Entity event = schema.addEntity("Event");
@@ -23,6 +23,7 @@ public class FRCKrawlerDaoGenerator {
         Entity robot = schema.addEntity("Robot");
         Entity robotEvent = schema.addEntity("RobotEvent");
         Entity pitDatum = schema.addEntity("PitDatum");
+        Entity serverLogEntry = schema.addEntity("ServerLogEntry");
 
         //Match data
         matchDatum.implementsSerializable();
@@ -161,6 +162,10 @@ public class FRCKrawlerDaoGenerator {
         team.addStringProperty("name");
         team.addToMany(robot, robot_team_id);
         team.addStringProperty("data");
+
+        //Server Log
+        serverLogEntry.addDateProperty("time");
+        serverLogEntry.addStringProperty("message");
 
         new DaoGenerator().generateAll(schema, args[0]);
     }

@@ -10,6 +10,7 @@ import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.activities.RobotActivity;
 import com.team2052.frckrawler.activities.RobotEventActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
+import com.team2052.frckrawler.activities.ServerLogActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.binding.BinderModule;
@@ -112,4 +113,6 @@ public interface FragmentComponent {
     void inject(ScoutHomeFragment scoutHomeFragment);
 
     void inject(ExportDialogFragment exportDialogFragment);
+
+    void inject(ServerLogActivity serverLogActivity);
 }

@@ -43,7 +43,7 @@ public class MatchItemView extends BindableFrameLayout<Match> {
 
     @Override
     public void bind(Match match) {
-        mTitle.setText(String.format("Match %s", Integer.toString(match.getMatch_number())));
+        mTitle.setText(String.format("#%s", Integer.toString(match.getMatch_number())));
         JsonObject alliances = JSON.getAsJsonObject(match.getData()).get("alliances").getAsJsonObject();
         JsonObject red = alliances.get("red").getAsJsonObject();
         JsonObject blue = alliances.get("blue").getAsJsonObject();
@@ -70,10 +70,10 @@ public class MatchItemView extends BindableFrameLayout<Match> {
             mBLueTeams.get(3).setText(Integer.toString(blue_score));
 
         if (red_score > blue_score) {
-            mAllianceBorders.get(0).setBackgroundResource(R.drawable.alliance_border);
+            mAllianceBorders.get(0).setBackgroundResource(R.drawable.alliance_border_top);
             mAllianceBorders.get(1).setBackgroundResource(R.drawable.no_border);
         } else if (blue_score > red_score) {
-            mAllianceBorders.get(1).setBackgroundResource(R.drawable.alliance_border);
+            mAllianceBorders.get(1).setBackgroundResource(R.drawable.alliance_border_bottom);
             mAllianceBorders.get(0).setBackgroundResource(R.drawable.no_border);
         } else {
             mAllianceBorders.get(0).setBackgroundResource(R.drawable.no_border);

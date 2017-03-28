@@ -16,31 +16,6 @@ public class SubscriberModule {
     }
 
     @Provides
-    public EventListSubscriber provideEventListSubscriber() {
-        return new EventListSubscriber();
-    }
-
-    @Provides
-    public GameListSubscriber provideGameListSubscriber() {
-        return new GameListSubscriber();
-    }
-
-    @Provides
-    public MetricListSubscriber provideMetricListSubscriber() {
-        return new MetricListSubscriber();
-    }
-
-    @Provides
-    public TeamListSubscriber provideTeamListSubscriber() {
-        return new TeamListSubscriber();
-    }
-
-    @Provides
-    public MatchListSubscriber provideMatchListSubscriber() {
-        return new MatchListSubscriber();
-    }
-
-    @Provides
     public RobotListSubscriber provideRobotListSubscriber() {
         return new RobotListSubscriber();
     }

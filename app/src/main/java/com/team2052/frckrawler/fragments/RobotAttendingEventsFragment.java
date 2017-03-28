@@ -8,7 +8,6 @@ import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.listitems.smart.EventItemView;
 import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
-import com.team2052.frckrawler.subscribers.EventListSubscriber;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ import rx.Observable;
  * @author Adam
  * @since 11/24/2014
  */
-public class RobotAttendingEventsFragment extends RecyclerViewFragment<List<Event>, EventListSubscriber, RecyclerViewBinder> {
+public class RobotAttendingEventsFragment extends RecyclerViewFragment<List<Event>, RecyclerViewBinder> {
 
     private long robot_id;
 

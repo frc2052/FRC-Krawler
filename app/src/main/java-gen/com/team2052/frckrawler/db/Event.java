@@ -36,7 +36,9 @@ public class Event implements java.io.Serializable {
     @Generated
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated
     private transient EventDao myDao;
 
@@ -90,7 +92,9 @@ public class Event implements java.io.Serializable {
         this.unique_hash = unique_hash;
     }
 
-    /** called by internal mechanisms, do not call yourself. */
+    /**
+     * called by internal mechanisms, do not call yourself.
+     */
     @Generated
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
@@ -153,7 +157,9 @@ public class Event implements java.io.Serializable {
         this.unique_hash = unique_hash;
     }
 
-    /** To-one relationship, resolved on first access. */
+    /**
+     * To-one relationship, resolved on first access.
+     */
     @Generated
     public Game getGame() {
         long __key = this.game_id;
@@ -181,7 +187,9 @@ public class Event implements java.io.Serializable {
         }
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<MatchComment> getMatchCommentList() {
         if (matchCommentList == null) {
@@ -197,13 +205,17 @@ public class Event implements java.io.Serializable {
         return matchCommentList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetMatchCommentList() {
         matchCommentList = null;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<RobotEvent> getRobotEventList() {
         if (robotEventList == null) {
@@ -219,13 +231,17 @@ public class Event implements java.io.Serializable {
         return robotEventList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetRobotEventList() {
         robotEventList = null;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<Match> getMatchList() {
         if (matchList == null) {
@@ -241,13 +257,17 @@ public class Event implements java.io.Serializable {
         return matchList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetMatchList() {
         matchList = null;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<MatchDatum> getMatchDatumList() {
         if (matchDatumList == null) {
@@ -263,13 +283,17 @@ public class Event implements java.io.Serializable {
         return matchDatumList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetMatchDatumList() {
         matchDatumList = null;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<PitDatum> getPitDatumList() {
         if (pitDatumList == null) {
@@ -285,7 +309,9 @@ public class Event implements java.io.Serializable {
         return pitDatumList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetPitDatumList() {
         pitDatumList = null;
@@ -294,7 +320,7 @@ public class Event implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
      * Entity must attached to an entity context.
-    */
+     */
     @Generated
     public void delete() {
         __throwIfDetached();
@@ -304,7 +330,7 @@ public class Event implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
      * Entity must attached to an entity context.
-    */
+     */
     @Generated
     public void update() {
         __throwIfDetached();
@@ -314,7 +340,7 @@ public class Event implements java.io.Serializable {
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
      * Entity must attached to an entity context.
-    */
+     */
     @Generated
     public void refresh() {
         __throwIfDetached();

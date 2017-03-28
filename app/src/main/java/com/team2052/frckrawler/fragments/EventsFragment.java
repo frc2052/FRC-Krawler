@@ -12,7 +12,6 @@ import com.team2052.frckrawler.fragments.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.smart.EventItemView;
 import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
-import com.team2052.frckrawler.subscribers.EventListSubscriber;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ import rx.Observable;
 /**
  * Created by Adam on 11/17/2015.
  */
-public class EventsFragment extends RecyclerViewFragment<List<Event>, EventListSubscriber, RecyclerViewBinder> implements FABButtonListener {
+public class EventsFragment extends RecyclerViewFragment<List<Event>, RecyclerViewBinder> implements FABButtonListener {
     private long mGame_id;
 
     public static EventsFragment newInstance(long game_id) {

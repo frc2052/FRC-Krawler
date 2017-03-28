@@ -13,12 +13,14 @@ import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.client.ScoutPackage;
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.db.ServerLogEntry;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.Util;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Date;
 import java.util.UUID;
 
 public class ServerThread extends Thread {
@@ -58,9 +60,9 @@ public class ServerThread extends Thread {
             try {
                 serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothConstants.SERVICE_NAME, UUID.fromString(BluetoothConstants.UUID));
             } catch (IOException e) {
-                if (isOpen)
+                if (isOpen) {
                     e.printStackTrace();
-                else {
+                } else {
                     break;
                 }
             }
@@ -87,22 +89,28 @@ public class ServerThread extends Thread {
                         fromScoutStream = new ObjectInputStream(clientSocket.getInputStream());
                     } catch (IOException e) {
                         e.printStackTrace();
+                        insertLog(String.format("ERROR: %s had an error Syncing with the server", deviceName));
                     }
 
 
                     if (fromScoutStream != null) {
                         Optional<Integer> connection_type = Optional.absent();
-                        boolean validVersion = false;
+                        int version_code = 0;
+
                         try {
-                            validVersion = fromScoutStream.readInt() == BuildConfig.VERSION_CODE;
+                            version_code = fromScoutStream.readInt();
                         } catch (IOException e) {
                             e.printStackTrace();
+                            insertLog(String.format("ERROR: %s had an error Syncing with the server", deviceName));
                         }
+
+                        boolean validVersion = version_code == BuildConfig.VERSION_CODE;
 
                         try {
                             connection_type = Optional.of(fromScoutStream.readInt());
                         } catch (IOException e) {
                             e.printStackTrace();
+                            insertLog(String.format("ERROR: %s had an error Syncing with the server", deviceName));
                         }
 
                         if (connection_type.isPresent() && validVersion) {
@@ -115,6 +123,7 @@ public class ServerThread extends Thread {
                                         serverPackage = (ServerPackage) fromScoutStream.readObject();
                                     } catch (ClassNotFoundException | IOException e) {
                                         e.printStackTrace();
+                                        insertLog(String.format("ERROR: %s had an error Syncing with the server", deviceName));
                                     }
 
                                     try {
@@ -132,6 +141,7 @@ public class ServerThread extends Thread {
                                                     toScoutStream.flush();
                                                     handler.onSyncCancel();
                                                     hashPass = false;
+                                                    insertLog(String.format("ERROR: Device named %s currently synced event did not match this device's unique event id", deviceName));
                                                 }
                                             }
 
@@ -141,11 +151,12 @@ public class ServerThread extends Thread {
                                                 toScoutStream.writeObject(new ScoutPackage(mRxDbManager, hostedEvent));
                                                 toScoutStream.flush();
                                                 handler.onSyncCancel();
+                                                insertLog(String.format("INFO: Successfully synced with %s", deviceName));
                                             }
 
                                             if (hashPass) {
                                                 Log.d(TAG, "Saving Data from Scout");
-                                                serverPackage.save(mRxDbManager);
+                                                serverPackage.save(deviceName, mRxDbManager);
                                             }
                                         }
                                     } catch (IOException e) {
@@ -159,6 +170,8 @@ public class ServerThread extends Thread {
                                 toScoutStream.writeObject(BuildConfig.VERSION_NAME);
                                 toScoutStream.flush();
                                 handler.onSyncCancel();
+
+                                insertLog(String.format("ERROR: %s did not meet server's version requirements the server is running version code #%d and %s is running version code %d", deviceName, BuildConfig.VERSION_CODE, deviceName, version_code));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -180,6 +193,10 @@ public class ServerThread extends Thread {
             }
         }
         Log.d(TAG, "Server Closed");
+    }
+
+    private void insertLog(String message) {
+        mRxDbManager.getServerLogEntries().insert(new ServerLogEntry(new Date(), message));
     }
 
     public void closeServer() {

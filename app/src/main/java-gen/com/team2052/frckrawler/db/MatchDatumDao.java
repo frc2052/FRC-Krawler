@@ -54,7 +54,9 @@ public class MatchDatumDao extends AbstractDao<MatchDatum, Long> {
                 "\"DATA\" TEXT);"); // 7: data
     }
 
-    /** Drops the underlying database table. */
+    /**
+     * Drops the underlying database table.
+     */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"MATCH_DATUM\"";
         db.execSQL(sql);
@@ -63,7 +65,7 @@ public class MatchDatumDao extends AbstractDao<MatchDatum, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, MatchDatum entity) {
         stmt.clearBindings();
- 
+
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
@@ -73,12 +75,12 @@ public class MatchDatumDao extends AbstractDao<MatchDatum, Long> {
         stmt.bindLong(4, entity.getMetric_id());
         stmt.bindLong(5, entity.getMatch_type());
         stmt.bindLong(6, entity.getMatch_number());
- 
+
         java.util.Date last_updated = entity.getLast_updated();
         if (last_updated != null) {
             stmt.bindLong(7, last_updated.getTime());
         }
- 
+
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(8, data);
@@ -88,7 +90,7 @@ public class MatchDatumDao extends AbstractDao<MatchDatum, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, MatchDatum entity) {
         stmt.clearBindings();
- 
+
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
@@ -98,12 +100,12 @@ public class MatchDatumDao extends AbstractDao<MatchDatum, Long> {
         stmt.bindLong(4, entity.getMetric_id());
         stmt.bindLong(5, entity.getMatch_type());
         stmt.bindLong(6, entity.getMatch_number());
- 
+
         java.util.Date last_updated = entity.getLast_updated();
         if (last_updated != null) {
             stmt.bindLong(7, last_updated.getTime());
         }
- 
+
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(8, data);
@@ -146,7 +148,7 @@ public class MatchDatumDao extends AbstractDao<MatchDatum, Long> {
         entity.setMatch_number(cursor.getLong(offset + 5));
         entity.setLast_updated(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
         entity.setData(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-     }
+    }
 
     @Override
     protected final Long updateKeyAfterInsert(MatchDatum entity, long rowId) {
@@ -246,25 +248,25 @@ public class MatchDatumDao extends AbstractDao<MatchDatum, Long> {
         int offset = getAllColumns().length;
 
         Event event = loadCurrentOther(daoSession.getEventDao(), cursor, offset);
-         if(event != null) {
+        if (event != null) {
             entity.setEvent(event);
         }
         offset += daoSession.getEventDao().getAllColumns().length;
 
         Robot robot = loadCurrentOther(daoSession.getRobotDao(), cursor, offset);
-         if(robot != null) {
+        if (robot != null) {
             entity.setRobot(robot);
         }
         offset += daoSession.getRobotDao().getAllColumns().length;
 
         Metric metric = loadCurrentOther(daoSession.getMetricDao(), cursor, offset);
-         if(metric != null) {
+        if (metric != null) {
             entity.setMetric(metric);
-         }
+        }
 
         return entity;
     }
-    
+
     public MatchDatum loadDeep(Long key) {
         assertSinglePk();
         if (key == null) {
@@ -276,7 +278,7 @@ public class MatchDatumDao extends AbstractDao<MatchDatum, Long> {
         SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
         String sql = builder.toString();
 
-        String[] keyArray = new String[] { key.toString() };
+        String[] keyArray = new String[]{key.toString()};
         Cursor cursor = db.rawQuery(sql, keyArray);
 
         try {
@@ -332,7 +334,7 @@ public class MatchDatumDao extends AbstractDao<MatchDatum, Long> {
         Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
         return loadDeepAllAndCloseCursor(cursor);
     }
-    
+
     /**
      * Properties of entity MatchDatum.<br/>
      * Can be used for QueryBuilder and for referencing column names.
@@ -347,5 +349,5 @@ public class MatchDatumDao extends AbstractDao<MatchDatum, Long> {
         public final static Property Last_updated = new Property(6, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
         public final static Property Data = new Property(7, String.class, "data", false, "DATA");
     }
- 
+
 }

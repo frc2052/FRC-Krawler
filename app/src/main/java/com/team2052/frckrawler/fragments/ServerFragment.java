@@ -12,7 +12,9 @@ import android.widget.CompoundButton;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.EventInfoActivity;
+import com.team2052.frckrawler.activities.GameInfoActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
+import com.team2052.frckrawler.activities.ServerLogActivity;
 import com.team2052.frckrawler.binding.ServerFragmentBinder;
 import com.team2052.frckrawler.bluetooth.server.ServerStatus;
 import com.team2052.frckrawler.db.Event;
@@ -80,11 +82,17 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
                 case R.id.view_event:
                     startActivity(EventInfoActivity.newInstance(getActivity(), getSelectedEvent().getId()));
                     return;
+                case R.id.view_game:
+                    startActivity(GameInfoActivity.newInstance(getContext(), getSelectedEvent().getGame_id()));
+                    return;
                 case R.id.scout_match_button:
                     startActivity(ScoutActivity.newInstance(getActivity(), getSelectedEvent(), ScoutActivity.MATCH_SCOUT_TYPE));
                     return;
                 case R.id.scout_pit_button:
                     startActivity(ScoutActivity.newInstance(getActivity(), getSelectedEvent(), ScoutActivity.PIT_SCOUT_TYPE));
+                    return;
+                case R.id.view_logs:
+                    startActivity(new Intent(getContext(), ServerLogActivity.class));
                     return;
 //                case R.id.scout_practice_button:
 //                    startActivity(ScoutActivity.newInstance(getActivity(), getSelectedEvent(), ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE));
@@ -141,9 +149,13 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
         public void onNext(ServerStatus serverStatus) {
             fragment.binder.mHostToggle.setOnCheckedChangeListener(null);
             fragment.binder.mHostToggle.setChecked(serverStatus.getStatus());
+            fragment.binder.eventSpinner.setEnabled(!serverStatus.getStatus());
             fragment.binder.mHostToggle.setOnCheckedChangeListener(fragment);
 
+            fragment.binder.mServerStatus.setText(serverStatus.getStatus() ? R.string.server_status_on : R.string.server_status_off);
+
             int index = 0;
+
             if (serverStatus.getEvent() != null) {
                 for (int i = 0; i < fragment.subscriber.getData().size(); i++) {
                     if (fragment.subscriber.getData().get(i).getId() == serverStatus.getEvent().getId()) {

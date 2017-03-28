@@ -7,6 +7,7 @@ import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchDatum;
 import com.team2052.frckrawler.db.PitDatum;
 import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.db.ServerLogEntry;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -41,7 +42,7 @@ public class ServerPackage implements Serializable {
      * To save the data that is contained in the object
      * To be only ran on the server instance
      */
-    public void save(final RxDBManager rxDbManager) {
+    public void save(String deviceName, final RxDBManager rxDbManager) {
         rxDbManager.runInTx(() -> {
             //Save all the data
             for (int i = 0; i < metricMatchDatum.size(); i++) {
@@ -72,6 +73,7 @@ public class ServerPackage implements Serializable {
                 }
             }
         });
+        rxDbManager.getServerLogEntries().insert(new ServerLogEntry(new Date(), String.format("INFO: Saved with %s Inserted - %d Match Datum, %d Pit Datum, %d Match Comments", deviceName, metricMatchDatum.size(), metricPitDatum.size(), matchComments.size())));
     }
 
     public Event getScoutEvent() {
