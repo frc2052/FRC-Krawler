@@ -73,6 +73,7 @@ public class ServerPackage implements Serializable {
                 }
             }
         });
+
         rxDbManager.getServerLogEntries().insert(new ServerLogEntry(new Date(), String.format("INFO: Saved with %s Inserted - %d Match Datum, %d Pit Datum, %d Match Comments", deviceName, metricMatchDatum.size(), metricPitDatum.size(), matchComments.size())));
     }
 

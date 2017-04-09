@@ -68,8 +68,8 @@ public class SliderMetricWidget extends MetricWidget {
         maxText = ((TextView) findViewById(R.id.max));
 
         RxSeekBar.userChanges(seekBar).subscribeOn(AndroidSchedulers.mainThread()).subscribe(seekValue -> {
-            valueText.setText(Integer.toString(seekValue));
             value = seekValue + min;
+            valueText.setText(Integer.toString(value));
         });
     }
 

@@ -18,7 +18,7 @@ import java.util.Set;
 import rx.functions.Func1;
 
 public class MatchData extends AbstractTable<MatchDatum, MatchDatumDao> {
-    public Func1<List<MatchDatum>, List<Long>> mapMatchDataToMatchNumbers = matchData -> {
+    public List<Long> getMatchNumbersFromMatchData(List<MatchDatum> matchData){
         Set<Long> matchNumbers = Sets.newHashSet();
         for (int i = 0; i < matchData.size(); i++) {
             matchNumbers.add(matchData.get(i).getMatch_number());
@@ -26,7 +26,7 @@ public class MatchData extends AbstractTable<MatchDatum, MatchDatumDao> {
         ArrayList<Long> listMatchNumbers = Lists.newArrayList(matchNumbers);
         Collections.sort(listMatchNumbers);
         return listMatchNumbers;
-    };
+    }
 
     public MatchData(MatchDatumDao dao, DBManager dbManager) {
         super(dao, dbManager);

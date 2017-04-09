@@ -82,4 +82,6 @@ public static *** d(...);
 -keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
 public static java.lang.String TABLENAME;
 }
+
+-dontwarn org.greenrobot.greendao.database.**
 -keep class **$Properties

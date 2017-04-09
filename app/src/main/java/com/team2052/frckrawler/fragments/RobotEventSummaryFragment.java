@@ -51,7 +51,7 @@ public class RobotEventSummaryFragment extends ListViewFragment<Map<String, Stri
     protected Observable<? extends Map<String, String>> getObservable() {
         return mCompiler.getCompiledMetricToHashMap(mCompiler.getCompiledRobotSummary(mRobot_id, mEvent_id,
                 Observable.just(mRobot_id)
-                        .map(rxDbManager.getRobotsTable().mapIdToModel)
+                        .map(rxDbManager.getRobotsTable()::load)
                         .concatMap(robot -> rxDbManager.metricsInGame(robot.getGame_id(), null))));
     }
 }

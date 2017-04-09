@@ -58,6 +58,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread());
+
     Observable<String> metricCommentObservable = Observable
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
@@ -124,7 +125,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
     public void updateMetricValues() {
         subscriptions.add(metricValueObservable.subscribe(this::setMetricValues, onError -> {
             //Most likely part of the robot observable not being initiated, no big deal
-            if (onError instanceof ArrayIndexOutOfBoundsException) {
+            if (onError instanceof ArrayIndexOutOfBoundsException || onError instanceof NumberFormatException) {
                 return;
             }
             FirebaseCrash.log("Match: Error Updating Metric Values");
@@ -132,7 +133,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
         }));
         subscriptions.add(metricCommentObservable.subscribe(RxTextView.text(mCommentsView.getEditText()), onError -> {
             //Most likely part of the robot observable not being initiated, no big deal
-            if (onError instanceof ArrayIndexOutOfBoundsException) {
+            if (onError instanceof ArrayIndexOutOfBoundsException || onError instanceof NumberFormatException) {
                 return;
             }
             FirebaseCrash.log("Match: Error Updating Comments");

@@ -10,7 +10,6 @@ import java.util.List;
 import rx.functions.Func1;
 
 abstract class AbstractTable<T, D extends AbstractDao<T, Long>> {
-    public Func1<Long, T> mapIdToModel = this::load;
     protected DBManager dbManager;
     D dao;
 

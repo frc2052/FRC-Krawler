@@ -44,12 +44,6 @@ public class FRCKrawlerModule {
 
     @Provides
     @Singleton
-    public ScoutSyncHandler getScoutSyncHandler(Context context) {
-        return new ScoutSyncHandler(context);
-    }
-
-    @Provides
-    @Singleton
     public SharedPreferences provideSharedPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
