@@ -17,7 +17,10 @@ import com.team2052.frckrawler.db.ServerLogEntry;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.Util;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
@@ -36,6 +39,10 @@ public class ServerThread extends Thread {
     private BluetoothServerSocket serverSocket;
 
     public ServerThread(Context context, Event event) {
+        if (event == null) {
+            throw new IllegalStateException("Event cannot be null!");
+        }
+
         this.context = context;
         mRxDbManager = RxDBManager.getInstance(context);
         hostedEvent = event;

@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.fragments;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.view.RxView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.HasComponent;
@@ -21,6 +23,7 @@ import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncCancelledEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncErrorEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncSuccessEvent;
+import com.team2052.frckrawler.bluetooth.events.StartBluetoothConnectionEvent;
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.di.FragmentComponent;
@@ -33,7 +36,10 @@ import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Adam on 11/24/2015.
@@ -43,12 +49,11 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
 
     @Inject
     RxDBManager rxDbManager;
-    @Inject
-    ScoutSyncHandler scoutSyncHandler;
 
     private FragmentComponent mComponent;
     private Event mEvent;
     private View syncButton, syncProgressBar;
+    private Subscription subscription;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,9 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
+        if(subscription != null && !subscription.isUnsubscribed()){
+            subscription.unsubscribe();
+        }
         super.onDestroy();
     }
 
@@ -123,7 +131,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
                     Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
                 } else {
-                    scoutSyncHandler.startScoutSync(getContext());
+                    ScoutSyncHandler.startScoutSync(getContext(), this::startSync);
                 }
             }
         }
@@ -141,6 +149,26 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     private void setCurrentEvent(Event scoutEvent) {
         mEvent = scoutEvent;
         enableButtons(mEvent != null);
+    }
+
+    private void startSync(BluetoothDevice device) {
+        subscription = ScoutSyncHandler.getScoutSyncTask(getContext(), device)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(scoutSyncStatus -> {
+                    if (scoutSyncStatus.isSuccessful()) {
+                        EventBus.getDefault().post(new ScoutSyncSuccessEvent());
+                    } else {
+                        EventBus.getDefault().post(new ScoutSyncErrorEvent(scoutSyncStatus.getMessage()));
+                    }
+                }, FirebaseCrash::report);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onEvent(StartBluetoothConnectionEvent event){
+        setProgressVisibility(View.VISIBLE);
+        SnackbarUtil.make(getView(), "Connecting to device...", Snackbar.LENGTH_SHORT).show();
     }
 
     @SuppressWarnings("unused")

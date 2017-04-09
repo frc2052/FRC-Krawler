@@ -110,7 +110,10 @@ public class ImportMetricsActivity extends DatabaseActivity implements AdapterVi
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(onNext -> {
                             finish();
-                        }, FirebaseCrash::report);
+                        }, (throwable) -> {
+                            throwable.printStackTrace();
+                            FirebaseCrash.report(throwable);
+                        });
             }
 
             @Override

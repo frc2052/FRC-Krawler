@@ -37,6 +37,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 
+
 @Singleton
 /**
  * RX Specific Functions for DB
@@ -112,6 +113,7 @@ public class RxDBManager extends DBManager {
     }
 
     public Observable<List<Robot>> robotsWithTeam(long team_id) {
+
         return getRobotsTable().query(null, team_id, null).rx().list();
     }
 
@@ -143,7 +145,6 @@ public class RxDBManager extends DBManager {
 
     public Observable<List<Match>> matchesAtEvent(long event_id) {
         QueryBuilder<Match> query = getMatchesTable().getQueryBuilder().where(MatchDao.Properties.Event_id.eq(event_id));
-
         return query.rx().list()
                 .map(matches -> {
                     Collections.sort(matches, new MatchNumberComparator());

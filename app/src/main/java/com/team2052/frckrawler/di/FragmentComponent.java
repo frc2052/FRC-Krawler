@@ -50,8 +50,6 @@ import dagger.Component;
 public interface FragmentComponent {
     RxDBManager dbManager();
 
-    ScoutSyncHandler scoutSyncHander();
-
     Compiler compilerManager();
 
     void inject(HomeActivity activity);

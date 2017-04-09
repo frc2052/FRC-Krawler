@@ -352,7 +352,7 @@ public class MetricHelper {
             if (string.endsWith("\"")) {
                 string = string.substring(0, string.length() - 1);
             }
-
+            System.out.println(string);
             data = JSON.getAsJsonObject(string);
         }
 

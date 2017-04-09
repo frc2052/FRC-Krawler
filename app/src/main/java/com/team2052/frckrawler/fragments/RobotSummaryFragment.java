@@ -51,7 +51,7 @@ public class RobotSummaryFragment extends ListViewFragment<Map<String, String>, 
                         mRobot_id,
                         null,
                         Observable.just(mRobot_id)
-                                .map(rxDbManager.getRobotsTable().mapIdToModel)
+                                .map(rxDbManager.getRobotsTable()::load)
                                 .concatMap(robot -> rxDbManager.metricsInGame(robot.getGame_id(), null))
                 )
         );

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.GameInfoActivity;
@@ -21,6 +22,8 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.subscribers.EventStringSubscriber;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.SnackbarUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -40,6 +43,7 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println(EventBus.getDefault().hashCode());
         binder.create();
         binder.setServerFragment(this);
     }
@@ -142,7 +146,7 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
 
         @Override
         public void onError(Throwable e) {
-
+            FirebaseCrash.report(e);
         }
 
         @Override
