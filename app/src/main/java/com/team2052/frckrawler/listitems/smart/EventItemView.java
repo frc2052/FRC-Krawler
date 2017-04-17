@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.common.base.Optional;
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.database.tables.Events;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.tba.JSON;
 
@@ -42,8 +44,9 @@ public class EventItemView extends BindableFrameLayout<Event> {
 
         mName.setText(event.getName());
 
-        if (event.getData() != null && JSON.getAsJsonObject(event.getData()).has("location")) {
-            mLocation.setText(JSON.getAsJsonObject(event.getData()).get("location").getAsString());
+        Optional<String> eventLocation = Events.getEventLocation(event);
+        if (eventLocation.isPresent()) {
+            mLocation.setText(eventLocation.get());
         } else {
             mLocation.setText("Unknown Location");
         }

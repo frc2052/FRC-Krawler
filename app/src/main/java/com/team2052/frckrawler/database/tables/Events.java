@@ -1,6 +1,8 @@
 package com.team2052.frckrawler.database.tables;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.google.gson.JsonObject;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.EventDao;
@@ -11,6 +13,7 @@ import com.team2052.frckrawler.db.PitDatum;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.tba.JSON;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -97,5 +100,17 @@ public class Events extends AbstractTable<Event, EventDao> {
         }
         Collections.sort(teams, (lhs, rhs) -> Double.compare(lhs.getNumber(), rhs.getNumber()));
         return teams;
+    }
+
+    public static Optional<String> getEventLocation(Event event) {
+        if (event == null || event.getData() == null)
+            return Optional.absent();
+
+        JsonObject data = JSON.getAsJsonObject(event.getData());
+
+        if (data.has("location")) {
+            return Optional.of(data.get("location").getAsString());
+        }
+        return Optional.absent();
     }
 }

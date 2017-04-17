@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.fragments;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
@@ -9,7 +10,6 @@ import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.dialog.ImportDataSimpleDialogFragment;
-import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.smart.EventItemView;
 import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
 
@@ -21,7 +21,7 @@ import rx.Observable;
 /**
  * Created by Adam on 11/17/2015.
  */
-public class EventsFragment extends RecyclerViewFragment<List<Event>, RecyclerViewBinder> implements FABButtonListener {
+public class EventsFragment extends RecyclerViewFragment<List<Event>, RecyclerViewBinder> implements View.OnClickListener {
     private long mGame_id;
 
     public static EventsFragment newInstance(long game_id) {
@@ -49,11 +49,6 @@ public class EventsFragment extends RecyclerViewFragment<List<Event>, RecyclerVi
     }
 
     @Override
-    public void onFABPressed() {
-        ImportDataSimpleDialogFragment.newInstance(mGame_id).show(getChildFragmentManager(), "importEvent");
-    }
-
-    @Override
     protected ListViewNoDataParams getNoDataParams() {
         return new ListViewNoDataParams("No events found", R.drawable.ic_event);
     }
@@ -67,5 +62,12 @@ public class EventsFragment extends RecyclerViewFragment<List<Event>, RecyclerVi
                 startActivity(EventInfoActivity.newInstance(getActivity(), event.getId()));
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.floating_action_button){
+            ImportDataSimpleDialogFragment.newInstance(mGame_id).show(getChildFragmentManager(), "importEvent");
+        }
     }
 }

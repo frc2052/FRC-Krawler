@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragments;
+package com.team2052.frckrawler.fragments.robot;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,8 +10,8 @@ import com.team2052.frckrawler.activities.RobotActivity;
 import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.fragments.ListViewFragment;
 import com.team2052.frckrawler.fragments.dialog.AddTeamToEventDialogFragment;
-import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listitems.ListElement;
 import com.team2052.frckrawler.subscribers.RobotListSubscriber;
 
@@ -22,7 +22,7 @@ import rx.Observable;
 /**
  * @author Adam
  */
-public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubscriber> implements FABButtonListener {
+public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubscriber> implements View.OnClickListener {
     public static final String VIEW_TYPE = "VIEW_TYPE";
     private int mViewType;
     private long mKey;
@@ -73,15 +73,17 @@ public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubsc
     }
 
     @Override
-    public void onFABPressed() {
-        Event load = rxDbManager.getEventsTable().load(mKey);
-        if (load != null) {
-            AddTeamToEventDialogFragment.newInstance(load).show(getChildFragmentManager(), "addTeam");
-        }
+    protected ListViewNoDataParams getNoDataParams() {
+        return new ListViewNoDataParams("No teams found", R.drawable.ic_team);
     }
 
     @Override
-    protected ListViewNoDataParams getNoDataParams() {
-        return new ListViewNoDataParams("No teams found", R.drawable.ic_team);
+    public void onClick(View v) {
+        if(v.getId() == R.id.floating_action_button){
+            Event load = rxDbManager.getEventsTable().load(mKey);
+            if (load != null) {
+                AddTeamToEventDialogFragment.newInstance(load).show(getChildFragmentManager(), "addTeam");
+            }
+        }
     }
 }

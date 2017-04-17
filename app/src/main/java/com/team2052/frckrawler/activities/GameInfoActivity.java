@@ -11,7 +11,6 @@ import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.tab.GameInfoPagerAdapter;
-import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.views.LockableFloatingActionButton;
 
@@ -95,9 +94,6 @@ public class GameInfoActivity extends DatabaseActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.floating_action_button) {
-            ((FABButtonListener) mAdapter.getRegisteredFragment(mViewPager.getCurrentItem())).onFABPressed();
-        }
+        mAdapter.onClick(v, mViewPager.getCurrentItem());
     }
-
 }

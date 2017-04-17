@@ -43,7 +43,6 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println(EventBus.getDefault().hashCode());
         binder.create();
         binder.setServerFragment(this);
     }
