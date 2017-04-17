@@ -42,5 +42,9 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         if (oldSchemaVer < 6) {
             ServerLogEntryDao.createTable(wrap(db), false);
         }
+
+        if (oldSchemaVer < 7) {
+            db.execSQL("ALTER TABLE 'METRIC' ADD COLUMN PRIORITY INTEGER DEFAULT 0");
+        }
     }
 }

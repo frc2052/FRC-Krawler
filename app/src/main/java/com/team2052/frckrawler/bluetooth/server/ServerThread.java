@@ -17,10 +17,7 @@ import com.team2052.frckrawler.db.ServerLogEntry;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.Util;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.IOException;
-import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
@@ -142,13 +139,16 @@ public class ServerThread extends Thread {
                                             if (scoutEvent != null) {
                                                 Event serverEvent = mRxDbManager.getEventsTable().load(scoutEvent.getId());
 
-                                                if (Strings.isNullOrEmpty(scoutEvent.getUnique_hash()) || !scoutEvent.getUnique_hash().equals(serverEvent.getUnique_hash())) {
+                                                if (serverEvent == null
+                                                        || serverEvent.getUnique_hash() == null
+                                                        || Strings.isNullOrEmpty(scoutEvent.getUnique_hash())
+                                                        || !scoutEvent.getUnique_hash().equals(serverEvent.getUnique_hash())) {
                                                     Log.d(TAG, "Hash does not pass, sending error back");
                                                     toScoutStream.writeInt(BluetoothConstants.EVENT_MATCH_ERROR);
                                                     toScoutStream.flush();
                                                     handler.onSyncCancel();
                                                     hashPass = false;
-                                                    insertLog(String.format("ERROR: Device named %s currently synced event did not match this device's unique event id", deviceName));
+                                                    insertLog(String.format("ERROR: Device n b amed %s currently synced event did not match this device's unique event id", deviceName));
                                                 }
                                             }
 

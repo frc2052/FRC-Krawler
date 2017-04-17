@@ -11,7 +11,6 @@ import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.tab.EventViewPagerAdapter;
-import com.team2052.frckrawler.listeners.FABButtonListener;
 import com.team2052.frckrawler.views.LockableFloatingActionButton;
 
 /**
@@ -87,10 +86,6 @@ public class EventInfoActivity extends DatabaseActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.floating_action_button) {
-            if (mAdapter.getRegisteredFragment(mViewPager.getCurrentItem()) instanceof FABButtonListener) {
-                ((FABButtonListener) mAdapter.getRegisteredFragment(mViewPager.getCurrentItem())).onFABPressed();
-            }
-        }
+        mAdapter.onClick(v, mViewPager.getCurrentItem());
     }
 }

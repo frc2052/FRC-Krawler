@@ -136,6 +136,10 @@ public class RxDBManager extends DBManager {
         QueryBuilder<Metric> query = getMetricsTable().getQueryBuilder().where(MetricDao.Properties.Game_id.eq(game_id));
         if (category != null)
             query.where(MetricDao.Properties.Category.eq(category));
+
+        query.orderDesc(MetricDao.Properties.Priority);
+        query.orderAsc(MetricDao.Properties.Id);
+
         return query.rx().list();
     }
 
@@ -184,6 +188,7 @@ public class RxDBManager extends DBManager {
                 .map(metric -> {
                     Map<String, String> info = Maps.newLinkedHashMap();
                     info.put("Enabled", CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, String.valueOf(metric.getEnabled())));
+                    //info.put("Priority", String.valueOf(metric.getPriority()));
                     MetricTypeEntry<?> typeEntry = MetricTypeEntryHandler.INSTANCE.getTypeEntry(metric.getType());
                     if (typeEntry != null) {
                         typeEntry.addInfo(metric, info);

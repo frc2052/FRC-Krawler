@@ -369,7 +369,8 @@ public class MetricHelper {
                     metricType,
                     JSON.getGson().toJson(data),
                     game_id,
-                    true);
+                    true,
+                    0);
         }
     }
 }

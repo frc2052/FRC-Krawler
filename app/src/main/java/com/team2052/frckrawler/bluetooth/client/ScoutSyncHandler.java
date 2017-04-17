@@ -111,6 +111,7 @@ public class ScoutSyncHandler {
                         } else if (code == BluetoothConstants.VERSION_ERROR) {
                             return new ScoutSyncStatus(false, String.format("The server version is incompatible with your version. You are running %s and the server is running %s", BuildConfig.VERSION_NAME, inputStream.readObject()));
                         } else if (code == BluetoothConstants.EVENT_MATCH_ERROR) {
+                            RxDBManager.getInstance(context).runInTx(() -> RxDBManager.getInstance(context).deleteAll());
                             return new ScoutSyncStatus(false, "This device's data did not match up with the server tablet. The data from this tablet was lost.");
                         }
                         bluetoothConnection.closeConnection();
@@ -122,7 +123,7 @@ public class ScoutSyncHandler {
 
                     if (scoutPackage != null) {
                         // Knowing that the data was sent to the server, we can now delete the data on our device, and sync with the server
-                        RxDBManager.getInstance(context).deleteAll();
+                        RxDBManager.getInstance(context).runInTx(() -> RxDBManager.getInstance(context).deleteAll());
 
                         scoutPackage.save(RxDBManager.getInstance(context), context);
 

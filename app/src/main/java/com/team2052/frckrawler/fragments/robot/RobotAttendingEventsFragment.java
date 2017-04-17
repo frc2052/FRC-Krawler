@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.fragments;
+package com.team2052.frckrawler.fragments.robot;
 
 import android.os.Bundle;
 
@@ -6,6 +6,7 @@ import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.RobotEventActivity;
 import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.fragments.RecyclerViewFragment;
 import com.team2052.frckrawler.listitems.smart.EventItemView;
 import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
 

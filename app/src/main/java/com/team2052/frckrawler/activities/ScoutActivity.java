@@ -2,9 +2,12 @@ package com.team2052.frckrawler.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
@@ -82,9 +85,19 @@ public class ScoutActivity extends DatabaseActivity implements HasComponent {
     }
 
     @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Leave Scouting?");
+        alertDialog.setMessage("Are you sure you want to leave scouting? All unsaved data will be lost.");
+        alertDialog.setPositiveButton("I'm sure", (dialog, which) -> super.onBackPressed());
+        alertDialog.setNegativeButton("No, I don't", null);
+        alertDialog.create().show();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }

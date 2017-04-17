@@ -14,6 +14,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.metric.MetricValue;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.PitDatum;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.tba.JSON;
@@ -38,7 +39,9 @@ public class ScoutPitFragment extends BaseScoutFragment {
     Observable<List<MetricValue>> metricValueObservable = robotObservable()
             .map(robot -> {
                 List<MetricValue> metricValues = Lists.newArrayList();
-                final QueryBuilder<Metric> metricQueryBuilder = rxDbManager.getMetricsTable().query(MetricHelper.ROBOT_METRICS, null, mEvent.getGame_id(), true);
+                final QueryBuilder<Metric> metricQueryBuilder = rxDbManager.getMetricsTable().query(MetricHelper.ROBOT_METRICS, null, mEvent.getGame_id(), true)
+                        .orderDesc(MetricDao.Properties.Priority)
+                        .orderAsc(MetricDao.Properties.Id);
                 List<Metric> metrics = metricQueryBuilder.list();
 
                 for (int i = 0; i < metrics.size(); i++) {

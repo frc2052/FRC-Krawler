@@ -17,6 +17,7 @@ import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.tba.HTTP;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.tba.TBA;
+import com.team2052.frckrawler.util.Util;
 
 /**
  * @author Adam
@@ -68,6 +69,8 @@ public class ImportEventDataDialog extends BaseProgressDialog {
             daoSession.runInTx(() -> {
                 //Save the event
                 Event event = JSON.getGson().fromJson(jEvent, Event.class);
+                event.setUnique_hash(Util.generateUniqueHash());
+
                 event.setGame_id(game.getId());
                 daoSession.getEventsTable().insert(event);
                 //Save the teams

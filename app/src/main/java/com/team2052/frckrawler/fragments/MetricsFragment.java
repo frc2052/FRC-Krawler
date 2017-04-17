@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.AddMetricActivity;
@@ -12,7 +13,7 @@ import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.binding.ListViewNoDataParams;
 import com.team2052.frckrawler.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.listeners.FABButtonListener;
+import com.team2052.frckrawler.fragments.dialog.ImportDataSimpleDialogFragment;
 import com.team2052.frckrawler.listitems.smart.MetricItemView;
 import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
 import com.team2052.frckrawler.util.MetricHelper;
@@ -26,7 +27,7 @@ import rx.Observable;
  * @author Adam
  * @since 10/15/2014
  */
-public class MetricsFragment extends RecyclerViewFragment<List<Metric>, RecyclerViewBinder> implements FABButtonListener {
+public class MetricsFragment extends RecyclerViewFragment<List<Metric>, RecyclerViewBinder> implements View.OnClickListener {
     private static final String CATEGORY_EXTRA = "CATEGORY_EXTRA";
     private static final String GAME_ID = "GAME_ID";
     private long mGame_id;
@@ -77,11 +78,6 @@ public class MetricsFragment extends RecyclerViewFragment<List<Metric>, Recycler
     }
 
     @Override
-    public void onFABPressed() {
-        startActivity(AddMetricActivity.newInstance(getActivity(), mGame_id, mCategory));
-    }
-
-    @Override
     protected ListViewNoDataParams getNoDataParams() {
         return new ListViewNoDataParams("No metrics found", R.drawable.ic_metric);
     }
@@ -95,5 +91,12 @@ public class MetricsFragment extends RecyclerViewFragment<List<Metric>, Recycler
                 startActivity(MetricInfoActivity.newInstance(getActivity(), metric.getId()));
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.floating_action_button){
+            startActivity(AddMetricActivity.newInstance(getActivity(), mGame_id, mCategory));
+        }
     }
 }

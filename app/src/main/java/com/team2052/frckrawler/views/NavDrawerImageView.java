@@ -3,6 +3,7 @@ package com.team2052.frckrawler.views;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -12,7 +13,7 @@ import com.team2052.frckrawler.R;
  * @author Adam
  * @since 10/25/2014
  */
-public class NavDrawerImageView extends ImageView {
+public class NavDrawerImageView extends AppCompatImageView {
 
     public NavDrawerImageView(Context context) {
         super(context);

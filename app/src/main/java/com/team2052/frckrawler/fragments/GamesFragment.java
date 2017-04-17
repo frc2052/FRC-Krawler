@@ -34,9 +34,6 @@ public class GamesFragment extends RecyclerViewFragment<List<Game>, RecyclerView
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mFab = (FloatingActionButton) view.findViewById(R.id.fab);
-        /*mListView.setOnItemClickListener((adapterView, view1, i, l) -> {
-            startActivity(GameInfoActivity.newInstance(getActivity(), Long.parseLong(((ListElement) adapterView.getAdapter().getItem(i)).getKey())));
-        });*/
         mFab.setOnClickListener(view1 -> new AddGameDialogFragment().show(GamesFragment.this.getChildFragmentManager(), "addGame"));
     }
 

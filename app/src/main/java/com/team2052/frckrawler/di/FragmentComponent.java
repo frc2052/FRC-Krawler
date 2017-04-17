@@ -5,7 +5,6 @@ import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.GameInfoActivity;
 import com.team2052.frckrawler.activities.HomeActivity;
 import com.team2052.frckrawler.activities.ImportMetricsActivity;
-import com.team2052.frckrawler.activities.MatchListActivity;
 import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.activities.RobotActivity;
 import com.team2052.frckrawler.activities.RobotEventActivity;
@@ -14,7 +13,6 @@ import com.team2052.frckrawler.activities.ServerLogActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
 import com.team2052.frckrawler.binding.BinderModule;
-import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.database.metric.Compiler;
 import com.team2052.frckrawler.fragments.EventInfoFragment;
@@ -25,10 +23,10 @@ import com.team2052.frckrawler.fragments.MatchListFragment;
 import com.team2052.frckrawler.fragments.MetricInfoFragment;
 import com.team2052.frckrawler.fragments.MetricSummaryFragment;
 import com.team2052.frckrawler.fragments.MetricsFragment;
-import com.team2052.frckrawler.fragments.RobotAttendingEventsFragment;
-import com.team2052.frckrawler.fragments.RobotEventSummaryFragment;
-import com.team2052.frckrawler.fragments.RobotSummaryFragment;
-import com.team2052.frckrawler.fragments.RobotsFragment;
+import com.team2052.frckrawler.fragments.robot.RobotAttendingEventsFragment;
+import com.team2052.frckrawler.fragments.robot.RobotEventSummaryFragment;
+import com.team2052.frckrawler.fragments.robot.RobotSummaryFragment;
+import com.team2052.frckrawler.fragments.robot.RobotsFragment;
 import com.team2052.frckrawler.fragments.ScoutHomeFragment;
 import com.team2052.frckrawler.fragments.ServerFragment;
 import com.team2052.frckrawler.fragments.SummaryFragment;
@@ -65,8 +63,6 @@ public interface FragmentComponent {
     void inject(RobotActivity robotActivity);
 
     void inject(AddMetricActivity addMetricActivity);
-
-    void inject(MatchListActivity matchListActivity);
 
     void inject(MetricInfoActivity metricInfoActivity);
 
