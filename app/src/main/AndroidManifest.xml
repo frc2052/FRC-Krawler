@@ -24,11 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MatchListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ScoutActivity" />
-        </activity>
         <activity
             android:name=".activities.TeamInfoActivity"
             android:label="@string/team_title"
