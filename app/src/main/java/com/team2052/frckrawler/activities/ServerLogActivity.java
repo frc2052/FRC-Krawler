@@ -24,8 +24,8 @@ public class ServerLogActivity extends DatabaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        rxDbManager.serverLog()
-                .flatMap(list -> Observable.from(list))
+        rxDbManager.getServerLog()
+                .flatMap(Observable::from)
                 .map(entry -> {
                     String time = DateFormat.getTimeFormat(this).format(entry.getTime());
                     return (ListItem) new KeyValueListElement(time, entry.getMessage());

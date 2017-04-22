@@ -224,9 +224,7 @@ public class AddMetricActivity extends DatabaseActivity {
                     Observable.defer(() -> Observable.just(null))
                             .delay(1, TimeUnit.SECONDS)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(onNextDelayed -> {
-                                finish();
-                            }));
+                            .subscribe(onNextDelayed -> finish()));
         }, onError -> {
             FirebaseCrash.report(onError);
             SnackbarUtil.make(findViewById(R.id.root), "Unable to Save Metric", Snackbar.LENGTH_SHORT).show();

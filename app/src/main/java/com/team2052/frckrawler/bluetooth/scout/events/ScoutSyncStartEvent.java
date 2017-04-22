@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.bluetooth.client.events;
+package com.team2052.frckrawler.bluetooth.scout.events;
 
 /**
  * @author Adam

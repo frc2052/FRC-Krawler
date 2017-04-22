@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.bluetooth;
+package com.team2052.frckrawler.bluetooth.model;
 
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Match;

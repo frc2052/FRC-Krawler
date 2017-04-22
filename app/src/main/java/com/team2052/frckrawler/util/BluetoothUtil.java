@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.team2052.frckrawler.bluetooth.BluetoothConnection;
 import com.team2052.frckrawler.bluetooth.BluetoothConstants;
-import com.team2052.frckrawler.bluetooth.events.StartBluetoothConnectionEvent;
+import com.team2052.frckrawler.bluetooth.StartBluetoothConnectionEvent;
 
 import org.greenrobot.eventbus.EventBus;
 

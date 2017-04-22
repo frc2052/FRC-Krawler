@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.team2052.frckrawler.FRCKrawler;
-import com.team2052.frckrawler.bluetooth.client.ScoutSyncHandler;
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.database.metric.Compiler;
 

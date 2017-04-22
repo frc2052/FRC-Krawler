@@ -17,6 +17,11 @@ public class ScoutUtil {
         editor.apply();
     }
 
+    public static boolean isDeviceScout(Context context){
+        SharedPreferences scoutPrefs = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
+        return scoutPrefs.getBoolean(Constants.IS_SCOUT_PREF, false);
+    }
+
     public static boolean getDeviceIsScout(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
         return preferences.getBoolean(Constants.IS_SCOUT_PREF, false);

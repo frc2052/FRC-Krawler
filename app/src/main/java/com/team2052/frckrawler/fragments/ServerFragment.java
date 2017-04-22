@@ -24,6 +24,8 @@ import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.SnackbarUtil;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -171,6 +173,4 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
             fragment.binder.setSelection(index);
         }
     }
-
-
 }

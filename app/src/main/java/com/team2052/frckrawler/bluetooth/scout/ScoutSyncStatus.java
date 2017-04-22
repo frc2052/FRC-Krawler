@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.bluetooth.client;
+package com.team2052.frckrawler.bluetooth.scout;
 
 public class ScoutSyncStatus {
     private final boolean successful;
