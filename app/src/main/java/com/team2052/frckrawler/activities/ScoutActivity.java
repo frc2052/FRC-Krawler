@@ -2,11 +2,9 @@ package com.team2052.frckrawler.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
@@ -14,7 +12,9 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
+import com.team2052.frckrawler.theme.Themes;
 import com.team2052.frckrawler.util.MetricHelper;
+import com.team2052.frckrawler.util.ScoutUtil;
 
 import butterknife.ButterKnife;
 
@@ -41,9 +41,9 @@ public class ScoutActivity extends DatabaseActivity implements HasComponent {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Themes.getCurrentTheme(this).getTheme());
         super.onCreate(savedInstanceState);
         setNavigationDrawerEnabled(false);
-
         Event event = rxDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID_EXTRA, 0));
 
         if (event == null) {

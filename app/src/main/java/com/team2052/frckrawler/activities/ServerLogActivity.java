@@ -9,6 +9,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.KeyValueListElement;
+import com.team2052.frckrawler.theme.Themes;
 
 import rx.Observable;
 
@@ -18,6 +19,7 @@ public class ServerLogActivity extends DatabaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Themes.getCurrentTheme(this).getTheme());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view);
         mListView = (ListView) findViewById(R.id.list);

@@ -16,6 +16,7 @@ import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.bluetooth.server.ServerPackage;
 import com.team2052.frckrawler.database.RxDBManager;
+import com.team2052.frckrawler.theme.Themes;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.ScoutUtil;
 
@@ -56,10 +57,14 @@ public class ScoutSyncHandler {
                 builder.setPositiveButton("Bluetooth Settings", (dialog, which) -> context.startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS)));
             } else {
                 builder.setTitle("Select Server Device");
-                builder.setItems(BluetoothUtil.getDeviceNames(devices), (dialog, which) -> {
+                builder.setSingleChoiceItems(BluetoothUtil.getDeviceNames(devices), 0, (dialog, which) -> {
+                });
+                builder.setPositiveButton("Ok", (dialog, which) -> {
+                    int deviceIndex = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                     BluetoothDevice[] allBluetoothDevicesArray = BluetoothUtil.getAllBluetoothDevicesArray();
+
                     if (allBluetoothDevicesArray != null) {
-                        showAskSyncDialog(context, allBluetoothDevicesArray[which], startSyncConsumer);
+                        showAskSyncDialog(context, allBluetoothDevicesArray[deviceIndex], startSyncConsumer);
                     }
                 });
             }
@@ -84,7 +89,6 @@ public class ScoutSyncHandler {
         return BluetoothUtil.connectToBluetoothDevice(device)
                 .map(bluetoothConnection -> {
                     AndroidSchedulers.mainThread().createWorker().schedule(() -> EventBus.getDefault().post(new ScoutSyncStartEvent()));
-
                     BluetoothConnection.OutputStreamWrapper outputStreamWrapper = bluetoothConnection.getOutputStreamWrapper();
                     try {
                         outputStreamWrapper

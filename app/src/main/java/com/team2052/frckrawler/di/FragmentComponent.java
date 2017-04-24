@@ -23,6 +23,7 @@ import com.team2052.frckrawler.fragments.MatchListFragment;
 import com.team2052.frckrawler.fragments.MetricInfoFragment;
 import com.team2052.frckrawler.fragments.MetricSummaryFragment;
 import com.team2052.frckrawler.fragments.MetricsFragment;
+import com.team2052.frckrawler.fragments.RobotEventMatchesFragment;
 import com.team2052.frckrawler.fragments.robot.RobotAttendingEventsFragment;
 import com.team2052.frckrawler.fragments.robot.RobotEventSummaryFragment;
 import com.team2052.frckrawler.fragments.robot.RobotSummaryFragment;
@@ -109,4 +110,6 @@ public interface FragmentComponent {
     void inject(ExportDialogFragment exportDialogFragment);
 
     void inject(ServerLogActivity serverLogActivity);
+
+    void inject(RobotEventMatchesFragment robotEventMatchesFragment);
 }

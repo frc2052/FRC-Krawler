@@ -19,11 +19,11 @@ public class NavDrawerItem implements ListItem {
         this.title = title;
     }
 
-    public NavDrawerItem(int id, String title, int icon) {
+    public NavDrawerItem(int id, String title, int icon, boolean light) {
         this.id = id;
         this.title = title;
         this.icon = icon;
-        this.layout = R.layout.nav_list_item;
+        this.layout = light? R.layout.nav_list_item_light : R.layout.nav_list_item;
     }
 
     @Override

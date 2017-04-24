@@ -33,6 +33,7 @@
     <string-array name="robot_event_tab_titles">
         <!--<item>Info</item>-->
         <item>Summary</item>
+        <item>Matches</item>
     </string-array>
 
     <string-array name="team_tab_titles">
@@ -103,4 +104,5 @@
 
     <string name="server_status_on">The server is on and ready to sync</string>
     <string name="server_status_off">The server is off</string>
+    <string name="select_theme">Select Theme</string>
 </resources>

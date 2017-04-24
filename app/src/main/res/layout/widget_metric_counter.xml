@@ -36,7 +36,7 @@
                 android:layout_height="56dp"
                 android:background="?attr/selectableItemBackground"
                 android:text="-"
-                android:textColor="@color/color_accent"
+                android:textColor="?attr/colorAccent"
                 android:textSize="@dimen/text_size_xlarge" />
 
             <TextView
@@ -55,7 +55,7 @@
                 android:layout_height="56dp"
                 android:background="?attr/selectableItemBackground"
                 android:text="+"
-                android:textColor="@color/color_accent"
+                android:textColor="?attr/colorAccent"
                 android:textSize="@dimen/text_size_xlarge" />
         </LinearLayout>
 

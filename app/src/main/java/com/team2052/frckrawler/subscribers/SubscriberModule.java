@@ -31,7 +31,12 @@ public class SubscriberModule {
     }
 
     @Provides
-    public KeyValueListSubscriber provideKeyMapLIstScubsciber() {
+    public KeyValueListSubscriber provideKeyMapListSubbscriber() {
         return new KeyValueListSubscriber();
+    }
+
+    @Provides
+    StringListSubscriber provideStringListSubscriber(){
+        return new StringListSubscriber();
     }
 }

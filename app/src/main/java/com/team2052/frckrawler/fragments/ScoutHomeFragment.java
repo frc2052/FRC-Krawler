@@ -9,6 +9,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -57,6 +60,20 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_scout_home, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.change_scout_theme){
+            ScoutUtil.showAskThemeDialog(getContext());
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Nullable
@@ -138,8 +155,9 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     }
 
     private void startSync(BluetoothDevice device) {
-        syncSubscription = ScoutSyncHandler.getScoutSyncTask(getContext(), device)
-                .subscribeOn(Schedulers.computation())
+        syncSubscription =
+                ScoutSyncHandler.getScoutSyncTask(getContext(), device)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(scoutSyncStatus -> {
                     if (scoutSyncStatus.isSuccessful()) {

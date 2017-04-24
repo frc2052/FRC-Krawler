@@ -7,8 +7,7 @@
         android:id="@+id/banner_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="8dp"
-        android:background="@color/grey_900">
+        android:elevation="8dp">
 
         <LinearLayout
             android:id="@+id/banner_details_container"
@@ -58,7 +57,6 @@
         android:id="@+id/left_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#303030"
         android:layout_below="@+id/banner_container"
         android:choiceMode="singleChoice"
         android:divider="@null"

@@ -24,6 +24,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.NavDrawerAdataper;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
+import com.team2052.frckrawler.theme.Themes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,10 +89,10 @@ public class NavigationDrawerFragment extends Fragment {
                     getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
                 }
             };
-            this.mDrawerLayout.setDrawerListener(this.mDrawerToggle);
+            this.mDrawerLayout.addDrawerListener(this.mDrawerToggle);
             this.mDrawerLayout.post(() -> NavigationDrawerFragment.this.mDrawerToggle.syncState());
         } else {
-            drawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
                 @Override
                 public void onDrawerOpened(View drawerView) {
                     if (!isAdded()) {
@@ -136,15 +137,13 @@ public class NavigationDrawerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences scoutPrefs = getActivity().getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
+        boolean light = Themes.getCurrentTheme(getContext()).isLight();
         //Deny the scout to access all the items
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, getActivity().getString(R.string.scout), R.drawable.ic_assignment_black_24dp));
-
-        if (!scoutPrefs.getBoolean(Constants.IS_SCOUT_PREF, false)) {
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, getActivity().getString(R.string.server), R.drawable.ic_bluetooth_black_24dp));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, getActivity().getString(R.string.teams), R.drawable.ic_group_black_24dp));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, getActivity().getString(R.string.games), R.drawable.ic_games_black_24dp));
-            NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_settings, getActivity().getString(R.string.settings), R.drawable.ic_settings_black_24dp));
-        }
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, getActivity().getString(R.string.scout), R.drawable.ic_assignment_black_24dp, light));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, getActivity().getString(R.string.server), R.drawable.ic_bluetooth_black_24dp, light));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, getActivity().getString(R.string.teams), R.drawable.ic_group_black_24dp, light));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, getActivity().getString(R.string.games), R.drawable.ic_games_black_24dp, light));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_settings, getActivity().getString(R.string.settings), R.drawable.ic_settings_black_24dp, light));
 
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
         fromSavedInstanceState = (savedInstanceState == null);
@@ -157,6 +156,10 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerListView = (ListView) mDrawerContainer.findViewById(R.id.left_drawer);
         mDrawerListView.setOnItemClickListener((parent, view, position, id) -> selectItem(position));
         mDrawerListView.setAdapter(navAdapter);
+
+        Themes currentTheme = Themes.getCurrentTheme(getActivity());
+        mDrawerContainer.findViewById(R.id.banner_container).setBackgroundColor(currentTheme.isLight() ? getResources().getColor(R.color.grey_300) : getResources().getColor(R.color.grey_900));
+        mDrawerListView.setBackgroundColor(currentTheme.isLight() ? getResources().getColor(R.color.light_background) : getResources().getColor(R.color.dark_background));
         return mDrawerContainer;
     }
 
