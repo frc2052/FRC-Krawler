@@ -3,14 +3,31 @@ package com.team2052.frckrawler.util;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 
 import com.google.common.base.Optional;
 import com.team2052.frckrawler.Constants;
+import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.theme.ThemeChangedEvent;
+import com.team2052.frckrawler.theme.Themes;
+
+import org.greenrobot.eventbus.EventBus;
+
+import rx.functions.Action1;
 
 public class ScoutUtil {
+
+    @IntDef({NEUTRAL_THEME, BLUE_THEME, RED_THEME})
+    public @interface ScoutTheme {}
+    public static final int NEUTRAL_THEME = 0,
+            BLUE_THEME = 1,
+            RED_THEME = 2;
+
+
     public static void setDeviceAsScout(Context context, boolean isScout) {
         SharedPreferences.Editor editor = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0).edit();
         editor.putBoolean(Constants.IS_SCOUT_PREF, isScout);
@@ -45,6 +62,31 @@ public class ScoutUtil {
             return RxDBManager.getInstance(context).getEventsTable().load(scoutPrefs.getLong(Constants.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
         }
         return null;
+    }
+
+    @ScoutTheme
+    public static int getScoutTheme(Context context) {
+        SharedPreferences scoutPrefs = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
+        return scoutPrefs.getInt(Constants.SCOUT_THEME_SELECTION, 0);
+    }
+
+    public static void setScoutTheme(Context context, @ScoutTheme  int theme) {
+        SharedPreferences.Editor scoutPrefs = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0).edit();
+        scoutPrefs.putInt(Constants.SCOUT_THEME_SELECTION, theme);
+        scoutPrefs.apply();
+    }
+
+    public static void showAskThemeDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.select_theme);
+        builder.setSingleChoiceItems(Themes.getNames(), ScoutUtil.getScoutTheme(context), (dialog1, which) -> {
+        });
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            int themeIndex = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+            ScoutUtil.setScoutTheme(context, themeIndex);
+            EventBus.getDefault().post(new ThemeChangedEvent());
+        });
+        builder.create().show();
     }
 
     public static void resetSyncDevice(Context context) {
