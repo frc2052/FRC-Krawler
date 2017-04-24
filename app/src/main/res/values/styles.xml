@@ -12,6 +12,24 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.Red">
+        <item name="colorPrimary">@color/red_800</item>
+        <item name="colorPrimaryDark">@color/red_900</item>
+        <item name="colorAccent">@color/color_accent</item>
+    </style>
+
+.    <style name="AppTheme.Dark">
+        <item name="colorPrimary">@color/grey_900</item>
+        <item name="colorPrimaryDark">#000000</item>
+        <item name="colorAccent">@color/color_accent</item>
+    </style>
+
+    <style name="AppTheme.Blue">
+        <item name="colorPrimary">@color/blue_800</item>
+        <item name="colorPrimaryDark">@color/blue_900</item>
+        <item name="colorAccent">@color/color_accent</item>
+    </style>
+
     <style name="AppTheme.NoActionBar.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -24,8 +42,8 @@
 
     <style name="DefaultToolbarStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="android:background">@color/primary</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:background">?attr/colorPrimary</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>

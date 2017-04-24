@@ -7,13 +7,20 @@ import android.os.Handler;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.fragments.NavigationDrawerFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
+import com.team2052.frckrawler.theme.ThemeChangedEvent;
+import com.team2052.frckrawler.theme.Themes;
 import com.team2052.frckrawler.views.ScrimInsetsFrameLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public abstract class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerListener {
@@ -52,9 +59,18 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_navigation_drawer);
 
+        if (useCustomTheme()) {
+            Themes currentTheme = Themes.getCurrentTheme(this);
+            setTheme(currentTheme.getTheme());
+            getWindow().getDecorView().setBackgroundColor(currentTheme.isLight() ? getResources().getColor(R.color.light_background) : getResources().getColor(R.color.dark_background));
+        }
+
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer_layout);
         mContentView = (FrameLayout) findViewById(R.id.content);
-        mDrawerLayout.setStatusBarBackground(R.color.primary_dark);
+        mDrawerLayout.setStatusBarBackgroundColor(typedValue.data);
         mDrawerContainer = (ScrimInsetsFrameLayout) findViewById(R.id.navigation_drawer_fragment_container);
 
         handler = new Handler();
@@ -89,6 +105,14 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity
         }
 
         onNavigationDrawerCreated();
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     /**
@@ -263,5 +287,14 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity
         if (!isDrawerOpen()) {
             getSupportActionBar().setTitle(mActionBarTitle);
         }
+    }
+
+    protected boolean useCustomTheme() {
+        return true;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onThemeChangedEvent(ThemeChangedEvent event) {
+        recreate();
     }
 }

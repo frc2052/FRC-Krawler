@@ -6,6 +6,8 @@ import com.team2052.frckrawler.db.RobotEvent;
 import com.team2052.frckrawler.db.RobotEventDao;
 import com.team2052.frckrawler.db.Team;
 
+import org.greenrobot.greendao.query.QueryBuilder;
+
 public class RobotEvents extends AbstractTable<RobotEvent, RobotEventDao> {
 
     public RobotEvents(RobotEventDao dao, DBManager dbManager) {
@@ -29,9 +31,19 @@ public class RobotEvents extends AbstractTable<RobotEvent, RobotEventDao> {
         return dao.load(id);
     }
 
-
     @Override
     public void delete(RobotEvent model) {
         dao.delete(model);
+    }
+
+    public QueryBuilder<RobotEvent> query(Long robot_id, Long event_id) {
+        QueryBuilder<RobotEvent> queryBuilder = getQueryBuilder();
+        if (robot_id != null) {
+            queryBuilder.where(RobotEventDao.Properties.Robot_id.eq(robot_id));
+        }
+        if (event_id != null) {
+            queryBuilder.where(RobotEventDao.Properties.Event_id.eq(event_id));
+        }
+        return queryBuilder;
     }
 }

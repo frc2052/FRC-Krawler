@@ -12,6 +12,7 @@ import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.listitems.ListItem;
 import com.team2052.frckrawler.listitems.elements.CompiledMetricListElement;
+import com.team2052.frckrawler.theme.Themes;
 
 import javax.inject.Inject;
 
@@ -38,6 +39,7 @@ public class SummaryDataActivity extends DatabaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Themes.getCurrentTheme(this).getTheme());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view);
         mListView = (ListView) findViewById(R.id.list);

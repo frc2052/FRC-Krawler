@@ -45,6 +45,18 @@ public class HomeActivity extends DatabaseActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Serialize the current dropdown position.
+        outState.putInt(STATE_SELECTED_NAV_ID, mCurrentSelectedNavigationItemId);
+        Fragment subFragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        if (subFragment != null) {
+            subFragment.onSaveInstanceState(outState);
+        }
+    }
+
+
+    @Override
     public void onCreateNavigationDrawer() {
         useActionBarToggle(true);
         encourageLearning(!mFromSavedInstanceState);

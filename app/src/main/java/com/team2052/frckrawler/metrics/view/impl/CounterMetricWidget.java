@@ -17,7 +17,6 @@ import java.util.Observable;
 
 
 public class CounterMetricWidget extends MetricWidget implements OnClickListener {
-
     int value;
     private int max;
     private int min;

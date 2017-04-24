@@ -19,6 +19,7 @@ import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.fragments.dialog.ExportDialogFragment;
 import com.team2052.frckrawler.fragments.dialog.PickEventDialogFragment;
 import com.team2052.frckrawler.subscribers.SubscriberModule;
+import com.team2052.frckrawler.theme.Themes;
 
 public class SettingsActivity extends AppCompatActivity implements PickEventDialogFragment.EventPickedListener, HasComponent {
     private static final String EXPORT_PREFERENCE_KEY = "compile_export_preference";
@@ -29,6 +30,7 @@ public class SettingsActivity extends AppCompatActivity implements PickEventDial
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setTheme(Themes.getCurrentTheme(this).getTheme());
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getFragmentManager().beginTransaction()
