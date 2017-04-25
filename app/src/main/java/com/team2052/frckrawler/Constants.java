@@ -7,7 +7,7 @@ public class Constants {
     public static final String PREFS_FILE_NAME = "FRCKrawlerPrefs";
     public static final String IS_SCOUT_PREF = "isScout";
     public static final String CURRENT_SCOUT_EVENT_ID = "currentEvent";
-    public static final String SCOUT_THEME_SELECTION = "currentScoutTheme";
+    public static final String SCOUT_THEME_SELECTION = "current_theme";
     /**
      * The SharedPreferences key for the MAC address of the
      * most recently connected server

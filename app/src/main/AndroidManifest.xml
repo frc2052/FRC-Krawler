@@ -51,6 +51,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.ScoutActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="nosensor" />
         <activity
             android:name=".activities.MetricInfoActivity"

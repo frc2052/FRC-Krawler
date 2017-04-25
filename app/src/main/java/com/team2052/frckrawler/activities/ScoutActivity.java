@@ -41,7 +41,6 @@ public class ScoutActivity extends DatabaseActivity implements HasComponent {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(Themes.getCurrentTheme(this).getTheme());
         super.onCreate(savedInstanceState);
         setNavigationDrawerEnabled(false);
         Event event = rxDbManager.getEventsTable().load(getIntent().getLongExtra(EVENT_ID_EXTRA, 0));
@@ -56,26 +55,17 @@ public class ScoutActivity extends DatabaseActivity implements HasComponent {
 
         final int scout_type = getIntent().getIntExtra(SCOUT_TYPE_EXTRA, 0);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (fragment == null) {
-            int titleResId;
             switch (scout_type) {
                 case PIT_SCOUT_TYPE:
-                    titleResId = R.string.pit_scout;
                     fragment = ScoutPitFragment.newInstance(event);
                     break;
                 case PRACTICE_MATCH_SCOUT_TYPE:
-                    titleResId = R.string.practice_match_scout;
                     fragment = ScoutMatchFragment.newInstance(event, MetricHelper.MATCH_PRACTICE_TYPE);
                     break;
                 case MATCH_SCOUT_TYPE:
                 default:
-                    titleResId = R.string.match_scout;
                     fragment = ScoutMatchFragment.newInstance(event, MetricHelper.MATCH_GAME_TYPE);
-            }
-
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(titleResId);
             }
         }
 
