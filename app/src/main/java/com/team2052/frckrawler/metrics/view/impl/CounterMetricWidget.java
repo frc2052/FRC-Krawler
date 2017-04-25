@@ -1,10 +1,12 @@
 package com.team2052.frckrawler.metrics.view.impl;
 
 import android.content.Context;
+import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
@@ -13,10 +15,8 @@ import com.team2052.frckrawler.metrics.view.MetricWidget;
 import com.team2052.frckrawler.tba.JSON;
 import com.team2052.frckrawler.util.MetricHelper;
 
-import java.util.Observable;
 
-
-public class CounterMetricWidget extends MetricWidget implements OnClickListener {
+public class CounterMetricWidget extends MetricWidget implements OnClickListener, View.OnLongClickListener {
     int value;
     private int max;
     private int min;
@@ -54,7 +54,9 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
     public void initViews() {
         inflater.inflate(R.layout.widget_metric_counter, this);
         findViewById(R.id.plus).setOnClickListener(this);
+        findViewById(R.id.plus).setOnLongClickListener(this);
         findViewById(R.id.minus).setOnClickListener(this);
+        findViewById(R.id.minus).setOnLongClickListener(this);
         nameText = (TextView) findViewById(R.id.title);
         valueText = (TextView) findViewById(R.id.value);
     }
@@ -77,12 +79,34 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
             if (value < min)
                 value = min;
         }
+        updateValueText();
+    }
 
+    private void updateValueText() {
         ((TextView) findViewById(R.id.value)).setText(Integer.toString(value));
     }
 
     @Override
     public JsonElement getData() {
         return MetricHelper.buildNumberMetricValue(value);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        new MaterialDialog.Builder(getContext())
+                .title( nameText.getText().toString())
+                .inputType(InputType.TYPE_CLASS_NUMBER)
+                .input("Enter Value", Integer.toString(value), false, (dialog, input) -> {
+                    int i = Integer.parseInt(input.toString());
+                    if (i > max) {
+                        value = max;
+                    } else if (i < min) {
+                        value = min;
+                    } else {
+                        value = i;
+                    }
+                    updateValueText();
+                }).show();
+        return false;
     }
 }
