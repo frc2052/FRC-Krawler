@@ -3,6 +3,7 @@ package com.team2052.frckrawler.util;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -20,13 +21,6 @@ import org.greenrobot.eventbus.EventBus;
 import rx.functions.Action1;
 
 public class ScoutUtil {
-
-    @IntDef({NEUTRAL_THEME, BLUE_THEME, RED_THEME})
-    public @interface ScoutTheme {}
-    public static final int NEUTRAL_THEME = 0,
-            BLUE_THEME = 1,
-            RED_THEME = 2;
-
 
     public static void setDeviceAsScout(Context context, boolean isScout) {
         SharedPreferences.Editor editor = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0).edit();
@@ -64,14 +58,13 @@ public class ScoutUtil {
         return null;
     }
 
-    @ScoutTheme
     public static int getScoutTheme(Context context) {
-        SharedPreferences scoutPrefs = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
+        SharedPreferences scoutPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         return scoutPrefs.getInt(Constants.SCOUT_THEME_SELECTION, 0);
     }
 
-    public static void setScoutTheme(Context context, @ScoutTheme  int theme) {
-        SharedPreferences.Editor scoutPrefs = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0).edit();
+    public static void setScoutTheme(Context context, int theme) {
+        SharedPreferences.Editor scoutPrefs = PreferenceManager.getDefaultSharedPreferences(context).edit();
         scoutPrefs.putInt(Constants.SCOUT_THEME_SELECTION, theme);
         scoutPrefs.apply();
     }

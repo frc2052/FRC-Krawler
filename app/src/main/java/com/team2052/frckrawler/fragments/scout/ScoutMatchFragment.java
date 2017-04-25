@@ -3,6 +3,9 @@ package com.team2052.frckrawler.fragments.scout;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +43,8 @@ public class ScoutMatchFragment extends BaseScoutFragment {
     private static String MATCH_TYPE = "MATCH_TYPE";
     @BindView(R.id.match_number_input)
     TextInputLayout mMatchNumberInput;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private int mMatchType;
     Observable<List<MetricValue>> metricValueObservable = Observable
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
@@ -104,6 +109,11 @@ public class ScoutMatchFragment extends BaseScoutFragment {
         super.onViewCreated(view, savedInstanceState);
 
         ButterKnife.bind(this, view);
+
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        supportActionBar.setDisplayHomeAsUpEnabled(true);
+        supportActionBar.setTitle(R.string.match_scout);
 
         mMatchNumberInput.getEditText().setText("1");
 

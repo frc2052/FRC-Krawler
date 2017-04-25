@@ -27,8 +27,8 @@ public class RobotEventPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return RobotEventSummaryFragment.newInstance(robot_id, event_id);
-            case 1:
-                return RobotEventMatchesFragment.newInstance(robot_id, event_id);
+            /*case 1:
+                return RobotEventMatchesFragment.newInstance(robot_id, event_id);*/
         }
         return null;
     }
