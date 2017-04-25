@@ -33,7 +33,7 @@
     <string-array name="robot_event_tab_titles">
         <!--<item>Info</item>-->
         <item>Summary</item>
-        <item>Matches</item>
+        <!--<item>Matches</item>-->
     </string-array>
 
     <string-array name="team_tab_titles">
