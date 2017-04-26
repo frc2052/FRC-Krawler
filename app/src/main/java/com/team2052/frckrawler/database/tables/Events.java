@@ -26,6 +26,18 @@ public class Events extends AbstractTable<Event, EventDao> {
         super(dao, dbManager);
     }
 
+    public static Optional<String> getEventLocation(Event event) {
+        if (event == null || event.getData() == null)
+            return Optional.absent();
+
+        JsonObject data = JSON.getAsJsonObject(event.getData());
+
+        if (data.has("location")) {
+            return Optional.of(data.get("location").getAsString());
+        }
+        return Optional.absent();
+    }
+
     public List<Robot> getRobots(Event event) {
         List<Robot> robots = new ArrayList<>();
         for (RobotEvent robotEvent : getRobotEvents(event)) {
@@ -61,7 +73,6 @@ public class Events extends AbstractTable<Event, EventDao> {
     public List<Event> getAllEvents() {
         return dao.loadAll();
     }
-
 
     public List<Match> getMatches(Event event) {
         event.resetMatchList();
@@ -100,17 +111,5 @@ public class Events extends AbstractTable<Event, EventDao> {
         }
         Collections.sort(teams, (lhs, rhs) -> Double.compare(lhs.getNumber(), rhs.getNumber()));
         return teams;
-    }
-
-    public static Optional<String> getEventLocation(Event event) {
-        if (event == null || event.getData() == null)
-            return Optional.absent();
-
-        JsonObject data = JSON.getAsJsonObject(event.getData());
-
-        if (data.has("location")) {
-            return Optional.of(data.get("location").getAsString());
-        }
-        return Optional.absent();
     }
 }

@@ -16,7 +16,6 @@ import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.bluetooth.server.ServerPackage;
 import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.theme.Themes;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.ScoutUtil;
 

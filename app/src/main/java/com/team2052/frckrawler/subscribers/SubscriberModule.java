@@ -36,7 +36,7 @@ public class SubscriberModule {
     }
 
     @Provides
-    StringListSubscriber provideStringListSubscriber(){
+    StringListSubscriber provideStringListSubscriber() {
         return new StringListSubscriber();
     }
 }

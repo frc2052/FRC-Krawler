@@ -18,11 +18,9 @@ import rx.Observable;
 public class RobotEventMatchesFragment extends ListViewFragment<List<String>, StringListSubscriber> {
     public static final String ROBOT_ID = "ROBOT_ID";
     public static final String EVENT_ID = "EVENT_ID";
-
-    private long robot_id, event_id;
-
     @Inject
     Compiler compiler;
+    private long robot_id, event_id;
 
     public static RobotEventMatchesFragment newInstance(long robot_id, long event_id) {
         RobotEventMatchesFragment robotEventMatchesFragment = new RobotEventMatchesFragment();

@@ -79,7 +79,7 @@ public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubsc
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.floating_action_button){
+        if (v.getId() == R.id.floating_action_button) {
             Event load = rxDbManager.getEventsTable().load(mKey);
             if (load != null) {
                 AddTeamToEventDialogFragment.newInstance(load).show(getChildFragmentManager(), "addTeam");

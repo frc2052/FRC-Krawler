@@ -12,9 +12,7 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
-import com.team2052.frckrawler.theme.Themes;
 import com.team2052.frckrawler.util.MetricHelper;
-import com.team2052.frckrawler.util.ScoutUtil;
 
 import butterknife.ButterKnife;
 

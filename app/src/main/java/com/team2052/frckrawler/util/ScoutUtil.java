@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
@@ -17,8 +16,6 @@ import com.team2052.frckrawler.theme.ThemeChangedEvent;
 import com.team2052.frckrawler.theme.Themes;
 
 import org.greenrobot.eventbus.EventBus;
-
-import rx.functions.Action1;
 
 public class ScoutUtil {
 

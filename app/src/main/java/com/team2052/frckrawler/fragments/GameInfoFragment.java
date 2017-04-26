@@ -1,17 +1,15 @@
 package com.team2052.frckrawler.fragments;
 
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatEditText;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.subscribers.KeyValueListSubscriber;
-import com.team2052.frckrawler.util.Util;
 
 import java.util.Map;
 
@@ -62,50 +60,37 @@ public class GameInfoFragment extends ListViewFragment<Map<String, String>, KeyV
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete:
-                buildDeleteDialog().show();
+                new MaterialDialog.Builder(getContext())
+                        .title(R.string.delete_game)
+                        .positiveColorRes(R.color.red_800)
+                        .positiveText(R.string.delete)
+                        .negativeText(R.string.cancel)
+                        .content(R.string.delete_game_message)
+                        .onPositive((materialDialog, dialogAction) -> {
+                            Observable.just(mGame)
+                                    .map(game -> {
+                                        rxDbManager.getGamesTable().delete(game);
+                                        return game;
+                                    })
+                                    .observeOn(Schedulers.computation())
+                                    .subscribeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(onNext -> {
+                                    }, onError -> {
+                                        onError.printStackTrace();
+                                        FirebaseCrash.report(onError);
+                                    }, () -> getActivity().finish());
+                        })
+                        .show();
                 break;
             case R.id.menu_edit:
-                buildEditDialog().show();
+                new MaterialDialog.Builder(getContext())
+                        .title(R.string.edit_game)
+                        .input(getString(R.string.game_name), mGame.getName(), false, (materialDialog, charSequence) -> {
+                            mGame.setName(charSequence.toString());
+                            mGame.update();
+                        }).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private AlertDialog buildDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Delete Game?");
-        builder.setMessage("Are you sure you want to delete this game?");
-        builder.setPositiveButton("Delete", (dialog, which) -> {
-            Observable.just(mGame)
-                    .map(game -> {
-                        rxDbManager.getGamesTable().delete(game);
-                        return game;
-                    })
-                    .observeOn(Schedulers.computation())
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .subscribe(onNext -> {
-                    }, onError -> {
-                        onError.printStackTrace();
-                        FirebaseCrash.report(onError);
-                    }, () -> getActivity().finish());
-        });
-        builder.setNegativeButton("Cancel", null);
-        return builder.create();
-    }
-
-    private AlertDialog buildEditDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        AppCompatEditText name = new AppCompatEditText(getActivity());
-        name.setText(mGame.getName());
-        int padding = Util.getPixelsFromDp(getActivity(), 16);
-        name.setPadding(padding, padding, padding, padding);
-        builder.setView(name);
-        builder.setTitle("Edit Game");
-        builder.setPositiveButton("Ok", (dialog, which) -> {
-            mGame.setName(name.getText().toString());
-            mGame.update();
-        });
-        builder.setNegativeButton("Cancel", null);
-        return builder.create();
     }
 }
