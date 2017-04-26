@@ -7,8 +7,6 @@ import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.List;
 
-import rx.functions.Func1;
-
 abstract class AbstractTable<T, D extends AbstractDao<T, Long>> {
     protected DBManager dbManager;
     D dao;
