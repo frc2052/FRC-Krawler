@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.theme.Themes;

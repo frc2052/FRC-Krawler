@@ -70,7 +70,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.change_scout_theme){
+        if (item.getItemId() == R.id.change_scout_theme) {
             ScoutUtil.showAskThemeDialog(getContext());
         }
         return super.onOptionsItemSelected(item);
@@ -157,19 +157,19 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     private void startSync(BluetoothDevice device) {
         syncSubscription =
                 ScoutSyncHandler.getScoutSyncTask(getContext(), device)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(scoutSyncStatus -> {
-                    if (scoutSyncStatus.isSuccessful()) {
-                        EventBus.getDefault().post(new ScoutSyncSuccessEvent());
-                    } else {
-                        EventBus.getDefault().post(new ScoutSyncErrorEvent(scoutSyncStatus.getMessage()));
-                    }
-                }, throwable -> {
-                    throwable.printStackTrace();
-                    EventBus.getDefault().post(new ScoutSyncErrorEvent());
-                    FirebaseCrash.report(throwable);
-                });
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(scoutSyncStatus -> {
+                            if (scoutSyncStatus.isSuccessful()) {
+                                EventBus.getDefault().post(new ScoutSyncSuccessEvent());
+                            } else {
+                                EventBus.getDefault().post(new ScoutSyncErrorEvent(scoutSyncStatus.getMessage()));
+                            }
+                        }, throwable -> {
+                            throwable.printStackTrace();
+                            EventBus.getDefault().post(new ScoutSyncErrorEvent());
+                            FirebaseCrash.report(throwable);
+                        });
     }
 
     public void setProgressVisibility(int view_state) {

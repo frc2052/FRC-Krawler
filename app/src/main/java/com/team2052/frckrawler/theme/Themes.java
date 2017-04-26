@@ -23,6 +23,18 @@ public enum Themes {
         this.isLight = isLight;
     }
 
+    public static Themes getCurrentTheme(Context context) {
+        return Themes.values()[ScoutUtil.getScoutTheme(context)];
+    }
+
+    public static String[] getNames() {
+        String[] names = new String[values().length];
+        for (int i = 0; i < values().length; i++) {
+            names[i] = values()[i].getName();
+        }
+        return names;
+    }
+
     @StyleRes
     public int getTheme() {
         return theme_res_id;
@@ -32,19 +44,7 @@ public enum Themes {
         return name;
     }
 
-    public static Themes getCurrentTheme(Context context) {
-        return Themes.values()[ScoutUtil.getScoutTheme(context)];
-    }
-
     public boolean isLight() {
         return isLight;
-    }
-
-    public static String[] getNames() {
-        String[] names = new String[values().length];
-        for (int i = 0; i < values().length; i++) {
-            names[i] = values()[i].getName();
-        }
-        return names;
     }
 }

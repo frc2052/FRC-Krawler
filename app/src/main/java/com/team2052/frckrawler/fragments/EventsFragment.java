@@ -66,7 +66,7 @@ public class EventsFragment extends RecyclerViewFragment<List<Event>, RecyclerVi
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.floating_action_button){
+        if (v.getId() == R.id.floating_action_button) {
             ImportDataSimpleDialogFragment.newInstance(mGame_id).show(getChildFragmentManager(), "importEvent");
         }
     }

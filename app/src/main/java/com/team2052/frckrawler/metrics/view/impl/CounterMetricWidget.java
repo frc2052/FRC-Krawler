@@ -94,7 +94,7 @@ public class CounterMetricWidget extends MetricWidget implements OnClickListener
     @Override
     public boolean onLongClick(View v) {
         new MaterialDialog.Builder(getContext())
-                .title( nameText.getText().toString())
+                .title(nameText.getText().toString())
                 .inputType(InputType.TYPE_CLASS_NUMBER)
                 .input("Enter Value", Integer.toString(value), false, (dialog, input) -> {
                     int i = Integer.parseInt(input.toString());

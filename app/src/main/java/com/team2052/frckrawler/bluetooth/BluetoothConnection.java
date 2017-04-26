@@ -17,8 +17,16 @@ public class BluetoothConnection {
         this.outputStreamWrapper = new OutputStreamWrapper(outputStream);
     }
 
-    public void closeConnection() throws IOException{
+    public void closeConnection() throws IOException {
         socket.close();
+    }
+
+    public ObjectInputStream getInputStream() {
+        return inputStream;
+    }
+
+    public OutputStreamWrapper getOutputStreamWrapper() {
+        return outputStreamWrapper;
     }
 
     public static class OutputStreamWrapper {
@@ -34,7 +42,7 @@ public class BluetoothConnection {
         }
 
         public OutputStreamWrapper writeObject(Object obj) throws IOException {
-            if(obj == null)
+            if (obj == null)
                 throw new IllegalStateException("Object cannot be null!");
 
             outputStream.writeObject(obj);
@@ -44,13 +52,5 @@ public class BluetoothConnection {
         public void send() throws IOException {
             outputStream.flush();
         }
-    }
-
-    public ObjectInputStream getInputStream() {
-        return inputStream;
-    }
-
-    public OutputStreamWrapper getOutputStreamWrapper() {
-        return outputStreamWrapper;
     }
 }

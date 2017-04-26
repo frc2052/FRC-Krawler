@@ -19,8 +19,6 @@ import com.team2052.frckrawler.bluetooth.server.ServerStatus;
 import com.team2052.frckrawler.bluetooth.server.ServerThread;
 import com.team2052.frckrawler.db.Event;
 
-import org.greenrobot.eventbus.EventBus;
-
 import rx.Observable;
 
 public class ServerService extends Service {

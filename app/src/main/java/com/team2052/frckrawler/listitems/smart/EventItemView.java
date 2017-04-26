@@ -8,7 +8,6 @@ import com.google.common.base.Optional;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.database.tables.Events;
 import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.tba.JSON;
 
 import java.text.DateFormat;
 
