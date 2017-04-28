@@ -156,7 +156,7 @@ public class Compiler {
         final Scheduler scheduler = Schedulers.from(Executors.newFixedThreadPool(10));
 
         //Cache metrics so we can use it over and over
-        final Observable<Metric> metricObservable = getMetrics(event.getId()).flatMap(Observable::from).cache();
+        final Observable<Metric> metricObservable = getMetrics(event.getGame_id()).flatMap(Observable::from).cache();
 
         return rxDbManager.robotsAtEvent(event.getId())
                 .flatMap(Observable::from)
