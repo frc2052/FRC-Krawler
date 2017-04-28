@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.4.0-alpha5'
+        classpath 'com.android.tools.build:gradle:2.4.0-alpha6'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2'
