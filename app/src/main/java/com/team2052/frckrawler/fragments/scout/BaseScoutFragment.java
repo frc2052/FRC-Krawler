@@ -54,7 +54,7 @@ public abstract class BaseScoutFragment extends Fragment {
     TextInputLayout mCommentsView;
 
     @BindView(R.id.button_save)
-    FloatingActionButton mSaveButton;
+    View mSaveButton;
 
     @BindView(R.id.metric_widget_list)
     LinearLayout mMetricList;

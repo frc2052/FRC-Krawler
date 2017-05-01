@@ -24,7 +24,6 @@ public class MetricInfoFragment extends ListViewFragment<Map<String, String>, Ke
         return metricInfoFragment;
     }
 
-
     @Override
     public void inject() {
         mComponent.inject(this);
@@ -50,9 +49,7 @@ public class MetricInfoFragment extends ListViewFragment<Map<String, String>, Ke
                         })
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(onNext -> {
-                            refresh();
-                        }, onError -> {
+                        .subscribe(onNext -> refresh(), onError -> {
                             //Handle the exception
                         });
             }

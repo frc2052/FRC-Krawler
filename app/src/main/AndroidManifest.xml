@@ -52,6 +52,7 @@
         <activity
             android:name=".activities.ScoutActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateUnchanged"
             android:screenOrientation="nosensor" />
         <activity
             android:name=".activities.MetricInfoActivity"
