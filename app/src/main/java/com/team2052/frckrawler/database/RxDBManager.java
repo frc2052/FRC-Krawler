@@ -197,7 +197,7 @@ public class RxDBManager extends DBManager {
                 });
     }
 
-    public Observable<List<ServerLogEntry>> serverLog() {
+    public Observable<List<ServerLogEntry>> getServerLog() {
         return Observable.defer(() -> {
             List<ServerLogEntry> list = getServerLogEntries().getQueryBuilder().orderDesc(ServerLogEntryDao.Properties.Time).list();
             return Observable.just(list);

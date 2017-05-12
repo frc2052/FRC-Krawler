@@ -90,7 +90,6 @@ public class ServerFragmentBinder extends BaseDataBinder<List<String>> {
         }
     }
 
-
     private void showData(boolean show) {
         viewLogsButton.setEnabled(show);
         viewEventButton.setEnabled(show);

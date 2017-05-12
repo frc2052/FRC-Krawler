@@ -23,6 +23,8 @@ import com.team2052.frckrawler.subscribers.EventStringSubscriber;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.SnackbarUtil;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import rx.Observable;

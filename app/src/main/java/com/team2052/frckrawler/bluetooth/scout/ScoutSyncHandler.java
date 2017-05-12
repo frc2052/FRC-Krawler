@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.bluetooth.client;
+package com.team2052.frckrawler.bluetooth.scout;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -8,13 +8,13 @@ import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.google.common.base.Optional;
-import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.BuildConfig;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.bluetooth.BluetoothConnection;
 import com.team2052.frckrawler.bluetooth.BluetoothConstants;
-import com.team2052.frckrawler.bluetooth.client.events.ScoutSyncStartEvent;
-import com.team2052.frckrawler.bluetooth.server.ServerPackage;
+import com.team2052.frckrawler.bluetooth.scout.events.ScoutSyncStartEvent;
+import com.team2052.frckrawler.bluetooth.syncable.ScoutSyncable;
+import com.team2052.frckrawler.bluetooth.syncable.ServerDataSyncable;
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.util.BluetoothUtil;
 import com.team2052.frckrawler.util.ScoutUtil;
@@ -22,7 +22,6 @@ import com.team2052.frckrawler.util.ScoutUtil;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.Set;
 
 import rx.Observable;
@@ -92,8 +91,7 @@ public class ScoutSyncHandler {
                     try {
                         outputStreamWrapper
                                 .writeInteger(BuildConfig.VERSION_CODE)
-                                .writeInteger(BluetoothConstants.SCOUT_SYNC)
-                                .writeObject(new ServerPackage(RxDBManager.getInstance(context), ScoutUtil.getScoutEvent(context)))
+                                .writeObject(new ServerDataSyncable(context))
                                 .send();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -103,39 +101,35 @@ public class ScoutSyncHandler {
                     return bluetoothConnection;
                 })
                 .map(bluetoothConnection -> {
-                    ObjectInputStream inputStream = bluetoothConnection.getInputStream();
-
-                    ScoutPackage scoutPackage = null;
-
                     try {
-                        int code = inputStream.readInt();
-                        if (code == BluetoothConstants.OK) {
-                            scoutPackage = (ScoutPackage) inputStream.readObject();
-                        } else if (code == BluetoothConstants.VERSION_ERROR) {
-                            return new ScoutSyncStatus(false, String.format("The server version is incompatible with your version. You are running %s and the server is running %s", BuildConfig.VERSION_NAME, inputStream.readObject()));
-                        } else if (code == BluetoothConstants.EVENT_MATCH_ERROR) {
-                            RxDBManager.getInstance(context).runInTx(() -> RxDBManager.getInstance(context).deleteAll());
-                            return new ScoutSyncStatus(false, "This device's data did not match up with the server tablet. The data from this tablet was lost.");
-                        }
+                        ScoutSyncable scoutSyncable = (ScoutSyncable) bluetoothConnection.getInputStream().readObject();
                         bluetoothConnection.closeConnection();
-                    } catch (ClassNotFoundException | IOException e) {
+
+                        int code = scoutSyncable.getReturnCode();
+                        switch (code) {
+                            case BluetoothConstants.ReturnCodes.OK:
+                                // Knowing that the data was sent to the server, we can now delete the data on our device, and sync with the server
+                                RxDBManager.getInstance(context).runInTx(() -> RxDBManager.getInstance(context).deleteAll());
+                                scoutSyncable.saveToScout(context);
+
+                                ScoutUtil.setDeviceAsScout(context, true);
+                                ScoutUtil.setSyncDevice(context, device);
+                                return new ScoutSyncStatus(true);
+                            case BluetoothConstants.ReturnCodes.VERSION_ERROR:
+                                return new ScoutSyncStatus(false, "The server version is incompatible with your version");
+                            case BluetoothConstants.ReturnCodes.EVENT_MATCH_ERROR:
+                                RxDBManager.getInstance(context).runInTx(() -> RxDBManager.getInstance(context).deleteAll());
+                                return new ScoutSyncStatus(false, "This device's data did not match up with the server tablet. The data from this tablet was lost.");
+                            default:
+                                return new ScoutSyncStatus(false, "Scout got response code that this device couldn't handle. Try updating");
+                        }
+                    } catch (IOException e) {
                         e.printStackTrace();
-                        FirebaseCrash.report(e);
+                        return new ScoutSyncStatus(false);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                         return new ScoutSyncStatus(false);
                     }
-
-                    if (scoutPackage != null) {
-                        // Knowing that the data was sent to the server, we can now delete the data on our device, and sync with the server
-                        RxDBManager.getInstance(context).runInTx(() -> RxDBManager.getInstance(context).deleteAll());
-
-                        scoutPackage.save(RxDBManager.getInstance(context), context);
-
-                        ScoutUtil.setDeviceAsScout(context, true);
-                        ScoutUtil.setSyncDevice(context, device);
-                        return new ScoutSyncStatus(true);
-                    }
-
-                    return new ScoutSyncStatus(false);
                 });
     }
 }

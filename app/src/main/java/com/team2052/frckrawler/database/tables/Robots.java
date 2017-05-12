@@ -2,7 +2,7 @@ package com.team2052.frckrawler.database.tables;
 
 import android.support.annotation.Nullable;
 
-import com.team2052.frckrawler.bluetooth.RobotComment;
+import com.team2052.frckrawler.bluetooth.model.RobotComment;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Robot;

@@ -9,9 +9,6 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.fragments.robot.RobotAttendingEventsFragment;
 import com.team2052.frckrawler.fragments.robot.RobotSummaryFragment;
 
-/**
- * Created by Adam on 11/23/2015.
- */
 public class RobotViewPagerAdapter extends FragmentPagerAdapter {
     private String[] HEADERS;
     private long robot_id;

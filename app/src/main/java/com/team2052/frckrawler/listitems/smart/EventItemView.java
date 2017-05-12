@@ -18,13 +18,10 @@ import io.nlopez.smartadapters.views.BindableFrameLayout;
 public class EventItemView extends BindableFrameLayout<Event> {
     @BindView(R.id.list_view_event_name)
     TextView mName;
-
     @BindView(R.id.list_view_event_date)
     TextView mDate;
-
     @BindView(R.id.list_view_event_location)
     TextView mLocation;
-
 
     public EventItemView(Context context) {
         super(context);

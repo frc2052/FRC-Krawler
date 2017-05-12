@@ -82,6 +82,7 @@ public class ServerService extends Service {
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         b.setContentIntent(resultPendingIntent);
+
         return b.build();
     }
 
