@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.fragments.scout;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -10,18 +9,18 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import com.google.common.base.Optional;
 import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.HasComponent;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.database.metric.MetricValue;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.data.RxDBManager;
 import com.team2052.frckrawler.di.FragmentComponent;
-import com.team2052.frckrawler.metrics.view.MetricWidget;
-import com.team2052.frckrawler.util.SnackbarUtil;
+import com.team2052.frckrawler.helpers.SnackbarHelper;
+import com.team2052.frckrawler.interfaces.HasComponent;
+import com.team2052.frckrawler.metric.MetricTypes;
+import com.team2052.frckrawler.metric.data.MetricValue;
+import com.team2052.frckrawler.metric.view.MetricWidget;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.Robot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,14 +115,14 @@ public abstract class BaseScoutFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onNext -> {
                     if (onNext) {
-                        SnackbarUtil.make(getView(), "Save Complete", Snackbar.LENGTH_SHORT).show();
+                        SnackbarHelper.make(getView(), "Save Complete", Snackbar.LENGTH_SHORT).show();
                     } else {
-                        SnackbarUtil.make(getView(), "Update Complete", Snackbar.LENGTH_SHORT).show();
+                        SnackbarHelper.make(getView(), "Update Complete", Snackbar.LENGTH_SHORT).show();
                     }
                 }, onError -> {
                     FirebaseCrash.log("Error Saving Metrics");
                     FirebaseCrash.report(onError);
-                    SnackbarUtil.make(getView(), "Cannot Save, make sure you double check everything and try again", Snackbar.LENGTH_SHORT).show();
+                    SnackbarHelper.make(getView(), "Cannot Save, make sure you double check everything and try again", Snackbar.LENGTH_SHORT).show();
                 });
         subscriptions.add(saveSubscription);
     }
@@ -139,10 +138,8 @@ public abstract class BaseScoutFragment extends Fragment {
             //This shouldn't happen, but just in case
             mMetricList.removeAllViews();
             for (int i = 0; i < values.size(); i++) {
-                Optional<MetricWidget> widget = MetricWidget.createWidget(getActivity(), values.get(i));
-                if (widget.isPresent()) {
-                    mMetricList.addView(widget.get());
-                }
+                MetricWidget widget = MetricTypes.createWidget(getActivity(), values.get(i));
+                mMetricList.addView(widget);
             }
         } else {
             for (int i = 0; i < values.size(); i++) {

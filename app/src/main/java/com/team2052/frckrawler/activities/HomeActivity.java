@@ -12,11 +12,11 @@ import android.view.Menu;
 
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.fragments.GamesFragment;
-import com.team2052.frckrawler.fragments.ScoutHomeFragment;
+import com.team2052.frckrawler.adapters.items.items.NavDrawerItem;
 import com.team2052.frckrawler.fragments.ServerFragment;
-import com.team2052.frckrawler.fragments.TeamsFragment;
-import com.team2052.frckrawler.listitems.items.NavDrawerItem;
+import com.team2052.frckrawler.fragments.game.GamesFragment;
+import com.team2052.frckrawler.fragments.scout.ScoutHomeFragment;
+import com.team2052.frckrawler.fragments.team.TeamsFragment;
 import com.team2052.frckrawler.services.ServerService;
 
 import butterknife.BindView;

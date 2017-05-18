@@ -4,9 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.team2052.frckrawler.adapters.ViewOnClickFragmentStatePagerAdapter;
-import com.team2052.frckrawler.fragments.EventInfoFragment;
-import com.team2052.frckrawler.fragments.MatchListFragment;
 import com.team2052.frckrawler.fragments.SummaryFragment;
+import com.team2052.frckrawler.fragments.event.EventInfoFragment;
+import com.team2052.frckrawler.fragments.event.MatchListFragment;
 import com.team2052.frckrawler.fragments.robot.RobotsFragment;
 
 /**

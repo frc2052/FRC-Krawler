@@ -12,13 +12,13 @@ import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.syncable.ScoutDataSyncable;
 import com.team2052.frckrawler.bluetooth.syncable.ScoutEventMatchSyncable;
 import com.team2052.frckrawler.bluetooth.syncable.ScoutWrongVersionSyncable;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.EventDao;
-import com.team2052.frckrawler.db.ServerLogEntry;
-import com.team2052.frckrawler.util.BluetoothUtil;
+import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.helpers.BluetoothHelper;
+import com.team2052.frckrawler.helpers.Util;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.EventDao;
+import com.team2052.frckrawler.models.ServerLogEntry;
 import com.team2052.frckrawler.util.Logger;
-import com.team2052.frckrawler.util.Util;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,19 +26,21 @@ import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.UUID;
 
+import rx.Observer;
+
 public class ServerThread extends Thread {
     public static String TAG = ServerThread.class.getSimpleName();
     private final BluetoothAdapter mBluetoothAdapter;
-    private final ServerCallbackHandler handler;
     public boolean isOpen = true;
-
+    String currentSyncDeviceName = "";
     private RxDBManager mRxDbManager = null;
     private Context context;
     private Event hostedEvent;
     private BluetoothServerSocket serverSocket;
-    String currentSyncDeviceName = "";
+    private Observer<ServerStatus> statusObserver;
 
-    public ServerThread(Context context, Event event) {
+    public ServerThread(Observer<ServerStatus> statusObserver, Context context, Event event) {
+        this.statusObserver = statusObserver;
         if (event == null) {
             throw new IllegalStateException("Event cannot be null!");
         }
@@ -47,8 +49,7 @@ public class ServerThread extends Thread {
         mRxDbManager = RxDBManager.getInstance(context);
         hostedEvent = event;
         serverSocket = null;
-        mBluetoothAdapter = BluetoothUtil.getBluetoothAdapter();
-        handler = new ServerCallbackHandler(this.context);
+        mBluetoothAdapter = BluetoothHelper.getBluetoothAdapter();
     }
 
     @Override
@@ -63,14 +64,16 @@ public class ServerThread extends Thread {
         }
 
         while (isOpen) {
+            statusObserver.onNext(ServerStatus.create(hostedEvent, true));
+
             try {
                 serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(BluetoothConstants.SERVICE_NAME, UUID.fromString(BluetoothConstants.UUID));
                 BluetoothSocket clientSocket = serverSocket.accept();
-                serverSocket.close();
-
                 Logger.d(TAG, "Starting sync");
+                statusObserver.onNext(ServerStatus.create(hostedEvent, true, true, clientSocket.getRemoteDevice()));
+
+                serverSocket.close();
                 currentSyncDeviceName = clientSocket.getRemoteDevice().getName();
-                handler.onSyncStart(currentSyncDeviceName);
 
                 ObjectOutputStream toScoutStream = new ObjectOutputStream(clientSocket.getOutputStream());
                 ObjectInputStream fromScoutStream = new ObjectInputStream(clientSocket.getInputStream());
@@ -80,12 +83,11 @@ public class ServerThread extends Thread {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                insertLog(String.format("ERROR: %s had an error Syncing with the server"));
-                handler.onSyncCancel();
-
+                statusObserver.onNext(ServerStatus.create(hostedEvent, true));
                 closeServer();
             }
         }
+        closeServer();
         Logger.d(TAG, "Server Closed");
     }
 
@@ -116,7 +118,7 @@ public class ServerThread extends Thread {
             case BluetoothConstants.SCOUT_SYNC:
                 connection.sendScoutSyncable(new ScoutDataSyncable(context, hostedEvent));
                 insertLog(String.format("INFO: Successfully synced with %s", currentSyncDeviceName));
-                handler.onSyncCancel();
+                statusObserver.onNext(ServerStatus.create(hostedEvent, true));
                 return;
         }
 
@@ -137,6 +139,7 @@ public class ServerThread extends Thread {
             } catch (IOException ignored) {
             }
         }
+        statusObserver.onNext(ServerStatus.off());
     }
 
     public Event getHostedEvent() {

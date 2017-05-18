@@ -4,10 +4,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.team2052.frckrawler.adapters.ViewOnClickFragmentStatePagerAdapter;
-import com.team2052.frckrawler.fragments.EventsFragment;
-import com.team2052.frckrawler.fragments.GameInfoFragment;
-import com.team2052.frckrawler.fragments.MetricsFragment;
-import com.team2052.frckrawler.util.MetricHelper;
+import com.team2052.frckrawler.fragments.event.EventsInGameFragment;
+import com.team2052.frckrawler.fragments.game.GameInfoFragment;
+import com.team2052.frckrawler.fragments.metric.MetricsFragment;
+import com.team2052.frckrawler.helpers.metric.MetricHelper;
 
 /**
  * Created by Acorp on 11/17/2015.
@@ -27,7 +27,7 @@ public class GameInfoPagerAdapter extends ViewOnClickFragmentStatePagerAdapter {
             case 0:
                 return GameInfoFragment.newInstance(mGameId);
             case 1:
-                return EventsFragment.newInstance(mGameId);
+                return EventsInGameFragment.newInstance(mGameId);
             case 2:
                 return MetricsFragment.newInstance(MetricHelper.MATCH_PERF_METRICS, mGameId);
             case 3:

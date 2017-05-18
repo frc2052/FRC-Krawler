@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.team2052.frckrawler.FRCKrawler;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.database.metric.Compiler;
+import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.metric.data.Compiler;
 
 import javax.inject.Singleton;
 

@@ -15,14 +15,14 @@ import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.listeners.RefreshListener;
-import com.team2052.frckrawler.listitems.ListElement;
-import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.elements.SimpleListElement;
-import com.team2052.frckrawler.tba.ConnectionChecker;
-import com.team2052.frckrawler.tba.TBA;
+import com.team2052.frckrawler.adapters.items.ListElement;
+import com.team2052.frckrawler.adapters.items.ListItem;
+import com.team2052.frckrawler.adapters.items.elements.SimpleListElement;
+import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.data.tba.ConnectionChecker;
+import com.team2052.frckrawler.data.tba.TBA;
+import com.team2052.frckrawler.interfaces.RefreshListener;
+import com.team2052.frckrawler.models.Game;
 
 import java.util.Calendar;
 

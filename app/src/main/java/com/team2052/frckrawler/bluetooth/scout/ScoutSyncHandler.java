@@ -15,9 +15,9 @@ import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.scout.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.bluetooth.syncable.ScoutSyncable;
 import com.team2052.frckrawler.bluetooth.syncable.ServerDataSyncable;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.util.BluetoothUtil;
-import com.team2052.frckrawler.util.ScoutUtil;
+import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.helpers.BluetoothHelper;
+import com.team2052.frckrawler.helpers.ScoutHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -48,21 +48,17 @@ public class ScoutSyncHandler {
 
     private static void showDeviceListDialog(Context context, Action1<BluetoothDevice> startSyncConsumer) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        Set<BluetoothDevice> devices = BluetoothUtil.getAllBluetoothDevices();
+        Set<BluetoothDevice> devices = BluetoothHelper.getAllBluetoothDevices();
         if (devices != null) {
             if (devices.isEmpty()) {
                 builder.setTitle("No devices are paired with this device");
                 builder.setPositiveButton("Bluetooth Settings", (dialog, which) -> context.startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS)));
             } else {
                 builder.setTitle("Select Server Device");
-                builder.setSingleChoiceItems(BluetoothUtil.getDeviceNames(devices), 0, (dialog, which) -> {
-                });
-                builder.setPositiveButton("Ok", (dialog, which) -> {
-                    int deviceIndex = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                    BluetoothDevice[] allBluetoothDevicesArray = BluetoothUtil.getAllBluetoothDevicesArray();
-
+                builder.setItems(BluetoothHelper.getDeviceNames(devices), (dialog, which) -> {
+                    BluetoothDevice[] allBluetoothDevicesArray = BluetoothHelper.getAllBluetoothDevicesArray();
                     if (allBluetoothDevicesArray != null) {
-                        showAskSyncDialog(context, allBluetoothDevicesArray[deviceIndex], startSyncConsumer);
+                        showAskSyncDialog(context, allBluetoothDevicesArray[which], startSyncConsumer);
                     }
                 });
             }
@@ -71,11 +67,11 @@ public class ScoutSyncHandler {
     }
 
     public static void startScoutSync(final Context context, Action1<BluetoothDevice> startSyncConsumer) {
-        if (!BluetoothUtil.hasBluetoothAdapter()) {
+        if (!BluetoothHelper.hasBluetoothAdapter()) {
             Toast.makeText(context, context.getString(R.string.bluetooth_not_supported_message), Toast.LENGTH_LONG).show();
             return;
         }
-        Optional<BluetoothDevice> bluetoothDevice = ScoutUtil.getSyncDevice(context);
+        Optional<BluetoothDevice> bluetoothDevice = ScoutHelper.getSyncDevice(context);
         if (bluetoothDevice.isPresent()) {
             showAskSyncDialog(context, bluetoothDevice.get(), startSyncConsumer);
         } else {
@@ -84,9 +80,10 @@ public class ScoutSyncHandler {
     }
 
     public static Observable<ScoutSyncStatus> getScoutSyncTask(Context context, BluetoothDevice device) {
-        return BluetoothUtil.connectToBluetoothDevice(device)
+        return BluetoothHelper.connectToBluetoothDevice(device)
                 .map(bluetoothConnection -> {
                     AndroidSchedulers.mainThread().createWorker().schedule(() -> EventBus.getDefault().post(new ScoutSyncStartEvent()));
+
                     BluetoothConnection.OutputStreamWrapper outputStreamWrapper = bluetoothConnection.getOutputStreamWrapper();
                     try {
                         outputStreamWrapper
@@ -112,8 +109,8 @@ public class ScoutSyncHandler {
                                 RxDBManager.getInstance(context).runInTx(() -> RxDBManager.getInstance(context).deleteAll());
                                 scoutSyncable.saveToScout(context);
 
-                                ScoutUtil.setDeviceAsScout(context, true);
-                                ScoutUtil.setSyncDevice(context, device);
+                                ScoutHelper.setDeviceAsScout(context, true);
+                                ScoutHelper.setSyncDevice(context, device);
                                 return new ScoutSyncStatus(true);
                             case BluetoothConstants.ReturnCodes.VERSION_ERROR:
                                 return new ScoutSyncStatus(false, "The server version is incompatible with your version");

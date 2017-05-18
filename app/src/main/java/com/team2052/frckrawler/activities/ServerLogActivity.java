@@ -7,8 +7,8 @@ import android.widget.ListView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.elements.KeyValueListElement;
+import com.team2052.frckrawler.adapters.items.ListItem;
+import com.team2052.frckrawler.adapters.items.elements.KeyValueListElement;
 import com.team2052.frckrawler.theme.Themes;
 
 import rx.Observable;
@@ -29,7 +29,7 @@ public class ServerLogActivity extends DatabaseActivity {
         rxDbManager.getServerLog()
                 .flatMap(Observable::from)
                 .map(entry -> {
-                    String time = DateFormat.getTimeFormat(this).format(entry.getTime());
+                    String time = DateFormat.getMediumDateFormat(this).format(entry.getTime());
                     return (ListItem) new KeyValueListElement(time, entry.getMessage());
                 })
                 .toList()

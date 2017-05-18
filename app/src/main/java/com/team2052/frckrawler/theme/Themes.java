@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.StyleRes;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.util.ScoutUtil;
+import com.team2052.frckrawler.helpers.ScoutHelper;
 
 public enum Themes {
     DEFAULT("Default", R.style.AppTheme, false),
@@ -24,7 +24,7 @@ public enum Themes {
     }
 
     public static Themes getCurrentTheme(Context context) {
-        return Themes.values()[ScoutUtil.getScoutTheme(context)];
+        return Themes.values()[ScoutHelper.getScoutTheme(context)];
     }
 
     public static String[] getNames() {

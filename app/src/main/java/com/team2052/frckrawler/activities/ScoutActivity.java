@@ -9,16 +9,14 @@ import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment;
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment;
-import com.team2052.frckrawler.util.MetricHelper;
+import com.team2052.frckrawler.helpers.metric.MetricHelper;
+import com.team2052.frckrawler.interfaces.HasComponent;
+import com.team2052.frckrawler.models.Event;
 
 import butterknife.ButterKnife;
 
-/**
- * Created by adam on 5/2/15.
- */
 public class ScoutActivity extends DatabaseActivity implements HasComponent {
 
     public static final int MATCH_SCOUT_TYPE = 0;

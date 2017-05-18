@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.team2052.frckrawler.fragments.MetricInfoFragment;
+import com.team2052.frckrawler.fragments.metric.MetricInfoFragment;
 
 public class MetricInfoPagerAdapter extends FragmentPagerAdapter {
     final long metricId;

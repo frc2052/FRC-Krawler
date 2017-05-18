@@ -4,8 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.items.NavDrawerItem;
+import com.team2052.frckrawler.adapters.items.ListItem;
+import com.team2052.frckrawler.adapters.items.items.NavDrawerItem;
 
 import java.util.List;
 

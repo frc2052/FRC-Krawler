@@ -3,13 +3,13 @@ package com.team2052.frckrawler.bluetooth.syncable;
 import android.content.Context;
 
 import com.team2052.frckrawler.bluetooth.model.RobotComment;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.MatchComment;
-import com.team2052.frckrawler.db.MatchDatum;
-import com.team2052.frckrawler.db.PitDatum;
-import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.util.ScoutUtil;
+import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.helpers.ScoutHelper;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.MatchComment;
+import com.team2052.frckrawler.models.MatchDatum;
+import com.team2052.frckrawler.models.PitDatum;
+import com.team2052.frckrawler.models.Robot;
 
 import java.util.Date;
 import java.util.List;
@@ -22,9 +22,9 @@ public class ServerDataSyncable extends ServerSyncable {
     private final List<RobotComment> robotComments;
 
     public ServerDataSyncable(Context context) {
-        Event scoutEvent = ScoutUtil.getScoutEvent(context);
-        if (scoutEvent == null && !ScoutUtil.isDeviceScout(context)) {
-            throw new IllegalStateException("This device isn't a scout!");
+        Event scoutEvent = ScoutHelper.getScoutEvent(context);
+        if (scoutEvent == null && !ScoutHelper.isDeviceScout(context)) {
+            //throw new IllegalStateException("This device isn't a scout!");
         }
         if (scoutEvent != null) {
             setEvent_hash(scoutEvent.getUnique_hash());

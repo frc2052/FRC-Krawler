@@ -11,15 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.common.collect.Lists;
-import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.models.Event;
 
 import java.util.List;
 
-/**
- * Created by Adam on 5/29/2016.
- */
 public class PickEventDialogFragment extends DialogFragment {
     private List<Event> events = Lists.newArrayList();
 
@@ -39,7 +35,7 @@ public class PickEventDialogFragment extends DialogFragment {
         for (Event event : events) {
             eventStrings.add(event.getGame().getName() + ", " + event.getName());
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Pick Event");
         builder.setNegativeButton("Cancel", null);
 

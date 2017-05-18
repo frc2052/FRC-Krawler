@@ -4,9 +4,7 @@
 
     <!--Material Colors-->
     <color name="primary">#450000</color>
-    <color name="primary_dark">#2a0000</color>
+    <color name="primary_dark">#330000</color>
     <color name="color_accent">#ffd740</color>
-
-    <color name="dark_background">#303030</color>
-    <color name="light_background">#F5F5F5</color>
+    <color name="green_800">#2E7D32</color>
 </resources>

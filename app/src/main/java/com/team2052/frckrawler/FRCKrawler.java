@@ -2,22 +2,15 @@ package com.team2052.frckrawler;
 
 import android.support.multidex.MultiDexApplication;
 
-import com.team2052.frckrawler.binding.BinderModule;
 import com.team2052.frckrawler.di.ApplicationComponent;
 import com.team2052.frckrawler.di.DaggerApplicationComponent;
 import com.team2052.frckrawler.di.FRCKrawlerModule;
-import com.team2052.frckrawler.metric.MetricTypeEntryHandler;
+import com.team2052.frckrawler.di.binding.BinderModule;
 
 public class FRCKrawler extends MultiDexApplication {
     private FRCKrawlerModule mModule;
     private ApplicationComponent mApplicationComponent;
     private BinderModule mBinderModule;
-
-    @Override
-    public void onCreate() {
-        MetricTypeEntryHandler.INSTANCE.init();
-        super.onCreate();
-    }
 
     public ApplicationComponent getComponent() {
         if (mApplicationComponent == null) {

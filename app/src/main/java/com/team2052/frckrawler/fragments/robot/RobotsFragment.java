@@ -7,19 +7,20 @@ import android.view.View;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.RobotActivity;
-import com.team2052.frckrawler.binding.ListViewNoDataParams;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.adapters.items.ListElement;
+import com.team2052.frckrawler.di.binding.NoDataParams;
+import com.team2052.frckrawler.di.subscribers.RobotListSubscriber;
 import com.team2052.frckrawler.fragments.ListViewFragment;
 import com.team2052.frckrawler.fragments.dialog.AddTeamToEventDialogFragment;
-import com.team2052.frckrawler.listitems.ListElement;
-import com.team2052.frckrawler.subscribers.RobotListSubscriber;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.Robot;
 
 import java.util.List;
 
 import rx.Observable;
 
 /**
+ * Generic Fragment list for viewing robots from either a single team, or in an event
  * @author Adam
  */
 public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubscriber> implements View.OnClickListener {
@@ -73,8 +74,8 @@ public class RobotsFragment extends ListViewFragment<List<Robot>, RobotListSubsc
     }
 
     @Override
-    protected ListViewNoDataParams getNoDataParams() {
-        return new ListViewNoDataParams("No teams found", R.drawable.ic_team);
+    protected NoDataParams getNoDataParams() {
+        return new NoDataParams("No teams found", R.drawable.ic_team);
     }
 
     @Override

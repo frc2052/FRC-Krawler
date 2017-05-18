@@ -7,12 +7,12 @@ import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.listeners.RefreshListener;
-import com.team2052.frckrawler.tba.HTTP;
-import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.tba.TBA;
+import com.team2052.frckrawler.data.tba.HTTP;
+import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.data.tba.TBA;
+import com.team2052.frckrawler.interfaces.RefreshListener;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.Match;
 
 import java.util.List;
 

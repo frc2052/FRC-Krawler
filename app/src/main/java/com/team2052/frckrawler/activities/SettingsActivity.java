@@ -12,13 +12,14 @@ import android.view.MenuItem;
 import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.data.RxDBManager;
 import com.team2052.frckrawler.di.DaggerFragmentComponent;
 import com.team2052.frckrawler.di.FragmentComponent;
+import com.team2052.frckrawler.di.subscribers.SubscriberModule;
 import com.team2052.frckrawler.fragments.dialog.ExportDialogFragment;
 import com.team2052.frckrawler.fragments.dialog.PickEventDialogFragment;
-import com.team2052.frckrawler.subscribers.SubscriberModule;
+import com.team2052.frckrawler.interfaces.HasComponent;
+import com.team2052.frckrawler.models.Event;
 import com.team2052.frckrawler.theme.Themes;
 
 public class SettingsActivity extends AppCompatActivity implements PickEventDialogFragment.EventPickedListener, HasComponent {

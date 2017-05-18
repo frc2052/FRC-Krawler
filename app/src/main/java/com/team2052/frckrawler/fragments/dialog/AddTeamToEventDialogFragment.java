@@ -14,8 +14,8 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.db.Event;
+import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.models.Event;
 
 import java.util.Arrays;
 import java.util.List;
@@ -89,7 +89,7 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
             }
         });
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add Team(s)");
         builder.setPositiveButton("Add", this);
         builder.setNegativeButton("Cancel", this);

@@ -11,13 +11,13 @@ import android.view.ViewGroup;
 
 import com.team2052.frckrawler.DividerItemDecoration;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.HasComponent;
-import com.team2052.frckrawler.binding.ListViewNoDataParams;
-import com.team2052.frckrawler.binding.RecyclerViewBinder;
-import com.team2052.frckrawler.database.RxDBManager;
+import com.team2052.frckrawler.data.RxDBManager;
 import com.team2052.frckrawler.di.FragmentComponent;
-import com.team2052.frckrawler.listeners.RefreshListener;
-import com.team2052.frckrawler.subscribers.BaseDataSubscriber;
+import com.team2052.frckrawler.di.binding.NoDataParams;
+import com.team2052.frckrawler.di.binding.RecyclerViewBinder;
+import com.team2052.frckrawler.di.subscribers.BaseDataSubscriber;
+import com.team2052.frckrawler.interfaces.HasComponent;
+import com.team2052.frckrawler.interfaces.RefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,8 +82,8 @@ public abstract class RecyclerViewFragment<T extends List, B extends RecyclerVie
         super.onViewCreated(view, savedInstanceState);
     }
 
-    protected ListViewNoDataParams getNoDataParams() {
-        return new ListViewNoDataParams("No Data Found", R.drawable.ic_no_data);
+    protected NoDataParams getNoDataParams() {
+        return new NoDataParams("No Data Found", R.drawable.ic_no_data);
     }
 
     protected boolean showDividers() {

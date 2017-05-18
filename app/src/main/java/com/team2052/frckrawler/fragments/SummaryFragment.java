@@ -8,12 +8,12 @@ import android.view.View;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
-import com.team2052.frckrawler.binding.ListViewNoDataParams;
-import com.team2052.frckrawler.binding.RecyclerViewBinder;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.listitems.smart.MetricItemView;
-import com.team2052.frckrawler.listitems.smart.SmartAdapterInteractions;
+import com.team2052.frckrawler.adapters.items.smart.MetricItemView;
+import com.team2052.frckrawler.adapters.items.smart.SmartAdapterInteractions;
+import com.team2052.frckrawler.di.binding.NoDataParams;
+import com.team2052.frckrawler.di.binding.RecyclerViewBinder;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.Metric;
 
 import java.util.List;
 
@@ -21,8 +21,7 @@ import io.nlopez.smartadapters.SmartAdapter;
 import rx.Observable;
 
 /**
- * @author Adam
- * @since 10/16/2014
+ *
  */
 public class SummaryFragment extends RecyclerViewFragment<List<Metric>, RecyclerViewBinder> {
     private Event mEvent;
@@ -52,8 +51,8 @@ public class SummaryFragment extends RecyclerViewFragment<List<Metric>, Recycler
     }
 
     @Override
-    protected ListViewNoDataParams getNoDataParams() {
-        return new ListViewNoDataParams("No metrics found", R.drawable.ic_metric);
+    protected NoDataParams getNoDataParams() {
+        return new NoDataParams("No metrics found", R.drawable.ic_metric);
     }
 
     @Override

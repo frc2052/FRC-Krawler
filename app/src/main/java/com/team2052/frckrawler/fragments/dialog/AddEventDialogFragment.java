@@ -11,10 +11,10 @@ import android.widget.EditText;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.listeners.RefreshListener;
+import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.interfaces.RefreshListener;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.Game;
 
 import java.util.Date;
 
@@ -49,7 +49,7 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_event, null);
         ButterKnife.bind(this, view);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add Event");
         builder.setPositiveButton("Add", this);
         builder.setNegativeButton("Cancel", this);

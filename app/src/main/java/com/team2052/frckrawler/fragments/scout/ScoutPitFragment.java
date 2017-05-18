@@ -14,14 +14,14 @@ import com.google.common.collect.Lists;
 import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.metric.MetricValue;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.MetricDao;
-import com.team2052.frckrawler.db.PitDatum;
-import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.MetricHelper;
+import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.helpers.metric.MetricHelper;
+import com.team2052.frckrawler.metric.data.MetricValue;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.Metric;
+import com.team2052.frckrawler.models.MetricDao;
+import com.team2052.frckrawler.models.PitDatum;
+import com.team2052.frckrawler.models.Robot;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -34,9 +34,6 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by Adam on 6/15/2016.
- */
 public class ScoutPitFragment extends BaseScoutFragment {
     private static final String TAG = "ScoutPitFragment";
     @BindView(R.id.toolbar)
@@ -57,7 +54,7 @@ public class ScoutPitFragment extends BaseScoutFragment {
 
                     PitDatum currentData = matchDataQueryBuilder.unique();
                     //Add the metric values
-                    metricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
+                    metricValues.add(MetricValue.create(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
                 }
                 return metricValues;
             })
@@ -128,10 +125,10 @@ public class ScoutPitFragment extends BaseScoutFragment {
                     for (MetricValue widget : pitScoutSaveMetric.metricValues) {
                         PitDatum pitDatum = new PitDatum(null);
                         pitDatum.setRobot(robot);
-                        pitDatum.setMetric(widget.getMetric());
+                        pitDatum.setMetric(widget.metric());
                         pitDatum.setEvent(mEvent);
                         //pitDatum.setUser_id(user != null ? user.getId() : null); NOOP
-                        pitDatum.setData(JSON.getGson().toJson(widget.getValue()));
+                        pitDatum.setData(widget.valueAsString());
                         if (rxDbManager.getPitDataTable().insertWithSaved(pitDatum) && !saved)
                             saved = true;
                     }

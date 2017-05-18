@@ -1,6 +1,6 @@
 package com.team2052.frckrawler.comparators;
 
-import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.models.Robot;
 
 import java.util.Comparator;
 

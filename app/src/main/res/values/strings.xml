@@ -103,4 +103,5 @@
 
     <string name="server_status_on">The server is on and ready to sync</string>
     <string name="server_status_off">The server is off</string>
+    <string name="select_theme">Select Theme</string>
 </resources>

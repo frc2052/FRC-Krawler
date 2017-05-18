@@ -4,31 +4,24 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
-import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.EventInfoActivity;
 import com.team2052.frckrawler.activities.GameInfoActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
 import com.team2052.frckrawler.activities.ServerLogActivity;
-import com.team2052.frckrawler.binding.ServerFragmentBinder;
-import com.team2052.frckrawler.bluetooth.server.ServerStatus;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.subscribers.EventStringSubscriber;
-import com.team2052.frckrawler.util.BluetoothUtil;
-import com.team2052.frckrawler.util.SnackbarUtil;
-
-import org.greenrobot.eventbus.EventBus;
+import com.team2052.frckrawler.di.binding.ServerFragmentBinder;
+import com.team2052.frckrawler.di.subscribers.EventStringSubscriber;
+import com.team2052.frckrawler.helpers.BluetoothHelper;
+import com.team2052.frckrawler.models.Event;
 
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 
 public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, EventStringSubscriber, ServerFragmentBinder>
         implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -49,27 +42,20 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        binder.updateServerStatus();
-
         binder.setmRootView(view);
         binder.bindViews();
 
-        binder.mHostToggle.setEnabled(BluetoothUtil.hasBluetoothAdapter());
+        binder.mHostToggle.setEnabled(BluetoothHelper.hasBluetoothAdapter());
         super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getId() == R.id.host_toggle) {
-
-            if (!BluetoothUtil.hasBluetoothAdapter()) {
-                SnackbarUtil.make(getView(), "Sorry, your device does not support bluetooth.", Snackbar.LENGTH_LONG).show();
-                return;
-            } else if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                 startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_BT_ENABLED);
                 return;
             }
-
             buttonView.setChecked(!isChecked);
             if (isEventsValid() && getSelectedEvent() != null) {
                 Event event = getSelectedEvent();
@@ -129,48 +115,4 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
     private boolean isEventsValid() {
         return subscriber.getData() != null && !subscriber.getData().isEmpty();
     }
-
-    public static class ServerStatusObserver extends Subscriber<ServerStatus> {
-
-        ServerFragment fragment;
-
-        public ServerStatusObserver(ServerFragment serverFragment) {
-            fragment = serverFragment;
-        }
-
-        @Override
-        public void onCompleted() {
-
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            FirebaseCrash.report(e);
-        }
-
-        @Override
-        public void onNext(ServerStatus serverStatus) {
-            fragment.binder.mHostToggle.setOnCheckedChangeListener(null);
-            fragment.binder.mHostToggle.setChecked(serverStatus.getStatus());
-            fragment.binder.eventSpinner.setEnabled(!serverStatus.getStatus());
-            fragment.binder.mHostToggle.setOnCheckedChangeListener(fragment);
-
-            fragment.binder.mServerStatus.setText(serverStatus.getStatus() ? R.string.server_status_on : R.string.server_status_off);
-
-            int index = 0;
-
-            if (serverStatus.getEvent() != null) {
-                for (int i = 0; i < fragment.subscriber.getData().size(); i++) {
-                    if (fragment.subscriber.getData().get(i).getId() == serverStatus.getEvent().getId()) {
-                        index = i;
-                        break;
-                    }
-                }
-            }
-
-            fragment.binder.setSelection(index);
-        }
-    }
-
-
 }

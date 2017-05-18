@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.tab.GameInfoPagerAdapter;
-import com.team2052.frckrawler.listeners.RefreshListener;
+import com.team2052.frckrawler.interfaces.RefreshListener;
 import com.team2052.frckrawler.views.LockableFloatingActionButton;
 
 /**

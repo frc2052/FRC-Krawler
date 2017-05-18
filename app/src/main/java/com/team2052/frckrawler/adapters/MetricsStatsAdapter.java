@@ -6,11 +6,11 @@ import android.support.v7.app.AlertDialog;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.team2052.frckrawler.adapters.items.ListItem;
 import com.team2052.frckrawler.comparators.SimpleValueCompiledComparator;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.MetricHelper;
+import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.helpers.metric.MetricHelper;
+import com.team2052.frckrawler.models.Metric;
 
 import java.util.ArrayList;
 import java.util.Collections;

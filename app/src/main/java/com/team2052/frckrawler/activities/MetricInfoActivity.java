@@ -12,7 +12,7 @@ import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.tab.MetricInfoPagerAdapter;
-import com.team2052.frckrawler.db.Metric;
+import com.team2052.frckrawler.models.Metric;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

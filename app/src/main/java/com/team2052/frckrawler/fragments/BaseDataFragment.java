@@ -3,11 +3,11 @@ package com.team2052.frckrawler.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import com.team2052.frckrawler.activities.HasComponent;
-import com.team2052.frckrawler.binding.BaseDataBinder;
-import com.team2052.frckrawler.database.RxDBManager;
+import com.team2052.frckrawler.data.RxDBManager;
 import com.team2052.frckrawler.di.FragmentComponent;
-import com.team2052.frckrawler.subscribers.BaseDataSubscriber;
+import com.team2052.frckrawler.di.binding.BaseDataBinder;
+import com.team2052.frckrawler.di.subscribers.BaseDataSubscriber;
+import com.team2052.frckrawler.interfaces.HasComponent;
 
 import javax.inject.Inject;
 
@@ -54,4 +54,8 @@ public abstract class BaseDataFragment
     public abstract void inject();
 
     protected abstract Observable<? extends T> getObservable();
+
+    public T getData() {
+        return subscriber.getData();
+    }
 }

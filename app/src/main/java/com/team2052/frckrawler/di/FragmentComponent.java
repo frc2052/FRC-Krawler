@@ -12,29 +12,28 @@ import com.team2052.frckrawler.activities.ScoutActivity;
 import com.team2052.frckrawler.activities.ServerLogActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
-import com.team2052.frckrawler.binding.BinderModule;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.database.metric.Compiler;
-import com.team2052.frckrawler.fragments.EventInfoFragment;
-import com.team2052.frckrawler.fragments.EventsFragment;
-import com.team2052.frckrawler.fragments.GameInfoFragment;
-import com.team2052.frckrawler.fragments.GamesFragment;
-import com.team2052.frckrawler.fragments.MatchListFragment;
-import com.team2052.frckrawler.fragments.MetricInfoFragment;
-import com.team2052.frckrawler.fragments.MetricSummaryFragment;
-import com.team2052.frckrawler.fragments.MetricsFragment;
-import com.team2052.frckrawler.fragments.RobotEventMatchesFragment;
-import com.team2052.frckrawler.fragments.ScoutHomeFragment;
+import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.di.binding.BinderModule;
+import com.team2052.frckrawler.di.subscribers.SubscriberModule;
 import com.team2052.frckrawler.fragments.ServerFragment;
 import com.team2052.frckrawler.fragments.SummaryFragment;
-import com.team2052.frckrawler.fragments.TeamInfoFragment;
-import com.team2052.frckrawler.fragments.TeamsFragment;
 import com.team2052.frckrawler.fragments.dialog.ExportDialogFragment;
+import com.team2052.frckrawler.fragments.event.EventInfoFragment;
+import com.team2052.frckrawler.fragments.event.EventsInGameFragment;
+import com.team2052.frckrawler.fragments.event.MatchListFragment;
+import com.team2052.frckrawler.fragments.game.GameInfoFragment;
+import com.team2052.frckrawler.fragments.game.GamesFragment;
+import com.team2052.frckrawler.fragments.metric.MetricInfoFragment;
+import com.team2052.frckrawler.fragments.metric.MetricsFragment;
 import com.team2052.frckrawler.fragments.robot.RobotAttendingEventsFragment;
+import com.team2052.frckrawler.fragments.robot.RobotEventMatchesFragment;
 import com.team2052.frckrawler.fragments.robot.RobotEventSummaryFragment;
 import com.team2052.frckrawler.fragments.robot.RobotSummaryFragment;
 import com.team2052.frckrawler.fragments.robot.RobotsFragment;
-import com.team2052.frckrawler.subscribers.SubscriberModule;
+import com.team2052.frckrawler.fragments.scout.ScoutHomeFragment;
+import com.team2052.frckrawler.fragments.team.TeamInfoFragment;
+import com.team2052.frckrawler.fragments.team.TeamsFragment;
+import com.team2052.frckrawler.metric.data.Compiler;
 
 import javax.inject.Singleton;
 
@@ -75,7 +74,7 @@ public interface FragmentComponent {
 
     void inject(GamesFragment gamesFragment);
 
-    void inject(EventsFragment eventsNewFragment);
+    void inject(EventsInGameFragment eventsNewFragment);
 
     void inject(MetricsFragment metricsFragment);
 
@@ -102,8 +101,6 @@ public interface FragmentComponent {
     void inject(RobotSummaryFragment robotSummaryFragment);
 
     void inject(RobotEventSummaryFragment robotEventSummaryFragment);
-
-    void inject(MetricSummaryFragment metricSummaryFragment);
 
     void inject(ScoutHomeFragment scoutHomeFragment);
 

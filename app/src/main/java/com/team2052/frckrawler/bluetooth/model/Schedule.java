@@ -1,7 +1,7 @@
 package com.team2052.frckrawler.bluetooth.model;
 
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Match;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.Match;
 
 import java.io.Serializable;
 import java.util.List;

@@ -13,17 +13,18 @@ import android.view.ViewGroup;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.firebase.crash.FirebaseCrash;
+import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.metric.MetricValue;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.MatchComment;
-import com.team2052.frckrawler.db.MatchDatum;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.MetricDao;
-import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.MetricHelper;
+import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.helpers.metric.MetricHelper;
+import com.team2052.frckrawler.metric.data.MetricValue;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.MatchComment;
+import com.team2052.frckrawler.models.MatchDatum;
+import com.team2052.frckrawler.models.Metric;
+import com.team2052.frckrawler.models.MetricDao;
+import com.team2052.frckrawler.models.Robot;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -45,6 +46,8 @@ public class ScoutMatchFragment extends BaseScoutFragment {
     TextInputLayout mMatchNumberInput;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.add_match_num)
+    View addMatchNumButton;
     private int mMatchType;
     Observable<List<MetricValue>> metricValueObservable = Observable
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
@@ -62,7 +65,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                             .query(valueParams.robot.getId(), metric.getId(), Long.valueOf(valueParams.match_num), mMatchType, mEvent.getId());
                     MatchDatum currentData = matchDataQueryBuilder.unique();
                     //Add the metric values
-                    metricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
+                    metricValues.add(MetricValue.create(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
                 }
                 return metricValues;
             })
@@ -117,15 +120,24 @@ public class ScoutMatchFragment extends BaseScoutFragment {
 
         mMatchNumberInput.getEditText().setText("1");
 
+        subscriptions.add(RxView.clicks(addMatchNumButton)
+                .flatMap(aVoid -> matchNumberObservable())
+                .map(number -> number += 1)
+                .map(String::valueOf)
+                .onErrorReturn(throwable -> "")
+                .subscribe(numText -> mMatchNumberInput.getEditText().setText(numText)));
+
         subscriptions.add(RxTextView.afterTextChangeEvents(mMatchNumberInput.getEditText())
                 .filter(event -> {
                     try {
                         Integer.parseInt(event.editable().toString());
                         mMatchNumberInput.setErrorEnabled(false);
+                        addMatchNumButton.setEnabled(true);
                         mMatchNumberInput.setError("");
                     } catch (NumberFormatException e1) {
                         mMatchNumberInput.setErrorEnabled(true);
                         mMatchNumberInput.setError("Invalid Number");
+                        addMatchNumButton.setEnabled(false);
                         return false;
                     }
                     return true;
@@ -167,11 +179,11 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                                 null,
                                 mEvent.getId(),
                                 matchScoutSaveMetric.robot.getId(),
-                                metricValue.getMetric().getId(),
+                                metricValue.metric().getId(),
                                 mMatchType,
                                 matchScoutSaveMetric.matchNum,
                                 new Date(),
-                                JSON.getGson().toJson(metricValue.getValue()));
+                                metricValue.valueAsString());
                         if (rxDbManager.getMatchDataTable().insertMatchData(matchDatum) && !saved)
                             saved = true;
                     }

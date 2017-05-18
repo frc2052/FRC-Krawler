@@ -8,16 +8,16 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.listeners.RefreshListener;
-import com.team2052.frckrawler.tba.HTTP;
-import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.tba.TBA;
-import com.team2052.frckrawler.util.Util;
+import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.data.tba.HTTP;
+import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.data.tba.TBA;
+import com.team2052.frckrawler.helpers.Util;
+import com.team2052.frckrawler.interfaces.RefreshListener;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.Game;
+import com.team2052.frckrawler.models.Match;
+import com.team2052.frckrawler.models.Team;
 
 /**
  * @author Adam

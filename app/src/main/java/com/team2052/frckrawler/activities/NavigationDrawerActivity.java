@@ -12,8 +12,8 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 
 import com.team2052.frckrawler.R;
+import com.team2052.frckrawler.adapters.items.items.NavDrawerItem;
 import com.team2052.frckrawler.fragments.NavigationDrawerFragment;
-import com.team2052.frckrawler.listitems.items.NavDrawerItem;
 import com.team2052.frckrawler.theme.ThemeChangedEvent;
 import com.team2052.frckrawler.theme.Themes;
 import com.team2052.frckrawler.views.ScrimInsetsFrameLayout;
@@ -62,7 +62,6 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity
         if (useCustomTheme()) {
             Themes currentTheme = Themes.getCurrentTheme(this);
             setTheme(currentTheme.getTheme());
-            getWindow().getDecorView().setBackgroundColor(currentTheme.isLight() ? getResources().getColor(R.color.light_background) : getResources().getColor(R.color.dark_background));
         }
 
         TypedValue typedValue = new TypedValue();

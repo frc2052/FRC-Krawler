@@ -16,9 +16,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.firebase.FirebaseUtil;
-import com.team2052.frckrawler.firebase.models.MetricImportModel;
-import com.team2052.frckrawler.util.MetricHelper;
+import com.team2052.frckrawler.data.firebase.FirebaseUtil;
+import com.team2052.frckrawler.data.firebase.models.MetricImportModel;
+import com.team2052.frckrawler.helpers.metric.MetricFactory;
+import com.team2052.frckrawler.helpers.metric.MetricHelper;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -92,7 +93,7 @@ public class ImportMetricsActivity extends DatabaseActivity implements AdapterVi
                 final MetricImportModel value = dataSnapshot.getValue(MetricImportModel.class);
                 Observable.from(value.metrics)
                         .map(firebaseMetric -> {
-                            final MetricHelper.MetricFactory metricFactory = new MetricHelper.MetricFactory(firebaseMetric.name);
+                            final MetricFactory metricFactory = new MetricFactory(firebaseMetric.name);
                             metricFactory.setDataRaw(firebaseMetric.data);
                             metricFactory.setGameId(game_id);
                             @MetricHelper.MetricType

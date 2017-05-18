@@ -7,16 +7,17 @@ import com.google.common.collect.Lists;
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.model.Schedule;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.Robot;
-import com.team2052.frckrawler.db.RobotEvent;
-import com.team2052.frckrawler.db.Team;
+import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.Game;
+import com.team2052.frckrawler.models.Match;
+import com.team2052.frckrawler.models.Metric;
+import com.team2052.frckrawler.models.Robot;
+import com.team2052.frckrawler.models.RobotEvent;
+import com.team2052.frckrawler.models.Team;
 
 import java.util.List;
+
 
 public class ScoutDataSyncable extends ScoutSyncable {
     private final Game game;

@@ -3,14 +3,15 @@ package com.team2052.frckrawler.activities;
 import android.os.Bundle;
 
 import com.team2052.frckrawler.FRCKrawler;
-import com.team2052.frckrawler.database.RxDBManager;
+import com.team2052.frckrawler.data.RxDBManager;
 import com.team2052.frckrawler.di.DaggerFragmentComponent;
 import com.team2052.frckrawler.di.FragmentComponent;
-import com.team2052.frckrawler.subscribers.SubscriberModule;
+import com.team2052.frckrawler.di.subscribers.SubscriberModule;
+import com.team2052.frckrawler.interfaces.HasComponent;
 
 import javax.inject.Inject;
 
-public abstract class DatabaseActivity extends BaseActivity implements HasComponent {
+public abstract class DatabaseActivity extends NavigationDrawerActivity implements HasComponent {
     public static final String PARENT_ID = "PARENT_ID";
     FragmentComponent mComponent;
     @Inject
@@ -37,4 +38,14 @@ public abstract class DatabaseActivity extends BaseActivity implements HasCompon
     }
 
     public abstract void inject();
+
+    @Override
+    public void onNavDrawerOpened() {
+
+    }
+
+    @Override
+    public void onNavDrawerClosed() {
+
+    }
 }

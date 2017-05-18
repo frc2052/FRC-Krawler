@@ -4,13 +4,12 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.squareup.okhttp.Response;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Team;
-import com.team2052.frckrawler.listeners.RefreshListener;
-import com.team2052.frckrawler.tba.HTTP;
-import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.tba.TBA;
+import com.team2052.frckrawler.data.tba.HTTP;
+import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.data.tba.TBA;
+import com.team2052.frckrawler.interfaces.RefreshListener;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.Team;
 
 import java.util.Arrays;
 
@@ -47,7 +46,6 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
                 .map(Integer::parseInt)
                 .map(teamNumber -> String.format(TBA.TEAM, teamNumber))
                 .map(HTTP::getResponse)
-                .filter(Response::isSuccessful)
                 .map(HTTP::dataFromResponse)
                 .map(JSON::getAsJsonObject)
                 .map(jsonObject -> JSON.getGson().fromJson(jsonObject, Team.class))

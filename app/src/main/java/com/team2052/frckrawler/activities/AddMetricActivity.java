@@ -2,6 +2,7 @@ package com.team2052.frckrawler.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -19,15 +20,15 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.database.metric.MetricValue;
-import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.metric.MetricTypeEntry;
-import com.team2052.frckrawler.metric.MetricTypeEntryHandler;
-import com.team2052.frckrawler.metrics.view.MetricWidget;
-import com.team2052.frckrawler.metrics.view.impl.CheckBoxMetricWidget;
-import com.team2052.frckrawler.util.MetricHelper;
-import com.team2052.frckrawler.util.SnackbarUtil;
+import com.team2052.frckrawler.helpers.SnackbarHelper;
+import com.team2052.frckrawler.helpers.metric.MetricFactory;
+import com.team2052.frckrawler.helpers.metric.MetricHelper;
+import com.team2052.frckrawler.metric.MetricTypes;
+import com.team2052.frckrawler.metric.data.MetricValue;
+import com.team2052.frckrawler.metric.view.MetricWidget;
+import com.team2052.frckrawler.metric.view.impl.CheckBoxMetricWidget;
+import com.team2052.frckrawler.models.Game;
+import com.team2052.frckrawler.models.Metric;
 
 import java.util.Arrays;
 import java.util.List;
@@ -100,6 +101,7 @@ public class AddMetricActivity extends DatabaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mGame = rxDbManager.getGamesTable().load(getIntent().getLongExtra(GAME_ID_EXTRA, 0));
         setStatusBarColor(R.color.amber_700);
 
@@ -109,6 +111,7 @@ public class AddMetricActivity extends DatabaseActivity {
 
         setContentView(R.layout.activity_add_metric);
         ButterKnife.bind(this);
+
 
         mMinimumObservable = createNumberDefaultValueObservable(mMinimum, MetricHelper.MINIMUM_DEFAULT_VALUE);
         mMaximumObservable = createNumberDefaultValueObservable(mMaximum, MetricHelper.MAXIMUM_DEFAULT_VALUE);
@@ -131,12 +134,10 @@ public class AddMetricActivity extends DatabaseActivity {
         metricObservable = Observable
                 .zip(mNameObservable, mMinimumObservable, mMaximumObservable, mIncrementationObservable, mCommaListObservable, MetricPreviewParams::new)
                 .map(metricPreviewParams -> {
-                    MetricHelper.MetricFactory metricFactory = MetricTypeEntryHandler.INSTANCE.getTypeEntry(typeSpinner.getSelectedItemPosition())
-                            .buildMetric(metricPreviewParams.name,
-                                    metricPreviewParams.mMin,
-                                    metricPreviewParams.mMax,
-                                    metricPreviewParams.mInc,
-                                    metricPreviewParams.commaList);
+                    MetricFactory metricFactory = new MetricFactory(metricPreviewParams.name);
+                    metricFactory.setMetricType(typeSpinner.getSelectedItemPosition());
+                    metricFactory.setDataMinMaxInc(metricPreviewParams.mMin, metricPreviewParams.mMax, metricPreviewParams.mInc);
+                    metricFactory.setDataListIndexValue(metricPreviewParams.commaList);
                     metricFactory.setMetricCategory(metricCategory);
                     metricFactory.setGameId(mGame.getId());
                     return metricFactory.buildMetric();
@@ -147,7 +148,11 @@ public class AddMetricActivity extends DatabaseActivity {
         //Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+        toolbar.setNavigationIcon(R.drawable.ic_close_black_24dp);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            toolbar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
 
         ViewCompat.setElevation(toolbar, getResources().getDimension(R.dimen.toolbar_elevation));
     }
@@ -163,32 +168,47 @@ public class AddMetricActivity extends DatabaseActivity {
         addObservableToUpdateMetric(observable, true);
     }
 
-    private void changeSelection(int position) {
+    private void changeSelection(@MetricHelper.MetricType int position) {
         MetricWidget newWidget;
 
-        MetricTypeEntry<?> typeEntry = MetricTypeEntryHandler.INSTANCE.getTypeEntry(position);
-        if (typeEntry == null)
-            typeEntry = MetricTypeEntryHandler.INSTANCE.getBooleanMetricTypeWidget();
-
-        //noinspection ResourceType
-        mMinimum.setVisibility(typeEntry.minimumVisibility());
-        //noinspection ResourceType
-        mMaximum.setVisibility(typeEntry.maximumVisibility());
-        //noinspection ResourceType
-        mIncrementation.setVisibility(typeEntry.incrementationVisibility());
-        //noinspection ResourceType
-        mCommaSeparatedList.setVisibility(typeEntry.commaListVisibility());
-        newWidget = typeEntry.getWidget(this);
-
+        switch (position) {
+            case MetricHelper.BOOLEAN:
+            case MetricHelper.STOP_WATCH:
+                mMaximum.setEnabled(false);
+                mMinimum.setEnabled(false);
+                mIncrementation.setEnabled(false);
+                mCommaSeparatedList.setEnabled(false);
+                break;
+            case MetricHelper.CHOOSER:
+            case MetricHelper.CHECK_BOX:
+                mMaximum.setEnabled(false);
+                mMinimum.setEnabled(false);
+                mIncrementation.setEnabled(false);
+                mCommaSeparatedList.setEnabled(true);
+                break;
+            case MetricHelper.COUNTER:
+                mMaximum.setEnabled(true);
+                mMinimum.setEnabled(true);
+                mIncrementation.setEnabled(true);
+                mCommaSeparatedList.setEnabled(false);
+                break;
+            case MetricHelper.SLIDER:
+                mMaximum.setEnabled(true);
+                mMinimum.setEnabled(true);
+                mIncrementation.setEnabled(false);
+                mCommaSeparatedList.setEnabled(false);
+                break;
+        }
+        newWidget = MetricTypes.createWidget(this, position);
         setMetricWidget(newWidget);
         updateMetric();
     }
 
     private void updateMetric() {
         subscriptions.add(
-                metricObservable.map(metric -> new MetricValue(metric, null))
+                metricObservable.map(metric -> MetricValue.create(metric, null))
                         .subscribe(onNext -> {
-                            if (typeSpinner.getSelectedItemPosition() == MetricTypeEntryHandler.INSTANCE.getCheckBoxMetricTypeWidget().getTypeId()) {
+                            if (typeSpinner.getSelectedItemPosition() == MetricHelper.CHECK_BOX) {
                                 setMetricWidget(new CheckBoxMetricWidget(AddMetricActivity.this, onNext));
                             } else if (currentWidget != null) {
                                 currentWidget.setMetricValue(onNext);
@@ -218,7 +238,7 @@ public class AddMetricActivity extends DatabaseActivity {
         subscriptions.add(metricObservable.subscribe(onNext -> {
             rxDbManager.getMetricsTable().insert(onNext);
 
-            SnackbarUtil.make(findViewById(R.id.root), "Metric Saved", Snackbar.LENGTH_SHORT).show();
+            SnackbarHelper.make(findViewById(R.id.root), "Metric Saved", Snackbar.LENGTH_SHORT).show();
             //Show a snackbar for a second
             subscriptions.add(
                     Observable.defer(() -> Observable.just(null))
@@ -227,7 +247,7 @@ public class AddMetricActivity extends DatabaseActivity {
                             .subscribe(onNextDelayed -> finish()));
         }, onError -> {
             FirebaseCrash.report(onError);
-            SnackbarUtil.make(findViewById(R.id.root), "Unable to Save Metric", Snackbar.LENGTH_SHORT).show();
+            SnackbarHelper.make(findViewById(R.id.root), "Unable to Save Metric", Snackbar.LENGTH_SHORT).show();
         }));
     }
 

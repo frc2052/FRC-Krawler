@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.bluetooth.server;
 
 import android.bluetooth.BluetoothSocket;
+import android.support.annotation.Nullable;
 
 import com.team2052.frckrawler.BuildConfig;
 import com.team2052.frckrawler.bluetooth.BluetoothConnection;
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import javax.annotation.Nullable;
 
 public class ServerBluetoothConnection extends BluetoothConnection {
     private final int scoutVersion;

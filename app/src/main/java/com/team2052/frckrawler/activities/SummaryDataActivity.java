@@ -7,11 +7,11 @@ import android.widget.ListView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.MetricsStatsAdapter;
-import com.team2052.frckrawler.database.metric.Compiler;
-import com.team2052.frckrawler.db.Event;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.elements.CompiledMetricListElement;
+import com.team2052.frckrawler.adapters.items.ListItem;
+import com.team2052.frckrawler.adapters.items.elements.CompiledMetricListElement;
+import com.team2052.frckrawler.metric.data.Compiler;
+import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.models.Metric;
 import com.team2052.frckrawler.theme.Themes;
 
 import javax.inject.Inject;

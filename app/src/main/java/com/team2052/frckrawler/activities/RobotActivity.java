@@ -10,11 +10,8 @@ import android.view.MenuItem;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.tab.RobotViewPagerAdapter;
-import com.team2052.frckrawler.db.Robot;
+import com.team2052.frckrawler.models.Robot;
 
-/**
- * @author Adam
- */
 public class RobotActivity extends DatabaseActivity {
     ViewPager viewPager;
     TabLayout tabLayout;

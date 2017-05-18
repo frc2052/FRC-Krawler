@@ -19,8 +19,8 @@ import android.widget.Button;
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.SetupFragmentAdapter;
-import com.team2052.frckrawler.firebase.FirebaseUtil;
-import com.team2052.frckrawler.util.BluetoothUtil;
+import com.team2052.frckrawler.data.firebase.FirebaseUtil;
+import com.team2052.frckrawler.helpers.BluetoothHelper;
 import com.team2052.frckrawler.views.DisableSwipeViewPager;
 
 import butterknife.BindView;
@@ -86,7 +86,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 0 && BluetoothUtil.isBluetoothEnabled()) {
+        if (requestCode == 0 && BluetoothHelper.isBluetoothEnabled()) {
             setupFinished();
         } else {
             pager.goToNextPage();
@@ -97,12 +97,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.welcome_next_page:
-                Log.i(LOG_TAG, String.valueOf(BluetoothUtil.isBluetoothEnabled()));
+                Log.i(LOG_TAG, String.valueOf(BluetoothHelper.isBluetoothEnabled()));
                 int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 if (permission != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                 } else {
-                    if (BluetoothUtil.isBluetoothEnabled()) {
+                    if (BluetoothHelper.isBluetoothEnabled()) {
                         setupFinished();
                     } else {
                         pager.goToNextPage();
@@ -111,7 +111,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.bluetooth_next_page:
             case R.id.enable_bluetooth_button:
-                if (!BluetoothUtil.hasBluetoothAdapter())
+                if (!BluetoothHelper.hasBluetoothAdapter())
                     setupFinished();
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);

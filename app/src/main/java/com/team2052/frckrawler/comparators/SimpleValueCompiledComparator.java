@@ -1,7 +1,7 @@
 package com.team2052.frckrawler.comparators;
 
-import com.team2052.frckrawler.listitems.ListItem;
-import com.team2052.frckrawler.listitems.elements.CompiledMetricListElement;
+import com.team2052.frckrawler.adapters.items.ListItem;
+import com.team2052.frckrawler.adapters.items.elements.CompiledMetricListElement;
 
 import java.util.Comparator;
 
@@ -18,8 +18,8 @@ public class SimpleValueCompiledComparator implements Comparator<ListItem> {
 
     @Override
     public int compare(ListItem lhs, ListItem rhs) {
-        double lhsVal = ((CompiledMetricListElement) lhs).compiledMetricValue.getCompiledValueJson().get("value").getAsDouble();
-        double rhsVal = ((CompiledMetricListElement) rhs).compiledMetricValue.getCompiledValueJson().get("value").getAsDouble();
+        double lhsVal = ((CompiledMetricListElement) lhs).compiledMetricValue.jsonValue().get("value").getAsDouble();
+        double rhsVal = ((CompiledMetricListElement) rhs).compiledMetricValue.jsonValue().get("value").getAsDouble();
         return desc ? Double.compare(lhsVal, rhsVal) : Double.compare(rhsVal, lhsVal);
     }
 }

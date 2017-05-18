@@ -11,12 +11,11 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 
 import com.google.gson.JsonObject;
-import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.database.RxDBManager;
-import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.tba.JSON;
-import com.team2052.frckrawler.util.MetricHelper;
+import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.helpers.metric.MetricHelper;
+import com.team2052.frckrawler.models.Metric;
 
 /**
  * @author Adam
@@ -49,7 +48,7 @@ public class EditMetricDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mMetric = mDbSession.getMetricsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
-        AlertDialog.Builder b = new AlertDialog.Builder(getActivity(), R.style.AppAlertDialogStyle);
+        AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
         b.setTitle("Edit Metric");
         b.setView(initViews());
         b.setPositiveButton("Update", (dialog, which) -> {

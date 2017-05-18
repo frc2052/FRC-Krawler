@@ -4,10 +4,10 @@ import android.os.Bundle;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.binding.ListViewNoDataParams;
-import com.team2052.frckrawler.database.metric.Compiler;
+import com.team2052.frckrawler.di.binding.NoDataParams;
+import com.team2052.frckrawler.di.subscribers.KeyValueListSubscriber;
 import com.team2052.frckrawler.fragments.ListViewFragment;
-import com.team2052.frckrawler.subscribers.KeyValueListSubscriber;
+import com.team2052.frckrawler.metric.data.Compiler;
 
 import java.util.Map;
 
@@ -39,8 +39,8 @@ public class RobotEventSummaryFragment extends ListViewFragment<Map<String, Stri
     }
 
     @Override
-    protected ListViewNoDataParams getNoDataParams() {
-        return new ListViewNoDataParams("No metrics found", R.drawable.ic_metric);
+    protected NoDataParams getNoDataParams() {
+        return new NoDataParams("No metrics found", R.drawable.ic_metric);
     }
 
     @Override
