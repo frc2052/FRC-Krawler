@@ -17,7 +17,7 @@ public class BaseProgressDialog extends DialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mRxDbManager = RxDBManager.getInstance(getActivity());
+        mRxDbManager = RxDBManager.Companion.getInstance(getActivity());
         setRetainInstance(true);
         super.onCreate(savedInstanceState);
     }

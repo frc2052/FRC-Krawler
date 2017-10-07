@@ -33,7 +33,7 @@ public class PickEventDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         List<String> eventStrings = Lists.newArrayList();
         for (Event event : events) {
-            eventStrings.add(event.getGame().getName() + ", " + event.getName());
+            eventStrings.add(event.getSeason().getName() + ", " + event.getName());
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Pick Event");
@@ -48,7 +48,7 @@ public class PickEventDialogFragment extends DialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        events = RxDBManager.getInstance(getActivity()).getEventsTable().getAllEvents();
+        events = RxDBManager.Companion.getInstance(getActivity()).getEventsTable().getAllEvents();
         if (events.size() < 1) {
             dismiss();
         }

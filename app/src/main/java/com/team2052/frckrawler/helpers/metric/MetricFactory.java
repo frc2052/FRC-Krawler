@@ -3,7 +3,7 @@ package com.team2052.frckrawler.helpers.metric;
 import com.google.common.base.Strings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.data.tba.v3.JSON;
 import com.team2052.frckrawler.models.Metric;
 
 import java.util.List;

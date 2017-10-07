@@ -29,7 +29,7 @@ public class SummaryFragment extends RecyclerViewFragment<List<Metric>, Recycler
     public static SummaryFragment newInstance(long event_id) {
         SummaryFragment fragment = new SummaryFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(DatabaseActivity.PARENT_ID, event_id);
+        bundle.putLong(DatabaseActivity.Companion.getPARENT_ID(), event_id);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -37,7 +37,7 @@ public class SummaryFragment extends RecyclerViewFragment<List<Metric>, Recycler
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mEvent = rxDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        mEvent = rxDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID()));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class SummaryFragment extends RecyclerViewFragment<List<Metric>, Recycler
 
     @Override
     protected Observable<? extends List<Metric>> getObservable() {
-        return rxDbManager.metricsInGame(mEvent.getGame_id(), null);
+        return rxDbManager.metricsInGame(mEvent.getSeason_id(), null);
     }
 
     @Override

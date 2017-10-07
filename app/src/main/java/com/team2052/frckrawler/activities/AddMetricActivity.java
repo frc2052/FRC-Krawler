@@ -27,8 +27,8 @@ import com.team2052.frckrawler.metric.MetricTypes;
 import com.team2052.frckrawler.metric.data.MetricValue;
 import com.team2052.frckrawler.metric.view.MetricWidget;
 import com.team2052.frckrawler.metric.view.impl.CheckBoxMetricWidget;
-import com.team2052.frckrawler.models.Game;
 import com.team2052.frckrawler.models.Metric;
+import com.team2052.frckrawler.models.Season;
 
 import java.util.Arrays;
 import java.util.List;
@@ -68,7 +68,7 @@ public class AddMetricActivity extends DatabaseActivity {
     @BindView(R.id.comma_separated_list)
     TextInputLayout mCommaSeparatedList;
 
-    private Game mGame;
+    private Season season;
 
     @MetricHelper.MetricCategory
     private int mMetricCategory;
@@ -102,7 +102,7 @@ public class AddMetricActivity extends DatabaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mGame = rxDbManager.getGamesTable().load(getIntent().getLongExtra(GAME_ID_EXTRA, 0));
+        season = getRxDbManager().getSeasonsTable().load(getIntent().getLongExtra(GAME_ID_EXTRA, 0));
         setStatusBarColor(R.color.amber_700);
 
         @MetricHelper.MetricCategory
@@ -139,7 +139,7 @@ public class AddMetricActivity extends DatabaseActivity {
                     metricFactory.setDataMinMaxInc(metricPreviewParams.mMin, metricPreviewParams.mMax, metricPreviewParams.mInc);
                     metricFactory.setDataListIndexValue(metricPreviewParams.commaList);
                     metricFactory.setMetricCategory(metricCategory);
-                    metricFactory.setGameId(mGame.getId());
+                    metricFactory.setGameId(season.getId());
                     return metricFactory.buildMetric();
                 })
                 .subscribeOn(Schedulers.computation())
@@ -199,14 +199,14 @@ public class AddMetricActivity extends DatabaseActivity {
                 mCommaSeparatedList.setEnabled(false);
                 break;
         }
-        newWidget = MetricTypes.createWidget(this, position);
+        newWidget = MetricTypes.INSTANCE.createWidget(this, position);
         setMetricWidget(newWidget);
         updateMetric();
     }
 
     private void updateMetric() {
         subscriptions.add(
-                metricObservable.map(metric -> MetricValue.create(metric, null))
+                metricObservable.map(metric -> new MetricValue(metric, null))
                         .subscribe(onNext -> {
                             if (typeSpinner.getSelectedItemPosition() == MetricHelper.CHECK_BOX) {
                                 setMetricWidget(new CheckBoxMetricWidget(AddMetricActivity.this, onNext));
@@ -236,7 +236,7 @@ public class AddMetricActivity extends DatabaseActivity {
     @OnClick(R.id.button_save)
     protected void saveButtonClicked(View view) {
         subscriptions.add(metricObservable.subscribe(onNext -> {
-            rxDbManager.getMetricsTable().insert(onNext);
+            getRxDbManager().getMetricsTable().insert(onNext);
 
             SnackbarHelper.make(findViewById(R.id.root), "Metric Saved", Snackbar.LENGTH_SHORT).show();
             //Show a snackbar for a second

@@ -14,8 +14,8 @@ import android.widget.FrameLayout;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.items.items.NavDrawerItem;
 import com.team2052.frckrawler.fragments.NavigationDrawerFragment;
-import com.team2052.frckrawler.theme.ThemeChangedEvent;
-import com.team2052.frckrawler.theme.Themes;
+import com.team2052.frckrawler.themes.ThemeChangedEvent;
+import com.team2052.frckrawler.themes.Themes;
 import com.team2052.frckrawler.views.ScrimInsetsFrameLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -67,12 +67,16 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity
         TypedValue typedValue = new TypedValue();
         getTheme().resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer_layout);
-        mContentView = (FrameLayout) findViewById(R.id.content);
+        mDrawerLayout = findViewById(R.id.nav_drawer_layout);
+        mContentView = findViewById(R.id.content);
         mDrawerLayout.setStatusBarBackgroundColor(typedValue.data);
-        mDrawerContainer = (ScrimInsetsFrameLayout) findViewById(R.id.navigation_drawer_fragment_container);
+        mDrawerContainer = findViewById(R.id.navigation_drawer_fragment_container);
 
         handler = new Handler();
+    }
+
+    protected boolean useCustomTheme() {
+        return true;
     }
 
     public void setStatusBarColor(int color_id) {
@@ -94,7 +98,7 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity
 
         mNavDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_fragment);
         mNavDrawerFragment.setUp(R.id.navigation_drawer_fragment_container,
-                (DrawerLayout) findViewById(R.id.nav_drawer_layout),
+                findViewById(R.id.nav_drawer_layout),
                 mEncourageLearning, mUseActionBarToggle);
         mDrawerContainer.setOnInsetsCallback(insets -> mNavDrawerFragment.onInsetsChanged(insets));
 
@@ -178,7 +182,7 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity
          * Launch after a short delay to give the drawer time to close.
          */
 
-        handler.postDelayed(() -> TaskStackBuilder.create(NavigationDrawerActivity.this).addNextIntent(HomeActivity.newInstance(NavigationDrawerActivity.this, id)).startActivities(), DRAWER_CLOSE_ANIMATION_DURATION);
+        handler.postDelayed(() -> TaskStackBuilder.create(NavigationDrawerActivity.this).addNextIntent(HomeActivity.Companion.newInstance(NavigationDrawerActivity.this, id)).startActivities(), DRAWER_CLOSE_ANIMATION_DURATION);
     }
 
 
@@ -286,10 +290,6 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity
         if (!isDrawerOpen()) {
             getSupportActionBar().setTitle(mActionBarTitle);
         }
-    }
-
-    protected boolean useCustomTheme() {
-        return true;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

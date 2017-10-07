@@ -12,7 +12,8 @@
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="?colorPrimary">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -26,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:background="?colorPrimary"
                 android:orientation="vertical">
 
                 <LinearLayout

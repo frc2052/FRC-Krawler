@@ -25,13 +25,13 @@ public class EventViewPagerAdapter extends ViewOnClickFragmentStatePagerAdapter 
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return EventInfoFragment.newInstance(event_id);
+                return EventInfoFragment.Companion.newInstance(event_id);
             case 1:
                 return SummaryFragment.newInstance(event_id);
             case 2:
-                return MatchListFragment.newInstance(event_id);
+                return MatchListFragment.Companion.newInstance(event_id);
             case 3:
-                return RobotsFragment.newEventInstance(event_id);
+                return RobotsFragment.Companion.newEventInstance(event_id);
         }
         return null;
     }

@@ -12,20 +12,19 @@ import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.data.RxDBManager;
 import com.team2052.frckrawler.models.Event;
-import com.team2052.frckrawler.theme.ThemeChangedEvent;
-import com.team2052.frckrawler.theme.Themes;
+import com.team2052.frckrawler.themes.ThemeChangedEvent;
+import com.team2052.frckrawler.themes.Themes;
 
 import org.greenrobot.eventbus.EventBus;
 
 public class ScoutHelper {
-
     public static void setDeviceAsScout(Context context, boolean isScout) {
         SharedPreferences.Editor editor = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0).edit();
         editor.putBoolean(Constants.IS_SCOUT_PREF, isScout);
         editor.apply();
     }
 
-    public static boolean isDeviceScout(Context context){
+    public static boolean isDeviceScout(Context context) {
         SharedPreferences scoutPrefs = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
         return scoutPrefs.getBoolean(Constants.IS_SCOUT_PREF, false);
     }
@@ -55,7 +54,7 @@ public class ScoutHelper {
     public static Event getScoutEvent(Context context) {
         SharedPreferences scoutPrefs = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
         if (scoutPrefs.getLong(Constants.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
-            return RxDBManager.getInstance(context).getEventsTable().load(scoutPrefs.getLong(Constants.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
+            return RxDBManager.Companion.getInstance(context).getEventsTable().load(scoutPrefs.getLong(Constants.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
         }
         return null;
     }

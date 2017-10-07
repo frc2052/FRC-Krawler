@@ -16,7 +16,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.data.tba.v3.JSON;
 import com.team2052.frckrawler.helpers.metric.MetricHelper;
 import com.team2052.frckrawler.metric.data.MetricValue;
 import com.team2052.frckrawler.models.Event;
@@ -53,7 +53,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
                 List<MetricValue> metricValues = Lists.newArrayList();
-                final QueryBuilder<Metric> metricQueryBuilder = rxDbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, mEvent.getGame_id(), true)
+                final QueryBuilder<Metric> metricQueryBuilder = rxDbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, mEvent.getSeason_id(), true)
                         .orderDesc(MetricDao.Properties.Priority)
                         .orderAsc(MetricDao.Properties.Id);
                 List<Metric> metrics = metricQueryBuilder.list();
@@ -65,7 +65,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                             .query(valueParams.robot.getId(), metric.getId(), Long.valueOf(valueParams.match_num), mMatchType, mEvent.getId());
                     MatchDatum currentData = matchDataQueryBuilder.unique();
                     //Add the metric values
-                    metricValues.add(MetricValue.create(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
+                    metricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
                 }
                 return metricValues;
             })
@@ -76,7 +76,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
                 final QueryBuilder<MatchComment> matchCommentQueryBuilder
-                        = rxDbManager.getMatchCommentsTable().query(Long.valueOf(valueParams.match_num), mMatchType, valueParams.robot.getId(), mEvent.getId(), null);
+                        = rxDbManager.getMatchCommentsTable().query(Long.valueOf(valueParams.match_num), mMatchType, valueParams.robot.getId(), mEvent.getId(), 0);
                 MatchComment mMatchComment = matchCommentQueryBuilder.unique();
                 String comment = null;
                 if (mMatchComment != null)
@@ -155,6 +155,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             if (onError instanceof ArrayIndexOutOfBoundsException || onError instanceof NumberFormatException) {
                 return;
             }
+            onError.printStackTrace();
             FirebaseCrash.log("Match: Error Updating Metric Values");
             FirebaseCrash.report(onError);
         }));
@@ -163,6 +164,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             if (onError instanceof ArrayIndexOutOfBoundsException || onError instanceof NumberFormatException) {
                 return;
             }
+            onError.printStackTrace();
             FirebaseCrash.log("Match: Error Updating Comments");
             FirebaseCrash.report(onError);
         }));
@@ -179,7 +181,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                                 null,
                                 mEvent.getId(),
                                 matchScoutSaveMetric.robot.getId(),
-                                metricValue.metric().getId(),
+                                metricValue.getMetric().getId(),
                                 mMatchType,
                                 matchScoutSaveMetric.matchNum,
                                 new Date(),

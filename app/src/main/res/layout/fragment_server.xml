@@ -14,11 +14,6 @@
         android:orientation="vertical"
         android:paddingTop="8dp">
 
-        <com.team2052.frckrawler.views.MessageCardView
-            android:id="@+id/message_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -69,26 +64,32 @@
 
                 <Button
                     android:id="@+id/view_logs"
-                    style="@style/Widget.AppCompat.Button.Small"
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
+                    android:tag=":aesthetic_ignore"
                     android:text="View Logs" />
 
                 <Button
                     android:id="@+id/view_event"
-                    style="@style/Widget.AppCompat.Button.Small"
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
+                    android:tag=":aesthetic_ignore"
                     android:text="View Event" />
 
                 <Button
                     android:id="@+id/view_game"
-                    style="@style/Widget.AppCompat.Button.Small"
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
+                    android:tag=":aesthetic_ignore"
                     android:text="View Game" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
+
+        <com.team2052.frckrawler.views.MessageCardView
+            android:id="@+id/message_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -112,16 +113,16 @@
 
                 <Button
                     android:id="@+id/scout_match_button"
-                    style="@style/Widget.AppCompat.Button.Small"
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
+                    android:tag=":aesthetic_ignore"
                     android:text="@string/match_scout" />
 
                 <Button
                     android:id="@+id/scout_pit_button"
-                    style="@style/Widget.AppCompat.Button.Small"
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
+                    android:tag=":aesthetic_ignore"
                     android:text="@string/pit_scout" />
             </LinearLayout>
         </android.support.v7.widget.CardView>

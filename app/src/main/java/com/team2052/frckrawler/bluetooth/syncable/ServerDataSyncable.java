@@ -29,7 +29,7 @@ public class ServerDataSyncable extends ServerSyncable {
         if (scoutEvent != null) {
             setEvent_hash(scoutEvent.getUnique_hash());
         }
-        RxDBManager dbManager = RxDBManager.getInstance(context);
+        RxDBManager dbManager = RxDBManager.Companion.getInstance(context);
         metricMatchDatum = dbManager.getMatchDataTable().loadAll();
         metricPitDatum = dbManager.getPitDataTable().loadAll();
         matchComments = dbManager.getMatchCommentsTable().loadAll();
@@ -38,7 +38,7 @@ public class ServerDataSyncable extends ServerSyncable {
 
     @Override
     public void saveToServer(final Context context) {
-        RxDBManager dbManager = RxDBManager.getInstance(context);
+        RxDBManager dbManager = RxDBManager.Companion.getInstance(context);
 
         dbManager.runInTx(() -> {
             //Save all the data

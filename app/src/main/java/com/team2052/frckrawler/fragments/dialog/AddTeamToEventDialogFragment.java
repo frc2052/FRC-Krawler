@@ -39,7 +39,7 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
     public static AddTeamToEventDialogFragment newInstance(Event game) {
         AddTeamToEventDialogFragment fragment = new AddTeamToEventDialogFragment();
         Bundle b = new Bundle();
-        b.putLong(DatabaseActivity.PARENT_ID, game.getId());
+        b.putLong(DatabaseActivity.Companion.getPARENT_ID(), game.getId());
         fragment.setArguments(b);
         return fragment;
     }
@@ -47,8 +47,8 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rxDbManager = RxDBManager.getInstance(getActivity());
-        this.mEvent = RxDBManager.getInstance(getActivity()).getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        rxDbManager = RxDBManager.Companion.getInstance(getActivity());
+        this.mEvent = RxDBManager.Companion.getInstance(getActivity()).getEventsTable().load(getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID()));
     }
 
     @Override

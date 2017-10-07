@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.adapters.items.ListItem;
 import com.team2052.frckrawler.comparators.SimpleValueCompiledComparator;
-import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.data.tba.v3.JSON;
 import com.team2052.frckrawler.helpers.metric.MetricHelper;
 import com.team2052.frckrawler.models.Metric;
 

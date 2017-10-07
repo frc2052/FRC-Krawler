@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.team2052.frckrawler.adapters.ViewOnClickFragmentStatePagerAdapter;
 import com.team2052.frckrawler.fragments.event.EventsInGameFragment;
-import com.team2052.frckrawler.fragments.game.GameInfoFragment;
+import com.team2052.frckrawler.fragments.game.SeasonInfoFragment;
 import com.team2052.frckrawler.fragments.metric.MetricsFragment;
 import com.team2052.frckrawler.helpers.metric.MetricHelper;
 
@@ -25,9 +25,9 @@ public class GameInfoPagerAdapter extends ViewOnClickFragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return GameInfoFragment.newInstance(mGameId);
+                return SeasonInfoFragment.Companion.newInstance(mGameId);
             case 1:
-                return EventsInGameFragment.newInstance(mGameId);
+                return EventsInGameFragment.Companion.newInstance(mGameId);
             case 2:
                 return MetricsFragment.newInstance(MetricHelper.MATCH_PERF_METRICS, mGameId);
             case 3:

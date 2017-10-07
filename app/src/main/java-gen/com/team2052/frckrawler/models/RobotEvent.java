@@ -22,11 +22,15 @@ public class RobotEvent implements java.io.Serializable {
     private long event_id;
     private String data;
 
-    /** Used to resolve relations */
+    /**
+     * Used to resolve relations
+     */
     @Generated
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated
     private transient RobotEventDao myDao;
 
@@ -58,7 +62,9 @@ public class RobotEvent implements java.io.Serializable {
         this.data = data;
     }
 
-    /** called by internal mechanisms, do not call yourself. */
+    /**
+     * called by internal mechanisms, do not call yourself.
+     */
     @Generated
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
@@ -97,7 +103,9 @@ public class RobotEvent implements java.io.Serializable {
         this.data = data;
     }
 
-    /** To-one relationship, resolved on first access. */
+    /**
+     * To-one relationship, resolved on first access.
+     */
     @Generated
     public Robot getRobot() {
         long __key = this.robot_id;
@@ -107,7 +115,7 @@ public class RobotEvent implements java.io.Serializable {
             Robot robotNew = targetDao.load(__key);
             synchronized (this) {
                 robot = robotNew;
-            	robot__resolvedKey = __key;
+                robot__resolvedKey = __key;
             }
         }
         return robot;
@@ -125,7 +133,9 @@ public class RobotEvent implements java.io.Serializable {
         }
     }
 
-    /** To-one relationship, resolved on first access. */
+    /**
+     * To-one relationship, resolved on first access.
+     */
     @Generated
     public Event getEvent() {
         long __key = this.event_id;
@@ -135,7 +145,7 @@ public class RobotEvent implements java.io.Serializable {
             Event eventNew = targetDao.load(__key);
             synchronized (this) {
                 event = eventNew;
-            	event__resolvedKey = __key;
+                event__resolvedKey = __key;
             }
         }
         return event;
@@ -154,9 +164,9 @@ public class RobotEvent implements java.io.Serializable {
     }
 
     /**
-    * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
-    * Entity must attached to an entity context.
-    */
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
+     * Entity must attached to an entity context.
+     */
     @Generated
     public void delete() {
         __throwIfDetached();
@@ -164,9 +174,9 @@ public class RobotEvent implements java.io.Serializable {
     }
 
     /**
-    * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
-    * Entity must attached to an entity context.
-    */
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
+     * Entity must attached to an entity context.
+     */
     @Generated
     public void update() {
         __throwIfDetached();
@@ -174,9 +184,9 @@ public class RobotEvent implements java.io.Serializable {
     }
 
     /**
-    * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
-    * Entity must attached to an entity context.
-    */
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
+     * Entity must attached to an entity context.
+     */
     @Generated
     public void refresh() {
         __throwIfDetached();

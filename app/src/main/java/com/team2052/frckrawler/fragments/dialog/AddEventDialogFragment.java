@@ -14,7 +14,7 @@ import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.data.RxDBManager;
 import com.team2052.frckrawler.interfaces.RefreshListener;
 import com.team2052.frckrawler.models.Event;
-import com.team2052.frckrawler.models.Game;
+import com.team2052.frckrawler.models.Season;
 
 import java.util.Date;
 
@@ -28,12 +28,12 @@ import butterknife.ButterKnife;
 public class AddEventDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
     @BindView(R.id.name)
     EditText name;
-    private Game mGame;
+    private Season mGame;
 
-    public static AddEventDialogFragment newInstance(Game game) {
+    public static AddEventDialogFragment newInstance(Season game) {
         AddEventDialogFragment fragment = new AddEventDialogFragment();
         Bundle b = new Bundle();
-        b.putLong(DatabaseActivity.PARENT_ID, game.getId());
+        b.putLong(DatabaseActivity.Companion.getPARENT_ID(), game.getId());
         fragment.setArguments(b);
         return fragment;
     }
@@ -41,7 +41,7 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mGame = RxDBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        this.mGame = RxDBManager.Companion.getInstance(getActivity()).getSeasonsTable().load(getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID()));
     }
 
     @Override
@@ -70,10 +70,10 @@ public class AddEventDialogFragment extends DialogFragment implements DialogInte
         if (which == DialogInterface.BUTTON_POSITIVE) {
             Event event = new Event(null);
             event.setName(name.getText().toString());
-            event.setGame(mGame);
+            event.setSeason(mGame);
             event.setFmsid(null);
             event.setDate(new Date());
-            RxDBManager.getInstance(getContext()).getEventsTable().insert(event);
+            RxDBManager.Companion.getInstance(getContext()).getEventsTable().insert(event);
         } else {
             dismiss();
         }

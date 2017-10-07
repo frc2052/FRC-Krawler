@@ -13,7 +13,7 @@ public class RobotListSubscriber extends BaseDataSubscriber<List<Robot>, List<Li
         dataToBind = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
             Robot robot = data.get(i);
-            dataToBind.add(new RobotListElement(robot, robot.getGame()));
+            dataToBind.add(new RobotListElement(robot, robot.getSeason()));
         }
     }
 }

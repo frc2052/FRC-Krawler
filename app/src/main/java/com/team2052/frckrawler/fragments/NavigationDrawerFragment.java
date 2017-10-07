@@ -24,7 +24,6 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.NavDrawerAdataper;
 import com.team2052.frckrawler.adapters.items.ListItem;
 import com.team2052.frckrawler.adapters.items.items.NavDrawerItem;
-import com.team2052.frckrawler.theme.Themes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,12 +136,11 @@ public class NavigationDrawerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences scoutPrefs = getActivity().getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
-        boolean light = Themes.getCurrentTheme(getContext()).isLight();
         //Deny the scout to access all the items
         NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_scout, getActivity().getString(R.string.scout), R.drawable.ic_assignment_black_24dp));
         NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_server, getActivity().getString(R.string.server), R.drawable.ic_bluetooth_black_24dp));
         NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_teams, getActivity().getString(R.string.teams), R.drawable.ic_group_black_24dp));
-        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, getActivity().getString(R.string.games), R.drawable.ic_games_black_24dp));
+        NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_games, getActivity().getString(R.string.seasons), R.drawable.ic_season_black_24dp));
         NAV_ITEMS.add(new NavDrawerItem(R.id.nav_item_settings, getActivity().getString(R.string.settings), R.drawable.ic_settings_black_24dp));
 
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);

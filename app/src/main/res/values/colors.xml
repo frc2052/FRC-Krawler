@@ -7,4 +7,17 @@
     <color name="primary_dark">#330000</color>
     <color name="color_accent">#ffd740</color>
     <color name="green_800">#2E7D32</color>
+
+    <!--Theme Colors-->
+    <color name="red">#F44336</color>
+    <color name="blue">#2196F3</color>
+
+    <integer-array name="primary_light">
+        <item>@color/primary</item>
+        <item>@color/black</item>
+        <item>@color/white</item>
+        <item>@color/color_accent</item>
+        <item>@color/red</item>
+        <item>@color/blue</item>
+    </integer-array>
 </resources>

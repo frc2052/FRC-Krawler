@@ -94,7 +94,10 @@ public abstract class BaseScoutFragment extends Fragment {
                     mRobotSpinner.setAdapter(adapter);
                     mRobotSpinner.setSelection(0);
                     updateMetricValues();
-                }, FirebaseCrash::report);
+                }, onError -> {
+                    onError.printStackTrace();
+                    FirebaseCrash.report(onError);
+                });
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -138,7 +141,7 @@ public abstract class BaseScoutFragment extends Fragment {
             //This shouldn't happen, but just in case
             mMetricList.removeAllViews();
             for (int i = 0; i < values.size(); i++) {
-                MetricWidget widget = MetricTypes.createWidget(getActivity(), values.get(i));
+                MetricWidget widget = MetricTypes.INSTANCE.createWidget(getActivity(), values.get(i));
                 mMetricList.addView(widget);
             }
         } else {

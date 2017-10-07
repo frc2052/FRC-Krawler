@@ -81,8 +81,8 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        RxView.clicks(view.findViewById(R.id.scout_match_button)).doOnNext(startScoutingActivity(ScoutActivity.MATCH_SCOUT_TYPE)).subscribe();
-        RxView.clicks(view.findViewById(R.id.scout_pit_button)).doOnNext(startScoutingActivity(ScoutActivity.PIT_SCOUT_TYPE)).subscribe();
+        RxView.clicks(view.findViewById(R.id.scout_match_button)).doOnNext(startScoutingActivity(ScoutActivity.Companion.getMATCH_SCOUT_TYPE())).subscribe();
+        RxView.clicks(view.findViewById(R.id.scout_pit_button)).doOnNext(startScoutingActivity(ScoutActivity.Companion.getPIT_SCOUT_TYPE())).subscribe();
         //RxView.clicks(view.findViewById(R.id.scout_practice_button)).doOnNext(startScoutingActivity(ScoutActivity.PRACTICE_MATCH_SCOUT_TYPE)).subscribe();
         view.findViewById(R.id.sync_button).setOnClickListener(this);
 
@@ -92,8 +92,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         updateEvent();
 
         //Disable navigation drawer when scout
-        if (ScoutHelper.getDeviceIsScout(getContext())
-                && getActivity() instanceof NavigationDrawerActivity) {
+        if (ScoutHelper.getDeviceIsScout(getContext()) && getActivity() instanceof NavigationDrawerActivity) {
             ((NavigationDrawerActivity) getActivity()).setNavigationDrawerEnabled(false);
         }
 
@@ -112,7 +111,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     public Action1<Void> startScoutingActivity(int type) {
         return aVoid -> {
             if (mEvent != null) {
-                startActivity(ScoutActivity.newInstance(getActivity(), mEvent, type));
+                startActivity(ScoutActivity.Companion.newInstance(getActivity(), mEvent, type));
             } else {
                 SnackbarHelper.make(getView(), "Unable to find event", Snackbar.LENGTH_LONG).show();
                 updateEvent();
@@ -195,8 +194,8 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         if (getActivity() instanceof NavigationDrawerActivity) {
             ((NavigationDrawerActivity) getActivity()).setNavigationDrawerEnabled(false);
         }
-        setCurrentEvent(ScoutHelper.getScoutEvent(getActivity()));
 
+        updateEvent();
         getView().findViewById(R.id.sync_button).setEnabled(true);
         syncStatusTextView.setText("Sync Successful");
 

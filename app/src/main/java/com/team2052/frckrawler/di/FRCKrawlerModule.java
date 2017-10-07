@@ -32,7 +32,7 @@ public class FRCKrawlerModule {
     @Provides
     @Singleton
     public RxDBManager getDBManager() {
-        return RxDBManager.getInstance(mApp.getApplicationContext());
+        return RxDBManager.Companion.getInstance(mApp.getApplicationContext());
     }
 
     @Provides

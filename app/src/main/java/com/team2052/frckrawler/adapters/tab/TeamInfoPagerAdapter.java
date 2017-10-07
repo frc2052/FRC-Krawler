@@ -27,10 +27,10 @@ public class TeamInfoPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = TeamInfoFragment.newInstance(team_id);
+                fragment = TeamInfoFragment.Companion.newInstance(team_id);
                 break;
             case 1:
-                fragment = RobotsFragment.newTeamInstance(team_id);
+                fragment = RobotsFragment.Companion.newTeamInstance(team_id);
                 break;
         }
         return fragment;

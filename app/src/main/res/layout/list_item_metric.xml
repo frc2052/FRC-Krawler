@@ -9,6 +9,7 @@
 
     <TextView
         android:id="@+id/metric_list_name"
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -16,17 +17,16 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        style="@style/TextAppearance.AppCompat.Title"
         tools:text="Name" />
 
     <TextView
         android:id="@+id/metric_list_type"
+        style="@style/TextAppearance.AppCompat.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/metric_list_name"
         android:layout_alignStart="@+id/metric_list_name"
         android:layout_below="@+id/metric_list_name"
-        style="@style/TextAppearance.AppCompat.Caption"
         android:layout_marginBottom="8dp"
         tools:text="Type" />
 

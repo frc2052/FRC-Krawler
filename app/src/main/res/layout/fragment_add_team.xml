@@ -7,9 +7,10 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/team_number"
-        android:hint="Comma Separated Team Numbers"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:hint="Comma Separated Team Numbers">
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

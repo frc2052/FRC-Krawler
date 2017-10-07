@@ -7,18 +7,13 @@
         <item name="colorAccent">@color/color_accent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
     <style name="AppTheme.Red">
         <item name="colorPrimary">@color/red_800</item>
         <item name="colorPrimaryDark">@color/red_900</item>
         <item name="colorAccent">@color/color_accent</item>
     </style>
 
-.    <style name="AppTheme.Dark">
+    <style name="AppTheme.Dark">
         <item name="colorPrimary">@color/grey_900</item>
         <item name="colorPrimaryDark">#000000</item>
         <item name="colorAccent">@color/color_accent</item>
@@ -30,14 +25,9 @@
         <item name="colorAccent">@color/color_accent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppThemeNoActionBarTranslucentStatus" parent="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="DefaultToolbarStyle">

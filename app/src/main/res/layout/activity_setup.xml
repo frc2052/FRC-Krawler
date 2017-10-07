@@ -44,12 +44,12 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="72dp"
                     android:layout_above="@+id/welcome_message"
                     android:layout_below="@+id/welcome_frc_krawler"
                     android:layout_centerInParent="true"
-                    android:tint="@color/color_accent"
-                    android:src="@drawable/setup_screen_logo" />
+                    android:padding="72dp"
+                    android:src="@drawable/setup_screen_logo"
+                    android:tint="@color/color_accent" />
 
                 <TextView
                     android:id="@+id/welcome_message"

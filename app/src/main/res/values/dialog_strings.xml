@@ -3,9 +3,9 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
 
-    <string name="delete_game">Delete Game</string>
-    <string name="delete_game_message">Are you sure you want to delete this game? All data associated with this game will be lost</string>
-    <string name="edit_game">Edit Game</string>
-    <string name="game_name">Game Name</string>
-    <string name="add_game">Add Game</string>
+    <string name="delete_season">Delete Season</string>
+    <string name="delete_season_message">Are you sure you want to delete this season? All data associated with this season will be lost</string>
+    <string name="edit_game">Edit Season</string>
+    <string name="season_name">Season Name</string>
+    <string name="add_season">Add Season</string>
 </resources>

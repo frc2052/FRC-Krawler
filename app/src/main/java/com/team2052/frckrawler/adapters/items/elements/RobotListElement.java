@@ -8,8 +8,8 @@ import android.widget.TextView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.items.ListElement;
 import com.team2052.frckrawler.data.RxDBManager;
-import com.team2052.frckrawler.models.Game;
 import com.team2052.frckrawler.models.Robot;
+import com.team2052.frckrawler.models.Season;
 
 /**
  * @author Adam
@@ -18,12 +18,12 @@ import com.team2052.frckrawler.models.Robot;
 public class RobotListElement extends ListElement {
 
     private final Robot mRobot;
-    private Game game;
+    private Season season;
 
-    public RobotListElement(Robot robot, Game game) {
+    public RobotListElement(Robot robot, Season season) {
         super(Long.toString(robot.getId()));
         this.mRobot = robot;
-        this.game = game;
+        this.season = season;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class RobotListElement extends ListElement {
             convertView = inflater.inflate(R.layout.list_item_robot, null);
         }
         ((TextView) convertView.findViewById(R.id.number)).setText("Team " + String.valueOf(mRobot.getTeam_id()));
-        ((TextView) convertView.findViewById(R.id.game)).setText(game.getName() + " - " + RxDBManager.getInstance(c).getRobotsTable().getTeam(mRobot).getName());
+        ((TextView) convertView.findViewById(R.id.game)).setText(season.getName() + " - " + RxDBManager.Companion.getInstance(c).getRobotsTable().getTeam(mRobot).getName());
         return convertView;
     }
 }

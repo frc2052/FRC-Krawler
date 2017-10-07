@@ -9,14 +9,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.data.RxDBManager;
-import com.team2052.frckrawler.data.tba.HTTP;
-import com.team2052.frckrawler.data.tba.JSON;
-import com.team2052.frckrawler.data.tba.TBA;
+import com.team2052.frckrawler.data.tba.v3.HTTP;
+import com.team2052.frckrawler.data.tba.v3.JSON;
+import com.team2052.frckrawler.data.tba.v3.TBA;
 import com.team2052.frckrawler.helpers.Util;
 import com.team2052.frckrawler.interfaces.RefreshListener;
 import com.team2052.frckrawler.models.Event;
-import com.team2052.frckrawler.models.Game;
 import com.team2052.frckrawler.models.Match;
+import com.team2052.frckrawler.models.Season;
 import com.team2052.frckrawler.models.Team;
 
 /**
@@ -27,11 +27,11 @@ public class ImportEventDataDialog extends BaseProgressDialog {
 
     private String LOG_TAG = "ImportEventDataDialog";
 
-    public static ImportEventDataDialog newInstance(String eventKey, Game game) {
+    public static ImportEventDataDialog newInstance(String eventKey, Season game) {
         ImportEventDataDialog importDataDialog = new ImportEventDataDialog();
         Bundle bundle = new Bundle();
         bundle.putString("eventKey", eventKey);
-        bundle.putLong(DatabaseActivity.PARENT_ID, game.getId());
+        bundle.putLong(DatabaseActivity.Companion.getPARENT_ID(), game.getId());
         importDataDialog.setArguments(bundle);
         return importDataDialog;
     }
@@ -39,25 +39,25 @@ public class ImportEventDataDialog extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Game game = mRxDbManager.getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        Season game = mRxDbManager.getSeasonsTable().load(getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID()));
         String mEventKey = getArguments().getString("eventKey");
         new ImportEvent(mEventKey, game).execute();
     }
 
     public class ImportEvent extends AsyncTask<Void, String, Void> {
         private final String url;
-        private final Game game;
+        private final Season season;
 
-        public ImportEvent(String eventKey, Game mGame) {
+        public ImportEvent(String eventKey, Season season) {
             //Get the main event based on the key
             this.url = String.format(TBA.EVENT, eventKey);
-            this.game = mGame;
+            this.season = season;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             final long startTime = System.currentTimeMillis();
-            final RxDBManager daoSession = RxDBManager.getInstance(getActivity());
+            final RxDBManager daoSession = RxDBManager.Companion.getInstance(getActivity());
             //Get all data from TBA ready to parse
 
             publishProgress("Downloading Data");
@@ -71,7 +71,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                 Event event = JSON.getGson().fromJson(jEvent, Event.class);
                 event.setUnique_hash(Util.generateUniqueHash());
 
-                event.setGame_id(game.getId());
+                event.setSeason_id(season.getId());
                 daoSession.getEventsTable().insert(event);
                 //Save the teams
                 ImportEvent.this.publishProgress("Saving Teams");

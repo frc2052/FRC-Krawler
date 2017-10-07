@@ -86,7 +86,7 @@ public class Compiler {
         return Observable.just(event)
                 .flatMap(event1 -> Observable.from(rxDbManager.getEventsTable().getRobots(event1)))
                 .concatMap(robot -> getRobotMetricSummary(event.getId(), metric, robot, compileWeight).subscribeOn(Schedulers.computation()))
-                .toSortedList((cmv, cmv1) -> Double.compare(cmv.robot().getTeam_id(), cmv1.robot().getTeam_id()));
+                .toSortedList((cmv, cmv1) -> Double.compare(cmv.getRobot().getTeam_id(), cmv1.getRobot().getTeam_id()));
     }
 
     /**
@@ -109,14 +109,14 @@ public class Compiler {
                         .rx()
                         .list()
                         .concatMap(Observable::from)
-                        .map(MetricDataHelper.mapMatchDataToMetricValue)
+                        .map(MetricDataHelper.INSTANCE.getMapMatchDataToMetricValue())
                         .toList();
             } else if (metric.getCategory() == MetricHelper.ROBOT_METRICS) {
                 metricValueListObservable = rxDbManager.getPitDataTable().query(robot.getId(), metric.getId(), event_id)
                         .rx()
                         .list()
                         .concatMap(Observable::from)
-                        .map(MetricDataHelper.mapPitDataToMetricValue)
+                        .map(MetricDataHelper.INSTANCE.getMapPitDataToMetricValue())
                         .toList();
             }
             return metricValueListObservable;
@@ -133,7 +133,7 @@ public class Compiler {
 
     public List<String> getRobotMatchComments(Event event, Robot robot) {
         List<String> comments = Lists.newArrayList();
-        QueryBuilder<MatchComment> matchCommentQueryBuilder = rxDbManager.getMatchCommentsTable().query(null, null, robot.getId(), event.getId(), null);
+        QueryBuilder<MatchComment> matchCommentQueryBuilder = rxDbManager.getMatchCommentsTable().query(null, null, robot.getId(), event.getId(), 0);
         for (MatchComment matchComment : matchCommentQueryBuilder.list()) {
             comments.add(matchComment.getMatch_number() + ": " + matchComment.getComment());
         }
@@ -141,7 +141,7 @@ public class Compiler {
     }
 
     public Observable<List<Long>> getMatchNumbers(Event event, Robot robot) {
-        return rxDbManager.getMatchDataTable().query(robot.getId(), null, null, null, event.getId())
+        return rxDbManager.getMatchDataTable().query(robot.getId(), null, null, 0, event.getId())
                 .orderAsc(MatchDatumDao.Properties.Match_number)
                 .rx()
                 .list()
@@ -157,7 +157,7 @@ public class Compiler {
         final Scheduler scheduler = Schedulers.from(Executors.newFixedThreadPool(10));
 
         //Cache metrics so we can use it over and over
-        final Observable<Metric> metricObservable = getMetrics(event.getGame_id()).flatMap(Observable::from).cache();
+        final Observable<Metric> metricObservable = getMetrics(event.getSeason_id()).flatMap(Observable::from).cache();
 
         return rxDbManager.robotsAtEvent(event.getId())
                 .flatMap(Observable::from)
@@ -185,13 +185,13 @@ public class Compiler {
                     Collections.sort(lists, (strings1, strings) -> Double.compare(Integer.parseInt(strings1.get(0)), Integer.parseInt(strings.get(0))));
                     return lists;
                 })
-                .zipWith(getMetrics(event.getGame_id()), summaryHeaderFunc);
+                .zipWith(getMetrics(event.getSeason_id()), summaryHeaderFunc);
     }
 
     public Observable<List<CompiledMetricValue>> getCompiledRobotSummary(long robot_id, Long event_id) {
         return getCompiledRobotSummary(robot_id, event_id, Observable.just(robot_id)
                 .map(rxDbManager.getRobotsTable()::load)
-                .concatMap(robot -> getMetrics(robot.getGame_id()))
+                .concatMap(robot -> getMetrics(robot.getSeason_id()))
         );
     }
 
@@ -226,13 +226,13 @@ public class Compiler {
                 .concatMap(matchNumber ->
                         metricsObservable
                                 .flatMap(Observable::from)
-                                .map(metric -> rxDbManager.getMatchDataTable().query(robot.getId(), metric.getId(), matchNumber, null, event.getId()).unique())
+                                .map(metric -> rxDbManager.getMatchDataTable().query(robot.getId(), metric.getId(), matchNumber, 0, event.getId()).unique())
                                 .map(CompileUtil.convertMatchDataToStringFunc)
                                 .toList()
                                 .map(record -> {
                                     record.add(0, String.valueOf(matchNumber));
                                     record.add(0, String.valueOf(robot.getTeam_id()));
-                                    MatchComment comment = rxDbManager.getMatchCommentsTable().query(matchNumber, null, robot.getId(), event.getId(), null).unique();
+                                    MatchComment comment = rxDbManager.getMatchCommentsTable().query(matchNumber, null, robot.getId(), event.getId(), 0).unique();
                                     if (comment != null) {
                                         record.add(comment.getComment());
                                     }
@@ -242,7 +242,7 @@ public class Compiler {
 
     public Observable<List<List<String>>> getRawExport(Event event) {
         final Scheduler scheduler = Schedulers.from(Executors.newFixedThreadPool(10));
-        final Observable<List<Metric>> metricObservable = rxDbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, event.getGame_id(), null).rx().list().cache();
+        final Observable<List<Metric>> metricObservable = rxDbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, event.getSeason_id(), null).rx().list().cache();
 
         return rxDbManager.robotsAtEvent(event.getId())
                 .flatMap(Observable::from)
@@ -250,7 +250,7 @@ public class Compiler {
                 .toList()
                 .map(lists -> {
                     //Load metrics one more time
-                    List<Metric> metrics = rxDbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, event.getGame_id(), null).list();
+                    List<Metric> metrics = rxDbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, event.getSeason_id(), null).list();
 
                     List<String> header = Lists.newArrayList();
 

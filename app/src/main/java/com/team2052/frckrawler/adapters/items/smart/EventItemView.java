@@ -4,9 +4,8 @@ import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.common.base.Optional;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.data.tables.Events;
+import com.team2052.frckrawler.data.tables.EventHelper;
 import com.team2052.frckrawler.models.Event;
 
 import java.text.DateFormat;
@@ -40,12 +39,8 @@ public class EventItemView extends BindableFrameLayout<Event> {
 
         mName.setText(event.getName());
 
-        Optional<String> eventLocation = Events.getEventLocation(event);
-        if (eventLocation.isPresent()) {
-            mLocation.setText(eventLocation.get());
-        } else {
-            mLocation.setText("Unknown Location");
-        }
+        String eventLocation = EventHelper.getEventLocation(event);
+        mLocation.setText(eventLocation);
 
         mDate.setText(DateFormat.getDateInstance().format(event.getDate()));
     }

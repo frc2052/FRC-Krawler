@@ -16,11 +16,6 @@ public class BinderModule {
     }
 
     @Provides
-    public ServerFragmentBinder provideServerFragmentConsumer() {
-        return new ServerFragmentBinder();
-    }
-
-    @Provides
     public RecyclerViewBinder provideRecyclerViewBinder() {
         return new RecyclerViewBinder();
     }

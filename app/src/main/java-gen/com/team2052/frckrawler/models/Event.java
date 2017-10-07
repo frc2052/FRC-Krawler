@@ -25,47 +25,51 @@ public class Event implements java.io.Serializable {
     @Unique
     private String fmsid;
     private String name;
-    private long game_id;
+    private long season_id;
     private String data;
     private java.util.Date date;
     private String unique_hash;
 
-    /** Used to resolve relations */
+    /**
+     * Used to resolve relations
+     */
     @Generated
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated
     private transient EventDao myDao;
 
-    @ToOne(joinProperty = "game_id")
-    private Game game;
+    @ToOne(joinProperty = "season_id")
+    private Season season;
 
     @Generated
-    private transient Long game__resolvedKey;
+    private transient Long season__resolvedKey;
 
     @ToMany(joinProperties = {
-        @JoinProperty(name = "id", referencedName = "event_id")
+            @JoinProperty(name = "id", referencedName = "event_id")
     })
     private List<MatchComment> matchCommentList;
 
     @ToMany(joinProperties = {
-        @JoinProperty(name = "id", referencedName = "event_id")
+            @JoinProperty(name = "id", referencedName = "event_id")
     })
     private List<RobotEvent> robotEventList;
 
     @ToMany(joinProperties = {
-        @JoinProperty(name = "id", referencedName = "event_id")
+            @JoinProperty(name = "id", referencedName = "event_id")
     })
     private List<Match> matchList;
 
     @ToMany(joinProperties = {
-        @JoinProperty(name = "id", referencedName = "event_id")
+            @JoinProperty(name = "id", referencedName = "event_id")
     })
     private List<MatchDatum> matchDatumList;
 
     @ToMany(joinProperties = {
-        @JoinProperty(name = "id", referencedName = "event_id")
+            @JoinProperty(name = "id", referencedName = "event_id")
     })
     private List<PitDatum> pitDatumList;
 
@@ -78,17 +82,19 @@ public class Event implements java.io.Serializable {
     }
 
     @Generated
-    public Event(Long id, String fmsid, String name, long game_id, String data, java.util.Date date, String unique_hash) {
+    public Event(Long id, String fmsid, String name, long season_id, String data, java.util.Date date, String unique_hash) {
         this.id = id;
         this.fmsid = fmsid;
         this.name = name;
-        this.game_id = game_id;
+        this.season_id = season_id;
         this.data = data;
         this.date = date;
         this.unique_hash = unique_hash;
     }
 
-    /** called by internal mechanisms, do not call yourself. */
+    /**
+     * called by internal mechanisms, do not call yourself.
+     */
     @Generated
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
@@ -119,12 +125,12 @@ public class Event implements java.io.Serializable {
         this.name = name;
     }
 
-    public long getGame_id() {
-        return game_id;
+    public long getSeason_id() {
+        return season_id;
     }
 
-    public void setGame_id(long game_id) {
-        this.game_id = game_id;
+    public void setSeason_id(long season_id) {
+        this.season_id = season_id;
     }
 
     public String getData() {
@@ -151,35 +157,39 @@ public class Event implements java.io.Serializable {
         this.unique_hash = unique_hash;
     }
 
-    /** To-one relationship, resolved on first access. */
+    /**
+     * To-one relationship, resolved on first access.
+     */
     @Generated
-    public Game getGame() {
-        long __key = this.game_id;
-        if (game__resolvedKey == null || !game__resolvedKey.equals(__key)) {
+    public Season getSeason() {
+        long __key = this.season_id;
+        if (season__resolvedKey == null || !season__resolvedKey.equals(__key)) {
             __throwIfDetached();
-            GameDao targetDao = daoSession.getGameDao();
-            Game gameNew = targetDao.load(__key);
+            SeasonDao targetDao = daoSession.getSeasonDao();
+            Season seasonNew = targetDao.load(__key);
             synchronized (this) {
-                game = gameNew;
-            	game__resolvedKey = __key;
+                season = seasonNew;
+                season__resolvedKey = __key;
             }
         }
-        return game;
+        return season;
     }
 
     @Generated
-    public void setGame(Game game) {
-        if (game == null) {
-            throw new DaoException("To-one property 'game_id' has not-null constraint; cannot set to-one to null");
+    public void setSeason(Season season) {
+        if (season == null) {
+            throw new DaoException("To-one property 'season_id' has not-null constraint; cannot set to-one to null");
         }
         synchronized (this) {
-            this.game = game;
-            game_id = game.getId();
-            game__resolvedKey = game_id;
+            this.season = season;
+            season_id = season.getId();
+            season__resolvedKey = season_id;
         }
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<MatchComment> getMatchCommentList() {
         if (matchCommentList == null) {
@@ -187,7 +197,7 @@ public class Event implements java.io.Serializable {
             MatchCommentDao targetDao = daoSession.getMatchCommentDao();
             List<MatchComment> matchCommentListNew = targetDao._queryEvent_MatchCommentList(id);
             synchronized (this) {
-                if(matchCommentList == null) {
+                if (matchCommentList == null) {
                     matchCommentList = matchCommentListNew;
                 }
             }
@@ -195,13 +205,17 @@ public class Event implements java.io.Serializable {
         return matchCommentList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetMatchCommentList() {
         matchCommentList = null;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<RobotEvent> getRobotEventList() {
         if (robotEventList == null) {
@@ -209,7 +223,7 @@ public class Event implements java.io.Serializable {
             RobotEventDao targetDao = daoSession.getRobotEventDao();
             List<RobotEvent> robotEventListNew = targetDao._queryEvent_RobotEventList(id);
             synchronized (this) {
-                if(robotEventList == null) {
+                if (robotEventList == null) {
                     robotEventList = robotEventListNew;
                 }
             }
@@ -217,13 +231,17 @@ public class Event implements java.io.Serializable {
         return robotEventList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetRobotEventList() {
         robotEventList = null;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<Match> getMatchList() {
         if (matchList == null) {
@@ -231,7 +249,7 @@ public class Event implements java.io.Serializable {
             MatchDao targetDao = daoSession.getMatchDao();
             List<Match> matchListNew = targetDao._queryEvent_MatchList(id);
             synchronized (this) {
-                if(matchList == null) {
+                if (matchList == null) {
                     matchList = matchListNew;
                 }
             }
@@ -239,13 +257,17 @@ public class Event implements java.io.Serializable {
         return matchList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetMatchList() {
         matchList = null;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<MatchDatum> getMatchDatumList() {
         if (matchDatumList == null) {
@@ -253,7 +275,7 @@ public class Event implements java.io.Serializable {
             MatchDatumDao targetDao = daoSession.getMatchDatumDao();
             List<MatchDatum> matchDatumListNew = targetDao._queryEvent_MatchDatumList(id);
             synchronized (this) {
-                if(matchDatumList == null) {
+                if (matchDatumList == null) {
                     matchDatumList = matchDatumListNew;
                 }
             }
@@ -261,13 +283,17 @@ public class Event implements java.io.Serializable {
         return matchDatumList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetMatchDatumList() {
         matchDatumList = null;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<PitDatum> getPitDatumList() {
         if (pitDatumList == null) {
@@ -275,7 +301,7 @@ public class Event implements java.io.Serializable {
             PitDatumDao targetDao = daoSession.getPitDatumDao();
             List<PitDatum> pitDatumListNew = targetDao._queryEvent_PitDatumList(id);
             synchronized (this) {
-                if(pitDatumList == null) {
+                if (pitDatumList == null) {
                     pitDatumList = pitDatumListNew;
                 }
             }
@@ -283,16 +309,18 @@ public class Event implements java.io.Serializable {
         return pitDatumList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetPitDatumList() {
         pitDatumList = null;
     }
 
     /**
-    * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
-    * Entity must attached to an entity context.
-    */
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
+     * Entity must attached to an entity context.
+     */
     @Generated
     public void delete() {
         __throwIfDetached();
@@ -300,9 +328,9 @@ public class Event implements java.io.Serializable {
     }
 
     /**
-    * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
-    * Entity must attached to an entity context.
-    */
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
+     * Entity must attached to an entity context.
+     */
     @Generated
     public void update() {
         __throwIfDetached();
@@ -310,9 +338,9 @@ public class Event implements java.io.Serializable {
     }
 
     /**
-    * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
-    * Entity must attached to an entity context.
-    */
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
+     * Entity must attached to an entity context.
+     */
     @Generated
     public void refresh() {
         __throwIfDetached();

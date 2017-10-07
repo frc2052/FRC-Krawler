@@ -34,17 +34,17 @@ public class NumberMetricSummaryCard extends BindableFrameLayout<CompiledMetricV
 
     @Override
     public void bind(CompiledMetricValue compiledMetricValue) {
-        name.setText(compiledMetricValue.metric().getName());
+        name.setText(compiledMetricValue.getMetric().getName());
 
         chartView.reset();
 
         LineSet lineSet = new LineSet();
         lineSet.setSmooth(true);
         LineSet averageSet = new LineSet();
-        for (int i = 0; i < compiledMetricValue.metricValues().size(); i++) {
-            float v = MetricDataHelper.getDoubleMetricValue(compiledMetricValue.metricValues().get(i)).t1.floatValue();
+        for (int i = 0; i < compiledMetricValue.getMetricValues().size(); i++) {
+            float v = MetricDataHelper.INSTANCE.getDoubleMetricValue(compiledMetricValue.getMetricValues().get(i)).t1.floatValue();
             lineSet.addPoint(Integer.toString(i), v);
-            averageSet.addPoint(Integer.toString(i), compiledMetricValue.jsonValue().get("value").getAsFloat());
+            averageSet.addPoint(Integer.toString(i), compiledMetricValue.getJsonValue().get("value").getAsFloat());
         }
 
         lineSet.setColor(getResources().getColor(R.color.color_accent));

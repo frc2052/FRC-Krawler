@@ -18,7 +18,7 @@ public class MetricSummaryCardMultiMapper extends DefaultBindableLayoutBuilder {
     public Class<? extends BindableLayout> viewType(@NonNull Object item, int position, @NonNull Mapper mapper) {
         if (item instanceof CompiledMetricValue) {
             CompiledMetricValue compiledMetricValue = (CompiledMetricValue) item;
-            switch (compiledMetricValue.metric().getType()) {
+            switch (compiledMetricValue.getMetric().getType()) {
                 case MetricHelper.BOOLEAN:
                     return BooleanMetricValueSummaryCard.class;
                 case MetricHelper.COUNTER:

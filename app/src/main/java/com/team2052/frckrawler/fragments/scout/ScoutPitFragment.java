@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
 import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.data.tba.v3.JSON;
 import com.team2052.frckrawler.helpers.metric.MetricHelper;
 import com.team2052.frckrawler.metric.data.MetricValue;
 import com.team2052.frckrawler.models.Event;
@@ -42,7 +42,7 @@ public class ScoutPitFragment extends BaseScoutFragment {
     Observable<List<MetricValue>> metricValueObservable = robotObservable()
             .map(robot -> {
                 List<MetricValue> metricValues = Lists.newArrayList();
-                final QueryBuilder<Metric> metricQueryBuilder = rxDbManager.getMetricsTable().query(MetricHelper.ROBOT_METRICS, null, mEvent.getGame_id(), true)
+                final QueryBuilder<Metric> metricQueryBuilder = rxDbManager.getMetricsTable().query(MetricHelper.ROBOT_METRICS, null, mEvent.getSeason_id(), true)
                         .orderDesc(MetricDao.Properties.Priority)
                         .orderAsc(MetricDao.Properties.Id);
                 List<Metric> metrics = metricQueryBuilder.list();
@@ -54,7 +54,7 @@ public class ScoutPitFragment extends BaseScoutFragment {
 
                     PitDatum currentData = matchDataQueryBuilder.unique();
                     //Add the metric values
-                    metricValues.add(MetricValue.create(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
+                    metricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
                 }
                 return metricValues;
             })
@@ -125,7 +125,7 @@ public class ScoutPitFragment extends BaseScoutFragment {
                     for (MetricValue widget : pitScoutSaveMetric.metricValues) {
                         PitDatum pitDatum = new PitDatum(null);
                         pitDatum.setRobot(robot);
-                        pitDatum.setMetric(widget.metric());
+                        pitDatum.setMetric(widget.getMetric());
                         pitDatum.setEvent(mEvent);
                         //pitDatum.setUser_id(user != null ? user.getId() : null); NOOP
                         pitDatum.setData(widget.valueAsString());

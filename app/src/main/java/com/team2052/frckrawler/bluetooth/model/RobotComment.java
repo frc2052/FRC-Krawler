@@ -2,9 +2,6 @@ package com.team2052.frckrawler.bluetooth.model;
 
 import java.io.Serializable;
 
-/**
- * Created by adam on 3/28/15.
- */
 public class RobotComment implements Serializable {
     private long robotId;
     private String comment;

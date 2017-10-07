@@ -24,12 +24,12 @@
         android:layout_marginLeft="72dp"
         android:text="KnightKrawler" />
 
-    <TextView
+   <!-- <TextView
         android:id="@+id/list_item_team_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="16dp"
         android:layout_below="@+id/list_item_team_name"
-        android:text="Location" />
+        android:layout_marginTop="16dp"
+        android:text="Location" />-->
 </RelativeLayout>

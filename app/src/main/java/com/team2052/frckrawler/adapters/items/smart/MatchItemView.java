@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.data.tba.v3.JSON;
 import com.team2052.frckrawler.models.Match;
 
 import java.util.List;
@@ -48,12 +48,12 @@ public class MatchItemView extends BindableFrameLayout<Match> {
         JsonObject red = alliances.get("red").getAsJsonObject();
         JsonObject blue = alliances.get("blue").getAsJsonObject();
 
-        JsonArray red_teams = red.get("teams").getAsJsonArray();
+        JsonArray red_teams = red.get("team_keys").getAsJsonArray();
         mRedTeams.get(0).setText(red_teams.get(0).getAsString().substring(3));
         mRedTeams.get(1).setText(red_teams.get(1).getAsString().substring(3));
         mRedTeams.get(2).setText(red_teams.get(2).getAsString().substring(3));
 
-        JsonArray blue_teams = blue.get("teams").getAsJsonArray();
+        JsonArray blue_teams = blue.get("team_keys").getAsJsonArray();
         mBLueTeams.get(0).setText(blue_teams.get(0).getAsString().substring(3));
         mBLueTeams.get(1).setText(blue_teams.get(1).getAsString().substring(3));
         mBLueTeams.get(2).setText(blue_teams.get(2).getAsString().substring(3));

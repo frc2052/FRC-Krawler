@@ -11,7 +11,7 @@ public class EventStringSubscriber extends BaseDataSubscriber<List<Event>, List<
         dataToBind = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
             Event event = data.get(i);
-            dataToBind.add(String.format("%s, %s", event.getGame().getName(), event.getName()));
+            dataToBind.add(String.format("%s, %s", event.getSeason().getName(), event.getName()));
         }
     }
 }

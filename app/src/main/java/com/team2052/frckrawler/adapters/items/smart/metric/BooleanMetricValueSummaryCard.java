@@ -34,8 +34,8 @@ public class BooleanMetricValueSummaryCard extends BindableFrameLayout<CompiledM
     @Override
     public void bind(CompiledMetricValue compiledMetricValue) {
         chartView.reset();
-        float value = compiledMetricValue.jsonValue().get("value").getAsFloat();
-        name.setText(compiledMetricValue.metric().getName());
+        float value = compiledMetricValue.getJsonValue().get("value").getAsFloat();
+        name.setText(compiledMetricValue.getMetric().getName());
 
         BarSet chartSet = new BarSet();
 

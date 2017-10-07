@@ -34,21 +34,21 @@ public abstract class ListViewFragment<T, S extends BaseDataSubscriber<T, List<L
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binder.setNoDataParams(getNoDataParams());
+        getBinder().setNoDataParams(getNoDataParams());
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        binder.setmRootView(view);
+        getBinder().setmRootView(view);
     }
 
     @Override
     public void refresh() {
         getObservable().subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
-                .subscribe(subscriber);
+                .subscribe(getSubscriber());
     }
 
     protected NoDataParams getNoDataParams() {

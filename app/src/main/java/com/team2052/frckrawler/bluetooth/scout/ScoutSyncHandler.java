@@ -106,7 +106,8 @@ public class ScoutSyncHandler {
                         switch (code) {
                             case BluetoothConstants.ReturnCodes.OK:
                                 // Knowing that the data was sent to the server, we can now delete the data on our device, and sync with the server
-                                RxDBManager.getInstance(context).runInTx(() -> RxDBManager.getInstance(context).deleteAll());
+                                RxDBManager.Companion.getInstance(context).runInTx(() -> RxDBManager.Companion.getInstance(context).deleteAll());
+
                                 scoutSyncable.saveToScout(context);
 
                                 ScoutHelper.setDeviceAsScout(context, true);
@@ -115,7 +116,7 @@ public class ScoutSyncHandler {
                             case BluetoothConstants.ReturnCodes.VERSION_ERROR:
                                 return new ScoutSyncStatus(false, "The server version is incompatible with your version");
                             case BluetoothConstants.ReturnCodes.EVENT_MATCH_ERROR:
-                                RxDBManager.getInstance(context).runInTx(() -> RxDBManager.getInstance(context).deleteAll());
+                                RxDBManager.Companion.getInstance(context).runInTx(() -> RxDBManager.Companion.getInstance(context).deleteAll());
                                 return new ScoutSyncStatus(false, "This device's data did not match up with the server tablet. The data from this tablet was lost.");
                             default:
                                 return new ScoutSyncStatus(false, "Scout got response code that this device couldn't handle. Try updating");

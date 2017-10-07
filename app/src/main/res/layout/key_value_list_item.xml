@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:minHeight="48dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:minHeight="48dp">
 
     <TextView
+        android:id="@+id/key_text_view"
+        style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/key_text_view"
         android:layout_margin="16dp"
-        style="@style/TextAppearance.AppCompat.Body1"
         tools:text="Test" />
 
     <TextView
+        android:id="@+id/value_text_view"
+        style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/value_text_view"
-        android:gravity="right"
         android:layout_margin="16dp"
-        style="@style/TextAppearance.AppCompat.Body1"
+        android:gravity="right"
         tools:text="Test2" />
 </LinearLayout>

@@ -27,16 +27,20 @@ public class Team implements java.io.Serializable {
     private String name;
     private String data;
 
-    /** Used to resolve relations */
+    /**
+     * Used to resolve relations
+     */
     @Generated
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated
     private transient TeamDao myDao;
 
     @ToMany(joinProperties = {
-        @JoinProperty(name = "number", referencedName = "team_id")
+            @JoinProperty(name = "number", referencedName = "team_id")
     })
     private List<Robot> robotList;
 
@@ -56,7 +60,9 @@ public class Team implements java.io.Serializable {
         this.data = data;
     }
 
-    /** called by internal mechanisms, do not call yourself. */
+    /**
+     * called by internal mechanisms, do not call yourself.
+     */
     @Generated
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
@@ -95,7 +101,9 @@ public class Team implements java.io.Serializable {
         this.data = data;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    /**
+     * To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity.
+     */
     @Generated
     public List<Robot> getRobotList() {
         if (robotList == null) {
@@ -103,7 +111,7 @@ public class Team implements java.io.Serializable {
             RobotDao targetDao = daoSession.getRobotDao();
             List<Robot> robotListNew = targetDao._queryTeam_RobotList(number);
             synchronized (this) {
-                if(robotList == null) {
+                if (robotList == null) {
                     robotList = robotListNew;
                 }
             }
@@ -111,16 +119,18 @@ public class Team implements java.io.Serializable {
         return robotList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated
     public synchronized void resetRobotList() {
         robotList = null;
     }
 
     /**
-    * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
-    * Entity must attached to an entity context.
-    */
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
+     * Entity must attached to an entity context.
+     */
     @Generated
     public void delete() {
         __throwIfDetached();
@@ -128,9 +138,9 @@ public class Team implements java.io.Serializable {
     }
 
     /**
-    * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
-    * Entity must attached to an entity context.
-    */
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
+     * Entity must attached to an entity context.
+     */
     @Generated
     public void update() {
         __throwIfDetached();
@@ -138,9 +148,9 @@ public class Team implements java.io.Serializable {
     }
 
     /**
-    * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
-    * Entity must attached to an entity context.
-    */
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
+     * Entity must attached to an entity context.
+     */
     @Generated
     public void refresh() {
         __throwIfDetached();

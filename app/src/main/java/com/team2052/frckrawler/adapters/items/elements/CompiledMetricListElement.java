@@ -19,14 +19,14 @@ public class CompiledMetricListElement extends ListElement {
     public CompiledMetricValue compiledMetricValue;
 
     public CompiledMetricListElement(CompiledMetricValue compiledMetricValue) {
-        super(String.valueOf(compiledMetricValue.robot().getTeam_id()));
+        super(String.valueOf(compiledMetricValue.getRobot().getTeam_id()));
         this.compiledMetricValue = compiledMetricValue;
     }
 
     @Override
     public View getView(Context c, LayoutInflater inflater, View convertView) {
         View inflate = inflater.inflate(R.layout.list_item_metric_value, null);
-        Team team = compiledMetricValue.robot().getTeam();
+        Team team = compiledMetricValue.getRobot().getTeam();
         ((TextView) inflate.findViewById(R.id.title)).setText(String.format("%s, %s", team.getName(), team.getNumber()));
         ((TextView) inflate.findViewById(R.id.value)).setText(compiledMetricValue.getReadableValue());
         return inflate;

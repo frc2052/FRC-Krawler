@@ -9,18 +9,18 @@ import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.model.Schedule;
 import com.team2052.frckrawler.data.RxDBManager;
 import com.team2052.frckrawler.models.Event;
-import com.team2052.frckrawler.models.Game;
 import com.team2052.frckrawler.models.Match;
 import com.team2052.frckrawler.models.Metric;
 import com.team2052.frckrawler.models.Robot;
 import com.team2052.frckrawler.models.RobotEvent;
+import com.team2052.frckrawler.models.Season;
 import com.team2052.frckrawler.models.Team;
 
 import java.util.List;
 
 
 public class ScoutDataSyncable extends ScoutSyncable {
-    private final Game game;
+    private final Season game;
     private final Event event;
     private final List<Metric> metrics;
     private final List<RobotEvent> robot_events;
@@ -30,9 +30,9 @@ public class ScoutDataSyncable extends ScoutSyncable {
 
     public ScoutDataSyncable(Context context, Event currentEvent) {
         super(BluetoothConstants.ReturnCodes.OK);
-        RxDBManager dbManager = RxDBManager.getInstance(context);
+        RxDBManager dbManager = RxDBManager.Companion.getInstance(context);
 
-        this.game = dbManager.getGamesTable().load(currentEvent.getGame_id());
+        this.game = dbManager.getSeasonsTable().load(currentEvent.getSeason_id());
         this.event = currentEvent;
         schedule = new Schedule(event);
 
@@ -52,7 +52,7 @@ public class ScoutDataSyncable extends ScoutSyncable {
 
     @Override
     public void saveToScout(Context context) {
-        RxDBManager dbManager = RxDBManager.getInstance(context);
+        RxDBManager dbManager = RxDBManager.Companion.getInstance(context);
 
         dbManager.runInTx(() -> {
                     for (Metric metric : metrics) {
@@ -76,7 +76,7 @@ public class ScoutDataSyncable extends ScoutSyncable {
                     }
 
                     dbManager.getEventsTable().insert(event);
-                    dbManager.getGamesTable().insert(game);
+                    dbManager.getSeasonsTable().insert(game);
                 }
         );
 

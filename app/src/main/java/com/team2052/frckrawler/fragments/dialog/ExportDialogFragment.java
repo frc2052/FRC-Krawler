@@ -51,7 +51,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
     public static ExportDialogFragment newInstance(Event event, int export_type) {
         ExportDialogFragment exportDialogFragment = new ExportDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(DatabaseActivity.PARENT_ID, event.getId());
+        bundle.putLong(DatabaseActivity.Companion.getPARENT_ID(), event.getId());
         bundle.putInt(EXPORT_TYPE, export_type);
         exportDialogFragment.setArguments(bundle);
         return exportDialogFragment;
@@ -61,7 +61,7 @@ public class ExportDialogFragment extends BaseProgressDialog {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        event = mRxDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        event = mRxDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID()));
 
         EventBus.getDefault().register(this);
 

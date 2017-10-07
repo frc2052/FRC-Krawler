@@ -59,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/banner_container"
-        android:background="#303030"
+        android:background="?android:windowBackground"
         android:choiceMode="singleChoice"
         android:divider="@null"
         android:fitsSystemWindows="true" />

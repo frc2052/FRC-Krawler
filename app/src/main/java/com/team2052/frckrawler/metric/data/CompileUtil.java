@@ -7,7 +7,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.data.tba.v3.JSON;
 import com.team2052.frckrawler.metric.MetricTypes;
 import com.team2052.frckrawler.models.Event;
 import com.team2052.frckrawler.models.MatchDatum;
@@ -30,7 +30,7 @@ import rx.functions.Func2;
 
 public class CompileUtil {
 
-    public static Func1<CompiledMetricValue, AbstractMap.SimpleEntry<String, String>> mapCompiledMetricValueToKeyValue = compiledMetricValue -> new AbstractMap.SimpleEntry<>(compiledMetricValue.metric().getName(), compiledMetricValue.getReadableValue());
+    public static Func1<CompiledMetricValue, AbstractMap.SimpleEntry<String, String>> mapCompiledMetricValueToKeyValue = compiledMetricValue -> new AbstractMap.SimpleEntry<>(compiledMetricValue.getMetric().getName(), compiledMetricValue.getReadableValue());
 
     public static Func1<List<AbstractMap.SimpleEntry<String, String>>, Map<String, String>> mapEntriesToMap = simpleEntries -> {
         Map<String, String> map = new LinkedHashMap<>();
@@ -87,7 +87,7 @@ public class CompileUtil {
     };
 
     public static Func1<List<MetricValue>, CompiledMetricValue> metricValuesToCompiledValue(Robot robot, Metric metric, float compileWeight) {
-        return metricValues -> MetricTypes.getType(metric.getType()).compile(metric, metricValues, compileWeight).toRobotCompiledValue(robot);
+        return metricValues -> MetricTypes.INSTANCE.getType(metric.getType()).compile(metric, metricValues, compileWeight).toRobotCompiledValue(robot);
     }
 
     public static Observable<File> getSummaryFile(@NonNull Event event) {
@@ -96,7 +96,7 @@ public class CompileUtil {
                     File fileSystem = Environment.getExternalStorageDirectory();
                     File file = null;
                     if (fileSystem.canWrite()) {
-                        File directory = new File(fileSystem, "/FRCKrawler/Summaries/" + event.getGame().getName() + "/");
+                        File directory = new File(fileSystem, "/FRCKrawler/Summaries/" + event.getSeason().getName() + "/");
                         if (!directory.exists()) {
                             boolean created = directory.mkdirs();
                             if (!created) {
@@ -105,7 +105,7 @@ public class CompileUtil {
                         }
                         try {
                             file = File.createTempFile(
-                                    String.format("%s_%s_Summary", event.getGame().getName(), event.getName()),  /* prefix */
+                                    String.format("%s_%s_Summary", event.getSeason().getName(), event.getName()),  /* prefix */
                                     ".csv",         /* suffix */
                                     directory      /* directory */
                             );
@@ -123,7 +123,7 @@ public class CompileUtil {
                     File fileSystem = Environment.getExternalStorageDirectory();
                     File file = null;
                     if (fileSystem.canWrite()) {
-                        File directory = new File(fileSystem, "/FRCKrawler/RawExport/" + event.getGame().getName() + "/");
+                        File directory = new File(fileSystem, "/FRCKrawler/RawExport/" + event.getSeason().getName() + "/");
                         if (!directory.exists()) {
                             boolean created = directory.mkdirs();
                             if (!created) {
@@ -132,7 +132,7 @@ public class CompileUtil {
                         }
                         try {
                             file = File.createTempFile(
-                                    String.format("%s_%s_RawExport", event.getGame().getName(), event.getName()),  /* prefix */
+                                    String.format("%s_%s_RawExport", event.getSeason().getName(), event.getName()),  /* prefix */
                                     ".csv",         /* suffix */
                                     directory      /* directory */
                             );

@@ -13,7 +13,7 @@ import android.widget.Spinner;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.data.RxDBManager;
-import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.data.tba.v3.JSON;
 import com.team2052.frckrawler.helpers.metric.MetricHelper;
 import com.team2052.frckrawler.models.Metric;
 
@@ -33,21 +33,21 @@ public class EditMetricDialogFragment extends DialogFragment {
     public static EditMetricDialogFragment newInstance(Metric metric) {
         EditMetricDialogFragment fragment = new EditMetricDialogFragment();
         Bundle args = new Bundle();
-        args.putLong(DatabaseActivity.PARENT_ID, metric.getId());
+        args.putLong(DatabaseActivity.Companion.getPARENT_ID(), metric.getId());
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mDbSession = RxDBManager.getInstance(getActivity());
+        mDbSession = RxDBManager.Companion.getInstance(getActivity());
         super.onCreate(savedInstanceState);
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mMetric = mDbSession.getMetricsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        mMetric = mDbSession.getMetricsTable().load(getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID()));
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
         b.setTitle("Edit Metric");
         b.setView(initViews());

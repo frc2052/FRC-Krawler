@@ -19,10 +19,10 @@ import com.team2052.frckrawler.adapters.items.ListElement;
 import com.team2052.frckrawler.adapters.items.ListItem;
 import com.team2052.frckrawler.adapters.items.elements.SimpleListElement;
 import com.team2052.frckrawler.data.RxDBManager;
-import com.team2052.frckrawler.data.tba.ConnectionChecker;
-import com.team2052.frckrawler.data.tba.TBA;
+import com.team2052.frckrawler.data.tba.v3.ConnectionChecker;
+import com.team2052.frckrawler.data.tba.v3.TBA;
 import com.team2052.frckrawler.interfaces.RefreshListener;
-import com.team2052.frckrawler.models.Game;
+import com.team2052.frckrawler.models.Season;
 
 import java.util.Calendar;
 
@@ -41,7 +41,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     private String[] yearDropDownItems;
     private Spinner yearSpinner;
     private Spinner eventSpinner;
-    private Game mGame;
+    private Season season;
     private boolean isConnected;
     private Subscription eventSubscription;
 
@@ -54,7 +54,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     public static ImportDataSimpleDialogFragment newInstance(long game_id) {
         ImportDataSimpleDialogFragment fragment = new ImportDataSimpleDialogFragment();
         Bundle b = new Bundle();
-        b.putLong(DatabaseActivity.PARENT_ID, game_id);
+        b.putLong(DatabaseActivity.Companion.getPARENT_ID(), game_id);
         fragment.setArguments(b);
         return fragment;
     }
@@ -62,7 +62,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mGame = RxDBManager.getInstance(getActivity()).getGamesTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
+        this.season = RxDBManager.Companion.getInstance(getActivity()).getSeasonsTable().load(getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID()));
         isConnected = ConnectionChecker.isConnectedToInternet(getActivity());
 
         // Get year
@@ -90,13 +90,13 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_import_simple, null);
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
         b.setPositiveButton("Import", (dialog, which) -> {
-            ImportEventDataDialog.newInstance(((ListElement) eventSpinner.getSelectedItem()).getKey(), mGame).show(ImportDataSimpleDialogFragment.this.getFragmentManager(), "importDialog");
+            ImportEventDataDialog.newInstance(((ListElement) eventSpinner.getSelectedItem()).getKey(), season).show(ImportDataSimpleDialogFragment.this.getFragmentManager(), "importDialog");
         });
         b.setNegativeButton("Cancel", (dialog, which) -> {
             ImportDataSimpleDialogFragment.this.dismiss();
         });
         b.setNeutralButton("Add Manual", ((dialog, which) -> {
-            AddEventDialogFragment.newInstance(mGame).show(getParentFragment().getChildFragmentManager(), "addEvent");
+            AddEventDialogFragment.newInstance(season).show(getParentFragment().getChildFragmentManager(), "addEvent");
         }));
         yearSpinner = (Spinner) view.findViewById(R.id.import_year_spinner);
         yearSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, yearDropDownItems));

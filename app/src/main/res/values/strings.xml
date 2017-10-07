@@ -10,7 +10,7 @@
     <string name="scout">Scout</string>
     <string name="server">Server</string>
     <string name="teams">Teams</string>
-    <string name="games">Games</string>
+    <string name="seasons">Seasons</string>
     <string name="settings">Settings</string>
 
     <!--Initial Setup Screen-->
@@ -47,15 +47,15 @@
     <!--End Settings -->
 
     <!--Info Fragments-->
-    <string name="game_info_num_of_event">Number of Events</string>
-    <string name="game_info_num_of_match_metrics">Number of Match Metrics</string>
-    <string name="game_info_num_of_pit_metrics">Number of Pit Metrics</string>
-    <string name="game_info_num_of_robots">Number of Robots</string>
+    <string name="game_info_num_of_event">Events</string>
+    <string name="game_info_num_of_match_metrics">Match Metrics</string>
+    <string name="game_info_num_of_pit_metrics">Pit Metrics</string>
+    <string name="game_info_num_of_robots">Robots</string>
 
-    <string name="event_info_num_of_teams">Number of Teams</string>
-    <string name="event_info_num_of_matches">Number of Matches</string>
-    <string name="event_info_num_of_pit_data">Amount of Pit Robot Data</string>
-    <string name="event_info_num_of_match_data">Amount of Match Data</string>
+    <string name="event_info_num_of_teams">Teams</string>
+    <string name="event_info_num_of_matches">Matches</string>
+    <string name="event_info_num_of_pit_data">Pit Robot Data</string>
+    <string name="event_info_num_of_match_data">Match Data</string>
 
     <!--End Info Fragments-->
 
@@ -79,7 +79,7 @@
         <item>Chooser</item>
         <item>Checkbox</item>
         <item>Stopwatch</item>
-        <item>Text Field</item>
+        <!-- <item>Text Field</item>-->
     </string-array>
     <!--End Metrics-->
 
@@ -88,7 +88,7 @@
     <string name="event_title">Event</string>
     <string name="robot_title">Robot</string>
     <string name="team_title">Team</string>
-    <string name="game_title">Game</string>
+    <string name="season_title">Season</string>
     <!--End Titles-->
 
     <!-- Misc -->
@@ -104,4 +104,15 @@
     <string name="server_status_on">The server is on and ready to sync</string>
     <string name="server_status_off">The server is off</string>
     <string name="select_theme">Select Theme</string>
+
+    <!--Theme-->
+    <string-array name="theme_type">
+        <item>Dark</item>
+        <item>Light</item>
+    </string-array>
+
+    <string-array name="theme_type_entries">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
 </resources>

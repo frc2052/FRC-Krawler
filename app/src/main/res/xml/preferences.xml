@@ -10,7 +10,6 @@
             android:summary="Export a CSV/Excel formatted document where the data provides a match by match summary of each team \n(This process may take a while)"
             android:title="Export Raw" />
     </PreferenceCategory>
-
     <PreferenceCategory android:title="Compile Options">
         <!--<ListPreference
             android:defaultValue="qual"

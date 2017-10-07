@@ -3,7 +3,7 @@ package com.team2052.frckrawler.helpers.metric;
 import android.support.annotation.IntDef;
 
 import com.google.gson.JsonElement;
-import com.team2052.frckrawler.data.tba.JSON;
+import com.team2052.frckrawler.data.tba.v3.JSON;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

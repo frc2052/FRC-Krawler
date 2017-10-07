@@ -62,7 +62,7 @@ public class MetricsFragment extends RecyclerViewFragment<List<Metric>, Recycler
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.import_metrics_menu) {
-            startActivity(ImportMetricsActivity.newInstance(getContext(), mGame_id, mCategory));
+            startActivity(ImportMetricsActivity.Companion.newInstance(getContext(), mGame_id, mCategory));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -88,14 +88,14 @@ public class MetricsFragment extends RecyclerViewFragment<List<Metric>, Recycler
         creator.listener((actionId, item, position, view) -> {
             if (actionId == SmartAdapterInteractions.EVENT_CLICKED && item instanceof Metric) {
                 Metric metric = (Metric) item;
-                startActivity(MetricInfoActivity.newInstance(getActivity(), metric.getId()));
+                startActivity(MetricInfoActivity.Companion.newInstance(getActivity(), metric.getId()));
             }
         });
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.floating_action_button){
+        if (v.getId() == R.id.floating_action_button) {
             startActivity(AddMetricActivity.newInstance(getActivity(), mGame_id, mCategory));
         }
     }

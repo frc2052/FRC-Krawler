@@ -41,14 +41,14 @@ public class RobotEventMatchesFragment extends ListViewFragment<List<String>, St
 
     @Override
     public void inject() {
-        mComponent.inject(this);
+        getMComponent().inject(this);
     }
 
     @Override
     protected Observable<? extends List<String>> getObservable() {
         return Observable.defer(() -> {
-            Robot robot = rxDbManager.getRobotsTable().load(robot_id);
-            Event event = rxDbManager.getEventsTable().load(event_id);
+            Robot robot = getRxDbManager().getRobotsTable().load(robot_id);
+            Event event = getRxDbManager().getEventsTable().load(event_id);
             return compiler.getMatchNumbers(event, robot)
                     .map(matchNumbers -> Lists.transform(matchNumbers, Functions.toStringFunction()));
         });

@@ -10,9 +10,10 @@
     <EditText
         android:id="@+id/nameVal"
         android:layout_width="match_parent"
-        android:inputType="textCapWords"
         android:layout_height="wrap_content"
-        android:hint="Name">
+        android:hint="Name"
+        android:inputType="textCapWords">
+
         <requestFocus />
     </EditText>
 

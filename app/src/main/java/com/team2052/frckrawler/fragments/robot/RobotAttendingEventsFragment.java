@@ -26,14 +26,14 @@ public class RobotAttendingEventsFragment extends RecyclerViewFragment<List<Even
     public static RobotAttendingEventsFragment newInstance(long robot_id) {
         RobotAttendingEventsFragment fragment = new RobotAttendingEventsFragment();
         Bundle args = new Bundle();
-        args.putLong(DatabaseActivity.PARENT_ID, robot_id);
+        args.putLong(DatabaseActivity.Companion.getPARENT_ID(), robot_id);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        robot_id = getArguments().getLong(DatabaseActivity.PARENT_ID);
+        robot_id = getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID());
         super.onCreate(savedInstanceState);
     }
 
@@ -53,7 +53,7 @@ public class RobotAttendingEventsFragment extends RecyclerViewFragment<List<Even
         creator.listener((actionId, item, position, view) -> {
             if (actionId == SmartAdapterInteractions.EVENT_CLICKED && item instanceof Event) {
                 Event event = (Event) item;
-                startActivity(RobotEventActivity.newInstance(getContext(), robot_id, event.getId()));
+                startActivity(RobotEventActivity.Companion.newInstance(getContext(), robot_id, event.getId()));
             }
         });
     }

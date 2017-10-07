@@ -12,12 +12,12 @@ import java.util.Map;
 
 /**
  * {@inheritDoc}
- * 
+ *
  * @see org.greenrobot.greendao.AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
 
-    private final DaoConfig gameDaoConfig;
+    private final DaoConfig seasonDaoConfig;
     private final DaoConfig eventDaoConfig;
     private final DaoConfig teamDaoConfig;
     private final DaoConfig metricDaoConfig;
@@ -29,7 +29,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig pitDatumDaoConfig;
     private final DaoConfig serverLogEntryDaoConfig;
 
-    private final GameDao gameDao;
+    private final SeasonDao seasonDao;
     private final EventDao eventDao;
     private final TeamDao teamDao;
     private final MetricDao metricDao;
@@ -45,8 +45,8 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
-        gameDaoConfig = daoConfigMap.get(GameDao.class).clone();
-        gameDaoConfig.initIdentityScope(type);
+        seasonDaoConfig = daoConfigMap.get(SeasonDao.class).clone();
+        seasonDaoConfig.initIdentityScope(type);
 
         eventDaoConfig = daoConfigMap.get(EventDao.class).clone();
         eventDaoConfig.initIdentityScope(type);
@@ -78,7 +78,7 @@ public class DaoSession extends AbstractDaoSession {
         serverLogEntryDaoConfig = daoConfigMap.get(ServerLogEntryDao.class).clone();
         serverLogEntryDaoConfig.initIdentityScope(type);
 
-        gameDao = new GameDao(gameDaoConfig, this);
+        seasonDao = new SeasonDao(seasonDaoConfig, this);
         eventDao = new EventDao(eventDaoConfig, this);
         teamDao = new TeamDao(teamDaoConfig, this);
         metricDao = new MetricDao(metricDaoConfig, this);
@@ -90,7 +90,7 @@ public class DaoSession extends AbstractDaoSession {
         pitDatumDao = new PitDatumDao(pitDatumDaoConfig, this);
         serverLogEntryDao = new ServerLogEntryDao(serverLogEntryDaoConfig, this);
 
-        registerDao(Game.class, gameDao);
+        registerDao(Season.class, seasonDao);
         registerDao(Event.class, eventDao);
         registerDao(Team.class, teamDao);
         registerDao(Metric.class, metricDao);
@@ -102,9 +102,9 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(PitDatum.class, pitDatumDao);
         registerDao(ServerLogEntry.class, serverLogEntryDao);
     }
-    
+
     public void clear() {
-        gameDaoConfig.clearIdentityScope();
+        seasonDaoConfig.clearIdentityScope();
         eventDaoConfig.clearIdentityScope();
         teamDaoConfig.clearIdentityScope();
         metricDaoConfig.clearIdentityScope();
@@ -117,8 +117,8 @@ public class DaoSession extends AbstractDaoSession {
         serverLogEntryDaoConfig.clearIdentityScope();
     }
 
-    public GameDao getGameDao() {
-        return gameDao;
+    public SeasonDao getSeasonDao() {
+        return seasonDao;
     }
 
     public EventDao getEventDao() {

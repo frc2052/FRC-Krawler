@@ -2,6 +2,7 @@ package com.team2052.frckrawler.views;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
@@ -28,7 +29,7 @@ public class NavDrawerImageView extends AppCompatImageView {
     @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();
-        int color = getResources().getColorStateList(R.color.nav_selected_image_color).getColorForState(getDrawableState(), Color.TRANSPARENT);
+        int color = ResourcesCompat.getColorStateList(getResources(), R.color.nav_selected_image_color, getContext().getTheme()).getColorForState(getDrawableState(), Color.TRANSPARENT);
         setColorFilter(color);
         invalidate();
     }
