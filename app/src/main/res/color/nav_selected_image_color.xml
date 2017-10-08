@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="?colorAccent" android:state_pressed="true" />
-    <item android:color="?colorAccent" android:state_activated="true" />
+    <item android:color="@color/color_accent" android:state_pressed="true" />
+    <item android:color="@color/color_accent" android:state_activated="true" />
     <item android:color="#C0FFFFFF" />
 </selector>

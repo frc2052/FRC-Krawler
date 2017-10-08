@@ -1,10 +1,19 @@
 package com.team2052.frckrawler.fragments.dialog;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.team2052.frckrawler.data.tba.v3.TBA;
+import com.team2052.frckrawler.interfaces.RefreshListener;
 import com.team2052.frckrawler.models.Event;
 
+import java.util.Arrays;
+
+import rx.Observable;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class ImportTeamsProgressDialog extends BaseProgressDialog {
     private static final String TAG = "ImportTeamsProgressDial";
@@ -28,40 +37,32 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
         super.onCreate(savedInstanceState);
         String teams = getArguments().getString(TEAMS_ARGUMENT);
         Event event = mRxDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID_ARGUMENT));
-        //TODO
-//        subscription = Observable.just(teams)
-//                .map(teamsString -> Arrays.asList(teamsString.split("\\s*,\\s*")))
-//                .flatMap(Observable::from)
-//                .map(Integer::parseInt)
-//                .map(teamNumber -> String.format(TBA.TEAM, teamNumber))
-//                .map(HTTP::getResponse)
-//                .map(HTTP::dataFromResponse)
-//                .map(JSON::getAsJsonObject)
-//                .map(jsonObject -> JSON.getGson().fromJson(jsonObject, Team.class))
-//                .toList()
-//                .flatMap(Observable::from)
-//                .map(team -> {
-//                    AndroidSchedulers.mainThread().createWorker().schedule(() -> {
-//                                if (getDialog() != null) {
-//                                    ((ProgressDialog) getDialog()).setMessage("Inserting Team " + team.getNumber());
-//                                }
-//                            }
-//                    );
-//                    mRxDbManager.getTeamsTable().insertNew(team, event);
-//                    return true;
-//                })
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .toList()
-//                .subscribe(onNext -> {
-//                    dismiss();
-//                    if (getParentFragment() instanceof RefreshListener) {
-//                        ((RefreshListener) getParentFragment()).refresh();
-//                    }
-//                }, onError -> {
-//                    Log.e(TAG, "onCreate: ", onError);
-//                    dismiss();
-//                });
+        subscription = Observable.just(teams)
+                .map(teamsString -> Arrays.asList(teamsString.split("\\s*,\\s*")))
+                .flatMap(Observable::from)
+                .concatMap(TBA::requestTeam)
+                .map(team -> {
+                    AndroidSchedulers.mainThread().createWorker().schedule(() -> {
+                                if (getDialog() != null) {
+                                    ((ProgressDialog) getDialog()).setMessage("Inserting Team " + team.getNumber());
+                                }
+                            }
+                    );
+                    mRxDbManager.getTeamsTable().insertNew(team, event);
+                    return true;
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toList()
+                .subscribe(onNext -> {
+                    dismiss();
+                    if (getParentFragment() instanceof RefreshListener) {
+                        ((RefreshListener) getParentFragment()).refresh();
+                    }
+                }, onError -> {
+                    Log.e(TAG, "onCreate: ", onError);
+                    dismiss();
+                });
 
     }
 
