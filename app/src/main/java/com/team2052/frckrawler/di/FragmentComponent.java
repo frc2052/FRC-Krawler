@@ -19,7 +19,6 @@ import com.team2052.frckrawler.fragments.SummaryFragment;
 import com.team2052.frckrawler.fragments.dialog.ExportDialogFragment;
 import com.team2052.frckrawler.fragments.event.EventInfoFragment;
 import com.team2052.frckrawler.fragments.event.EventsInGameFragment;
-import com.team2052.frckrawler.fragments.event.MatchListFragment;
 import com.team2052.frckrawler.fragments.game.SeasonInfoFragment;
 import com.team2052.frckrawler.fragments.metric.MetricInfoFragment;
 import com.team2052.frckrawler.fragments.metric.MetricsFragment;
@@ -72,8 +71,6 @@ public interface FragmentComponent {
     void inject(EventsInGameFragment eventsNewFragment);
 
     void inject(MetricsFragment metricsFragment);
-
-    void inject(MatchListFragment matchListFragment);
 
     void inject(RobotAttendingEventsFragment robotAttendingEventsFragment);
 

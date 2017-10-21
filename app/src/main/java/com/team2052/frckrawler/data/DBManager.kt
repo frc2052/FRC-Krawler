@@ -25,13 +25,11 @@ open class DBManager internal constructor(protected var context: Context) {
     val matchCommentsTable: MatchComments
     val matchDataTable: MatchData
     val pitDataTable: PitData
-    val matchesTable: Matches
     val teamsTable: Teams
     val serverLogEntries: ServerLogEntries
 
     init {
-
-        val helper = DatabaseHelper(context, "frc-krawler-database-v3", null)
+        val helper = DatabaseHelper(context, "frc-krawler-database-v4", null)
 
         val db = helper.writableDatabase
         daoMaster = DaoMaster(db)
@@ -45,7 +43,6 @@ open class DBManager internal constructor(protected var context: Context) {
         matchCommentsTable = MatchComments(daoSession.matchCommentDao, this)
         matchDataTable = MatchData(daoSession.matchDatumDao, this)
         pitDataTable = PitData(daoSession.pitDatumDao, this)
-        matchesTable = Matches(daoSession.matchDao, this)
         teamsTable = Teams(daoSession.teamDao, this)
         serverLogEntries = ServerLogEntries(daoSession.serverLogEntryDao, this)
     }

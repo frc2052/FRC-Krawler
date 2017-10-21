@@ -89,4 +89,11 @@ public class ScoutHelper {
         prefsEditor.putString(Constants.MAC_ADDRESS_PREF, "null");
         prefsEditor.apply();
     }
+
+    public static void setEvent(Context context, Event event) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        prefsEditor.putLong(Constants.CURRENT_SCOUT_EVENT_ID, event.getId());
+        prefsEditor.apply();
+    }
 }

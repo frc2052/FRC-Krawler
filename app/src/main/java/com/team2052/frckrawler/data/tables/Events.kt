@@ -25,18 +25,12 @@ class Events(dao: EventDao, dbManager: DBManager) : AbstractTable<Event, EventDa
         dbManager.matchDataTable.delete(getMatchData(model))
         dbManager.pitDataTable.delete(getPitData(model))
         dbManager.matchCommentsTable.delete(getMatchComments(model))
-        dbManager.matchesTable.delete(getMatches(model))
         dbManager.robotEventsTable.delete(getRobotEvents(model))
         super.delete(model)
     }
 
     fun getAllEvents(): List<Event> {
         return dao.loadAll()
-    }
-
-    fun getMatches(event: Event): List<Match> {
-        event.resetMatchList()
-        return event.matchList
     }
 
     fun getMatchData(event: Event): List<MatchDatum> {

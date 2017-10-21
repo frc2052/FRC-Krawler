@@ -1,15 +1,13 @@
 package com.team2052.frckrawler.bluetooth.syncable;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.google.common.collect.Lists;
-import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.bluetooth.BluetoothConstants;
 import com.team2052.frckrawler.bluetooth.model.Schedule;
 import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.helpers.ScoutHelper;
 import com.team2052.frckrawler.models.Event;
-import com.team2052.frckrawler.models.Match;
 import com.team2052.frckrawler.models.Metric;
 import com.team2052.frckrawler.models.Robot;
 import com.team2052.frckrawler.models.RobotEvent;
@@ -55,24 +53,20 @@ public class ScoutDataSyncable extends ScoutSyncable {
         RxDBManager dbManager = RxDBManager.Companion.getInstance(context);
 
         dbManager.runInTx(() -> {
-                    for (Metric metric : metrics) {
-                        dbManager.getMetricsTable().insert(metric);
+            for (int i = 0; i < metrics.size(); i++) {
+                dbManager.getMetricsTable().insert(metrics.get(i));
                     }
 
-                    for (RobotEvent robotEvent : robot_events) {
-                        dbManager.getRobotEventsTable().insert(robotEvent);
+            for (int i = 0; i < robot_events.size(); i++) {
+                dbManager.getRobotEventsTable().insert(robot_events.get(i));
                     }
 
-                    for (Robot robot : robots) {
-                        dbManager.getRobotsTable().insert(robot);
+            for (int i = 0; i < robots.size(); i++) {
+                dbManager.getRobotsTable().insert(robots.get(i));
                     }
 
-                    for (Team team : teams) {
-                        dbManager.getTeamsTable().insert(team);
-                    }
-
-                    for (Match match : schedule.matches) {
-                        dbManager.getMatchesTable().insert(match);
+            for (int i = 0; i < teams.size(); i++) {
+                dbManager.getTeamsTable().insert(teams.get(i));
                     }
 
                     dbManager.getEventsTable().insert(event);
@@ -80,9 +74,6 @@ public class ScoutDataSyncable extends ScoutSyncable {
                 }
         );
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(Constants.CURRENT_SCOUT_EVENT_ID, event.getId());
-        editor.apply();
+        ScoutHelper.setEvent(context, event);
     }
 }

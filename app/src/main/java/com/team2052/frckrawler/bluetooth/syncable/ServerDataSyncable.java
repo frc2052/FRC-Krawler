@@ -59,8 +59,9 @@ public class ServerDataSyncable extends ServerSyncable {
                 Robot robot = dbManager.getRobotsTable().load(robotComment.getRobotId());
 
                 //If robot is null ignore
-                if (robot == null)
+                if (robot == null) {
                     continue;
+                }
 
                 if (robot.getLast_updated() == null || robot.getLast_updated().getTime() <= new Date().getTime()) {
                     robot.setLast_updated(new Date());

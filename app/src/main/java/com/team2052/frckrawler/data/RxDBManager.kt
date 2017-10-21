@@ -5,7 +5,6 @@ import com.google.common.base.CaseFormat
 import com.google.common.collect.Lists
 import com.google.common.collect.Maps
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.comparators.MatchNumberComparator
 import com.team2052.frckrawler.comparators.RobotTeamNumberComparator
 import com.team2052.frckrawler.data.tba.v3.JSON
 import com.team2052.frckrawler.helpers.metric.MetricHelper
@@ -26,7 +25,6 @@ class RxDBManager private constructor(context: Context) : DBManager(context) {
     }
 
     fun deleteAll() {
-        matchesTable.deleteAll()
         pitDataTable.deleteAll()
         seasonsTable.deleteAll()
         matchCommentsTable.deleteAll()
@@ -112,15 +110,6 @@ class RxDBManager private constructor(context: Context) : DBManager(context) {
         return teamsTable.dao.rx().loadAll()
     }
 
-    fun matchesAtEvent(event_id: Long): Observable<List<Match>> {
-        val query = matchesTable.queryBuilder.where(MatchDao.Properties.Event_id.eq(event_id))
-        return query.rx().list()
-                .map { matches ->
-                    Collections.sort(matches, MatchNumberComparator())
-                    matches
-                }
-    }
-
     fun gameInfo(mGame: Season?): Observable<out Map<String, String>> {
         return Observable.just(mGame).map<Map<String, String>> { season ->
             val info = Maps.newLinkedHashMap<String, String>()
@@ -145,7 +134,6 @@ class RxDBManager private constructor(context: Context) : DBManager(context) {
             val resources = context.resources
             if (event != null) {
                 info.put(resources.getString(R.string.event_info_num_of_teams), Integer.toString(eventsTable.getTeamsAtEvent(event).size))
-                info.put(resources.getString(R.string.event_info_num_of_matches), Integer.toString(eventsTable.getMatches(event).size))
                 info.put(resources.getString(R.string.event_info_num_of_pit_data), Integer.toString(eventsTable.getPitData(event).size))
                 info.put(resources.getString(R.string.event_info_num_of_match_data), Integer.toString(eventsTable.getMatchData(event).size))
             }

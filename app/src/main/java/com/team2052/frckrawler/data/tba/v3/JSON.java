@@ -8,10 +8,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.team2052.frckrawler.data.RxDBManager;
 import com.team2052.frckrawler.data.tba.v3.types.EventDeserializer;
-import com.team2052.frckrawler.data.tba.v3.types.MatchDeserializer;
 import com.team2052.frckrawler.data.tba.v3.types.TeamDeserializer;
 import com.team2052.frckrawler.models.Event;
-import com.team2052.frckrawler.models.Match;
 import com.team2052.frckrawler.models.Team;
 
 /**
@@ -27,7 +25,6 @@ public class JSON {
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(Event.class, new EventDeserializer());
             gsonBuilder.registerTypeAdapter(Team.class, new TeamDeserializer());
-            gsonBuilder.registerTypeAdapter(Match.class, new MatchDeserializer());
             gson = gsonBuilder.create();
         }
         return gson;

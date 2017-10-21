@@ -2,7 +2,7 @@ project(':DatabaseGenerator') {
     apply plugin: 'application'
     apply plugin: 'java'
 
-    mainClassName = "com.team2052.frckrawler.database.FRCKrawlerDaoGenerator"
+    mainClassName = "com.team2052.frckrawler.data.FRCKrawlerDaoGenerator"
     // edit output direction
     def outputDir = "../app/src/main/java-gen"
 

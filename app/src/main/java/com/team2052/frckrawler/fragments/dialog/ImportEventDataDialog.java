@@ -3,7 +3,6 @@ package com.team2052.frckrawler.fragments.dialog;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -15,7 +14,6 @@ import com.team2052.frckrawler.data.tba.v3.TBA;
 import com.team2052.frckrawler.helpers.Util;
 import com.team2052.frckrawler.interfaces.RefreshListener;
 import com.team2052.frckrawler.models.Event;
-import com.team2052.frckrawler.models.Match;
 import com.team2052.frckrawler.models.Season;
 import com.team2052.frckrawler.models.Team;
 
@@ -56,14 +54,12 @@ public class ImportEventDataDialog extends BaseProgressDialog {
 
         @Override
         protected Void doInBackground(Void... params) {
-            final long startTime = System.currentTimeMillis();
             final RxDBManager daoSession = RxDBManager.Companion.getInstance(getActivity());
             //Get all data from TBA ready to parse
 
             publishProgress("Downloading Data");
             final JsonElement jEvent = JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url)));
             final JsonArray jTeams = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/teams")));
-            final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
 
             //Run in bulk transaction
             daoSession.runInTx(() -> {
@@ -81,16 +77,6 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                     mRxDbManager.getTeamsTable().insertNew(team, event);
                 }
                 ImportEvent.this.publishProgress("Saving Matches");
-                JSON.set_daoSession(daoSession);
-                for (JsonElement element : jMatches) {
-                    //Save all the matches and alliances
-                    Match match = JSON.getGson().fromJson(element, Match.class);
-                    //Only save Qualifications
-                    if (match.getMatch_type().contains("qm")) {
-                        daoSession.getMatchesTable().insert(match);
-                    }
-                }
-                Log.i(LOG_TAG, "Saved " + event.getName() + " In " + (System.currentTimeMillis() - startTime) + "ms");
             });
 
             return null;
