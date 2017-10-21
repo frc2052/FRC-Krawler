@@ -38,7 +38,7 @@ class EventInfoActivity : DatabaseActivity(), View.OnClickListener {
             override fun onPageScrollStateChanged(state: Int) {}
 
             override fun onPageSelected(position: Int) {
-                if (position < 3) {
+                if (position < 2) {
                     floating_action_button.hide()
                     floating_action_button.locked = true
                 } else {

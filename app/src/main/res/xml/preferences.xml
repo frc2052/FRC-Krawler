@@ -50,15 +50,16 @@
 
     <PreferenceCategory android:title="About">
         <Preference
+            android:summary="@string/about"
+            android:title="" />
+        <Preference
             android:key="team_website"
             android:summary="Visit www.team2052.com"
             android:title="Team 2052 Website" />
-
         <Preference
             android:key="learn_more_link"
             android:summary="Learn more about FRC Krawler and how to use it"
             android:title="Learn more about FRC Krawler" />
-
         <Preference
             android:key="github_link"
             android:summary="View project on GitHub"
