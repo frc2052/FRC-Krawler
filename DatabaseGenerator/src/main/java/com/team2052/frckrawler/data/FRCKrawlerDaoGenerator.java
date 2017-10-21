@@ -11,7 +11,7 @@ public class FRCKrawlerDaoGenerator {
     public static final String jsonElementType = "com.google.gson.JsonElement";
 
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(7, "com.team2052.frckrawler.models");
+        Schema schema = new Schema(1, "com.team2052.frckrawler.models");
 
         Entity game = schema.addEntity("Season");
         Entity event = schema.addEntity("Event");
