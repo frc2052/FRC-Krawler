@@ -70,9 +70,6 @@ public class AddMetricActivity extends DatabaseActivity {
 
     private Season season;
 
-    @MetricHelper.MetricCategory
-    private int mMetricCategory;
-
     private Observable<Integer> mMinimumObservable, mMaximumObservable, mIncrementationObservable;
     private Observable<String> mNameObservable = Observable.defer(() -> Observable.just(mName.getEditText().getText().toString()))
             .map(text -> Strings.isNullOrEmpty(text) ? getResources().getStringArray(R.array.metric_types)[typeSpinner.getSelectedItemPosition()] : text);
@@ -107,7 +104,6 @@ public class AddMetricActivity extends DatabaseActivity {
 
         @MetricHelper.MetricCategory
         int metricCategory = getIntent().getIntExtra(METRIC_CATEGORY_EXTRA, MetricHelper.MATCH_PERF_METRICS);
-        this.mMetricCategory = metricCategory;
 
         setContentView(R.layout.activity_add_metric);
         ButterKnife.bind(this);

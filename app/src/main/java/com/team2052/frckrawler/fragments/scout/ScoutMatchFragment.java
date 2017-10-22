@@ -3,9 +3,12 @@ package com.team2052.frckrawler.fragments.scout;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +51,9 @@ public class ScoutMatchFragment extends BaseScoutFragment {
     Toolbar toolbar;
     @BindView(R.id.add_match_num)
     View addMatchNumButton;
+    @BindView(R.id.scroll_view)
+    NestedScrollView scrollView;
+
     private int mMatchType;
     Observable<List<MetricValue>> metricValueObservable = Observable
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
@@ -205,13 +211,24 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                 });
     }
 
-    @Deprecated
     private int getMatchNumber() {
         try {
             return Integer.parseInt(mMatchNumberInput.getEditText().getText().toString());
         } catch (NumberFormatException e) {
             return -1;
         }
+    }
+
+    @Override
+    protected void saveMetrics(View viewClicked) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Are you sure?")
+                .setMessage(Html.fromHtml(getString(R.string.save_match_dialog, getMatchNumber(), getSelectedRobot().getTeam_id())))
+                .setPositiveButton("Save", (dialog, which) -> {
+                    ScoutMatchFragment.super.saveMetrics(viewClicked);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     @Deprecated

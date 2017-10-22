@@ -117,4 +117,5 @@
     </string-array>
 
     <string name="about">Developed by Adam Corpstein (Adam8234)\nTested and promoted by Team 2052 KnightKrawler.</string>
+    <string name="save_match_dialog">You are about to save match <b>%1$d</b> for team <b>%2$d</b></string>
 </resources>

@@ -109,6 +109,10 @@ public abstract class BaseScoutFragment extends Fragment {
         return Observable.defer(() -> Observable.just(robots.get(mRobotSpinner.getSelectedItemPosition())));
     }
 
+    protected Robot getSelectedRobot() {
+        return robots.get(mRobotSpinner.getSelectedItemPosition());
+    }
+
     public abstract Observable<Boolean> getSaveMetricObservable();
 
     @OnClick(R.id.button_save)

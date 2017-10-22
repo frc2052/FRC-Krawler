@@ -14,12 +14,11 @@ class BooleanMetricType : MetricType<BooleanMetricWidget>() {
         return BooleanMetricWidget::class.java
     }
 
-    override val type: Int
-        get() = MetricHelper.BOOLEAN
+    override val type: Int get() = MetricHelper.BOOLEAN
 
     override fun compile(metric: Metric, metricValues: List<MetricValue>, weight: Float): CompiledMetricValue {
-        if (metric.type !== type) {
-            throw IllegalStateException("Metric state must be the same when compiling values!")
+        if (metric.type != type) {
+            throw IllegalStateException("Metric type must be the same when compiling values!")
         }
 
         val compiledValue = JsonObject()
@@ -35,8 +34,9 @@ class BooleanMetricType : MetricType<BooleanMetricWidget>() {
         for (value in metricValues) {
             val result = MetricDataHelper.getBooleanMetricValue(value)
 
-            if (result.t2.isError)
+            if (result.t2.isError) {
                 continue
+            }
 
             val compileWeightForMatchNumber = MetricDataHelper.getCompileWeightForMatchNumber(value, metricValues, weight.toDouble())
 

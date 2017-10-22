@@ -14,7 +14,7 @@ public class IndexValueSummaryCard extends BindableFrameLayout<CompiledMetricVal
 
     @Override
     public int getLayoutId() {
-        return R.layout.match_view;
+        return 0;
     }
 
     @Override

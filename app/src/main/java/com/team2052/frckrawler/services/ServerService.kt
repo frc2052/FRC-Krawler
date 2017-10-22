@@ -36,12 +36,12 @@ class ServerService : Service() {
 
     private fun startServer(event: Event) {
         serverThread = ServerThread(serverStatusServerStatusSubject, applicationContext, event)
-        serverThread!!.start()
+        serverThread?.start()
     }
 
     private fun stopServer() {
         if (isServerOn) {
-            serverThread!!.closeServer()
+            serverThread?.closeServer()
             serverThread = null
         }
     }

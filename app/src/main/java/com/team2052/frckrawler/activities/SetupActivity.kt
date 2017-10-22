@@ -48,6 +48,7 @@ class SetupActivity : AppCompatActivity(), View.OnClickListener {
 
         setContentView(R.layout.activity_setup)
         ButterKnife.bind(this)
+        pager = findViewById<DisableSwipeViewPager>(R.id.view_pager)
         setupViews()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
