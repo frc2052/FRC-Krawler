@@ -7,7 +7,6 @@ import com.team2052.frckrawler.database.tables.Events;
 import com.team2052.frckrawler.database.tables.Games;
 import com.team2052.frckrawler.database.tables.MatchComments;
 import com.team2052.frckrawler.database.tables.MatchData;
-import com.team2052.frckrawler.database.tables.Matches;
 import com.team2052.frckrawler.database.tables.Metrics;
 import com.team2052.frckrawler.database.tables.PitData;
 import com.team2052.frckrawler.database.tables.RobotEvents;
@@ -36,7 +35,6 @@ public class DBManager {
     private final MatchComments mMatchComments;
     private final MatchData mMatchData;
     private final PitData mPitDatas;
-    private final Matches mMatches;
     private final Teams mTeams;
     private final ServerLogEntries mServerLogEntries;
     protected Context context;
@@ -58,7 +56,6 @@ public class DBManager {
         mMatchComments = new MatchComments(daoSession.getMatchCommentDao(), this);
         mMatchData = new MatchData(daoSession.getMatchDatumDao(), this);
         mPitDatas = new PitData(daoSession.getPitDatumDao(), this);
-        mMatches = new Matches(daoSession.getMatchDao(), this);
         mTeams = new Teams(daoSession.getTeamDao(), this);
         mServerLogEntries = new ServerLogEntries(daoSession.getServerLogEntryDao(), this);
 
@@ -96,14 +93,9 @@ public class DBManager {
         return mPitDatas;
     }
 
-    public Matches getMatchesTable() {
-        return mMatches;
-    }
-
     public Teams getTeamsTable() {
         return mTeams;
     }
-
 
     public ServerLogEntries getServerLogEntries() {
         return mServerLogEntries;

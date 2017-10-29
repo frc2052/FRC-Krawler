@@ -11,7 +11,6 @@ import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.listeners.RefreshListener;
 import com.team2052.frckrawler.tba.HTTP;
@@ -63,7 +62,6 @@ public class ImportEventDataDialog extends BaseProgressDialog {
             publishProgress("Downloading Data");
             final JsonElement jEvent = JSON.getAsJsonObject(HTTP.dataFromResponse(HTTP.getResponse(url)));
             final JsonArray jTeams = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/teams")));
-            final JsonArray jMatches = JSON.getAsJsonArray(HTTP.dataFromResponse(HTTP.getResponse(url + "/matches")));
 
             //Run in bulk transaction
             daoSession.runInTx(() -> {
@@ -80,16 +78,7 @@ public class ImportEventDataDialog extends BaseProgressDialog {
                     Team team = JSON.getGson().fromJson(element, Team.class);
                     mRxDbManager.getTeamsTable().insertNew(team, event);
                 }
-                ImportEvent.this.publishProgress("Saving Matches");
                 JSON.set_daoSession(daoSession);
-                for (JsonElement element : jMatches) {
-                    //Save all the matches and alliances
-                    Match match = JSON.getGson().fromJson(element, Match.class);
-                    //Only save Qualifications
-                    if (match.getMatch_type().contains("qm")) {
-                        daoSession.getMatchesTable().insert(match);
-                    }
-                }
                 Log.i(LOG_TAG, "Saved " + event.getName() + " In " + (System.currentTimeMillis() - startTime) + "ms");
             });
 

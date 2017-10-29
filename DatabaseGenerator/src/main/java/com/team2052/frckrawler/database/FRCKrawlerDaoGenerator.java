@@ -17,7 +17,6 @@ public class FRCKrawlerDaoGenerator {
         Entity event = schema.addEntity("Event");
         Entity team = schema.addEntity("Team");
         Entity metric = schema.addEntity("Metric");
-        Entity match = schema.addEntity("Match");
         Entity matchDatum = schema.addEntity("MatchDatum");
         Entity matchComment = schema.addEntity("MatchComment");
         Entity robot = schema.addEntity("Robot");
@@ -87,18 +86,6 @@ public class FRCKrawlerDaoGenerator {
 
         robotEvent.addStringProperty("data");
 
-        //Match
-        match.implementsSerializable();
-        match.addIdProperty();
-        match.addStringProperty("match_key").unique();
-        match.addStringProperty("match_type");
-        match.addIntProperty("match_number");
-
-        Property match_event_id = match.addLongProperty("event_id").notNull().getProperty();
-        match.addToOne(event, match_event_id);
-
-        match.addStringProperty("data");
-
         //Events
         event.implementsSerializable();
         event.addIdProperty();
@@ -112,7 +99,6 @@ public class FRCKrawlerDaoGenerator {
         event.addStringProperty("unique_hash");
 
         event.addToMany(robotEvent, robot_event_event_id);
-        event.addToMany(match, match_event_id);
         event.addToMany(matchDatum, match_data_event_id);
         event.addToMany(pitDatum, pit_data_event_id);
 
