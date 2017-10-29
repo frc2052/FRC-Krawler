@@ -25,7 +25,6 @@ public class DaoMaster extends AbstractDaoMaster {
         EventDao.createTable(db, ifNotExists);
         TeamDao.createTable(db, ifNotExists);
         MetricDao.createTable(db, ifNotExists);
-        MatchDao.createTable(db, ifNotExists);
         MatchDatumDao.createTable(db, ifNotExists);
         MatchCommentDao.createTable(db, ifNotExists);
         RobotDao.createTable(db, ifNotExists);
@@ -40,7 +39,6 @@ public class DaoMaster extends AbstractDaoMaster {
         EventDao.dropTable(db, ifExists);
         TeamDao.dropTable(db, ifExists);
         MetricDao.dropTable(db, ifExists);
-        MatchDao.dropTable(db, ifExists);
         MatchDatumDao.dropTable(db, ifExists);
         MatchCommentDao.dropTable(db, ifExists);
         RobotDao.dropTable(db, ifExists);
@@ -69,7 +67,6 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(EventDao.class);
         registerDaoClass(TeamDao.class);
         registerDaoClass(MetricDao.class);
-        registerDaoClass(MatchDao.class);
         registerDaoClass(MatchDatumDao.class);
         registerDaoClass(MatchCommentDao.class);
         registerDaoClass(RobotDao.class);

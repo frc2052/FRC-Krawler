@@ -10,7 +10,7 @@ import rx.Observable;
  * @author Adam
  */
 public class TBA {
-    private static String BASE_TBA_API_URL = "http://www.thebluealliance.com/api/v2/";
+    private static String BASE_TBA_API_URL = "http://www.thebluealliance.com/api/v3/";
     public static String EVENT = BASE_TBA_API_URL + "event/%s";
     public static String TEAM = BASE_TBA_API_URL + "team/frc%d";
     private static String EVENT_BY_YEAR = BASE_TBA_API_URL + "events/%d";

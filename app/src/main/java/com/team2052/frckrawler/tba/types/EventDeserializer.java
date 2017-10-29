@@ -29,14 +29,14 @@ public class EventDeserializer implements JsonDeserializer<Event> {
         }
 
 
-        JsonObject data = new JsonObject();
+        /*JsonObject data = new JsonObject();
         if (object.get("location").isJsonNull()) {
             data.addProperty("location", "Location Unknown");
         } else {
             data.addProperty("location", object.get("location").getAsString());
-        }
+        }*/
 
-        event.setData(JSON.getGson().toJson(data));
+        /*event.setData(JSON.getGson().toJson(data));*/
 
         //Parse the date
         if (!object.get("start_date").isJsonNull()) {

@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @author Adam
  */
 public class HTTP {
-    public static final String TBA_APP_HEADER = "frc2052:frckrawler-scouting-system:v3";
+    public static final String TBA_APP_HEADER = "replaceme";
     private static OkHttpClient client;
 
     public static OkHttpClient getClient() {
@@ -27,7 +27,7 @@ public class HTTP {
     public static Response getResponse(String url) {
         Request.Builder requestBuilder = new Request.Builder()
                 .url(url)
-                .addHeader("X-TBA-App-Id", TBA_APP_HEADER);
+                .addHeader("X-TBA-Auth-Key", TBA_APP_HEADER);
         Request request = requestBuilder.build();
         try {
             return getClient().newCall(request).execute();

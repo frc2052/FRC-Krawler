@@ -9,12 +9,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.comparators.MatchNumberComparator;
 import com.team2052.frckrawler.comparators.RobotTeamNumberComparator;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.db.Match;
-import com.team2052.frckrawler.db.MatchDao;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.MetricDao;
 import com.team2052.frckrawler.db.Robot;
@@ -147,15 +144,6 @@ public class RxDBManager extends DBManager {
         return getTeamsTable().getDao().rx().loadAll();
     }
 
-    public Observable<List<Match>> matchesAtEvent(long event_id) {
-        QueryBuilder<Match> query = getMatchesTable().getQueryBuilder().where(MatchDao.Properties.Event_id.eq(event_id));
-        return query.rx().list()
-                .map(matches -> {
-                    Collections.sort(matches, new MatchNumberComparator());
-                    return matches;
-                });
-    }
-
     public Observable<? extends Map<String, String>> gameInfo(Game mGame) {
         return Observable.just(mGame).map(game -> {
             Map<String, String> info = Maps.newLinkedHashMap();
@@ -175,7 +163,6 @@ public class RxDBManager extends DBManager {
             Map<String, String> info = Maps.newLinkedHashMap();
             Resources resources = context.getResources();
             info.put(resources.getString(R.string.event_info_num_of_teams), Integer.toString(getEventsTable().getTeamsAtEvent(event).size()));
-            info.put(resources.getString(R.string.event_info_num_of_matches), Integer.toString(getEventsTable().getMatches(event).size()));
             info.put(resources.getString(R.string.event_info_num_of_pit_data), Integer.toString(getEventsTable().getPitData(event).size()));
             info.put(resources.getString(R.string.event_info_num_of_match_data), Integer.toString(getEventsTable().getMatchData(event).size()));
             return info;

@@ -12,7 +12,6 @@ import com.team2052.frckrawler.db.Game;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Team;
 import com.team2052.frckrawler.db.Metric;
-import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.MatchDatum;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.Robot;
@@ -24,7 +23,6 @@ import com.team2052.frckrawler.db.GameDao;
 import com.team2052.frckrawler.db.EventDao;
 import com.team2052.frckrawler.db.TeamDao;
 import com.team2052.frckrawler.db.MetricDao;
-import com.team2052.frckrawler.db.MatchDao;
 import com.team2052.frckrawler.db.MatchDatumDao;
 import com.team2052.frckrawler.db.MatchCommentDao;
 import com.team2052.frckrawler.db.RobotDao;
@@ -45,7 +43,6 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig eventDaoConfig;
     private final DaoConfig teamDaoConfig;
     private final DaoConfig metricDaoConfig;
-    private final DaoConfig matchDaoConfig;
     private final DaoConfig matchDatumDaoConfig;
     private final DaoConfig matchCommentDaoConfig;
     private final DaoConfig robotDaoConfig;
@@ -57,7 +54,6 @@ public class DaoSession extends AbstractDaoSession {
     private final EventDao eventDao;
     private final TeamDao teamDao;
     private final MetricDao metricDao;
-    private final MatchDao matchDao;
     private final MatchDatumDao matchDatumDao;
     private final MatchCommentDao matchCommentDao;
     private final RobotDao robotDao;
@@ -81,9 +77,6 @@ public class DaoSession extends AbstractDaoSession {
         metricDaoConfig = daoConfigMap.get(MetricDao.class).clone();
         metricDaoConfig.initIdentityScope(type);
 
-        matchDaoConfig = daoConfigMap.get(MatchDao.class).clone();
-        matchDaoConfig.initIdentityScope(type);
-
         matchDatumDaoConfig = daoConfigMap.get(MatchDatumDao.class).clone();
         matchDatumDaoConfig.initIdentityScope(type);
 
@@ -106,7 +99,6 @@ public class DaoSession extends AbstractDaoSession {
         eventDao = new EventDao(eventDaoConfig, this);
         teamDao = new TeamDao(teamDaoConfig, this);
         metricDao = new MetricDao(metricDaoConfig, this);
-        matchDao = new MatchDao(matchDaoConfig, this);
         matchDatumDao = new MatchDatumDao(matchDatumDaoConfig, this);
         matchCommentDao = new MatchCommentDao(matchCommentDaoConfig, this);
         robotDao = new RobotDao(robotDaoConfig, this);
@@ -118,7 +110,6 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(Event.class, eventDao);
         registerDao(Team.class, teamDao);
         registerDao(Metric.class, metricDao);
-        registerDao(Match.class, matchDao);
         registerDao(MatchDatum.class, matchDatumDao);
         registerDao(MatchComment.class, matchCommentDao);
         registerDao(Robot.class, robotDao);
@@ -132,7 +123,6 @@ public class DaoSession extends AbstractDaoSession {
         eventDaoConfig.clearIdentityScope();
         teamDaoConfig.clearIdentityScope();
         metricDaoConfig.clearIdentityScope();
-        matchDaoConfig.clearIdentityScope();
         matchDatumDaoConfig.clearIdentityScope();
         matchCommentDaoConfig.clearIdentityScope();
         robotDaoConfig.clearIdentityScope();
@@ -155,10 +145,6 @@ public class DaoSession extends AbstractDaoSession {
 
     public MetricDao getMetricDao() {
         return metricDao;
-    }
-
-    public MatchDao getMatchDao() {
-        return matchDao;
     }
 
     public MatchDatumDao getMatchDatumDao() {

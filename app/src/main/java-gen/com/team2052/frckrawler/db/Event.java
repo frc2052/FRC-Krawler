@@ -52,11 +52,6 @@ public class Event implements java.io.Serializable {
     @ToMany(joinProperties = {
         @JoinProperty(name = "id", referencedName = "event_id")
     })
-    private List<Match> matchList;
-
-    @ToMany(joinProperties = {
-        @JoinProperty(name = "id", referencedName = "event_id")
-    })
     private List<MatchDatum> matchDatumList;
 
     @ToMany(joinProperties = {
@@ -216,28 +211,6 @@ public class Event implements java.io.Serializable {
     @Generated
     public synchronized void resetRobotEventList() {
         robotEventList = null;
-    }
-
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
-    @Generated
-    public List<Match> getMatchList() {
-        if (matchList == null) {
-            __throwIfDetached();
-            MatchDao targetDao = daoSession.getMatchDao();
-            List<Match> matchListNew = targetDao._queryEvent_MatchList(id);
-            synchronized (this) {
-                if(matchList == null) {
-                    matchList = matchListNew;
-                }
-            }
-        }
-        return matchList;
-    }
-
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
-    @Generated
-    public synchronized void resetMatchList() {
-        matchList = null;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */

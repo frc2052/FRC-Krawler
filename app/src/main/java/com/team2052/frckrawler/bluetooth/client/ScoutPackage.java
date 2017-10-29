@@ -9,7 +9,6 @@ import com.team2052.frckrawler.bluetooth.Schedule;
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
-import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.Metric;
 import com.team2052.frckrawler.db.Robot;
 import com.team2052.frckrawler.db.RobotEvent;
@@ -72,10 +71,6 @@ public class ScoutPackage implements Serializable {
 
                     for (Team team : teams) {
                         rxDbManager.getTeamsTable().insert(team);
-                    }
-
-                    for (Match match : schedule.matches) {
-                        rxDbManager.getMatchesTable().insert(match);
                     }
 
                     rxDbManager.getEventsTable().insert(event);
