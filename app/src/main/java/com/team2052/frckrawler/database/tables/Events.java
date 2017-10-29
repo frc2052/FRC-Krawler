@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.team2052.frckrawler.database.DBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.EventDao;
-import com.team2052.frckrawler.db.Match;
 import com.team2052.frckrawler.db.MatchComment;
 import com.team2052.frckrawler.db.MatchDatum;
 import com.team2052.frckrawler.db.PitDatum;
@@ -65,18 +64,12 @@ public class Events extends AbstractTable<Event, EventDao> {
         dbManager.getMatchDataTable().delete(getMatchData(model));
         dbManager.getPitDataTable().delete(getPitData(model));
         dbManager.getMatchCommentsTable().delete(getMatchComments(model));
-        dbManager.getMatchesTable().delete(getMatches(model));
         dbManager.getRobotEventsTable().delete(getRobotEvents(model));
         dao.delete(model);
     }
 
     public List<Event> getAllEvents() {
         return dao.loadAll();
-    }
-
-    public List<Match> getMatches(Event event) {
-        event.resetMatchList();
-        return event.getMatchList();
     }
 
     public List<MatchDatum> getMatchData(Event event) {

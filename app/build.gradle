@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.0'
 
     defaultConfig {
         applicationId 'com.team2052.frckrawler'
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 39
         versionName "3.2.9"
         multiDexEnabled true

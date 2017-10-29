@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 
 import com.team2052.frckrawler.adapters.ViewOnClickFragmentStatePagerAdapter;
 import com.team2052.frckrawler.fragments.EventInfoFragment;
-import com.team2052.frckrawler.fragments.MatchListFragment;
 import com.team2052.frckrawler.fragments.SummaryFragment;
 import com.team2052.frckrawler.fragments.robot.RobotsFragment;
 
@@ -13,7 +12,7 @@ import com.team2052.frckrawler.fragments.robot.RobotsFragment;
  * Created by Adam on 11/23/2015.
  */
 public class EventViewPagerAdapter extends ViewOnClickFragmentStatePagerAdapter {
-    public String[] headers = new String[]{"Info", "Metric Summary", "Match Schedule", "Teams Attending"};
+    public String[] headers = new String[]{"Info", "Metric Summary", "Teams Attending"};
     private long event_id;
 
     public EventViewPagerAdapter(FragmentManager fragmentManager, long event_id) {
@@ -29,8 +28,6 @@ public class EventViewPagerAdapter extends ViewOnClickFragmentStatePagerAdapter 
             case 1:
                 return SummaryFragment.newInstance(event_id);
             case 2:
-                return MatchListFragment.newInstance(event_id);
-            case 3:
                 return RobotsFragment.newEventInstance(event_id);
         }
         return null;
