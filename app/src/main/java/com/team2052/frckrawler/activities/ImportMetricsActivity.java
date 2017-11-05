@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseListOptions;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,7 +52,11 @@ public class ImportMetricsActivity extends DatabaseActivity implements AdapterVi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         databaseReference = FirebaseUtil.getFirebaseDatabase().getReference().child("match_perf");
 
-        adapter = new FirebaseListAdapter<MetricImportModel>(this, MetricImportModel.class, R.layout.list_item_metrics_import, databaseReference) {
+        FirebaseListOptions<MetricImportModel> options = new FirebaseListOptions.Builder<MetricImportModel>()
+                .setQuery(databaseReference, MetricImportModel.class)
+                .setLayout(R.layout.list_item_metrics_import)
+                .build();
+        adapter = new FirebaseListAdapter<MetricImportModel>(options) {
             @Override
             protected void populateView(View v, MetricImportModel model, int position) {
                 ((TextView) v.findViewById(android.R.id.text1)).setText(model.name);
@@ -77,9 +82,15 @@ public class ImportMetricsActivity extends DatabaseActivity implements AdapterVi
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        adapter.cleanup();
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
     @Override
