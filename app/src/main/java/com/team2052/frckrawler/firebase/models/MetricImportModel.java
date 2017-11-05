@@ -14,5 +14,4 @@ public class MetricImportModel {
 
     public MetricImportModel() {
     }
-
 }
