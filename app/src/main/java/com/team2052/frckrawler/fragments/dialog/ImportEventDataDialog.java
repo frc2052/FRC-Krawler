@@ -97,8 +97,6 @@ public class ImportEventDataDialog extends BaseProgressDialog {
         protected void onProgressUpdate(String... values) {
             ((ProgressDialog) getDialog()).setMessage(values[0]);
         }
-
-
     }
 }
 
