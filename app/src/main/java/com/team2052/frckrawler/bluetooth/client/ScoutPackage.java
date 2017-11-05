@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.team2052.frckrawler.Constants;
-import com.team2052.frckrawler.bluetooth.Schedule;
 import com.team2052.frckrawler.database.RxDBManager;
 import com.team2052.frckrawler.db.Event;
 import com.team2052.frckrawler.db.Game;
@@ -27,11 +26,10 @@ import java.util.List;
  */
 public class ScoutPackage implements Serializable {
     private final ArrayList<Team> teams = new ArrayList<>();
-    private final Schedule schedule;
+    private final Event event;
     private final List<Metric> metrics;
     private final List<RobotEvent> robot_events;
     private final List<Robot> robots = new ArrayList<>();
-    private final Event event;
     private final Game game;
     private final String TAG = ScoutPackage.class.getSimpleName();
 
@@ -46,8 +44,6 @@ public class ScoutPackage implements Serializable {
         for (RobotEvent robotEvent : robot_events) {
             robots.add(rxDbManager.getRobotEventsTable().getRobot(robotEvent));
         }
-
-        schedule = new Schedule(event);
 
         for (RobotEvent robotEvent : robot_events) {
             teams.add(rxDbManager.getRobotEventsTable().getTeam(robotEvent));
