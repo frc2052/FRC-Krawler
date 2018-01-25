@@ -24,9 +24,9 @@ class RobotsFragment : ListViewFragment<List<Robot>, RobotListSubscriber>(), Vie
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val b = arguments
-        this.mViewType = b.getInt(VIEW_TYPE, 0)
-        mKey = b.getLong(DatabaseActivity.PARENT_ID)
+
+        this.mViewType = arguments?.getInt(VIEW_TYPE, 0) ?: 0
+        this.mKey = arguments?.getLong(DatabaseActivity.PARENT_ID) ?:0
     }
 
     override fun inject() {
@@ -37,9 +37,13 @@ class RobotsFragment : ListViewFragment<List<Robot>, RobotListSubscriber>(), Vie
         return if (mViewType == 0) rxDbManager.robotsWithTeam(mKey) else rxDbManager.robotsAtEvent(mKey)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mListView.setOnItemClickListener { parent, view1, position, id -> activity.startActivity(RobotActivity.newInstance(activity, java.lang.Long.parseLong((parent.adapter.getItem(position) as ListElement).key))) }
+
+        mListView.setOnItemClickListener { parent, view1, position, id ->
+            val act = activity ?: return@setOnItemClickListener
+            startActivity(RobotActivity.newInstance(act, java.lang.Long.parseLong((parent.adapter.getItem(position) as ListElement).key)))
+        }
     }
 
     override fun getNoDataParams(): NoDataParams {

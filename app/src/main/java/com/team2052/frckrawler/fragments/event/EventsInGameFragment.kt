@@ -28,7 +28,7 @@ class EventsInGameFragment : RecyclerViewFragment<List<Event>, RecyclerViewBinde
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mGame_id = arguments.getLong(DatabaseActivity.PARENT_ID, 0)
+        mGame_id = arguments?.getLong(DatabaseActivity.PARENT_ID, 0) ?: 0
         super.onCreate(savedInstanceState)
     }
 
@@ -44,7 +44,9 @@ class EventsInGameFragment : RecyclerViewFragment<List<Event>, RecyclerViewBinde
         creator.map(Event::class.java, EventItemView::class.java)
         creator.listener { actionId, item, position, view ->
             if (actionId == SmartAdapterInteractions.EVENT_CLICKED && item is Event) {
-                startActivity(EventInfoActivity.newInstance(activity, item.id!!))
+                context?.let {
+                    startActivity(EventInfoActivity.newInstance(it, item.id))
+                }
             }
         }
     }

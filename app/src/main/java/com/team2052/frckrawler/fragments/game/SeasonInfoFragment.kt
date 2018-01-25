@@ -23,7 +23,7 @@ class SeasonInfoFragment : ListViewFragment<Map<String, String>, KeyValueListSub
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mSeason = rxDbManager.seasonsTable.load(arguments.getLong(GAME_ID)) ?: return
+        mSeason = rxDbManager.seasonsTable.load(arguments?.getLong(GAME_ID)) ?: return
         setHasOptionsMenu(true)
     }
 
@@ -41,8 +41,10 @@ class SeasonInfoFragment : ListViewFragment<Map<String, String>, KeyValueListSub
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val ctx = context ?: return false
+
         when (item.itemId) {
-            R.id.menu_delete -> MaterialDialog.Builder(context)
+            R.id.menu_delete -> MaterialDialog.Builder(ctx)
                     .title(R.string.delete_season)
                     .positiveColorRes(R.color.red_800)
                     .positiveText(R.string.delete)
@@ -59,10 +61,10 @@ class SeasonInfoFragment : ListViewFragment<Map<String, String>, KeyValueListSub
                                 .subscribe({ }, { onError ->
                                     onError.printStackTrace()
                                     FirebaseCrash.report(onError)
-                                }) { activity.finish() }
+                                }) { activity?.finish() }
                     }
                     .show()
-            R.id.menu_edit -> MaterialDialog.Builder(context)
+            R.id.menu_edit -> MaterialDialog.Builder(ctx)
                     .title(R.string.edit_game)
                     .input(getString(R.string.season_name), mSeason.name, false) { materialDialog, charSequence ->
                         mSeason.name = charSequence.toString()

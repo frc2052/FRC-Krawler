@@ -42,32 +42,30 @@ class ServerFragment : BaseLifeCycleFragment<ServerFragmentViewModel>(), View.On
     override val viewModelClass: Class<ServerFragmentViewModel> = ServerFragmentViewModel::class.java
 
     override fun onClick(view: View) {
-        doIfEventNotNull {
+        val ctx = context ?: return
+
+        val eventFromSelected = getEventFromSelected()
+
+        if (eventFromSelected != null) {
             when (view.id) {
-                R.id.view_event -> startActivity(EventInfoActivity.newInstance(context, it.id))
-                R.id.view_game -> startActivity(SeasonInfoActivity.newInstance(context, it.season_id))
-                R.id.scout_match_button -> startActivity(ScoutActivity.newInstance(context, it, ScoutActivity.MATCH_SCOUT_TYPE))
-                R.id.scout_pit_button -> startActivity(ScoutActivity.newInstance(context, it, ScoutActivity.PIT_SCOUT_TYPE))
+                R.id.view_event -> startActivity(EventInfoActivity.newInstance(ctx, eventFromSelected.id))
+                R.id.view_game -> startActivity(SeasonInfoActivity.newInstance(ctx, eventFromSelected.season_id))
+                R.id.scout_match_button -> startActivity(ScoutActivity.newInstance(ctx, eventFromSelected, ScoutActivity.MATCH_SCOUT_TYPE))
+                R.id.scout_pit_button -> startActivity(ScoutActivity.newInstance(ctx, eventFromSelected, ScoutActivity.PIT_SCOUT_TYPE))
             }
         }
+
         when (view.id) {
-            R.id.view_logs -> startActivity(Intent(context, ServerLogActivity::class.java))
+            R.id.view_logs -> startActivity(Intent(ctx, ServerLogActivity::class.java))
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View = inflater!!.inflate(R.layout.fragment_server, null, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = inflater.inflate(R.layout.fragment_server, null, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         lifecycle.addObserver(viewModel)
 
         viewModel.onEventsUpdated {
-            if (it.isEmpty()) {
-                message_card.messageType = MessageCardView.ERROR
-                message_card.setMessageTitle("No Events")
-                message_card.setMessageText("Please download some events")
-            }
-
-            message_card.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
             scout_match_button.isEnabled = !it.isEmpty()
             scout_pit_button.isEnabled = !it.isEmpty()
             host_toggle.isEnabled = !it.isEmpty()
@@ -122,13 +120,6 @@ class ServerFragment : BaseLifeCycleFragment<ServerFragmentViewModel>(), View.On
     }
 
     fun getEventFromSelected(): Event? = viewModel.getEventAtIndex(event_spinner.selectedItemPosition)
-
-    inline fun doIfEventNotNull(func: (Event) -> Unit) {
-        val eventFromSelected = getEventFromSelected()
-        if (eventFromSelected != null) {
-            func(eventFromSelected)
-        }
-    }
 }
 
 

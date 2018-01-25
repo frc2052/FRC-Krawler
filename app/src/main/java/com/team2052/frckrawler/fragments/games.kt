@@ -22,21 +22,24 @@ class SeasonsFragment : RecyclerFragment<SeasonsFragmentViewModel>() {
     override val showDividers: Boolean = true
 
     override fun provideAdapterCreator(creator: SmartAdapter.MultiAdaptersCreator) {
+        val act = activity ?: return
         creator.map(Season::class.java, SeasonItemView::class.java)
         creator.listener { actionId, item, position, view ->
             if (actionId == SmartAdapterInteractions.EVENT_CLICKED && item is Season) {
-                startActivity(SeasonInfoActivity.newInstance(activity, item.id!!))
+                startActivity(SeasonInfoActivity.newInstance(act, item.id))
             }
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.recycler_view_fab, null, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val ctx = context ?: return
+
         super.onViewCreated(view, savedInstanceState)
         fab.setOnClickListener {
             //When we click the add button add a game
-            MaterialDialog.Builder(context)
+            MaterialDialog.Builder(ctx)
                     .title(R.string.add_season)
                     .negativeText(android.R.string.cancel)
                     .positiveText(android.R.string.ok)

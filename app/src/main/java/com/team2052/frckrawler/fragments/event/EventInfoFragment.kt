@@ -25,7 +25,7 @@ class EventInfoFragment : ListViewFragment<Map<String, String>, KeyValueListSubs
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        mEvent = rxDbManager.eventsTable.load(arguments.getLong(EVENT_ID))
+        mEvent = rxDbManager.eventsTable.load(arguments?.getLong(EVENT_ID))
     }
 
     override fun inject() {
@@ -43,44 +43,52 @@ class EventInfoFragment : ListViewFragment<Map<String, String>, KeyValueListSubs
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-            R.id.menu_delete -> buildDeleteDialog().show()
-            R.id.menu_edit -> buildEditDialog().show()
+            R.id.menu_delete -> buildDeleteDialog()?.show()
+            R.id.menu_edit -> buildEditDialog()?.show()
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun buildDeleteDialog(): AlertDialog {
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle("Delete Event?")
-        builder.setMessage("Are you sure you want to delete this event?")
-        builder.setPositiveButton("Ok") { dialog, which ->
-            Observable.just<Event>(mEvent)
-                    .map { event ->
-                        rxDbManager.runInTx(Runnable { rxDbManager.eventsTable.delete(event) })
-                        event
-                    }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe { onNext -> activity.finish() }
+    private fun buildDeleteDialog(): AlertDialog? {
+        val act = activity ?: return null
+
+        val builder = AlertDialog.Builder(act).apply {
+            setTitle("Delete Event?")
+            setMessage("Are you sure you want to delete this event?")
+            setPositiveButton("Ok") { dialog, which ->
+                Observable.just<Event>(mEvent)
+                        .map { event ->
+                            rxDbManager.runInTx(Runnable { rxDbManager.eventsTable.delete(event) })
+                            event
+                        }
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe { activity?.finish() }
+            }
+            setNegativeButton("Cancel", null)
         }
-        builder.setNegativeButton("Cancel", null)
         return builder.create()
     }
 
-    private fun buildEditDialog(): AlertDialog {
-        val builder = AlertDialog.Builder(activity)
-        val name = AppCompatEditText(activity)
-        name.setText(mEvent!!.name)
-        val padding = Util.getPixelsFromDp(activity, 16)
-        name.setPadding(padding, padding, padding, padding)
-        builder.setView(name)
-        builder.setTitle("Edit Event")
-        builder.setPositiveButton("Ok") { dialog, which ->
-            mEvent!!.name = name.text.toString()
-            mEvent!!.update()
-            (activity as NavigationDrawerActivity).setActionBarSubtitle(mEvent!!.name)
+    private fun buildEditDialog(): AlertDialog? {
+        val act = activity ?: return null
+
+        val builder = AlertDialog.Builder(act).apply {
+            val name = AppCompatEditText(activity)
+            name.setText(mEvent!!.name)
+            val padding = Util.getPixelsFromDp(activity, 16)
+            name.setPadding(padding, padding, padding, padding)
+            setView(name)
+            setTitle("Edit Event")
+            setPositiveButton("Ok") { _, _ ->
+                mEvent?.let {
+                    it.name = name.text.toString()
+                    it.update()
+                }
+                (activity as NavigationDrawerActivity).setActionBarSubtitle(mEvent?.name)
+            }
+            setNegativeButton("Cancel", null)
         }
-        builder.setNegativeButton("Cancel", null)
         return builder.create()
     }
 

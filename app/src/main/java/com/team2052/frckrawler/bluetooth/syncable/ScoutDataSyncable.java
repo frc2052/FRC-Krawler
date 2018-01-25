@@ -53,20 +53,20 @@ public class ScoutDataSyncable extends ScoutSyncable {
         RxDBManager dbManager = RxDBManager.Companion.getInstance(context);
 
         dbManager.runInTx(() -> {
-            for (int i = 0; i < metrics.size(); i++) {
-                dbManager.getMetricsTable().insert(metrics.get(i));
+                    for (int i = 0; i < metrics.size(); i++) {
+                        dbManager.getMetricsTable().insert(metrics.get(i));
                     }
 
-            for (int i = 0; i < robot_events.size(); i++) {
-                dbManager.getRobotEventsTable().insert(robot_events.get(i));
+                    for (int i = 0; i < robot_events.size(); i++) {
+                        dbManager.getRobotEventsTable().insert(robot_events.get(i));
                     }
 
-            for (int i = 0; i < robots.size(); i++) {
-                dbManager.getRobotsTable().insert(robots.get(i));
+                    for (int i = 0; i < robots.size(); i++) {
+                        dbManager.getRobotsTable().insert(robots.get(i));
                     }
 
-            for (int i = 0; i < teams.size(); i++) {
-                dbManager.getTeamsTable().insert(teams.get(i));
+                    for (int i = 0; i < teams.size(); i++) {
+                        dbManager.getTeamsTable().insert(teams.get(i));
                     }
 
                     dbManager.getEventsTable().insert(event);

@@ -19,8 +19,8 @@ class RobotEventSummaryFragment : ListViewFragment<Map<String, String>, KeyValue
     private var mEvent_id: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mRobot_id = arguments.getLong(DatabaseActivity.PARENT_ID)
-        mEvent_id = arguments.getLong(EVENT_ID)
+        mRobot_id = arguments?.getLong(DatabaseActivity.PARENT_ID) ?: 0
+        mEvent_id = arguments?.getLong(EVENT_ID) ?: 0
         super.onCreate(savedInstanceState)
     }
 

@@ -14,10 +14,12 @@ class TeamListFragment : RecyclerFragment<TeamListViewModel>() {
     override val viewModelClass: Class<TeamListViewModel> = TeamListViewModel::class.java
 
     override fun provideAdapterCreator(creator: SmartAdapter.MultiAdaptersCreator) {
+        val act = activity ?: return
+
         creator.map(Team::class.java, TeamItemView::class.java)
         creator.listener { actionId, item, position, view ->
             if (actionId == SmartAdapterInteractions.EVENT_CLICKED && item is Team) {
-                startActivity(TeamInfoActivity.newInstance(activity, item.number!!))
+                startActivity(TeamInfoActivity.newInstance(act, item.number))
             }
         }
     }

@@ -14,7 +14,8 @@ class TeamInfoFragment : ListViewFragment<Map<String, String>, KeyValueListSubsc
     }
 
     override fun getObservable(): Observable<out Map<String, String>> {
-        return rxDbManager.teamInfo(arguments.getLong(DatabaseActivity.PARENT_ID))
+        val teamId = arguments?.getLong(DatabaseActivity.PARENT_ID, -1) ?: -1
+        return rxDbManager.teamInfo(teamId)
     }
 
     companion object {

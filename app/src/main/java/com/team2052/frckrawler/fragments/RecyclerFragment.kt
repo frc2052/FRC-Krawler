@@ -25,7 +25,7 @@ abstract class RecyclerFragment<T : RecyclerFragmentViewModel<*>> : BaseLifeCycl
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.recycler_view, null, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         list.setHasFixedSize(true)
 
         val mLayoutManager = LinearLayoutManager(context)
