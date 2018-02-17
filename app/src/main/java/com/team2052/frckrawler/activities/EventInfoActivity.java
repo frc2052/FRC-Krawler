@@ -55,7 +55,7 @@ public class EventInfoActivity extends DatabaseActivity implements View.OnClickL
 
             @Override
             public void onPageSelected(int position) {
-                if (position < 3) {
+                if (position < 2) {
                     mFab.hide();
                     mFab.setLocked(true);
                 } else {
