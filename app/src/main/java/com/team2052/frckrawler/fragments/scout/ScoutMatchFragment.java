@@ -3,6 +3,8 @@ package com.team2052.frckrawler.fragments.scout;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,8 +29,10 @@ import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -102,6 +106,31 @@ public class ScoutMatchFragment extends BaseScoutFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ButterKnife.bind(this, view);
+
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        supportActionBar.setDisplayHomeAsUpEnabled(true);
+        supportActionBar.setTitle(R.string.match_scout);
+
+        mMatchNumberInput.getEditText().setText("1");
+        mMatchNumberInput.getEditText().setSelection(mMatchNumberInput.getEditText().getText().length());
+
+        subscriptions.add(RxTextView.afterTextChangeEvents(mMatchNumberInput.getEditText())
+                .filter(event -> {
+                    try {
+                        Integer.parseInt(event.editable().toString());
+                        mMatchNumberInput.setErrorEnabled(false);
+                        mMatchNumberInput.setError("");
+                    } catch (NumberFormatException e1) {
+                        mMatchNumberInput.setErrorEnabled(true);
+                        mMatchNumberInput.setError("Invalid Number");
+                        return false;
+                    }
+                    return true;
+                }).debounce(500, TimeUnit.MILLISECONDS).subscribe(onNext -> updateMetricValues()));
     }
 
     private Observable<Integer> matchNumberObservable() {
