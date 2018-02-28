@@ -127,6 +127,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
         mMatchNumberInput.getEditText().setText("1");
 
         subscriptions.add(RxView.clicks(addMatchNumButton)
+                .doOnNext(aVoid -> mCommentsView.clearFocus())
                 .flatMap(aVoid -> matchNumberObservable())
                 .map(number -> number += 1)
                 .map(String::valueOf)

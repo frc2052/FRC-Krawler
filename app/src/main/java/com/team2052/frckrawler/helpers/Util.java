@@ -7,9 +7,6 @@ import android.util.TypedValue;
 
 import com.team2052.frckrawler.R;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
 public class Util {
     public static int getPixelsFromDp(Context c, int dipValue) {
         Resources r = c.getResources();
@@ -23,11 +20,5 @@ public class Util {
         styledAttributes.recycle();
 
         return toolbarHeight;
-    }
-
-
-    public static String generateUniqueHash() {
-        SecureRandom random = new SecureRandom();
-        return new BigInteger(128, random).toString(32);
     }
 }

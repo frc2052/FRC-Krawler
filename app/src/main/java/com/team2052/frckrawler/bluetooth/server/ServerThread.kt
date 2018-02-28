@@ -10,12 +10,10 @@ import com.team2052.frckrawler.bluetooth.syncable.ScoutDataSyncable
 import com.team2052.frckrawler.bluetooth.syncable.ScoutEventMatchSyncable
 import com.team2052.frckrawler.bluetooth.syncable.ScoutWrongVersionSyncable
 import com.team2052.frckrawler.data.RxDBManager
-import com.team2052.frckrawler.helpers.Util
 import com.team2052.frckrawler.helpers.getDefaultBluetoothAdapterOrNull
 import com.team2052.frckrawler.models.Event
 import com.team2052.frckrawler.models.EventDao
 import com.team2052.frckrawler.models.ServerLogEntry
-import com.team2052.frckrawler.util.Logger
 import rx.Observer
 import java.io.IOException
 import java.io.ObjectInputStream
@@ -34,7 +32,7 @@ class ServerThread(private val statusObserver: Observer<ServerStatus>, private v
 
         //If event doesn't has a unique hash, generate one
         if (Strings.isNullOrEmpty(hostedEvent.unique_hash)) {
-            hostedEvent.unique_hash = Util.generateUniqueHash()
+            hostedEvent.unique_hash = UUID.randomUUID().toString()
             hostedEvent.update()
         }
 
@@ -46,7 +44,7 @@ class ServerThread(private val statusObserver: Observer<ServerStatus>, private v
                 val clientSocket = serverSocket?.accept()
                 serverSocket?.close()
                 if (clientSocket != null) {
-                    Logger.d(TAG, "Starting sync")
+                    Log.d(TAG, "Starting sync")
                     statusObserver.onNext(ServerStatus(hostedEvent, isOpen, true, clientSocket.remoteDevice))
 
                     currentSyncDeviceName = clientSocket.remoteDevice.name
@@ -65,7 +63,7 @@ class ServerThread(private val statusObserver: Observer<ServerStatus>, private v
 
         }
         closeServer()
-        Logger.d(TAG, "Server Closed")
+        Log.d(TAG, "Server Closed")
     }
 
     @Throws(IOException::class, InterruptedException::class)
@@ -105,7 +103,7 @@ class ServerThread(private val statusObserver: Observer<ServerStatus>, private v
 
 
     private fun insertLog(message: String) {
-        Logger.i(TAG, message)
+        Log.i(TAG, message)
         mRxDbManager.serverLogEntries.insert(ServerLogEntry(Date(), message))
     }
 

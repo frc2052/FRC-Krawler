@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.fragments.scout;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.view.RxView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.NavigationDrawerActivity;
@@ -31,6 +29,7 @@ import com.team2052.frckrawler.helpers.BluetoothHelper;
 import com.team2052.frckrawler.helpers.ScoutHelper;
 import com.team2052.frckrawler.helpers.SnackbarHelper;
 import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.services.StartSyncIntentService;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,7 +40,6 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 public class ScoutHomeFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_ENABLE_BT = 1;
@@ -150,9 +148,12 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         enableButtons(mEvent != null);
     }
 
-    private void startSync(BluetoothDevice device) {
-        syncSubscription =
-                ScoutSyncHandler.getScoutSyncTask(getContext(), device)
+    private void startSync(String deviceMacAddress) {
+        Intent intent = new Intent(getContext(), StartSyncIntentService.class);
+        intent.putExtra(StartSyncIntentService.Companion.getMAC_ADDRESS_KEY(), deviceMacAddress);
+        getActivity().startService(intent);
+        /*syncSubscription =
+                ScoutSyncHandler.getScoutSyncTask(getContext(), deviceMacAddress)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(scoutSyncStatus -> {
@@ -165,7 +166,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
                             throwable.printStackTrace();
                             EventBus.getDefault().post(new ScoutSyncErrorEvent());
                             FirebaseCrash.report(throwable);
-                        });
+                        });*/
     }
 
     public void setProgressVisibility(int view_state) {

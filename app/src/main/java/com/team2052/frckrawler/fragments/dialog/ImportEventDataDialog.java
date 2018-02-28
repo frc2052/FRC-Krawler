@@ -11,7 +11,6 @@ import com.team2052.frckrawler.data.RxDBManager;
 import com.team2052.frckrawler.data.tba.v3.HTTP;
 import com.team2052.frckrawler.data.tba.v3.JSON;
 import com.team2052.frckrawler.data.tba.v3.TBA;
-import com.team2052.frckrawler.helpers.Util;
 import com.team2052.frckrawler.interfaces.RefreshListener;
 import com.team2052.frckrawler.models.Event;
 import com.team2052.frckrawler.models.Season;
@@ -65,7 +64,6 @@ public class ImportEventDataDialog extends BaseProgressDialog {
             daoSession.runInTx(() -> {
                 //Save the event
                 Event event = JSON.getGson().fromJson(jEvent, Event.class);
-                event.setUnique_hash(Util.generateUniqueHash());
 
                 event.setSeason_id(season.getId());
                 daoSession.getEventsTable().insert(event);

@@ -90,6 +90,10 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_import_simple, null);
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
         b.setPositiveButton("Import", (dialog, which) -> {
+            if (eventSpinner.getSelectedItem() == null) {
+                return;
+            }
+
             ImportEventDataDialog.newInstance(((ListElement) eventSpinner.getSelectedItem()).getKey(), season).show(ImportDataSimpleDialogFragment.this.getFragmentManager(), "importDialog");
         });
         b.setNegativeButton("Cancel", (dialog, which) -> {
