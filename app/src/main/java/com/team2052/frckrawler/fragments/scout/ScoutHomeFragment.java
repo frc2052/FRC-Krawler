@@ -37,7 +37,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -47,8 +46,6 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     private Event mEvent;
     private View syncProgressBar;
     private TextView syncStatusTextView;
-
-    private Subscription syncSubscription;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,9 +97,6 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        if (syncSubscription != null && !syncSubscription.isUnsubscribed()) {
-            syncSubscription.unsubscribe();
-        }
         super.onDestroy();
     }
 
@@ -152,21 +146,6 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         Intent intent = new Intent(getContext(), StartSyncIntentService.class);
         intent.putExtra(StartSyncIntentService.Companion.getMAC_ADDRESS_KEY(), deviceMacAddress);
         getActivity().startService(intent);
-        /*syncSubscription =
-                ScoutSyncHandler.getScoutSyncTask(getContext(), deviceMacAddress)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(scoutSyncStatus -> {
-                            if (scoutSyncStatus.isSuccessful()) {
-                                EventBus.getDefault().post(new ScoutSyncSuccessEvent());
-                            } else {
-                                EventBus.getDefault().post(new ScoutSyncErrorEvent(scoutSyncStatus.getMessage()));
-                            }
-                        }, throwable -> {
-                            throwable.printStackTrace();
-                            EventBus.getDefault().post(new ScoutSyncErrorEvent());
-                            FirebaseCrash.report(throwable);
-                        });*/
     }
 
     public void setProgressVisibility(int view_state) {
