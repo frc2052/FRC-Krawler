@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -107,7 +108,11 @@ public class ExportDialogFragment extends BaseProgressDialog {
         MediaScannerConnection.scanFile(getActivity(), new String[]{file.getAbsolutePath()}, null, null);
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        Uri apkURI = FileProvider.getUriForFile(
+                getActivity(),
+                getActivity().getApplicationContext()
+                        .getPackageName() + ".provider", file);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, apkURI);
         shareIntent.setType("file/csv");
         startActivity(Intent.createChooser(shareIntent, "Share CSV with..."));
         AndroidSchedulers.mainThread().createWorker().schedule(() -> keepScreenOn(false));
