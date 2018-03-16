@@ -44,21 +44,18 @@ public abstract class BaseScoutFragment extends Fragment {
     private static final String TAG = "BaseScoutFragment";
     protected RxDBManager rxDbManager;
     protected Event mEvent;
+    protected List<Robot> robots;
+    protected List<String> robotNames;
     CompositeSubscription subscriptions = new CompositeSubscription();
-
     @BindView(R.id.robot)
     Spinner mRobotSpinner;
-
     @BindView(R.id.comments)
     TextInputLayout mCommentsView;
-
     @BindView(R.id.button_save)
     View mSaveButton;
-
     @BindView(R.id.metric_widget_list)
     LinearLayout mMetricList;
     private FragmentComponent mComponent;
-    private List<Robot> robots;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +87,7 @@ public abstract class BaseScoutFragment extends Fragment {
                 .map(robot -> String.format("%d, %s", robot.getTeam_id(), robot.getTeam().getName()))
                 .toList()
                 .subscribe(onNext -> {
+                    this.robotNames = onNext;
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, onNext);
                     mRobotSpinner.setAdapter(adapter);
                     mRobotSpinner.setSelection(0);

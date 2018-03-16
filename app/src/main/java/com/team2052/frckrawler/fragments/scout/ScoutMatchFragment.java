@@ -1,22 +1,27 @@
 package com.team2052.frckrawler.fragments.scout;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.data.tba.v3.JSON;
@@ -81,8 +86,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
     Observable<String> metricCommentObservable = Observable
             .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
-                final QueryBuilder<MatchComment> matchCommentQueryBuilder
-                        = rxDbManager.getMatchCommentsTable().query(Long.valueOf(valueParams.match_num), mMatchType, valueParams.robot.getId(), mEvent.getId(), 0);
+                final QueryBuilder<MatchComment> matchCommentQueryBuilder = rxDbManager.getMatchCommentsTable().query(Long.valueOf(valueParams.match_num), mMatchType, valueParams.robot.getId(), mEvent.getId(), 0);
                 MatchComment mMatchComment = matchCommentQueryBuilder.unique();
                 String comment = null;
                 if (mMatchComment != null)
@@ -222,19 +226,54 @@ public class ScoutMatchFragment extends BaseScoutFragment {
 
     @Override
     protected void saveMetrics(View viewClicked) {
-        new AlertDialog.Builder(getContext())
-                .setTitle("Are you sure?")
-                .setMessage(Html.fromHtml(getString(R.string.save_match_dialog, getMatchNumber(), getSelectedRobot().getTeam_id())))
-                .setPositiveButton("Save", (dialog, which) -> {
-                    ScoutMatchFragment.super.saveMetrics(viewClicked);
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext());
+        builder.title("Confirm Save");
+        builder.autoDismiss(false);
+        builder.positiveText("Save");
+        builder.negativeText("Cancel");
+        builder.customView(R.layout.confirm_save_dialog, false);
+        builder.onPositive((dialog, which) -> {
+            super.saveMetrics(viewClicked);
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(dialog.findViewById(R.id.confirm_save_dialog_match).getWindowToken(), 0);
+            dialog.dismiss();
+        });
+        builder.onNegative((dialog, which) -> dialog.dismiss());
 
-    @Deprecated
-    private boolean isMatchNumberValid() {
-        return getMatchNumber() != -1;
+        MaterialDialog build = builder.build();
+        build.show();
+
+
+        Spinner robot_spinner = build.getView().findViewById(R.id.confirm_save_dialog_team);
+        robot_spinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, robotNames));
+        TextInputLayout match_number = build.getView().findViewById(R.id.confirm_save_dialog_match);
+
+        Observable<Integer> match_number_observable = RxTextView.afterTextChangeEvents(match_number.getEditText())
+                .map(event -> {
+                    try {
+                        return Integer.parseInt(event.editable().toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return -1;
+                })
+                .debounce(500, TimeUnit.MILLISECONDS);
+        Observable<Robot> robot_confirm_observable = RxAdapterView.itemSelections(robot_spinner).map(robots::get);
+
+        Observable.combineLatest(match_number_observable, robot_confirm_observable, MetricValueUpdateParams::new)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onNext -> {
+                    if (onNext.match_num == getMatchNumber() && onNext.robot.equals(getSelectedRobot())) {
+                        build.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+                    } else {
+                        build.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+                    }
+                }, onError -> {
+                    build.dismiss();
+                    build.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+                    super.saveMetrics(viewClicked);
+                }, () -> {
+                });
     }
 
     private static class MetricValueUpdateParams {
@@ -260,4 +299,6 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             this.comment = comment;
         }
     }
+
+
 }
