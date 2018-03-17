@@ -13,7 +13,6 @@ public class FRCKrawlerDaoGenerator {
     public static void main(String args[]) throws Exception {
         Schema schema = new Schema(1, "com.team2052.frckrawler.models");
 
-        Entity event = schema.addEntity("Event");
         Entity team = schema.addEntity("Team");
         Entity metric = schema.addEntity("Metric");
         Entity matchDatum = schema.addEntity("MatchDatum");
@@ -25,13 +24,8 @@ public class FRCKrawlerDaoGenerator {
         //Match data
         matchDatum.implementsSerializable();
         matchDatum.addIdProperty();
-
-        Property match_data_event_id = matchDatum.addLongProperty("event_id").notNull().getProperty();
-        matchDatum.addToOne(event, match_data_event_id);
-
         Property match_data_robot_id = matchDatum.addLongProperty("robot_id").notNull().getProperty();
         matchDatum.addToOne(robot, match_data_robot_id);
-
         Property match_data_metric_id = matchDatum.addLongProperty("metric_id").notNull().getProperty();
         matchDatum.addToOne(metric, match_data_metric_id);
 
@@ -43,16 +37,10 @@ public class FRCKrawlerDaoGenerator {
         //Pit data
         pitDatum.implementsSerializable();
         pitDatum.addIdProperty();
-
         Property pit_data_robot_id = pitDatum.addLongProperty("robot_id").notNull().getProperty();
         pitDatum.addToOne(robot, pit_data_robot_id);
-
         Property pit_data_metric_id = pitDatum.addLongProperty("metric_id").notNull().getProperty();
         pitDatum.addToOne(metric, pit_data_metric_id);
-
-        Property pit_data_event_id = pitDatum.addLongProperty("event_id").notNull().getProperty();
-        pitDatum.addToOne(event, pit_data_event_id);
-
         pitDatum.addStringProperty("data");
         pitDatum.addDateProperty("last_updated");
 
@@ -66,24 +54,8 @@ public class FRCKrawlerDaoGenerator {
         Property match_comment_robot_id = matchComment.addLongProperty("robot_id").getProperty();
         matchComment.addToOne(robot, match_comment_robot_id);
 
-        Property match_comment_event_id = matchComment.addLongProperty("event_id").getProperty();
-        matchComment.addToOne(event, match_comment_event_id);
-
         matchComment.addStringProperty("comment");
         matchComment.addDateProperty("last_updated");
-
-        //Events
-        event.implementsSerializable();
-        event.addIdProperty();
-        event.addStringProperty("fmsid").unique();
-        event.addStringProperty("name");
-        event.addToMany(matchComment, match_comment_event_id);
-        event.addStringProperty("data");
-        event.addDateProperty("date");
-        event.addStringProperty("unique_hash");
-
-        event.addToMany(matchDatum, match_data_event_id);
-        event.addToMany(pitDatum, pit_data_event_id);
 
         //Robots
         robot.implementsSerializable();
@@ -95,7 +67,6 @@ public class FRCKrawlerDaoGenerator {
         robot.addStringProperty("comments");
         robot.addDateProperty("last_updated");
 
-        robot.addToOne(event, robot_event_id);
         robot.addToOne(team, robot_team_id);
         robot.addToMany(matchDatum, match_data_robot_id);
         robot.addToMany(pitDatum, pit_data_robot_id);
@@ -110,8 +81,6 @@ public class FRCKrawlerDaoGenerator {
         metric.addToMany(pitDatum, pit_data_metric_id);
         metric.addIntProperty("type");
         metric.addStringProperty("data");
-        Property metric_event_id = metric.addLongProperty("event_id").notNull().getProperty();
-        metric.addToOne(event, metric_event_id);
         metric.addBooleanProperty("enabled").notNull();
         metric.addIntProperty("priority").notNull();
 
