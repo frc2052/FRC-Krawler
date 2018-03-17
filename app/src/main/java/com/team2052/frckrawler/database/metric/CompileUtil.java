@@ -72,17 +72,22 @@ public class CompileUtil {
 
         if (data.has("value")) {
             return data.get("value").toString();
-        } else {
+        } else if (data.has("values")) {
             JsonObject metricData = JSON.getAsJsonObject(metric.getData());
             JsonArray dataIndexes = data.getAsJsonArray("values");
             JsonArray valueArray = metricData.getAsJsonArray("values");
             List<String> selected = Lists.newArrayListWithExpectedSize(dataIndexes.size());
-            for (int i = 0; i < dataIndexes.size(); i++) {
-                int dataIndex = dataIndexes.get(i).getAsInt();
-                selected.add(valueArray.get(dataIndex).toString());
+            if (valueArray.size() > 0) {
+                for (int i = 0; i < dataIndexes.size(); i++) {
+                    int dataIndex = dataIndexes.get(i).getAsInt();
+                    selected.add(valueArray.get(dataIndex).toString());
+                }
+                return Joiner.on(", ").join(selected);
+            } else {
+                return "";
             }
-            return Joiner.on(", ").join(selected);
         }
+        return "";
     };
 
     public static Func1<List<MetricValue>, CompiledMetricValue> metricValuesToCompiledValue(Robot robot, Metric metric, float compileWeight) {
