@@ -106,7 +106,6 @@ public class MetricFactory {
                 metricCategory,
                 metricType,
                 JSON.getGson().toJson(data),
-                game_id,
                 true,
                 0);
     }

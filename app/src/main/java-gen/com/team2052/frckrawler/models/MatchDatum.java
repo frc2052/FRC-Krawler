@@ -16,8 +16,7 @@ public class MatchDatum implements java.io.Serializable {
 
     @Id
     private Long id;
-    private long event_id;
-    private long robot_id;
+    private long team_id;
     private long metric_id;
     private int match_type;
     private long match_number;
@@ -34,17 +33,11 @@ public class MatchDatum implements java.io.Serializable {
     @Generated
     private transient MatchDatumDao myDao;
 
-    @ToOne(joinProperty = "event_id")
-    private Event event;
+    @ToOne(joinProperty = "team_id")
+    private Team team;
 
     @Generated
-    private transient Long event__resolvedKey;
-
-    @ToOne(joinProperty = "robot_id")
-    private Robot robot;
-
-    @Generated
-    private transient Long robot__resolvedKey;
+    private transient Long team__resolvedKey;
 
     @ToOne(joinProperty = "metric_id")
     private Metric metric;
@@ -61,10 +54,9 @@ public class MatchDatum implements java.io.Serializable {
     }
 
     @Generated
-    public MatchDatum(Long id, long event_id, long robot_id, long metric_id, int match_type, long match_number, java.util.Date last_updated, String data) {
+    public MatchDatum(Long id, long team_id, long metric_id, int match_type, long match_number, java.util.Date last_updated, String data) {
         this.id = id;
-        this.event_id = event_id;
-        this.robot_id = robot_id;
+        this.team_id = team_id;
         this.metric_id = metric_id;
         this.match_type = match_type;
         this.match_number = match_number;
@@ -87,20 +79,12 @@ public class MatchDatum implements java.io.Serializable {
         this.id = id;
     }
 
-    public long getEvent_id() {
-        return event_id;
+    public long getTeam_id() {
+        return team_id;
     }
 
-    public void setEvent_id(long event_id) {
-        this.event_id = event_id;
-    }
-
-    public long getRobot_id() {
-        return robot_id;
-    }
-
-    public void setRobot_id(long robot_id) {
-        this.robot_id = robot_id;
+    public void setTeam_id(long team_id) {
+        this.team_id = team_id;
     }
 
     public long getMetric_id() {
@@ -145,57 +129,29 @@ public class MatchDatum implements java.io.Serializable {
 
     /** To-one relationship, resolved on first access. */
     @Generated
-    public Event getEvent() {
-        long __key = this.event_id;
-        if (event__resolvedKey == null || !event__resolvedKey.equals(__key)) {
+    public Team getTeam() {
+        long __key = this.team_id;
+        if (team__resolvedKey == null || !team__resolvedKey.equals(__key)) {
             __throwIfDetached();
-            EventDao targetDao = daoSession.getEventDao();
-            Event eventNew = targetDao.load(__key);
+            TeamDao targetDao = daoSession.getTeamDao();
+            Team teamNew = targetDao.load(__key);
             synchronized (this) {
-                event = eventNew;
-                event__resolvedKey = __key;
+                team = teamNew;
+                team__resolvedKey = __key;
             }
         }
-        return event;
+        return team;
     }
 
     @Generated
-    public void setEvent(Event event) {
-        if (event == null) {
-            throw new DaoException("To-one property 'event_id' has not-null constraint; cannot set to-one to null");
+    public void setTeam(Team team) {
+        if (team == null) {
+            throw new DaoException("To-one property 'team_id' has not-null constraint; cannot set to-one to null");
         }
         synchronized (this) {
-            this.event = event;
-            event_id = event.getId();
-            event__resolvedKey = event_id;
-        }
-    }
-
-    /** To-one relationship, resolved on first access. */
-    @Generated
-    public Robot getRobot() {
-        long __key = this.robot_id;
-        if (robot__resolvedKey == null || !robot__resolvedKey.equals(__key)) {
-            __throwIfDetached();
-            RobotDao targetDao = daoSession.getRobotDao();
-            Robot robotNew = targetDao.load(__key);
-            synchronized (this) {
-                robot = robotNew;
-                robot__resolvedKey = __key;
-            }
-        }
-        return robot;
-    }
-
-    @Generated
-    public void setRobot(Robot robot) {
-        if (robot == null) {
-            throw new DaoException("To-one property 'robot_id' has not-null constraint; cannot set to-one to null");
-        }
-        synchronized (this) {
-            this.robot = robot;
-            robot_id = robot.getId();
-            robot__resolvedKey = robot_id;
+            this.team = team;
+            team_id = team.getNumber();
+            team__resolvedKey = team_id;
         }
     }
 

@@ -9,8 +9,6 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseStatement;
 import org.greenrobot.greendao.internal.DaoConfig;
 import org.greenrobot.greendao.internal.SqlUtils;
-import org.greenrobot.greendao.query.Query;
-import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +22,8 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
 
     public static final String TABLENAME = "MATCH_COMMENT";
     private DaoSession daoSession;
-    private Query<MatchComment> event_MatchCommentListQuery;
-    private Query<MatchComment> robot_MatchCommentListQuery;
     private String selectDeep;
+
 
     public MatchCommentDao(DaoConfig config) {
         super(config);
@@ -46,10 +43,9 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"MATCH_NUMBER\" INTEGER," + // 1: match_number
                 "\"MATCH_TYPE\" INTEGER," + // 2: match_type
-                "\"ROBOT_ID\" INTEGER," + // 3: robot_id
-                "\"EVENT_ID\" INTEGER," + // 4: event_id
-                "\"COMMENT\" TEXT," + // 5: comment
-                "\"LAST_UPDATED\" INTEGER);"); // 6: last_updated
+                "\"TEAM_ID\" INTEGER," + // 3: team_id
+                "\"COMMENT\" TEXT," + // 4: comment
+                "\"LAST_UPDATED\" INTEGER);"); // 5: last_updated
     }
 
     /** Drops the underlying database table. */
@@ -76,25 +72,20 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         if (match_type != null) {
             stmt.bindLong(3, match_type);
         }
- 
-        Long robot_id = entity.getRobot_id();
-        if (robot_id != null) {
-            stmt.bindLong(4, robot_id);
-        }
- 
-        Long event_id = entity.getEvent_id();
-        if (event_id != null) {
-            stmt.bindLong(5, event_id);
+
+        Long team_id = entity.getTeam_id();
+        if (team_id != null) {
+            stmt.bindLong(4, team_id);
         }
  
         String comment = entity.getComment();
         if (comment != null) {
-            stmt.bindString(6, comment);
+            stmt.bindString(5, comment);
         }
  
         java.util.Date last_updated = entity.getLast_updated();
         if (last_updated != null) {
-            stmt.bindLong(7, last_updated.getTime());
+            stmt.bindLong(6, last_updated.getTime());
         }
     }
 
@@ -116,25 +107,20 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         if (match_type != null) {
             stmt.bindLong(3, match_type);
         }
- 
-        Long robot_id = entity.getRobot_id();
-        if (robot_id != null) {
-            stmt.bindLong(4, robot_id);
-        }
- 
-        Long event_id = entity.getEvent_id();
-        if (event_id != null) {
-            stmt.bindLong(5, event_id);
+
+        Long team_id = entity.getTeam_id();
+        if (team_id != null) {
+            stmt.bindLong(4, team_id);
         }
  
         String comment = entity.getComment();
         if (comment != null) {
-            stmt.bindString(6, comment);
+            stmt.bindString(5, comment);
         }
  
         java.util.Date last_updated = entity.getLast_updated();
         if (last_updated != null) {
-            stmt.bindLong(7, last_updated.getTime());
+            stmt.bindLong(6, last_updated.getTime());
         }
     }
 
@@ -155,10 +141,9 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
                 cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // match_number
                 cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // match_type
-                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // robot_id
-                cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4), // event_id
-                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // comment
-                cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)) // last_updated
+                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // team_id
+                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // comment
+                cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)) // last_updated
         );
         return entity;
     }
@@ -168,10 +153,9 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setMatch_number(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
         entity.setMatch_type(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
-        entity.setRobot_id(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
-        entity.setEvent_id(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
-        entity.setComment(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setLast_updated(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
+        entity.setTeam_id(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setComment(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setLast_updated(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
      }
     
     @Override
@@ -199,45 +183,14 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         return true;
     }
     
-    /** Internal query to resolve the "matchCommentList" to-many relationship of Event. */
-    public List<MatchComment> _queryEvent_MatchCommentList(Long event_id) {
-        synchronized (this) {
-            if (event_MatchCommentListQuery == null) {
-                QueryBuilder<MatchComment> queryBuilder = queryBuilder();
-                queryBuilder.where(Properties.Event_id.eq(null));
-                event_MatchCommentListQuery = queryBuilder.build();
-            }
-        }
-        Query<MatchComment> query = event_MatchCommentListQuery.forCurrentThread();
-        query.setParameter(0, event_id);
-        return query.list();
-    }
-
-    /** Internal query to resolve the "matchCommentList" to-many relationship of Robot. */
-    public List<MatchComment> _queryRobot_MatchCommentList(Long robot_id) {
-        synchronized (this) {
-            if (robot_MatchCommentListQuery == null) {
-                QueryBuilder<MatchComment> queryBuilder = queryBuilder();
-                queryBuilder.where(Properties.Robot_id.eq(null));
-                robot_MatchCommentListQuery = queryBuilder.build();
-            }
-        }
-        Query<MatchComment> query = robot_MatchCommentListQuery.forCurrentThread();
-        query.setParameter(0, robot_id);
-        return query.list();
-    }
-
     protected String getSelectDeep() {
         if (selectDeep == null) {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
             builder.append(',');
-            SqlUtils.appendColumns(builder, "T0", daoSession.getRobotDao().getAllColumns());
-            builder.append(',');
-            SqlUtils.appendColumns(builder, "T1", daoSession.getEventDao().getAllColumns());
+            SqlUtils.appendColumns(builder, "T0", daoSession.getTeamDao().getAllColumns());
             builder.append(" FROM MATCH_COMMENT T");
-            builder.append(" LEFT JOIN ROBOT T0 ON T.\"ROBOT_ID\"=T0.\"_id\"");
-            builder.append(" LEFT JOIN EVENT T1 ON T.\"EVENT_ID\"=T1.\"_id\"");
+            builder.append(" LEFT JOIN TEAM T0 ON T.\"TEAM_ID\"=T0.\"NUMBER\"");
             builder.append(' ');
             selectDeep = builder.toString();
         }
@@ -248,12 +201,8 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         MatchComment entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
-        Robot robot = loadCurrentOther(daoSession.getRobotDao(), cursor, offset);
-        entity.setRobot(robot);
-        offset += daoSession.getRobotDao().getAllColumns().length;
-
-        Event event = loadCurrentOther(daoSession.getEventDao(), cursor, offset);
-        entity.setEvent(event);
+        Team team = loadCurrentOther(daoSession.getTeamDao(), cursor, offset);
+        entity.setTeam(team);
 
         return entity;
     }
@@ -330,10 +279,9 @@ public class MatchCommentDao extends AbstractDao<MatchComment, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Match_number = new Property(1, Long.class, "match_number", false, "MATCH_NUMBER");
         public final static Property Match_type = new Property(2, Integer.class, "match_type", false, "MATCH_TYPE");
-        public final static Property Robot_id = new Property(3, Long.class, "robot_id", false, "ROBOT_ID");
-        public final static Property Event_id = new Property(4, Long.class, "event_id", false, "EVENT_ID");
-        public final static Property Comment = new Property(5, String.class, "comment", false, "COMMENT");
-        public final static Property Last_updated = new Property(6, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
+        public final static Property Team_id = new Property(3, Long.class, "team_id", false, "TEAM_ID");
+        public final static Property Comment = new Property(4, String.class, "comment", false, "COMMENT");
+        public final static Property Last_updated = new Property(5, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
     }
  
 }

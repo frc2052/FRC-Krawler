@@ -4,5 +4,5 @@
     <item name="nav_item_server" type="id" />
     <item name="nav_item_settings" type="id" />
     <item name="nav_item_teams" type="id" />
-    <item name="nav_item_games" type="id" />
+    <item name="nav_item_metrics" type="id" />
 </resources>

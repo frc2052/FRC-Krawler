@@ -17,11 +17,7 @@ import com.team2052.frckrawler.models.DaoSession
 open class DBManager internal constructor(protected var context: Context) {
     protected val daoSession: DaoSession
     private val daoMaster: DaoMaster
-    val seasonsTable: Seasons
-    val eventsTable: Events
-    val robotsTable: Robots
     val metricsTable: Metrics
-    val robotEventsTable: RobotEvents
     val matchCommentsTable: MatchComments
     val matchDataTable: MatchData
     val pitDataTable: PitData
@@ -35,11 +31,7 @@ open class DBManager internal constructor(protected var context: Context) {
         daoMaster = DaoMaster(db)
         daoSession = daoMaster.newSession()
 
-        seasonsTable = Seasons(daoSession.seasonDao, this)
-        eventsTable = Events(daoSession.eventDao, this)
-        robotsTable = Robots(daoSession.robotDao, this)
         metricsTable = Metrics(daoSession.metricDao, this)
-        robotEventsTable = RobotEvents(daoSession.robotEventDao, this)
         matchCommentsTable = MatchComments(daoSession.matchCommentDao, this)
         matchDataTable = MatchData(daoSession.matchDatumDao, this)
         pitDataTable = PitData(daoSession.pitDatumDao, this)

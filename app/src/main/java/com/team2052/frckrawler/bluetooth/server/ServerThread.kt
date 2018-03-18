@@ -3,16 +3,12 @@ package com.team2052.frckrawler.bluetooth.server
 import android.bluetooth.BluetoothServerSocket
 import android.content.Context
 import android.util.Log
-import com.google.common.base.Strings
 import com.team2052.frckrawler.BuildConfig
 import com.team2052.frckrawler.bluetooth.BluetoothConstants
 import com.team2052.frckrawler.bluetooth.syncable.ScoutDataSyncable
-import com.team2052.frckrawler.bluetooth.syncable.ScoutEventMatchSyncable
 import com.team2052.frckrawler.bluetooth.syncable.ScoutWrongVersionSyncable
 import com.team2052.frckrawler.data.RxDBManager
 import com.team2052.frckrawler.helpers.getDefaultBluetoothAdapterOrNull
-import com.team2052.frckrawler.models.Event
-import com.team2052.frckrawler.models.EventDao
 import com.team2052.frckrawler.models.ServerLogEntry
 import rx.Observer
 import java.io.IOException
@@ -20,7 +16,7 @@ import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.util.*
 
-class ServerThread(private val statusObserver: Observer<ServerStatus>, private val context: Context, val hostedEvent: Event) : Thread() {
+class ServerThread(private val statusObserver: Observer<ServerStatus>, private val context: Context) : Thread() {
     var isOpen: Boolean = true
     private var currentSyncDeviceName = ""
     private var mRxDbManager: RxDBManager = RxDBManager.getInstance(context)
@@ -29,15 +25,8 @@ class ServerThread(private val statusObserver: Observer<ServerStatus>, private v
     override fun run() {
         Log.d(TAG, "Server Open")
         isOpen = true
-
-        //If event doesn't has a unique hash, generate one
-        if (Strings.isNullOrEmpty(hostedEvent.unique_hash)) {
-            hostedEvent.unique_hash = UUID.randomUUID().toString()
-            hostedEvent.update()
-        }
-
         while (isOpen) {
-            statusObserver.onNext(ServerStatus(hostedEvent, isOpen, false, null))
+            statusObserver.onNext(ServerStatus(isOpen, false, null))
 
             try {
                 serverSocket = getDefaultBluetoothAdapterOrNull()?.listenUsingRfcommWithServiceRecord(BluetoothConstants.SERVICE_NAME, UUID.fromString(BluetoothConstants.UUID))
@@ -45,7 +34,7 @@ class ServerThread(private val statusObserver: Observer<ServerStatus>, private v
                 serverSocket?.close()
                 if (clientSocket != null) {
                     Log.d(TAG, "Starting sync")
-                    statusObserver.onNext(ServerStatus(hostedEvent, isOpen, true, clientSocket.remoteDevice))
+                    statusObserver.onNext(ServerStatus(isOpen, true, clientSocket.remoteDevice))
 
                     currentSyncDeviceName = clientSocket.remoteDevice.name
 
@@ -57,7 +46,7 @@ class ServerThread(private val statusObserver: Observer<ServerStatus>, private v
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                statusObserver.onNext(ServerStatus(hostedEvent, state = true))
+                statusObserver.onNext(ServerStatus(state = true))
                 closeServer()
             }
 
@@ -79,7 +68,8 @@ class ServerThread(private val statusObserver: Observer<ServerStatus>, private v
             return
         }
 
-        if (!Strings.isNullOrEmpty(connection.serverSyncable!!.event_hash)) {
+        //Hash
+        /*if (!Strings.isNullOrEmpty(connection.serverSyncable!!.event_hash)) {
             val count = mRxDbManager.eventsTable.queryBuilder.where(EventDao.Properties.Unique_hash.eq(connection.serverSyncable!!.event_hash)).count()
             Log.d(TAG, count.toString() + " event(s) found with hash")
 
@@ -88,13 +78,13 @@ class ServerThread(private val statusObserver: Observer<ServerStatus>, private v
                 insertLog(String.format("ERROR: Device named %s that is currently synced event did not match this device's unique event id", currentSyncDeviceName))
                 return
             }
-        }
+        }*/
 
         when (connection.serverSyncable!!.sync_code) {
             BluetoothConstants.SCOUT_SYNC -> {
-                connection.sendScoutSyncable(ScoutDataSyncable(context, hostedEvent))
+                connection.sendScoutSyncable(ScoutDataSyncable(context))
                 insertLog(String.format("INFO: Successfully synced with %s", currentSyncDeviceName))
-                statusObserver.onNext(ServerStatus(hostedEvent, true, false, null))
+                statusObserver.onNext(ServerStatus(true, false, null))
             }
         }
 

@@ -17,15 +17,14 @@ public class FRCKrawlerDaoGenerator {
         Entity metric = schema.addEntity("Metric");
         Entity matchDatum = schema.addEntity("MatchDatum");
         Entity matchComment = schema.addEntity("MatchComment");
-        Entity robot = schema.addEntity("Robot");
         Entity pitDatum = schema.addEntity("PitDatum");
         Entity serverLogEntry = schema.addEntity("ServerLogEntry");
 
         //Match data
         matchDatum.implementsSerializable();
         matchDatum.addIdProperty();
-        Property match_data_robot_id = matchDatum.addLongProperty("robot_id").notNull().getProperty();
-        matchDatum.addToOne(robot, match_data_robot_id);
+        Property match_data_team_id = matchDatum.addLongProperty("team_id").notNull().getProperty();
+        matchDatum.addToOne(team, match_data_team_id);
         Property match_data_metric_id = matchDatum.addLongProperty("metric_id").notNull().getProperty();
         matchDatum.addToOne(metric, match_data_metric_id);
 
@@ -37,8 +36,8 @@ public class FRCKrawlerDaoGenerator {
         //Pit data
         pitDatum.implementsSerializable();
         pitDatum.addIdProperty();
-        Property pit_data_robot_id = pitDatum.addLongProperty("robot_id").notNull().getProperty();
-        pitDatum.addToOne(robot, pit_data_robot_id);
+        Property pit_data_team_id = pitDatum.addLongProperty("team_id").notNull().getProperty();
+        pitDatum.addToOne(team, pit_data_team_id);
         Property pit_data_metric_id = pitDatum.addLongProperty("metric_id").notNull().getProperty();
         pitDatum.addToOne(metric, pit_data_metric_id);
         pitDatum.addStringProperty("data");
@@ -51,26 +50,11 @@ public class FRCKrawlerDaoGenerator {
         matchComment.addLongProperty("match_number");
         matchComment.addIntProperty("match_type");
 
-        Property match_comment_robot_id = matchComment.addLongProperty("robot_id").getProperty();
-        matchComment.addToOne(robot, match_comment_robot_id);
+        Property match_comment_team_id = matchComment.addLongProperty("team_id").getProperty();
+        matchComment.addToOne(team, match_comment_team_id);
 
         matchComment.addStringProperty("comment");
         matchComment.addDateProperty("last_updated");
-
-        //Robots
-        robot.implementsSerializable();
-        robot.addIdProperty().unique().autoincrement();
-        Property robot_team_id = robot.addLongProperty("team_id").notNull().getProperty();
-        Property robot_event_id = robot.addLongProperty("event_id").notNull().getProperty();
-
-        robot.addStringProperty("data");
-        robot.addStringProperty("comments");
-        robot.addDateProperty("last_updated");
-
-        robot.addToOne(team, robot_team_id);
-        robot.addToMany(matchDatum, match_data_robot_id);
-        robot.addToMany(pitDatum, pit_data_robot_id);
-        robot.addToMany(matchComment, match_comment_robot_id);
 
         //Metric
         metric.implementsSerializable();
@@ -89,8 +73,9 @@ public class FRCKrawlerDaoGenerator {
         team.addLongProperty("number").unique().primaryKey();
         team.addStringProperty("teamkey").unique();
         team.addStringProperty("name");
-        team.addToMany(robot, robot_team_id);
         team.addStringProperty("data");
+        team.addDateProperty("last_updated");
+        team.addStringProperty("comments");
 
         //Server Log
         serverLogEntry.addDateProperty("time");

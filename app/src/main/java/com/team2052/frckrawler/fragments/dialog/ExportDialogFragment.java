@@ -6,18 +6,17 @@ import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.tbruyelle.rxpermissions.RxPermissions;
-import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.fragments.dialog.events.ProgressDialogUpdateEvent;
 import com.team2052.frckrawler.interfaces.HasComponent;
 import com.team2052.frckrawler.metric.data.CompileUtil;
-import com.team2052.frckrawler.metric.data.Compiler;
-import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.metric.data.RxCompiler;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,15 +42,13 @@ public class ExportDialogFragment extends BaseProgressDialog {
     private static final String EXPORT_TYPE = "EXPORT_TYPE_EXTRA";
 
     @Inject
-    Compiler compiler;
+    RxCompiler compiler;
 
-    private Event event;
     private Subscription subscription;
 
-    public static ExportDialogFragment newInstance(Event event, int export_type) {
+    public static ExportDialogFragment newInstance(int export_type) {
         ExportDialogFragment exportDialogFragment = new ExportDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(DatabaseActivity.Companion.getPARENT_ID(), event.getId());
         bundle.putInt(EXPORT_TYPE, export_type);
         exportDialogFragment.setArguments(bundle);
         return exportDialogFragment;
@@ -60,8 +57,6 @@ public class ExportDialogFragment extends BaseProgressDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        event = mRxDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID()));
 
         EventBus.getDefault().register(this);
 
@@ -107,7 +102,11 @@ public class ExportDialogFragment extends BaseProgressDialog {
         MediaScannerConnection.scanFile(getActivity(), new String[]{file.getAbsolutePath()}, null, null);
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        Uri apkURI = FileProvider.getUriForFile(
+                getActivity(),
+                getActivity().getApplicationContext()
+                        .getPackageName() + ".provider", file);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, apkURI);
         shareIntent.setType("file/csv");
         startActivity(Intent.createChooser(shareIntent, "Share CSV with..."));
         AndroidSchedulers.mainThread().createWorker().schedule(() -> keepScreenOn(false));
@@ -128,18 +127,18 @@ public class ExportDialogFragment extends BaseProgressDialog {
     private Observable<List<List<String>>> getExportObservable(int type) {
         switch (type) {
             case EXPORT_TYPE_RAW:
-                return compiler.getRawExport(event);
+                return compiler.getRawExport();
             default:
-                return compiler.getSummaryExport(event);
+                return compiler.getSummaryExport();
         }
     }
 
     private Observable<File> getExportFile(int type) {
         switch (type) {
             case EXPORT_TYPE_RAW:
-                return CompileUtil.getRawExportFile(event);
+                return CompileUtil.getRawExportFile();
             default:
-                return CompileUtil.getSummaryFile(event);
+                return CompileUtil.getSummaryFile();
         }
     }
 

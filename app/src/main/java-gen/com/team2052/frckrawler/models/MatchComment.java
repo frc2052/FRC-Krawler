@@ -18,8 +18,7 @@ public class MatchComment implements java.io.Serializable {
     private Long id;
     private Long match_number;
     private Integer match_type;
-    private Long robot_id;
-    private Long event_id;
+    private Long team_id;
     private String comment;
     private java.util.Date last_updated;
 
@@ -33,17 +32,11 @@ public class MatchComment implements java.io.Serializable {
     @Generated
     private transient MatchCommentDao myDao;
 
-    @ToOne(joinProperty = "robot_id")
-    private Robot robot;
+    @ToOne(joinProperty = "team_id")
+    private Team team;
 
     @Generated
-    private transient Long robot__resolvedKey;
-
-    @ToOne(joinProperty = "event_id")
-    private Event event;
-
-    @Generated
-    private transient Long event__resolvedKey;
+    private transient Long team__resolvedKey;
 
     @Generated
     public MatchComment() {
@@ -54,12 +47,11 @@ public class MatchComment implements java.io.Serializable {
     }
 
     @Generated
-    public MatchComment(Long id, Long match_number, Integer match_type, Long robot_id, Long event_id, String comment, java.util.Date last_updated) {
+    public MatchComment(Long id, Long match_number, Integer match_type, Long team_id, String comment, java.util.Date last_updated) {
         this.id = id;
         this.match_number = match_number;
         this.match_type = match_type;
-        this.robot_id = robot_id;
-        this.event_id = event_id;
+        this.team_id = team_id;
         this.comment = comment;
         this.last_updated = last_updated;
     }
@@ -95,20 +87,12 @@ public class MatchComment implements java.io.Serializable {
         this.match_type = match_type;
     }
 
-    public Long getRobot_id() {
-        return robot_id;
+    public Long getTeam_id() {
+        return team_id;
     }
 
-    public void setRobot_id(Long robot_id) {
-        this.robot_id = robot_id;
-    }
-
-    public Long getEvent_id() {
-        return event_id;
-    }
-
-    public void setEvent_id(Long event_id) {
-        this.event_id = event_id;
+    public void setTeam_id(Long team_id) {
+        this.team_id = team_id;
     }
 
     public String getComment() {
@@ -129,51 +113,26 @@ public class MatchComment implements java.io.Serializable {
 
     /** To-one relationship, resolved on first access. */
     @Generated
-    public Robot getRobot() {
-        Long __key = this.robot_id;
-        if (robot__resolvedKey == null || !robot__resolvedKey.equals(__key)) {
+    public Team getTeam() {
+        Long __key = this.team_id;
+        if (team__resolvedKey == null || !team__resolvedKey.equals(__key)) {
             __throwIfDetached();
-            RobotDao targetDao = daoSession.getRobotDao();
-            Robot robotNew = targetDao.load(__key);
+            TeamDao targetDao = daoSession.getTeamDao();
+            Team teamNew = targetDao.load(__key);
             synchronized (this) {
-                robot = robotNew;
-                robot__resolvedKey = __key;
+                team = teamNew;
+                team__resolvedKey = __key;
             }
         }
-        return robot;
+        return team;
     }
 
     @Generated
-    public void setRobot(Robot robot) {
+    public void setTeam(Team team) {
         synchronized (this) {
-            this.robot = robot;
-            robot_id = robot == null ? null : robot.getId();
-            robot__resolvedKey = robot_id;
-        }
-    }
-
-    /** To-one relationship, resolved on first access. */
-    @Generated
-    public Event getEvent() {
-        Long __key = this.event_id;
-        if (event__resolvedKey == null || !event__resolvedKey.equals(__key)) {
-            __throwIfDetached();
-            EventDao targetDao = daoSession.getEventDao();
-            Event eventNew = targetDao.load(__key);
-            synchronized (this) {
-                event = eventNew;
-                event__resolvedKey = __key;
-            }
-        }
-        return event;
-    }
-
-    @Generated
-    public void setEvent(Event event) {
-        synchronized (this) {
-            this.event = event;
-            event_id = event == null ? null : event.getId();
-            event__resolvedKey = event_id;
+            this.team = team;
+            team_id = team == null ? null : team.getNumber();
+            team__resolvedKey = team_id;
         }
     }
 

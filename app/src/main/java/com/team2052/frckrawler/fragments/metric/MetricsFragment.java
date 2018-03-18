@@ -74,7 +74,7 @@ public class MetricsFragment extends RecyclerViewFragment<List<Metric>, Recycler
 
     @Override
     protected Observable<? extends List<Metric>> getObservable() {
-        return rxDbManager.metricsInGame(mGame_id, mCategory);
+        return rxDbManager.metricsByCategory(mCategory);
     }
 
     @Override

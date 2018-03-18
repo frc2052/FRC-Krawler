@@ -61,7 +61,7 @@
                 </LinearLayout>
 
                 <Spinner
-                    android:id="@+id/robot"
+                    android:id="@+id/team"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

@@ -1,10 +1,12 @@
 package com.team2052.frckrawler.services
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.bluetooth.BluetoothDevice
 import android.content.Context
+import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.team2052.frckrawler.R
@@ -17,7 +19,12 @@ class NotificationServerStatusObserver(private val context: Context) : Observer<
     private val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     init {
-        val b = NotificationCompat.Builder(context)
+        //Why oreo, why?
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager.createNotificationChannel(NotificationChannel("misc", "Miscellaneous", NotificationManager.IMPORTANCE_LOW))
+        }
+
+        val b = NotificationCompat.Builder(context, "misc")
         b.setSmallIcon(R.drawable.ic_stat_knightkrawler)
         b.setContentTitle(context.resources.getString(R.string.server_open))
         b.setContentText(context.resources.getString(R.string.server_open_description))
@@ -58,7 +65,7 @@ class NotificationServerStatusObserver(private val context: Context) : Observer<
 
 
     private fun buildSyncingWithDeviceNotification(device: BluetoothDevice): Notification {
-        val b = NotificationCompat.Builder(context)
+        val b = NotificationCompat.Builder(context, "misc")
         b.setSmallIcon(R.drawable.ic_stat_sync)
         b.color = context.resources.getColor(R.color.primary)
         b.setContentTitle("Syncing")

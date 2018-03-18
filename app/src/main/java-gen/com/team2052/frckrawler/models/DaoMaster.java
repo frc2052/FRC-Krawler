@@ -25,12 +25,10 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
-        registerDaoClass(EventDao.class);
         registerDaoClass(TeamDao.class);
         registerDaoClass(MetricDao.class);
         registerDaoClass(MatchDatumDao.class);
         registerDaoClass(MatchCommentDao.class);
-        registerDaoClass(RobotDao.class);
         registerDaoClass(PitDatumDao.class);
         registerDaoClass(ServerLogEntryDao.class);
     }
@@ -39,24 +37,20 @@ public class DaoMaster extends AbstractDaoMaster {
      * Creates underlying database table using DAOs.
      */
     public static void createAllTables(Database db, boolean ifNotExists) {
-        EventDao.createTable(db, ifNotExists);
         TeamDao.createTable(db, ifNotExists);
         MetricDao.createTable(db, ifNotExists);
         MatchDatumDao.createTable(db, ifNotExists);
         MatchCommentDao.createTable(db, ifNotExists);
-        RobotDao.createTable(db, ifNotExists);
         PitDatumDao.createTable(db, ifNotExists);
         ServerLogEntryDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
-        EventDao.dropTable(db, ifExists);
         TeamDao.dropTable(db, ifExists);
         MetricDao.dropTable(db, ifExists);
         MatchDatumDao.dropTable(db, ifExists);
         MatchCommentDao.dropTable(db, ifExists);
-        RobotDao.dropTable(db, ifExists);
         PitDatumDao.dropTable(db, ifExists);
         ServerLogEntryDao.dropTable(db, ifExists);
     }

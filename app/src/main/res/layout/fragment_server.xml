@@ -33,26 +33,13 @@
                     android:layout_height="wrap_content"
                     android:text="Server Toggle" />
 
-                <LinearLayout
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/host_toggle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp">
-
-                    <Spinner
-                        android:id="@+id/event_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="2" />
-
-                    <android.support.v7.widget.SwitchCompat
-                        android:id="@+id/host_toggle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:checked="false"
-                        android:padding="16dp" />
-                </LinearLayout>
+                    android:layout_gravity="center_vertical"
+                    android:checked="false"
+                    android:padding="16dp" />
 
                 <TextView
                     android:id="@+id/server_status"
@@ -68,20 +55,6 @@
                     android:layout_height="58dp"
                     android:tag=":aesthetic_ignore"
                     android:text="View Logs" />
-
-                <Button
-                    android:id="@+id/view_event"
-                    android:layout_width="match_parent"
-                    android:layout_height="58dp"
-                    android:tag=":aesthetic_ignore"
-                    android:text="View Event" />
-
-                <Button
-                    android:id="@+id/view_game"
-                    android:layout_width="match_parent"
-                    android:layout_height="58dp"
-                    android:tag=":aesthetic_ignore"
-                    android:text="View Game" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 

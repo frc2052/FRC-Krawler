@@ -10,26 +10,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.adapters.ListViewAdapter;
-import com.team2052.frckrawler.adapters.items.ListElement;
-import com.team2052.frckrawler.adapters.items.ListItem;
-import com.team2052.frckrawler.adapters.items.elements.SimpleListElement;
-import com.team2052.frckrawler.data.RxDBManager;
 import com.team2052.frckrawler.data.tba.v3.ConnectionChecker;
-import com.team2052.frckrawler.data.tba.v3.TBA;
 import com.team2052.frckrawler.interfaces.RefreshListener;
-import com.team2052.frckrawler.models.Season;
 
 import java.util.Calendar;
 
-import rx.Observable;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Used to import a event to a game in the most simple way for the user.
@@ -41,7 +30,6 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     private String[] yearDropDownItems;
     private Spinner yearSpinner;
     private Spinner eventSpinner;
-    private Season season;
     private boolean isConnected;
     private Subscription eventSubscription;
 
@@ -62,7 +50,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.season = RxDBManager.Companion.getInstance(getActivity()).getSeasonsTable().load(getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID()));
+        //this.season = RxDBManager.Companion.getInstance(getActivity()).getSeasonsTable().load(getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID()));
         isConnected = ConnectionChecker.isConnectedToInternet(getActivity());
 
         // Get year
@@ -94,13 +82,12 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                 return;
             }
 
-            ImportEventDataDialog.newInstance(((ListElement) eventSpinner.getSelectedItem()).getKey(), season).show(ImportDataSimpleDialogFragment.this.getFragmentManager(), "importDialog");
+            //ImportEventDataDialog.newInstance(((ListElement) eventSpinner.getSelectedItem()).getKey(), season).show(ImportDataSimpleDialogFragment.this.getFragmentManager(), "importDialog");
         });
         b.setNegativeButton("Cancel", (dialog, which) -> {
             ImportDataSimpleDialogFragment.this.dismiss();
         });
         b.setNeutralButton("Add Manual", ((dialog, which) -> {
-            AddEventDialogFragment.newInstance(season).show(getParentFragment().getChildFragmentManager(), "addEvent");
         }));
         yearSpinner = (Spinner) view.findViewById(R.id.import_year_spinner);
         yearSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, yearDropDownItems));
@@ -134,7 +121,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
             eventSpinner.setVisibility(View.GONE);
 
             getDialog().findViewById(R.id.progress).setVisibility(View.VISIBLE);
-            eventSubscription = TBA.requestEventsYear(Integer.parseInt((String) yearSpinner.getSelectedItem()))
+            /*eventSubscription = TBA.requestEventsYear(Integer.parseInt((String) yearSpinner.getSelectedItem()))
                     .flatMap(Observable::from)
                     .map(event -> (ListItem) new SimpleListElement(event.getName(), event.getFmsid()))
                     .toList()
@@ -148,7 +135,7 @@ public class ImportDataSimpleDialogFragment extends DialogFragment implements Ad
                             }, () -> {
                                 eventSpinner.setVisibility(View.VISIBLE);
                                 getDialog().findViewById(R.id.progress).setVisibility(View.GONE);
-                            });
+                            });*/
         }
     }
 

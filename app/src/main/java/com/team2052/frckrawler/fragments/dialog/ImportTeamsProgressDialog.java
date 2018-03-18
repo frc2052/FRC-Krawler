@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.team2052.frckrawler.data.tba.v3.TBA;
 import com.team2052.frckrawler.interfaces.RefreshListener;
-import com.team2052.frckrawler.models.Event;
 
 import java.util.Arrays;
 
@@ -23,11 +22,10 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
     private Subscription subscription;
 
 
-    public static ImportTeamsProgressDialog newInstance(String teams, long event_id) {
+    public static ImportTeamsProgressDialog newInstance(String teams) {
         ImportTeamsProgressDialog importTeamsProgressDialog = new ImportTeamsProgressDialog();
         Bundle bundle = new Bundle();
         bundle.putString(TEAMS_ARGUMENT, teams);
-        bundle.putLong(EVENT_ID_ARGUMENT, event_id);
         importTeamsProgressDialog.setArguments(bundle);
         return importTeamsProgressDialog;
     }
@@ -36,7 +34,6 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String teams = getArguments().getString(TEAMS_ARGUMENT);
-        Event event = mRxDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID_ARGUMENT));
         subscription = Observable.just(teams)
                 .map(teamsString -> Arrays.asList(teamsString.split("\\s*,\\s*")))
                 .flatMap(Observable::from)
@@ -48,7 +45,7 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
                                 }
                             }
                     );
-                    mRxDbManager.getTeamsTable().insertNew(team, event);
+                    mRxDbManager.getTeamsTable().insertNew(team);
                     return true;
                 })
                 .subscribeOn(Schedulers.io())

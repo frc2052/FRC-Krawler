@@ -28,22 +28,14 @@
             android:name=".activities.TeamInfoActivity"
             android:label="@string/team_title"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.RobotActivity"
-            android:label="@string/robot_title"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.SummaryDataActivity" />
         <activity
-            android:name=".activities.SeasonInfoActivity"
-            android:label="@string/season_title"
+            android:name=".activities.MetricsActivity"
+            android:label="@string/metrics"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.HomeActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.EventInfoActivity"
-            android:label="@string/event_title"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.AddMetricActivity"
@@ -65,9 +57,6 @@
         <activity
             android:name=".activities.ImportMetricsActivity"
             android:label="Import Metrics" />
-        <activity
-            android:name=".activities.RobotEventActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".services.ServerService"
@@ -92,6 +81,15 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/primary" />
 
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

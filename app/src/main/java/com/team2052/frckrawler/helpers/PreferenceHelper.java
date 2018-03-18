@@ -5,7 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public class PreferenceHelper {
-    private static final String COMPILE_TEAM_NAME_PREFERENCE = "compile_team_name_preference",
+    private static final String
+            COMPILE_TEAM_NAME_PREFERENCE = "compile_team_name_preference",
             COMPILE_MATCH_METRICS_PREFERENCE = "compile_match_metrics_preference",
             COMPILE_PIT_METRICS_PREFERENCE = "compile_pit_metric_preference",
             COMPILE_WEIGHT_PREFERENCE = "compile_weight_preference";

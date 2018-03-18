@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.team2052.frckrawler.models.DaoMaster;
-import com.team2052.frckrawler.models.ServerLogEntryDao;
 
 /**
  * @author Adam

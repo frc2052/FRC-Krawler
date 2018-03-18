@@ -10,16 +10,13 @@ import android.view.MenuItem
 import com.google.firebase.crash.FirebaseCrash
 import com.team2052.frckrawler.FRCKrawler
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.data.RxDBManager
 import com.team2052.frckrawler.di.DaggerFragmentComponent
 import com.team2052.frckrawler.di.FragmentComponent
 import com.team2052.frckrawler.di.subscribers.SubscriberModule
 import com.team2052.frckrawler.fragments.dialog.ExportDialogFragment
-import com.team2052.frckrawler.fragments.dialog.PickEventDialogFragment
 import com.team2052.frckrawler.interfaces.HasComponent
-import com.team2052.frckrawler.models.Event
 
-class SettingsActivity : AppCompatActivity(), PickEventDialogFragment.EventPickedListener, HasComponent {
+class SettingsActivity : AppCompatActivity(), HasComponent {
     private var mComponent: FragmentComponent? = null
 
     var clickedPreference = -1
@@ -32,9 +29,9 @@ class SettingsActivity : AppCompatActivity(), PickEventDialogFragment.EventPicke
                 .commit()
     }
 
-    override fun pickedEvent(event: Event) {
+    /*override fun pickedEvent(event: Event) {
         ExportDialogFragment.newInstance(event, clickedPreference).show(supportFragmentManager, "exportDialogFragment")
-    }
+    }*/
 
     override fun getComponent(): FragmentComponent {
         if (mComponent == null) {
@@ -79,9 +76,9 @@ internal class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceC
         }
 
         addPreferencesFromResource(R.xml.preferences)
-        val numEvents = RxDBManager.getInstance(activity).eventsTable.getAllEvents().size
-        findPreference(EXPORT_PREFERENCE_KEY).isEnabled = numEvents >= 1
-        findPreference(EXPORT_RAW_PREFERENCE_KEY).isEnabled = numEvents >= 1
+        //val numEvents = RxDBManager.getInstance(activity).eventsTable.getAllEvents().size
+        //findPreference(EXPORT_PREFERENCE_KEY).isEnabled = numEvents >= 1
+        //findPreference(EXPORT_RAW_PREFERENCE_KEY).isEnabled = numEvents >= 1
 
         val teamWebsite = findPreference("team_website")
         teamWebsite.intent = Intent(Intent.ACTION_VIEW, Uri.parse(TEAM_WEBSITE))
@@ -96,13 +93,13 @@ internal class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceC
 
     override fun onPreferenceClick(preference: Preference): Boolean {
         val key = preference.key
-        if (key == EXPORT_PREFERENCE_KEY || key == EXPORT_RAW_PREFERENCE_KEY) {
-            PickEventDialogFragment().show((activity as AppCompatActivity).supportFragmentManager, "pickEventDialog")
-        }
-
         when (key) {
-            EXPORT_PREFERENCE_KEY -> (activity as SettingsActivity).clickedPreference = 0
-            EXPORT_RAW_PREFERENCE_KEY -> (activity as SettingsActivity).clickedPreference = 1
+            EXPORT_PREFERENCE_KEY -> {
+                ExportDialogFragment.newInstance(ExportDialogFragment.EXPORT_TYPE_NORMAL).show((activity as SettingsActivity).supportFragmentManager, "exportDialog")
+            }
+            EXPORT_RAW_PREFERENCE_KEY -> {
+                ExportDialogFragment.newInstance(ExportDialogFragment.EXPORT_TYPE_RAW).show((activity as SettingsActivity).supportFragmentManager, "exportDialog")
+            }
         }
         return false
     }

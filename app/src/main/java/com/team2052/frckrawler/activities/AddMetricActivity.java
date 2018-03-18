@@ -28,7 +28,6 @@ import com.team2052.frckrawler.metric.data.MetricValue;
 import com.team2052.frckrawler.metric.view.MetricWidget;
 import com.team2052.frckrawler.metric.view.impl.CheckBoxMetricWidget;
 import com.team2052.frckrawler.models.Metric;
-import com.team2052.frckrawler.models.Season;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +43,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public class AddMetricActivity extends DatabaseActivity {
     private static final String TAG = "AddMetricActivity";
-    private static String GAME_ID_EXTRA = "AddMetricGameIdExtra";
+    private static String EVENT_ID_EXTRA = "AddMetricGameIdExtra";
     private static String METRIC_CATEGORY_EXTRA = "AddMetricMetricCategoryExtra";
 
     MetricWidget currentWidget;
@@ -68,8 +67,6 @@ public class AddMetricActivity extends DatabaseActivity {
     @BindView(R.id.comma_separated_list)
     TextInputLayout mCommaSeparatedList;
 
-    private Season season;
-
     private Observable<Integer> mMinimumObservable, mMaximumObservable, mIncrementationObservable;
     private Observable<String> mNameObservable = Observable.defer(() -> Observable.just(mName.getEditText().getText().toString()))
             .map(text -> Strings.isNullOrEmpty(text) ? getResources().getStringArray(R.array.metric_types)[typeSpinner.getSelectedItemPosition()] : text);
@@ -77,9 +74,9 @@ public class AddMetricActivity extends DatabaseActivity {
             .map(text -> Strings.isNullOrEmpty(text) ? Lists.newArrayList() : Arrays.asList(text.split("\\s*,\\s*")));
     private Observable<Metric> metricObservable;
 
-    public static Intent newInstance(Context context, long gameId, int metricType) {
+    public static Intent newInstance(Context context, long event_id, int metricType) {
         Intent intent = new Intent(context, AddMetricActivity.class);
-        intent.putExtra(GAME_ID_EXTRA, gameId);
+        intent.putExtra(EVENT_ID_EXTRA, event_id);
         intent.putExtra(METRIC_CATEGORY_EXTRA, metricType);
         return intent;
     }
@@ -99,7 +96,6 @@ public class AddMetricActivity extends DatabaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        season = getRxDbManager().getSeasonsTable().load(getIntent().getLongExtra(GAME_ID_EXTRA, 0));
         setStatusBarColor(R.color.amber_700);
 
         @MetricHelper.MetricCategory
@@ -135,7 +131,6 @@ public class AddMetricActivity extends DatabaseActivity {
                     metricFactory.setDataMinMaxInc(metricPreviewParams.mMin, metricPreviewParams.mMax, metricPreviewParams.mInc);
                     metricFactory.setDataListIndexValue(metricPreviewParams.commaList);
                     metricFactory.setMetricCategory(metricCategory);
-                    metricFactory.setGameId(season.getId());
                     return metricFactory.buildMetric();
                 })
                 .subscribeOn(Schedulers.computation())

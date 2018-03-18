@@ -7,20 +7,18 @@ import org.greenrobot.greendao.query.QueryBuilder
 import java.util.*
 
 class PitData(dao: PitDatumDao, dbManager: DBManager) : AbstractTable<PitDatum, PitDatumDao>(dao, dbManager) {
-    fun query(robot_id: Long?, metric_id: Long?, event_id: Long?): QueryBuilder<PitDatum> {
+    fun query(team_id: Long?, metric_id: Long?): QueryBuilder<PitDatum> {
         val queryBuilder = queryBuilder
-        if (robot_id != null)
-            queryBuilder.where(PitDatumDao.Properties.Robot_id.eq(robot_id))
+        if (team_id != null)
+            queryBuilder.where(PitDatumDao.Properties.Team_id.eq(team_id))
         if (metric_id != null)
             queryBuilder.where(PitDatumDao.Properties.Metric_id.eq(metric_id))
-        if (event_id != null)
-            queryBuilder.where(PitDatumDao.Properties.Event_id.eq(event_id))
         return queryBuilder
     }
 
     fun insertWithSaved(pitDatum: PitDatum): Boolean {
         pitDatum.id = null
-        val pitDataQueryBuilder = query(pitDatum.robot_id, pitDatum.metric_id, pitDatum.event_id)
+        val pitDataQueryBuilder = query(pitDatum.team_id, pitDatum.metric_id)
         val count = pitDataQueryBuilder.count()
         if (count > 0) {
             val unique = pitDataQueryBuilder.unique()

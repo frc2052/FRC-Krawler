@@ -12,7 +12,6 @@ import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment
 import com.team2052.frckrawler.helpers.metric.MetricHelper
 import com.team2052.frckrawler.interfaces.HasComponent
-import com.team2052.frckrawler.models.Event
 
 class ScoutActivity : DatabaseActivity(), HasComponent {
     private var fragment: Fragment? = null
@@ -20,13 +19,6 @@ class ScoutActivity : DatabaseActivity(), HasComponent {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setNavigationDrawerEnabled(false)
-        val event = rxDbManager.eventsTable.load(intent.getLongExtra(EVENT_ID_EXTRA, 0))
-
-        if (event == null) {
-            finish()
-            return
-        }
-
         setContentView(R.layout.activity_scout)
         ButterKnife.bind(this)
 
@@ -34,10 +26,10 @@ class ScoutActivity : DatabaseActivity(), HasComponent {
 
         if (fragment == null) {
             when (scout_type) {
-                PIT_SCOUT_TYPE -> fragment = ScoutPitFragment.newInstance(event)
-                PRACTICE_MATCH_SCOUT_TYPE -> fragment = ScoutMatchFragment.newInstance(event, MetricHelper.MATCH_PRACTICE_TYPE)
+                PIT_SCOUT_TYPE -> fragment = ScoutPitFragment.newInstance()
+                PRACTICE_MATCH_SCOUT_TYPE -> fragment = ScoutMatchFragment.newInstance(MetricHelper.MATCH_PRACTICE_TYPE)
             //MATCH_SCOUT_TYPE,
-                else -> fragment = ScoutMatchFragment.newInstance(event, MetricHelper.MATCH_GAME_TYPE)
+                else -> fragment = ScoutMatchFragment.newInstance(MetricHelper.MATCH_GAME_TYPE)
             }
         }
 
@@ -74,10 +66,9 @@ class ScoutActivity : DatabaseActivity(), HasComponent {
         private val SCOUT_TYPE_EXTRA = "com.team2052.frckrawler.SCOUT_TYPE_EXTRA"
         private val EVENT_ID_EXTRA = "com.team2052.frckrawler.EVENT_ID_EXTRA"
 
-        fun newInstance(context: Context, event: Event, type: Int): Intent {
+        fun newInstance(context: Context, type: Int): Intent {
             val intent = Intent(context, ScoutActivity::class.java)
             intent.putExtra(SCOUT_TYPE_EXTRA, type)
-            intent.putExtra(EVENT_ID_EXTRA, event.id)
             return intent
         }
     }

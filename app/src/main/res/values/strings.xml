@@ -10,7 +10,6 @@
     <string name="scout">Scout</string>
     <string name="server">Server</string>
     <string name="teams">Teams</string>
-    <string name="seasons">Seasons</string>
     <string name="settings">Settings</string>
 
     <!--Initial Setup Screen-->
@@ -37,7 +36,6 @@
 
     <string-array name="team_tab_titles">
         <item>Info</item>
-        <item>Robots</item>
         <!--<item>Contacts</item>-->
     </string-array>
     <!--End Tab Titles-->
@@ -119,4 +117,5 @@
     <string name="about">Developed by Adam Corpstein (Adam8234)\nTested and promoted by Team 2052 KnightKrawler.</string>
     <string name="save_match_dialog">You are about to save match <b>%1$d</b> for team <b>%2$d</b></string>
     <string name="match_number">Match Number</string>
+    <string name="metrics">Metrics</string>
 </resources>

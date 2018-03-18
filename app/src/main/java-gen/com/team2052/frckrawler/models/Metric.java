@@ -6,7 +6,6 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.JoinProperty;
 import org.greenrobot.greendao.annotation.ToMany;
-import org.greenrobot.greendao.annotation.ToOne;
 import org.greenrobot.greendao.annotation.Unique;
 
 import java.util.List;
@@ -26,7 +25,6 @@ public class Metric implements java.io.Serializable {
     private Integer category;
     private Integer type;
     private String data;
-    private long event_id;
     private boolean enabled;
     private int priority;
 
@@ -39,12 +37,6 @@ public class Metric implements java.io.Serializable {
     /** Used for active entity operations. */
     @Generated
     private transient MetricDao myDao;
-
-    @ToOne(joinProperty = "event_id")
-    private Event event;
-
-    @Generated
-    private transient Long event__resolvedKey;
 
     @ToMany(joinProperties = {
             @JoinProperty(name = "id", referencedName = "metric_id")
@@ -65,13 +57,12 @@ public class Metric implements java.io.Serializable {
     }
 
     @Generated
-    public Metric(Long id, String name, Integer category, Integer type, String data, long event_id, boolean enabled, int priority) {
+    public Metric(Long id, String name, Integer category, Integer type, String data, boolean enabled, int priority) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.type = type;
         this.data = data;
-        this.event_id = event_id;
         this.enabled = enabled;
         this.priority = priority;
     }
@@ -123,14 +114,6 @@ public class Metric implements java.io.Serializable {
         this.data = data;
     }
 
-    public long getEvent_id() {
-        return event_id;
-    }
-
-    public void setEvent_id(long event_id) {
-        this.event_id = event_id;
-    }
-
     public boolean getEnabled() {
         return enabled;
     }
@@ -145,34 +128,6 @@ public class Metric implements java.io.Serializable {
 
     public void setPriority(int priority) {
         this.priority = priority;
-    }
-
-    /** To-one relationship, resolved on first access. */
-    @Generated
-    public Event getEvent() {
-        long __key = this.event_id;
-        if (event__resolvedKey == null || !event__resolvedKey.equals(__key)) {
-            __throwIfDetached();
-            EventDao targetDao = daoSession.getEventDao();
-            Event eventNew = targetDao.load(__key);
-            synchronized (this) {
-                event = eventNew;
-                event__resolvedKey = __key;
-            }
-        }
-        return event;
-    }
-
-    @Generated
-    public void setEvent(Event event) {
-        if (event == null) {
-            throw new DaoException("To-one property 'event_id' has not-null constraint; cannot set to-one to null");
-        }
-        synchronized (this) {
-            this.event = event;
-            event_id = event.getId();
-            event__resolvedKey = event_id;
-        }
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */

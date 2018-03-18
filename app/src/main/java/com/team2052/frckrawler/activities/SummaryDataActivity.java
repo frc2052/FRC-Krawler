@@ -6,26 +6,18 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.adapters.MetricsStatsAdapter;
-import com.team2052.frckrawler.adapters.items.ListItem;
-import com.team2052.frckrawler.adapters.items.elements.CompiledMetricListElement;
-import com.team2052.frckrawler.metric.data.Compiler;
-import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.metric.data.RxCompiler;
 import com.team2052.frckrawler.models.Metric;
 
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class SummaryDataActivity extends DatabaseActivity {
     public static String EVENT_ID = "EVENT_ID";
     @Inject
-    public Compiler mCompiler;
+    public RxCompiler mCompiler;
     private ListView mListView;
-    private Event mEvent;
     private Metric mMetric;
     private Subscription subscription;
 
@@ -41,12 +33,12 @@ public class SummaryDataActivity extends DatabaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view);
         mListView = (ListView) findViewById(R.id.list);
-        mEvent = getRxDbManager().getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
+        //mEvent = getRxDbManager().getEventsTable().load(getIntent().getLongExtra(EVENT_ID, 0));
         mMetric = getRxDbManager().getMetricsTable().load(getIntent().getLongExtra(DatabaseActivity.Companion.getPARENT_ID(), 0));
         setActionBarTitle(getString(R.string.summary_title));
         setActionBarSubtitle(mMetric.getName());
 
-        subscription = mCompiler.getMetricEventSummary(mEvent, mMetric)
+        /*subscription = mCompiler.getMetricEventSummary(mEvent, mMetric)
                 .flatMap(Observable::from)
                 .map(compiledMetricValue -> (ListItem) new CompiledMetricListElement(compiledMetricValue))
                 .toList()
@@ -55,7 +47,7 @@ public class SummaryDataActivity extends DatabaseActivity {
                 .subscribeOn(Schedulers.computation())
                 .subscribe(onNext -> {
                     mListView.setAdapter(onNext);
-                });
+                });*/
     }
 
     @Override

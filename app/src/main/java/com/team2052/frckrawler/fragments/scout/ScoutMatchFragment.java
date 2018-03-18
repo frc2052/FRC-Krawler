@@ -27,12 +27,11 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.data.tba.v3.JSON;
 import com.team2052.frckrawler.helpers.metric.MetricHelper;
 import com.team2052.frckrawler.metric.data.MetricValue;
-import com.team2052.frckrawler.models.Event;
 import com.team2052.frckrawler.models.MatchComment;
 import com.team2052.frckrawler.models.MatchDatum;
 import com.team2052.frckrawler.models.Metric;
 import com.team2052.frckrawler.models.MetricDao;
-import com.team2052.frckrawler.models.Robot;
+import com.team2052.frckrawler.models.Team;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -61,10 +60,10 @@ public class ScoutMatchFragment extends BaseScoutFragment {
 
     private int mMatchType;
     Observable<List<MetricValue>> metricValueObservable = Observable
-            .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
+            .combineLatest(matchNumberObservable(), teamObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
                 List<MetricValue> metricValues = Lists.newArrayList();
-                final QueryBuilder<Metric> metricQueryBuilder = rxDbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, mEvent.getSeason_id(), true)
+                final QueryBuilder<Metric> metricQueryBuilder = rxDbManager.getMetricsTable().query(MetricHelper.MATCH_PERF_METRICS, null, true)
                         .orderDesc(MetricDao.Properties.Priority)
                         .orderAsc(MetricDao.Properties.Id);
                 List<Metric> metrics = metricQueryBuilder.list();
@@ -73,7 +72,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                     //Query for existing data
                     QueryBuilder<MatchDatum> matchDataQueryBuilder = rxDbManager
                             .getMatchDataTable()
-                            .query(valueParams.robot.getId(), metric.getId(), Long.valueOf(valueParams.match_num), mMatchType, mEvent.getId());
+                            .query(valueParams.team.getNumber(), metric.getId(), Long.valueOf(valueParams.match_number), mMatchType);
                     MatchDatum currentData = matchDataQueryBuilder.unique();
                     //Add the metric values
                     metricValues.add(new MetricValue(metric, currentData == null ? null : JSON.getAsJsonObject(currentData.getData())));
@@ -84,9 +83,9 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             .observeOn(AndroidSchedulers.mainThread());
 
     Observable<String> metricCommentObservable = Observable
-            .combineLatest(matchNumberObservable(), robotObservable(), MetricValueUpdateParams::new)
+            .combineLatest(matchNumberObservable(), teamObservable(), MetricValueUpdateParams::new)
             .map(valueParams -> {
-                final QueryBuilder<MatchComment> matchCommentQueryBuilder = rxDbManager.getMatchCommentsTable().query(Long.valueOf(valueParams.match_num), mMatchType, valueParams.robot.getId(), mEvent.getId(), 0);
+                final QueryBuilder<MatchComment> matchCommentQueryBuilder = rxDbManager.getMatchCommentsTable().query(Long.valueOf(valueParams.match_number), mMatchType, valueParams.team.getNumber(), 0);
                 MatchComment mMatchComment = matchCommentQueryBuilder.unique();
                 String comment = null;
                 if (mMatchComment != null)
@@ -96,11 +95,10 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread());
 
-    public static ScoutMatchFragment newInstance(Event event, int type) {
+    public static ScoutMatchFragment newInstance(int type) {
         ScoutMatchFragment scoutMatchFragment = new ScoutMatchFragment();
         Bundle args = new Bundle();
         args.putInt(MATCH_TYPE, type);
-        args.putLong(EVENT_ID, event.getId());
         scoutMatchFragment.setArguments(args);
         return scoutMatchFragment;
     }
@@ -162,7 +160,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
     @Override
     public void updateMetricValues() {
         subscriptions.add(metricValueObservable.subscribe(this::setMetricValues, onError -> {
-            //Most likely part of the robot observable not being initiated, no big deal
+            //Most likely part of the team observable not being initiated, no big deal
             if (onError instanceof ArrayIndexOutOfBoundsException || onError instanceof NumberFormatException) {
                 return;
             }
@@ -171,7 +169,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
             FirebaseCrash.report(onError);
         }));
         subscriptions.add(metricCommentObservable.subscribe(RxTextView.text(mCommentsView.getEditText()), onError -> {
-            //Most likely part of the robot observable not being initiated, no big deal
+            //Most likely part of the team observable not being initiated, no big deal
             if (onError instanceof ArrayIndexOutOfBoundsException || onError instanceof NumberFormatException) {
                 return;
             }
@@ -183,22 +181,22 @@ public class ScoutMatchFragment extends BaseScoutFragment {
 
     @Override
     public Observable<Boolean> getSaveMetricObservable() {
-        return Observable.combineLatest(matchNumberObservable(), robotObservable(), Observable.defer(() -> Observable.just(getValues())), Observable.just(mCommentsView.getEditText().getText().toString()), MatchScoutSaveMetric::new)
+        return Observable.combineLatest(matchNumberObservable(), teamObservable(), Observable.defer(() -> Observable.just(getValues())), Observable.just(mCommentsView.getEditText().getText().toString()), MatchScoutSaveMetric::new)
                 .map(matchScoutSaveMetric -> {
                     //Insert Metric Data
                     boolean saved = false;
                     for (MetricValue metricValue : matchScoutSaveMetric.metricValues) {
                         MatchDatum matchDatum = new MatchDatum(
                                 null,
-                                mEvent.getId(),
-                                matchScoutSaveMetric.robot.getId(),
+                                matchScoutSaveMetric.team.getNumber(),
                                 metricValue.getMetric().getId(),
                                 mMatchType,
                                 matchScoutSaveMetric.matchNum,
                                 new Date(),
                                 metricValue.valueAsString());
-                        if (rxDbManager.getMatchDataTable().insertMatchData(matchDatum) && !saved)
+                        if (rxDbManager.getMatchDataTable().insertMatchData(matchDatum) && !saved) {
                             saved = true;
+                        }
                     }
 
 
@@ -206,8 +204,7 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                         MatchComment matchComment = new MatchComment(null);
                         matchComment.setMatch_number((long) matchScoutSaveMetric.matchNum);
                         matchComment.setMatch_type(mMatchType);
-                        matchComment.setRobot(matchScoutSaveMetric.robot);
-                        matchComment.setEvent(mEvent);
+                        matchComment.setTeam(matchScoutSaveMetric.team);
                         matchComment.setComment(matchScoutSaveMetric.comment);
                         if (rxDbManager.getMatchCommentsTable().insertMatchComment(matchComment) && !saved)
                             saved = true;
@@ -258,12 +255,12 @@ public class ScoutMatchFragment extends BaseScoutFragment {
                     return -1;
                 })
                 .debounce(500, TimeUnit.MILLISECONDS);
-        Observable<Robot> robot_confirm_observable = RxAdapterView.itemSelections(robot_spinner).map(robots::get);
 
-        Observable.combineLatest(match_number_observable, robot_confirm_observable, MetricValueUpdateParams::new)
+        Observable<Team> team_confirm_dialog_observable = RxAdapterView.itemSelections(robot_spinner).map(teams::get);
+        Observable.combineLatest(match_number_observable, team_confirm_dialog_observable, MetricValueUpdateParams::new)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onNext -> {
-                    if (onNext.match_num == getMatchNumber() && onNext.robot.equals(getSelectedRobot())) {
+                    if (onNext.match_number == getMatchNumber() && onNext.team.equals(getSelectedTeam())) {
                         build.getActionButton(DialogAction.POSITIVE).setEnabled(true);
                     } else {
                         build.getActionButton(DialogAction.POSITIVE).setEnabled(false);
@@ -277,24 +274,24 @@ public class ScoutMatchFragment extends BaseScoutFragment {
     }
 
     private static class MetricValueUpdateParams {
-        Integer match_num;
-        Robot robot;
+        Integer match_number;
+        Team team;
 
-        public MetricValueUpdateParams(Integer match_num, Robot robot) {
-            this.match_num = match_num;
-            this.robot = robot;
+        public MetricValueUpdateParams(Integer match_number, Team team) {
+            this.match_number = match_number;
+            this.team = team;
         }
     }
 
     public class MatchScoutSaveMetric {
         Integer matchNum;
-        Robot robot;
+        Team team;
         List<MetricValue> metricValues;
         String comment;
 
-        public MatchScoutSaveMetric(Integer matchNum, Robot robot, List<MetricValue> metricValues, String comment) {
+        public MatchScoutSaveMetric(Integer matchNum, Team team, List<MetricValue> metricValues, String comment) {
             this.matchNum = matchNum;
-            this.robot = robot;
+            this.team = team;
             this.metricValues = metricValues;
             this.comment = comment;
         }

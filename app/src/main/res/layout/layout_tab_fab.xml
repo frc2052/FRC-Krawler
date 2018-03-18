@@ -41,7 +41,6 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/fab_margin"
         android:tint="@color/grey_900"
-        android:visibility="gone"
         app:layout_behavior="com.team2052.frckrawler.util.ScrollAwareFABBehavior"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 </android.support.design.widget.CoordinatorLayout>

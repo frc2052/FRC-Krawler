@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.team2052.frckrawler.FRCKrawler;
 import com.team2052.frckrawler.data.RxDBManager;
-import com.team2052.frckrawler.metric.data.Compiler;
+import com.team2052.frckrawler.metric.data.RxCompiler;
 
 import javax.inject.Singleton;
 
@@ -37,8 +37,8 @@ public class FRCKrawlerModule {
 
     @Provides
     @Singleton
-    public Compiler getDataManager() {
-        return new Compiler(mApp.getApplicationContext(), getDBManager());
+    public RxCompiler getDataManager() {
+        return new RxCompiler(mApp.getApplicationContext(), getDBManager());
     }
 
     @Provides

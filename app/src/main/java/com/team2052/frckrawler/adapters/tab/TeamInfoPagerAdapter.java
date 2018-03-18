@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.fragments.robot.RobotsFragment;
 import com.team2052.frckrawler.fragments.team.TeamInfoFragment;
 
 /**
@@ -28,9 +27,6 @@ public class TeamInfoPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 fragment = TeamInfoFragment.Companion.newInstance(team_id);
-                break;
-            case 1:
-                fragment = RobotsFragment.Companion.newTeamInstance(team_id);
                 break;
         }
         return fragment;

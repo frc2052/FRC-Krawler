@@ -7,12 +7,10 @@ import android.view.View;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.adapters.items.smart.MetricItemView;
 import com.team2052.frckrawler.adapters.items.smart.SmartAdapterInteractions;
 import com.team2052.frckrawler.di.binding.NoDataParams;
 import com.team2052.frckrawler.di.binding.RecyclerViewBinder;
-import com.team2052.frckrawler.models.Event;
 import com.team2052.frckrawler.models.Metric;
 
 import java.util.List;
@@ -24,8 +22,6 @@ import rx.Observable;
  *
  */
 public class SummaryFragment extends RecyclerViewFragment<List<Metric>, RecyclerViewBinder> {
-    private Event mEvent;
-
     public static SummaryFragment newInstance(long event_id) {
         SummaryFragment fragment = new SummaryFragment();
         Bundle bundle = new Bundle();
@@ -37,7 +33,6 @@ public class SummaryFragment extends RecyclerViewFragment<List<Metric>, Recycler
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mEvent = rxDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID()));
     }
 
     @Override
@@ -47,7 +42,7 @@ public class SummaryFragment extends RecyclerViewFragment<List<Metric>, Recycler
 
     @Override
     protected Observable<? extends List<Metric>> getObservable() {
-        return rxDbManager.metricsInGame(mEvent.getSeason_id(), null);
+        return null;// rxDbManager.metricsByCategory(mEvent.getSeason_id(), null);
     }
 
     @Override
@@ -61,7 +56,7 @@ public class SummaryFragment extends RecyclerViewFragment<List<Metric>, Recycler
         creator.listener((actionId, item, position, view) -> {
             if (actionId == SmartAdapterInteractions.EVENT_CLICKED && item instanceof Metric) {
                 Metric metric = (Metric) item;
-                startActivity(SummaryDataActivity.newInstance(getActivity(), metric.getId(), mEvent.getId()));
+                //startActivity(SummaryDataActivity.newInstance(getActivity(), metric.getId(), mEvent.getId()));
             }
         });
     }

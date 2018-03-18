@@ -13,10 +13,9 @@ class MatchData(dao: MatchDatumDao, dbManager: DBManager) : AbstractTable<MatchD
     fun insertMatchData(matchDatum: MatchDatum): Boolean {
         matchDatum.id = null
         val matchDataQueryBuilder = dao.queryBuilder()
-        matchDataQueryBuilder.where(MatchDatumDao.Properties.Robot_id.eq(matchDatum.robot_id))
+        matchDataQueryBuilder.where(MatchDatumDao.Properties.Team_id.eq(matchDatum.team_id))
         matchDataQueryBuilder.where(MatchDatumDao.Properties.Metric_id.eq(matchDatum.metric_id))
         matchDataQueryBuilder.where(MatchDatumDao.Properties.Match_number.eq(matchDatum.match_number))
-        matchDataQueryBuilder.where(MatchDatumDao.Properties.Event_id.eq(matchDatum.event_id))
         matchDataQueryBuilder.where(MatchDatumDao.Properties.Match_type.eq(matchDatum.match_type))
         val count = matchDataQueryBuilder.count()
 
@@ -43,16 +42,14 @@ class MatchData(dao: MatchDatumDao, dbManager: DBManager) : AbstractTable<MatchD
         return listMatchNumbers
     }
 
-    fun query(robotId: Long? = null, metricId: Long? = null, match_number: Long? = null, match_type: Int = MetricHelper.MATCH_GAME_TYPE, eventId: Long? = null): QueryBuilder<MatchDatum> {
+    fun query(team_id: Long? = null, metric_id: Long? = null, match_number: Long? = null, match_type: Int = MetricHelper.MATCH_GAME_TYPE): QueryBuilder<MatchDatum> {
         val matchDataQueryBuilder = queryBuilder
-        if (robotId != null)
-            matchDataQueryBuilder.where(MatchDatumDao.Properties.Robot_id.eq(robotId))
-        if (metricId != null)
-            matchDataQueryBuilder.where(MatchDatumDao.Properties.Metric_id.eq(metricId))
+        if (team_id != null)
+            matchDataQueryBuilder.where(MatchDatumDao.Properties.Team_id.eq(team_id))
+        if (metric_id != null)
+            matchDataQueryBuilder.where(MatchDatumDao.Properties.Metric_id.eq(metric_id))
         if (match_number != null)
             matchDataQueryBuilder.where(MatchDatumDao.Properties.Match_number.eq(match_number))
-        if (eventId != null)
-            matchDataQueryBuilder.where(MatchDatumDao.Properties.Event_id.eq(eventId))
 
         matchDataQueryBuilder.where(MatchDatumDao.Properties.Match_type.eq(match_type))
         return matchDataQueryBuilder

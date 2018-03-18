@@ -1,3 +1,4 @@
+/*
 package com.team2052.frckrawler.data.tba.v3.types;
 
 import com.google.gson.JsonDeserializationContext;
@@ -52,3 +53,4 @@ public class EventDeserializer implements JsonDeserializer<Event> {
         return event;
     }
 }
+*/

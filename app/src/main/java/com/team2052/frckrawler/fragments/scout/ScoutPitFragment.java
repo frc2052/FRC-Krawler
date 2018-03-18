@@ -17,11 +17,10 @@ import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.data.tba.v3.JSON;
 import com.team2052.frckrawler.helpers.metric.MetricHelper;
 import com.team2052.frckrawler.metric.data.MetricValue;
-import com.team2052.frckrawler.models.Event;
 import com.team2052.frckrawler.models.Metric;
 import com.team2052.frckrawler.models.MetricDao;
 import com.team2052.frckrawler.models.PitDatum;
-import com.team2052.frckrawler.models.Robot;
+import com.team2052.frckrawler.models.Team;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -39,10 +38,10 @@ public class ScoutPitFragment extends BaseScoutFragment {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    Observable<List<MetricValue>> metricValueObservable = robotObservable()
-            .map(robot -> {
+    Observable<List<MetricValue>> metricValueObservable = teamObservable()
+            .map(team -> {
                 List<MetricValue> metricValues = Lists.newArrayList();
-                final QueryBuilder<Metric> metricQueryBuilder = rxDbManager.getMetricsTable().query(MetricHelper.ROBOT_METRICS, null, mEvent.getSeason_id(), true)
+                final QueryBuilder<Metric> metricQueryBuilder = rxDbManager.getMetricsTable().query(MetricHelper.ROBOT_METRICS, null, true)
                         .orderDesc(MetricDao.Properties.Priority)
                         .orderAsc(MetricDao.Properties.Id);
                 List<Metric> metrics = metricQueryBuilder.list();
@@ -50,7 +49,7 @@ public class ScoutPitFragment extends BaseScoutFragment {
                 for (int i = 0; i < metrics.size(); i++) {
                     Metric metric = metrics.get(i);
                     //Query for existing data
-                    QueryBuilder<PitDatum> matchDataQueryBuilder = rxDbManager.getPitDataTable().query(robot.getId(), metric.getId(), mEvent.getId());
+                    QueryBuilder<PitDatum> matchDataQueryBuilder = rxDbManager.getPitDataTable().query(team.getNumber(), metric.getId());
 
                     PitDatum currentData = matchDataQueryBuilder.unique();
                     //Add the metric values
@@ -61,14 +60,13 @@ public class ScoutPitFragment extends BaseScoutFragment {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread());
 
-    Observable<String> metricCommentObservable = robotObservable()
-            .flatMap(robot -> Observable.just(Strings.nullToEmpty(robot.getComments())))
+    Observable<String> metricCommentObservable = teamObservable()
+            .flatMap(team -> Observable.just(Strings.nullToEmpty(team.getComments())))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread());
 
-    public static ScoutPitFragment newInstance(Event event) {
+    public static ScoutPitFragment newInstance() {
         Bundle args = new Bundle();
-        args.putLong(EVENT_ID, event.getId());
         ScoutPitFragment fragment = new ScoutPitFragment();
         fragment.setArguments(args);
         return fragment;
@@ -95,7 +93,7 @@ public class ScoutPitFragment extends BaseScoutFragment {
     @Override
     public void updateMetricValues() {
         subscriptions.add(metricValueObservable.subscribe(this::setMetricValues, onError -> {
-            //Most likely part of the robot observable not being initiated, no big deal
+            //Most likely part of the team observable not being initiated, no big deal
             if (onError instanceof ArrayIndexOutOfBoundsException) {
                 return;
             }
@@ -103,7 +101,7 @@ public class ScoutPitFragment extends BaseScoutFragment {
             FirebaseCrash.report(onError);
         }));
         subscriptions.add(metricCommentObservable.subscribe(RxTextView.text(mCommentsView.getEditText()), onError -> {
-            //Most likely part of the robot observable not being initiated, no big deal
+            //Most likely part of the team observable not being initiated, no big deal
             if (onError instanceof ArrayIndexOutOfBoundsException) {
                 return;
             }
@@ -115,39 +113,36 @@ public class ScoutPitFragment extends BaseScoutFragment {
     @Override
     public Observable<Boolean> getSaveMetricObservable() {
         return Observable.combineLatest(
-                robotObservable(),
+                teamObservable(),
                 Observable.defer(() -> Observable.just(getValues())),
                 Observable.just(mCommentsView.getEditText().getText().toString()),
-                PitScoutSaveMetric::new)
-                .map(pitScoutSaveMetric -> {
+                PitScoutSaveMetric::new).map(pitScoutSaveMetric -> {
                     boolean saved = false;
-                    Robot robot = pitScoutSaveMetric.robot;
+            Team team = pitScoutSaveMetric.team;
                     for (MetricValue widget : pitScoutSaveMetric.metricValues) {
                         PitDatum pitDatum = new PitDatum(null);
-                        pitDatum.setRobot(robot);
+                        pitDatum.setTeam(team);
                         pitDatum.setMetric(widget.getMetric());
-                        pitDatum.setEvent(mEvent);
-                        //pitDatum.setUser_id(user != null ? user.getId() : null); NOOP
                         pitDatum.setData(widget.valueAsString());
                         if (rxDbManager.getPitDataTable().insertWithSaved(pitDatum) && !saved)
                             saved = true;
                     }
 
-                    robot.setComments(pitScoutSaveMetric.comment);
-                    robot.setLast_updated(new Date());
-                    robot.update();
+            team.setComments(pitScoutSaveMetric.comment);
+            team.setLast_updated(new Date());
+            rxDbManager.getTeamsTable().getDao().update(team);
 
                     return saved;
                 });
     }
 
     public static class PitScoutSaveMetric {
-        Robot robot;
+        Team team;
         List<MetricValue> metricValues;
         private String comment;
 
-        public PitScoutSaveMetric(Robot robot, List<MetricValue> metricValues, String comment) {
-            this.robot = robot;
+        public PitScoutSaveMetric(Team team, List<MetricValue> metricValues, String comment) {
+            this.team = team;
             this.metricValues = metricValues;
             this.comment = comment;
         }

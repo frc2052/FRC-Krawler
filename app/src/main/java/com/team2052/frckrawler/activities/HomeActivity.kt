@@ -10,7 +10,6 @@ import butterknife.ButterKnife
 import com.team2052.frckrawler.Constants
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.adapters.items.items.NavDrawerItem
-import com.team2052.frckrawler.fragments.SeasonsFragment
 import com.team2052.frckrawler.fragments.ServerFragment
 import com.team2052.frckrawler.fragments.TeamListFragment
 import com.team2052.frckrawler.fragments.scout.ScoutHomeFragment
@@ -36,7 +35,6 @@ class HomeActivity : DatabaseActivity() {
         subFragment?.onSaveInstanceState(outState)
     }
 
-
     override fun onCreateNavigationDrawer() {
         useActionBarToggle(true)
         encourageLearning(!mFromSavedInstanceState)
@@ -48,7 +46,10 @@ class HomeActivity : DatabaseActivity() {
             R.id.nav_item_scout -> fragment = ScoutHomeFragment()
             R.id.nav_item_server -> fragment = ServerFragment()
             R.id.nav_item_teams -> fragment = TeamListFragment()
-            R.id.nav_item_games -> fragment = SeasonsFragment()
+            R.id.nav_item_metrics -> {
+                startActivity(Intent(this, MetricsActivity::class.java))
+                return
+            }
             R.id.nav_item_settings -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 return
@@ -78,10 +79,11 @@ class HomeActivity : DatabaseActivity() {
         //Used to switch to a different fragment if it came from a separate activity
         val b = intent.extras
         if (b != null) {
-            if (b.containsKey(REQUESTED_MODE))
+            if (b.containsKey(REQUESTED_MODE)) {
                 if (b.getInt(REQUESTED_MODE, -1) != -1) {
                     initNavId = b.getInt(REQUESTED_MODE)
                 }
+            }
         }
 
         if (savedInstanceState != null) {
@@ -116,7 +118,7 @@ class HomeActivity : DatabaseActivity() {
                 R.id.nav_item_scout -> bar.setTitle(R.string.scout)
                 R.id.nav_item_server -> bar.setTitle(R.string.server)
                 R.id.nav_item_teams -> bar.setTitle(R.string.teams)
-                R.id.nav_item_games -> bar.setTitle(R.string.seasons)
+                R.id.nav_item_metrics -> bar.setTitle(R.string.metrics)
             }
         }
         return super.onPrepareOptionsMenu(menu)

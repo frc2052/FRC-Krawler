@@ -14,8 +14,8 @@ import android.widget.FrameLayout;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.items.items.NavDrawerItem;
 import com.team2052.frckrawler.fragments.NavigationDrawerFragment;
+import com.team2052.frckrawler.themes.Theme;
 import com.team2052.frckrawler.themes.ThemeChangedEvent;
-import com.team2052.frckrawler.themes.Themes;
 import com.team2052.frckrawler.views.ScrimInsetsFrameLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,7 +60,7 @@ public abstract class NavigationDrawerActivity extends AppCompatActivity
         super.setContentView(R.layout.activity_navigation_drawer);
 
         if (useCustomTheme()) {
-            Themes currentTheme = Themes.getCurrentTheme(this);
+            Theme currentTheme = Theme.getCurrentTheme(this);
             setTheme(currentTheme.getTheme());
         }
 

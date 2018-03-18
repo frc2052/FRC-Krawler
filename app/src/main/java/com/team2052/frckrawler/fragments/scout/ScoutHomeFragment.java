@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -27,12 +26,11 @@ import com.team2052.frckrawler.bluetooth.scout.events.ScoutSyncStartEvent;
 import com.team2052.frckrawler.bluetooth.scout.events.ScoutSyncSuccessEvent;
 import com.team2052.frckrawler.helpers.BluetoothHelper;
 import com.team2052.frckrawler.helpers.ScoutHelper;
-import com.team2052.frckrawler.helpers.SnackbarHelper;
-import com.team2052.frckrawler.models.Event;
 import com.team2052.frckrawler.services.StartSyncIntentService;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.concurrent.TimeUnit;
 
@@ -43,7 +41,6 @@ import rx.functions.Action1;
 public class ScoutHomeFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_ENABLE_BT = 1;
 
-    private Event mEvent;
     private View syncProgressBar;
     private TextView syncStatusTextView;
 
@@ -82,9 +79,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         view.findViewById(R.id.sync_button).setOnClickListener(this);
 
         syncProgressBar = view.findViewById(R.id.sync_progress_bar);
-        syncStatusTextView = (TextView) view.findViewById(R.id.sync_status);
-
-        updateEvent();
+        syncStatusTextView = view.findViewById(R.id.sync_status);
 
         //Disable navigation drawer when scout
         if (ScoutHelper.getDeviceIsScout(getContext()) && getActivity() instanceof NavigationDrawerActivity) {
@@ -101,14 +96,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     }
 
     public Action1<Void> startScoutingActivity(int type) {
-        return aVoid -> {
-            if (mEvent != null) {
-                startActivity(ScoutActivity.Companion.newInstance(getActivity(), mEvent, type));
-            } else {
-                SnackbarHelper.make(getView(), "Unable to find event", Snackbar.LENGTH_LONG).show();
-                updateEvent();
-            }
-        };
+        return aVoid -> startActivity(ScoutActivity.Companion.newInstance(getActivity(), type));
     }
 
     @Override
@@ -131,15 +119,6 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     public void enableButtons(boolean enabled) {
         getView().findViewById(R.id.scout_match_button).setEnabled(enabled);
         getView().findViewById(R.id.scout_pit_button).setEnabled(enabled);
-    }
-
-    private void updateEvent() {
-        setCurrentEvent(ScoutHelper.getScoutEvent(getContext()));
-    }
-
-    private void setCurrentEvent(Event scoutEvent) {
-        mEvent = scoutEvent;
-        enableButtons(mEvent != null);
     }
 
     private void startSync(String deviceMacAddress) {
@@ -175,10 +154,8 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
             ((NavigationDrawerActivity) getActivity()).setNavigationDrawerEnabled(false);
         }
 
-        updateEvent();
         getView().findViewById(R.id.sync_button).setEnabled(true);
         syncStatusTextView.setText("Sync Successful");
-
         //Change Progress bar visibility but delay 1000ms for status to disappear
         syncProgressBar.setVisibility(View.GONE);
         setProgressVisibilityDelay(View.GONE, 1000);
@@ -206,7 +183,7 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     }
 
     @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ScoutSyncStartEvent event) {
         enableButtons(false);
         setProgressVisibility(View.VISIBLE);

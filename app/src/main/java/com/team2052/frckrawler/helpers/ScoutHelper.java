@@ -4,16 +4,13 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
 import com.google.common.base.Optional;
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.data.RxDBManager;
-import com.team2052.frckrawler.models.Event;
+import com.team2052.frckrawler.themes.Theme;
 import com.team2052.frckrawler.themes.ThemeChangedEvent;
-import com.team2052.frckrawler.themes.Themes;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -50,15 +47,6 @@ public class ScoutHelper {
         return Optional.of(BluetoothHelper.getDevice(address));
     }
 
-    @Nullable
-    public static Event getScoutEvent(Context context) {
-        SharedPreferences scoutPrefs = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
-        if (scoutPrefs.getLong(Constants.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE) != Long.MIN_VALUE) {
-            return RxDBManager.Companion.getInstance(context).getEventsTable().load(scoutPrefs.getLong(Constants.CURRENT_SCOUT_EVENT_ID, Long.MIN_VALUE));
-        }
-        return null;
-    }
-
     public static int getScoutTheme(Context context) {
         SharedPreferences scoutPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         return scoutPrefs.getInt(Constants.SCOUT_THEME_SELECTION, 0);
@@ -73,7 +61,7 @@ public class ScoutHelper {
     public static void showAskThemeDialog(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.select_theme);
-        builder.setSingleChoiceItems(Themes.getNames(), ScoutHelper.getScoutTheme(context), (dialog1, which) -> {
+        builder.setSingleChoiceItems(Theme.getNames(), ScoutHelper.getScoutTheme(context), (dialog1, which) -> {
         });
         builder.setPositiveButton("Ok", (dialog, which) -> {
             int themeIndex = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
@@ -87,13 +75,6 @@ public class ScoutHelper {
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
         prefsEditor.putString(Constants.MAC_ADDRESS_PREF, "null");
-        prefsEditor.apply();
-    }
-
-    public static void setEvent(Context context, Event event) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putLong(Constants.CURRENT_SCOUT_EVENT_ID, event.getId());
         prefsEditor.apply();
     }
 }

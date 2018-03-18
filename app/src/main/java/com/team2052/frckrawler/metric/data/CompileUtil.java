@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.metric.data;
 
 import android.os.Environment;
-import android.support.annotation.NonNull;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -9,10 +8,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.data.tba.v3.JSON;
 import com.team2052.frckrawler.metric.MetricTypes;
-import com.team2052.frckrawler.models.Event;
 import com.team2052.frckrawler.models.MatchDatum;
 import com.team2052.frckrawler.models.Metric;
-import com.team2052.frckrawler.models.Robot;
+import com.team2052.frckrawler.models.Team;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -86,61 +84,59 @@ public class CompileUtil {
         }
     };
 
-    public static Func1<List<MetricValue>, CompiledMetricValue> metricValuesToCompiledValue(Robot robot, Metric metric, float compileWeight) {
-        return metricValues -> MetricTypes.INSTANCE.getType(metric.getType()).compile(metric, metricValues, compileWeight).toRobotCompiledValue(robot);
+    public static Func1<List<MetricValue>, CompiledMetricValue> metricValuesToCompiledValue(Team team, Metric metric, float compileWeight) {
+        return metricValues -> MetricTypes.INSTANCE.getType(metric.getType()).compile(metric, metricValues, compileWeight).toTeamCompiledValue(team);
     }
 
-    public static Observable<File> getSummaryFile(@NonNull Event event) {
-        return Observable.just(event)
-                .map(event1 -> {
-                    File fileSystem = Environment.getExternalStorageDirectory();
-                    File file = null;
-                    if (fileSystem.canWrite()) {
-                        File directory = new File(fileSystem, "/FRCKrawler/Summaries/" + event.getSeason().getName() + "/");
-                        if (!directory.exists()) {
-                            boolean created = directory.mkdirs();
-                            if (!created) {
-                                directory = new File(fileSystem, "/");
-                            }
-                        }
-                        try {
-                            file = File.createTempFile(
-                                    String.format("%s_%s_Summary", event.getSeason().getName(), event.getName()),  /* prefix */
-                                    ".csv",         /* suffix */
-                                    directory      /* directory */
-                            );
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    return file;
-                });
+    public static Observable<File> getSummaryFile() {
+        File fileSystem = Environment.getExternalStorageDirectory();
+        File file = null;
+        if (fileSystem.canWrite()) {
+            File directory = new File(fileSystem, "/FRCKrawler/Summaries/"/* + event.getSeason().getName() + "/"*/);
+            if (!directory.exists()) {
+                boolean created = directory.mkdirs();
+                if (!created) {
+                    directory = new File(fileSystem, "/");
+                }
+            }
+            try {
+                file = File.createTempFile(
+                        //TODO
+                        String.format("Summary"/*, event.getSeason().getName(), event.getName()*/),  /* prefix */
+                        ".csv",         /* suffix */
+                        directory      /* directory */
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+        return Observable.just(file);
     }
 
-    public static Observable<File> getRawExportFile(@NonNull Event event) {
-        return Observable.just(event)
-                .map(event1 -> {
-                    File fileSystem = Environment.getExternalStorageDirectory();
-                    File file = null;
-                    if (fileSystem.canWrite()) {
-                        File directory = new File(fileSystem, "/FRCKrawler/RawExport/" + event.getSeason().getName() + "/");
-                        if (!directory.exists()) {
-                            boolean created = directory.mkdirs();
-                            if (!created) {
-                                directory = new File(fileSystem, "/");
-                            }
-                        }
-                        try {
-                            file = File.createTempFile(
-                                    String.format("%s_%s_RawExport", event.getSeason().getName(), event.getName()),  /* prefix */
-                                    ".csv",         /* suffix */
-                                    directory      /* directory */
-                            );
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    return file;
-                });
+    public static Observable<File> getRawExportFile() {
+        File fileSystem = Environment.getExternalStorageDirectory();
+        File file = null;
+        if (fileSystem.canWrite()) {
+            //TODO
+            File directory = new File(fileSystem, "/FRCKrawler/RawExport/" /*+ event.getSeason().getName() + "/"*/);
+            if (!directory.exists()) {
+                boolean created = directory.mkdirs();
+                if (!created) {
+                    directory = new File(fileSystem, "/");
+                }
+            }
+            try {
+                file = File.createTempFile(
+                        //TODO
+                        String.format("RawExport"/*, event.getSeason().getName(), event.getName()*/),  /* prefix */
+                        ".csv",         /* suffix */
+                        directory      /* directory */
+                );
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return Observable.just(file);
     }
 }

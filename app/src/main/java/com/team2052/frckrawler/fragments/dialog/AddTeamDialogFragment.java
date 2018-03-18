@@ -13,9 +13,7 @@ import android.view.View;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.activities.DatabaseActivity;
 import com.team2052.frckrawler.data.RxDBManager;
-import com.team2052.frckrawler.models.Event;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,18 +26,16 @@ import rx.Observable;
  * @author Adam
  * @since 3/7/2015.
  */
-public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogFragment implements DialogInterface.OnClickListener {
+public class AddTeamDialogFragment extends android.support.v4.app.DialogFragment implements DialogInterface.OnClickListener {
     private static final String TAG = "AddTeamToEventDialogFra";
 
     @BindView(R.id.team_number)
     TextInputLayout add_team;
-    private Event mEvent;
     private RxDBManager rxDbManager;
 
-    public static AddTeamToEventDialogFragment newInstance(Event game) {
-        AddTeamToEventDialogFragment fragment = new AddTeamToEventDialogFragment();
+    public static AddTeamDialogFragment newInstance() {
+        AddTeamDialogFragment fragment = new AddTeamDialogFragment();
         Bundle b = new Bundle();
-        b.putLong(DatabaseActivity.Companion.getPARENT_ID(), game.getId());
         fragment.setArguments(b);
         return fragment;
     }
@@ -48,7 +44,6 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         rxDbManager = RxDBManager.Companion.getInstance(getActivity());
-        this.mEvent = RxDBManager.Companion.getInstance(getActivity()).getEventsTable().load(getArguments().getLong(DatabaseActivity.Companion.getPARENT_ID()));
     }
 
     @Override
@@ -114,7 +109,7 @@ public class AddTeamToEventDialogFragment extends android.support.v4.app.DialogF
                         return Joiner.on(',').join(teamNumbers);
                     })
                     .subscribe(onNext -> {
-                        ImportTeamsProgressDialog.newInstance(onNext, mEvent.getId()).show(getFragmentManager(), "importTeamsProgressDialog");
+                        ImportTeamsProgressDialog.newInstance(onNext).show(getFragmentManager(), "importTeamsProgressDialog");
                     }, onError -> {
                         dismiss();
                     });

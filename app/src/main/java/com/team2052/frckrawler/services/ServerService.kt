@@ -7,7 +7,6 @@ import android.os.IBinder
 import android.util.Log
 import com.team2052.frckrawler.bluetooth.server.ServerStatus
 import com.team2052.frckrawler.bluetooth.server.ServerThread
-import com.team2052.frckrawler.models.Event
 import rx.Observable
 import rx.subjects.BehaviorSubject
 
@@ -34,8 +33,8 @@ class ServerService : Service() {
         return mBinder
     }
 
-    private fun startServer(event: Event) {
-        serverThread = ServerThread(serverStatusServerStatusSubject, applicationContext, event)
+    private fun startServer() {
+        serverThread = ServerThread(serverStatusServerStatusSubject, applicationContext)
         serverThread?.start()
     }
 
@@ -46,15 +45,14 @@ class ServerService : Service() {
         }
     }
 
-    private val isServerOn: Boolean
-        get() = serverThread != null
+    private val isServerOn: Boolean get() = serverThread != null
 
-    fun changeServerStatus(event: Event?, on: Boolean) {
+    fun changeServerStatus(on: Boolean) {
         val requestedOff = isServerOn && !on
-        if (event == null || requestedOff) {
+        if (requestedOff) {
             stopServer()
         } else {
-            startServer(event)
+            startServer()
         }
     }
 

@@ -16,21 +16,6 @@ public class SubscriberModule {
     }
 
     @Provides
-    public RobotListSubscriber provideRobotListSubscriber() {
-        return new RobotListSubscriber();
-    }
-
-    @Provides
-    public EventStringSubscriber provideEventStringListSubscriber() {
-        return new EventStringSubscriber();
-    }
-
-    @Provides
-    public RobotStringSubscriber provideRobotStringListSubscriber() {
-        return new RobotStringSubscriber();
-    }
-
-    @Provides
     public KeyValueListSubscriber provideKeyMapListSubbscriber() {
         return new KeyValueListSubscriber();
     }

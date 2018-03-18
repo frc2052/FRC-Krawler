@@ -17,7 +17,6 @@ import org.greenrobot.greendao.internal.DaoConfig;
 public class TeamDao extends AbstractDao<Team, Long> {
 
     public static final String TABLENAME = "TEAM";
-    private DaoSession daoSession;
 
     public TeamDao(DaoConfig config) {
         super(config);
@@ -26,7 +25,6 @@ public class TeamDao extends AbstractDao<Team, Long> {
 
     public TeamDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
-        this.daoSession = daoSession;
     }
 
     /**
@@ -38,7 +36,9 @@ public class TeamDao extends AbstractDao<Team, Long> {
                 "\"NUMBER\" INTEGER PRIMARY KEY UNIQUE ," + // 0: number
                 "\"TEAMKEY\" TEXT UNIQUE ," + // 1: teamkey
                 "\"NAME\" TEXT," + // 2: name
-                "\"DATA\" TEXT);"); // 3: data
+                "\"DATA\" TEXT," + // 3: data
+                "\"LAST_UPDATED\" INTEGER," + // 4: last_updated
+                "\"COMMENTS\" TEXT);"); // 5: comments
     }
 
     /** Drops the underlying database table. */
@@ -70,6 +70,16 @@ public class TeamDao extends AbstractDao<Team, Long> {
         if (data != null) {
             stmt.bindString(4, data);
         }
+
+        java.util.Date last_updated = entity.getLast_updated();
+        if (last_updated != null) {
+            stmt.bindLong(5, last_updated.getTime());
+        }
+
+        String comments = entity.getComments();
+        if (comments != null) {
+            stmt.bindString(6, comments);
+        }
     }
 
     @Override
@@ -95,12 +105,16 @@ public class TeamDao extends AbstractDao<Team, Long> {
         if (data != null) {
             stmt.bindString(4, data);
         }
-    }
 
-    @Override
-    protected final void attachEntity(Team entity) {
-        super.attachEntity(entity);
-        entity.__setDaoSession(daoSession);
+        java.util.Date last_updated = entity.getLast_updated();
+        if (last_updated != null) {
+            stmt.bindLong(5, last_updated.getTime());
+        }
+
+        String comments = entity.getComments();
+        if (comments != null) {
+            stmt.bindString(6, comments);
+        }
     }
 
     @Override
@@ -114,7 +128,9 @@ public class TeamDao extends AbstractDao<Team, Long> {
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // number
                 cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // teamkey
                 cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
-                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // data
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // data
+                cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)), // last_updated
+                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // comments
         );
         return entity;
     }
@@ -125,6 +141,8 @@ public class TeamDao extends AbstractDao<Team, Long> {
         entity.setTeamkey(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setData(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setLast_updated(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
+        entity.setComments(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
      }
      
     @Override
@@ -161,6 +179,8 @@ public class TeamDao extends AbstractDao<Team, Long> {
         public final static Property Teamkey = new Property(1, String.class, "teamkey", false, "TEAMKEY");
         public final static Property Name = new Property(2, String.class, "name", false, "NAME");
         public final static Property Data = new Property(3, String.class, "data", false, "DATA");
+        public final static Property Last_updated = new Property(4, java.util.Date.class, "last_updated", false, "LAST_UPDATED");
+        public final static Property Comments = new Property(5, String.class, "comments", false, "COMMENTS");
     }
     
 }

@@ -19,8 +19,7 @@ import com.team2052.frckrawler.interfaces.HasComponent;
 import com.team2052.frckrawler.metric.MetricTypes;
 import com.team2052.frckrawler.metric.data.MetricValue;
 import com.team2052.frckrawler.metric.view.MetricWidget;
-import com.team2052.frckrawler.models.Event;
-import com.team2052.frckrawler.models.Robot;
+import com.team2052.frckrawler.models.Team;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +42,12 @@ public abstract class BaseScoutFragment extends Fragment {
     public static final String EVENT_ID = "EVENT_ID";
     private static final String TAG = "BaseScoutFragment";
     protected RxDBManager rxDbManager;
-    protected Event mEvent;
-    protected List<Robot> robots;
+    protected List<Team> teams;
     protected List<String> robotNames;
+
     CompositeSubscription subscriptions = new CompositeSubscription();
-    @BindView(R.id.robot)
+
+    @BindView(R.id.team)
     Spinner mRobotSpinner;
     @BindView(R.id.comments)
     TextInputLayout mCommentsView;
@@ -75,16 +75,13 @@ public abstract class BaseScoutFragment extends Fragment {
 
         subscriptions.add(RxAdapterView.itemSelections(mRobotSpinner).debounce(500, TimeUnit.MILLISECONDS).subscribe(onNext -> updateMetricValues()));
 
-        mEvent = rxDbManager.getEventsTable().load(getArguments().getLong(EVENT_ID));
         //Load Robots at Event
-        rxDbManager.robotsAtEvent(getArguments().getLong(EVENT_ID))
+        rxDbManager.getTeamsTable().loadAllObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(robots1 -> {
-                    this.robots = robots1;
-                    return Observable.from(robots1);
-                })
-                .map(robot -> String.format("%d, %s", robot.getTeam_id(), robot.getTeam().getName()))
+                .doOnNext(teams1 -> teams = teams1)
+                .concatMap(Observable::from)
+                .map(robot -> String.format("%d, %s", robot.getNumber(), robot.getName()))
                 .toList()
                 .subscribe(onNext -> {
                     this.robotNames = onNext;
@@ -103,12 +100,12 @@ public abstract class BaseScoutFragment extends Fragment {
 
     }
 
-    protected Observable<Robot> robotObservable() {
-        return Observable.defer(() -> Observable.just(robots.get(mRobotSpinner.getSelectedItemPosition())));
+    protected Observable<Team> teamObservable() {
+        return Observable.defer(() -> Observable.just(teams.get(mRobotSpinner.getSelectedItemPosition())));
     }
 
-    protected Robot getSelectedRobot() {
-        return robots.get(mRobotSpinner.getSelectedItemPosition());
+    protected Team getSelectedTeam() {
+        return teams.get(mRobotSpinner.getSelectedItemPosition());
     }
 
     public abstract Observable<Boolean> getSaveMetricObservable();
