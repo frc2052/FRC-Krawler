@@ -19,7 +19,6 @@ import com.team2052.frckrawler.util.Tuple2;
 import java.util.List;
 
 public class ChooserMetricWidget extends ListIndexMetricWidget implements OnItemSelectedListener {
-
     int value;
     private Spinner chooserSpinner;
 
@@ -56,7 +55,7 @@ public class ChooserMetricWidget extends ListIndexMetricWidget implements OnItem
     @Override
     public void initViews() {
         inflater.inflate(R.layout.widget_metric_chooser, this);
-        chooserSpinner = (Spinner) findViewById(R.id.choooserList);
+        chooserSpinner = findViewById(R.id.choooserList);
         chooserSpinner.setOnItemSelectedListener(this);
     }
 
@@ -72,6 +71,9 @@ public class ChooserMetricWidget extends ListIndexMetricWidget implements OnItem
 
     @Override
     public List<Integer> getIndexValues() {
-        return Lists.newArrayList(value);
+        if (chooserSpinner.getAdapter().getCount() > 0) {
+            return Lists.newArrayList(value);
+        }
+        return Lists.newArrayList();
     }
 }
