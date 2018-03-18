@@ -15,6 +15,7 @@ import com.team2052.frckrawler.di.FragmentComponent
 import com.team2052.frckrawler.di.subscribers.SubscriberModule
 import com.team2052.frckrawler.fragments.dialog.ExportDialogFragment
 import com.team2052.frckrawler.interfaces.HasComponent
+import com.team2052.frckrawler.services.BackupDBIntentService
 
 class SettingsActivity : AppCompatActivity(), HasComponent {
     private var mComponent: FragmentComponent? = null
@@ -58,6 +59,7 @@ class SettingsActivity : AppCompatActivity(), HasComponent {
 
 }
 
+const val DATABSE_BACKUP_PREFRENCE_KEY = "database_backup"
 const val EXPORT_PREFERENCE_KEY = "compile_export_preference"
 const val EXPORT_RAW_PREFERENCE_KEY = "compile_raw_export"
 
@@ -89,6 +91,7 @@ internal class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceC
 
         findPreference(EXPORT_PREFERENCE_KEY).onPreferenceClickListener = this
         findPreference(EXPORT_RAW_PREFERENCE_KEY).onPreferenceClickListener = this
+        findPreference(DATABSE_BACKUP_PREFRENCE_KEY).onPreferenceClickListener = this
     }
 
     override fun onPreferenceClick(preference: Preference): Boolean {
@@ -99,6 +102,10 @@ internal class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceC
             }
             EXPORT_RAW_PREFERENCE_KEY -> {
                 ExportDialogFragment.newInstance(ExportDialogFragment.EXPORT_TYPE_RAW).show((activity as SettingsActivity).supportFragmentManager, "exportDialog")
+            }
+            DATABSE_BACKUP_PREFRENCE_KEY -> {
+                val intent = Intent(activity, BackupDBIntentService::class.java)
+                activity.startService(intent)
             }
         }
         return false

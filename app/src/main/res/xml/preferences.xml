@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="database_backup"
+        android:summary="Create a backup of the database"
+        android:title="Backup Database" />
     <PreferenceCategory android:title="Export">
         <Preference
             android:key="compile_export_preference"

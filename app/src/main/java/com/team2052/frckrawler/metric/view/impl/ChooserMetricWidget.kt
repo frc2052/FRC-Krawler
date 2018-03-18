@@ -15,7 +15,7 @@ import com.team2052.frckrawler.metric.view.ListIndexMetricWidget
 
 class ChooserMetricWidget : ListIndexMetricWidget, OnItemSelectedListener {
     internal var value: Int = 0
-    private var chooserSpinner: Spinner? = null
+    private lateinit var chooserSpinner: Spinner
 
     @Suppress("unused")
     constructor(context: Context, metricValue: MetricValue) : super(context, metricValue) {
@@ -32,7 +32,7 @@ class ChooserMetricWidget : ListIndexMetricWidget, OnItemSelectedListener {
 
         val adapter = ArrayAdapter<Any>(context, android.R.layout.simple_list_item_1)
         for (value in optionalValues.get()) adapter.add(value)
-        chooserSpinner!!.adapter = adapter
+        chooserSpinner.adapter = adapter
 
         var selectedPos = 0
         val preloadedValuesResult = MetricDataHelper.getListIndexMetricValue(m)
@@ -40,14 +40,15 @@ class ChooserMetricWidget : ListIndexMetricWidget, OnItemSelectedListener {
             if (!preloadedValuesResult.t1.isEmpty())
                 selectedPos = preloadedValuesResult.t1[0]
 
-        if (!adapter.isEmpty)
-            chooserSpinner!!.setSelection(selectedPos)
+        if (!adapter.isEmpty) {
+            chooserSpinner.setSelection(selectedPos)
+        }
     }
 
     override fun initViews() {
         inflater.inflate(R.layout.widget_metric_chooser, this)
         chooserSpinner = findViewById<View>(R.id.choooserList) as Spinner
-        chooserSpinner?.onItemSelectedListener = this
+        chooserSpinner.onItemSelectedListener = this
     }
 
     override fun onItemSelected(a: AdapterView<*>, arg1: View?, pos: Int, arg3: Long) {
@@ -59,6 +60,9 @@ class ChooserMetricWidget : ListIndexMetricWidget, OnItemSelectedListener {
     }
 
     override fun getIndexValues(): List<Int> {
-        return Lists.newArrayList(value)
+        if (!chooserSpinner.adapter.isEmpty) {
+            return Lists.newArrayList(value)
+        }
+        return Lists.newArrayList()
     }
 }

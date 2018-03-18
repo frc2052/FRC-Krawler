@@ -49,7 +49,6 @@ class ServerThread(private val statusObserver: Observer<ServerStatus>, private v
                 statusObserver.onNext(ServerStatus(state = true))
                 closeServer()
             }
-
         }
         closeServer()
         Log.d(TAG, "Server Closed")

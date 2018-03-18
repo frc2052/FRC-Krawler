@@ -25,7 +25,7 @@ open class DBManager internal constructor(protected var context: Context) {
     val serverLogEntries: ServerLogEntries
 
     init {
-        val helper = DatabaseHelper(context, "frc-krawler-database-v4", null)
+        val helper = DatabaseHelper(context, DB_NAME, null)
 
         val db = helper.writableDatabase
         daoMaster = DaoMaster(db)
@@ -37,5 +37,9 @@ open class DBManager internal constructor(protected var context: Context) {
         pitDataTable = PitData(daoSession.pitDatumDao, this)
         teamsTable = Teams(daoSession.teamDao, this)
         serverLogEntries = ServerLogEntries(daoSession.serverLogEntryDao, this)
+    }
+
+    companion object {
+        val DB_NAME = "frc-krawler-database-v4"
     }
 }

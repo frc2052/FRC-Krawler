@@ -73,7 +73,7 @@
             </intent-filter>
         </service>
         <service android:name=".services.StartSyncIntentService" />
-
+        <service android:name=".services.BackupDBIntentService" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_stat_knightkrawler" />
