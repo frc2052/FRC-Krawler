@@ -77,15 +77,11 @@ public class CompileUtil {
             JsonArray dataIndexes = data.getAsJsonArray("values");
             JsonArray valueArray = metricData.getAsJsonArray("values");
             List<String> selected = Lists.newArrayListWithExpectedSize(dataIndexes.size());
-            if (valueArray.size() > 0) {
-                for (int i = 0; i < dataIndexes.size(); i++) {
-                    int dataIndex = dataIndexes.get(i).getAsInt();
-                    selected.add(valueArray.get(dataIndex).toString());
-                }
-                return Joiner.on(", ").join(selected);
-            } else {
-                return "";
+            for (int i = 0; i < dataIndexes.size(); i++) {
+                int dataIndex = dataIndexes.get(i).getAsInt();
+                selected.add(valueArray.get(dataIndex).toString());
             }
+            return Joiner.on(", ").join(selected);
         }
         return "";
     };
