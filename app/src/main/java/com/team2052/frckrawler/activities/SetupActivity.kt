@@ -16,11 +16,11 @@ import android.view.View
 import android.widget.Button
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.team2052.frckrawler.Constants
+import com.team2052.frckrawler.core.common.Constants
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.adapters.SetupFragmentAdapter
 import com.team2052.frckrawler.data.firebase.FirebaseUtil
-import com.team2052.frckrawler.helpers.BluetoothHelper
+import com.team2052.frckrawler.core.bluetooth.BluetoothHelper
 import com.team2052.frckrawler.views.DisableSwipeViewPager
 
 /**

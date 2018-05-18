@@ -5,17 +5,16 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Intent
 import com.team2052.frckrawler.BuildConfig
-import com.team2052.frckrawler.bluetooth.BluetoothConnection
-import com.team2052.frckrawler.bluetooth.BluetoothConstants
-import com.team2052.frckrawler.bluetooth.StartBluetoothConnectionEvent
-import com.team2052.frckrawler.bluetooth.scout.events.ScoutSyncErrorEvent
-import com.team2052.frckrawler.bluetooth.scout.events.ScoutSyncStartEvent
-import com.team2052.frckrawler.bluetooth.scout.events.ScoutSyncSuccessEvent
-import com.team2052.frckrawler.bluetooth.syncable.ScoutSyncable
-import com.team2052.frckrawler.bluetooth.syncable.ServerDataSyncable
-import com.team2052.frckrawler.data.RxDBManager
-import com.team2052.frckrawler.helpers.BluetoothHelper
-import com.team2052.frckrawler.helpers.ScoutHelper
+import com.team2052.frckrawler.core.bluetooth.BluetoothConnection
+import com.team2052.frckrawler.core.bluetooth.BluetoothConstants
+import com.team2052.frckrawler.core.bluetooth.BluetoothHelper
+import com.team2052.frckrawler.core.bluetooth.StartBluetoothConnectionEvent
+import com.team2052.frckrawler.core.bluetooth.scout.events.ScoutSyncErrorEvent
+import com.team2052.frckrawler.core.bluetooth.scout.events.ScoutSyncStartEvent
+import com.team2052.frckrawler.core.bluetooth.scout.events.ScoutSyncSuccessEvent
+import com.team2052.frckrawler.core.bluetooth.syncable.ScoutSyncable
+import com.team2052.frckrawler.core.bluetooth.syncable.ServerDataSyncable
+import com.team2052.frckrawler.core.data.models.RxDBManager
 import org.greenrobot.eventbus.EventBus
 import rx.android.schedulers.AndroidSchedulers
 import java.io.IOException
@@ -48,7 +47,6 @@ class StartSyncIntentService : IntentService("StartSyncIntentService") {
             } catch (e: IOException) {
             }
 
-
             val bluetoothConnection = BluetoothConnection(socket, inputStream, outputStream)
             val outputStreamWrapper = bluetoothConnection.outputStreamWrapper
 
@@ -69,8 +67,8 @@ class StartSyncIntentService : IntentService("StartSyncIntentService") {
                     // Knowing that the data was sent to the server, we can now delete the data on our device, and sync with the server
                     RxDBManager.getInstance(applicationContext).runInTx(Runnable { RxDBManager.getInstance(applicationContext).deleteAll() })
                     scoutSyncable.saveToScout(applicationContext)
-                    ScoutHelper.setDeviceAsScout(applicationContext, true)
-                    ScoutHelper.setSyncDevice(applicationContext, device)
+                    com.team2052.frckrawler.core.common.ScoutHelper.setDeviceAsScout(applicationContext, true)
+                    com.team2052.frckrawler.core.common.ScoutHelper.setSyncDevice(applicationContext, device)
                     AndroidSchedulers.mainThread().createWorker().schedule { EventBus.getDefault().post(ScoutSyncSuccessEvent()) }
                 }
                 BluetoothConstants.ReturnCodes.VERSION_ERROR -> AndroidSchedulers.mainThread().createWorker().schedule { ScoutSyncErrorEvent("The server version is incompatible with your version") }

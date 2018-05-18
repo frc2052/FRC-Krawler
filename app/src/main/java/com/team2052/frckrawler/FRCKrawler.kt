@@ -1,6 +1,7 @@
 package com.team2052.frckrawler
 
 import android.support.multidex.MultiDexApplication
+import com.google.firebase.FirebaseApp
 
 import com.team2052.frckrawler.di.ApplicationComponent
 import com.team2052.frckrawler.di.DaggerApplicationComponent
@@ -11,6 +12,12 @@ class FRCKrawler : MultiDexApplication() {
     private var mModule: FRCKrawlerModule? = null
     private var mApplicationComponent: ApplicationComponent? = null
     private var mBinderModule: BinderModule? = null
+
+
+    override fun onCreate() {
+        super.onCreate()
+        FirebaseApp.initializeApp(this)
+    }
 
     val component: ApplicationComponent
         get() {

@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.models.Metric;
+import com.team2052.frckrawler.core.data.models.Metric;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

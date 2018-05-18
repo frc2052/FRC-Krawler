@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.team2052.frckrawler.DividerItemDecoration;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.core.data.models.RxDBManager;
 import com.team2052.frckrawler.di.FragmentComponent;
 import com.team2052.frckrawler.di.binding.NoDataParams;
 import com.team2052.frckrawler.di.binding.RecyclerViewBinder;

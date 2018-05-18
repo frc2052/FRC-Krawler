@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.team2052.frckrawler.data.tba.v3.TBA;
+import com.team2052.frckrawler.core.common.v3.TBA;
 import com.team2052.frckrawler.interfaces.RefreshListener;
 
 import java.util.Arrays;
@@ -34,7 +34,7 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String teams = getArguments().getString(TEAMS_ARGUMENT);
-        subscription = Observable.just(teams)
+        /*subscription = Observable.just(teams)
                 .map(teamsString -> Arrays.asList(teamsString.split("\\s*,\\s*")))
                 .flatMap(Observable::from)
                 .concatMap(TBA::requestTeam)
@@ -59,7 +59,7 @@ public class ImportTeamsProgressDialog extends BaseProgressDialog {
                 }, onError -> {
                     Log.e(TAG, "onCreate: ", onError);
                     dismiss();
-                });
+                });*/
 
     }
 

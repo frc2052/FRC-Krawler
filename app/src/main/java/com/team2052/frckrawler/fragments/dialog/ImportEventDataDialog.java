@@ -6,10 +6,10 @@ import android.os.Bundle;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.team2052.frckrawler.data.RxDBManager;
-import com.team2052.frckrawler.data.tba.v3.HTTP;
-import com.team2052.frckrawler.data.tba.v3.JSON;
-import com.team2052.frckrawler.data.tba.v3.TBA;
+import com.team2052.frckrawler.core.data.models.RxDBManager;
+import com.team2052.frckrawler.core.common.v3.HTTP;
+import com.team2052.frckrawler.core.common.v3.JSON;
+import com.team2052.frckrawler.core.common.v3.TBA;
 import com.team2052.frckrawler.interfaces.RefreshListener;
 
 /**

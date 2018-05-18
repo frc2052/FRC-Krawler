@@ -13,7 +13,7 @@ import android.view.View;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.core.data.models.RxDBManager;
 
 import java.util.Arrays;
 import java.util.List;

@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.team2052.frckrawler.adapters.ViewOnClickFragmentStatePagerAdapter;
+import com.team2052.frckrawler.core.common.MetricHelper;
 import com.team2052.frckrawler.fragments.metric.MetricsFragment;
-import com.team2052.frckrawler.helpers.metric.MetricHelper;
 
 /**
  * Created by Acorp on 11/17/2015.

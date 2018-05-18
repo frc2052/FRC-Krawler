@@ -8,9 +8,9 @@ import android.support.v7.app.AlertDialog
 import android.view.MenuItem
 import butterknife.ButterKnife
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.core.common.MetricHelper
 import com.team2052.frckrawler.fragments.scout.ScoutMatchFragment
 import com.team2052.frckrawler.fragments.scout.ScoutPitFragment
-import com.team2052.frckrawler.helpers.metric.MetricHelper
 import com.team2052.frckrawler.interfaces.HasComponent
 
 class ScoutActivity : DatabaseActivity(), HasComponent {

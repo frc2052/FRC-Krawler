@@ -12,11 +12,11 @@ import com.team2052.frckrawler.activities.ImportMetricsActivity;
 import com.team2052.frckrawler.activities.MetricInfoActivity;
 import com.team2052.frckrawler.adapters.items.smart.MetricItemView;
 import com.team2052.frckrawler.adapters.items.smart.SmartAdapterInteractions;
+import com.team2052.frckrawler.core.common.MetricHelper;
 import com.team2052.frckrawler.di.binding.NoDataParams;
 import com.team2052.frckrawler.di.binding.RecyclerViewBinder;
 import com.team2052.frckrawler.fragments.RecyclerViewFragment;
-import com.team2052.frckrawler.helpers.metric.MetricHelper;
-import com.team2052.frckrawler.models.Metric;
+import com.team2052.frckrawler.core.data.models.Metric;
 
 import java.util.List;
 

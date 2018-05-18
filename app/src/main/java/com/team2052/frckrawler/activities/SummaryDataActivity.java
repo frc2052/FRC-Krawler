@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.metric.data.RxCompiler;
-import com.team2052.frckrawler.models.Metric;
+import com.team2052.frckrawler.core.data.models.Metric;
+import com.team2052.frckrawler.core.metrics.data.RxCompiler;
 
 import javax.inject.Inject;
 

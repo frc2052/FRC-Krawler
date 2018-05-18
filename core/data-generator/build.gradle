@@ -1,0 +1,25 @@
+apply plugin: 'application'
+apply plugin: 'java'
+
+mainClassName = "com.team2052.frckrawler.data.FRCKrawlerDaoGenerator"
+// edit output direction
+def outputDir = "../data/src/main/java"
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile('org.greenrobot:greendao-generator:3.2.0')
+}
+
+task createDocs {
+    def docs = file(outputDir)
+    docs.mkdirs()
+}
+
+run {
+    args outputDir
+}
+
+repositories {
+    jcenter()
+    mavenCentral() // add repository
+}

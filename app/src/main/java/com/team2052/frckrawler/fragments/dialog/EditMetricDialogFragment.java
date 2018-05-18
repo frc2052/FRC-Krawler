@@ -12,10 +12,10 @@ import android.widget.Spinner;
 
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.data.RxDBManager;
-import com.team2052.frckrawler.data.tba.v3.JSON;
-import com.team2052.frckrawler.helpers.metric.MetricHelper;
-import com.team2052.frckrawler.models.Metric;
+import com.team2052.frckrawler.core.common.MetricHelper;
+import com.team2052.frckrawler.core.data.models.RxDBManager;
+import com.team2052.frckrawler.core.common.v3.JSON;
+import com.team2052.frckrawler.core.data.models.Metric;
 
 /**
  * @author Adam

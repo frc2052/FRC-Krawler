@@ -4,7 +4,7 @@ import android.app.IntentService
 import android.content.Intent
 import android.os.Environment
 import com.google.common.io.Files
-import com.team2052.frckrawler.data.DBManager
+import com.team2052.frckrawler.core.data.models.DBManager
 import java.io.File
 
 class BackupDBIntentService : IntentService("BackupDBIntentService") {

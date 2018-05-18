@@ -2,7 +2,7 @@ package com.team2052.frckrawler.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.team2052.frckrawler.data.RxDBManager
+import com.team2052.frckrawler.core.data.models.RxDBManager
 import com.team2052.frckrawler.di.FragmentComponent
 import com.team2052.frckrawler.di.binding.BaseDataBinder
 import com.team2052.frckrawler.di.subscribers.BaseDataSubscriber

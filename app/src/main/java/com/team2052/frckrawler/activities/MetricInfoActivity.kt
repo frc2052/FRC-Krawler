@@ -9,7 +9,7 @@ import android.view.MenuItem
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.adapters.tab.MetricInfoPagerAdapter
 import com.team2052.frckrawler.bindToViewPagerAndTabLayout
-import com.team2052.frckrawler.models.Metric
+import com.team2052.frckrawler.core.data.models.Metric
 import com.team2052.frckrawler.wrapAsObservable
 import kotlinx.android.synthetic.main.layout_tab_fab.*
 import rx.android.schedulers.AndroidSchedulers

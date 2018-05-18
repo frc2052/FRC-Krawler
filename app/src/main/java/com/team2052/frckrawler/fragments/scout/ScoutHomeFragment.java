@@ -18,14 +18,14 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.NavigationDrawerActivity;
 import com.team2052.frckrawler.activities.ScoutActivity;
-import com.team2052.frckrawler.bluetooth.StartBluetoothConnectionEvent;
-import com.team2052.frckrawler.bluetooth.scout.ScoutSyncHandler;
-import com.team2052.frckrawler.bluetooth.scout.events.ScoutSyncCancelledEvent;
-import com.team2052.frckrawler.bluetooth.scout.events.ScoutSyncErrorEvent;
-import com.team2052.frckrawler.bluetooth.scout.events.ScoutSyncStartEvent;
-import com.team2052.frckrawler.bluetooth.scout.events.ScoutSyncSuccessEvent;
-import com.team2052.frckrawler.helpers.BluetoothHelper;
-import com.team2052.frckrawler.helpers.ScoutHelper;
+import com.team2052.frckrawler.core.bluetooth.StartBluetoothConnectionEvent;
+import com.team2052.frckrawler.core.bluetooth.scout.ScoutSyncHandler;
+import com.team2052.frckrawler.core.bluetooth.scout.events.ScoutSyncCancelledEvent;
+import com.team2052.frckrawler.core.bluetooth.scout.events.ScoutSyncErrorEvent;
+import com.team2052.frckrawler.core.bluetooth.scout.events.ScoutSyncStartEvent;
+import com.team2052.frckrawler.core.bluetooth.scout.events.ScoutSyncSuccessEvent;
+import com.team2052.frckrawler.core.bluetooth.BluetoothHelper;
+import com.team2052.frckrawler.core.common.ScoutHelper;
 import com.team2052.frckrawler.services.StartSyncIntentService;
 
 import org.greenrobot.eventbus.EventBus;
@@ -57,13 +57,6 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.change_scout_theme) {
-            ScoutHelper.showAskThemeDialog(getContext());
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Nullable
     @Override

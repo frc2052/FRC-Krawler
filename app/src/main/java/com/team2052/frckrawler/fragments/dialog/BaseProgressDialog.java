@@ -5,7 +5,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.core.data.models.RxDBManager;
 
 /**
  * @author Adam

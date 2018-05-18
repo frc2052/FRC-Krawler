@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!--Material Colors-->
+    <color name="primary">#450000</color>
+    <color name="primary_dark">#330000</color>
+    <color name="color_accent">#ffd740</color>
+    <color name="green_800">#2E7D32</color>
+
+    <!--Theme Colors-->
+    <color name="red">#F44336</color>
+    <color name="blue">#2196F3</color>
+</resources>

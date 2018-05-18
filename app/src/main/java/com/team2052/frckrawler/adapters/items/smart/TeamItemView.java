@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.data.tba.v3.JSON;
-import com.team2052.frckrawler.models.Team;
+import com.team2052.frckrawler.core.common.v3.JSON;
+import com.team2052.frckrawler.core.data.models.Team;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

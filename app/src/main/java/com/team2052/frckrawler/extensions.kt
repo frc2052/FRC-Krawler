@@ -6,8 +6,8 @@ import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.team2052.frckrawler.data.RxDBManager
-import com.team2052.frckrawler.data.tba.v3.JSON
+import com.team2052.frckrawler.core.data.models.RxDBManager
+import com.team2052.frckrawler.core.common.v3.JSON
 import rx.Observable
 
 fun AndroidViewModel.getDatabase() = RxDBManager.getInstance(getApplication())

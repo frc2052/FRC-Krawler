@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
-import com.team2052.frckrawler.bluetooth.server.ServerStatus
-import com.team2052.frckrawler.bluetooth.server.ServerThread
+import com.team2052.frckrawler.core.bluetooth.server.ServerStatus
+import com.team2052.frckrawler.core.bluetooth.server.ServerThread
 import rx.Observable
 import rx.subjects.BehaviorSubject
 

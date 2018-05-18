@@ -19,10 +19,10 @@ import com.team2052.frckrawler.FRCKrawler
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.activities.ScoutActivity
 import com.team2052.frckrawler.activities.ServerLogActivity
-import com.team2052.frckrawler.bluetooth.server.ServerStatus
-import com.team2052.frckrawler.helpers.SnackbarHelper
-import com.team2052.frckrawler.helpers.getDefaultBluetoothAdapter
-import com.team2052.frckrawler.helpers.getDefaultBluetoothAdapterOrNull
+import com.team2052.frckrawler.core.bluetooth.getDefaultBluetoothAdapter
+import com.team2052.frckrawler.core.bluetooth.getDefaultBluetoothAdapterOrNull
+import com.team2052.frckrawler.core.bluetooth.server.ServerStatus
+import com.team2052.frckrawler.core.common.SnackbarHelper
 import com.team2052.frckrawler.services.ServerService
 import com.team2052.frckrawler.services.ServerServiceConnection
 import kotlinx.android.synthetic.main.fragment_server.*

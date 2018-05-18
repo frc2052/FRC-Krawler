@@ -10,10 +10,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.team2052.frckrawler.Constants;
+import com.team2052.frckrawler.core.common.Constants;
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.activities.DatabaseActivity;
-import com.team2052.frckrawler.data.tba.v3.ConnectionChecker;
+import com.team2052.frckrawler.core.common.v3.ConnectionChecker;
 import com.team2052.frckrawler.interfaces.RefreshListener;
 
 import java.util.Calendar;

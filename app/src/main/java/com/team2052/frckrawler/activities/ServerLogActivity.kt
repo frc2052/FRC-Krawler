@@ -9,7 +9,7 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.adapters.ListViewAdapter
 import com.team2052.frckrawler.adapters.items.ListItem
 import com.team2052.frckrawler.adapters.items.elements.KeyValueListElement
-import com.team2052.frckrawler.models.ServerLogEntry
+import com.team2052.frckrawler.core.data.models.ServerLogEntry
 import rx.Observable
 
 class ServerLogActivity : DatabaseActivity() {

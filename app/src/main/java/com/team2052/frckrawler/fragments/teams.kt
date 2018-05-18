@@ -11,7 +11,7 @@ import com.team2052.frckrawler.adapters.items.smart.SmartAdapterInteractions
 import com.team2052.frckrawler.adapters.items.smart.TeamItemView
 import com.team2052.frckrawler.fragments.dialog.AddTeamDialogFragment
 import com.team2052.frckrawler.getDatabase
-import com.team2052.frckrawler.models.Team
+import com.team2052.frckrawler.core.data.models.Team
 import io.nlopez.smartadapters.SmartAdapter
 import kotlinx.android.synthetic.main.recycler_view_fab.*
 import rx.Observable

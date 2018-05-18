@@ -11,7 +11,7 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.activities.HomeActivity
-import com.team2052.frckrawler.bluetooth.server.ServerStatus
+import com.team2052.frckrawler.core.bluetooth.server.ServerStatus
 import rx.Observer
 
 class NotificationServerStatusObserver(private val context: Context) : Observer<ServerStatus> {
@@ -57,7 +57,7 @@ class NotificationServerStatusObserver(private val context: Context) : Observer<
         }
 
         if (serverStatus.syncing && serverStatus.device != null) {
-            notificationManager.notify(SYNC_ONGOING_ID, buildSyncingWithDeviceNotification(serverStatus.device))
+            notificationManager.notify(SYNC_ONGOING_ID, buildSyncingWithDeviceNotification(serverStatus.device!!))
         } else {
             notificationManager.cancel(SYNC_ONGOING_ID)
         }

@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.view.ViewCompat
 import android.view.Menu
 import butterknife.ButterKnife
-import com.team2052.frckrawler.Constants
+import com.team2052.frckrawler.core.common.Constants
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.adapters.items.items.NavDrawerItem
 import com.team2052.frckrawler.fragments.ServerFragment

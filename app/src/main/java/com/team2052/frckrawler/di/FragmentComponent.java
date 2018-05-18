@@ -9,7 +9,8 @@ import com.team2052.frckrawler.activities.ScoutActivity;
 import com.team2052.frckrawler.activities.ServerLogActivity;
 import com.team2052.frckrawler.activities.SummaryDataActivity;
 import com.team2052.frckrawler.activities.TeamInfoActivity;
-import com.team2052.frckrawler.data.RxDBManager;
+import com.team2052.frckrawler.core.data.models.RxDBManager;
+import com.team2052.frckrawler.core.metrics.data.RxCompiler;
 import com.team2052.frckrawler.di.binding.BinderModule;
 import com.team2052.frckrawler.di.subscribers.SubscriberModule;
 import com.team2052.frckrawler.fragments.SummaryFragment;
@@ -18,7 +19,6 @@ import com.team2052.frckrawler.fragments.metric.MetricInfoFragment;
 import com.team2052.frckrawler.fragments.metric.MetricsFragment;
 import com.team2052.frckrawler.fragments.scout.ScoutHomeFragment;
 import com.team2052.frckrawler.fragments.team.TeamInfoFragment;
-import com.team2052.frckrawler.metric.data.RxCompiler;
 
 import javax.inject.Singleton;
 

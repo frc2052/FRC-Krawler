@@ -24,14 +24,14 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.team2052.frckrawler.R;
-import com.team2052.frckrawler.data.tba.v3.JSON;
-import com.team2052.frckrawler.helpers.metric.MetricHelper;
-import com.team2052.frckrawler.metric.data.MetricValue;
-import com.team2052.frckrawler.models.MatchComment;
-import com.team2052.frckrawler.models.MatchDatum;
-import com.team2052.frckrawler.models.Metric;
-import com.team2052.frckrawler.models.MetricDao;
-import com.team2052.frckrawler.models.Team;
+import com.team2052.frckrawler.core.common.MetricHelper;
+import com.team2052.frckrawler.core.common.v3.JSON;
+import com.team2052.frckrawler.core.data.models.MatchComment;
+import com.team2052.frckrawler.core.data.models.MatchDatum;
+import com.team2052.frckrawler.core.data.models.Metric;
+import com.team2052.frckrawler.core.data.models.MetricDao;
+import com.team2052.frckrawler.core.data.models.Team;
+import com.team2052.frckrawler.core.metrics.data.MetricValue;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 

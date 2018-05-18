@@ -8,9 +8,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.team2052.frckrawler.adapters.items.ListItem;
 import com.team2052.frckrawler.comparators.SimpleValueCompiledComparator;
-import com.team2052.frckrawler.data.tba.v3.JSON;
-import com.team2052.frckrawler.helpers.metric.MetricHelper;
-import com.team2052.frckrawler.models.Metric;
+import com.team2052.frckrawler.core.common.MetricHelper;
+import com.team2052.frckrawler.core.common.v3.JSON;
+import com.team2052.frckrawler.core.data.models.Metric;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import com.team2052.frckrawler.R;
 import com.team2052.frckrawler.adapters.items.ListElement;
-import com.team2052.frckrawler.metric.data.CompiledMetricValue;
-import com.team2052.frckrawler.models.Team;
+import com.team2052.frckrawler.core.metrics.data.CompiledMetricValue;
+import com.team2052.frckrawler.core.data.models.Team;
 
 /**
  * @author Adam
