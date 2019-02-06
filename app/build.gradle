@@ -9,8 +9,8 @@ android {
         applicationId 'com.team2052.frckrawler'
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 43
-        versionName "3.3.3"
+        versionCode 44
+        versionName "3.3.4"
         multiDexEnabled true
 
         // Needed for support lib 23.2.0+ on pre-L devices
