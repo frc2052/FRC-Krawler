@@ -44,6 +44,7 @@ public class ScoutSyncHandler {
         dialog.setMessage(String.format("Are you sure you want to sync to %s?", device.getName()));
         dialog.setPositiveButton("Yes", (dialog1, which) -> startSyncConsumer.call(device));
         dialog.setNegativeButton("No", null);
+        dialog.setNeutralButton("Change Server", (dialog1, which) -> showDeviceListDialog(context, startSyncConsumer));
         dialog.create().show();
     }
 
