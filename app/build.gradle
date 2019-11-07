@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId 'com.team2052.frckrawler'
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 27
         versionCode 44
         versionName "3.3.4"
         multiDexEnabled true
