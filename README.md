@@ -5,9 +5,6 @@
 FRC Krawler is a *FIRST* Robotics Scouting App by Team 2052 KnightKrawler.
 
 # Project Management/Contributing
-### Keeping up to date
-  1. Check our [Trello Board](https://trello.com/b/LCJL8AKc) for upcoming plans
-  2. Look at our Milestones on the issues page
   
 ### Contributing
   1. Fork this repository, import into Android-Studio, and create a separate branch for your changes
