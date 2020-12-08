@@ -1,1 +1,2 @@
-include ':app', ':DatabaseGenerator'
+rootProject.name = "FRC-Krawler"
+include ':app'
