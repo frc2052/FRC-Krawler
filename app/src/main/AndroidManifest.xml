@@ -1,107 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.team2052.frckrawler">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <application
-        android:name="com.team2052.frckrawler.FRCKrawler"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher"
-        android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity
-            android:name=".activities.SetupActivity"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar">
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.FRCKrawler">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.TeamInfoActivity"
-            android:label="@string/team_title"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.RobotActivity"
-            android:label="@string/robot_title"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.SummaryDataActivity" />
-        <activity
-            android:name=".activities.GameInfoActivity"
-            android:label="@string/game_title"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.HomeActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.EventInfoActivity"
-            android:label="@string/event_title"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.AddMetricActivity"
-            android:label="Add Metric"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.ScoutActivity"
-            android:screenOrientation="nosensor"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.MetricInfoActivity"
-            android:label="Metric"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.SettingsActivity"
-            android:label="Settings"
-            android:screenOrientation="nosensor" />
-        <activity
-            android:name=".activities.ImportMetricsActivity"
-            android:label="Import Metrics" />
-        <activity
-            android:name=".activities.RobotEventActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <service
-            android:name=".services.ServerService"
-            android:exported="false" />
-
-        <activity
-            android:name=".activities.ServerLogActivity"
-            android:exported="true"
-            android:label="Server Log" />
-
-        <service android:name=".services.FRCKrawlerFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_stat_knightkrawler" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/primary" />
-
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
-
-        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
     </application>
+
 </manifest>
