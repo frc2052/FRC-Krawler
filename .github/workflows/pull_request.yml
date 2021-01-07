@@ -3,7 +3,8 @@ name: Pull request builder
 on:
   pull_request:
     branches: 
-      - master
+      - main
+      - mainv4
 
 jobs:
   build:
