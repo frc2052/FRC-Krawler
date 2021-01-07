@@ -4,15 +4,22 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.team2052.frckrawler.database.dao.GamesDAO
-import com.team2052.frckrawler.database.entity.Game
+import com.team2052.frckrawler.database.table.Event
+import com.team2052.frckrawler.database.table.EventsDAO
+import com.team2052.frckrawler.database.table.Game
+import com.team2052.frckrawler.database.table.GamesDAO
 
 private const val DATABASE = "frc_krawler_database"
 
-@Database(entities = [Game::class], version = 1, exportSchema = false)
+@Database(
+        entities = [Game::class, Event::class],
+        version = 2,
+        exportSchema = false
+)
 abstract class DataBase: RoomDatabase() {
 
     abstract fun gameDAO(): GamesDAO
+    abstract fun eventDAO(): EventsDAO
 
     companion object {
         // Singleton prevents multiple instances of the database opening at the same time.
