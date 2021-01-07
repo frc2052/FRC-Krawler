@@ -8,6 +8,10 @@ import com.team2052.frckrawler.database.DataBase
 import com.team2052.frckrawler.database.table.Event
 import com.team2052.frckrawler.database.table.Game
 import kotlinx.coroutines.launch
+import android.util.Log
+import androidx.lifecycle.lifecycleScope
+import com.team2052.frckrawler.network.ApiManager
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +26,13 @@ class MainActivity : AppCompatActivity() {
             db.eventDAO().insert(Event(0, "event", "12/12/12"))
             val year = db.gameDAO().getGameByYear(2020);
 
+        }
+
+
+        // Temporary to test API calls
+        lifecycleScope.launch {
+            val team = ApiManager.tbaApi.getTeam(2052)
+            Log.d("NetworkingTest", team.toString())
         }
     }
 }
