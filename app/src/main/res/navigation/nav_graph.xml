@@ -9,5 +9,13 @@
     android:id="@+id/sampleFragment"
     android:name="com.team2052.frckrawler.sample.SampleFragment"
     android:label="sample_fragment"
-    tools:layout="@layout/sample_fragment" />
+    tools:layout="@layout/sample_fragment" >
+    <action
+        android:id="@+id/action_sampleFragment_to_sampleFragment2"
+        app:destination="@id/sampleFragment2" />
+  </fragment>
+  <fragment
+      android:id="@+id/sampleFragment2"
+      android:name="com.team2052.frckrawler.sample.SampleFragment2"
+      android:label="SampleFragment2" />
 </navigation>

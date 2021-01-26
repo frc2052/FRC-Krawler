@@ -14,7 +14,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    app:title="Sample screen" />
+    app:title="Sample screen 2" />
 
   <TextView
     android:id="@+id/sample_text"
@@ -24,14 +24,6 @@
     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/toolbar"
-    tools:text="Hello world" />
-
-  <Button
-      android:id="@+id/button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="Go to screen 2"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/sample_text" />
+    android:text="Hello world, this is screen 2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
