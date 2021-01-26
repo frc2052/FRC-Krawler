@@ -9,6 +9,7 @@ import com.team2052.frckrawler.database.table.Event
 import com.team2052.frckrawler.database.table.Game
 import kotlinx.coroutines.launch
 import android.util.Log
+import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import com.team2052.frckrawler.network.ApiManager
 import kotlinx.coroutines.launch
@@ -31,8 +32,8 @@ class MainActivity : AppCompatActivity() {
 
         // Temporary to test API calls
         lifecycleScope.launch {
-            val team = ApiManager.tbaApi.getTeam(2052)
-            Log.d("NetworkingTest", team.toString())
+            val match = ApiManager.tbaApi.getMatches( 2052, "2019mndu2")
+            Log.d("NetworkingTest", match.toString())
         }
     }
 }
