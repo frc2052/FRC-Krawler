@@ -7,18 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.team2052.frckrawler.databinding.Sample2FragmentBinding
+import com.team2052.frckrawler.databinding.ServerFragmentBinding
 
 class ServerFragment: Fragment() {
 
-    private var binding: Sample2FragmentBinding? = null
+    private var binding: ServerFragmentBinding? = null
 
     private var  serverAdapter = ServerAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
     ): View {
-        binding = Sample2FragmentBinding.inflate(inflater, container, false )
+        binding = ServerFragmentBinding.inflate(inflater, container, false )
         return binding!!.root
     }
 
