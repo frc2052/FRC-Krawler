@@ -3,7 +3,7 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/nav_graph"
-  app:startDestination="@id/sampleFragment">
+  app:startDestination="@id/modeSelectFragment">
 
   <fragment
     android:id="@+id/sampleFragment"
@@ -18,4 +18,8 @@
       android:id="@+id/sampleFragment2"
       android:name="com.team2052.frckrawler.sample.SampleFragment2"
       android:label="SampleFragment2" />
+  <fragment
+      android:id="@+id/modeSelectFragment"
+      android:name="com.team2052.frckrawler.modeSelect.ModeSelectFragment"
+      android:label="ModeSelectFragment" />
 </navigation>
