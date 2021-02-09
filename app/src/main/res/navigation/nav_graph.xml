@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/nav_graph"
-  app:startDestination="@id/modeSelectFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/modeSelectFragment">
 
-  <fragment
-    android:id="@+id/sampleFragment"
-    android:name="com.team2052.frckrawler.sample.SampleFragment"
-    android:label="sample_fragment"
-    tools:layout="@layout/sample_fragment" >
-    <action
-        android:id="@+id/action_sampleFragment_to_sampleFragment2"
-        app:destination="@id/sampleFragment2" />
-  </fragment>
-  <fragment
-      android:id="@+id/sampleFragment2"
-      android:name="com.team2052.frckrawler.sample.SampleFragment2"
-      android:label="SampleFragment2" />
-  <fragment
-      android:id="@+id/modeSelectFragment"
-      android:name="com.team2052.frckrawler.modeSelect.ModeSelectFragment"
-      android:label="ModeSelectFragment" />
+    <fragment
+        android:id="@+id/serverFragment"
+        android:name="com.team2052.frckrawler.server.ServerFragment"
+        android:label="ServerFragment" />
+    <fragment
+        android:id="@+id/modeSelectFragment"
+        android:name="com.team2052.frckrawler.modeSelect.ModeSelectFragment"
+        android:label="ModeSelectFragment" >
+        <action
+            android:id="@+id/action_modeSelectFragment_to_serverFragment"
+            app:destination="@id/serverFragment" />
+    </fragment>
 </navigation>
