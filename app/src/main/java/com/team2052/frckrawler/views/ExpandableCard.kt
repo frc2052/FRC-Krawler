@@ -1,8 +1,6 @@
 package com.team2052.frckrawler.views
 
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +9,6 @@ import android.widget.Spinner
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.withStyledAttributes
-import androidx.fragment.app.FragmentManager
-import androidx.navigation.fragment.FragmentNavigator
-import androidx.transition.FragmentTransitionSupport
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.databinding.ExpandableCardBinding
 
@@ -39,9 +34,10 @@ class ExpandableCard : CardView {
             switchCardCollapseState()
         }
 
-        binding.continueBtn.setOnClickListener {
+    }
 
-        }
+    public fun setContinueButtonListener(listener: View.OnClickListener) {
+        binding.continueBtn.setOnClickListener(listener)
     }
 
     public fun addSpinner(label: String, options: List<String>) {
