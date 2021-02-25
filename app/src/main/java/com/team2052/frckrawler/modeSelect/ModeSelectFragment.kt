@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.team2052.frckrawler.MainActivity
 import com.team2052.frckrawler.bluetooth.BluetoothManager
+import androidx.navigation.fragment.findNavController
+import com.team2052.frckrawler.R
 import com.team2052.frckrawler.databinding.ModeSelectFragmentBinding
 
 class ModeSelectFragment : Fragment() {
@@ -34,10 +36,6 @@ class ModeSelectFragment : Fragment() {
         // TODO: when ever the device mode is selected set the configuration accordingly (null for solo scouting)
         val bluetoothManager: BluetoothManager? = (activity as MainActivity).bluetoothManager
         //bluetoothManager.makeDeviceDiscoverable(requireContext())
-
-        binding?.BluetoothButton?.setOnClickListener {
-            //findNavController().navigate(R.id.action_modeSelect_to_bluetoothConnecting)
-        }
     }
 
     override fun onDestroyView() {
@@ -65,6 +63,9 @@ class ModeSelectFragment : Fragment() {
                 binding?.apply {
                     remoteScoutExpandable.addSpinner("server", list)
                     serverExpandable.addSpinner("server", list)
+                    serverExpandable.setContinueButtonListener{
+                        findNavController().navigate(R.id.action_modeSelectFragment_to_serverFragment)
+                    }
                     soloScoutingExpandable.addSpinner("server", list)
                 }
             }

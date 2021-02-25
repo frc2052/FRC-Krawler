@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools"> q
     <!-- Base application theme. -->
-    <style name="Theme.FRCKrawler" parent="Theme.MaterialComponents">
+    <style name="Theme.FRCKrawler" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/maroon_200</item>
         <item name="colorPrimaryVariant">@color/maroon_500</item>
@@ -11,7 +11,5 @@
         <item name="colorOnSecondary">@color/black_000</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-        <item name="android:actionBarStyle">@style/Theme.MaterialComponents.DayNight.DarkActionBar</item>
     </style>
 </resources>
