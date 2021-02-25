@@ -40,7 +40,16 @@
         android:layout_margin="16dp"
         custom:title="Solo Scouting"
         custom:description="I want to scout without connecting to other devices"
-        custom:continueMessage="start solo scouting"/>
+        custom:continueMessage="start solo scouting">
+
+    </com.team2052.frckrawler.views.ExpandableCard>
+
+    <Button
+        android:id="@+id/BluetoothButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Test Bluetooth Connection" />
 
 </LinearLayout>
 <!--
