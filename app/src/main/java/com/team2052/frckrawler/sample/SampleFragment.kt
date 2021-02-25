@@ -32,7 +32,7 @@ class SampleFragment : Fragment() {
 
     binding?.button?.setOnClickListener {
       // R.id.action_sampleFragment_to_sampleFragment2 is defined in the nav_graph.xml resource file
-      findNavController().navigate(R.id.action_sampleFragment_to_sampleFragment2)
+      //findNavController().navigate(R.id.action_sampleFragment_to_sampleFragment2)
     }
 
   }
