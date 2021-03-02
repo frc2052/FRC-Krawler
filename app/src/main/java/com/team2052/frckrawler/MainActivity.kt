@@ -1,14 +1,10 @@
 package com.team2052.frckrawler
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import com.team2052.frckrawler.bluetooth.BluetoothManager
@@ -25,15 +21,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        bluetoothManager = BluetoothManager(baseContext)
-        // Bluetooth requires background location on newer devices
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if(ContextCompat.checkSelfPermission(baseContext, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION), 0)
-            }
-        }
-        bluetoothManager?.setupBluetoothCapabilities(this)
 
         val db = Room.databaseBuilder(applicationContext, DataBase::class.java, "database-name").fallbackToDestructiveMigration().build()
 
