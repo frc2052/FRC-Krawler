@@ -6,25 +6,34 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.compose.theme.FrcKrawlerTheme
 import com.team2052.frckrawler.databinding.SampleFragment2Binding
 import com.team2052.frckrawler.databinding.SampleFragmentBinding
 
 class SampleFragment2 : Fragment() {
 
-  private lateinit var viewModel: SampleViewModel
-  private var binding: SampleFragment2Binding? = null
-
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View {
-    binding = SampleFragment2Binding.inflate(inflater, container, false)
-    return binding!!.root
+    return ComposeView(requireContext()).apply {
+      setContent {
+        SampleComposable()
+      }
+    }
   }
+}
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    binding = null
+@Composable
+private fun SampleComposable() {
+  FrcKrawlerTheme {
+    Surface {
+      Text("Hello from Jetpack Compose!")
+    }
   }
 }
