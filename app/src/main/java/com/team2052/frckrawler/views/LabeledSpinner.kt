@@ -4,13 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.Spinner
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.withStyledAttributes
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.databinding.ExpandableCardBinding
 import com.team2052.frckrawler.databinding.LabeledSpinnerBinding
 
 class LabeledSpinner : ConstraintLayout {
@@ -27,14 +23,13 @@ class LabeledSpinner : ConstraintLayout {
 
     }
 
-    public fun setLabel(label: String) {
+    fun setLabel(label: String) {
         binding.spinnerLabel.text = label
     }
 
-    public fun setOptions(options: List<String>) {
+    fun setOptions(options: List<String?>) {
         val adapter: ArrayAdapter<String> = ArrayAdapter(context, android.R.layout.simple_spinner_item, options)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinner.adapter = adapter
     }
-
 }
