@@ -10,6 +10,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        compose true
     }
 
     defaultConfig {
@@ -25,16 +26,19 @@ android {
     packagingOptions {
         exclude "META-INF/atomicfu.kotlin_module"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -60,6 +64,16 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraint_layout_version"
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.2"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.2"
+
+    // Compose
+    implementation "androidx.compose.ui:ui:${rootProject.compose_version}"
+    implementation "androidx.compose.ui:ui-tooling:${rootProject.compose_version}"
+    implementation "androidx.compose.foundation:foundation:${rootProject.compose_version}"
+    implementation "androidx.compose.material:material:${rootProject.compose_version}"
+    implementation "androidx.compose.material:material-icons-core:${rootProject.compose_version}"
+    implementation "androidx.compose.material:material-icons-extended:${rootProject.compose_version}"
+    implementation 'androidx.activity:activity-compose:1.3.0-alpha04'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha03'
 
     // Room components
     implementation "androidx.room:room-runtime:$rootProject.room_version"
