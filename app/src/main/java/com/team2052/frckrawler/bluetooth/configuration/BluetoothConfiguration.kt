@@ -1,11 +1,20 @@
 package com.team2052.frckrawler.bluetooth.configuration
 
-abstract class BluetoothConfiguration
-{
-    val UUID: String = "d6035ed0-8f10-11e2-9e96-0800200c9a66"
-    val SERVICE_NAME: String = "FRCKrawler"
+import android.bluetooth.BluetoothAdapter
+import android.content.Context
 
-    abstract fun initialize()
+abstract class BluetoothConfiguration() {
 
-    abstract fun close()
+    protected var bluetoothAdapter: BluetoothAdapter? = null
+
+    protected var initialized: Boolean = false
+    open fun <T : BluetoothConfiguration>initialize(bluetoothAdapter: BluetoothAdapter): T {
+        this.bluetoothAdapter = bluetoothAdapter
+        initialized = true
+        return this as T
+    }
+
+    abstract fun run(context: Context)
+
+    abstract fun close(context: Context)
 }

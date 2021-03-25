@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    var bluetoothManager: BluetoothManager? = null
+    lateinit var bluetoothManager: BluetoothManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,13 +41,13 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         when(requestCode) {
-            BluetoothManager.BLUETOOTH_ENABLE_REQUEST_CODE -> {
+            BluetoothManager.BluetoothConstants.BLUETOOTH_ENABLE_REQUEST_CODE -> {
                 when(resultCode) {
                     Activity.RESULT_OK -> {
 
                     }
                     Activity.RESULT_CANCELED -> {
-                        bluetoothManager?.requestBluetoothEnable(this)
+                        bluetoothManager.requestBluetoothEnable(this)
                     }
                 }
             }
@@ -56,6 +56,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        bluetoothManager?.cleanup()
+        bluetoothManager.cleanup()
     }
 }
