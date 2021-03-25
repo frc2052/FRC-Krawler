@@ -40,7 +40,7 @@ class ExpandableCard : CardView {
         binding.continueBtn.setOnClickListener(listener)
     }
 
-    public fun addSpinner(label: String, options: List<String>) {
+    public fun addSpinner(label: String, options: List<String?>) {
         val lspinner = LabeledSpinner(context)
         lspinner.setLabel(label.plus(":"))
         lspinner.setOptions(options)
