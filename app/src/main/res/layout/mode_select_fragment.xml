@@ -3,6 +3,7 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black_121"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -29,27 +30,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        custom:title="Remote Scout"
+        custom:continueMessage="start scouting"
         custom:description="I want to connect to a server and scout"
-        custom:continueMessage="start scouting"/>
+        custom:title="Remote Scout" />
 
     <com.team2052.frckrawler.views.ExpandableCard
         android:id="@+id/server_expandable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        custom:title="Server"
+        custom:continueMessage="start server"
         custom:description="This device will be a server for remote scouts"
-        custom:continueMessage="start servering"/>
+        custom:title="Server" />
 
     <com.team2052.frckrawler.views.ExpandableCard
         android:id="@+id/solo_scouting_expandable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        custom:title="Solo Scouting"
+        android:backgroundTint="#0DFFFFFF"
+        custom:cardBackgroundColor="@color/black_121"
+        custom:continueMessage="start scouting"
         custom:description="I want to scout without connecting to other devices"
-        custom:continueMessage="start solo scouting"/>
+        custom:title="Solo Scouting" />
 
 </LinearLayout>
 <!--

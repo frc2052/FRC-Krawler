@@ -1,12 +1,11 @@
 package com.team2052.frckrawler.sample
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.NavDirections
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.databinding.SampleFragmentBinding
@@ -35,6 +34,7 @@ class SampleFragment : Fragment() {
       // R.id.action_sampleFragment_to_sampleFragment2 is defined in the nav_graph.xml resource file
       //findNavController().navigate(R.id.action_sampleFragment_to_sampleFragment2)
     }
+
   }
 
   override fun onDestroyView() {
