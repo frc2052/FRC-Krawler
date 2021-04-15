@@ -3,10 +3,11 @@ buildscript {
     ext.kotlin_version = "1.4.30"
     repositories {
         google()
+        // TODO: jcenter is deprecated
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.0-alpha11'
+        classpath 'com.android.tools.build:gradle:7.0.0-alpha14'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -17,6 +18,7 @@ buildscript {
 allprojects {
     repositories {
         google()
+        // TODO: jcenter is deprecated
         jcenter()
     }
 }

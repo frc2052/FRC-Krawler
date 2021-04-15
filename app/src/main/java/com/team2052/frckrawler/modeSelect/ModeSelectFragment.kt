@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.Text
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +20,7 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.bluetooth.BluetoothManager
 import com.team2052.frckrawler.bluetooth.configuration.client.BluetoothClientConfiguration
 import com.team2052.frckrawler.bluetooth.configuration.server.BluetoothServerConfiguration
+import com.team2052.frckrawler.compose.theme.FrcKrawlerTheme
 import com.team2052.frckrawler.databinding.ModeSelectFragmentBinding
 import com.team2052.frckrawler.util.BluetoothUtils
 
@@ -28,9 +31,18 @@ class ModeSelectFragment : Fragment() {
     private lateinit var viewModel: ModeSelectViewModel
     private var binding: ModeSelectFragmentBinding? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = ModeSelectFragmentBinding.inflate(inflater, container, false)
-        return binding!!.root
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                FrcKrawlerTheme {
+                    Text(text = "Hello World!")
+                }
+            }
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
