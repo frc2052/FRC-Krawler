@@ -1,4 +1,7 @@
 package com.team2052.frckrawler.modeSelect
 
-class ComposeModeSelectViewModel {
+import androidx.lifecycle.ViewModel
+
+class ComposeModeSelectViewModel : ViewModel() {
+
 }

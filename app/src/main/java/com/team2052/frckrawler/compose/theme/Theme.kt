@@ -7,12 +7,28 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
+/*
+primary,
+primaryVariant,
+secondary,
+secondaryVariant,
+background,
+surface,
+error,
+onPrimary,
+onSecondary,
+onBackground,
+onSurface,
+onError,
+*/
+
 private val DarkColorPalette = darkColors(
     primary = maroon200,
     primaryVariant = maroon500,
     onPrimary = Color.White,
     secondary = yellow200,
-    onSecondary = Color.Black
+    onSecondary = Color.White,
+    surface = black121,
 )
 
 private val LightColorPalette = lightColors(
@@ -20,19 +36,14 @@ private val LightColorPalette = lightColors(
     primaryVariant = maroon500,
     onPrimary = Color.White,
     secondary = yellow200,
-    onSecondary = Color.Black
+    onSecondary = Color.Black,
+    surface = black121
 )
 
 @Composable
-fun FrcKrawlerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
-
+fun FrcKrawlerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     MaterialTheme(
-        colors = colors,
+        colors = if (darkTheme) DarkColorPalette else LightColorPalette,
         shapes = shapes,
         content = content
     )
