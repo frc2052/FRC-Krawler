@@ -1,15 +1,16 @@
 package com.team2052.frckrawler.modeSelect
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import com.team2052.frckrawler.base.Dropdown2
-import com.team2052.frckrawler.base.Dropdown3
-import com.team2052.frckrawler.base.Dropdown4
+import com.team2052.frckrawler.base.LabeledDropdown
+import com.team2052.frckrawler.base.Dropdown
 
 class ComposeModeSelectFragment : Fragment() {}
 
@@ -19,13 +20,13 @@ fun ModeSelector(padding: PaddingValues) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        Column(
-//            modifier = Modifier.padding(8.dp),
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            Text(text = "Welcome to FRC Krawler!", color = Color.White, style = MaterialTheme.typography.h6)
-//            Text(text = "To get started, select from the options below", color = Color.White, style = MaterialTheme.typography.h6)
-//        }
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "Welcome to FRC Krawler!", color = MaterialTheme.colors.onSurface, style = MaterialTheme.typography.h6)
+            Text(text = "To get started, select from the options below", color = MaterialTheme.colors.onSurface, style = MaterialTheme.typography.h6)
+        }
         ExpandableCardGroup {
             listOf<@Composable () -> Unit> {
                 enumValues<DeviceModes>().forEach { deviceMode ->
@@ -59,18 +60,9 @@ enum class DeviceModes (
         description = "I want to connect to a server and scout",
         startMessage = "start scouting",
         content = {
-            Dropdown3(
-                dropdownList = listOf("Infinite Recharge", "Destination Deep Space", "First Power Up")
-//                dropdownList = listOf {
-//                    Text(text = "Hello world! 1")
-//                    Text(text = "Hello world! 2")
-//                    Text(text = "Hello world! 3")
-//                    Text(text = "Hello world! 4")
-//                    Text(text = "Hello world! 5")
-//                    Text(text = "Hello world! 6")
-//                }
-            )
-            //LabeledDropdown(modifier = modifier, label = "Server", dropdownList = listOf("Nexus 7", "Sam's iPad", "Bluetooth device 3", "Bluetooth device 4"))
+            LabeledDropdown(modifier = modifier, label = "Server") {
+                Dropdown(dropdownList = listOf("Nexus 7", "Sam's iPad", "Bluetooth device 3", "Bluetooth device 4"))
+            }
         }
     ),
     SERVER(
@@ -78,9 +70,12 @@ enum class DeviceModes (
         description = "This device will be a server for remote scouts",
         startMessage = "start server",
         content = {
-            Dropdown4(dropdownList = listOf("Infinite Recharge", "Destination Deep Space----------------------", "First Power Up"))
-            //LabeledDropdown(modifier = modifier, label = "Game", dropdownList = listOf("Infinite Recharge", "Destination Deep Space", "First Power Up"))
-            //LabeledDropdown(modifier = modifier, label = "Event", dropdownList = listOf("Northern Lights"))
+            LabeledDropdown(modifier = modifier, label = "Game") {
+                Dropdown(dropdownList = listOf("Infinite Recharge", "Destination Deep Space Destination Deep Space", "First Power Up"))
+            }
+            LabeledDropdown(modifier = modifier, label = "Event") {
+                Dropdown(dropdownList = listOf("Northern Lights"))
+            }
         }
     ),
     REMOTE_SCOUT(
@@ -88,12 +83,11 @@ enum class DeviceModes (
         description = "I want to scout without connecting to other devices",
         startMessage = "start scouting",
         content = {
-            Dropdown2(
-                selectedIndex = 0
-            ) { modifier ->
-                Text(modifier = modifier, text = "Hello, this is a test to see if long text will work!")
-                Text(modifier = modifier, text = "Hello")
-                Text(modifier = modifier, text = "Hello")
+            LabeledDropdown(modifier = modifier, label = "Game") {
+                Dropdown(dropdownList = listOf("Infinite Recharge", "Destination Deep Space Destination Deep Space", "First Power Up"))
+            }
+            LabeledDropdown(modifier = modifier, label = "Event") {
+                Dropdown(dropdownList = listOf("Northern Lights"))
             }
         }
     )
