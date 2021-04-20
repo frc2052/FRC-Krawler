@@ -21,14 +21,8 @@ import androidx.core.os.ConfigurationCompat
 @Composable
 fun ExpandableCardGroup(
     content: () -> List<@Composable () -> Unit>
-) {
-    LazyColumn(
-        modifier = Modifier.padding(12.dp)
-    ) {
-        items(content()) { expandableCard ->
-            expandableCard()
-        }
-    }
+) = LazyColumn(modifier = Modifier.padding(12.dp)) {
+    items(content()) { it() }
 }
 
 @Composable
