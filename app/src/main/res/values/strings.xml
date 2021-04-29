@@ -1,9 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE resources [
+    <!ENTITY appName "KFC Krawler">
+]>
+
 <resources>
-    <string name="app_name">FRC-Krawler</string>
+    <string name="app_name">&appName;</string>
     <string name="bluetooth_Text">Bluetooth Server Running:</string>
     <string name="viewLogsButton">View Logs</string>
     <string-array name="games">
         <item>Infinite Recharge</item>
     </string-array>
-    <string name="mode_select_message">Welcome to FRC Krawler! To get started, select from the options below</string>
+
+    <string name="welcome_message">Welcome to &appName;!</string>
+    <string name="getting_started_message">To get started, select from the options below</string>
+
+    <!---->
+    <string name="mode_remote_scout">Remote Scout</string>
+    <string name="mode_remote_scout_description">I want to connect to a server and scout</string>
+    <string name="mode_remote_scout_continue_message">start scouting</string>
+
+    <string name="mode_server">Server</string>
+    <string name="mode_server_description">This device will be a server for remote scouts</string>
+    <string name="mode_server_continue_message">start server</string>
+
+    <string name="mode_solo_scout">Solo Scout</string>
+    <string name="mode_solo_scout_description">I want to scout without connecting to other devices</string>
+    <string name="mode_solo_scout_continue_message">start scouting</string>
+
+    <string name="cd_expandable_card">Card expansion toggle</string>
 </resources>
