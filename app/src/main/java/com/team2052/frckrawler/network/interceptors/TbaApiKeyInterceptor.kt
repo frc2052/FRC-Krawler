@@ -12,5 +12,4 @@ class TbaApiKeyInterceptor : Interceptor {
 
         return chain.proceed(request)
     }
-
 }

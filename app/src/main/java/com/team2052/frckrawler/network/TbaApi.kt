@@ -11,6 +11,7 @@ interface TbaApi {
 
     @GET("team/frc{team}")
     suspend fun getTeam(@Path("team") team: Int): Team
+
     @GET("team/frc{team}/event/{event}/matches")
     suspend fun getMatches(
         @Path("team") team: Int,
