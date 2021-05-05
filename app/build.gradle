@@ -42,56 +42,74 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.0.0-beta05"
+    }
 }
 
 // All rootProject properties can be found in the build.gradle (FRC-Krawler) file
 dependencies {
-    implementation "androidx.legacy:legacy-support-v4:1.0.0"
+
+    // Versions
+    ext.core_ktx_version = "1.3.2"
+    ext.appCompat_version = "1.3.0-rc01"
+    ext.room_version = "2.3.0"
+    ext.material_version = "1.3.0"
+    ext.constraint_layout_version = "2.0.4"
+    ext.compose_version = "1.0.0-beta05"
+
+    // Testing versions
+    ext.junit_version = "4.13.2"
+    ext.espresso_version = "3.3.0"
+    ext.androidx_junit_version = "1.1.2"
 
     // Android
-    implementation "androidx.core:core-ktx:$rootProject.core_ktx_version"
-    implementation "androidx.appcompat:appcompat:$rootProject.appCompat_version"
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
+    implementation "androidx.core:core-ktx:$core_ktx_version"
+    implementation "androidx.appcompat:appcompat:$appCompat_version"
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
 
     // UI
-    implementation "com.google.android.material:material:$rootProject.material_version"
-    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraint_layout_version"
-    implementation "androidx.navigation:navigation-fragment-ktx:2.3.2"
-    implementation "androidx.navigation:navigation-ui-ktx:2.3.2"
+    implementation "com.google.android.material:material:$material_version"
+    implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.5"
+    implementation "androidx.navigation:navigation-ui-ktx:2.3.5"
 
     // Compose
-    implementation "androidx.compose.ui:ui:${rootProject.compose_version}"
-    implementation "androidx.compose.ui:ui-tooling:${rootProject.compose_version}"
-    implementation "androidx.compose.foundation:foundation:${rootProject.compose_version}"
-    implementation "androidx.compose.material:material:${rootProject.compose_version}"
-    implementation "androidx.compose.material:material-icons-core:${rootProject.compose_version}"
-    implementation "androidx.compose.material:material-icons-extended:${rootProject.compose_version}"
-    implementation 'androidx.activity:activity-compose:1.3.0-alpha04'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha03'
-    // implementation "androidx.navigation:navigation-compose:1.0.0-alpha10" <- Incompatible for unknown reasons.
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    implementation "androidx.compose.foundation:foundation:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.material:material-icons-core:$compose_version"
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version" // <- Incompatible for unknown reasons.
+    implementation 'androidx.activity:activity-compose:1.3.0-alpha07'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha04'
+    implementation "androidx.navigation:navigation-compose:1.0.0-alpha10" // <- Incompatible for unknown reasons.
 
     // Room components
-    implementation "androidx.room:room-runtime:$rootProject.room_version"
-    kapt "androidx.room:room-compiler:$rootProject.room_version"
-    testImplementation "androidx.room:room-testing:$rootProject.room_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    testImplementation "androidx.room:room-testing:$room_version"
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
-    implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.11.0")
+    implementation 'com.squareup.moshi:moshi-kotlin:1.11.0'
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.11.0"
 
     // Testing
-    testImplementation "junit:junit:$rootProject.junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$rootProject.androidx_junit_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espresso_version"
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$androidx_junit_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Optional
-    implementation "androidx.room:room-ktx:$rootProject.room_version" // Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version" // Kotlin Extensions and Coroutines support for Room
 }

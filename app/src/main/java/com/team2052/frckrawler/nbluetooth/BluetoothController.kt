@@ -4,17 +4,13 @@ import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import kotlinx.coroutines.flow.Flow
 import java.io.Closeable
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Contains vital bluetooth controls and functions
@@ -26,7 +22,6 @@ import java.io.Closeable
 class BluetoothController(
     private val activity: Activity,
     private val bluetooth: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter(),
-    private val bluetoothBroadcastReceiver: BluetoothBroadcastReceiver,
 ) : Closeable {
 
     /**
@@ -60,6 +55,6 @@ class BluetoothController(
     fun paired(device: BluetoothDevice) : Boolean = bluetooth?.bondedDevices?.contains(device) ?: false
 
     override fun close() {
-        bluetoothBroadcastReceiver.close()
+        //bluetoothBroadcastReceiver.close()
     }
 }

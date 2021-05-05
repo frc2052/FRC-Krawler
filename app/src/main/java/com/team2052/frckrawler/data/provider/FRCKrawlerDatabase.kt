@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.data.room
+package com.team2052.frckrawler.data.provider
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -13,5 +13,5 @@ import com.team2052.frckrawler.data.model.Event
     exportSchema = false
 )
 abstract class FRCKrawlerDatabase: RoomDatabase() {
-    abstract fun eventsDao(): EventsDao
+    abstract fun eventDAO(): EventDAO
 }
