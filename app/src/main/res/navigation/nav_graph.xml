@@ -2,19 +2,4 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/modeSelectFragment">
-
-    <fragment
-        android:id="@+id/serverFragment"
-        android:name="com.team2052.frckrawler.server.ServerFragment"
-        android:label="ServerFragment" />
-    <fragment
-        android:id="@+id/modeSelectFragment"
-        android:name="com.team2052.frckrawler.modeSelect.ModeSelectFragment"
-        android:label="ModeSelectFragment" >
-        <action
-            android:id="@+id/action_modeSelectFragment_to_serverFragment"
-            app:destination="@id/serverFragment" />
-    </fragment>
-</navigation>
+    android:id="@+id/nav_graph" />
