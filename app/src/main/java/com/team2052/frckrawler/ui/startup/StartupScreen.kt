@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.main
+package com.team2052.frckrawler.ui.startup
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
@@ -17,7 +17,6 @@ import androidx.navigation.compose.navigate
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.NavScreen
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
-import com.team2052.frckrawler.ui.startup.StartupViewModel
 import java.util.*
 import kotlin.random.Random
 
@@ -54,7 +53,7 @@ fun StartupScreen(
                 end.linkTo(parent.end)
                 bottom.linkTo(parent.bottom)
             }
-        }
+        },
     ) {
         Column(
             modifier = Modifier.layoutId("titleGroup"),
@@ -70,11 +69,14 @@ fun StartupScreen(
                 style = MaterialTheme.typography.h6
             )
         }
-        CircularProgressIndicator(modifier = Modifier
-            .size(48.dp)
-            .layoutId("progressIndicator"))
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(48.dp)
+                .layoutId("progressIndicator")
+        )
     }
 
+    // TODO: get the starting route from DataStore
     viewModel.buffer(onComplete = {
         navController.navigate(NavScreen.ModeSelectScreen.route)
     })
@@ -89,4 +91,3 @@ private fun formatAppName(@StringRes appNameResourceId: Int = R.string.app_name)
     }
     return String(ca)
 }
-
