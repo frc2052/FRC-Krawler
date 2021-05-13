@@ -1,23 +1,30 @@
 package com.team2052.frckrawler.ui.modeSelect
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.team2052.frckrawler.data.EventRepository
-import com.team2052.frckrawler.nbluetooth.BluetoothController
+import androidx.lifecycle.viewModelScope
+import com.team2052.frckrawler.FRCKrawlerApp
+import com.team2052.frckrawler.model.Event
+import com.team2052.frckrawler.repository.EventRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ModeSelectViewModel(
-    //private val eventRepository: EventRepository,
-    private val bluetoothController: BluetoothController
+@HiltViewModel
+class ModeSelectViewModel @Inject constructor(
+    private val context: FRCKrawlerApp,
+    private val eventRepository: EventRepository,
 ) : ViewModel() {
 
-}
+    val events: MutableState<List<Event>> = mutableStateOf(emptyList())
 
-class ModeSelectViewModelFactory(
-    //private val eventRepository: EventRepository,
-    private val bluetoothController: BluetoothController
-) : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return ModeSelectViewModel(bluetoothController) as T
+    fun networkTest() {
+        viewModelScope.launch {
+            val result = eventRepository.getEventList(2052)
+            events.value = result
+        }
     }
+
+    // TODO: Implement Data Store
 }
