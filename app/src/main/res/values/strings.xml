@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE resources [
-    <!ENTITY appName "KFC Krawler">
+    <!ENTITY appName "FRC Krawler">
+    <!ENTITY appVersion "1.0.0">
+    <!ENTITY applicationID "com.team2052.frckrawler">
 ]>
 
 <resources>
     <string name="app_name">&appName;</string>
+    <string name="app_version">&appVersion;</string>
     <string name="bluetooth_Text">Bluetooth Server Running:</string>
     <string name="viewLogsButton">View Logs</string>
+
+    <!--Shared Preference File Keys-->
+    <string name="preference_app_mode">&applicationID;PREFERENCE_APP_MODE</string>
 
     <string name="welcome_message">Welcome to &appName;!</string>
     <string name="getting_started_message">To get started, select from the options below</string>

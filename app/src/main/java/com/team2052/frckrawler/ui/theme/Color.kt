@@ -23,4 +23,5 @@ object FRCKrawlerColor {
      */
     val backgroundLight = Color(0xFFEDEDED)
     val logoTintDark = Color(0x14000000)
+
 }
