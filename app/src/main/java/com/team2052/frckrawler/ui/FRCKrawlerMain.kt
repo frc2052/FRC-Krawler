@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.model.Event
-import com.team2052.frckrawler.ui.main.StartupScreen
+import com.team2052.frckrawler.ui.startup.StartupScreen
 import com.team2052.frckrawler.ui.modeSelect.ModeSelectScreen
 import com.team2052.frckrawler.ui.modeSelect.ModeSelectViewModel
 import com.team2052.frckrawler.ui.scout.ScoutScreen
