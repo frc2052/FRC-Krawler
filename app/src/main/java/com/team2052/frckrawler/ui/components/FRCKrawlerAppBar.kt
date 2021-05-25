@@ -1,63 +1,69 @@
 package com.team2052.frckrawler.ui.components
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.team2052.frckrawler.R
+import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
-fun FRCKrawlerAppbar(
+fun FRCKrawlerAppBar(
     modifier: Modifier = Modifier,
-    backwardsNavigation: Boolean,
+    navController: NavController = rememberNavController(),
     onNavigationPressed: () -> Unit = { },
+    navigation: @Composable () -> Unit = {
+        if (navController.previousBackStackEntry == null) {
+            IconButton(onClick = { onNavigationPressed() }) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Menu",
+                    tint = MaterialTheme.colors.onPrimary,
+                )
+            }
+        } else {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowLeft,
+                    contentDescription = "Backwards Navigation",
+                    tint = MaterialTheme.colors.onPrimary,
+                )
+            }
+        }
+    },
     title: @Composable RowScope.() -> Unit,
     actions: @Composable RowScope.() -> Unit = { },
-) {
-    TopAppBar(
-        modifier = modifier,
-        backgroundColor = MaterialTheme.colors.primary,
-        elevation = 0.dp,
-        contentColor = MaterialTheme.colors.onSurface,
-        navigationIcon = {
-            Icon(
-                modifier = Modifier.fillMaxSize().padding(12.dp).also {
-                    if (backwardsNavigation) it.clickable { onNavigationPressed() } else it
-                },
-                painter = painterResource(if (backwardsNavigation) R.drawable.ic_baseline_keyboard_arrow_left_24 else R.drawable.ic_bg_logo),
-                contentDescription = "",
-                tint = Color(0xFFFFFFFF)
-            )
-        },
-        actions = actions,
-        title = {
-            Row(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                content = title
-            )
+) = TopAppBar(
+    modifier = modifier.zIndex(1f),
+    backgroundColor = MaterialTheme.colors.primary,
+    elevation = 4.dp,
+    contentColor = MaterialTheme.colors.onSurface,
+    navigationIcon = navigation,
+    actions = {
+        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.onPrimary) {
+            actions()
         }
-    )
-}
+    },
+    title = {
+        ProvideTextStyle(MaterialTheme.typography.h6.copy(
+            color = MaterialTheme.colors.onPrimary
+        )) { Row { title() } }
+    }
+)
 
 @Preview
 @Composable
 private fun FRCKrawlerAppBarPreviewLight() {
     FrcKrawlerTheme(darkTheme = false) {
-        FRCKrawlerAppbar(backwardsNavigation = false, title = { Text("Preview") })
+        FRCKrawlerAppBar(title = { Text("Preview") })
     }
 }
 
@@ -65,6 +71,6 @@ private fun FRCKrawlerAppBarPreviewLight() {
 @Composable
 private fun FRCKrawlerAppBarPreviewDark() {
     FrcKrawlerTheme(darkTheme = true) {
-        FRCKrawlerAppbar(backwardsNavigation = false, title = { Text("Preview") })
+        FRCKrawlerAppBar(title = { Text("Preview") })
     }
 }
