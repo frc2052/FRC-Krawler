@@ -3,7 +3,14 @@ package com.team2052.frckrawler.bluetooth
 import android.bluetooth.BluetoothDevice
 import java.io.Closeable
 
-class BluetoothWishList {
+/**
+ * Works with non bluetooth compatible devices (never crashes!)
+ */
+interface BluetoothWishList {
+
+    fun toggleBluetooth()
+
+    //fun getPairedDevices
 
     class BluetoothWishList {
 

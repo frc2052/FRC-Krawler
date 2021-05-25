@@ -9,7 +9,7 @@ object FRCKrawlerColor {
     val maroon200 = Color(0xFF450000) // primary
     val maroon500 = Color(0xFF2A0000) // primaryVariant
     val yellow200 = Color(0xFFFFD740) // secondary
-    val yellow500 = Color(0xFFC8A600) // secondaryVariant
+    val yellow500 = Color(0xFFFFB300) // secondaryVariant
     val red = Color(0xFFCf6679)
 
     /**

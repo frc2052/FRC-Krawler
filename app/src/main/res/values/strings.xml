@@ -18,8 +18,8 @@
     <string name="getting_started_message">To get started, select from the options below</string>
 
     <!--Mode Select-->
-    <string name="mode_select_title">mode select</string>
-    <string name="mode_select_nav_route">serverHomeScreen</string>
+    <string name="mode_select_screen_title">mode select</string>
+    <string name="mode_select_screen_route">serverHomeScreen</string>
 
     <string name="mode_remote_scout">remote scout</string>
     <string name="mode_remote_scout_description">I want to connect to a server and scout</string>
@@ -32,6 +32,10 @@
     <string name="mode_solo_scout">solo scout</string>
     <string name="mode_solo_scout_description">I want to scout without connecting to other devices</string>
     <string name="mode_solo_scout_continue">start scouting</string>
+
+    <!--Mode Select-->
+    <string name="server_screen_title">server</string>
+    <string name="server_screen_route">server_screen</string>
 
     <string name="cd_expandable_card">Card expansion toggle</string>
 </resources>

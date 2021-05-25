@@ -1,6 +1,6 @@
 package com.team2052.frckrawler.di
 
-import com.team2052.frckrawler.network.EventService
+import com.team2052.frckrawler.data.remote.EventService
 import com.team2052.frckrawler.repository.EventRepository
 import dagger.Module
 import dagger.Provides
