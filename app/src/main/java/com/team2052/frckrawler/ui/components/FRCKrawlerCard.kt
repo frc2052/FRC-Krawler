@@ -1,7 +1,8 @@
 package com.team2052.frckrawler.ui.components
 
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.*
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -10,7 +11,9 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
@@ -19,12 +22,13 @@ import java.util.*
 @Composable
 fun FRCKrawlerExpandableCardGroup(
     modifier: Modifier = Modifier,
-    content: List<@Composable (Modifier, Int) -> Unit>,
+    content: () -> List<@Composable (Modifier, Int) -> Unit>,
 ) {
     var internalCardCount = 0
-    for(composable in content) { composable(modifier, internalCardCount++) }
+    for(composable in content()) { composable(modifier, internalCardCount++) }
 }
 
+// TODO: Extract border color into material theme background color
 @Composable
 fun FRCKrawlerCard(
     modifier: Modifier = Modifier,
@@ -34,31 +38,36 @@ fun FRCKrawlerCard(
 ) = Card(
     modifier = modifier.fillMaxWidth(),
     shape = RoundedCornerShape(4.dp),
+    border = BorderStroke(2.dp, Color(0xFFF5F5F5)),
     elevation = LocalCardElevation.current,
 ) {
     Column(
         modifier = Modifier
-            .padding(24.dp)
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300,
                     easing = FastOutSlowInEasing,
                 )
-            )
+            ),
+        verticalArrangement = Arrangement.Center,
     ) {
         header()
         content?.let { content ->
             Column(
-                modifier = Modifier.padding(top = 24.dp).also {
+                modifier = Modifier.padding(horizontal = 24.dp).also {
                     if (actions.isNotEmpty()) it.padding(bottom = 24.dp)
                 }
             ) { content() }
         }
         if (actions.isNotEmpty()) {
+            Divider(
+                color = Color(0xFFF5F5F5),
+                thickness = 2.dp,
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 24.dp),
+                    .padding(12.dp),
                 horizontalArrangement = Arrangement.End,
             ) {
                 actions.forEach { action ->
@@ -73,6 +82,8 @@ fun FRCKrawlerCard(
                     }
                 }
             }
+        } else if (content != null) {
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
@@ -82,7 +93,9 @@ fun FRCKrawlerCardHeader(
     modifier: Modifier = Modifier,
     title: @Composable RowScope.() -> Unit,
     description: (@Composable RowScope.() -> Unit)? = null,
-) = Column(modifier = modifier.fillMaxWidth()) {
+) = Column(modifier = modifier
+    .fillMaxWidth()
+    .padding(24.dp)) {
     CompositionLocalProvider(
         LocalTextStyle provides if (description != null)
             MaterialTheme.typography.h6 else MaterialTheme.typography.h5
@@ -105,10 +118,15 @@ fun FRCKrawlerExpandableCard(
 ) = FRCKrawlerCard(
     modifier = modifier,
     header = {
-        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
             Row(modifier = Modifier.weight(0.5f)) { header() }
             IconButton(
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier
+                    .padding(end = 24.dp)
+                    .size(36.dp),
                 onClick = { onExpanded(!expanded) },
             ) {
                 Icon(
