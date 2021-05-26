@@ -12,6 +12,7 @@ class StartupViewModel @Inject constructor(
 
 ) : ViewModel() {
 
+    // TODO: Preform Pre-app setup
     fun buffer(onComplete: () -> Unit) {
         viewModelScope.launch {
             delay(2000)

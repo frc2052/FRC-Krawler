@@ -1,12 +1,10 @@
 package com.team2052.frckrawler.ui.theme
 
-import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import com.team2052.frckrawler.compose.theme.*
 
@@ -31,7 +29,7 @@ private val DarkColorPalette = darkColors(
     onPrimary =         Color.White,
 
     secondary =         FRCKrawlerColor.yellow200,
-    secondaryVariant =  FRCKrawlerColor.yellow200,
+    secondaryVariant =  FRCKrawlerColor.yellow500,
     onSecondary =       Color.Black,
 
     surface =           FRCKrawlerColor.backgroundDark,
@@ -49,11 +47,11 @@ private val LightColorPalette = lightColors(
     primaryVariant =    FRCKrawlerColor.maroon500,
     onPrimary =         Color.White,
 
-    secondary =         FRCKrawlerColor.yellow500,
-    secondaryVariant =  FRCKrawlerColor.yellow200,
+    secondary =         FRCKrawlerColor.yellow200,
+    secondaryVariant =  FRCKrawlerColor.yellow500,
     onSecondary =       Color.Black,
 
-    surface =           FRCKrawlerColor.backgroundLight,
+    surface =           Color(0xFFFFFFFF),
     onSurface =         Color.Black,
 
     background =        FRCKrawlerColor.backgroundLight,
