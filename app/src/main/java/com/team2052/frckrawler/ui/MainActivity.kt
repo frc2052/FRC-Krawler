@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            FrcKrawlerTheme {
+            FrcKrawlerTheme(darkTheme = false) {
                 NavGraph()
             }
         }

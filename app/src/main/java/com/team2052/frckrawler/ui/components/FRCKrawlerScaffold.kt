@@ -41,7 +41,7 @@ fun FRCKrawlerScaffold(
             ),
         )
     },
-    content: @Composable() (ColumnScope.(PaddingValues) -> Unit),
+    content: @Composable ColumnScope.(PaddingValues) -> Unit,
 ) = Scaffold(
     modifier = modifier,
     scaffoldState = scaffoldState,
@@ -55,7 +55,7 @@ fun FRCKrawlerScaffold(
     floatingActionButton = floatingActionButton,
     floatingActionButtonPosition = FabPosition.End,
     drawerContent = drawerContent,
-    backgroundColor = Color(0xFFF5F5F5),
+    backgroundColor = MaterialTheme.colors.background,
 ) {
     // TODO: Replace with constant 4.dp
     CompositionLocalProvider(LocalCardElevation provides if (isSystemInDarkTheme()) 1.dp else 4.dp) {

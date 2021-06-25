@@ -35,55 +35,58 @@ fun FRCKrawlerCard(
     header: @Composable () -> Unit,
     actions: Map<String, () -> Unit> = emptyMap(),
     content: (@Composable ColumnScope.() -> Unit)? = null,
-) = Card(
-    modifier = modifier.fillMaxWidth(),
-    shape = RoundedCornerShape(4.dp),
-    border = BorderStroke(2.dp, Color(0xFFF5F5F5)),
-    elevation = LocalCardElevation.current,
 ) {
-    Column(
-        modifier = Modifier
-            .animateContentSize(
-                animationSpec = tween(
-                    durationMillis = 300,
-                    easing = FastOutSlowInEasing,
-                )
-            ),
-        verticalArrangement = Arrangement.Center,
+    val elevationOverlay = LocalElevationOverlay.current
+    val absoluteElevation = LocalAbsoluteElevation.current + LocalCardElevation.current / 2
+    val borderColor = elevationOverlay?.apply(MaterialTheme.colors.surface, absoluteElevation)
+        ?: MaterialTheme.colors.surface
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(4.dp),
+        border = BorderStroke(2.dp, borderColor),
+        elevation = LocalCardElevation.current,
     ) {
-        header()
-        content?.let { content ->
-            Column(
-                modifier = Modifier.padding(horizontal = 24.dp).also {
-                    if (actions.isNotEmpty()) it.padding(bottom = 24.dp)
-                }
-            ) { content() }
-        }
-        if (actions.isNotEmpty()) {
-            Divider(
-                color = Color(0xFFF5F5F5),
-                thickness = 2.dp,
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.End,
-            ) {
-                actions.forEach { action ->
-                    TextButton(
-                        modifier = Modifier.padding(start = 24.dp),
-                        onClick = { action.value() },
-                    ) {
-                        Text(
-                            text = action.key.toUpperCase(Locale.getDefault()),
-                            color = MaterialTheme.colors.secondary,
-                        )
+        Column(
+            modifier = Modifier
+                .animateContentSize(
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = FastOutSlowInEasing,
+                    )
+                ),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            header()
+            if (content != null) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 24.dp).also {
+                        if (actions.isNotEmpty()) it.padding(bottom = 24.dp)
+                    }
+                ) { content() }
+            }
+            if (actions.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.End,
+                ) {
+                    actions.forEach { action ->
+                        TextButton(
+                            modifier = Modifier.padding(start = 24.dp),
+                            onClick = { action.value() },
+                        ) {
+                            Text(
+                                text = action.key.toUpperCase(Locale.getDefault()),
+                                color = MaterialTheme.colors.secondary,
+                            )
+                        }
                     }
                 }
+            } else if (content != null) {
+                Spacer(modifier = Modifier.height(24.dp))
             }
-        } else if (content != null) {
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
