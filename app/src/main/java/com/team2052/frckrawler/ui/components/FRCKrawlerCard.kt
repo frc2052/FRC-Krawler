@@ -1,8 +1,11 @@
 package com.team2052.frckrawler.ui.components
 
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -32,7 +35,7 @@ fun FRCKrawlerExpandableCardGroup(
 @Composable
 fun FRCKrawlerCard(
     modifier: Modifier = Modifier,
-    header: @Composable () -> Unit,
+    header: @Composable () -> Unit = { FRCKrawlerCardHeader() },
     actions: Map<String, () -> Unit> = emptyMap(),
     content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
@@ -42,7 +45,9 @@ fun FRCKrawlerCard(
         ?: MaterialTheme.colors.surface
 
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth(),
+            //.border(1.dp, Color(0xFFC6C6C6), RoundedCornerShape(4.dp)),
         shape = RoundedCornerShape(4.dp),
         border = BorderStroke(2.dp, borderColor),
         elevation = LocalCardElevation.current,
@@ -60,9 +65,9 @@ fun FRCKrawlerCard(
             header()
             if (content != null) {
                 Column(
-                    modifier = Modifier.padding(horizontal = 24.dp).also {
-                        if (actions.isNotEmpty()) it.padding(bottom = 24.dp)
-                    }
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .padding(bottom = if (actions.isEmpty()) 24.dp else 0.dp),
                 ) { content() }
             }
             if (actions.isNotEmpty()) {
@@ -73,19 +78,19 @@ fun FRCKrawlerCard(
                     horizontalArrangement = Arrangement.End,
                 ) {
                     actions.forEach { action ->
-                        TextButton(
-                            modifier = Modifier.padding(start = 24.dp),
-                            onClick = { action.value() },
-                        ) {
-                            Text(
-                                text = action.key.toUpperCase(Locale.getDefault()),
-                                color = MaterialTheme.colors.secondary,
-                            )
+                        if (action.key.isNotEmpty()) {
+                            TextButton(
+                                modifier = Modifier.padding(start = 24.dp),
+                                onClick = { action.value() },
+                            ) {
+                                Text(
+                                    text = action.key.uppercase(Locale.getDefault()),
+                                    color = MaterialTheme.colors.secondary,
+                                )
+                            }
                         }
                     }
                 }
-            } else if (content != null) {
-                Spacer(modifier = Modifier.height(24.dp))
             }
         }
     }
@@ -94,15 +99,17 @@ fun FRCKrawlerCard(
 @Composable
 fun FRCKrawlerCardHeader(
     modifier: Modifier = Modifier,
-    title: @Composable RowScope.() -> Unit,
+    title: (@Composable RowScope.() -> Unit)? = null,
     description: (@Composable RowScope.() -> Unit)? = null,
 ) = Column(modifier = modifier
     .fillMaxWidth()
-    .padding(24.dp)) {
-    CompositionLocalProvider(
-        LocalTextStyle provides if (description != null)
-            MaterialTheme.typography.h6 else MaterialTheme.typography.h5
-    ) { Row { title() } }
+    .padding(horizontal = 24.dp)
+    .padding(bottom = 24.dp)) {
+    title?.let { title ->
+        CompositionLocalProvider(
+            LocalTextStyle provides MaterialTheme.typography.h6
+        ) { Row(modifier = Modifier.padding(top = 24.dp)) { title() } }
+    }
     description?.let { description ->
         CompositionLocalProvider(
             LocalTextStyle provides MaterialTheme.typography.subtitle1

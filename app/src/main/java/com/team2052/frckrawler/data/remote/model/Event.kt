@@ -39,7 +39,7 @@ data class Event(
     companion object {
         fun fake() = Event(
             key = "frc201234",
-            name = "201234"
+            name = "201234",
         )
     }
 }

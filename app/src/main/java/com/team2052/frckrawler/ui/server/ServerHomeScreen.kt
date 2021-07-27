@@ -1,15 +1,12 @@
-package com.team2052.frckrawler.ui.server.home
+package com.team2052.frckrawler.ui.server
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,9 +14,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.ui.NavScreen
+import com.team2052.frckrawler.ui.nav.NavScreen
 import com.team2052.frckrawler.ui.components.*
-import com.team2052.frckrawler.ui.server.ServerViewModel
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
 
@@ -31,9 +27,12 @@ fun ServerHomeScreen(
     val viewModel: ServerViewModel = hiltViewModel()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+
     FRCKrawlerScaffold(
         modifier = modifier,
         scaffoldState = scaffoldState,
+        refreshing = viewModel.isRefreshing,
+        onRefresh = { viewModel.refresh() },
         appBar = {
             FRCKrawlerAppBar(
                 navController = navController,
@@ -44,11 +43,14 @@ fun ServerHomeScreen(
             )
         },
         tabBar = {
-            FRCKrawlerTabBar(parentNavScreen = NavScreen.Server) { screen ->
+            FRCKrawlerTabBar(navController = navController, currentScreen = NavScreen.SERVER_HOME) { screen ->
                 navController.navigate(screen.route) {
                     launchSingleTop = true
                 }
             }
+        },
+        drawerContent = {
+            FRCKrawlerDrawer()
         },
     ) { contentPadding ->
         ServerHomeScreenContent(
@@ -61,7 +63,6 @@ fun ServerHomeScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ServerHomeScreenContent(
     modifier: Modifier = Modifier,
@@ -70,6 +71,29 @@ private fun ServerHomeScreenContent(
     scaffoldState: ScaffoldState,
     snackbarController: FRCKrawlerSnackbarController,
 ) {
+    var alert by remember { mutableStateOf(false) }
+    var alertWidth by remember { mutableStateOf(0) }
+    if (alert) {
+        AlertDialog(
+            modifier = Modifier.onGloballyPositioned { alertWidth = it.size.width },
+            onDismissRequest = { /*TODO*/ },
+            title = { Text("Searching for devices") },
+            text = {
+                Column {
+                    TextButton(modifier = Modifier.padding(bottom = 12.dp), onClick = { /*TODO*/ }) {
+                        Text(text = "Sam's 2nd iPad")}
+                    TextButton(modifier = Modifier.padding(bottom = 12.dp), onClick = { /*TODO*/ }) {
+                        Text(text = "xs01412njfs")}
+                    TextButton(modifier = Modifier, onClick = { /*TODO*/ }) {
+                        Text(text = "Matt's phone")}
+                }
+            },
+            buttons = {
+                LinearProgressIndicator()
+            }
+        )
+    }
+
     FRCKrawlerCard(
         modifier = modifier,
         header = {
@@ -78,7 +102,6 @@ private fun ServerHomeScreenContent(
                 description = { Text("Control server and configuration") },
             )
         },
-        actions = emptyMap(),
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -87,7 +110,7 @@ private fun ServerHomeScreenContent(
             Button(
                 modifier = Modifier.weight(1f),
                 onClick = {
-                    navController.navigate(NavScreen.ModeSelect.route)
+                    navController.navigate(NavScreen.MODE_SELECT.route)
                 },
             ) {
                 Text(text = "Server Config")
@@ -124,23 +147,69 @@ private fun ServerHomeScreenContent(
                 }
             }
         }
-    }
-    Table(modifier = Modifier) {
-        Text(text = "Scouts", style = MaterialTheme.typography.h6)
-        TableHeader(items = 4) {
-            Text("Col 1")
-            Text("Col 2")
-            Text("Col 3")
-            Text("Col 4")
-        }
-        repeat(4) {
-            TableRow(items = 4) {
-                Text("R- Col 1")
-                Text("R- Col 2")
-                Text("R- Col 3")
-                Text("R- Col 4")
+        Column {
+            viewModel.scouts.forEach {
+                Text(it.device.name)
             }
         }
+    }
+
+    val checkedStates = remember { mutableStateListOf(false, false, false, false, false) }
+
+    FRCKrawlerCard(
+        modifier = modifier,
+        header = {
+            FRCKrawlerCardHeader(title = { Text("Scouts") }, description = { Text("Connected Scouts") })
+        },
+        actions = mapOf(
+            (if (checkedStates.contains(true))
+                "remove scout${if (checkedStates.toList().count { it } > 1) "s" else ""}"
+            else "") to {  },
+            "add scouts" to {  },
+        ),
+    ) {
+        FRCKrawlerDataTable(
+            dataTableSource = TableSource(
+                TableRow(
+                    { Text("Status") },
+                    { Text("Device Name") },
+                    { Text("Alliance") },
+                    { Text("Match") },
+                    checked = checkedStates[0]
+                ),
+                TableRow(
+                    { Text("Online") },
+                    { Text("Scouter #1") },
+                    { Text("Red") },
+                    { Text("22") },
+                    checked = checkedStates[1]
+                ),
+                TableRow(
+                    { Text("Offline") },
+                    { Text("Scouter #2") },
+                    { Text("Red") },
+                    { Text("18") },
+                    checked = checkedStates[2]
+                ),
+                TableRow(
+                    { Text("Online") },
+                    { Text("Scouter #3") },
+                    { Text("Blue") },
+                    { Text("22") },
+                    checked = checkedStates[3]
+                ),
+                TableRow(
+                    { Text("Online") },
+                    { Text("Scouter #4") },
+                    { Text("Blue") },
+                    { Text("22") },
+                    checked = checkedStates[4]
+                ),
+            ),
+            onCheckedChange = { index, checked ->
+                checkedStates[index] = checked
+            },
+        )
     }
 }
 

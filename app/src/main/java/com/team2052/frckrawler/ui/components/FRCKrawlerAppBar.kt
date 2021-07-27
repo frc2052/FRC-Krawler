@@ -37,6 +37,7 @@ fun FRCKrawlerAppBar(
                 )
             }
         } else {
+            //Log.d("APP_BAR_NAV", navController.previousBackStackEntry.toString())
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowLeft,
