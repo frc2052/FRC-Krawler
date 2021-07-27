@@ -1,17 +1,16 @@
 package com.team2052.frckrawler.ui.modeSelect
 
-import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.FRCKrawlerApp
 import com.team2052.frckrawler.bluetooth.BluetoothController
 import com.team2052.frckrawler.repository.EventRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.Headers
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
 class ModeSelectViewModel @Inject constructor(
@@ -20,37 +19,30 @@ class ModeSelectViewModel @Inject constructor(
     val bluetoothController: BluetoothController,
 ) : ViewModel() {
 
-//    val events: MutableState<List<Event>?> = mutableStateOf(emptyList())
-//
-//    fun networkTest() {
-//        viewModelScope.launch {
-////            val result = eventRepository.getEventList(2052)
-////            events.value = result
-//        }
-//    }
-
-    val headers: MutableState<Headers?> = mutableStateOf(null)
-
-    fun headerTest() {
+    var isRefreshing by mutableStateOf(false)
+    fun refresh() {
+        isRefreshing = true
         viewModelScope.launch {
-//            eventRepository.getEvents().forEach { event ->
-//                headers.value.plus()
-//            }
-
-//                .enqueue(
-//                object : Callback<List<Event>> {
-//                    override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
-//                        if (response.isSuccessful) {
-//                            Log.d("NETWORK_TEST", "Success!")
-//                        }
-//                    }
-//                    override fun onFailure(call: Call<List<Event>>, t: Throwable) {
-//                        Log.d("NETWORK_TEST", "Fail!")
-//                    }
-//                }
-//            )
+            delay(1000)
+            isRefreshing = false
         }
     }
 
-    // TODO: Implement Data Store
+    var expandedCard by mutableStateOf(-1)
+
+    var remoteScoutData: ScoutData by mutableStateOf(ScoutData())
+    var serverData: ServerData by mutableStateOf(ServerData())
+    var soloScoutData: ScoutData by mutableStateOf(ScoutData())
 }
+
+data class ScoutData(
+    val game: String = "",
+    val event: String = "",
+)
+
+data class ServerData(
+    val teamNumber: String = "",
+    val serverName: String = "",
+    val game: String = "",
+    val event: String = "",
+)

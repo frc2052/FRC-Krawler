@@ -16,7 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.ui.NavScreen
+import com.team2052.frckrawler.ui.nav.NavScreen
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import java.util.*
@@ -29,9 +29,11 @@ import kotlin.random.Random
 fun StartupScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
-    currentNavScreen: NavScreen = NavScreen.Startup,
 ) {
-    FRCKrawlerScaffold(modifier = modifier) {
+    FRCKrawlerScaffold(
+        modifier = modifier,
+        scrollable = false,
+    ) {
 
         val viewModel: StartupViewModel = hiltViewModel()
 
@@ -76,10 +78,12 @@ fun StartupScreen(
             )
         }
 
+        // TODO: This block of code is run twice because of a reload (quick fix: launchSingleTop = true)
         // TODO: get the starting route from DataStore
         viewModel.buffer(onComplete = {
-            navController.navigate(NavScreen.ModeSelect.route) {
-                popUpTo(currentNavScreen.route) { inclusive = true }
+            navController.navigate(NavScreen.MODE_SELECT.route) {
+                launchSingleTop = true
+                popUpTo(NavScreen.STARTUP.route) { inclusive = true }
             }
         })
     }

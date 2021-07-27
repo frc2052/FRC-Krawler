@@ -1,16 +1,16 @@
 package com.team2052.frckrawler.ui.components
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.theme.FRCKrawlerColor
 
@@ -21,6 +21,9 @@ fun FRCKrawlerScaffold(
     modifier: Modifier = Modifier,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     contentPadding: PaddingValues = PaddingValues(24.dp),
+    scrollable: Boolean = true,
+    refreshing: Boolean = false,
+    onRefresh: (() -> Unit)? = null,
     appBar: @Composable () -> Unit = { },
     tabBar: @Composable () -> Unit = { },
     floatingActionButton: @Composable () -> Unit = { },
@@ -61,13 +64,22 @@ fun FRCKrawlerScaffold(
     CompositionLocalProvider(LocalCardElevation provides if (isSystemInDarkTheme()) 1.dp else 4.dp) {
         Box(modifier = Modifier.fillMaxSize()) {
             background()
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(contentPadding),
-                horizontalAlignment = Alignment.CenterHorizontally,
+            SwipeRefresh(
+                modifier = Modifier.fillMaxSize(),
+                state = rememberSwipeRefreshState(refreshing),
+                onRefresh = { if (onRefresh != null) onRefresh() },
+                swipeEnabled = onRefresh != null,
+                refreshTriggerDistance = 96.dp,
             ) {
-                content(PaddingValues(bottom = 24.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(if (scrollable) Modifier.verticalScroll(state = rememberScrollState()) else Modifier)
+                        .padding(contentPadding),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    content(PaddingValues(bottom = 24.dp))
+                }
             }
             FRCKrawlerSnackbar(
                 snackbarHostState = scaffoldState.snackbarHostState,

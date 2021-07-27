@@ -13,12 +13,10 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 object BluetoothModule {
-
-    // TODO: this should be a singleton that persists across the app
+    @Singleton
     @Provides
-    @ViewModelScoped
     fun provideBluetoothController(
         @ApplicationContext context: Context
     ): BluetoothController {
@@ -27,5 +25,4 @@ object BluetoothModule {
             bluetooth = BluetoothAdapter.getDefaultAdapter(),
         )
     }
-
 }

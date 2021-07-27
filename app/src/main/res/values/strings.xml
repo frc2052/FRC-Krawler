@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE resources [
     <!ENTITY appName "FRC Krawler">
-    <!ENTITY appVersion "1.0.0">
+    <!ENTITY appVersion "v4.0">
     <!ENTITY applicationID "com.team2052.frckrawler">
 ]>
 
@@ -14,12 +14,12 @@
     <!--Shared Preference File Keys-->
     <string name="preference_app_mode">&applicationID;PREFERENCE_APP_MODE</string>
 
-    <string name="welcome_message">Welcome to &appName;!</string>
-    <string name="getting_started_message">To get started, select from the options below</string>
-
     <!--Mode Select-->
     <string name="mode_select_screen_title">mode select</string>
     <string name="mode_select_screen_route">serverHomeScreen</string>
+
+    <string name="welcome_message">Welcome to &appName;!</string>
+    <string name="getting_started_message">To get started, select from the options below</string>
 
     <string name="mode_remote_scout">remote scout</string>
     <string name="mode_remote_scout_description">I want to connect to a server and scout</string>
