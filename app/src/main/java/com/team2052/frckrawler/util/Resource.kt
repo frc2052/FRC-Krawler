@@ -1,5 +1,8 @@
 package com.team2052.frckrawler.util
 
+/**
+ * Data Wrapper for network to inform viewmodels of fetch status
+ */
 sealed class Resource<T>(
     val data: T? = null,
     val message: String? = null
