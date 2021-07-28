@@ -43,6 +43,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    composeOptions {
+        kotlinCompilerVersion = "1.5.10"
+        kotlinCompilerExtensionVersion = "1.0.0-rc02"
+    }
 }
 
 // All rootProject properties can be found in the build.gradle (FRC-Krawler) file
