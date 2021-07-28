@@ -1,10 +1,8 @@
 package com.team2052.frckrawler.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -32,7 +30,7 @@ fun FRCKrawlerDrawer(
                     .clip(CircleShape)
                     .background(MaterialTheme.colors.primary)
                     .padding(24.dp),
-                painter = painterResource(id = R.drawable.ic_bg_logo),
+                painter = painterResource(id = R.drawable.ic_logo),
                 contentDescription = "",
                 tint = MaterialTheme.colors.secondary
             )
