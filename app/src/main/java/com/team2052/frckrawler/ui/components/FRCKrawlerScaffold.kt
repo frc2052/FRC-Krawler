@@ -33,7 +33,7 @@ fun FRCKrawlerScaffold(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(48.dp),
-            painter = painterResource(id = R.drawable.ic_bg_logo),
+            painter = painterResource(id = R.drawable.ic_logo),
             contentDescription = "Background",
             colorFilter = ColorFilter.tint(
                 if (MaterialTheme.colors.isLight) {
