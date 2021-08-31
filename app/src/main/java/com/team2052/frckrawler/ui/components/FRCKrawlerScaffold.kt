@@ -8,19 +8,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.ui.theme.FRCKrawlerColor
+import com.team2052.frckrawler.ui.theme.*
 
-val LocalCardElevation = compositionLocalOf { 2.dp }
+data class FRCKrawlerScaffold(
+    val thing: String
+)
 
 @Composable
 fun FRCKrawlerScaffold(
     modifier: Modifier = Modifier,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    contentPadding: PaddingValues = PaddingValues(24.dp),
+    contentPadding: PaddingValues = PaddingValues(spaceLarge),
     scrollable: Boolean = true,
     refreshing: Boolean = false,
     onRefresh: (() -> Unit)? = null,
@@ -32,14 +35,14 @@ fun FRCKrawlerScaffold(
         Image(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(48.dp),
-            painter = painterResource(id = R.drawable.ic_logo),
-            contentDescription = "Background",
+                .padding(spaceExtraLarge),
+            painter = painterResource(R.drawable.ic_logo),
+            contentDescription = stringResource(R.string.cd_background_logo),
             colorFilter = ColorFilter.tint(
                 if (MaterialTheme.colors.isLight) {
-                    FRCKrawlerColor.logoTintLight
+                    darkGray.copy(alpha = 0.05f)
                 } else {
-                    FRCKrawlerColor.logoTintDark
+                    lightGray.copy(alpha = 0.05f)
                 }
             ),
         )
@@ -53,41 +56,45 @@ fun FRCKrawlerScaffold(
             appBar()
             tabBar()
         }
-     },
+    },
     snackbarHost = { scaffoldState.snackbarHostState },
     floatingActionButton = floatingActionButton,
     floatingActionButtonPosition = FabPosition.End,
-    drawerContent = drawerContent,
+    drawerContent = if (
+        scaffoldState.drawerState.isClosed && !scaffoldState.drawerState.isAnimationRunning
+    ) drawerContent else null,
     backgroundColor = MaterialTheme.colors.background,
 ) {
-    // TODO: Replace with constant 4.dp
-    CompositionLocalProvider(LocalCardElevation provides if (isSystemInDarkTheme()) 1.dp else 4.dp) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            background()
-            SwipeRefresh(
-                modifier = Modifier.fillMaxSize(),
-                state = rememberSwipeRefreshState(refreshing),
-                onRefresh = { if (onRefresh != null) onRefresh() },
-                swipeEnabled = onRefresh != null,
-                refreshTriggerDistance = 96.dp,
+    Box(modifier = Modifier.fillMaxSize()) {
+        background()
+        SwipeRefresh(
+            modifier = Modifier.fillMaxSize(),
+            state = rememberSwipeRefreshState(refreshing),
+            onRefresh = { if (onRefresh != null) onRefresh() },
+            swipeEnabled = onRefresh != null,
+            refreshTriggerDistance = 96.dp,
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(
+                        if (scrollable)
+                            Modifier.verticalScroll(rememberScrollState())
+                        else
+                            Modifier
+                    )
+                    .padding(contentPadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .then(if (scrollable) Modifier.verticalScroll(state = rememberScrollState()) else Modifier)
-                        .padding(contentPadding),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    content(PaddingValues(bottom = 24.dp))
-                }
+                content(PaddingValues(bottom = spaceLarge))
             }
-            FRCKrawlerSnackbar(
-                snackbarHostState = scaffoldState.snackbarHostState,
-                modifier = Modifier.align(Alignment.BottomCenter),
-                onDismiss = {
-                    scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-                },
-            )
         }
+        FRCKrawlerSnackbar(
+            snackbarHostState = scaffoldState.snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter),
+            onDismiss = {
+                scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
+            },
+        )
     }
 }
