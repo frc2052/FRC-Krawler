@@ -43,11 +43,8 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
-    }
-
-    packagingOptions {
-        exclude "META-INF/atomicfu.kotlin_module"
+        kotlinCompilerVersion = "1.5.10"
+        kotlinCompilerExtensionVersion = "1.0.0-rc02"
     }
 }
 
@@ -107,7 +104,7 @@ dependencies {
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
     kapt "androidx.hilt:hilt-compiler:1.0.0"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0-alpha03"
-
+    
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
 }
