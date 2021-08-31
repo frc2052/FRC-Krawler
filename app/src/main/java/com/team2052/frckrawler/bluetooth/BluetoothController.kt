@@ -1,9 +1,12 @@
 package com.team2052.frckrawler.bluetooth
 
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.Composable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.Closeable
 import javax.inject.Inject
@@ -13,6 +16,18 @@ class BluetoothController @Inject constructor(
     val bluetooth: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter(),
 ) : Closeable {
 
+    fun enableBluetooth() {
+        requireBluetooth { bluetooth ->
+            if (!bluetooth.isEnabled) bluetooth.enable()
+        }
+    }
+
+    fun disableBluetooth() {
+        requireBluetooth { bluetooth ->
+            if (bluetooth.isEnabled) bluetooth.disable()
+        }
+    }
+
     fun toggleBluetooth(state: Boolean) {
         requireBluetooth { bluetooth ->
             if (bluetooth.isEnabled != state) {
@@ -21,15 +36,17 @@ class BluetoothController @Inject constructor(
         }
     }
 
-    fun bluetoothState(): Boolean =
-        requireBluetooth { bluetooth ->
+    fun bluetoothEnabled(): Boolean {
+        return requireBluetooth { bluetooth ->
             bluetooth.isEnabled
         } ?: false
+    }
 
-    fun bondedDevices(): Set<BluetoothDevice> =
-        requireBluetooth { bluetooth ->
+    fun bondedDevices(): Set<BluetoothDevice> {
+        return requireBluetooth { bluetooth ->
             bluetooth.bondedDevices
         } ?: emptySet()
+    }
 
     fun makeDiscoverable(duration: Int) {
         requireBluetooth {
