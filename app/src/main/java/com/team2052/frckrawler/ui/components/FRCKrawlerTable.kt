@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -11,6 +10,9 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.team2052.frckrawler.ui.theme.borderWidth
+import timber.log.Timber
+import java.lang.Exception
 
 /**
  * TABLE GUIDE LINE
@@ -24,116 +26,128 @@ import androidx.compose.ui.unit.dp
  * Clicking on overflow reveals tool tip with full text.
  */
 
-private const val borderWidth = 1
-private val borderColor = Color(0xFFC6C6C6)
-
 @Composable
-fun FRCKrawlerDataTable(
+fun DataTable(
     modifier: Modifier = Modifier,
-    dataTableSource: TableSource,
-    onCheckedChange: ((Int, Boolean) -> Unit)? = null,
+    selectable: Boolean = true,
+    onSelectionChanged: (List<Boolean>) -> Unit = { },
+    builder: DataTableBuilder.() -> Unit,
 ) {
-    val columns = dataTableSource.header.items
-    val rows = dataTableSource.rows
+    val dataTableBuilder = remember {
+        DataTableBuilder().apply(builder)
+    }
+    val dataTable = remember {
+        dataTableBuilder.build()
+    }
 
-    val selectable = onCheckedChange != null
+    if (dataTable.header == null && dataTable.rows.isEmpty()) return
+
+    var headerSelected by remember { mutableStateOf(false) }
+    var rowSelections by remember { mutableStateOf(List(dataTable.rows.size) { false }) }
+
+    val header = if (dataTable.header != null) {
+        val headerRowScope = DataTableRowScope().apply(dataTable.header)
+        headerRowScope.items.toList()
+    } else null
+
+    val rowCount = dataTable.rows.size + if (dataTable.header != null) 1 else 0
+
+    val rows = mutableListOf<List<@Composable () -> Unit>>()
+    dataTable.rows.forEach {
+        val rowScope = DataTableRowScope().apply(it)
+        rows += rowScope.items.toList()
+    }
+
+    val columnCount = header?.size ?: rows[0].size
+    for (row in rows) {
+        if (row.size != columnCount) throw Exception("Unmatched row item counts in DataTable!")
+    }
+
+    val columns = List<MutableList<@Composable () -> Unit>>(columnCount) { mutableListOf() }
+    for (index in columns.indices) {
+        if (header != null) columns[index] += header[index]
+        rows.forEach { row ->
+            columns[index] += row[index]
+        }
+    }
 
     Layout(
         modifier = modifier,
         content = {
-            // Creates datatable checkboxes
             if (selectable) {
-                val checkboxModifier = Modifier.padding(horizontal = 16.dp)
-                Checkbox(
-                    modifier = checkboxModifier
-                        .height(56.dp),
-                    checked = dataTableSource.header.checked,
-                    onCheckedChange = { checked ->
-                        dataTableSource.header.checked = checked
-                        onCheckedChange!!(0, dataTableSource.header.checked)
-                        rows.forEachIndexed { index, dataRow ->
-                            dataRow.checked = checked
-                            onCheckedChange!!(index + 1, dataRow.checked)
-                        }
-                    },
-                )
-                rows.forEachIndexed { index, dataRow ->
+                repeat(rowCount) { index ->
                     Checkbox(
-                        modifier = checkboxModifier
-                            .height(52.dp),
-                        checked = dataRow.checked,
-                        onCheckedChange = { checked ->
-                            dataRow.checked = checked
-                            onCheckedChange!!(index + 1, dataRow.checked)
-                            if (!checked) {
-                                onCheckedChange!!(0, false)
+                        modifier = Modifier.padding(horizontal = 16.dp).height(56.dp),
+                        checked = (index != 0 && rowSelections[index - 1]) || headerSelected,
+                        onCheckedChange = { state ->
+                            if (index == 0) {
+                                headerSelected = state
+                                rowSelections = List(dataTable.rows.size) { state }
+                            } else {
+                                val mutableRowSelections = rowSelections.toMutableList()
+                                mutableRowSelections[index - 1] = state
+                                rowSelections = mutableRowSelections
                             }
-                        },
+                            onSelectionChanged(if (header != null) rowSelections + headerSelected else rowSelections)
+                        }
                     )
                 }
             }
 
-            // Creates datatable items
-            for (columnIndex in columns.indices) {
-                // Column header
-                Box(
-                    Modifier
-                        .height(56.dp)
-                        .padding(horizontal = 16.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    ProvideTextStyle(LocalTextStyle.current.copy(fontWeight = FontWeight.SemiBold)) {
-                        columns[columnIndex](Modifier)
-                    }
-                }
-
-                // Column items
-                rows.forEachIndexed { index, dataRow ->
-                    // Get the current column item from the row
+            columns.forEach { column ->
+                var startingIndex = 0
+                if (header != null) {
                     Box(
                         Modifier
-                            .height(52.dp)
+                            .height(56.dp)
                             .padding(horizontal = 16.dp),
                         contentAlignment = Alignment.Center,
                     ) {
-                        dataRow.items[columnIndex](dataRow.modifier)
+                        ProvideTextStyle(LocalTextStyle.current.copy(fontWeight = FontWeight.SemiBold)) {
+                            column[0]()
+                        }
+                    }
+                    startingIndex = 1
+                }
+                for (index in startingIndex until column.size) {
+                    Box(
+                        Modifier
+                            .height(56.dp)
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        column[index]()
                     }
                 }
             }
 
-            // Creates row dividers
-            // The dividers will be placed properly after the table is created
-            repeat(dataTableSource.rows.size) {
+            repeat(rowCount - 1) {
                 Divider(
                     modifier = Modifier.fillMaxWidth(),
                     color = borderColor,
-                    thickness = borderWidth.dp
+                    thickness = borderWidth
                 )
             }
-        },
+        }
     ) { measurables, constraints ->
-
-        // Number of rows (including the header)
-        val rowCount = rows.size + 1
-
         val placeables: List<Placeable> = measurables.map { it.measure(constraints) }
         val selectorPlaceables = placeables.subList(0, rowCount)
-        val itemPlaceables = placeables.subList(rowCount, placeables.size - rows.size)
-        val dividerPlaceables = placeables.subList(placeables.size - rows.size, placeables.size)
+        val itemPlaceables = placeables.subList(if (selectable) rowCount else 0, placeables.size - (rowCount - 1))
+        val dividerPlaceables = placeables.subList(placeables.size - (rowCount - 1), placeables.size)
+
+        Timber.d("DataTable PLACEABLES: ${placeables.size}; SELECTORS: ${selectorPlaceables.size}; ITEMS: ${itemPlaceables.size}; DIVIDERS: ${dividerPlaceables.size};")
 
         val checkboxWidth = if (selectable) selectorPlaceables[0].width else 0
 
         // Lists containing the width and height of each column
-        val columnHeights: MutableList<Int> = MutableList(columns.size) { 0 }
-        val columnWidths: MutableList<Int> = MutableList(columns.size) { 0 }
+        val columnHeights = MutableList(columns.size) { 0 }
+        val columnWidths = MutableList(columns.size) { 0 }
 
-        // Cycle through each placeable and calculate it's effect on it's columns width and height
         var columnIndex = -1
         itemPlaceables.forEachIndexed { index, placeable ->
+
             // Increments the column index
-            if (index % rowCount == 0) {
-                columnIndex++
-            }
+            if ((index) % rowCount == 0) columnIndex++
 
             // Add the height of the placeable to the total column height
             columnHeights[columnIndex] += placeable.height
@@ -141,10 +155,11 @@ fun FRCKrawlerDataTable(
             // Finds the maximum placeable width and sets the columns width accordingly
             val columnWidth = columnWidths[columnIndex]
             columnWidths[columnIndex] = if (placeable.width > columnWidth) placeable.width else columnWidth
+
         }
 
         // Calculate the maximum row height to use for the layout dimensions
-        val layoutHeight = columnHeights.maxOf { it } + (borderWidth * rows.size)
+        val layoutHeight = columnHeights.maxOf { it } + (borderWidth.value.toInt() * rows.size)
 
         // Identify the maximum column width to use for filling white space in the table
         val maxColumnWidth = columnWidths.maxOf { it }
@@ -156,9 +171,11 @@ fun FRCKrawlerDataTable(
             var xOffset = 0
             var yOffset = 0
 
-            selectorPlaceables.forEachIndexed { index, placeable ->
-                placeable.placeRelative(xOffset, yOffset)
-                yOffset += if (index == 0) { 56 } else { 52 } + borderWidth
+            if (selectable) {
+                selectorPlaceables.forEachIndexed { index, placeable ->
+                    placeable.placeRelative(xOffset, yOffset)
+                    yOffset += if (index == 0) { 56 } else { 52 } + borderWidth.value.toInt()
+                }
             }
 
             // Places each placeable with the correct offset defined by the column widths and heights
@@ -166,7 +183,7 @@ fun FRCKrawlerDataTable(
             yOffset = 0
             itemPlaceables.forEachIndexed { index, placeable ->
                 placeable.placeRelative(xOffset, yOffset)
-                yOffset += if (index % rowCount == 0) { 56 } else { 52 } + borderWidth
+                yOffset += if (index % rowCount == 0) { 56 } else { 52 } + borderWidth.value.toInt()
                 if ((index + 1) % rowCount == 0) {
                     yOffset = 0
                     xOffset += columnWidths[(index / rows.size) - 1]
@@ -175,24 +192,47 @@ fun FRCKrawlerDataTable(
 
             yOffset = 0
             dividerPlaceables.forEachIndexed { index, placeable ->
-                yOffset += if (index == 0) { 56 } else { 52 + borderWidth }
+                yOffset += if (index == 0) { 56 } else { 52 + borderWidth.value.toInt() }
                 placeable.placeRelative(0, yOffset)
             }
         }
     }
 }
 
-class TableSource(
-    val header: TableRow,
-    vararg rows: TableRow,
-) {
-    val rows = rows.map { it }
+data class DataTable(
+    val header: (DataTableRowScope.() -> Unit)?,
+    val rows: List<DataTableRowScope.() -> Unit>,
+)
+
+open class DataTableBuilder {
+    private var header: (DataTableRowScope.() -> Unit)? = null
+    private val rows: MutableList<DataTableRowScope.() -> Unit> = mutableListOf()
+
+    fun header(content: DataTableRowScope.() -> Unit) {
+        header = content
+    }
+
+    fun row(content: DataTableRowScope.() -> Unit) {
+        rows += content
+    }
+
+    fun rows(count: Int, content: DataTableRowScope.(Int) -> Unit) {
+        for (index in 0 until count) {
+            row { content(index) }
+        }
+    }
+
+    fun build() = DataTable(header = header, rows = rows.toList())
 }
 
-class TableRow(
-    vararg items: @Composable (Modifier) -> Unit,
-    val modifier: Modifier = Modifier,
-    var checked: Boolean = false,
-) {
-    val items = items.map { it }
+open class DataTableRowScope {
+    val items: MutableList<@Composable () -> Unit> = mutableListOf()
+
+    fun item(text: String) = item { Text(text) }
+
+    fun item(content: @Composable () -> Unit) {
+        items += content
+    }
 }
+
+private val borderColor = Color(0xFFC6C6C6)

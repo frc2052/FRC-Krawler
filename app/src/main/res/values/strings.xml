@@ -11,31 +11,49 @@
     <string name="bluetooth_Text">Bluetooth Server Running:</string>
     <string name="viewLogsButton">View Logs</string>
 
-    <!--Shared Preference File Keys-->
+    <!--Shared Preferences TODO: Should this be here?-->
     <string name="preference_app_mode">&applicationID;PREFERENCE_APP_MODE</string>
+
+    <!--Content Descriptions-->
+    <string name="cd_expandable_card">Card expansion toggle</string>
+    <string name="cd_background_logo">Background Logo</string>
+
+    <string name="cd_text_field_error">Incomplete text field</string>
+
+    <string name="cd_dropdown_expand">Expand Dropdown</string>
+    <string name="cd_dropdown_collapse">Collapse Dropdown</string>
 
     <!--Mode Select-->
     <string name="mode_select_screen_title">mode select</string>
-    <string name="mode_select_screen_route">serverHomeScreen</string>
 
     <string name="welcome_message">Welcome to &appName;!</string>
     <string name="getting_started_message">To get started, select from the options below</string>
 
     <string name="mode_remote_scout">remote scout</string>
     <string name="mode_remote_scout_description">I want to connect to a server and scout</string>
-    <string name="mode_remote_scout_continue">start scouting</string>
+    <string name="mode_remote_scout_continue">START SCOUTING</string>
 
     <string name="mode_server">server</string>
     <string name="mode_server_description">This device will be a server for remote scouts</string>
-    <string name="mode_server_continue">start server</string>
+    <string name="mode_server_continue">START SERVER</string>
 
     <string name="mode_solo_scout">solo scout</string>
     <string name="mode_solo_scout_description">I want to scout without connecting to other devices</string>
-    <string name="mode_solo_scout_continue">start scouting</string>
+    <string name="mode_solo_scout_continue">START SCOUTING</string>
 
-    <!--Mode Select-->
+    <!--Scout Screens-->
+    <string name="scout_screen_title">scout</string>
+    <string name="scout_home_screen_title">home</string>
+    <string name="scout_matches_screen_title">matches</string>
+
+    <!--Server Screens-->
     <string name="server_screen_title">server</string>
-    <string name="server_screen_route">server_screen</string>
+    <string name="server_home_screen_title">home</string>
+    <string name="server_matches_screen_title">matches</string>
+    <string name="server_games_screen_title">games</string>
 
-    <string name="cd_expandable_card">Card expansion toggle</string>
+    <!--Metrics Screens-->
+    <string name="metrics_screen">metrics</string>
+    <string name="match_metrics_screen">match</string>
+    <string name="pit_metrics_screen">pit</string>
 </resources>

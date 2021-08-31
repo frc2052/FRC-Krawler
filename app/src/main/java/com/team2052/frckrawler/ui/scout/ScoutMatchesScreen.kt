@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.scout.matches
+package com.team2052.frckrawler.ui.scout
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FloatingActionButton
@@ -14,8 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.ui.components.*
-import com.team2052.frckrawler.ui.nav.NavScreen
-import com.team2052.frckrawler.ui.scout.ScoutViewModel
+import com.team2052.frckrawler.ui.nav.Screen.*
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
@@ -41,7 +40,7 @@ fun ScoutMatchesScreen(
             )
         },
         tabBar = {
-            FRCKrawlerTabBar(navController = navController, currentScreen = NavScreen.SCOUT_MATCHES) { screen ->
+            FRCKrawlerTabBar(navigation = Scout, currentScreen = ScoutMatches) { screen ->
                 navController.navigate(screen.route) {
                     launchSingleTop = true
                 }

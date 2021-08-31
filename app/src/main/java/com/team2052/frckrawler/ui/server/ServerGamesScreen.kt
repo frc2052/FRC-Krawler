@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.server
 
+import android.widget.TableRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -9,11 +10,8 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,11 +19,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.components.*
-import com.team2052.frckrawler.ui.nav.NavScreen
+import com.team2052.frckrawler.ui.nav.Screen.*
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
-fun ServerSeasonsScreen(
+fun ServerGamesScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
 ) {
@@ -38,8 +36,6 @@ fun ServerSeasonsScreen(
     FRCKrawlerScaffold(
         modifier = modifier,
         scaffoldState = scaffoldState,
-        refreshing = viewModel.isRefreshing,
-        onRefresh = { viewModel.refresh() },
         appBar = {
             FRCKrawlerAppBar(
                 navController = navController,
@@ -50,8 +46,9 @@ fun ServerSeasonsScreen(
             )
         },
         tabBar = {
-            FRCKrawlerTabBar(navController = navController, currentScreen = NavScreen.SERVER_SEASONS) { screen ->
+            FRCKrawlerTabBar(navigation = Server, currentScreen = ServerGames) { screen ->
                 navController.navigate(screen.route) {
+                    popUpTo(ServerGames.route) { inclusive = true }
                     launchSingleTop = true
                 }
             }
@@ -87,6 +84,9 @@ fun ServerSeasonsScreen(
         drawerContent = {
             FRCKrawlerDrawer()
         },
+        background = {
+            // TODO: If there are no games set the background to the no games background
+        }
     ) { contentPadding ->
         ServerSeasonsScreenContent(
             modifier = Modifier.padding(contentPadding),
@@ -96,24 +96,24 @@ fun ServerSeasonsScreen(
         if (addGameDialogOpen) {
             var dialogWidth by remember { mutableStateOf(0) }
             var gameName by remember { mutableStateOf("") }
-            AlertDialog(
-                modifier = Modifier.fillMaxWidth(0.5f),
-                onDismissRequest = { addGameDialogOpen = false },
-                title = { Text("Add New Game") },
-                text = { FRCKrawlerTextField(modifier = Modifier.padding(top = 24.dp), value = gameName, onValueChange = { gameName = it }, label = "Name") },
-                buttons = {
-                    ProvideTextStyle(LocalTextStyle.current.copy(color = MaterialTheme.colors.secondary)) {
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                            TextButton(modifier = Modifier.padding(12.dp), onClick = { /*TODO*/ }) {
-                                Text("CANCEL")
-                            }
-                            TextButton(modifier = Modifier.padding(12.dp), onClick = { /*TODO*/ }) {
-                                Text("SAVE")
-                            }
-                        }
-                    }
-                }
-            )
+//            AlertDialog(
+//                modifier = Modifier.fillMaxWidth(0.5f),
+//                onDismissRequest = { addGameDialogOpen = false },
+//                title = { Text("Add New Game") },
+//                text = { FRCKrawlerTextField(modifier = Modifier.padding(top = 24.dp), value = gameName, onValueChange = { gameName = it }, label = "Name") },
+//                buttons = {
+//                    ProvideTextStyle(LocalTextStyle.current.copy(color = MaterialTheme.colors.secondary)) {
+//                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+//                            TextButton(modifier = Modifier.padding(12.dp), onClick = { /*TODO*/ }) {
+//                                Text("CANCEL")
+//                            }
+//                            TextButton(modifier = Modifier.padding(12.dp), onClick = { /*TODO*/ }) {
+//                                Text("SAVE")
+//                            }
+//                        }
+//                    }
+//                }
+//            )
         }
     }
 }
@@ -129,26 +129,26 @@ fun ServerSeasonsScreenContent(
         val txtMod = Modifier.padding(12.dp)
 
         val checkedStates = remember { mutableStateListOf(false, false, false, false, false) }
-        FRCKrawlerDataTable(
-            dataTableSource = TableSource(
-                TableRow({ Text("Year") }, { Text("Season") }, { Text("Metrics") }, checked = checkedStates[0]),
-                TableRow({ Text("2020") }, { Text("Infinite Recharge") }, { Text("true") }, checked = checkedStates[1]),
-                TableRow({ Text("2019") }, { Text("Power Up") }, { Text("false") }, checked = checkedStates[2]),
-                TableRow({ Text("2018") }, { Text("Rover Ruckus") }, { Text("false") }, checked = checkedStates[3]),
-                TableRow({ Text("2020") }, { Text("Infinite Recharge") }, { Text("true") }, checked = checkedStates[1]),
-                TableRow({ Text("2019") }, { Text("Power Up") }, { Text("false") }, checked = checkedStates[2]),
-                TableRow({ Text("2018") }, { Text("Rover Ruckus") }, { Text("false") }, checked = checkedStates[3]),
-                TableRow({ Text("2020") }, { Text("Infinite Recharge") }, { Text("true") }, checked = checkedStates[1]),
-                TableRow({ Text("2019") }, { Text("Power Up") }, { Text("false") }, checked = checkedStates[2]),
-                TableRow({ Text("2018") }, { Text("Rover Ruckus") }, { Text("false") }, checked = checkedStates[3]),
-                TableRow({ Text("2020") }, { Text("Infinite Recharge") }, { Text("true") }, checked = checkedStates[1]),
-                TableRow({ Text("2019") }, { Text("Power Up") }, { Text("false") }, checked = checkedStates[2]),
-                TableRow({ Text("2018") }, { Text("Rover Ruckus") }, { Text("false") }, checked = checkedStates[3]),
-            ),
-            onCheckedChange = { index, checked ->
-                checkedStates[index] = checked
-            }
-        )
+//        FRCKrawlerDataTable(
+//            dataTableSource = TableSource(
+//                TableRow({ Text("Year") }, { Text("Season") }, { Text("Metrics") }, checked = checkedStates[0]),
+//                TableRow({ Text("2020") }, { Text("Infinite Recharge") }, { Text("true") }, checked = checkedStates[1]),
+//                TableRow({ Text("2019") }, { Text("Power Up") }, { Text("false") }, checked = checkedStates[2]),
+//                TableRow({ Text("2018") }, { Text("Rover Ruckus") }, { Text("false") }, checked = checkedStates[3]),
+//                TableRow({ Text("2020") }, { Text("Infinite Recharge") }, { Text("true") }, checked = checkedStates[1]),
+//                TableRow({ Text("2019") }, { Text("Power Up") }, { Text("false") }, checked = checkedStates[2]),
+//                TableRow({ Text("2018") }, { Text("Rover Ruckus") }, { Text("false") }, checked = checkedStates[3]),
+//                TableRow({ Text("2020") }, { Text("Infinite Recharge") }, { Text("true") }, checked = checkedStates[1]),
+//                TableRow({ Text("2019") }, { Text("Power Up") }, { Text("false") }, checked = checkedStates[2]),
+//                TableRow({ Text("2018") }, { Text("Rover Ruckus") }, { Text("false") }, checked = checkedStates[3]),
+//                TableRow({ Text("2020") }, { Text("Infinite Recharge") }, { Text("true") }, checked = checkedStates[1]),
+//                TableRow({ Text("2019") }, { Text("Power Up") }, { Text("false") }, checked = checkedStates[2]),
+//                TableRow({ Text("2018") }, { Text("Rover Ruckus") }, { Text("false") }, checked = checkedStates[3]),
+//            ),
+//            onCheckedChange = { index, checked ->
+//                checkedStates[index] = checked
+//            }
+//        )
     }
 }
 
@@ -156,7 +156,7 @@ fun ServerSeasonsScreenContent(
 @Composable
 private fun ServerSeasonsScreenPreviewLight() {
     FrcKrawlerTheme(darkTheme = false) {
-        ServerSeasonsScreen(navController = rememberNavController())
+        ServerGamesScreen(navController = rememberNavController())
     }
 }
 
@@ -164,6 +164,6 @@ private fun ServerSeasonsScreenPreviewLight() {
 @Composable
 private fun ServerSeasonsScreenPreviewDark() {
     FrcKrawlerTheme(darkTheme = true) {
-        ServerSeasonsScreen(navController = rememberNavController())
+        ServerGamesScreen(navController = rememberNavController())
     }
 }

@@ -26,8 +26,10 @@ fun FRCKrawlerAppBar(
         val scope = rememberCoroutineScope()
         if (navController.previousBackStackEntry == null) {
             IconButton(onClick = {
-                scope.launch {
-                    scaffoldState.drawerState.open()
+                if (!scaffoldState.drawerState.isAnimationRunning) {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
+                    }
                 }
             }) {
                 Icon(
@@ -37,7 +39,6 @@ fun FRCKrawlerAppBar(
                 )
             }
         } else {
-            //Log.d("APP_BAR_NAV", navController.previousBackStackEntry.toString())
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowLeft,

@@ -12,7 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.ui.components.*
-import com.team2052.frckrawler.ui.nav.NavScreen
+import com.team2052.frckrawler.ui.nav.Screen.*
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
@@ -38,7 +38,7 @@ fun ScoutHomeScreen(
             )
         },
         tabBar = {
-            FRCKrawlerTabBar(navController = navController, currentScreen = NavScreen.SCOUT_HOME) { screen ->
+            FRCKrawlerTabBar(navigation = Scout, currentScreen = ScoutHome) { screen ->
                 navController.navigate(screen.route) {
                     launchSingleTop = true
                 }
@@ -65,7 +65,6 @@ private fun ScoutHomeScreenContent(
                 description = { Text("Connect to a server and manage scout properties") },
             )
         },
-        actions = emptyMap(),
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
