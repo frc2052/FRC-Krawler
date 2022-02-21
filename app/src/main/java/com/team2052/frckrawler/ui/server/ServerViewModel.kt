@@ -23,6 +23,10 @@ class ServerViewModel @Inject constructor(
     private val locationTactic = mutableStateOf(LocationTactic.NONE)
     private val locationPermissionGranted = mutableStateOf(false)
 
+    fun startServer() {
+
+    }
+
     /**
      * 1. State = enabling
      * 2. Request & await permissions

@@ -14,7 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.ui.components.*
-import com.team2052.frckrawler.ui.nav.Screen.*
+import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable

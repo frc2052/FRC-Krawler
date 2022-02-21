@@ -18,9 +18,7 @@ import com.team2052.frckrawler.R
 @Composable
 fun FRCKrawlerDrawer(
     modifier: Modifier = Modifier,
-) = Column(
-
-) {
+) = Column(modifier = modifier) {
     Surface(elevation = 8.dp) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Icon(

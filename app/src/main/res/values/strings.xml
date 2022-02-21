@@ -29,15 +29,15 @@
     <string name="welcome_message">Welcome to &appName;!</string>
     <string name="getting_started_message">To get started, select from the options below</string>
 
-    <string name="mode_remote_scout">remote scout</string>
+    <string name="mode_remote_scout">Remote Scout</string>
     <string name="mode_remote_scout_description">I want to connect to a server and scout</string>
     <string name="mode_remote_scout_continue">START SCOUTING</string>
 
-    <string name="mode_server">server</string>
+    <string name="mode_server">Server</string>
     <string name="mode_server_description">This device will be a server for remote scouts</string>
     <string name="mode_server_continue">START SERVER</string>
 
-    <string name="mode_solo_scout">solo scout</string>
+    <string name="mode_solo_scout">Solo Scout</string>
     <string name="mode_solo_scout_description">I want to scout without connecting to other devices</string>
     <string name="mode_solo_scout_continue">START SCOUTING</string>
 

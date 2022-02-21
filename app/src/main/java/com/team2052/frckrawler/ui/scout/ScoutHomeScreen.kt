@@ -12,7 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.ui.components.*
-import com.team2052.frckrawler.ui.nav.Screen.*
+import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
@@ -57,10 +57,10 @@ private fun ScoutHomeScreenContent(
     modifier: Modifier = Modifier,
     navController: NavController,
 ) {
-    FRCKrawlerCard(
+    Card(
         modifier = modifier,
         header = {
-            FRCKrawlerCardHeader(
+            CardHeader(
                 title = { Text("Scout Properties") },
                 description = { Text("Connect to a server and manage scout properties") },
             )

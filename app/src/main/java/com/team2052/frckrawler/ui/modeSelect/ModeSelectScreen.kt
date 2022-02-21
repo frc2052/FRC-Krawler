@@ -2,8 +2,6 @@ package com.team2052.frckrawler.ui.modeSelect
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,12 +14,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.ui.nav.Screen
+import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.components.*
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerDropdown
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
-import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import com.team2052.frckrawler.ui.theme.spaceMedium
+import com.team2052.frckrawler.ui.theme.*
 
 @Composable
 fun ModeSelectScreen(
@@ -34,8 +31,6 @@ fun ModeSelectScreen(
     FRCKrawlerScaffold(
         modifier = modifier,
         scaffoldState = scaffoldState,
-        refreshing = viewModel.isRefreshing,
-        onRefresh = { viewModel.refresh() },
         appBar = {
             FRCKrawlerAppBar(
                 navController = navController,
@@ -45,9 +40,7 @@ fun ModeSelectScreen(
                 }
             )
         },
-        drawerContent = {
-            FRCKrawlerDrawer()
-        },
+        drawerContent = { FRCKrawlerDrawer() },
     ) { contentPadding ->
         ModeSelectScreenContent(
             modifier = modifier.padding(contentPadding),
@@ -73,222 +66,282 @@ private fun ModeSelectScreenContent(
         }
     }
 
-    // TODO: Hoisting the state to the view model may be unnecessary if we use rememberSaveable
-    FRCKrawlerExpandableCardGroup(modifier = modifier) {
-        listOf(
-            { modifier, id ->
-                var game by remember { mutableStateOf(viewModel.remoteScoutData.game) }
-                var event by remember { mutableStateOf(viewModel.remoteScoutData.event) }
-
-                FRCKrawlerExpandableCard(
-                    modifier = modifier,
-                    header = {
-                        FRCKrawlerCardHeader(
-                            title = { Text(stringResource(R.string.mode_remote_scout)) },
-                            description = { Text(stringResource(R.string.mode_remote_scout_description)) },
-                        )
-                    },
-                    actions = {
-                        TextButton(onClick = {
-                            if (game.isNotBlank() && event.isNotBlank()) {
-                                navController.navigate(Screen.Scout.route) {
-                                    popUpTo(Screen.ModeSelect.route) { inclusive = true }
-                                }
-                            }
-                        }) {
-                            Text(stringResource(R.string.mode_remote_scout_continue))
-                        }
-                    },
-                    expanded = viewModel.expandedCard == id,
-                    onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
-                    content = {
-                        FRCKrawlerDropdown(
-                            modifier = Modifier.padding(bottom = 12.dp),
-                            value = game,
-                            onValueChange = {
-                                game = it
-                                viewModel.remoteScoutData = viewModel.remoteScoutData.copy(game = game)
-                            },
-                            label = "Game",
-                            dropdownItems = listOf("Infinite Recharge at Home", "Infinite Recharge", "Rover Ruckus")
-                        )
-
-                        FRCKrawlerDropdown(
-                            value = event,
-                            onValueChange = {
-                                event = it
-                                viewModel.remoteScoutData = viewModel.remoteScoutData.copy(event = event)
-                            },
-                            label = "Event",
-                            dropdownItems = listOf("Northern Lights")
-                        )
-                    },
-                )
-            },
-            { modifier, id ->
-                var teamNumber by remember { mutableStateOf(viewModel.serverData.teamNumber) }
-                var teamNumberValidity by remember { mutableStateOf(true) }
-                val teamNumberLength = 4
-
-                var serverName by remember { mutableStateOf(viewModel.serverData.serverName) }
-                var serverNameValidity by remember { mutableStateOf(true) }
-                val serverNameLengthRange = IntRange(4, 20)
-
-                // TODO: In the future using something other than strings, which could be unreliable, could be good
-                var game by remember { mutableStateOf(viewModel.serverData.game) }
-                var gameValidity by remember { mutableStateOf(true) }
-
-                var event by remember { mutableStateOf(viewModel.serverData.event) }
-                var eventValidity by remember { mutableStateOf(true) }
-
-                FRCKrawlerExpandableCard(
-                    modifier = modifier,
-                    header = {
-                        FRCKrawlerCardHeader(
-                            title = { Text(stringResource(R.string.mode_server)) },
-                            description = { Text(stringResource(R.string.mode_server_description)) },
-                        )
-                    },
-                    actions = {
-                        TextButton(onClick = {
-                            if (teamNumber.length != teamNumberLength) teamNumberValidity = false
-                            if (serverName.length !in serverNameLengthRange) serverNameValidity = false
-                            if (game.isEmpty()) gameValidity = false
-                            if (event.isEmpty()) eventValidity = false
-
-                            if (teamNumberValidity && serverNameValidity && gameValidity && eventValidity) {
-                                navController.navigate(Screen.Server.route) {
-                                    popUpTo(Screen.ModeSelect.route) { inclusive = true }
-                                }
-                            }
-                        }) {
-                            Text(stringResource(R.string.mode_server_continue))
-                        }
-                    },
-                    expanded = viewModel.expandedCard == id,
-                    onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
-                    content = {
-                        // Team number text field
-                        FRCKrawlerTextField(
-                            modifier = Modifier.padding(bottom = spaceMedium),
-                            value = teamNumber,
-                            onValueChange = { value ->
-                                if (value.length <= teamNumberLength) teamNumber = value
-                                viewModel.serverData = viewModel.serverData.copy(teamNumber = teamNumber)
-                            },
-                            validity = teamNumberValidity,
-                            validityCheck = { value ->
-                                teamNumberValidity = value.isDigitsOnly() && value.length == teamNumberLength // && !value.contains("(bad|word|filter|hope|works)")
-                            },
-                            isError = { validity -> !validity },
-                            label = "Team Number",
-                            keyboardType = KeyboardType.NumberPassword,
-                        )
-
-                        // Server name text field
-                        var serverNameHasFocus by remember { mutableStateOf(false) }
-                        FRCKrawlerTextField(
-                            modifier = Modifier.padding(bottom = spaceMedium),
-                            value = serverName,
-                            onValueChange = { value ->
-                                if (value.length <= serverNameLengthRange.last) serverName = value
-                                serverNameValidity = value.length in serverNameLengthRange
-
-                                viewModel.serverData = viewModel.serverData.copy(serverName = serverName)
-                            },
-                            validity = serverNameValidity,
-                            validityCheck = { value ->
-                                serverNameValidity = value.length in serverNameLengthRange // && !value.contains("(bad|word|filter|hope|works)")
-                            },
-                            isError = { validity -> !validity },
-                            label = "Server Name" + if (serverNameHasFocus) " - ${serverName.length}/${serverNameLengthRange.last}" else "",
-                            onFocusChange = { serverNameHasFocus = it },
-                        )
-
-                        // Game selection dropdown
-                        FRCKrawlerDropdown(
-                            modifier = Modifier.padding(bottom = 12.dp),
-                            value = game,
-                            onValueChange = {
-                                game = it
-                                viewModel.serverData = viewModel.serverData.copy(game = game)
-                            },
-                            validity = gameValidity,
-                            validityCheck = {
-                                gameValidity = it.isNotEmpty()
-                            },
-                            label = "Game",
-                            dropdownItems = listOf("Infinite Recharge at Home", "Infinite Recharge", "Rover Ruckus")
-                        )
-
-                        // Event selection dropdown
-                        FRCKrawlerDropdown(
-                            value = event,
-                            onValueChange = {
-                                event = it
-                                viewModel.serverData = viewModel.serverData.copy(event = event)
-                            },
-                            validity = eventValidity,
-                            validityCheck = {
-                                eventValidity = it.isNotEmpty()
-                            },
-                            label = "Event",
-                            dropdownItems = listOf("Northern Lights")
-                        )
-                    },
-                )
-            },
-            { modifier, id ->
-                var game by remember { mutableStateOf(viewModel.soloScoutData.game) }
-                var event by remember { mutableStateOf(viewModel.soloScoutData.event) }
-
-                FRCKrawlerExpandableCard(
-                    modifier = modifier,
-                    header = {
-                        FRCKrawlerCardHeader(
-                            title = { Text(stringResource(R.string.mode_solo_scout)) },
-                            description = { Text(stringResource(R.string.mode_solo_scout_description)) },
-                        )
-                    },
-                    actions = {
-                        TextButton(onClick = {
-                            if (game.isNotBlank() && event.isNotBlank()) {
-                                navController.navigate(Screen.Scout.route) {
-                                    popUpTo(Screen.ModeSelect.route) { inclusive = true }
-                                }
-                            }
-                        }) {
-                            Text(stringResource(R.string.mode_solo_scout_continue))
-                        }
-                    },
-                    expanded = viewModel.expandedCard == id,
-                    onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
-                    content = {
-                        FRCKrawlerDropdown(
-                            modifier = Modifier.padding(bottom = 12.dp),
-                            value = game,
-                            onValueChange = {
-                                game = it
-                                viewModel.soloScoutData = viewModel.soloScoutData.copy(game = game)
-                            },
-                            label = "Game",
-                            dropdownItems = listOf("Infinite Recharge at Home", "Infinite Recharge", "Rover Ruckus")
-                        )
-
-                        FRCKrawlerDropdown(
-                            value = event,
-                            onValueChange = {
-                                event = it
-                                viewModel.soloScoutData = viewModel.soloScoutData.copy(event = event)
-                            },
-                            label = "Event",
-                            dropdownItems = listOf("Northern Lights")
-                        )
-                    },
-                )
-            },
-        )
+    ExpandableCardGroup {
+        expandableCard { id ->
+            RemoteScoutCard(
+                id = id,
+                modifier = modifier,
+                viewModel = viewModel,
+                navController = navController,
+            )
+        }
+        expandableCard { id ->
+            ServerCard(
+                id = id,
+                modifier = modifier,
+                viewModel = viewModel,
+                navController = navController,
+            )
+        }
+        expandableCard { id ->
+            SoloScoutCard(
+                id = id,
+                modifier = modifier,
+                viewModel = viewModel,
+                navController = navController,
+            )
+        }
     }
+}
+
+@Composable
+private fun RemoteScoutCard(
+    id: Int,
+    modifier: Modifier = Modifier,
+    viewModel: ModeSelectViewModel,
+    navController: NavController,
+) {
+    var server by remember { mutableStateOf(viewModel.remoteScoutData.server) }
+    var serverValidity by remember { mutableStateOf(true) }
+
+    ExpandableCard(
+        modifier = modifier,
+        header = {
+            CardHeader(
+                title = { Text(stringResource(R.string.mode_remote_scout)) },
+                description = { Text(stringResource(R.string.mode_remote_scout_description)) },
+            )
+        },
+        actions = {
+            TextButton(onClick = {
+                if (server.isEmpty()) serverValidity = false
+
+                if (serverValidity) {
+                    navController.navigate(Screen.Scout.route) {
+                        popUpTo(Screen.ModeSelect.route) { inclusive = true }
+                    }
+                }
+            }) {
+                Text(stringResource(R.string.mode_remote_scout_continue))
+            }
+        },
+        expanded = viewModel.expandedCard == id,
+        onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
+        content = {
+            // Server selection dropdown
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                FRCKrawlerDropdown(
+                    modifier = Modifier,
+                    value = server,
+                    onValueChange = {
+                        server = it
+                        viewModel.remoteScoutData = viewModel.remoteScoutData.copy(server = server)
+                    },
+                    validity = serverValidity,
+                    validityCheck = {
+                        serverValidity = it.isNotEmpty()
+                    },
+                    label = "Server",
+                    dropdownItems = listOf("KnightKrawler", "team 3053")
+                )
+                Spacer(modifier = Modifier.width(spaceLarge))
+                TextButton(onClick = { /*TODO*/ }) {
+                    Text("Refresh")
+                }
+            }
+        },
+    )
+}
+
+@Composable
+private fun ServerCard(
+    id: Int,
+    modifier: Modifier = Modifier,
+    viewModel: ModeSelectViewModel,
+    navController: NavController,
+) {
+    var teamNumber by remember { mutableStateOf(viewModel.serverData.teamNumber) }
+    var teamNumberValidity by remember { mutableStateOf(true) }
+    val teamNumberLength = 4
+
+    var serverName by remember { mutableStateOf(viewModel.serverData.serverName) }
+    var serverNameValidity by remember { mutableStateOf(true) }
+    val serverNameLengthRange = IntRange(4, 20)
+
+    var game by remember { mutableStateOf(viewModel.serverData.game) }
+    var gameValidity by remember { mutableStateOf(true) }
+
+    var event by remember { mutableStateOf(viewModel.serverData.event) }
+    var eventValidity by remember { mutableStateOf(true) }
+
+    ExpandableCard(
+        modifier = modifier,
+        header = {
+            CardHeader(
+                title = { Text(stringResource(R.string.mode_server)) },
+                description = { Text(stringResource(R.string.mode_server_description)) },
+            )
+        },
+        actions = {
+            TextButton(onClick = {
+                if (teamNumber.length != teamNumberLength) teamNumberValidity = false
+                if (serverName.length !in serverNameLengthRange) serverNameValidity = false
+                if (game.isEmpty()) gameValidity = false
+                if (event.isEmpty()) eventValidity = false
+
+                if (teamNumberValidity && serverNameValidity && gameValidity && eventValidity) {
+                    navController.navigate(Screen.Server.route) {
+                        popUpTo(Screen.ModeSelect.route) { inclusive = true }
+                    }
+                }
+            }) {
+                Text(stringResource(R.string.mode_server_continue))
+            }
+        },
+        expanded = viewModel.expandedCard == id,
+        onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
+        content = {
+            // Team number text field
+            FRCKrawlerTextField(
+                modifier = Modifier.padding(bottom = spaceMedium),
+                value = teamNumber,
+                onValueChange = { value ->
+                    if (value.length <= teamNumberLength) teamNumber = value
+                    viewModel.serverData = viewModel.serverData.copy(teamNumber = teamNumber)
+                },
+                validity = teamNumberValidity,
+                validityCheck = { value ->
+                    teamNumberValidity = value.isDigitsOnly() && value.length == teamNumberLength
+                },
+                isError = { validity -> !validity },
+                label = "Team Number",
+                keyboardType = KeyboardType.NumberPassword,
+            )
+
+            // Server name text field
+            var serverNameHasFocus by remember { mutableStateOf(false) }
+            FRCKrawlerTextField(
+                modifier = Modifier.padding(bottom = spaceMedium),
+                value = serverName,
+                onValueChange = { value ->
+                    if (value.length <= serverNameLengthRange.last) serverName = value
+                    serverNameValidity = value.length in serverNameLengthRange
+
+                    viewModel.serverData = viewModel.serverData.copy(serverName = serverName)
+                },
+                validity = serverNameValidity,
+                validityCheck = { value ->
+                    serverNameValidity = value.length in serverNameLengthRange
+                },
+                isError = { validity -> !validity },
+                label = "Server Name" + if (serverNameHasFocus) " - ${serverName.length}/${serverNameLengthRange.last}" else "",
+                onFocusChange = { serverNameHasFocus = it },
+            )
+
+            // Game selection dropdown
+            FRCKrawlerDropdown(
+                modifier = Modifier.padding(bottom = spaceMedium),
+                value = game,
+                onValueChange = {
+                    game = it
+                    viewModel.serverData = viewModel.serverData.copy(game = game)
+                },
+                validity = gameValidity,
+                validityCheck = {
+                    gameValidity = it.isNotEmpty()
+                },
+                label = "Game",
+                dropdownItems = listOf("Infinite Recharge at Home", "Infinite Recharge", "Rover Ruckus")
+            )
+
+            // Event selection dropdown
+            FRCKrawlerDropdown(
+                value = event,
+                onValueChange = {
+                    event = it
+                    viewModel.serverData = viewModel.serverData.copy(event = event)
+                },
+                validity = eventValidity,
+                validityCheck = {
+                    eventValidity = it.isNotEmpty()
+                },
+                label = "Event",
+                dropdownItems = listOf("Northern Lights")
+            )
+        },
+    )
+}
+
+@Composable
+private fun SoloScoutCard(
+    id: Int,
+    modifier: Modifier = Modifier,
+    viewModel: ModeSelectViewModel,
+    navController: NavController,
+) {
+    var game by remember { mutableStateOf(viewModel.soloScoutData.game) }
+    var gameValidity by remember { mutableStateOf(true) }
+
+    var event by remember { mutableStateOf(viewModel.soloScoutData.event) }
+    var eventValidity by remember { mutableStateOf(true) }
+
+    ExpandableCard(
+        modifier = modifier,
+        header = {
+            CardHeader(
+                title = { Text(stringResource(R.string.mode_solo_scout)) },
+                description = { Text(stringResource(R.string.mode_solo_scout_description)) },
+            )
+        },
+        actions = {
+            TextButton(onClick = {
+                if (game.isEmpty()) gameValidity = false
+                if (event.isEmpty()) eventValidity = false
+
+                if (gameValidity && eventValidity) {
+                    navController.navigate(Screen.Scout.route) {
+                        popUpTo(Screen.ModeSelect.route) { inclusive = true }
+                    }
+                }
+            }) {
+                Text(stringResource(R.string.mode_solo_scout_continue))
+            }
+        },
+        expanded = viewModel.expandedCard == id,
+        onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
+        content = {
+            // Game selection dropdown
+            FRCKrawlerDropdown(
+                modifier = Modifier.padding(bottom = spaceMedium),
+                value = game,
+                onValueChange = {
+                    game = it
+                    viewModel.serverData = viewModel.serverData.copy(game = game)
+                },
+                validity = gameValidity,
+                validityCheck = {
+                    gameValidity = it.isNotEmpty()
+                },
+                label = "Game",
+                dropdownItems = listOf("Infinite Recharge at Home", "Infinite Recharge", "Rover Ruckus")
+            )
+
+            // Event selection dropdown
+            FRCKrawlerDropdown(
+                value = event,
+                onValueChange = {
+                    event = it
+                    viewModel.serverData = viewModel.serverData.copy(event = event)
+                },
+                validity = eventValidity,
+                validityCheck = {
+                    eventValidity = it.isNotEmpty()
+                },
+                label = "Event",
+                dropdownItems = listOf("Northern Lights")
+            )
+        },
+    )
 }
 
 @Preview

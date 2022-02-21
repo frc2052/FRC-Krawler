@@ -21,23 +21,63 @@ import com.team2052.frckrawler.ui.theme.borderWidth
 import com.team2052.frckrawler.ui.theme.spaceLarge
 import com.team2052.frckrawler.ui.theme.spaceMedium
 import java.util.*
+import kotlin.math.exp
 
 private val cardElevation = 4.dp
 
 @Composable
-fun FRCKrawlerExpandableCardGroup(
+fun CardGroupExample(modifier: Modifier) {
+    ExpandableCardGroup(modifier = modifier) {
+        expandableCard { id ->
+            ExpandableCard(
+                header = { /*TODO*/ },
+                expanded = id == currentExpandedCardIndex,
+                onExpanded = { expanded -> currentExpandedCardIndex = if (expanded) id else -1 }
+            )
+        }
+        expandableCard { id ->
+
+        }
+        expandableCard { id ->
+
+        }
+    }
+}
+
+@Composable
+fun ExpandableCardGroup(
     modifier: Modifier = Modifier,
-    content: () -> List<@Composable (Modifier, Int) -> Unit>,
+    builder: CardGroupBuilder.() -> Unit,
 ) {
-    var internalCardCount = 0
-    for(composable in content()) { composable(modifier, internalCardCount++) }
+    val cardGroupBuilder = remember {
+        CardGroupBuilder().apply(builder)
+    }
+    val cards = cardGroupBuilder.build()
+
+    Column(modifier = modifier) {
+        for (index in cards.indices) {
+            cards[index](index)
+        }
+    }
+}
+
+open class CardGroupBuilder {
+    private var cards: MutableList<@Composable (Int) -> Unit> = mutableListOf()
+
+    var currentExpandedCardIndex = -1
+
+    fun expandableCard(content: @Composable (Int) -> Unit) {
+        cards += content
+    }
+
+    fun build() = cards
 }
 
 // TODO: Extract border color into material theme background color
 @Composable
-fun FRCKrawlerCard(
+fun Card(
     modifier: Modifier = Modifier,
-    header: @Composable () -> Unit = { FRCKrawlerCardHeader() },
+    header: @Composable () -> Unit = { CardHeader() },
     actions: (@Composable RowScope.(Modifier) -> Unit)? = null,
     content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
@@ -88,7 +128,7 @@ fun FRCKrawlerCard(
 }
 
 @Composable
-fun FRCKrawlerCardHeader(
+fun CardHeader(
     modifier: Modifier = Modifier,
     title: (@Composable RowScope.() -> Unit)? = null,
     description: (@Composable RowScope.() -> Unit)? = null,
@@ -109,14 +149,14 @@ fun FRCKrawlerCardHeader(
 }
 
 @Composable
-fun FRCKrawlerExpandableCard(
+fun ExpandableCard(
     modifier: Modifier = Modifier,
     header: @Composable () -> Unit,
     actions: (@Composable RowScope.(Modifier) -> Unit)? = null,
     expanded: Boolean,
     onExpanded: (Boolean) -> Unit = { },
     content: (@Composable ColumnScope.() -> Unit)? = null,
-) = FRCKrawlerCard(
+) = Card(
     modifier = modifier,
     header = {
         Row(
