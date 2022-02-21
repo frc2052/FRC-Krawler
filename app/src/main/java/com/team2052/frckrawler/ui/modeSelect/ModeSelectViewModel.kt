@@ -30,12 +30,16 @@ class ModeSelectViewModel @Inject constructor(
 
     var expandedCard by mutableStateOf(-1)
 
-    var remoteScoutData: ScoutData by mutableStateOf(ScoutData())
+    var remoteScoutData: RemoteScoutData by mutableStateOf(RemoteScoutData())
     var serverData: ServerData by mutableStateOf(ServerData())
-    var soloScoutData: ScoutData by mutableStateOf(ScoutData())
+    var soloScoutData: SoloScoutData by mutableStateOf(SoloScoutData())
 }
 
-data class ScoutData(
+data class RemoteScoutData(
+    val server: String = "",
+)
+
+data class SoloScoutData(
     val game: String = "",
     val event: String = "",
 )

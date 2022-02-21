@@ -16,20 +16,20 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun FRCKrawlerAppBar(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    scaffoldState: ScaffoldState,
     navigation: @Composable () -> Unit = {
         val scope = rememberCoroutineScope()
         if (navController.previousBackStackEntry == null) {
             IconButton(onClick = {
-                if (!scaffoldState.drawerState.isAnimationRunning) {
-                    scope.launch {
-                        scaffoldState.drawerState.open()
-                    }
+                Timber.d("BUTTON CLICKED!")
+                scope.launch {
+                    scaffoldState.drawerState.open()
                 }
             }) {
                 Icon(
@@ -72,7 +72,10 @@ fun FRCKrawlerAppBar(
 @Composable
 private fun FRCKrawlerAppBarPreviewLight() {
     FrcKrawlerTheme(darkTheme = false) {
-        FRCKrawlerAppBar(title = { Text("Preview") })
+        FRCKrawlerAppBar(
+            title = { Text("preview") },
+            scaffoldState = rememberScaffoldState(),
+        )
     }
 }
 
@@ -80,6 +83,9 @@ private fun FRCKrawlerAppBarPreviewLight() {
 @Composable
 private fun FRCKrawlerAppBarPreviewDark() {
     FrcKrawlerTheme(darkTheme = true) {
-        FRCKrawlerAppBar(title = { Text("Preview") })
+        FRCKrawlerAppBar(
+            title = { Text("preview") },
+            scaffoldState = rememberScaffoldState(),
+        )
     }
 }

@@ -1,15 +1,14 @@
-package com.team2052.frckrawler.ui.nav
+package com.team2052.frckrawler.ui.navigation
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.*
-import androidx.navigation.compose.NamedNavArgument
 import com.google.accompanist.navigation.animation.*
 import com.team2052.frckrawler.ui.modeSelect.ModeSelectScreen
 import com.team2052.frckrawler.ui.scout.ScoutHomeScreen
 import com.team2052.frckrawler.ui.scout.ScoutMatchesScreen
-import com.team2052.frckrawler.ui.nav.Screen.*
+import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.server.ServerGamesScreen
 import com.team2052.frckrawler.ui.server.ServerHomeScreen
 import com.team2052.frckrawler.ui.server.ServerMatchesScreen
@@ -19,33 +18,27 @@ import com.team2052.frckrawler.ui.server.metrics.PitMetricsScreen
 private const val transitionOffset = 400
 private const val transitionDuration = 400
 
-// Enter transition smoothly brings the screen in from the right.
-@ExperimentalAnimationApi
-private val defaultEnterTransition = slideInHorizontally(
-    initialOffsetX = { transitionOffset },
-    animationSpec = tween(transitionDuration)
-) + fadeIn(animationSpec = tween(transitionDuration))
-
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation(initialScreen: Screen = ModeSelect) {
     // The universal navigation controller used for all navigation throughout the app.
     val navController = rememberAnimatedNavController()
+
     AnimatedNavHost(
         navController = navController,
         startDestination = initialScreen.route,
-        enterTransition = { _, _ ->
+        enterTransition = {
             EnterTransition.None
         },
-        exitTransition = { _, _ ->
+        exitTransition = {
             ExitTransition.None
         },
     ) {
         composable(
             screen = ModeSelect,
-            enterTransition = { initial, _ ->
+            enterTransition = {
                 // Check if mode select is the first screen and run the startup animation accordingly.
-                if (initial.destination.route == null) {
+                if (initialState.destination.route == null) {
                     fadeIn(animationSpec = tween(transitionDuration))
                 } else {
                     slideInHorizontally(
@@ -53,7 +46,7 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
                         animationSpec = tween(transitionDuration)
                     ) + fadeIn(animationSpec = tween(transitionDuration))
                 }
-            },
+            }
         ) {
             ModeSelectScreen(navController = navController)
         }
@@ -92,8 +85,8 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
             }
 
             navigation(
-                navigation = Metrics,
                 initialScreen = MatchMetrics,
+                navigation = Metrics,
             ) {
                 composable(screen = MatchMetrics) {
                     MatchMetricsScreen(navController = navController)
@@ -107,27 +100,26 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
     }
 }
 
+// Wrapper function for adding a composable element using the Screen class
 @ExperimentalAnimationApi
 private fun NavGraphBuilder.composable(
     screen: Screen,
-    arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
     enterTransition: (
-        (initial: NavBackStackEntry, target: NavBackStackEntry) -> EnterTransition?
+        AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?
     )? = null,
     exitTransition: (
-        (initial: NavBackStackEntry, target: NavBackStackEntry) -> ExitTransition?
+        AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?
     )? = null,
     popEnterTransition: (
-        (initial: NavBackStackEntry, target: NavBackStackEntry) -> EnterTransition?
+        AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?
     )? = enterTransition,
     popExitTransition: (
-        (initial: NavBackStackEntry, target: NavBackStackEntry) -> ExitTransition?
+        AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?
     )? = exitTransition,
-    content: @Composable (NavBackStackEntry) -> Unit,
+    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit,
 ) = composable(
     route = screen.route,
-    arguments = arguments,
     deepLinks = deepLinks,
     enterTransition = enterTransition,
     exitTransition = exitTransition,
@@ -136,21 +128,22 @@ private fun NavGraphBuilder.composable(
     content = content
 )
 
+// Wrapper function for adding a composable element using the Screen class
 @ExperimentalAnimationApi
 private fun NavGraphBuilder.navigation(
-    navigation: Screen,
     initialScreen: Screen,
+    navigation: Screen,
     enterTransition: (
-        (initial: NavBackStackEntry, target: NavBackStackEntry) -> EnterTransition
+    AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?
     )? = null,
     exitTransition: (
-        (initial: NavBackStackEntry, target: NavBackStackEntry) -> ExitTransition
+    AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?
     )? = null,
     popEnterTransition: (
-        (initial: NavBackStackEntry, target: NavBackStackEntry) -> EnterTransition
+    AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?
     )? = enterTransition,
     popExitTransition: (
-        (initial: NavBackStackEntry, target: NavBackStackEntry) -> ExitTransition
+    AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?
     )? = exitTransition,
     builder: NavGraphBuilder.() -> Unit
 ) = navigation(

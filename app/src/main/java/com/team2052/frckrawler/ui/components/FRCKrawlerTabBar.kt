@@ -8,7 +8,7 @@ import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.team2052.frckrawler.ui.nav.Screen
+import com.team2052.frckrawler.ui.navigation.Screen
 import java.util.*
 
 @Composable
