@@ -4,48 +4,49 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.team2052.frckrawler.ui.NavScreen
+import com.team2052.frckrawler.ui.navigation.Screen
 import java.util.*
 
 @Composable
 fun FRCKrawlerTabBar(
     modifier: Modifier = Modifier,
-    parentNavScreen: NavScreen,
-    selectedTabIndex: Int = 0,
-    onTabSelected: (NavScreen) -> Unit = { },
-) = ScrollableTabRow(
-    selectedTabIndex = selectedTabIndex,
-    modifier = modifier.height(48.dp),
+    navigation: Screen,
+    currentScreen: Screen,
+    onTabSelected: (Screen) -> Unit = { },
 ) {
-    parentNavScreen::class.nestedClasses.mapIndexed { index, it ->
-        val screen = it.objectInstance as NavScreen
-        val selected = (selectedTabIndex == index)
-        val enabled = screen.route.isNotEmpty()
-        Tab(
-            modifier = Modifier
-                .padding(horizontal = 48.dp)
-                .fillMaxHeight(),
-            selected = selected,
-            onClick = { if (enabled) onTabSelected(screen) },
-            enabled = enabled,
-            selectedContentColor = MaterialTheme.colors.secondary,
-            unselectedContentColor = MaterialTheme.colors.onPrimary,
+    if (navigation.screens.contains(currentScreen)) {
+        val selectedTabIndex = navigation.screens.indexOf(currentScreen)
+        ScrollableTabRow(
+            modifier = modifier.height(48.dp),
+            selectedTabIndex = selectedTabIndex,
+            backgroundColor = MaterialTheme.colors.primary,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    modifier = Modifier.tabIndicatorOffset(
+                        tabPositions[selectedTabIndex]
+                    ),
+                    color = MaterialTheme.colors.secondary,
+                )
+            },
         ) {
-            Text(screen.title.toUpperCase(Locale.getDefault()))
-//            ProvideTextStyle(
-//                MaterialTheme.typography.button.copy(
-//                    color = if (selected) {
-//                        MaterialTheme.colors.secondary
-//                    } else {
-//                        MaterialTheme.colors.onPrimary
-//                    }
-//                )
-//            ) {
-//                Text(screen.title.toUpperCase(Locale.getDefault()))
-//            }
+            navigation.screens.forEachIndexed { index, screen ->
+                Tab(
+                    modifier = Modifier.fillMaxHeight(),
+                    selected = index == selectedTabIndex,
+                    onClick = { onTabSelected(screen) },
+                    selectedContentColor = MaterialTheme.colors.secondary,
+                    unselectedContentColor = MaterialTheme.colors.onPrimary,
+                ) {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 48.dp),
+                        text = screen.title.uppercase(Locale.getDefault()),
+                    )
+                }
+            }
         }
     }
 }
