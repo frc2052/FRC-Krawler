@@ -13,93 +13,134 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.ui.theme.borderWidth
+import com.team2052.frckrawler.ui.theme.spaceLarge
+import com.team2052.frckrawler.ui.theme.spaceMedium
 import java.util.*
+import kotlin.math.exp
+
+private val cardElevation = 4.dp
 
 @Composable
-fun FRCKrawlerExpandableCardGroup(
-    modifier: Modifier = Modifier,
-    content: () -> List<@Composable (Modifier, Int) -> Unit>,
-) {
-    var internalCardCount = 0
-    for(composable in content()) { composable(modifier, internalCardCount++) }
-}
-
-// TODO: Extract border color into material theme background color
-@Composable
-fun FRCKrawlerCard(
-    modifier: Modifier = Modifier,
-    header: @Composable () -> Unit,
-    actions: Map<String, () -> Unit> = emptyMap(),
-    content: (@Composable ColumnScope.() -> Unit)? = null,
-) = Card(
-    modifier = modifier.fillMaxWidth(),
-    shape = RoundedCornerShape(4.dp),
-    border = BorderStroke(2.dp, Color(0xFFF5F5F5)),
-    elevation = LocalCardElevation.current,
-) {
-    Column(
-        modifier = Modifier
-            .animateContentSize(
-                animationSpec = tween(
-                    durationMillis = 300,
-                    easing = FastOutSlowInEasing,
-                )
-            ),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        header()
-        content?.let { content ->
-            Column(
-                modifier = Modifier.padding(horizontal = 24.dp).also {
-                    if (actions.isNotEmpty()) it.padding(bottom = 24.dp)
-                }
-            ) { content() }
-        }
-        if (actions.isNotEmpty()) {
-            Divider(
-                color = Color(0xFFF5F5F5),
-                thickness = 2.dp,
+fun CardGroupExample(modifier: Modifier) {
+    ExpandableCardGroup(modifier = modifier) {
+        expandableCard { id ->
+            ExpandableCard(
+                header = { /*TODO*/ },
+                expanded = id == currentExpandedCardIndex,
+                onExpanded = { expanded -> currentExpandedCardIndex = if (expanded) id else -1 }
             )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.End,
-            ) {
-                actions.forEach { action ->
-                    TextButton(
-                        modifier = Modifier.padding(start = 24.dp),
-                        onClick = { action.value() },
-                    ) {
-                        Text(
-                            text = action.key.toUpperCase(Locale.getDefault()),
-                            color = MaterialTheme.colors.secondary,
-                        )
-                    }
-                }
-            }
-        } else if (content != null) {
-            Spacer(modifier = Modifier.height(24.dp))
+        }
+        expandableCard { id ->
+
+        }
+        expandableCard { id ->
+
         }
     }
 }
 
 @Composable
-fun FRCKrawlerCardHeader(
+fun ExpandableCardGroup(
     modifier: Modifier = Modifier,
-    title: @Composable RowScope.() -> Unit,
+    builder: CardGroupBuilder.() -> Unit,
+) {
+    val cardGroupBuilder = remember {
+        CardGroupBuilder().apply(builder)
+    }
+    val cards = cardGroupBuilder.build()
+
+    Column(modifier = modifier) {
+        for (index in cards.indices) {
+            cards[index](index)
+        }
+    }
+}
+
+open class CardGroupBuilder {
+    private var cards: MutableList<@Composable (Int) -> Unit> = mutableListOf()
+
+    var currentExpandedCardIndex = -1
+
+    fun expandableCard(content: @Composable (Int) -> Unit) {
+        cards += content
+    }
+
+    fun build() = cards
+}
+
+// TODO: Extract border color into material theme background color
+@Composable
+fun Card(
+    modifier: Modifier = Modifier,
+    header: @Composable () -> Unit = { CardHeader() },
+    actions: (@Composable RowScope.(Modifier) -> Unit)? = null,
+    content: (@Composable ColumnScope.() -> Unit)? = null,
+) {
+    val elevationOverlay = LocalElevationOverlay.current
+    val absoluteElevation = LocalAbsoluteElevation.current + cardElevation / 2
+    val borderColor = elevationOverlay?.apply(MaterialTheme.colors.surface, absoluteElevation)
+        ?: MaterialTheme.colors.surface
+
+    Card(
+        modifier = modifier
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(4.dp),
+        border = BorderStroke(borderWidth, borderColor),
+        elevation = cardElevation,
+    ) {
+        Column(
+            modifier = Modifier
+                .animateContentSize(
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = FastOutSlowInEasing,
+                    )
+                ),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            header()
+            if (content != null) {
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .padding(bottom = if (actions == null) 24.dp else 0.dp),
+                ) { content() }
+            }
+            if (actions != null) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.End,
+                ) {
+                    ProvideTextStyle(MaterialTheme.typography.button.copy(color = MaterialTheme.colors.primary)) {
+                        actions(Modifier.padding(start = spaceLarge))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CardHeader(
+    modifier: Modifier = Modifier,
+    title: (@Composable RowScope.() -> Unit)? = null,
     description: (@Composable RowScope.() -> Unit)? = null,
 ) = Column(modifier = modifier
     .fillMaxWidth()
-    .padding(24.dp)) {
-    CompositionLocalProvider(
-        LocalTextStyle provides if (description != null)
-            MaterialTheme.typography.h6 else MaterialTheme.typography.h5
-    ) { Row { title() } }
+    .padding(horizontal = 24.dp)
+    .padding(bottom = 24.dp)) {
+    title?.let { title ->
+        CompositionLocalProvider(
+            LocalTextStyle provides MaterialTheme.typography.h6.copy(fontWeight = FontWeight.SemiBold)
+        ) { Row(modifier = Modifier.padding(top = 24.dp)) { title() } }
+    }
     description?.let { description ->
         CompositionLocalProvider(
             LocalTextStyle provides MaterialTheme.typography.subtitle1
@@ -108,14 +149,14 @@ fun FRCKrawlerCardHeader(
 }
 
 @Composable
-fun FRCKrawlerExpandableCard(
+fun ExpandableCard(
     modifier: Modifier = Modifier,
     header: @Composable () -> Unit,
-    actions: Map<String, () -> Unit> = emptyMap(),
+    actions: (@Composable RowScope.(Modifier) -> Unit)? = null,
     expanded: Boolean,
     onExpanded: (Boolean) -> Unit = { },
     content: (@Composable ColumnScope.() -> Unit)? = null,
-) = FRCKrawlerCard(
+) = Card(
     modifier = modifier,
     header = {
         Row(
@@ -131,7 +172,7 @@ fun FRCKrawlerExpandableCard(
             ) {
                 Icon(
                     modifier = Modifier.fillMaxSize(),
-                    imageVector = if (content != null || actions.isNotEmpty()) {
+                    imageVector = if (content != null || actions != null) {
                         when (expanded) {
                             true -> Icons.Filled.KeyboardArrowDown
                             false -> Icons.Filled.KeyboardArrowUp
@@ -142,6 +183,6 @@ fun FRCKrawlerExpandableCard(
             }
         }
     },
-    actions = if (expanded) actions else emptyMap(),
+    actions = if (expanded) actions else null,
     content = if (expanded) content else null,
 )

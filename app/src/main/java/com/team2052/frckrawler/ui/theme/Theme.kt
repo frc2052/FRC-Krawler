@@ -5,8 +5,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import com.team2052.frckrawler.compose.theme.*
 
 /*
 primary,
@@ -24,48 +22,49 @@ onError,
 */
 
 private val DarkColorPalette = darkColors(
-    primary =           FRCKrawlerColor.maroon200,
-    primaryVariant =    FRCKrawlerColor.maroon500,
-    onPrimary =         Color.White,
+    primary =           maroon200,
+    primaryVariant =    maroon500,
+    onPrimary =         white,
 
-    secondary =         FRCKrawlerColor.yellow200,
-    secondaryVariant =  FRCKrawlerColor.yellow500,
-    onSecondary =       Color.Black,
+    secondary =         yellow200,
+    secondaryVariant =  yellow500,
+    onSecondary =       black,
 
-    surface =           FRCKrawlerColor.backgroundDark,
-    onSurface =         Color.White,
+    surface =           black,
+    onSurface =         white,
 
-    background =        FRCKrawlerColor.backgroundDark,
-    onBackground =      Color.White,
+    background =        black,
+    onBackground =      white,
 
-    error =             FRCKrawlerColor.red,
-    onError =           Color.Black,
+    error =             red,
+    onError =           white,
 )
 
 private val LightColorPalette = lightColors(
-    primary =           FRCKrawlerColor.maroon200,
-    primaryVariant =    FRCKrawlerColor.maroon500,
-    onPrimary =         Color.White,
+    primary =           maroon200,
+    primaryVariant =    maroon500,
+    onPrimary =         white,
 
-    secondary =         FRCKrawlerColor.yellow200,
-    secondaryVariant =  FRCKrawlerColor.yellow500,
-    onSecondary =       Color.Black,
+    secondary =         yellow200,
+    secondaryVariant =  yellow500,
+    onSecondary =       black,
 
-    surface =           Color(0xFFFFFFFF),
-    onSurface =         Color.Black,
+    surface =           white,
+    onSurface =         black,
 
-    background =        FRCKrawlerColor.backgroundLight,
-    onBackground =      Color.Black,
+    background =        white,
+    onBackground =      black,
 
-    error =             FRCKrawlerColor.red,
-    onError =           Color.Black,
+    error =             red,
+    onError =           black,
 )
 
 @Composable
-fun FrcKrawlerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    MaterialTheme(
-        colors = if (darkTheme) DarkColorPalette else LightColorPalette,
-        shapes = shapes,
-        content = content
-    )
-}
+fun FrcKrawlerTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit,
+) = MaterialTheme(
+    colors = if (darkTheme) DarkColorPalette else LightColorPalette,
+    shapes = shapes,
+    content = content
+)

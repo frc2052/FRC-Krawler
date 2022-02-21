@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--TODO: Update colors-->
 <resources>
     <color name="maroon_200">#450000</color>
     <color name="maroon_500">#2A0000</color>
@@ -6,11 +7,5 @@
     <color name="black_121">#121212</color>
     <color name="black_000">#000000</color>
     <color name="red_ERROR">#CF6679</color>
-    <color name="white_FFF">#FFFFFF</color>
-
-
-
-
-
-
+    <color name="white_FFF">#FAFAFA</color>
 </resources>
