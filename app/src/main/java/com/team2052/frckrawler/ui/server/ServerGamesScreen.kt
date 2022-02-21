@@ -1,15 +1,12 @@
 package com.team2052.frckrawler.ui.server
 
-import android.widget.TableRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +16,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.components.*
-import com.team2052.frckrawler.ui.nav.Screen.*
+import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
@@ -85,7 +82,19 @@ fun ServerGamesScreen(
             FRCKrawlerDrawer()
         },
         background = {
-            // TODO: If there are no games set the background to the no games background
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Icon(
+                    modifier = Modifier.size(128.dp),
+                    imageVector = Icons.Filled.Analytics,
+                    contentDescription = "Background",
+                    tint = MaterialTheme.colors.secondary,
+                )
+                Text(text = "No Games", style = MaterialTheme.typography.h4)
+            }
         }
     ) { contentPadding ->
         ServerSeasonsScreenContent(

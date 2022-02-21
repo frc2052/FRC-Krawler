@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.ui.server
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -10,9 +9,8 @@ import androidx.navigation.NavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
-import com.team2052.frckrawler.ui.components.FRCKrawlerSnackbarController
 import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
-import com.team2052.frckrawler.ui.nav.Screen
+import com.team2052.frckrawler.ui.navigation.Screen
 
 @Composable
 fun ServerMatchesScreen(

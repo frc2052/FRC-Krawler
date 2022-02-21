@@ -3,7 +3,7 @@ package com.team2052.frckrawler.ui.scout
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import com.team2052.frckrawler.bluetooth.BluetoothController
-import com.team2052.frckrawler.ui.nav.Screen
+import com.team2052.frckrawler.ui.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

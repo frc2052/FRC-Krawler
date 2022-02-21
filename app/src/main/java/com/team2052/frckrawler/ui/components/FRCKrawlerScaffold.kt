@@ -15,10 +15,6 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.theme.*
 
-data class FRCKrawlerScaffold(
-    val thing: String
-)
-
 @Composable
 fun FRCKrawlerScaffold(
     modifier: Modifier = Modifier,
@@ -61,7 +57,7 @@ fun FRCKrawlerScaffold(
     floatingActionButton = floatingActionButton,
     floatingActionButtonPosition = FabPosition.End,
     drawerContent = if (
-        scaffoldState.drawerState.isClosed && !scaffoldState.drawerState.isAnimationRunning
+        !scaffoldState.drawerState.isClosed
     ) drawerContent else null,
     backgroundColor = MaterialTheme.colors.background,
 ) {
