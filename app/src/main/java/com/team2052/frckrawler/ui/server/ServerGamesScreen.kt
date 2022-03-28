@@ -70,7 +70,8 @@ fun ServerGamesScreen(
         ServerSeasonsScreenContent(
             modifier = Modifier.padding(contentPadding),
             listOfGames = listOfGames,
-            onOpen = {}
+            onOpen = {},
+            navController = navController
         )
         if (addGameDialogOpen) {
             AddGameDialog(
@@ -177,7 +178,8 @@ private fun AddGameDialog(
 fun ServerSeasonsScreenContent(
     modifier: Modifier = Modifier,
     listOfGames: List<String>,
-    onOpen:() -> Unit
+    onOpen:() -> Unit,
+    navController: NavController
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         listOfGames.forEach { game ->
@@ -185,6 +187,7 @@ fun ServerSeasonsScreenContent(
                 modifier = Modifier.padding(12.dp),
                 onClick = {
                     onOpen()
+                    navController.navigate(Metrics.route)
                 }
             ) {
                 Text(
