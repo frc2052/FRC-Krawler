@@ -6,7 +6,7 @@ buildscript {
         retrofit_version = '2.9.0'
         okhttp_version = '4.9.0'
         moshi_version = '1.13.0'
-        room_version = '2.4.1'
+        room_version = '2.4.2'
         hilt_version = '2.38.1'
     }
 
