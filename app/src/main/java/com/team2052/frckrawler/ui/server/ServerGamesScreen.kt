@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.ui.components.*
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.navigation.Screen.*
@@ -29,9 +30,13 @@ fun ServerGamesScreen(
     navController: NavController,
 ) {
     val scaffoldState = rememberScaffoldState()
+    val viewModel: ServerGamesViewModel = hiltViewModel()
 
     var addGameDialogOpen by remember { mutableStateOf(false) }
-    var listOfGames by remember { mutableStateOf(emptyList<String>()) }
+
+    LaunchedEffect(true) {
+        viewModel.loadGames()
+    }
 
     FRCKrawlerScaffold(
         modifier = modifier,
@@ -62,20 +67,20 @@ fun ServerGamesScreen(
             FRCKrawlerDrawer()
         },
         background = {
-            if (listOfGames.isEmpty()) {
+            if (viewModel.games.isEmpty()) {
                 EmptyBackground()
             }
         }
     ) { contentPadding ->
         ServerSeasonsScreenContent(
             modifier = Modifier.padding(contentPadding),
-            listOfGames = listOfGames,
+            listOfGames = viewModel.games,
             onOpen = {},
             navController = navController
         )
         if (addGameDialogOpen) {
             AddGameDialog(
-                onAddGame = { newGame -> listOfGames = listOfGames + newGame },
+                onAddGame = { newGame -> viewModel.makeGame(newGame)},
                 onClose = { addGameDialogOpen = false },
             )
         }
@@ -177,7 +182,7 @@ private fun AddGameDialog(
 @Composable
 fun ServerSeasonsScreenContent(
     modifier: Modifier = Modifier,
-    listOfGames: List<String>,
+    listOfGames: List<Game>,
     onOpen:() -> Unit,
     navController: NavController
 ) {
@@ -191,10 +196,11 @@ fun ServerSeasonsScreenContent(
                 }
             ) {
                 Text(
-                    text = game,
+                    text = game.name,
                     style = MaterialTheme.typography.h4
                 )
             }
+            Divider()
         }
     }
 }
