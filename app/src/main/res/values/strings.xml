@@ -42,9 +42,9 @@
     <string name="mode_solo_scout_continue">START SCOUTING</string>
 
     <!--Scout Screens-->
-    <string name="scout_screen_title">scout</string>
-    <string name="scout_home_screen_title">home</string>
-    <string name="scout_matches_screen_title">matches</string>
+    <string name="scout_screen_title">Scout</string>
+    <string name="scout_home_screen_title">Home</string>
+    <string name="scout_matches_screen_title">Matches</string>
 
     <!--Server Screens-->
     <string name="server_screen_title">Server</string>
@@ -53,7 +53,7 @@
     <string name="server_games_screen_title">Games</string>
 
     <!--Metrics Screens-->
-    <string name="metrics_screen">metrics</string>
-    <string name="match_metrics_screen">match</string>
-    <string name="pit_metrics_screen">pit</string>
+    <string name="metrics_screen">Metrics</string>
+    <string name="match_metrics_screen">Match</string>
+    <string name="pit_metrics_screen">Pit</string>
 </resources>
