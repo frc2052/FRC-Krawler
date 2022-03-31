@@ -30,4 +30,12 @@ object DatabaseModule {
     ): GameDao {
         return database.gameDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideMetricsDao(
+        database: FRCKrawlerDatabase
+    ): MetricsDao {
+        return database.metricsDao()
+    }
 }
