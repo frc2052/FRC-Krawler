@@ -6,12 +6,14 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         Game::class,
-        Metric::class
+        MatchMetric::class,
+        PitMetric::class
                ],
     version = 1,
     exportSchema = false
 )
 abstract class FRCKrawlerDatabase: RoomDatabase() {
     abstract fun gameDao(): GameDao
-    abstract fun metricsDao(): MetricsDao
+    abstract fun matchMetricsDao(): MatchMetricsDao
+    abstract fun pitMetricsDao(): PitMetricsDao
 }
