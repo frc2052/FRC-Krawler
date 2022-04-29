@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +25,7 @@ import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
+import androidx.compose.material.TextField as TextField1
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -169,6 +172,7 @@ private fun MetricActions(onOpen: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun AddMetricDialog(
     onAddMetric: (String) -> Unit,
@@ -176,6 +180,8 @@ private fun AddMetricDialog(
 ) {
     var metricName by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
+    val options = listOf("Option 1")
+    var typeField by remember { mutableStateOf("") }
 
     Column {
         FRCKrawlerTextField(
@@ -187,31 +193,34 @@ private fun AddMetricDialog(
         Row(
             horizontalArrangement = Arrangement.End
         ) {
-            TextButton(
-                modifier = Modifier.padding(8.dp),
-                onClick = { expanded = true }
-            ) {
-                Text("TYPE")
-            }
-            DropdownMenu(
+            ExposedDropdownMenuBox(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onExpandedChange = {
+                    expanded = !expanded
+                }
             ) {
-                DropdownMenuItem(
-                    onClick = {}
+                Button(
+                    modifier = Modifier.padding(8.dp),
+                    onClick = { expanded },
                 ) {
-                    Text("Refresh")
+                    Text("Type ")
+                    Icon(Icons.Rounded.Menu, contentDescription = "Open Menu")
                 }
-                DropdownMenuItem(
-                    onClick = {}
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    }
                 ) {
-                    Text("Settings")
-                }
-                Divider()
-                DropdownMenuItem(
-                    onClick = {}
-                ) {
-                    Text("Send Feedback")
+                    options.forEach { typeField ->
+                        DropdownMenuItem(
+                            onClick = {
+                                expanded = false
+                            }
+                        ) {
+                            Text(text = typeField)
+                        }
+                    }
                 }
             }
         }
