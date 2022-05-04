@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,11 +19,9 @@ import com.team2052.frckrawler.data.local.MatchMetric
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
-import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
-import androidx.compose.material.TextField as TextField1
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -59,13 +55,17 @@ fun MatchMetricsScreen(
             )
         },
         floatingActionButton = {
-            MetricActions(
+            if (
+                sheetState.targetValue == ModalBottomSheetValue.Hidden
+            ) {
+                MetricActions(
                 onOpen = {
                     scope.launch {
                         sheetState.show()
+                        }
                     }
-                }
-            )
+                )
+            }
         },
         drawerContent = {
             FRCKrawlerDrawer()
@@ -168,89 +168,6 @@ private fun MetricActions(onOpen: () -> Unit) {
                    contentDescription = "Manual Metric Add"
                )
            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-private fun AddMetricDialog(
-    onAddMetric: (String) -> Unit,
-    onClose: () -> Unit
-) {
-    var metricName by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false) }
-    val options = listOf("Option 1")
-    var typeField by remember { mutableStateOf("") }
-
-    Column {
-        FRCKrawlerTextField(
-            modifier = Modifier.padding(top = 24.dp),
-            value = metricName,
-            onValueChange = { metricName = it },
-            label = "Name"
-        )
-        Row(
-            horizontalArrangement = Arrangement.End
-        ) {
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = {
-                    expanded = !expanded
-                }
-            ) {
-                Button(
-                    modifier = Modifier.padding(8.dp),
-                    onClick = { expanded },
-                ) {
-                    Text("Type ")
-                    Icon(Icons.Rounded.Menu, contentDescription = "Open Menu")
-                }
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = {
-                        expanded = false
-                    }
-                ) {
-                    options.forEach { typeField ->
-                        DropdownMenuItem(
-                            onClick = {
-                                expanded = false
-                            }
-                        ) {
-                            Text(text = typeField)
-                        }
-                    }
-                }
-            }
-        }
-        ProvideTextStyle(
-            LocalTextStyle.current.copy(
-                color = MaterialTheme.colors.secondary
-            )
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                TextButton(
-                    modifier = Modifier.padding(12.dp),
-                    onClick = {
-                        onClose()
-                    }
-                ) {
-                    Text("CANCEL")
-                }
-                TextButton(
-                    modifier = Modifier.padding(12.dp),
-                    onClick = {
-                        onAddMetric(metricName)
-                        onClose()
-                    }
-                ) {
-                    Text("SAVE")
-                }
-            }
         }
     }
 }

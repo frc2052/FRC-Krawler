@@ -154,57 +154,6 @@ private fun MetricActions(onOpen: () -> Unit) {
 }
 
 @Composable
-private fun AddMetricDialog(
-    onAddMetric: (String) -> Unit,
-    onClose: () -> Unit
-) {
-    var metricName by remember { mutableStateOf("") }
-    AlertDialog(
-        modifier = Modifier.fillMaxWidth(0.75f),
-        onDismissRequest = { onClose() },
-        title = { Text("Add New Metric") },
-        text = {
-            FRCKrawlerTextField(
-                modifier = Modifier.padding(top = 24.dp),
-                value = metricName,
-                onValueChange = { metricName = it},
-                label = "Name"
-            )
-        },
-        buttons = {
-            ProvideTextStyle(
-                LocalTextStyle.current.copy(
-                    color = MaterialTheme.colors.secondary
-                )
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(
-                        modifier = Modifier.padding(12.dp),
-                        onClick = {
-                            onClose()
-                        }
-                    ) {
-                        Text("CANCEL")
-                    }
-                    TextButton(
-                        modifier = Modifier.padding(12.dp),
-                        onClick = {
-                            onAddMetric(metricName)
-                            onClose()
-                        }
-                    ) {
-                        Text("SAVE")
-                    }
-                }
-            }
-        }
-    )
-}
-
-@Composable
 fun ServerSeasonsMetricContent(
     modifier: Modifier = Modifier,
     listOfPitMetrics: List<PitMetric>,
