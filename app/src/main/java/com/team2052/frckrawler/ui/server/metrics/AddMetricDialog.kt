@@ -4,8 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Maximize
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.Minimize
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.data.local.MetricType
@@ -24,6 +27,7 @@ fun AddMetricDialog(
     var selectedMetricType : MetricType? by remember { mutableStateOf(null) }
     var radioButtonState by remember { mutableStateOf(true) }
     val radioOptions = listOf("Yes", "No")
+    var numberText by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier.padding(24.dp)
@@ -48,7 +52,29 @@ fun AddMetricDialog(
                     }
                 }
             }
-            MetricType.Counter -> {}
+            MetricType.Counter -> {
+                Column(
+                    modifier = Modifier.padding(4.dp)
+                ) {
+                    Row() {
+                        IconButton(
+                            onClick = {}
+                        ) {
+                            Icon(Icons.Rounded.Minimize, contentDescription = "Minus")
+                        }
+                        TextField(
+                            value = numberText,
+                            onValueChange = { numberText = it },
+                            label = { Text("Number") }
+                        )
+                        IconButton(
+                            onClick = {}
+                        ) {
+                            Icon(Icons.Rounded.Maximize, contentDescription = "Plus")
+                        }
+                    }
+                }
+            }
             MetricType.Slider -> {}
             MetricType.Chooser -> {}
             MetricType.Checkbox -> {}
