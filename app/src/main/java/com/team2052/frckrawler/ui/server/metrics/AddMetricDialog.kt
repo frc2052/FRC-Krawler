@@ -28,6 +28,8 @@ fun AddMetricDialog(
     var radioButtonState by remember { mutableStateOf(true) }
     val radioOptions = listOf("Yes", "No")
     var numberText by rememberSaveable { mutableStateOf("") }
+    var sliderPosition by remember { mutableStateOf(0f) }
+    var sliderText by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier.padding(24.dp)
@@ -75,7 +77,25 @@ fun AddMetricDialog(
                     }
                 }
             }
-            MetricType.Slider -> {}
+            MetricType.Slider -> {
+                Column(
+                    modifier = Modifier.padding(4.dp)
+                ) {
+                    Row() {
+                        TextField(
+                            value = sliderText,
+                            onValueChange = { sliderText = it },
+                            label = { Text("Value") }
+                        )
+                        Slider(
+                            value = sliderPosition,
+                            onValueChange = {sliderPosition = it },
+                            valueRange = 0f..100f,
+                            steps = 5
+                        )
+                    }
+                }
+            }
             MetricType.Chooser -> {}
             MetricType.Checkbox -> {}
             MetricType.Stopwatch -> {}
