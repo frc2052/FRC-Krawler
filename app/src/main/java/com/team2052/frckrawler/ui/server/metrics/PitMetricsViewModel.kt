@@ -5,28 +5,28 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team2052.frckrawler.data.local.MatchMetric
-import com.team2052.frckrawler.data.local.MatchMetricsDao
+import com.team2052.frckrawler.data.local.PitMetric
+import com.team2052.frckrawler.data.local.PitMetricsDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MatchMetricsViewModel @Inject constructor(
-    private val matchMetricsDao: MatchMetricsDao
+class PitMetricsViewModel @Inject constructor(
+    private val pitMetricsDao: PitMetricsDao
 ): ViewModel() {
-    var matchMetrics: List<MatchMetric> by mutableStateOf(emptyList())
+    var pitMetrics: List<PitMetric> by mutableStateOf(emptyList())
 
-    fun loadMatchMetrics() {
+    fun loadPitMetrics() {
         viewModelScope.launch {
-            matchMetrics = matchMetricsDao.getAll()
+            pitMetrics = pitMetricsDao.getAll()
         }
     }
 
-    fun makeMatchMetric(name: String) {
+    fun makePitMetric(name: String) {
         viewModelScope.launch {
-            matchMetricsDao.insert(MatchMetric(name = name))
+            pitMetricsDao.insert(PitMetric(name = name))
         }
-        loadMatchMetrics()
+        loadPitMetrics()
     }
 }

@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.server.metrics
 
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,15 +15,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.data.local.Metric
+import com.team2052.frckrawler.data.local.MatchMetric
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
-import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
-import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MatchMetricsScreen(
     modifier: Modifier = Modifier,
@@ -30,17 +31,17 @@ fun MatchMetricsScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
     val viewModel: MatchMetricsViewModel = hiltViewModel()
-
-    var addMetricsDialogOpen by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(true) {
-        viewModel.loadMetrics()
+        viewModel.loadMatchMetrics()
     }
 
-    FRCKrawlerScaffold(
+    Scaffold(
         modifier = modifier,
         scaffoldState = scaffoldState,
-        appBar = {
+        topBar = {
             FRCKrawlerAppBar(
                 navController = navController,
                 scaffoldState = scaffoldState,
@@ -53,39 +54,57 @@ fun MatchMetricsScreen(
                 }
             )
         },
-        tabBar = {
-            FRCKrawlerTabBar(navigation = Screen.Metrics, currentScreen = Screen.MatchMetrics) { screen ->
-                navController.navigate(screen.route) {
-                    popUpTo(Screen.Metrics.route) { inclusive = true }
-                    launchSingleTop = true
-                }
-            }
-        },
         floatingActionButton = {
-            MetricActions(
-                onOpen = { addMetricsDialogOpen = true }
-            )
+            if (
+                sheetState.targetValue == ModalBottomSheetValue.Hidden
+            ) {
+                MetricActions(
+                onOpen = {
+                    scope.launch {
+                        sheetState.show()
+                        }
+                    }
+                )
+            }
         },
         drawerContent = {
             FRCKrawlerDrawer()
         },
-        background = {
-            if (viewModel.metrics.isEmpty()) {
-                EmptyBackground()
-            }
-        }
     ) { contentPadding ->
-        ServerSeasonsMetricContent(
-            modifier = Modifier.padding(contentPadding),
-            listOfMetrics = viewModel.metrics,
-            onOpen = {},
-            navController = navController
-        )
-        if (addMetricsDialogOpen) {
-            AddMetricDialog(
-                onAddMetric = { newMetric -> viewModel.makeMetric(newMetric) },
-                onClose = { addMetricsDialogOpen = false},
-            )
+        ModalBottomSheetLayout(
+            sheetState = sheetState,
+            sheetContent = {
+                AddMetricDialog(
+                    onAddMetric = { newMetric -> viewModel.makeMatchMetric(newMetric) },
+                    onClose = {
+                        scope.launch {
+                            sheetState.hide()
+                        }
+                    },
+                )
+            }
+        ) {
+            if (viewModel.matchMetrics.isEmpty()) {
+                EmptyBackground()
+            } else {
+                Column {
+                    FRCKrawlerTabBar(
+                        navigation = Screen.Metrics,
+                        currentScreen = Screen.MatchMetrics
+                    ) { screen ->
+                        navController.navigate(screen.route) {
+                            popUpTo(Screen.Metrics.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                    ServerSeasonsMetricContent(
+                        modifier = Modifier.padding(contentPadding),
+                        listOfMatchMetrics = viewModel.matchMetrics,
+                        onOpen = {},
+                        navController = navController
+                    )
+                }
+            }
         }
     }
 }
@@ -154,65 +173,14 @@ private fun MetricActions(onOpen: () -> Unit) {
 }
 
 @Composable
-private fun AddMetricDialog(
-    onAddMetric: (String) -> Unit,
-    onClose: () -> Unit
-) {
-    var metricName by remember { mutableStateOf("") }
-    AlertDialog(
-        modifier = Modifier.fillMaxWidth(0.75f),
-        onDismissRequest = { onClose() },
-        title = { Text("Add New Metric") },
-        text = {
-            FRCKrawlerTextField(
-                modifier = Modifier.padding(top = 24.dp),
-                value = metricName,
-                onValueChange = { metricName = it},
-                label = "Name"
-            )
-        },
-        buttons = {
-            ProvideTextStyle(
-                LocalTextStyle.current.copy(
-                    color = MaterialTheme.colors.secondary
-                )
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(
-                        modifier = Modifier.padding(12.dp),
-                        onClick = {
-                            onClose()
-                        }
-                    ) {
-                        Text("CANCEL")
-                    }
-                    TextButton(
-                        modifier = Modifier.padding(12.dp),
-                        onClick = {
-                            onAddMetric(metricName)
-                            onClose()
-                        }
-                    ) {
-                        Text("SAVE")
-                    }
-                }
-            }
-        }
-    )
-}
-
-@Composable
 fun ServerSeasonsMetricContent(
     modifier: Modifier = Modifier,
-    listOfMetrics: List<Metric>,
+    listOfMatchMetrics: List<MatchMetric>,
     onOpen: () -> Unit,
     navController: NavController
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        listOfMetrics.forEach { metric ->
+    Column(modifier = modifier.fillMaxSize()) {
+        listOfMatchMetrics.forEach { metric ->
             TextButton(
                 modifier = Modifier.padding(10.dp),
                 onClick = {
@@ -222,7 +190,7 @@ fun ServerSeasonsMetricContent(
             ) {
                 Text(
                     text = metric.name,
-                    style = MaterialTheme.typography.button
+                    style = MaterialTheme.typography.h4
                 )
             }
             Divider()
