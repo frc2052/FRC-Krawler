@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Metric(
+data class MatchMetric(
     @PrimaryKey(
         autoGenerate = true
     ) val id: Int = 0,
