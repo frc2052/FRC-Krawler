@@ -9,6 +9,7 @@ import com.team2052.frckrawler.ui.modeSelect.ModeSelectScreen
 import com.team2052.frckrawler.ui.scout.ScoutHomeScreen
 import com.team2052.frckrawler.ui.scout.ScoutMatchesScreen
 import com.team2052.frckrawler.ui.navigation.Screen.*
+import com.team2052.frckrawler.ui.scout.RemoteScoutHomeScreen
 import com.team2052.frckrawler.ui.server.ServerGamesScreen
 import com.team2052.frckrawler.ui.server.ServerHomeScreen
 import com.team2052.frckrawler.ui.server.ServerMatchesScreen
@@ -20,7 +21,7 @@ private const val transitionDuration = 400
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun Navigation(initialScreen: Screen = ModeSelect) {
+fun Navigation(initialScreen: Screen = RemoteScout) {
     // The universal navigation controller used for all navigation throughout the app.
     val navController = rememberAnimatedNavController()
 
@@ -51,6 +52,12 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
             ModeSelectScreen(navController = navController)
         }
 
+        composable(
+            screen = RemoteScout,
+        ) {
+            RemoteScoutHomeScreen(navController = navController)
+        }
+        
         navigation(
             navigation = Scout,
             initialScreen = ScoutHome,

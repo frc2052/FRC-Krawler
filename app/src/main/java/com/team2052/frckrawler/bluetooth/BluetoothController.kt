@@ -1,12 +1,9 @@
 package com.team2052.frckrawler.bluetooth
 
-import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.Composable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.Closeable
 import javax.inject.Inject

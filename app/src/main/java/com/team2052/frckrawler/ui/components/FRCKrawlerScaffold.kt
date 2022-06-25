@@ -15,6 +15,9 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.theme.*
 
+private val minContentWidth = 500.dp
+private val maxContentWidth = 700.dp
+
 @Composable
 fun FRCKrawlerScaffold(
     modifier: Modifier = Modifier,
@@ -34,13 +37,12 @@ fun FRCKrawlerScaffold(
                 .padding(spaceExtraLarge),
             painter = painterResource(R.drawable.ic_logo),
             contentDescription = stringResource(R.string.cd_background_logo),
-            colorFilter = ColorFilter.tint(
-                if (MaterialTheme.colors.isLight) {
-                    darkGray.copy(alpha = 0.05f)
-                } else {
-                    lightGray.copy(alpha = 0.05f)
-                }
-            ),
+            colorFilter = if (MaterialTheme.colors.isLight) {
+                ColorFilter.tint(darkGray.copy(alpha = 0.05f))
+            } else {
+                null
+            },
+            alpha = 0.2f,
         )
     },
     content: @Composable ColumnScope.(PaddingValues) -> Unit,
@@ -70,19 +72,17 @@ fun FRCKrawlerScaffold(
             swipeEnabled = onRefresh != null,
             refreshTriggerDistance = 96.dp,
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .then(
-                        if (scrollable)
-                            Modifier.verticalScroll(rememberScrollState())
-                        else
-                            Modifier
-                    )
-                    .padding(contentPadding),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                content(PaddingValues(bottom = spaceLarge))
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+                Column(
+                    modifier = Modifier
+                        .widthIn(minContentWidth, maxContentWidth)
+                        .fillMaxWidth()
+                        .then(if (scrollable) Modifier.verticalScroll(rememberScrollState()) else Modifier)
+                        .padding(contentPadding),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    content(PaddingValues(bottom = spaceLarge))
+                }
             }
         }
         FRCKrawlerSnackbar(

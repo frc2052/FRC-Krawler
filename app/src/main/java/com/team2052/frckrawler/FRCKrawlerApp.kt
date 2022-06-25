@@ -9,6 +9,7 @@ import java.lang.ref.WeakReference
 
 @HiltAndroidApp
 class FRCKrawlerApp : Application() {
+    // TODO: In the future if the app exceeds the max function limit we should extend MultiDexApplication
     override fun onCreate() {
         super.onCreate()
         context = WeakReference(this)

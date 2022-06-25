@@ -17,6 +17,12 @@ sealed class Screen(
         getString(R.string.mode_select_screen_title),
     )
 
+    // Remote scout screen
+    object RemoteScout : Screen(
+        "remote_scout_screen",
+        "Remote Scout",
+    )
+
     // Scouting screens
     object Scout : Screen(
         "scout_screen",

@@ -35,7 +35,7 @@ fun FRCKrawlerSnackbar(
     )
 }
 
-class FRCKrawlerSnackbarController(val scope: CoroutineScope) {
+class FRCKrawlerSnackbarController(private val scope: CoroutineScope) {
 
     private var snackbarJob: Job? = null
 

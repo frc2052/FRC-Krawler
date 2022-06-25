@@ -2,13 +2,15 @@ package com.team2052.frckrawler.ui.modeSelect
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -129,7 +131,22 @@ private fun RemoteScoutCard(
         onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
         content = {
             // Server selection dropdown
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Column {
+                Button(
+                    modifier = Modifier.padding(bottom = spaceMedium),
+                    onClick = { /*TODO*/ },
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            modifier = Modifier.padding(end = ButtonDefaults.ContentPadding.calculateEndPadding(
+                                LayoutDirection.Ltr)
+                            ),
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "add new device",
+                        )
+                        Text("new device")
+                    }
+                }
                 FRCKrawlerDropdown(
                     modifier = Modifier,
                     value = server,
@@ -144,10 +161,6 @@ private fun RemoteScoutCard(
                     label = "Server",
                     dropdownItems = listOf("KnightKrawler", "team 3053")
                 )
-                Spacer(modifier = Modifier.width(spaceLarge))
-                TextButton(onClick = { /*TODO*/ }) {
-                    Text("Refresh")
-                }
             }
         },
     )
