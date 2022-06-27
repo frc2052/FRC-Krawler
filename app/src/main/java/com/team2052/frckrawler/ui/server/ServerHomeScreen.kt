@@ -4,6 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -19,10 +22,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
+import com.google.accompanist.permissions.PermissionsRequired
 import com.google.accompanist.permissions.rememberPermissionState
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.data.model.DeviceType
+import com.team2052.frckrawler.ui.RequestEnableBluetooth
 import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.components.*
+import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -46,151 +53,81 @@ fun ServerHomeScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
 ) {
-    val scope = rememberCoroutineScope()
-
     val viewModel: ServerViewModel = hiltViewModel()
     val scaffoldState = rememberScaffoldState()
 
-    // Opens the settings when the locationSettingsInformation alert is confirmed
-    val settingsLauncher = ComposableLauncher<Unit> {
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        val uri = Uri.fromParts("package", LocalContext.current.packageName, null)
-        intent.data = uri
-
-        LocalContext.current.startActivity(intent)
-    }
-
-    val alertController = rememberAlertController()
-    AlertManager(alertController = alertController) {
-        alert("bluetoothRequest") {
-            Alert(
-                onStateChange = { hide() },
-                confirm = { Text("Enable") },
-                dismiss = { Text("Cancel") },
-                title = { Text("Enable Bluetooth") },
-            ) {
-                Text("Enabling bluetooth will allow the server " +
-                        "to connect and receive data from scouts.")
-            }
-        }
-        alert("locationRequest") {
-            Alert(
-                onStateChange = { state ->
-                    when (state) {
-                        AlertState.CONFIRMED -> {
-                            hide()
-                        }
-                        AlertState.DISMISSED -> {
-                            alertController.show("locationSettingsInformation")
-                            hide()
-                        }
-                    }
-                },
-                confirm = { Text("Confirm") },
-                dismiss = { Text("Decline") },
-                title = { Text("Enable Coarse Location") },
-            ) {
-                Text("Android ${Build.VERSION.CODENAME} (${Build.VERSION.SDK_INT}) " +
-                        "requires coarse location permissions to access bluetooth features.")
-            }
-        }
-        alert("locationSettingsInformation") {
-            Alert(
-                onStateChange = { alertState ->
-                    if (alertState == AlertState.CONFIRMED) {
-                        scope.launch { settingsLauncher.launch() }
-                    }
-                    hide()
-                },
-                confirm = { Text("Open Settings") },
-                title = { Text("Re-enable Coarse Location") },
-            ) {
-                Text("Enabling coarse location is an essential step " +
-                        "in running the FRCKrawler Bluetooth Server. " +
-                        "Please re-enable this permission in the app settings.")
-            }
-        }
-    }
-
-    FRCKrawlerScaffold(
-        modifier = modifier,
-        scaffoldState = scaffoldState,
-        appBar = {
-            FRCKrawlerAppBar(
-                navController = navController,
-                scaffoldState = scaffoldState,
-                title = {
-                    Text(stringResource(R.string.server_screen_title))
-                }
+    Box {
+        
+        if (viewModel.showPermissionRequests) {
+            BluetoothPermissionRequestDialogs(
+                deviceType = DeviceType.Server,
+                onAllPermissionsGranted = { viewModel.startServer() },
+                onCanceled = { viewModel.showPermissionRequests = false }
             )
-        },
-        tabBar = {
-            FRCKrawlerTabBar(navigation = Server, currentScreen = ServerHome) { screen ->
-                navController.navigate(screen.route) {
-                    popUpTo(ServerHome.route) { inclusive = true }
-                    launchSingleTop = true
-                }
-            }
-        },
-        drawerContent = {
-            FRCKrawlerDrawer()
-        },
-    ) { contentPadding ->
-        ServerHomeScreenContent(
-            modifier = Modifier.padding(contentPadding),
-            viewModel = viewModel,
-            navController = navController,
-            scope = scope,
+        }
+
+        if (viewModel.requestEnableBluetooth) {
+            RequestEnableBluetooth(
+                deviceType = DeviceType.Server,
+                onEnabled = { viewModel.startServer() },
+                onCanceled = { viewModel.requestEnableBluetooth = false }
+            )
+        }
+        
+        FRCKrawlerScaffold(
+            modifier = modifier,
             scaffoldState = scaffoldState,
-            snackbarController = FRCKrawlerSnackbarController(scope),
-            alertController = alertController,
-        )
+            appBar = {
+                FRCKrawlerAppBar(
+                    navController = navController,
+                    scaffoldState = scaffoldState,
+                    title = {
+                        Text(stringResource(R.string.server_screen_title))
+                    }
+                )
+            },
+            tabBar = {
+                FRCKrawlerTabBar(navigation = Server, currentScreen = ServerHome) { screen ->
+                    navController.navigate(screen.route) {
+                        popUpTo(ServerHome.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            },
+            drawerContent = {
+                FRCKrawlerDrawer()
+            },
+        ) { contentPadding ->
+            Column(
+                modifier = Modifier.padding(contentPadding)
+            ) {
+                ServerProperties(
+                    modifier = modifier,
+                    serverState = viewModel.serverState,
+                    navController = navController,
+                    toggleServer = {
+                        if (viewModel.serverState == ServerState.ENABLED) {
+                            viewModel.stopServer()
+                        } else {
+                            viewModel.startServer()
+                        }
+                    }
+                )
+
+                ScoutsList(modifier = modifier)
+            }
+        }
     }
 }
 
-@Composable
-private fun ServerHomeScreenContent(
-    modifier: Modifier = Modifier,
-    viewModel: ServerViewModel,
-    navController: NavController,
-    scope: CoroutineScope,
-    scaffoldState: ScaffoldState,
-    snackbarController: FRCKrawlerSnackbarController,
-    alertController: AlertController,
-) {
-    ServerProperties(
-        modifier = modifier,
-        viewModel = viewModel,
-        navController = navController,
-        scope = scope,
-        scaffoldState = scaffoldState,
-        snackbarController = snackbarController,
-        alertController = alertController,
-    )
-
-    ScoutsList(modifier = modifier)
-}
 
 @Composable
 private fun ServerProperties(
     modifier: Modifier = Modifier,
-    viewModel: ServerViewModel,
+    serverState: ServerState,
     navController: NavController,
-    scope: CoroutineScope,
-    scaffoldState: ScaffoldState,
-    snackbarController: FRCKrawlerSnackbarController,
-    alertController: AlertController,
+    toggleServer: () -> Unit,
 ) {
-    val serverLauncher = ComposableLauncher<Boolean> {
-        var serverSuccessful = false
-        RequestLocationPermission(alertController) {
-            serverSuccessful = it
-            if (!serverSuccessful) complete(false)
-        }
-        alertController.show("bluetoothRequest")
-    }
-
     Card(
         modifier = modifier,
         header = {
@@ -216,41 +153,12 @@ private fun ServerProperties(
             Spacer(modifier = Modifier.width(24.dp))
 
             Button(
-                modifier = Modifier.weight(0.5f),
-                enabled = viewModel.serverState.value == ServerState.ENABLED ||
-                        viewModel.serverState.value == ServerState.DISABLED,
-                onClick = {
-                    if (viewModel.serverState.value == ServerState.DISABLED) {
-                        // Begin enabling the server.
-                        snackbarController.showSnackbar(
-                            scaffoldState = scaffoldState,
-                            message = "starting server...",
-                            actionLabel = "dismiss",
-                        )
-                        scope.launch {
-                            serverLauncher.launch(onCompletion = { success ->
-                                if (success != null) {
-                                    Timber.d("SUCCESSFULLNESS - $success")
-                                }
-                            })
-                        }
-
-//                        bluetoothEnableLauncher.launch {
-//                            viewModel.startServer()
-//                        }
-                    } else if (viewModel.serverState.value == ServerState.ENABLED) {
-                        // Begin disabling the server.
-                        snackbarController.showSnackbar(
-                            scaffoldState = scaffoldState,
-                            message = "stopping server...",
-                            actionLabel = "dismiss",
-                        )
-                        viewModel.stopServer()
-                    }
-                },
+                modifier = modifier,
+                enabled = serverState == ServerState.ENABLED || serverState == ServerState.DISABLED,
+                onClick = toggleServer,
             ) {
                 Text(
-                    when (viewModel.serverState.value) {
+                    when (serverState) {
                         ServerState.ENABLED -> "Stop Server"
                         ServerState.ENABLING -> "Starting Server"
                         ServerState.DISABLED -> "Start Server"
@@ -304,26 +212,6 @@ private fun ScoutsList(
             }
         }
     }
-}
-
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-private fun RequestLocationPermission(
-    alertController: AlertController,
-    onCompletion: (Boolean) -> Unit,
-) {
-    val coarseLocationState = rememberPermissionState(
-        permission = android.Manifest.permission.ACCESS_COARSE_LOCATION
-    )
-
-    PermissionRequired(
-        permissionState = coarseLocationState,
-        permissionNotGrantedContent = { alertController.show("locationRequest") },
-        permissionNotAvailableContent = {
-            alertController.show("locationSettingsInformation")
-            onCompletion(false)
-        },
-    ) { onCompletion(true) }
 }
 
 @Preview
