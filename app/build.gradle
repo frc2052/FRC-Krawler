@@ -7,12 +7,12 @@ plugins {
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "com.team2052.frckrawler"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"

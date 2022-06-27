@@ -11,6 +11,10 @@
     <string name="bluetooth_Text">Bluetooth Server Running:</string>
     <string name="viewLogsButton">View Logs</string>
 
+    <!-- Common strings -->
+    <string name="ok">ok</string>
+    <string name="cancel">cancel</string>
+
     <!--Shared Preferences TODO: Should this be here?-->
     <string name="preference_app_mode">&applicationID;PREFERENCE_APP_MODE</string>
 
@@ -56,4 +60,29 @@
     <string name="metrics_screen">Metrics</string>
     <string name="match_metrics_screen">Match</string>
     <string name="pit_metrics_screen">Pit</string>
+
+    <!-- Permissions -->
+    <string name="bluetooth_permission_rationale_title">Permissions required</string>
+    <string name="bluetooth_permission_rationale_description_server">FRCKrawler requires bluetooth permissions to create a server. This will allow scouts to connect and sync data.</string>
+    <string name="bluetooth_permission_rationale_description_client">FRCKrawler requires bluetooth permissions to connect to a scouting server. This will allow syncing data between this device and the server.</string>
+    <string name="bluetooth_denied_title">Permissions required</string>
+    <string name="bluetooth_denied_description_server">FRCKrawler cannot enable the server without bluetooth permissions. Please enable the permissions in settings.</string>
+    <string name="bluetooth_denied_description_client">FRCKrawler cannot connect to a server without bluetooth permissions. Please enable the permissions in settings.</string>
+    <string name="bluetooth_denied_launch_settings">go to settings</string>
+
+    <!-- Enable bluetooth -->
+    <string name="bluetooth_enable_title">Bluetooth not enabled</string>
+    <string name="bluetooth_enable_server_description">Running an FRCKrawler server requires you to enable bluetooth. Please enable bluetooth and try again.</string>
+    <string name="bluetooth_enable_client_description">Connecting to an FRCKrawler server requires you to enable bluetooth. Please enable bluetooth and try again.</string>
+
+    <!-- Server syncing -->
+    <string name="server_sync_notification_title">FRCKrawler Server Running</string>
+    <plurals name="server_sync_clients_connected">
+        <item quantity="one">%1$d scout connected</item>
+        <item quantity="other">%1$d scouts connected</item>
+    </plurals>
+
+    <!-- Notifications -->
+    <string name="notification_channel_sync_name">Sync</string>
+    <string name="notification_channel_sync_description">Data sync notifications</string>
 </resources>
