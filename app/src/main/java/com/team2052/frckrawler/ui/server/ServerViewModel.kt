@@ -1,31 +1,29 @@
 package com.team2052.frckrawler.ui.server
 
-import android.content.Context
+import android.bluetooth.BluetoothAdapter
 import android.os.Build
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.team2052.frckrawler.bluetooth.BluetoothController
+import com.team2052.frckrawler.bluetooth.server.SyncServiceController
+import com.team2052.frckrawler.ui.permissions.PermissionManager
+import com.team2052.frckrawler.ui.permissions.RequiredPermissions
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Delay
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ServerViewModel @Inject constructor(
-    private val bluetoothController: BluetoothController
+    private val bluetoothAdapter: BluetoothAdapter,
+    private val permissionManager: PermissionManager,
+    private val syncServiceController: SyncServiceController
 ) : ViewModel() {
 
-    val serverState = mutableStateOf(ServerState.DISABLED)
+    var serverState by mutableStateOf(ServerState.DISABLED)
+    var showPermissionRequests by mutableStateOf(false)
+    var requestEnableBluetooth by mutableStateOf(false)
 
-    private val locationTactic = mutableStateOf(LocationTactic.NONE)
-    private val locationPermissionGranted = mutableStateOf(false)
-
-    fun startServer() {
-
-    }
+    private val bluetoothStrategy = getBluetoothStrategy()
 
     /**
      * 1. State = enabling
@@ -34,63 +32,37 @@ class ServerViewModel @Inject constructor(
      * 4. Start server thread
      * 5. State = enabled
      */
-    suspend fun startServer(
-        requestLocationPermission: suspend () -> Boolean,
-        requestBluetooth: suspend () -> Boolean,
-    ) {
-        serverState.value = ServerState.ENABLING
-
-        // Select & request location strategies
-        when {
-            Build.VERSION.SDK_INT <= 22 -> {
-                locationTactic.value = LocationTactic.NONE
-                locationPermissionGranted.value = true
-            }
-            Build.VERSION.SDK_INT >= 26 -> {
-                locationTactic.value = LocationTactic.COMPANION_DEVICE
-                locationPermissionGranted.value = true
-            }
-            else -> {
-                locationTactic.value = LocationTactic.COARSE_LOCATION
-                locationPermissionGranted.value = requestLocationPermission()
-            }
-        }
+    fun startServer() {
+        serverState = ServerState.ENABLING
 
         // Check location strategy worked
-        if (!locationPermissionGranted.value) {
-            serverState.value = ServerState.DISABLED
+        if (!permissionManager.hasPermissions(RequiredPermissions.serverPermissions)) {
+            serverState = ServerState.DISABLED
+            showPermissionRequests = true
             return
         }
 
         // Request bluetooth if not all ready enabled
-        if (!bluetoothController.bluetoothEnabled()) {
-            if (!requestBluetooth()) {
-                serverState.value = ServerState.DISABLED
-                return
-            } else {
-                bluetoothController.enableBluetooth()
-            }
+        if (!bluetoothAdapter.isEnabled) {
+            serverState = ServerState.DISABLED
+            requestEnableBluetooth = true
+            return
         }
 
-        delay(1000)
+        syncServiceController.startServer()
 
-        serverState.value = ServerState.ENABLED
+        serverState = ServerState.ENABLED
     }
 
     fun stopServer() {
-        serverState.value = ServerState.DISABLING
+        serverState = ServerState.DISABLING
 
-        serverState.value = ServerState.DISABLED
+        syncServiceController.stopServer()
+
+        serverState = ServerState.DISABLED
     }
 
-//    var isRefreshing by mutableStateOf(false)
-//    fun refresh() {
-//        isRefreshing = true
-//        viewModelScope.launch {
-//            delay(1000)
-//            isRefreshing = false
-//        }
-//    }
+
 //
 //    val scouts: MutableList<Scout> = mutableListOf()
 //
@@ -131,6 +103,13 @@ class ServerViewModel @Inject constructor(
 //    )
 }
 
+private fun getBluetoothStrategy(): BluetoothStrategy {
+    return when {
+        Build.VERSION.SDK_INT >= 26 -> BluetoothStrategy.COMPANION_DEVICE
+        else -> BluetoothStrategy.COARSE_LOCATION
+    }
+}
+
 enum class ServerState {
     ENABLED,
     ENABLING,
@@ -138,8 +117,7 @@ enum class ServerState {
     DISABLING,
 }
 
-enum class LocationTactic {
-    NONE,
+enum class BluetoothStrategy {
     COARSE_LOCATION,
     COMPANION_DEVICE,
 }
