@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.di
 
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import com.team2052.frckrawler.bluetooth.BluetoothController
 import dagger.Module
@@ -19,6 +20,22 @@ object BluetoothModule {
         @ApplicationContext context: Context
     ) = BluetoothController(
         context = context,
-        bluetooth = BluetoothAdapter.getDefaultAdapter(),
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter(),
     )
+
+    @Singleton
+    @Provides
+    fun provideBluetoothManager(
+        @ApplicationContext context: Context
+    ): BluetoothManager {
+        return context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+    }
+
+    @Singleton
+    @Provides
+    fun provideBluetoothAdapter(
+        manager: BluetoothManager
+    ): BluetoothAdapter {
+        return manager.adapter
+    }
 }
