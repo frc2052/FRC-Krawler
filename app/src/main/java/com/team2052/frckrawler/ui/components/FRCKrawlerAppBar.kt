@@ -24,29 +24,27 @@ fun FRCKrawlerAppBar(
     navController: NavController = rememberNavController(),
     scaffoldState: ScaffoldState,
     navigation: @Composable () -> Unit = {
-        val scope = rememberCoroutineScope()
-        if (navController.previousBackStackEntry == null) {
-            IconButton(onClick = {
-                Timber.d("BUTTON CLICKED!")
-                scope.launch {
-                    scaffoldState.drawerState.open()
-                }
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = "Menu",
-                    tint = MaterialTheme.colors.onPrimary,
-                )
-            }
-        } else {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(
-                    imageVector = Icons.Filled.KeyboardArrowLeft,
-                    contentDescription = "Backwards Navigation",
-                    tint = MaterialTheme.colors.onPrimary,
-                )
-            }
-        }
+        DefaultNavigationButton(navController) { scaffoldState.drawerState.open() }
+    },
+    title: @Composable RowScope.() -> Unit,
+    actions: @Composable RowScope.() -> Unit = {}
+) {
+    FRCKrawlerAppBar(
+        modifier = modifier,
+        navController = navController,
+        navigation = navigation,
+        title = title,
+        actions = actions
+    )
+}
+
+@Composable
+fun FRCKrawlerAppBar(
+    modifier: Modifier = Modifier,
+    navController: NavController = rememberNavController(),
+    navigationButtonClicked: suspend () -> Unit = {},
+    navigation: @Composable () -> Unit = {
+        DefaultNavigationButton(navController, navigationButtonClicked)
     },
     title: @Composable RowScope.() -> Unit,
     actions: @Composable RowScope.() -> Unit = { },
@@ -67,6 +65,36 @@ fun FRCKrawlerAppBar(
         )) { Row { title() } }
     },
 )
+
+@Composable
+private fun DefaultNavigationButton(
+    navController: NavController,
+    navigationButtonClicked: suspend () -> Unit
+) {
+    val scope = rememberCoroutineScope()
+    if (navController.previousBackStackEntry == null) {
+        IconButton(onClick = {
+            Timber.d("BUTTON CLICKED!")
+            scope.launch {
+                navigationButtonClicked()
+            }
+        }) {
+            Icon(
+                imageVector = Icons.Filled.Menu,
+                contentDescription = "Menu",
+                tint = MaterialTheme.colors.onPrimary,
+            )
+        }
+    } else {
+        IconButton(onClick = { navController.popBackStack() }) {
+            Icon(
+                imageVector = Icons.Filled.KeyboardArrowLeft,
+                contentDescription = "Backwards Navigation",
+                tint = MaterialTheme.colors.onPrimary,
+            )
+        }
+    }
+}
 
 @Preview
 @Composable
