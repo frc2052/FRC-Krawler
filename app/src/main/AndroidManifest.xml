@@ -24,6 +24,10 @@
       android:name="android.hardware.bluetooth"
       android:required="true" />
 
+    <uses-feature
+        android:name="android.software.companion_device_setup"
+        android:required="false" />
+
     <application
       android:name=".FRCKrawlerApp"
       android:allowBackup="true"
@@ -41,6 +45,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+          android:name=".ui.bluetooth.chooser.BluetoothDeviceChooserActivity"
+          android:theme="@style/BluetoothDeviceChooser"
+          android:exported="false"/>
 
         <service
           android:name=".bluetooth.server.SyncServerService"
