@@ -75,6 +75,10 @@
     <string name="bluetooth_enable_server_description">Running an FRCKrawler server requires you to enable bluetooth. Please enable bluetooth and try again.</string>
     <string name="bluetooth_enable_client_description">Connecting to an FRCKrawler server requires you to enable bluetooth. Please enable bluetooth and try again.</string>
 
+    <!-- Bluetooth scan - devices dialog -->
+    <string name="bluetooth_scan_choose_dialog_title">Connect to server</string>
+    <string name="bluetooth_scan_choose_dialog_body">Choose a Bluetooth device to connect with</string>
+
     <!-- Server syncing -->
     <string name="server_sync_notification_title">FRCKrawler Server Running</string>
     <plurals name="server_sync_clients_connected">
