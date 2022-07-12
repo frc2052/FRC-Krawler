@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.server
 
+import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -195,6 +196,19 @@ private fun ScoutsList(
             }
         },
     ) {
+        val context = LocalContext.current
+        Button(
+            onClick = {
+
+                val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
+                    putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60)
+                }
+                context.startActivity(discoverableIntent)
+            }
+        ) {
+            Text("Connect new scouts")
+        }
+
         DataTable(onSelectionChanged = { states ->
             checkedStates = states
         }) {
