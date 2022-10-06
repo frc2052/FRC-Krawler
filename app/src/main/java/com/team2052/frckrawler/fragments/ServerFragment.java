@@ -143,6 +143,7 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
 
         @Override
         public void onError(Throwable e) {
+            e.printStackTrace();
             FirebaseCrash.report(e);
         }
 

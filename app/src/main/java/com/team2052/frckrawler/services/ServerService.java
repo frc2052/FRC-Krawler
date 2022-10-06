@@ -1,15 +1,18 @@
 package com.team2052.frckrawler.services;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
@@ -62,6 +65,12 @@ public class ServerService extends Service {
      */
     private void showNotification() {
         NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("sync", "Server status", NotificationManagerCompat.IMPORTANCE_DEFAULT);
+            m.createNotificationChannel(channel);
+        }
+
         m.notify(SERVER_OPEN_ID, makeNotification());
     }
 
@@ -74,13 +83,14 @@ public class ServerService extends Service {
         b.setContentTitle(getResources().getString(R.string.server_open));
         b.setContentText(getResources().getString(R.string.server_open_description));
         b.setColor(getResources().getColor(R.color.primary));
+        b.setChannelId("sync");
         b.setOngoing(true);
 
         Intent resultIntent = HomeActivity.newInstance(this, R.id.nav_item_server);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(HomeActivity.class);
         stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         b.setContentIntent(resultPendingIntent);
         return b.build();
     }
