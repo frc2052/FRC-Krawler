@@ -1,11 +1,15 @@
 package com.team2052.frckrawler.fragments.dialog;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.provider.DocumentsContract;
 import android.support.v4.content.FileProvider;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -24,6 +28,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -43,11 +53,15 @@ public class ExportDialogFragment extends BaseProgressDialog {
     private static final String TAG = "ExportDialogFragment";
     private static final String EXPORT_TYPE = "EXPORT_TYPE_EXTRA";
 
+    private static final int CREATE_FILE_CODE = 12;
+
     @Inject
     Compiler compiler;
 
     private Event event;
     private Subscription subscription;
+
+    private int exportType;
 
     public static ExportDialogFragment newInstance(Event event, int export_type) {
         ExportDialogFragment exportDialogFragment = new ExportDialogFragment();
@@ -64,6 +78,8 @@ public class ExportDialogFragment extends BaseProgressDialog {
 
         event = mRxDbManager.getEventsTable().load(getArguments().getLong(DatabaseActivity.PARENT_ID));
 
+        exportType = getArguments().getInt(EXPORT_TYPE);
+
         EventBus.getDefault().register(this);
 
         if (getActivity() instanceof HasComponent) {
@@ -75,12 +91,26 @@ public class ExportDialogFragment extends BaseProgressDialog {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CREATE_FILE_CODE && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                Uri uri = data.getData();
+                doExport(uri);
+                return;
+            }
+        }
+
+        Toast.makeText(getActivity(), "Failed to create export file, please try again", Toast.LENGTH_LONG).show();
+        dismiss();
+    }
+
     private void checkPermissionAndDoExport() {
         RxPermissions.getInstance(getActivity())
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe(granted -> {
                     if (granted) {
-                        doExport();
+                        createFile();
                     } else {
                         Toast.makeText(getActivity(), "Cannot export file, please grant permission", Toast.LENGTH_LONG).show();
                         dismiss();
@@ -88,31 +118,88 @@ public class ExportDialogFragment extends BaseProgressDialog {
                 }, FirebaseCrash::report);
     }
 
-    private void doExport() {
-        final int exportType = getArguments().getInt(EXPORT_TYPE);
-        Observable<List<List<String>>> exportObservable = getExportObservable(exportType);
-        Observable<File> summaryFile = getExportFile(exportType);
-
-        keepScreenOn(true);
-        subscription = summaryFile.zipWith(exportObservable, CompileUtil.writeToFile)
-                .observeOn(Schedulers.computation())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::shareFile, onError -> {
-                    onError.printStackTrace();
-                    FirebaseCrash.report(onError);
+    private void createFile() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            createFileWithScopedStorage();
+        } else {
+            getExportFile(exportType)
+              .map( file -> {
+                  Uri fileUri = FileProvider.getUriForFile(
+                    getActivity(),
+                    getActivity().getApplicationContext()
+                      .getPackageName() + ".provider", file);
+                  return fileUri;
+              })
+              .subscribeOn(Schedulers.io())
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(
+                uri -> {
+                    doExport(uri);
+                },
+                error -> {
+                    System.out.println("Failed to create file: " + error);
+                    Toast.makeText(getActivity(), "Failed to export file, please try again", Toast.LENGTH_LONG).show();
                     dismiss();
-                }, this::dismiss);
+                }
+              );
+        }
     }
 
-    private void shareFile(File file) {
-        MediaScannerConnection.scanFile(getActivity(), new String[]{file.getAbsolutePath()}, null, null);
+    private void createFileWithScopedStorage() {
+        String fileName;
+        switch (exportType) {
+            case EXPORT_TYPE_RAW: {
+                fileName = CompileUtil.rawExportFileName(event);
+                break;
+            }
+            default: {
+                fileName = CompileUtil.summaryFileName(event);
+                break;
+            }
+        }
+
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("file/csv");
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
+
+        startActivityForResult(intent, CREATE_FILE_CODE);
+    }
+
+    private void doExport(Uri exportUri) {
+        Observable<List<List<String>>> exportObservable = getExportObservable(exportType);
+
+        try {
+            // TODO this is in need of a complete rewrite
+            OutputStream stream = getContext().getContentResolver().openOutputStream(exportUri, "w");
+            OutputStreamWriter writer = new OutputStreamWriter(stream);
+            keepScreenOn(true);
+            subscription = exportObservable
+              .map( export -> { return CompileUtil.writeToFile.call(writer, export); })
+              .subscribeOn(Schedulers.io())
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(
+                success -> {
+                    shareFile(exportUri);
+                },
+                onError -> {
+                  onError.printStackTrace();
+                  Toast.makeText(getActivity(), "Failed to write to export file, please try again", Toast.LENGTH_LONG).show();
+                  dismiss();
+              }, this::dismiss);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), "Failed to open export file, please try again", Toast.LENGTH_LONG).show();
+            dismiss();
+        }
+    }
+
+    private void shareFile(Uri uri) {
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        Uri apkURI = FileProvider.getUriForFile(
-                getActivity(),
-                getActivity().getApplicationContext()
-                        .getPackageName() + ".provider", file);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, apkURI);
+
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         shareIntent.setType("file/csv");
         startActivity(Intent.createChooser(shareIntent, "Share CSV with..."));
         AndroidSchedulers.mainThread().createWorker().schedule(() -> keepScreenOn(false));

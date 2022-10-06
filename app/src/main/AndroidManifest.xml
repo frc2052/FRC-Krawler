@@ -19,6 +19,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+          android:exported="true"
             android:name=".activities.SetupActivity"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar">
             <intent-filter>
@@ -79,7 +80,8 @@
             android:exported="true"
             android:label="Server Log" />
 
-        <service android:name=".services.FRCKrawlerFirebaseMessagingService">
+        <service android:name=".services.FRCKrawlerFirebaseMessagingService"
+          android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

@@ -16,6 +16,7 @@ import com.team2052.frckrawler.tba.JSON;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -41,21 +42,23 @@ public class CompileUtil {
     };
 
     public static Func1<CompiledMetricValue, String> compiledMetricValueToString = CompiledMetricValue::getCompiledValue;
-    public static Func2<File, List<List<String>>, File> writeToFile = (file, lists) -> {
+    public static Func2<Writer, List<List<String>>, Void> writeToFile = (fileWriter, lists) -> {
         CSVWriter writer;
         try {
-            writer = new CSVWriter(new FileWriter(file), ',');
+            writer = new CSVWriter(fileWriter, ',');
 
             for (int i = 0; i < lists.size(); i++) {
                 List<String> record = lists.get(i);
                 writer.writeNext(Arrays.copyOf(record.toArray(), record.size(), String[].class));
             }
 
+            fileWriter.flush();
             writer.close();
+            fileWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return file;
+        return null;
     };
 
     public static Func1<MatchDatum, String> convertMatchDataToStringFunc = matchData -> {
@@ -105,7 +108,7 @@ public class CompileUtil {
                         }
                         try {
                             file = File.createTempFile(
-                                    String.format("%s_%s_Summary", event.getGame().getName(), event.getName()),  /* prefix */
+                                    summaryFileName(event),  /* prefix */
                                     ".csv",         /* suffix */
                                     directory      /* directory */
                             );
@@ -115,6 +118,14 @@ public class CompileUtil {
                     }
                     return file;
                 });
+    }
+
+    public static String summaryFileName(@NonNull Event event) {
+        return String.format("%s_%s_Summary", event.getGame().getName(), event.getName());
+    }
+
+    public static String rawExportFileName(@NonNull Event event) {
+        return String.format("%s_%s_RawExport", event.getGame().getName(), event.getName());
     }
 
     public static Observable<File> getRawExportFile(@NonNull Event event) {
@@ -132,7 +143,7 @@ public class CompileUtil {
                         }
                         try {
                             file = File.createTempFile(
-                                    String.format("%s_%s_RawExport", event.getGame().getName(), event.getName()),  /* prefix */
+                                    rawExportFileName(event),  /* prefix */
                                     ".csv",         /* suffix */
                                     directory      /* directory */
                             );
