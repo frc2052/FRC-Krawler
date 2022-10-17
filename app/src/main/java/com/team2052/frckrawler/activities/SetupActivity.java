@@ -15,6 +15,7 @@ import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.team2052.frckrawler.Constants;
 import com.team2052.frckrawler.R;
@@ -33,6 +34,8 @@ import butterknife.ButterKnife;
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String PREF_SETUP = "PREF_LOADED";
     private static final int REQUEST_ENABLE_BT = 1;
+    private static final int REQUEST_S_BT_PERMISSION = 2;
+    private static final int REQUEST_STORAGE_PERMISSION = 0;
     private static final String LOG_TAG = "SetupActivity";
     @BindView(R.id.view_pager)
     protected DisableSwipeViewPager pager;
@@ -86,10 +89,19 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 0 && BluetoothUtil.isBluetoothEnabled()) {
-            setupFinished();
-        } else {
-            pager.goToNextPage();
+        if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "We don't have permission! Grant the permission in device settings.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (requestCode == REQUEST_S_BT_PERMISSION) {
+            requestEnableBluetooth();
+        } else if (requestCode == REQUEST_STORAGE_PERMISSION) {
+            if (BluetoothUtil.isBluetoothEnabled()) {
+                setupFinished();
+            } else {
+                pager.goToNextPage();
+            }
         }
     }
 
@@ -100,7 +112,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 Log.i(LOG_TAG, String.valueOf(BluetoothUtil.isBluetoothEnabled()));
                 int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 if (permission != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
                 } else {
                     if (BluetoothUtil.isBluetoothEnabled()) {
                         setupFinished();
@@ -111,16 +123,25 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.bluetooth_next_page:
             case R.id.enable_bluetooth_button:
-                if (!BluetoothUtil.hasBluetoothAdapter())
+                if (!BluetoothUtil.hasBluetoothAdapter()) {
                     setupFinished();
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                }
+                if (BluetoothUtil.hasBluetoothPermission(this)) {
+                    requestEnableBluetooth();
+                } else {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_S_BT_PERMISSION);
+                }
                 break;
             case R.id.server_card:
             case R.id.scout_card:
                 setupFinished();
                 break;
         }
+    }
+
+    private void requestEnableBluetooth() {
+        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
     }
 
     public void setupFinished() {
