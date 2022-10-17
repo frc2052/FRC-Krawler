@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -121,7 +122,13 @@ public class HomeActivity extends DatabaseActivity {
         }
 
         //Start the service so it keeps in process
-        getApplicationContext().startService(new Intent(this, ServerService.class));
+        try {
+            Intent intent = new Intent(this, ServerService.class);
+            ContextCompat.startForegroundService(getApplicationContext(), intent);
+        } catch (Exception e) {
+           // Couldn't start the server, uh oh!
+           // This is usually because we are going into the background, so we will ignore for now
+        }
     }
 
     @Override

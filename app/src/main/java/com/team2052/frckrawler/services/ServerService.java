@@ -64,6 +64,7 @@ public class ServerService extends Service {
      * Shows the notification to the user
      */
     private void showNotification() {
+
         NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -71,7 +72,7 @@ public class ServerService extends Service {
             m.createNotificationChannel(channel);
         }
 
-        m.notify(SERVER_OPEN_ID, makeNotification());
+        startForeground(SERVER_OPEN_ID, makeNotification());
     }
 
     /**
@@ -100,8 +101,7 @@ public class ServerService extends Service {
      * Removes the notification
      */
     private void removeNotification() {
-        NotificationManager m = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        m.cancel(SERVER_OPEN_ID);
+        stopForeground(true);
     }
 
     private void stopServer() {
