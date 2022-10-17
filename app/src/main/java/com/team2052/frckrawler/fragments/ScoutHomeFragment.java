@@ -1,11 +1,14 @@
 package com.team2052.frckrawler.fragments;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -15,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.jakewharton.rxbinding.view.RxView;
@@ -126,6 +130,12 @@ public class ScoutHomeFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.sync_button) {
+            if (!BluetoothUtil.hasBluetoothPermission(requireContext())) {
+                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 0);
+                Toast.makeText(requireContext(), "Please enable the bluetooth permission in your device settings", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             if (!BluetoothUtil.hasBluetoothAdapter()) {
                 return;
             }

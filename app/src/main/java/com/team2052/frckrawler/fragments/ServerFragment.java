@@ -1,14 +1,19 @@
 package com.team2052.frckrawler.fragments;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.team2052.frckrawler.R;
@@ -59,8 +64,15 @@ public class ServerFragment extends BaseDataFragment<List<Event>, List<String>, 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getId() == R.id.host_toggle) {
+            if (!BluetoothUtil.hasBluetoothPermission(requireContext())) {
+                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 0);
+                Toast.makeText(requireContext(), "Please enable the bluetooth permission in your device settings", Toast.LENGTH_LONG).show();
+                buttonView.setChecked(false);
+                return;
+            }
 
             if (!BluetoothUtil.hasBluetoothAdapter()) {
+                buttonView.setChecked(false);
                 SnackbarUtil.make(getView(), "Sorry, your device does not support bluetooth.", Snackbar.LENGTH_LONG).show();
                 return;
             } else if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {

@@ -1,9 +1,14 @@
 package com.team2052.frckrawler.util;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 
 import com.team2052.frckrawler.bluetooth.BluetoothConnection;
 import com.team2052.frckrawler.bluetooth.BluetoothConstants;
@@ -93,5 +98,15 @@ public class BluetoothUtil {
             return null;
         }
         return BluetoothAdapter.getDefaultAdapter().getBondedDevices().toArray(new BluetoothDevice[BluetoothAdapter.getDefaultAdapter().getBondedDevices().size()]);
+    }
+
+    public static Boolean hasBluetoothPermission(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            int permission = ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT);
+            return permission == PackageManager.PERMISSION_GRANTED;
+        } else {
+            // Below S this an install time permission
+            return true;
+        }
     }
 }
