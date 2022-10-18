@@ -18,7 +18,6 @@ import com.team2052.frckrawler.fragments.ScoutHomeFragment;
 import com.team2052.frckrawler.fragments.ServerFragment;
 import com.team2052.frckrawler.fragments.TeamsFragment;
 import com.team2052.frckrawler.listitems.items.NavDrawerItem;
-import com.team2052.frckrawler.services.ServerService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -119,15 +118,6 @@ public class HomeActivity extends DatabaseActivity {
             }
         } else {
             switchToModeForId(initNavId);
-        }
-
-        //Start the service so it keeps in process
-        try {
-            Intent intent = new Intent(this, ServerService.class);
-            ContextCompat.startForegroundService(getApplicationContext(), intent);
-        } catch (Exception e) {
-           // Couldn't start the server, uh oh!
-           // This is usually because we are going into the background, so we will ignore for now
         }
     }
 
