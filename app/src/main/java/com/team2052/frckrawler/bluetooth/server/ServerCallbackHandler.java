@@ -18,6 +18,7 @@ public class ServerCallbackHandler {
         b.setContentTitle("Syncing");
         b.setContentText("FRC Krawler is syncing with " + deviceName);
         b.setDefaults(0);
+        b.setChannelId("sync");
         b.setOngoing(true);
         NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         m.notify(SYNC_ONGOING_ID, b.build());
@@ -34,6 +35,7 @@ public class ServerCallbackHandler {
         b.setSmallIcon(android.R.drawable.ic_dialog_alert);
         b.setContentTitle("Sync Error");
         b.setContentText("FRC krawler encountered an error when syncing with " + deviceName);
+        b.setChannelId("sync");
         m.notify(0, b.build());
     }
 }
