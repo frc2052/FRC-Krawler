@@ -106,6 +106,8 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     kapt "androidx.hilt:hilt-compiler:1.0.0"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+
+    implementation "com.squareup.okio:okio:3.2.0"
     
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
