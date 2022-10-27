@@ -108,6 +108,10 @@ dependencies {
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
     implementation "com.squareup.okio:okio:3.2.0"
+
+    // Work Manager
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation "androidx.hilt:hilt-work:1.0.0"
     
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'

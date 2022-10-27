@@ -81,7 +81,8 @@ fun ScoutHomeScreen(
             ScoutHomeScreenContent(
                 modifier = modifier.padding(contentPadding),
                 serverState = viewModel.serverConnectionState,
-                onFindServerClicked = { viewModel.connectToServer(context) }
+                onFindServerClicked = { viewModel.connectToServer(context) },
+                onSyncClicked = { viewModel.performSync() }
             )
         }
     }
@@ -91,6 +92,25 @@ fun ScoutHomeScreen(
 private fun ScoutHomeScreenContent(
     modifier: Modifier = Modifier,
     serverState: ServerConnectionState,
+    onFindServerClicked: () -> Unit,
+    onSyncClicked: () -> Unit,
+) {
+    Column(modifier = modifier) {
+        ConnectionStatusCard(
+            state = serverState,
+            onFindServerClicked = onFindServerClicked
+        )
+        Spacer(Modifier.height(16.dp))
+        Button(onClick = onSyncClicked) {
+            Text("Sync")
+        }
+    }
+}
+
+@Composable
+private fun ConnectionStatusCard(
+    modifier: Modifier = Modifier,
+    state: ServerConnectionState,
     onFindServerClicked: () -> Unit
 ) {
     Card(
@@ -101,16 +121,16 @@ private fun ScoutHomeScreenContent(
             )
         },
     ) {
-        when (serverState) {
+        when (state) {
             is ServerConnectionState.Connected -> {
-                ServerConnected(serverState)
+                ServerConnected(state)
             }
             is ServerConnectionState.Connecting -> {
                 ServerConnecting()
             }
             else -> {
                 ServerNotConnected(
-                    state = serverState,
+                    state = state,
                     onFindServerClicked = onFindServerClicked
                 )
             }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   package="com.team2052.frckrawler">
     <!-- Request legacy Bluetooth permissions on older devices. -->
     <uses-permission android:name="android.permission.BLUETOOTH"
@@ -56,6 +57,12 @@
           android:enabled="true"
           android:exported="false"
           android:foregroundServiceType="connectedDevice|dataSync"/>
+
+        <!-- Remove app startup to support WorkManager Hilt injection -->
+        <provider
+          android:name="androidx.startup.InitializationProvider"
+          android:authorities="${applicationId}.androidx-startup"
+          tools:node="remove" />
     </application>
 
 </manifest>

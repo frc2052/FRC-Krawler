@@ -6,6 +6,7 @@ import okio.BufferedSource
 import okio.buffer
 import okio.sink
 import okio.source
+import timber.log.Timber
 
 /**
  * Open buffered input and output streams on a BluetoothSocket
@@ -25,6 +26,6 @@ fun BufferedSource.readResult(): OperationResult {
 }
 
 fun BufferedSink.writeResult(result: OperationResult): OperationResult {
-  writeInt(result.id)
+  writeInt(result.id).emit()
   return result
 }

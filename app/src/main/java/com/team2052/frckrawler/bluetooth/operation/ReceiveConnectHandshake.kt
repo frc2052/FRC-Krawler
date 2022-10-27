@@ -5,6 +5,7 @@ import com.team2052.frckrawler.bluetooth.SyncOperation
 import com.team2052.frckrawler.bluetooth.writeResult
 import okio.BufferedSink
 import okio.BufferedSource
+import timber.log.Timber
 import java.nio.charset.Charset
 
 /**
@@ -19,7 +20,7 @@ class ReceiveConnectHandshake(
     val clientAppVersionCode = input.readInt()
     return if (clientAppVersionCode != versionCode) {
       output.writeResult(OperationResult.VersionMismatch).also {
-        output.writeString(versionName, Charset.defaultCharset())
+        output.writeString(versionName, Charset.defaultCharset()).emit()
       }
     } else {
       output.writeResult(OperationResult.Success)

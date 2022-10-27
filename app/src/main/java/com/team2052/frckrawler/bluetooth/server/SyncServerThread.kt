@@ -39,12 +39,13 @@ class SyncServerThread(
     }
 
     // TODO handle interrupt?
+    // TODO log to a database for troubleshooting?
     while (true) {
+      Timber.d("Still running")
       val clientSocket = serverSocket!!.accept()
       val clientDevice = clientSocket.remoteDevice
       Timber.d("Client connected: ${clientDevice.name}")
-      // TODO perform sync
-
+      syncWithClient(clientSocket)
     }
   }
 
@@ -53,7 +54,7 @@ class SyncServerThread(
       val operations = opFactory.createServerOperations()
       operations.forEach { op ->
         val result = op.execute(output, input)
-        // TODO handle result
+        Timber.d("Sync operation ${op.javaClass.simpleName} result: $result")
       }
     }
   }
