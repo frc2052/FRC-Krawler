@@ -3,12 +3,19 @@ package com.team2052.frckrawler
 import android.app.Application
 import android.content.Context
 import androidx.annotation.StringRes
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
+import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import java.lang.ref.WeakReference
+import javax.inject.Inject
 
 @HiltAndroidApp
-class FRCKrawlerApp : Application() {
+class FRCKrawlerApp : Application(), Configuration.Provider {
+
+    @Inject lateinit var workerFactory: HiltWorkerFactory
+
     override fun onCreate() {
         super.onCreate()
         context = WeakReference(this)
@@ -30,5 +37,11 @@ class FRCKrawlerApp : Application() {
             // it's safe to return an empty string in null situations.
             return string ?: ""
         }
+    }
+
+    override fun getWorkManagerConfiguration(): Configuration {
+        return Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
     }
 }

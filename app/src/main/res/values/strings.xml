@@ -86,6 +86,9 @@
         <item quantity="other">%1$d scouts connected</item>
     </plurals>
 
+    <!-- Scout syncing -->
+    <string name="scout_sync_notification_title">Syncing with server</string>
+
     <!-- Notifications -->
     <string name="notification_channel_sync_name">Sync</string>
     <string name="notification_channel_sync_description">Data sync notifications</string>

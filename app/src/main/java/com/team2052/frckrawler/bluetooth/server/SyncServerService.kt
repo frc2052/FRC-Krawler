@@ -8,6 +8,7 @@ import android.os.IBinder
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.notifications.FrcKrawlerNotificationChannel
 import com.team2052.frckrawler.notifications.NotificationChannelManager
+import com.team2052.frckrawler.notifications.NotificationId
 import com.team2052.frckrawler.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -17,13 +18,12 @@ import javax.inject.Inject
  * to allow syncing even when the app is not in the foreground.
  *
  * TODO add an action to the notification to stop the server?
+ * TODO request notification permission
  */
 @AndroidEntryPoint
 class SyncServerService : Service() {
 
   companion object {
-    private const val foregroundNotificationId = 2052
-
     internal val ACTION_START = "com.team2052.frckrawler.bluetooth.server.START"
     internal val ACTION_STOP = "com.team2052.frckrawler.bluetooth.server.STOP"
   }
@@ -40,7 +40,7 @@ class SyncServerService : Service() {
     // We want to be able to finish syncing if the app goes in the background, so
     // we run in the foreground
     notificationChannelManager.ensureChannelsCreated()
-    startForeground(foregroundNotificationId, getForegroundNotification())
+    startForeground(NotificationId.ServerServiceNotification, getForegroundNotification())
     startServer()
 
     return START_REDELIVER_INTENT
