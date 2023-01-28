@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -160,14 +159,6 @@ private fun ServerCard(
     viewModel: ModeSelectViewModel,
     navController: NavController,
 ) {
-    var teamNumber by remember { mutableStateOf(viewModel.serverData.teamNumber) }
-    var teamNumberValidity by remember { mutableStateOf(true) }
-    val teamNumberLength = 4
-
-    var serverName by remember { mutableStateOf(viewModel.serverData.serverName) }
-    var serverNameValidity by remember { mutableStateOf(true) }
-    val serverNameLengthRange = IntRange(4, 20)
-
     var game by remember { mutableStateOf(viewModel.serverData.game) }
     var gameValidity by remember { mutableStateOf(true) }
 
@@ -184,12 +175,10 @@ private fun ServerCard(
         },
         actions = {
             TextButton(onClick = {
-                if (teamNumber.length != teamNumberLength) teamNumberValidity = false
-                if (serverName.length !in serverNameLengthRange) serverNameValidity = false
-                if (game.isEmpty()) gameValidity = false
+               if (game.isEmpty()) gameValidity = false
                 if (event.isEmpty()) eventValidity = false
 
-                if (teamNumberValidity && serverNameValidity && gameValidity && eventValidity) {
+                if (gameValidity && eventValidity) {
                     navController.navigate(Screen.Server.route) {
                         popUpTo(Screen.ModeSelect.route) { inclusive = true }
                     }
@@ -201,43 +190,6 @@ private fun ServerCard(
         expanded = viewModel.expandedCard == id,
         onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
         content = {
-            // Team number text field
-            FRCKrawlerTextField(
-                modifier = Modifier.padding(bottom = spaceMedium),
-                value = teamNumber,
-                onValueChange = { value ->
-                    if (value.length <= teamNumberLength) teamNumber = value
-                    viewModel.serverData = viewModel.serverData.copy(teamNumber = teamNumber)
-                },
-                validity = teamNumberValidity,
-                validityCheck = { value ->
-                    teamNumberValidity = value.isDigitsOnly() && value.length == teamNumberLength
-                },
-                isError = { validity -> !validity },
-                label = "Team Number",
-                keyboardType = KeyboardType.NumberPassword,
-            )
-
-            // Server name text field
-            var serverNameHasFocus by remember { mutableStateOf(false) }
-            FRCKrawlerTextField(
-                modifier = Modifier.padding(bottom = spaceMedium),
-                value = serverName,
-                onValueChange = { value ->
-                    if (value.length <= serverNameLengthRange.last) serverName = value
-                    serverNameValidity = value.length in serverNameLengthRange
-
-                    viewModel.serverData = viewModel.serverData.copy(serverName = serverName)
-                },
-                validity = serverNameValidity,
-                validityCheck = { value ->
-                    serverNameValidity = value.length in serverNameLengthRange
-                },
-                isError = { validity -> !validity },
-                label = "Server Name" + if (serverNameHasFocus) " - ${serverName.length}/${serverNameLengthRange.last}" else "",
-                onFocusChange = { serverNameHasFocus = it },
-            )
-
             // Game selection dropdown
             FRCKrawlerDropdown(
                 modifier = Modifier.padding(bottom = spaceMedium),
