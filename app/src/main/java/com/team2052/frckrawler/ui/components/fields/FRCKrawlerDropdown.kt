@@ -1,11 +1,14 @@
 package com.team2052.frckrawler.ui.components.fields
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -13,18 +16,18 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
-import timber.log.Timber
 
 @Composable
-fun FRCKrawlerDropdown(
+fun <T> FRCKrawlerDropdown(
     modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
+    value: T?,
+    getLabel: (T?) -> String,
+    onValueChange: (T?) -> Unit,
+    onFocusChange: (Boolean) -> Unit,
     validity: Boolean = true,
-    validityCheck: (String) -> Unit = { },
     enabled: Boolean = true,
     label: String,
-    dropdownItems: List<String>,
+    dropdownItems: List<T>,
 ) {
     // TODO: Implement interaction between modeselect screen and the server home screen
     val focusManager = LocalFocusManager.current
@@ -33,12 +36,12 @@ fun FRCKrawlerDropdown(
 
     var hasFocus by remember { mutableStateOf(false) }
 
-    var lastValue by remember { mutableStateOf("") }
+    var lastValue by remember { mutableStateOf(value) }
 
     Column(modifier = modifier) {
         FRCKrawlerTextField(
             modifier = Modifier.onGloballyPositioned { width = it.size.width },
-            value = value,
+            value = getLabel(value),
             onValueChange = { },
             icon = {
                 if (hasFocus) {
@@ -54,12 +57,14 @@ fun FRCKrawlerDropdown(
                 }
             },
             validity = validity,
-            validityCheck = validityCheck,
             isError = { validity -> !validity },
             enabled = enabled,
             readOnly = true,
             label = label,
-            onFocusChange = { focus -> hasFocus = focus }
+            onFocusChange = { focus ->
+                hasFocus = focus
+                onFocusChange(focus)
+            }
         )
 
         DropdownMenu(
@@ -76,13 +81,13 @@ fun FRCKrawlerDropdown(
                             onValueChange(item)
                             item
                         } else {
-                            onValueChange("")
-                            ""
+                            onValueChange(null)
+                            null
                         }
 
                         focusManager.clearFocus()
                     },
-                ) { Text(item) }
+                ) { Text(getLabel(item)) }
             }
         }
     }

@@ -1,23 +1,21 @@
 package com.team2052.frckrawler.ui.modeSelect
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.components.*
-import com.team2052.frckrawler.ui.components.fields.FRCKrawlerDropdown
-import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
-import com.team2052.frckrawler.ui.theme.*
+import com.team2052.frckrawler.ui.navigation.Screen
+import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
 fun ModeSelectScreen(
@@ -128,26 +126,26 @@ private fun RemoteScoutCard(
         onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
         content = {
             // Server selection dropdown
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                FRCKrawlerDropdown(
-                    modifier = Modifier,
-                    value = server,
-                    onValueChange = {
-                        server = it
-                        viewModel.remoteScoutData = viewModel.remoteScoutData.copy(server = server)
-                    },
-                    validity = serverValidity,
-                    validityCheck = {
-                        serverValidity = it.isNotEmpty()
-                    },
-                    label = "Server",
-                    dropdownItems = listOf("KnightKrawler", "team 3053")
-                )
-                Spacer(modifier = Modifier.width(spaceLarge))
-                TextButton(onClick = { /*TODO*/ }) {
-                    Text("Refresh")
-                }
-            }
+//            Row(verticalAlignment = Alignment.CenterVertically) {
+//                FRCKrawlerDropdown(
+//                    modifier = Modifier,
+//                    value = server,
+//                    onValueChange = {
+//                        server = it
+//                        viewModel.remoteScoutData = viewModel.remoteScoutData.copy(server = server)
+//                    },
+//                    validity = serverValidity,
+//                    validityCheck = {
+//                        serverValidity = it.isNotEmpty()
+//                    },
+//                    label = "Server",
+//                    dropdownItems = listOf("KnightKrawler", "team 3053")
+//                )
+//                Spacer(modifier = Modifier.width(spaceLarge))
+//                TextButton(onClick = { /*TODO*/ }) {
+//                    Text("Refresh")
+//                }
+//            }
         },
     )
 }
@@ -159,11 +157,6 @@ private fun ServerCard(
     viewModel: ModeSelectViewModel,
     navController: NavController,
 ) {
-    var game by remember { mutableStateOf(viewModel.serverData.game) }
-    var gameValidity by remember { mutableStateOf(true) }
-
-    var event by remember { mutableStateOf(viewModel.serverData.event) }
-    var eventValidity by remember { mutableStateOf(true) }
 
     ExpandableCard(
         modifier = modifier,
@@ -175,13 +168,8 @@ private fun ServerCard(
         },
         actions = {
             TextButton(onClick = {
-               if (game.isEmpty()) gameValidity = false
-                if (event.isEmpty()) eventValidity = false
-
-                if (gameValidity && eventValidity) {
-                    navController.navigate(Screen.Server.route) {
-                        popUpTo(Screen.ModeSelect.route) { inclusive = true }
-                    }
+                navController.navigate(Screen.Server.route) {
+                    popUpTo(Screen.ModeSelect.route) { inclusive = true }
                 }
             }) {
                 Text(stringResource(R.string.mode_server_continue))
@@ -190,36 +178,6 @@ private fun ServerCard(
         expanded = viewModel.expandedCard == id,
         onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
         content = {
-            // Game selection dropdown
-            FRCKrawlerDropdown(
-                modifier = Modifier.padding(bottom = spaceMedium),
-                value = game,
-                onValueChange = {
-                    game = it
-                    viewModel.serverData = viewModel.serverData.copy(game = game)
-                },
-                validity = gameValidity,
-                validityCheck = {
-                    gameValidity = it.isNotEmpty()
-                },
-                label = "Game",
-                dropdownItems = listOf("Infinite Recharge at Home", "Infinite Recharge", "Rover Ruckus")
-            )
-
-            // Event selection dropdown
-            FRCKrawlerDropdown(
-                value = event,
-                onValueChange = {
-                    event = it
-                    viewModel.serverData = viewModel.serverData.copy(event = event)
-                },
-                validity = eventValidity,
-                validityCheck = {
-                    eventValidity = it.isNotEmpty()
-                },
-                label = "Event",
-                dropdownItems = listOf("Northern Lights")
-            )
         },
     )
 }
@@ -231,12 +189,6 @@ private fun SoloScoutCard(
     viewModel: ModeSelectViewModel,
     navController: NavController,
 ) {
-    var game by remember { mutableStateOf(viewModel.soloScoutData.game) }
-    var gameValidity by remember { mutableStateOf(true) }
-
-    var event by remember { mutableStateOf(viewModel.soloScoutData.event) }
-    var eventValidity by remember { mutableStateOf(true) }
-
     ExpandableCard(
         modifier = modifier,
         header = {
@@ -247,13 +199,8 @@ private fun SoloScoutCard(
         },
         actions = {
             TextButton(onClick = {
-                if (game.isEmpty()) gameValidity = false
-                if (event.isEmpty()) eventValidity = false
-
-                if (gameValidity && eventValidity) {
-                    navController.navigate(Screen.Scout.route) {
-                        popUpTo(Screen.ModeSelect.route) { inclusive = true }
-                    }
+                navController.navigate(Screen.Scout.route) {
+                    popUpTo(Screen.ModeSelect.route) { inclusive = true }
                 }
             }) {
                 Text(stringResource(R.string.mode_solo_scout_continue))
@@ -262,36 +209,7 @@ private fun SoloScoutCard(
         expanded = viewModel.expandedCard == id,
         onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
         content = {
-            // Game selection dropdown
-            FRCKrawlerDropdown(
-                modifier = Modifier.padding(bottom = spaceMedium),
-                value = game,
-                onValueChange = {
-                    game = it
-                    viewModel.serverData = viewModel.serverData.copy(game = game)
-                },
-                validity = gameValidity,
-                validityCheck = {
-                    gameValidity = it.isNotEmpty()
-                },
-                label = "Game",
-                dropdownItems = listOf("Infinite Recharge at Home", "Infinite Recharge", "Rover Ruckus")
-            )
 
-            // Event selection dropdown
-            FRCKrawlerDropdown(
-                value = event,
-                onValueChange = {
-                    event = it
-                    viewModel.serverData = viewModel.serverData.copy(event = event)
-                },
-                validity = eventValidity,
-                validityCheck = {
-                    eventValidity = it.isNotEmpty()
-                },
-                label = "Event",
-                dropdownItems = listOf("Northern Lights")
-            )
         },
     )
 }

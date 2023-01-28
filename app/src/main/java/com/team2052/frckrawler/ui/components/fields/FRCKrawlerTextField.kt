@@ -2,25 +2,19 @@ package com.team2052.frckrawler.ui.components.fields
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.theme.gray
 import com.team2052.frckrawler.ui.theme.lightGray
@@ -32,7 +26,6 @@ fun FRCKrawlerTextField(
     onValueChange: (String) -> Unit,
     icon: @Composable () -> Unit = { },
     validity: Boolean = true,
-    validityCheck: (String) -> Unit = { },
     isError: (Boolean) -> Boolean = { false },
     enabled: Boolean = true,
     readOnly: Boolean = false,
@@ -47,7 +40,6 @@ fun FRCKrawlerTextField(
     var lastFocus by remember { mutableStateOf(hasFocus) }
     if (hasFocus != lastFocus) {
         onFocusChange(hasFocus)
-        validityCheck(value)
     }
     // Sets the last focus before the next recompose (the placement is important)
     lastFocus = hasFocus
@@ -59,7 +51,6 @@ fun FRCKrawlerTextField(
         value = value,
         onValueChange = {
             onValueChange(it)
-            validityCheck(value)
         },
         enabled = enabled,
         readOnly = readOnly,

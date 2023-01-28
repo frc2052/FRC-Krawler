@@ -22,6 +22,7 @@ class ServerViewModel @Inject constructor(
     var serverState by mutableStateOf(ServerState.DISABLED)
     var showPermissionRequests by mutableStateOf(false)
     var requestEnableBluetooth by mutableStateOf(false)
+    var serverConfiguration by mutableStateOf(ServerConfiguration(null, null))
 
     private val bluetoothStrategy = getBluetoothStrategy()
 
@@ -108,13 +109,6 @@ private fun getBluetoothStrategy(): BluetoothStrategy {
         Build.VERSION.SDK_INT >= 26 -> BluetoothStrategy.COMPANION_DEVICE
         else -> BluetoothStrategy.COARSE_LOCATION
     }
-}
-
-enum class ServerState {
-    ENABLED,
-    ENABLING,
-    DISABLED,
-    DISABLING,
 }
 
 enum class BluetoothStrategy {

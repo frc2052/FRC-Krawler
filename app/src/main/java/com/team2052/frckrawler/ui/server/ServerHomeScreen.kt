@@ -2,16 +2,12 @@ package com.team2052.frckrawler.ui.server
 
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContract
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,20 +17,18 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionRequired
-import com.google.accompanist.permissions.PermissionsRequired
-import com.google.accompanist.permissions.rememberPermissionState
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
+import com.team2052.frckrawler.data.model.Event
+import com.team2052.frckrawler.data.model.TEMP_EVENTS
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
-import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.components.*
+import com.team2052.frckrawler.ui.components.fields.FRCKrawlerDropdown
+import com.team2052.frckrawler.ui.navigation.Screen.Server
+import com.team2052.frckrawler.ui.navigation.Screen.ServerHome
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import timber.log.Timber
+import com.team2052.frckrawler.ui.theme.spaceMedium
 
 /**
  * 21 - Automatically Granted
@@ -102,16 +96,21 @@ fun ServerHomeScreen(
             Column(
                 modifier = Modifier.padding(contentPadding)
             ) {
-                ServerProperties(
+                ServerConfigCard(
                     modifier = modifier,
                     serverState = viewModel.serverState,
-                    navController = navController,
                     toggleServer = {
                         if (viewModel.serverState == ServerState.ENABLED) {
                             viewModel.stopServer()
                         } else {
                             viewModel.startServer()
                         }
+                    },
+                    availableMetricSets = listOf("2022 KnightKrawler Metrics"),
+                    availableEvents = TEMP_EVENTS,
+                    configuration = viewModel.serverConfiguration,
+                    onConfigurationChanged = {
+                        viewModel.serverConfiguration = it
                     }
                 )
 
@@ -123,36 +122,75 @@ fun ServerHomeScreen(
 
 
 @Composable
-private fun ServerProperties(
+private fun ServerConfigCard(
     modifier: Modifier = Modifier,
+    availableEvents: List<Event>,
+    availableMetricSets: List<String>,
+    configuration: ServerConfiguration,
+    onConfigurationChanged: (ServerConfiguration) -> Unit,
     serverState: ServerState,
-    navController: NavController,
     toggleServer: () -> Unit,
 ) {
     Card(
         modifier = modifier,
         header = {
             CardHeader(
-                title = { Text("Server Properties") },
+                title = { Text("Server Controls") },
                 description = { Text("Control server and configuration") },
             )
         },
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+        // Event selection dropdown
+        var eventValid by remember { mutableStateOf(true) }
+        FRCKrawlerDropdown(
+            modifier = Modifier.padding(bottom = spaceMedium),
+            value = configuration.event,
+            getLabel = { it?.name ?: "" },
+            onValueChange = {
+                onConfigurationChanged(
+                    configuration.copy(event = it)
+                )
+                if (it != null) {
+                    eventValid = true
+                }
+            },
+            validity = eventValid,
+            onFocusChange = { focused ->
+                if (!focused) {
+                    eventValid = (configuration.event != null)
+                }
+            },
+            label = "Event",
+            dropdownItems = availableEvents
+        )
+
+        // Event selection dropdown
+        var metricsValid by remember { mutableStateOf(true) }
+        FRCKrawlerDropdown(
+            value = configuration.metricSetName,
+            onValueChange = {
+                onConfigurationChanged(
+                    configuration.copy(metricSetName = it)
+                )
+            },
+            getLabel = { it ?: "" },
+            validity = metricsValid,
+            onFocusChange = { focused ->
+                if (!focused) {
+                    metricsValid = (configuration.metricSetName != null)
+                }
+            },
+            label = "Metrics",
+            dropdownItems = availableMetricSets
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.BottomEnd
         ) {
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    navController.navigate(ModeSelect.route)
-                },
-            ) {
-                Text(text = "Server Config")
-            }
-
-            Spacer(modifier = Modifier.width(24.dp))
-
+            // TODO disable if event and metrics are not selected
             Button(
                 modifier = modifier,
                 enabled = serverState == ServerState.ENABLED || serverState == ServerState.DISABLED,
@@ -225,6 +263,21 @@ private fun ScoutsList(
                 item("22")
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ServerPropsPreview() {
+    FrcKrawlerTheme(darkTheme = false) {
+        ServerConfigCard(
+            serverState = ServerState.ENABLED,
+            toggleServer = {},
+            availableEvents = TEMP_EVENTS,
+            availableMetricSets = listOf("2022 KnightKrawler Metrics"),
+            configuration = ServerConfiguration(null, null),
+            onConfigurationChanged = {}
+        )
     }
 }
 
