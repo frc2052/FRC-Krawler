@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.server
+package com.team2052.frckrawler.ui.server.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,25 +25,12 @@ import com.team2052.frckrawler.ui.navigation.Screen.ServerHome
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
-/**
- * 21 - Automatically Granted
- * 22 - Automatically Granted
- * 23 - Coarse Location Needed
- * 24 - Coarse Location Needed
- * 25 - Coarse Location Needed
- * 26 - Coarse Location Needed
- * 27 - Use Companion Device Pairing
- * 28 - Use Companion Device Pairing
- * 29 - Use Companion Device Pairing
- * 30 - Use Companion Device Pairing
- */
-
 @Composable
 fun ServerHomeScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
 ) {
-    val viewModel: ServerViewModel = hiltViewModel()
+    val viewModel: ServerHomeViewModel = hiltViewModel()
     val scaffoldState = rememberScaffoldState()
 
     Box {

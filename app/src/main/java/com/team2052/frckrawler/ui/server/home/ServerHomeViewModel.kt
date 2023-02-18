@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.server
+package com.team2052.frckrawler.ui.server.home
 
 import android.bluetooth.BluetoothAdapter
 import android.os.Build
@@ -13,7 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ServerViewModel @Inject constructor(
+class ServerHomeViewModel @Inject constructor(
     private val bluetoothAdapter: BluetoothAdapter,
     private val permissionManager: PermissionManager,
     private val syncServiceController: SyncServiceController

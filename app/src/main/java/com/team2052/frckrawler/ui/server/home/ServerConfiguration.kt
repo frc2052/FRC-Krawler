@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.server
+package com.team2052.frckrawler.ui.server.home
 
 import com.team2052.frckrawler.data.model.Event
 

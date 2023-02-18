@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.server
+package com.team2052.frckrawler.ui.server.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
