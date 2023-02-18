@@ -1,19 +1,17 @@
 package com.team2052.frckrawler.bluetooth.server
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
-import com.team2052.frckrawler.bluetooth.SyncOperationFactory
 import com.team2052.frckrawler.bluetooth.bufferedIO
 import com.team2052.frckrawler.bluetooth.di.SyncEntryPoint
 import dagger.hilt.EntryPoints
-import okio.buffer
-import okio.sink
-import okio.source
 import timber.log.Timber
 
+@SuppressLint("MissingPermission")
 class SyncServerThread(
   context: Context
 ) : Thread("frckrawler-sync-server") {
@@ -22,7 +20,10 @@ class SyncServerThread(
   }
 
   private val bluetoothManager: BluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-  private val opFactory = EntryPoints.get(context.applicationContext, SyncEntryPoint::class.java).syncOperationFactory()
+
+  private val entryPoint = EntryPoints.get(context.applicationContext, SyncEntryPoint::class.java)
+  private val opFactory = entryPoint.syncOperationFactory()
+  private val scoutObserver = entryPoint.connectedScoutObserver()
 
   private var serverSocket: BluetoothServerSocket? = null
 
@@ -57,6 +58,9 @@ class SyncServerThread(
         Timber.d("Sync operation ${op.javaClass.simpleName} result: $result")
       }
     }
+
+    val device = clientSocket.remoteDevice
+    scoutObserver.notifyScoutSynced(device.name, device.address)
   }
 
   // TODO handle closing sockets?

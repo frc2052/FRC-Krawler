@@ -96,7 +96,10 @@ fun ServerHomeScreen(
                     }
                 )
 
-                ConnectedScoutsList(modifier = modifier)
+                ConnectedScoutsList(
+                    modifier = modifier,
+                    scouts = viewModel.connectedScouts
+                )
             }
         }
     }

@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import androidx.core.app.NotificationCompat
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.notifications.FrcKrawlerNotificationChannel
 import com.team2052.frckrawler.notifications.NotificationChannelManager
@@ -28,7 +29,8 @@ class SyncServerService : Service() {
     internal val ACTION_STOP = "com.team2052.frckrawler.bluetooth.server.STOP"
   }
 
-  @Inject lateinit internal var notificationChannelManager: NotificationChannelManager
+  @Inject
+  internal lateinit var notificationChannelManager: NotificationChannelManager
 
   lateinit var serverThread: SyncServerThread
 
@@ -61,7 +63,7 @@ class SyncServerService : Service() {
           PendingIntent.FLAG_IMMUTABLE)
       }
 
-    return Notification.Builder(this, FrcKrawlerNotificationChannel.Sync.id)
+    return NotificationCompat.Builder(this, FrcKrawlerNotificationChannel.Sync.id)
       .setContentTitle(getText(R.string.server_sync_notification_title))
       .setContentText(notificationText)
       .setSmallIcon(R.drawable.ic_logo)

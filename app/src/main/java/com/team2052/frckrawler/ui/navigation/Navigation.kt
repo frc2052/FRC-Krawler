@@ -10,7 +10,7 @@ import com.team2052.frckrawler.ui.scout.ScoutHomeScreen
 import com.team2052.frckrawler.ui.scout.ScoutMatchesScreen
 import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.server.ServerGamesScreen
-import com.team2052.frckrawler.ui.server.ServerHomeScreen
+import com.team2052.frckrawler.ui.server.home.ServerHomeScreen
 import com.team2052.frckrawler.ui.server.ServerMatchesScreen
 import com.team2052.frckrawler.ui.server.metrics.MatchMetricsScreen
 import com.team2052.frckrawler.ui.server.metrics.PitMetricsScreen

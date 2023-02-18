@@ -1,16 +1,15 @@
 package com.team2052.frckrawler.bluetooth.client
 
-import android.app.Notification
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
+import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
-import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.google.common.util.concurrent.ListenableFuture
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
 import com.team2052.frckrawler.bluetooth.SyncOperationFactory
@@ -36,6 +35,7 @@ class ScoutSyncWorker @AssistedInject constructor(
     public const val DATA_SERVER_ADDRESS = "server_address"
   }
 
+  @SuppressLint("MissingPermission")
   override suspend fun doWork(): Result {
     Timber.tag("client").d("starting sync")
     notificationChannelManager.ensureChannelsCreated()
@@ -69,7 +69,7 @@ class ScoutSyncWorker @AssistedInject constructor(
           PendingIntent.FLAG_IMMUTABLE)
       }
     val title = applicationContext.getText(R.string.scout_sync_notification_title)
-    val notification = Notification.Builder(applicationContext, FrcKrawlerNotificationChannel.Sync.id)
+    val notification = NotificationCompat.Builder(applicationContext, FrcKrawlerNotificationChannel.Sync.id)
       .setContentTitle(title)
       .setSmallIcon(R.drawable.ic_logo)
       .setContentIntent(pendingIntent)
