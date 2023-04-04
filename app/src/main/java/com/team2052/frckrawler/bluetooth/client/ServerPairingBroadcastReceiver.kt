@@ -16,7 +16,10 @@ class ServerPairingBroadcastReceiver(
   override fun onReceive(context: Context, intent: Intent) {
     when (intent.action) {
       BluetoothDevice.ACTION_BOND_STATE_CHANGED -> {
-        val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+        // TODO: API 32 and lower use this deprecated method
+        val device: BluetoothDevice? = intent.getParcelableExtra(
+          BluetoothDevice.EXTRA_DEVICE,
+        )
         val bondState: Int = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, 0)
         val previousState: Int = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, 0)
 

@@ -2,24 +2,18 @@ package com.team2052.frckrawler.ui.permissions
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
 import com.team2052.frckrawler.ui.components.Alert
 import com.team2052.frckrawler.ui.components.AlertState
-import com.team2052.frckrawler.ui.components.ComposableLauncher
-import com.team2052.frckrawler.ui.permissions.RequiredPermissions.serverPermissions
-import kotlinx.coroutines.launch
 
 
 /**
@@ -34,8 +28,8 @@ fun BluetoothPermissionRequestDialogs(
 ) {
   val permissions = rememberMultiplePermissionsState(
     permissions = when (deviceType) {
-      DeviceType.Client -> RequiredPermissions.clientPermissions
-      DeviceType.Server -> RequiredPermissions.serverPermissions
+      DeviceType.CLIENT -> RequiredPermissions.clientPermissions
+      DeviceType.SERVER -> RequiredPermissions.serverPermissions
     }
   )
 
@@ -46,8 +40,8 @@ fun BluetoothPermissionRequestDialogs(
         title = { Text(stringResource(R.string.bluetooth_permission_rationale_title)) },
         description = {
           val descriptionRes = when (deviceType) {
-            DeviceType.Client -> R.string.bluetooth_permission_rationale_description_client
-            DeviceType.Server -> R.string.bluetooth_permission_rationale_description_server
+            DeviceType.CLIENT -> R.string.bluetooth_permission_rationale_description_client
+            DeviceType.SERVER -> R.string.bluetooth_permission_rationale_description_server
           }
           Text(stringResource(descriptionRes))
         },
@@ -70,8 +64,8 @@ fun BluetoothPermissionRequestDialogs(
       title = { Text(stringResource(R.string.bluetooth_denied_title)) },
       description = {
         val descriptionRes = when (deviceType) {
-          DeviceType.Client -> R.string.bluetooth_denied_description_server
-          DeviceType.Server -> R.string.bluetooth_denied_description_client
+          DeviceType.CLIENT -> R.string.bluetooth_denied_description_server
+          DeviceType.SERVER -> R.string.bluetooth_denied_description_client
         }
         Text(stringResource(descriptionRes))
       },

@@ -22,15 +22,16 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class SyncServerService : Service() {
-
   companion object {
     internal val ACTION_START = "com.team2052.frckrawler.bluetooth.server.START"
     internal val ACTION_STOP = "com.team2052.frckrawler.bluetooth.server.STOP"
   }
 
-  @Inject lateinit internal var notificationChannelManager: NotificationChannelManager
+  @Inject internal lateinit var notificationChannelManager: NotificationChannelManager
 
   lateinit var serverThread: SyncServerThread
+
+  var isRunning = false
 
   override fun onBind(intent: Intent): IBinder? {
     return null
@@ -46,8 +47,16 @@ class SyncServerService : Service() {
     return START_REDELIVER_INTENT
   }
 
+  override fun onCreate() {
+    super.onCreate()
+    isRunning = true
+  }
+
   override fun onDestroy() {
-    super.onDestroy()
+    // TODO: Stop foreground task
+    stopServer()
+
+    isRunning = false
   }
 
   private fun getForegroundNotification(): Notification {
@@ -57,8 +66,12 @@ class SyncServerService : Service() {
     // TODO deep link to server screen
     val pendingIntent: PendingIntent =
       Intent(this, MainActivity::class.java).let { notificationIntent ->
-        PendingIntent.getActivity(this, 0, notificationIntent,
-          PendingIntent.FLAG_IMMUTABLE)
+        PendingIntent.getActivity(
+          this,
+          0,
+          notificationIntent,
+          PendingIntent.FLAG_IMMUTABLE
+        )
       }
 
     return Notification.Builder(this, FrcKrawlerNotificationChannel.Sync.id)

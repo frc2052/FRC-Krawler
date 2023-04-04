@@ -18,10 +18,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.data.local.Game
+import com.team2052.frckrawler.data.model.DeviceType
 import com.team2052.frckrawler.ui.components.*
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
-import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
@@ -30,61 +29,61 @@ fun ServerGamesScreen(
     navController: NavController,
 ) {
     val scaffoldState = rememberScaffoldState()
-    val viewModel: ServerGamesViewModel = hiltViewModel()
+    //val viewModel: ServerGamesViewModel = hiltViewModel()
 
     var addGameDialogOpen by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
-        viewModel.loadGames()
+        //viewModel.loadGames()
     }
 
-    FRCKrawlerScaffold(
-        modifier = modifier,
-        scaffoldState = scaffoldState,
-        appBar = {
-            FRCKrawlerAppBar(
-                navController = navController,
-                scaffoldState = scaffoldState,
-                title = {
-                    Text(stringResource(R.string.server_screen_title))
-                }
-            )
-        },
-        tabBar = {
-            FRCKrawlerTabBar(navigation = Server, currentScreen = ServerGames) { screen ->
-                navController.navigate(screen.route) {
-                    popUpTo(ServerGames.route) { inclusive = true }
-                    launchSingleTop = true
-                }
-            }
-        },
-        floatingActionButton = {
-            GameActions(
-                onOpen = { addGameDialogOpen = true }
-            )
-        },
-        drawerContent = {
-            FRCKrawlerDrawer()
-        },
-        background = {
-            if (viewModel.games.isEmpty()) {
-                EmptyBackground()
-            }
-        }
-    ) { contentPadding ->
-        ServerSeasonsScreenContent(
-            modifier = Modifier.padding(contentPadding),
-            listOfGames = viewModel.games,
-            onOpen = {},
-            navController = navController
-        )
-        if (addGameDialogOpen) {
-            AddGameDialog(
-                onAddGame = { newGame -> viewModel.makeGame(newGame)},
-                onClose = { addGameDialogOpen = false },
-            )
-        }
-    }
+//    FRCKrawlerScaffold(
+//        modifier = modifier,
+//        scaffoldState = scaffoldState,
+//        appBar = {
+//            FRCKrawlerAppBar(
+//                navController = navController,
+//                scaffoldState = scaffoldState,
+//                title = {
+//                    Text(stringResource(R.string.server_screen_title))
+//                }
+//            )
+//        },
+//        tabBar = {
+//            FRCKrawlerTabBar(navigation = DeviceType.Server, currentScreen = ServerGames) { screen ->
+//                navController.navigate(screen.route) {
+//                    popUpTo(ServerGames.route) { inclusive = true }
+//                    launchSingleTop = true
+//                }
+//            }
+//        },
+//        floatingActionButton = {
+//            GameActions(
+//                onOpen = { addGameDialogOpen = true }
+//            )
+//        },
+//        drawerContent = {
+//            FRCKrawlerDrawer()
+//        },
+//        background = {
+//            if (viewModel.games.isEmpty()) {
+//                EmptyBackground()
+//            }
+//        }
+//    ) { contentPadding ->
+//        ServerSeasonsScreenContent(
+//            modifier = Modifier.padding(contentPadding),
+//            listOfGames = viewModel.games,
+//            onOpen = {},
+//            navController = navController
+//        )
+//        if (addGameDialogOpen) {
+//            AddGameDialog(
+//                onAddGame = { newGame -> viewModel.makeGame(newGame)},
+//                onClose = { addGameDialogOpen = false },
+//            )
+//        }
+//    }
 }
 
 @Composable
@@ -182,27 +181,26 @@ private fun AddGameDialog(
 @Composable
 fun ServerSeasonsScreenContent(
     modifier: Modifier = Modifier,
-    listOfGames: List<Game>,
     onOpen:() -> Unit,
     navController: NavController
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        listOfGames.forEach { game ->
-            TextButton(
-                modifier = Modifier.padding(12.dp),
-                onClick = {
-                    onOpen()
-                    navController.navigate(Metrics.route)
-                }
-            ) {
-                Text(
-                    text = game.name,
-                    style = MaterialTheme.typography.h4
-                )
-            }
-            Divider()
-        }
-    }
+//    Column(modifier = modifier.fillMaxWidth()) {
+//        listOfGames.forEach { game ->
+//            TextButton(
+//                modifier = Modifier.padding(12.dp),
+//                onClick = {
+//                    onOpen()
+//                    navController.navigate(Metrics.route)
+//                }
+//            ) {
+//                Text(
+//                    text = game.name,
+//                    style = MaterialTheme.typography.h4
+//                )
+//            }
+//            Divider()
+//        }
+//    }
 }
 
 @Preview

@@ -1,0 +1,21 @@
+1. Client - Send Version Code
+2. Server - Receive Version Code
+    2.1 Server - Validate Version Code
+    2.2 Server - Send Validation Result
+        2.2.1 Server - Send Error String
+3. Client - Receive Validation Result and Error
+
+
+
+Default Operation:
+1. Client - Send Version
+2. Server - Receive Version
+3. Server - Send Version Validation
+4. Client - Receive Version Validation
+7. Server - Send Server Metadata (theme)
+
+Connect Operation:
+1. Default Operation
+
+
+

@@ -1,18 +1,15 @@
-package com.team2052.frckrawler.ui
+package com.team2052.frckrawler.ui.bluetooth
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material.LocalAbsoluteElevation
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
 import com.team2052.frckrawler.ui.components.Alert
@@ -44,20 +41,22 @@ fun RequestEnableBluetooth(
   }
 
   if (showCancelDialog) {
-    Alert(
-      title = { Text(stringResource(R.string.bluetooth_enable_title)) },
-      description = {
-        val descriptionRes = when (deviceType) {
-          DeviceType.Server -> R.string.bluetooth_enable_server_description
-          DeviceType.Client -> R.string.bluetooth_enable_client_description
+    CompositionLocalProvider(LocalAbsoluteElevation provides 2.dp) {
+      Alert(
+        title = { Text(stringResource(R.string.bluetooth_enable_title)) },
+        description = {
+          val descriptionRes = when (deviceType) {
+            DeviceType.SERVER -> R.string.bluetooth_enable_server_description
+            DeviceType.CLIENT -> R.string.bluetooth_enable_client_description
+          }
+          Text(stringResource(descriptionRes))
+        },
+        confirm = { Text(stringResource(R.string.ok)) },
+        onStateChange = {
+          showCancelDialog = false
+          onCanceled()
         }
-        Text(stringResource(descriptionRes))
-      },
-      confirm = { Text(stringResource(R.string.ok)) },
-      onStateChange = {
-        showCancelDialog = false
-        onCanceled()
-      }
-    )
+      )
+    }
   }
 }

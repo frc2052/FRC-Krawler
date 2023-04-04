@@ -8,13 +8,11 @@ import android.content.Intent
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
-import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.google.common.util.concurrent.ListenableFuture
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
-import com.team2052.frckrawler.bluetooth.SyncOperationFactory
 import com.team2052.frckrawler.bluetooth.bufferedIO
+import com.team2052.frckrawler.bluetooth.operation.SyncOperationFactory
 import com.team2052.frckrawler.notifications.FrcKrawlerNotificationChannel
 import com.team2052.frckrawler.notifications.NotificationChannelManager
 import com.team2052.frckrawler.notifications.NotificationId
@@ -25,15 +23,14 @@ import timber.log.Timber
 
 @HiltWorker
 class ScoutSyncWorker @AssistedInject constructor(
-  @Assisted appContext: Context,
-  @Assisted workerParams: WorkerParameters,
-  private val opFactory: SyncOperationFactory,
-  private val bluetoothAdapter: BluetoothAdapter,
-  private val notificationChannelManager: NotificationChannelManager
+    @Assisted appContext: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val opFactory: SyncOperationFactory,
+    private val bluetoothAdapter: BluetoothAdapter,
+    private val notificationChannelManager: NotificationChannelManager
 ) : CoroutineWorker(appContext, workerParams) {
-
   companion object {
-    public const val DATA_SERVER_ADDRESS = "server_address"
+    const val DATA_SERVER_ADDRESS = "server_address"
   }
 
   override suspend fun doWork(): Result {

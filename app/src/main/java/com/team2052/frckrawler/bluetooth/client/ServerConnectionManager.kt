@@ -7,36 +7,32 @@ import android.content.IntentFilter
 import android.os.ParcelUuid
 import androidx.activity.ComponentActivity
 import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
+import com.team2052.frckrawler.bluetooth.client.discovery.SdpDiscoveryBroadcastReceiver
+import com.team2052.frckrawler.bluetooth.client.discovery.ServerDiscoveryStrategy
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.*
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 
-class ServerConnectionManager internal @Inject constructor(
+class ServerConnectionManager @Inject internal constructor(
   private val bluetoothAdapter: BluetoothAdapter,
   private val discoveryStrategy: ServerDiscoveryStrategy,
   @ApplicationContext private val context: Context
 ) {
-
   private val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
   private val coroutineContext = dispatcher + SupervisorJob()
 
   /**
    * Get a list of all paired bluetooth devices that are running FRCKrawler servers
    */
+  @Throws(SecurityException::class)
   fun getPairedFrcKrawlerServers(): List<BluetoothDevice> {
     val pairedServers = bluetoothAdapter.bondedDevices.filter {
       it.uuids.contains(ParcelUuid(BluetoothSyncConstants.Uuid))
     }
-
     return pairedServers
   }
 
@@ -47,6 +43,7 @@ class ServerConnectionManager internal @Inject constructor(
    * Once the user has selected a device, we then attempt to pair with that device.
    * If pairing succeeds, we do a final check that an FRCKrawler server is running on that device.
    */
+  @Throws(SecurityException::class)
   suspend fun connectToNewServer(
     activity: ComponentActivity
   ): ServerConnectionResult = withContext(coroutineContext) {
@@ -57,16 +54,15 @@ class ServerConnectionManager internal @Inject constructor(
 
     val deviceToPair = (discoveryResult as DeviceSelectionResult.DeviceSelected).device
 
-    val pairedDevice: BluetoothDevice
-    if (deviceToPair.bondState != BluetoothDevice.BOND_BONDED) {
-      val pairingResult = pairDevice(deviceToPair)
-      if (pairingResult !is DevicePairingResult.DeviceParied) {
+    val pairedDevice: BluetoothDevice = if (deviceToPair.bondState != BluetoothDevice.BOND_BONDED) {
+      val pairingResult = pairDeviceWithTimeout(deviceToPair)
+      if (pairingResult !is DevicePairingResult.DevicePaired) {
         return@withContext ServerConnectionResult.PairingFailed
       }
-      pairedDevice = pairingResult.device
+      pairingResult.device
     } else {
-      pairedDevice = deviceToPair
-  }
+      deviceToPair
+    }
 
     val hasFrcKrawlerService = checkForFrcKrawlerServiceWithTimeout(pairedDevice)
 
@@ -77,7 +73,7 @@ class ServerConnectionManager internal @Inject constructor(
     }
   }
 
-  @OptIn(ExperimentalTime::class)
+  @Throws(SecurityException::class)
   private suspend fun pairDeviceWithTimeout(
     device: BluetoothDevice
   ): DevicePairingResult {
@@ -90,12 +86,13 @@ class ServerConnectionManager internal @Inject constructor(
     }
   }
 
+  @Throws(SecurityException::class)
   private suspend fun pairDevice(
     device: BluetoothDevice
   ): DevicePairingResult = suspendCoroutine { continuation ->
     var receiver = ServerPairingBroadcastReceiver(
       deviceToPair = device,
-      onBonded = { continuation.resume(DevicePairingResult.DeviceParied(device)) },
+      onBonded = { continuation.resume(DevicePairingResult.DevicePaired(device)) },
       onCanceled = { continuation.resume(DevicePairingResult.Cancelled) }
     )
 
@@ -103,8 +100,7 @@ class ServerConnectionManager internal @Inject constructor(
     device.createBond()
   }
 
-
-  @OptIn(ExperimentalTime::class)
+  @Throws(SecurityException::class)
   private suspend fun checkForFrcKrawlerServiceWithTimeout(
     device: BluetoothDevice
   ): Boolean {
@@ -117,6 +113,7 @@ class ServerConnectionManager internal @Inject constructor(
     }
   }
 
+  @Throws(SecurityException::class)
   private suspend fun checkForFrcKrawlerService(
     device: BluetoothDevice
   ): Boolean = suspendCoroutine { continuation ->
@@ -134,4 +131,9 @@ class ServerConnectionManager internal @Inject constructor(
     device.fetchUuidsWithSdp()
   }
 
+  fun cancelConnection() {
+    if (coroutineContext.isActive) {
+      coroutineContext.cancel()
+    }
+  }
 }

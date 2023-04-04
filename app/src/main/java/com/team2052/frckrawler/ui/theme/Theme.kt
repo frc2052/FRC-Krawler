@@ -5,6 +5,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 /*
 primary,
@@ -22,19 +23,19 @@ onError,
 */
 
 private val DarkColorPalette = darkColors(
-    primary =           maroon200,
-    primaryVariant =    maroon500,
-    onPrimary =         white,
+    primary =           yellow200,
+    primaryVariant =    yellow500,
+    onPrimary =         black,
 
-    secondary =         yellow200,
-    secondaryVariant =  yellow500,
-    onSecondary =       black,
+    secondary =         maroon200,
+    secondaryVariant =  maroon500,
+    onSecondary =       white,
 
     surface =           black,
-    onSurface =         white,
+    onSurface =         Color(0xFFFFFFFF),
 
-    background =        black,
-    onBackground =      white,
+    background =        Color(0xFF121212),
+    onBackground =      Color(0xFFFFFFFF),
 
     error =             red,
     onError =           white,

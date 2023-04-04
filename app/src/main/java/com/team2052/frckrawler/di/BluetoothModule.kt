@@ -3,10 +3,12 @@ package com.team2052.frckrawler.di
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import android.content.IntentFilter
 import android.os.Build
-import com.team2052.frckrawler.bluetooth.client.CompanionDeviceServerDiscoveryStrategy
-import com.team2052.frckrawler.bluetooth.client.ScanServerDiscoveryStrategy
-import com.team2052.frckrawler.bluetooth.client.ServerDiscoveryStrategy
+import androidx.activity.result.ActivityResultLauncher
+import com.team2052.frckrawler.bluetooth.client.discovery.CompanionDeviceServerDiscoveryStrategy
+import com.team2052.frckrawler.bluetooth.client.discovery.ScanServerDiscoveryStrategy
+import com.team2052.frckrawler.bluetooth.client.discovery.ServerDiscoveryStrategy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,10 +41,10 @@ object BluetoothModule {
         bluetoothAdapter: BluetoothAdapter,
         @ApplicationContext context: Context
     ): ServerDiscoveryStrategy {
-        if (Build.VERSION.SDK_INT >= 26) {
-            return CompanionDeviceServerDiscoveryStrategy()
+        return if (Build.VERSION.SDK_INT >= 26) {
+            CompanionDeviceServerDiscoveryStrategy()
         } else {
-            return ScanServerDiscoveryStrategy(bluetoothAdapter, context)
+            ScanServerDiscoveryStrategy(bluetoothAdapter, context)
         }
     }
 }

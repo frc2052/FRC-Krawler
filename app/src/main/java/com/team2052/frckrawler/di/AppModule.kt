@@ -12,10 +12,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Singleton
     @Provides
-    fun provideFRCKrawlerApp(@ApplicationContext app: Context): FRCKrawlerApp =
-        app as FRCKrawlerApp
-
+    fun provideFRCKrawlerApp(@ApplicationContext app: Context): FRCKrawlerApp {
+        return app as FRCKrawlerApp
+    }
 }

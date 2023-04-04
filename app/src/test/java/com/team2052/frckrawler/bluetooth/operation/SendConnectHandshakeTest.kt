@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.bluetooth.operation
 
-import com.team2052.frckrawler.bluetooth.OperationResult
-import com.team2052.frckrawler.bluetooth.readResult
+import com.team2052.frckrawler.bluetooth.operation.send.SendConnectHandshake
 import com.team2052.frckrawler.bluetooth.writeResult
 import okio.Buffer
 import org.junit.Assert.*
@@ -18,9 +17,9 @@ class SendConnectHandshakeTest {
       versionCode = 2052
     )
 
-    input.writeResult(OperationResult.Success)
+    input.writeResult(OperationResult.ResultCode.Success)
     val result = operation.execute(output, input)
 
-    assertEquals(result, OperationResult.Success)
+    assertEquals(result, OperationResult.ResultCode.Success)
   }
 }

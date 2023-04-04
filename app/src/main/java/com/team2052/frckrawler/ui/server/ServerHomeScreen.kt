@@ -2,66 +2,42 @@ package com.team2052.frckrawler.ui.server
 
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContract
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.activity.ComponentActivity
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Link
 import androidx.compose.runtime.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionRequired
-import com.google.accompanist.permissions.PermissionsRequired
-import com.google.accompanist.permissions.rememberPermissionState
-import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
-import com.team2052.frckrawler.ui.RequestEnableBluetooth
-import com.team2052.frckrawler.ui.navigation.Screen.*
+import com.team2052.frckrawler.ui.bluetooth.RequestEnableBluetooth
 import com.team2052.frckrawler.ui.components.*
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import timber.log.Timber
-
-/**
- * 21 - Automatically Granted
- * 22 - Automatically Granted
- * 23 - Coarse Location Needed
- * 24 - Coarse Location Needed
- * 25 - Coarse Location Needed
- * 26 - Coarse Location Needed
- * 27 - Use Companion Device Pairing
- * 28 - Use Companion Device Pairing
- * 29 - Use Companion Device Pairing
- * 30 - Use Companion Device Pairing
- */
 
 @Composable
 fun ServerHomeScreen(
     modifier: Modifier = Modifier,
-    navController: NavController,
+    onNavigateToServerLogs: () -> Unit = { },
 ) {
     val viewModel: ServerViewModel = hiltViewModel()
-    val scaffoldState = rememberScaffoldState()
+
+    // Don't love this, but it is what we need
+    val context = LocalContext.current as ComponentActivity
 
     Box {
-        
         if (viewModel.showPermissionRequests) {
             BluetoothPermissionRequestDialogs(
-                deviceType = DeviceType.Server,
+                deviceType = DeviceType.CLIENT,
                 onAllPermissionsGranted = { viewModel.startServer() },
                 onCanceled = { viewModel.showPermissionRequests = false }
             )
@@ -69,104 +45,50 @@ fun ServerHomeScreen(
 
         if (viewModel.requestEnableBluetooth) {
             RequestEnableBluetooth(
-                deviceType = DeviceType.Server,
+                deviceType = DeviceType.CLIENT,
                 onEnabled = { viewModel.startServer() },
                 onCanceled = { viewModel.requestEnableBluetooth = false }
             )
         }
-        
-        FRCKrawlerScaffold(
-            modifier = modifier,
-            scaffoldState = scaffoldState,
-            appBar = {
-                FRCKrawlerAppBar(
-                    navController = navController,
-                    scaffoldState = scaffoldState,
-                    title = {
-                        Text(stringResource(R.string.server_screen_title))
-                    }
-                )
-            },
-            tabBar = {
-                FRCKrawlerTabBar(navigation = Server, currentScreen = ServerHome) { screen ->
-                    navController.navigate(screen.route) {
-                        popUpTo(ServerHome.route) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                }
-            },
-            drawerContent = {
-                FRCKrawlerDrawer()
-            },
-        ) { contentPadding ->
-            Column(
-                modifier = Modifier.padding(contentPadding)
-            ) {
-                ServerProperties(
-                    modifier = modifier,
-                    serverState = viewModel.serverState,
-                    navController = navController,
-                    toggleServer = {
-                        if (viewModel.serverState == ServerState.ENABLED) {
-                            viewModel.stopServer()
-                        } else {
-                            viewModel.startServer()
-                        }
-                    }
-                )
 
-                ScoutsList(modifier = modifier)
-            }
+        Column {
+            ServerProperties(modifier, viewModel, onNavigateToServerLogs)
+            ScoutsList(modifier)
         }
     }
 }
 
-
 @Composable
 private fun ServerProperties(
     modifier: Modifier = Modifier,
-    serverState: ServerState,
-    navController: NavController,
-    toggleServer: () -> Unit,
+    viewModel: ServerViewModel,
+    onNavigateToServerLogs: () -> Unit,
 ) {
-    Card(
+    FRCKrawlerCard(
         modifier = modifier,
         header = {
-            CardHeader(
-                title = { Text("Server Properties") },
-                description = { Text("Control server and configuration") },
-            )
-        },
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    navController.navigate(ModeSelect.route)
-                },
+            FRCKrawlerCardHeader(
+                title = { Text("Server Controls") },
+                description = { Text("Server control and configurations") }
             ) {
-                Text(text = "Server Config")
-            }
-
-            Spacer(modifier = Modifier.width(24.dp))
-
-            Button(
-                modifier = modifier,
-                enabled = serverState == ServerState.ENABLED || serverState == ServerState.DISABLED,
-                onClick = toggleServer,
-            ) {
-                Text(
-                    when (serverState) {
-                        ServerState.ENABLED -> "Stop Server"
-                        ServerState.ENABLING -> "Starting Server"
-                        ServerState.DISABLED -> "Start Server"
-                        ServerState.DISABLING -> "Stopping Server"
-                    }
+                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                    Text(modifier = Modifier.padding(end = 8.dp), text = "Server Running:")
+                }
+                FRCKrawlerSwitch(
+                    checked = viewModel.serverState == ServerState.Running,
+                    onCheckedChange = { checked ->
+                        if (checked) {
+                            viewModel.startServer()
+                        } else {
+                            viewModel.stopServer()
+                        }
+                    },
                 )
             }
+        },
+    ) {
+        OutlinedButton(onClick = onNavigateToServerLogs) {
+            Text("VIEW LOGS")
         }
     }
 }
@@ -177,53 +99,30 @@ private fun ScoutsList(
 ) {
     var checkedStates by remember { mutableStateOf(emptyList<Boolean>()) }
 
-    Card(
+    FRCKrawlerCard(
         modifier = modifier,
         header = {
-            CardHeader(
+            FRCKrawlerCardHeader(
                 title = { Text("Connected Scouts") },
-                //description = { Text("Connected Scouts") },
-            )
-        },
-        actions = { modifier ->
-            TextButton(modifier = modifier, onClick = { /*TODO*/ }) {
-                Text(if (checkedStates.contains(true)) {
-                    "REMOVE SCOUT${if (checkedStates.toList().count { it } > 1) "S" else ""}"
-                } else "")
-            }
-            TextButton(modifier = modifier, onClick = { /*TODO*/ }) {
-                Text("ADD SCOUT")
+                description = { Text("Run the server to start connecting scouts") },
+            ) {
+                val context = LocalContext.current
+                FRCKrawlerButton(
+                    onClick = {
+                        val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
+                            putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60)
+                        }
+                        context.startActivity(discoverableIntent)
+                    },
+                    icon = Icons.Filled.Link,
+                ) {
+                    Text("CONNECT")
+                }
             }
         },
     ) {
-        val context = LocalContext.current
-        Button(
-            onClick = {
-
-                val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-                    putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60)
-                }
-                context.startActivity(discoverableIntent)
-            }
-        ) {
-            Text("Connect new scouts")
-        }
-
-        DataTable(onSelectionChanged = { states ->
-            checkedStates = states
-        }) {
-            header {
-                item("Status")
-                item("Device Name")
-                item("Alliance")
-                item("Match")
-            }
-            rows(6) { index ->
-                item("Online")
-                item("Scouter #$index")
-                item("Red")
-                item("22")
-            }
+        FRCKrawlerList() {
+            item({ Text("") }, { Text("") })
         }
     }
 }
@@ -232,7 +131,7 @@ private fun ScoutsList(
 @Composable
 private fun ServerHomeScreenPreviewLight() {
     FrcKrawlerTheme(darkTheme = false) {
-        ServerHomeScreen(navController = rememberNavController())
+        ServerHomeScreen()
     }
 }
 
@@ -240,6 +139,6 @@ private fun ServerHomeScreenPreviewLight() {
 @Composable
 private fun ServerHomeScreenPreviewDark() {
     FrcKrawlerTheme(darkTheme = true) {
-        ServerHomeScreen(navController = rememberNavController())
+        ServerHomeScreen()
     }
 }

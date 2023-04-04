@@ -27,23 +27,17 @@
     <string name="cd_dropdown_expand">Expand Dropdown</string>
     <string name="cd_dropdown_collapse">Collapse Dropdown</string>
 
-    <!--Mode Select-->
-    <string name="mode_select_screen_title">mode select</string>
+    <!--Initial Screen-->
+    <string name="initial_screen_welcome_message">Welcome to &appName;!</string>
+    <string name="initial_screen_getting_started_message">To get started, select from the options below.</string>
+    <string name="initial_screen_mode_change_message">The device mode can be switched later in the side panel.</string>
 
-    <string name="welcome_message">Welcome to &appName;!</string>
-    <string name="getting_started_message">To get started, select from the options below</string>
 
-    <string name="mode_remote_scout">Remote Scout</string>
-    <string name="mode_remote_scout_description">I want to connect to a server and scout</string>
-    <string name="mode_remote_scout_continue">START SCOUTING</string>
+    <string name="mode_scout">Scout</string>
+    <string name="mode_scout_description">Connect to server and match or pit scout</string>
 
     <string name="mode_server">Server</string>
-    <string name="mode_server_description">This device will be a server for remote scouts</string>
-    <string name="mode_server_continue">START SERVER</string>
-
-    <string name="mode_solo_scout">Solo Scout</string>
-    <string name="mode_solo_scout_description">I want to scout without connecting to other devices</string>
-    <string name="mode_solo_scout_continue">START SCOUTING</string>
+    <string name="mode_server_description">Server for scouts to connect to and deposit data</string>
 
     <!--Scout Screens-->
     <string name="scout_screen_title">Scout</string>

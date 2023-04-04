@@ -4,6 +4,7 @@ import android.content.Context
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.team2052.frckrawler.data.remote.*
+import com.team2052.frckrawler.data.remote.RequestInterceptor
 import com.team2052.frckrawler.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -20,7 +21,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     @Provides
     @Singleton
     fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
@@ -57,20 +57,4 @@ object NetworkModule {
     @Singleton
     fun provideEventService(retrofit: Retrofit): EventService =
         retrofit.create(EventService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideMatchService(retrofit: Retrofit): MatchService =
-        retrofit.create(MatchService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideStatusService(retrofit: Retrofit): StatusService =
-        retrofit.create(StatusService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideTeamService(retrofit: Retrofit): TeamService =
-        retrofit.create(TeamService::class.java)
-
 }

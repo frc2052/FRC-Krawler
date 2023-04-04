@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.scout
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import androidx.activity.ComponentActivity
@@ -13,7 +14,7 @@ import androidx.work.workDataOf
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncWorker
 import com.team2052.frckrawler.bluetooth.client.ServerConnectionManager
 import com.team2052.frckrawler.bluetooth.client.ServerConnectionResult
-import com.team2052.frckrawler.ui.navigation.Screen
+import com.team2052.frckrawler.ui.components.SnackbarManager
 import com.team2052.frckrawler.ui.permissions.PermissionManager
 import com.team2052.frckrawler.ui.permissions.RequiredPermissions
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,16 +29,14 @@ class ScoutViewModel @Inject constructor(
     private val serverManager: ServerConnectionManager,
     private val workManager: WorkManager,
 ) : ViewModel() {
-
-    var currentTab by mutableStateOf(Screen.ScoutHome)
     var showPermissionRequests by mutableStateOf(false)
     var requestEnableBluetooth by mutableStateOf(false)
 
     var serverConnectionState: ServerConnectionState by mutableStateOf(ServerConnectionState.NotConnected)
     var server: BluetoothDevice? = null
 
-
     // TODO skip pairing if a server is already paired and on?
+    @SuppressLint("MissingPermission")
     fun connectToServer(activity: ComponentActivity) {
         // Check location strategy worked
         if (!permissionManager.hasPermissions(RequiredPermissions.clientPermissions)) {
@@ -52,21 +51,46 @@ class ScoutViewModel @Inject constructor(
         }
 
         serverConnectionState = ServerConnectionState.Connecting
+
         viewModelScope.launch {
             val connectionResult = serverManager.connectToNewServer(activity)
 
             serverConnectionState = when (connectionResult) {
                 is ServerConnectionResult.Cancelled -> ServerConnectionState.NotConnected
-                is ServerConnectionResult.NoFrcKrawlerServiceFound -> ServerConnectionState.NoFrcKrawlerServiceFound
-                is ServerConnectionResult.PairingFailed -> ServerConnectionState.PairingFailed
+                is ServerConnectionResult.NoFrcKrawlerServiceFound -> {
+                    ServerConnectionState.NoFrcKrawlerServiceFound
+                }
+                is ServerConnectionResult.PairingFailed -> {
+                    SnackbarManager.showSnackbar("Server connection failed")
+
+                    ServerConnectionState.PairingFailed
+                }
                 is ServerConnectionResult.ServerConnected -> {
                     server = connectionResult.server
+
+                    SnackbarManager.showSnackbar("Connected to ${server?.name}")
+
                     ServerConnectionState.Connected(
                         name = connectionResult.server.name
                     )
                 }
             }
         }
+    }
+
+    fun serverConnected(): Boolean = server != null
+
+    fun cancelConnection() {
+        serverManager.cancelConnection()
+        serverConnectionState = ServerConnectionState.NotConnected
+
+        SnackbarManager.showSnackbar("Server connection canceled")
+    }
+
+    fun disconnectFromServer() {
+        serverConnectionState = ServerConnectionState.NotConnected
+
+        SnackbarManager.showSnackbar("Server disconnected")
     }
 
     fun performSync() {
@@ -82,5 +106,4 @@ class ScoutViewModel @Inject constructor(
             workManager.enqueue(workRequest)
         }
     }
-
 }

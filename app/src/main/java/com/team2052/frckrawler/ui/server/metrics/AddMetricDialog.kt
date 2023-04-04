@@ -10,8 +10,9 @@ import androidx.compose.material.icons.rounded.Minimize
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role.Companion.Checkbox
 import androidx.compose.ui.unit.dp
-import com.team2052.frckrawler.data.local.MetricType
+import com.team2052.frckrawler.data.model.MetricType
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -54,52 +55,52 @@ fun AddMetricDialog(
                     }
                 }
             }
-            MetricType.Counter -> {
-                Column(
-                    modifier = Modifier.padding(4.dp)
-                ) {
-                    Row() {
-                        IconButton(
-                            onClick = {}
-                        ) {
-                            Icon(Icons.Rounded.Minimize, contentDescription = "Minus")
-                        }
-                        TextField(
-                            value = numberText,
-                            onValueChange = { numberText = it },
-                            label = { Text("Number") }
-                        )
-                        IconButton(
-                            onClick = {}
-                        ) {
-                            Icon(Icons.Rounded.Maximize, contentDescription = "Plus")
-                        }
-                    }
-                }
-            }
-            MetricType.Slider -> {
-                Column(
-                    modifier = Modifier.padding(4.dp)
-                ) {
-                    Row() {
-                        TextField(
-                            value = sliderText,
-                            onValueChange = { sliderText = it },
-                            label = { Text("Value") }
-                        )
-                        Slider(
-                            value = sliderPosition,
-                            onValueChange = {sliderPosition = it },
-                            valueRange = 0f..100f,
-                            steps = 5
-                        )
-                    }
-                }
-            }
-            MetricType.Chooser -> {}
-            MetricType.Checkbox -> {}
-            MetricType.Stopwatch -> {}
-            MetricType.TextField -> {}
+//            MetricType.Counter -> {
+//                Column(
+//                    modifier = Modifier.padding(4.dp)
+//                ) {
+//                    Row() {
+//                        IconButton(
+//                            onClick = {}
+//                        ) {
+//                            Icon(Icons.Rounded.Minimize, contentDescription = "Minus")
+//                        }
+//                        TextField(
+//                            value = numberText,
+//                            onValueChange = { numberText = it },
+//                            label = { Text("Number") }
+//                        )
+//                        IconButton(
+//                            onClick = {}
+//                        ) {
+//                            Icon(Icons.Rounded.Maximize, contentDescription = "Plus")
+//                        }
+//                    }
+//                }
+//            }
+//            MetricType.Slider -> {
+//                Column(
+//                    modifier = Modifier.padding(4.dp)
+//                ) {
+//                    Row() {
+//                        TextField(
+//                            value = sliderText,
+//                            onValueChange = { sliderText = it },
+//                            label = { Text("Value") }
+//                        )
+//                        Slider(
+//                            value = sliderPosition,
+//                            onValueChange = {sliderPosition = it },
+//                            valueRange = 0f..100f,
+//                            steps = 5
+//                        )
+//                    }
+//                }
+//            }
+//            MetricType.Chooser -> {}
+//            MetricType.Checkbox -> {}
+//            MetricType.Stopwatch -> {}
+//            MetricType.TextField -> {}
             null -> {}
         }
         FRCKrawlerTextField(
