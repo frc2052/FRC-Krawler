@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
@@ -72,7 +73,11 @@ public class ServerService extends Service {
             m.createNotificationChannel(channel);
         }
 
-        startForeground(SERVER_OPEN_ID, makeNotification());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startForeground(SERVER_OPEN_ID, makeNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE);
+        } else {
+            startForeground(SERVER_OPEN_ID, makeNotification());
+        }
     }
 
     /**
