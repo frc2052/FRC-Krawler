@@ -106,6 +106,10 @@ public class ExportDialogFragment extends BaseProgressDialog {
     }
 
     private void checkPermissionAndDoExport() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            createFile();
+            return;
+        }
         RxPermissions.getInstance(getActivity())
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe(granted -> {

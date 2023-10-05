@@ -36,6 +36,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_S_BT_PERMISSION = 2;
     private static final int REQUEST_STORAGE_PERMISSION = 0;
+    private static final int REQUEST_NOTIFICATION_PERMISSION = 3;
     private static final String LOG_TAG = "SetupActivity";
     @BindView(R.id.view_pager)
     protected DisableSwipeViewPager pager;
@@ -96,7 +97,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
         if (requestCode == REQUEST_S_BT_PERMISSION) {
             requestEnableBluetooth();
-        } else if (requestCode == REQUEST_STORAGE_PERMISSION) {
+        } else if (requestCode == REQUEST_STORAGE_PERMISSION || requestCode == REQUEST_NOTIFICATION_PERMISSION) {
             if (BluetoothUtil.isBluetoothEnabled()) {
                 setupFinished();
             } else {
@@ -109,10 +110,10 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.welcome_next_page:
-                Log.i(LOG_TAG, String.valueOf(BluetoothUtil.isBluetoothEnabled()));
-                int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if (permission != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
                 } else {
                     if (BluetoothUtil.isBluetoothEnabled()) {
                         setupFinished();
