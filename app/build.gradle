@@ -23,7 +23,6 @@ android {
         }
         release {
             minifyEnabled true
-            zipAlignEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -39,13 +38,14 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
-    }
 
     repositories {
         maven { url "https://jitpack.io" }
+    }
+    namespace 'com.team2052.frckrawler'
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
     }
 }
 
