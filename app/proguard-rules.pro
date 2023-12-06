@@ -74,6 +74,11 @@ public static *** d(...);
 -dontwarn javax.inject.**
 -dontwarn sun.misc.Unsafe
 
+## GSON with R8
+-keep class com.google.gson.reflect.TypeToken
+-keep class * extends com.google.gson.reflect.TypeToken
+-keep public class * implements java.lang.reflect.Type
+
 # Guava 19.0
 -dontwarn java.lang.ClassValue
 -dontwarn com.google.j2objc.annotations.Weak
