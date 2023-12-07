@@ -63,7 +63,7 @@ kotlinx-metadata-jvm = "org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.5.0"
 hilt-gradlePlugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-androidCompiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
-hilt-compiler = "com.google.dagger:hilt-compiler:1.0.0"
+hilt-compiler = "androidx.hilt:hilt-compiler:1.0.0"
 hilt-navigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0"
 hilt-work = "androidx.hilt:hilt-work:1.0.0"
 
