@@ -4,15 +4,13 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
 }
-apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.team2052.frckrawler"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
 
