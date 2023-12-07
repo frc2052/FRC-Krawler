@@ -10,6 +10,7 @@ android {
     defaultConfig {
         applicationId "com.team2052.frckrawler"
         minSdkVersion 21
+        compileSdk 34
         targetSdkVersion 34
         versionCode 1
         versionName "1.0"
@@ -30,6 +31,7 @@ android {
     buildFeatures {
         viewBinding true
         compose true
+        buildConfig true
     }
 
     compileOptions {
