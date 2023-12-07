@@ -38,6 +38,7 @@ internal class CompanionDeviceServerDiscoveryStrategy @Inject constructor() : Se
       object : CompanionDeviceManager.Callback() {
         // Called when a device is found. Launch the IntentSender so the user
         // can select the device they want to pair with.
+        @Deprecated("Deprecated in Java")
         override fun onDeviceFound(chooserLauncher: IntentSender) {
           val launcher = activity.activityResultRegistry.register(
             ServerDiscoveryStrategy.LAUNCHER_KEY,
