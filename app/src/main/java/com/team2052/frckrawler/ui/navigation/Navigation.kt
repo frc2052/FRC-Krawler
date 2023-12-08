@@ -4,7 +4,10 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.*
-import com.google.accompanist.navigation.animation.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
+import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.ui.modeSelect.ModeSelectScreen
 import com.team2052.frckrawler.ui.scout.ScoutHomeScreen
 import com.team2052.frckrawler.ui.scout.ScoutMatchesScreen
@@ -22,9 +25,9 @@ private const val transitionDuration = 400
 @Composable
 fun Navigation(initialScreen: Screen = ModeSelect) {
     // The universal navigation controller used for all navigation throughout the app.
-    val navController = rememberAnimatedNavController()
+    val navController = rememberNavController()
 
-    AnimatedNavHost(
+    NavHost(
         navController = navController,
         startDestination = initialScreen.route,
         enterTransition = {
@@ -68,6 +71,11 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
          * Currently the animated nav-graph doesn't look good when navigating between
          * tabs. TODO: Implement shared element transitions when they come out
          */
+
+        /**
+         * Currently the animated nav-graph doesn't look good when navigating between
+         * tabs. TODO: Implement shared element transitions when they come out
+         */
         navigation(
             navigation = Server,
             initialScreen = ServerHome,
@@ -106,16 +114,16 @@ private fun NavGraphBuilder.composable(
     screen: Screen,
     deepLinks: List<NavDeepLink> = emptyList(),
     enterTransition: (
-        AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
     )? = null,
     exitTransition: (
-        AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
     )? = null,
     popEnterTransition: (
-        AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
     )? = enterTransition,
     popExitTransition: (
-        AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
     )? = exitTransition,
     content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit,
 ) = composable(
@@ -134,16 +142,16 @@ private fun NavGraphBuilder.navigation(
     initialScreen: Screen,
     navigation: Screen,
     enterTransition: (
-    AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
     )? = null,
     exitTransition: (
-    AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
     )? = null,
     popEnterTransition: (
-    AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
     )? = enterTransition,
     popExitTransition: (
-    AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
     )? = exitTransition,
     builder: NavGraphBuilder.() -> Unit
 ) = navigation(

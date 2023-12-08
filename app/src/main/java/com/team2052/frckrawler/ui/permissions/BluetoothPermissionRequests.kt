@@ -7,7 +7,10 @@ import android.provider.Settings
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -38,8 +41,9 @@ fun BluetoothPermissionRequestDialogs(
       DeviceType.Server -> RequiredPermissions.serverPermissions
     }
   )
+  var hasShownRequest by remember { mutableStateOf(false) }
 
-  if (!permissions.permissionRequested) {
+  if (!hasShownRequest) {
     if (permissions.shouldShowRationale) {
       Alert(
         confirm = { Text(stringResource(R.string.ok)) },
@@ -51,16 +55,20 @@ fun BluetoothPermissionRequestDialogs(
           }
           Text(stringResource(descriptionRes))
         },
-        onStateChange = { permissions.launchMultiplePermissionRequest() }
+        onStateChange = {
+          hasShownRequest = true
+          permissions.launchMultiplePermissionRequest()
+        }
       )
     } else {
       LaunchedEffect(true) {
+        hasShownRequest = true
         permissions.launchMultiplePermissionRequest()
       }
     }
   }
 
-  if (permissions.permissionRequested && permissions.revokedPermissions.isNotEmpty()) {
+  if (hasShownRequest && permissions.revokedPermissions.isNotEmpty()) {
     val settingsIntent = getSettingsIntent()
     val context = LocalContext.current
 
