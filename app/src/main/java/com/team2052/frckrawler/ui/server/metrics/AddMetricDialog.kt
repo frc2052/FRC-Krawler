@@ -11,15 +11,21 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddMetricDialog(
-    onAddMetric: (String) -> Unit,
+    category: MetricCategory,
+    gameId: Int,
     onClose: () -> Unit
 ) {
+    val viewModel: AddMetricViewModel = hiltViewModel()
+
     var metricName by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     val options = MetricType.values()
@@ -29,6 +35,12 @@ fun AddMetricDialog(
     var numberText by rememberSaveable { mutableStateOf("") }
     var sliderPosition by remember { mutableStateOf(0f) }
     var sliderText by rememberSaveable { mutableStateOf("") }
+
+    val isStateValid by remember {
+        derivedStateOf {
+            selectedMetricType != null && metricName.isNotBlank()
+        }
+    }
 
     Column(
         modifier = Modifier.padding(24.dp)
@@ -162,8 +174,14 @@ fun AddMetricDialog(
                 }
                 TextButton(
                     modifier = Modifier.padding(12.dp),
+                    enabled = isStateValid,
                     onClick = {
-                        onAddMetric(metricName)
+                        viewModel.saveMetric(
+                            name = metricName,
+                            category = category,
+                            gameId = gameId,
+                            type = selectedMetricType ?: MetricType.Boolean
+                        )
                         onClose()
                     }
                 ) {

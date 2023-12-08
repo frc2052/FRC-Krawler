@@ -68,7 +68,8 @@ fun MetricsListScreen(
             sheetState = sheetState,
             sheetContent = {
                 AddMetricDialog(
-                    onAddMetric = { newMetric -> /* TODO viewModel.makeMatchMetric(newMetric) */ },
+                    category = category,
+                    gameId = gameId,
                     onClose = {
                         scope.launch {
                             sheetState.hide()

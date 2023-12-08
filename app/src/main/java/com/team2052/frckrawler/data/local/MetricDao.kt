@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MetricDao {
@@ -14,8 +15,14 @@ interface MetricDao {
     suspend fun insert(metric: Metric)
 
     @Query("SELECT * FROM metric WHERE category = :category AND gameId = :gameId")
-    suspend fun getGameMetricsWithCategory(
+    fun getGameMetricsWithCategory(
         category: MetricCategory,
         gameId: Int
-    ): List<Metric>
+    ): Flow<List<Metric>>
+
+    @Query("SELECT COUNT(id) FROM metric WHERE category = :category AND gameId = :gameId")
+    suspend fun getMetricCountForCategory(
+        category: MetricCategory,
+        gameId: Int
+    ): Int
 }
