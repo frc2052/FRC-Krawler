@@ -74,9 +74,9 @@ fun FRCKrawlerTextField(
         interactionSource = interactionSource,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             unfocusedBorderColor = lightGray,
-            cursorColor = MaterialTheme.colors.secondary,
-            focusedBorderColor = MaterialTheme.colors.secondary,
-            focusedLabelColor = MaterialTheme.colors.secondary,
+            cursorColor = MaterialTheme.colors.primary,
+            focusedBorderColor = MaterialTheme.colors.primary,
+            focusedLabelColor = MaterialTheme.colors.primary,
             unfocusedLabelColor = gray,
             trailingIconColor = gray,
             errorLabelColor = MaterialTheme.colors.error,

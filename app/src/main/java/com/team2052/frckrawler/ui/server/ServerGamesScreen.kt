@@ -21,6 +21,7 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.ui.components.*
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
+import com.team2052.frckrawler.ui.game.AddGameDialog
 import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
@@ -133,50 +134,6 @@ private fun GameActions(onOpen: () -> Unit) {
             }
         }
     }
-}
-
-@Composable
-private fun AddGameDialog(
-    onAddGame: (String) -> Unit,
-    onClose: () -> Unit
-) {
-    var gameName by remember { mutableStateOf("") }
-    AlertDialog(
-        modifier = Modifier.fillMaxWidth(0.75f),
-        onDismissRequest = { onClose() },
-        title = { Text("Add New Game") },
-        text = {
-            FRCKrawlerTextField(
-                modifier = Modifier.padding(top = 24.dp),
-                value = gameName,
-                onValueChange = { gameName = it },
-                label = "Name"
-            )
-        },
-        buttons = {
-            ProvideTextStyle(LocalTextStyle.current.copy(color = MaterialTheme.colors.secondary)) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    TextButton(
-                        modifier = Modifier.padding(12.dp),
-                        onClick = {
-                            onClose()
-                        }
-                    ) {
-                        Text("CANCEL")
-                    }
-                    TextButton(
-                        modifier = Modifier.padding(12.dp),
-                        onClick = {
-                            onAddGame(gameName)
-                            onClose()
-                        }
-                    ) {
-                        Text("SAVE")
-                    }
-                }
-            }
-        }
-    )
 }
 
 @Composable
