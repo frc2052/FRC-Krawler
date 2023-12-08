@@ -1,10 +1,7 @@
 package com.team2052.frckrawler.ui.server
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -20,7 +17,6 @@ import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.ui.components.*
-import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.game.AddGameDialog
 import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -61,7 +57,7 @@ fun ServerGamesScreen(
         },
         floatingActionButton = {
             GameActions(
-                onOpen = { addGameDialogOpen = true }
+                onAddClick = { addGameDialogOpen = true }
             )
         },
         drawerContent = {
@@ -72,12 +68,10 @@ fun ServerGamesScreen(
                 EmptyBackground()
             }
         }
-    ) { contentPadding ->
-        ServerSeasonsScreenContent(
-            modifier = Modifier.padding(contentPadding),
+    ) { _ ->
+        GamesList(
             listOfGames = viewModel.games,
-            onOpen = {},
-            navController = navController
+            onGameClick = { navController.navigate(Metrics.route) }
         )
         if (addGameDialogOpen) {
             AddGameDialog(
@@ -106,57 +100,31 @@ private fun EmptyBackground() {
 }
 
 @Composable
-private fun GameActions(onOpen: () -> Unit) {
-    var fabExpanded by remember { mutableStateOf(false) }
-    Column {
-        if (fabExpanded) {
-            val fabModifier = Modifier.padding(bottom = 24.dp)
-            FloatingActionButton(
-                modifier = fabModifier,
-                onClick = { onOpen() }
-            ) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "Manual Season Add")
-            }
-            FloatingActionButton(
-                modifier = fabModifier,
-                onClick = {}
-            ) {
-                Icon(imageVector = Icons.Filled.Delete, contentDescription = "Manual Season Add")
-            }
-        }
-        FloatingActionButton(onClick = {
-            fabExpanded = !fabExpanded
-        }) {
-            if (!fabExpanded) {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "Manual Season Add")
-            } else {
-                Icon(imageVector = Icons.Filled.Close, contentDescription = "Manual Season Add")
-            }
-        }
+private fun GameActions(onAddClick: () -> Unit) {
+    val fabModifier = Modifier.padding(bottom = 24.dp)
+    FloatingActionButton(
+        modifier = fabModifier,
+        onClick = onAddClick
+    ) {
+        Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new game")
     }
 }
 
 @Composable
-fun ServerSeasonsScreenContent(
+fun GamesList(
     modifier: Modifier = Modifier,
     listOfGames: List<Game>,
-    onOpen:() -> Unit,
-    navController: NavController
+    onGameClick: (Game) -> Unit
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         listOfGames.forEach { game ->
-            TextButton(
-                modifier = Modifier.padding(12.dp),
-                onClick = {
-                    onOpen()
-                    navController.navigate(Metrics.route)
-                }
-            ) {
-                Text(
-                    text = game.name,
-                    style = MaterialTheme.typography.h4
-                )
-            }
+            Text(
+                modifier = Modifier.fillMaxWidth()
+                    .clickable { onGameClick(game) }
+                    .padding(horizontal = 12.dp, vertical = 12.dp),
+                text = game.name,
+                style = MaterialTheme.typography.h5
+            )
             Divider()
         }
     }
@@ -164,16 +132,15 @@ fun ServerSeasonsScreenContent(
 
 @Preview
 @Composable
-private fun ServerSeasonsScreenPreviewLight() {
+private fun GamesListPreview() {
     FrcKrawlerTheme(darkTheme = false) {
-        ServerGamesScreen(navController = rememberNavController())
-    }
-}
-
-@Preview
-@Composable
-private fun ServerSeasonsScreenPreviewDark() {
-    FrcKrawlerTheme(darkTheme = true) {
-        ServerGamesScreen(navController = rememberNavController())
+        GamesList(
+            listOfGames = listOf(
+                Game(name = "Infinite Recharge"),
+                Game(name = "Rapid React"),
+                Game(name = "Charged Up"),
+            ),
+            onGameClick = {}
+        )
     }
 }
