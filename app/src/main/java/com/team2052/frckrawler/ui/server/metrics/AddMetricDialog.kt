@@ -23,7 +23,6 @@ fun AddMetricDialog(
     var metricName by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     val options = MetricType.values()
-    var typeField by remember { mutableStateOf("") }
     var selectedMetricType : MetricType? by remember { mutableStateOf(null) }
     var radioButtonState by remember { mutableStateOf(true) }
     val radioOptions = listOf("Yes", "No")
@@ -106,7 +105,7 @@ fun AddMetricDialog(
             modifier = Modifier.padding(top = 24.dp),
             value = metricName,
             onValueChange = { metricName = it },
-            label = "Name"
+            label = "Metric name"
         )
         Row(
             horizontalArrangement = Arrangement.End
@@ -146,7 +145,7 @@ fun AddMetricDialog(
         }
         ProvideTextStyle(
             LocalTextStyle.current.copy(
-                color = MaterialTheme.colors.secondary
+                color = MaterialTheme.colors.primary
             )
         ) {
             Row(

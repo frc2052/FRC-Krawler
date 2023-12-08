@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.ui.server.metrics
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -45,13 +46,7 @@ fun MatchMetricsScreen(
             FRCKrawlerAppBar(
                 navController = navController,
                 scaffoldState = scaffoldState,
-                title = {
-                    Text(
-                        stringResource(
-                            R.string.metrics_screen
-                        )
-                    )
-                }
+                title = { Text(stringResource(R.string.metrics_screen) ) }
             )
         },
         floatingActionButton = {
@@ -59,17 +54,15 @@ fun MatchMetricsScreen(
                 sheetState.targetValue == ModalBottomSheetValue.Hidden
             ) {
                 MetricActions(
-                onOpen = {
-                    scope.launch {
-                        sheetState.show()
+                    onAddClick = {
+                        scope.launch {
+                            sheetState.show()
                         }
                     }
                 )
             }
         },
-        drawerContent = {
-            FRCKrawlerDrawer()
-        },
+        drawerContent = { FRCKrawlerDrawer() },
     ) { contentPadding ->
         ModalBottomSheetLayout(
             sheetState = sheetState,
@@ -87,7 +80,7 @@ fun MatchMetricsScreen(
             if (viewModel.matchMetrics.isEmpty()) {
                 EmptyBackground()
             } else {
-                Column {
+                Column(Modifier.padding(contentPadding)) {
                     FRCKrawlerTabBar(
                         navigation = Screen.Metrics,
                         currentScreen = Screen.MatchMetrics
@@ -100,8 +93,9 @@ fun MatchMetricsScreen(
                     ServerSeasonsMetricContent(
                         modifier = Modifier.padding(contentPadding),
                         listOfMatchMetrics = viewModel.matchMetrics,
-                        onOpen = {},
-                        navController = navController
+                        onMetricClick = {
+                                        // TODO edit metric
+                        },
                     )
                 }
             }
@@ -127,48 +121,15 @@ private fun EmptyBackground() {
 }
 
 @Composable
-private fun MetricActions(onOpen: () -> Unit) {
-    var fabExpanded by remember { mutableStateOf(false) }
-    Column {
-        if (fabExpanded) {
-            val fabModifier = Modifier.padding(bottom = 24.dp)
-            FloatingActionButton(
-                modifier = fabModifier,
-                onClick = { onOpen() }
+private fun MetricActions(onAddClick: () -> Unit) {
+    FloatingActionButton(
+        onClick = { onAddClick() }
 
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Manual Metric Add"
-                )
-            }
-            FloatingActionButton(
-                modifier = fabModifier,
-                onClick = {}
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Delete,
-                    contentDescription = "Manual Metric Add"
-                )
-            }
-        }
-        FloatingActionButton(
-            onClick = {
-                fabExpanded = !fabExpanded
-            }
-        ) {
-           if (!fabExpanded) {
-               Icon(
-                   imageVector = Icons.Filled.Menu,
-                   contentDescription = "Manual Metric Add"
-               )
-           } else {
-               Icon(
-                   imageVector = Icons.Filled.Close,
-                   contentDescription = "Manual Metric Add"
-               )
-           }
-        }
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Add,
+            contentDescription = "Manual Metric Add"
+        )
     }
 }
 
@@ -176,44 +137,18 @@ private fun MetricActions(onOpen: () -> Unit) {
 fun ServerSeasonsMetricContent(
     modifier: Modifier = Modifier,
     listOfMatchMetrics: List<MatchMetric>,
-    onOpen: () -> Unit,
-    navController: NavController
+    onMetricClick: (MatchMetric) -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         listOfMatchMetrics.forEach { metric ->
-            TextButton(
-                modifier = Modifier.padding(10.dp),
-                onClick = {
-                    onOpen()
-                    navController.navigate(Screen.MatchMetrics.route)
-                }
-            ) {
-                Text(
-                    text = metric.name,
-                    style = MaterialTheme.typography.h4
-                )
-            }
+            Text(
+                modifier = Modifier.fillMaxWidth()
+                    .clickable { onMetricClick(metric) }
+                    .padding(horizontal = 12.dp, vertical = 12.dp),
+                text = metric.name,
+                style = MaterialTheme.typography.h5
+            )
             Divider()
         }
-    }
-}
-
-@Preview
-@Composable
-private fun ServerSeasonsScreenPreviewLight() {
-    FrcKrawlerTheme(
-        darkTheme = false
-    ) {
-        MatchMetricsScreen(navController = rememberNavController())
-    }
-}
-
-@Preview
-@Composable
-private fun ServerSeasonsScreenPreviewDark() {
-    FrcKrawlerTheme(
-        darkTheme = true
-    ) {
-        MatchMetricsScreen(navController = rememberNavController())
     }
 }

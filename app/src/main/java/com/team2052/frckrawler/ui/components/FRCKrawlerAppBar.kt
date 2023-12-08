@@ -3,6 +3,7 @@ package com.team2052.frckrawler.ui.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
@@ -74,7 +75,6 @@ private fun DefaultNavigationButton(
     val scope = rememberCoroutineScope()
     if (navController.previousBackStackEntry == null) {
         IconButton(onClick = {
-            Timber.d("BUTTON CLICKED!")
             scope.launch {
                 navigationButtonClicked()
             }
@@ -88,7 +88,7 @@ private fun DefaultNavigationButton(
     } else {
         IconButton(onClick = { navController.popBackStack() }) {
             Icon(
-                imageVector = Icons.Filled.KeyboardArrowLeft,
+                imageVector = Icons.Filled.ArrowBack,
                 contentDescription = "Backwards Navigation",
                 tint = MaterialTheme.colors.onPrimary,
             )
