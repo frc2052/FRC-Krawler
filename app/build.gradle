@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
+    alias libs.plugins.ksp
+    alias libs.plugins.hilt
 }
 
 android {
@@ -95,18 +95,18 @@ dependencies {
     implementation libs.okhttp.core
     implementation libs.okhttp.logging
     implementation libs.moshi.core
-    kapt libs.moshi.codegen
+    ksp libs.moshi.codegen
 
     // Room
     implementation libs.room.runtime
     implementation libs.room.ktx
-    kapt libs.room.compiler
+    ksp libs.room.compiler
     testImplementation libs.room.testing
 
     // Dagger - Hilt
     implementation libs.hilt.android
-    kapt libs.hilt.androidCompiler
-    kapt libs.hilt.compiler
+    ksp libs.hilt.androidCompiler
+    ksp libs.hilt.compiler
     implementation libs.hilt.navigationCompose
 
     implementation libs.okio

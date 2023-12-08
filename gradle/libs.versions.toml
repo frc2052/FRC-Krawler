@@ -57,7 +57,6 @@ kotlin-stdlib-jdk7 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", versi
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
-hilt-gradlePlugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-androidCompiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-compiler = "androidx.hilt:hilt-compiler:1.1.0"
@@ -86,3 +85,5 @@ ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit"
 junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]
+ksp = "com.google.devtools.ksp:1.9.21-1.0.15"
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
