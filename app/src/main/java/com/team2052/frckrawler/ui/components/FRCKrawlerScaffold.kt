@@ -19,10 +19,6 @@ import com.team2052.frckrawler.ui.theme.*
 fun FRCKrawlerScaffold(
     modifier: Modifier = Modifier,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    contentPadding: PaddingValues = PaddingValues(spaceLarge),
-    scrollable: Boolean = true,
-    refreshing: Boolean = false,
-    onRefresh: (() -> Unit)? = null,
     appBar: @Composable () -> Unit = { },
     tabBar: @Composable () -> Unit = { },
     floatingActionButton: @Composable () -> Unit = { },
@@ -60,30 +56,19 @@ fun FRCKrawlerScaffold(
         !scaffoldState.drawerState.isClosed
     ) drawerContent else null,
     backgroundColor = MaterialTheme.colors.background,
-) {
-    Box(modifier = Modifier.fillMaxSize()) {
+) { contentPadding ->
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .padding(contentPadding)
+    ) {
         background()
-        SwipeRefresh(
-            modifier = Modifier.fillMaxSize(),
-            state = rememberSwipeRefreshState(refreshing),
-            onRefresh = { if (onRefresh != null) onRefresh() },
-            swipeEnabled = onRefresh != null,
-            refreshTriggerDistance = 96.dp,
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(contentPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .then(
-                        if (scrollable)
-                            Modifier.verticalScroll(rememberScrollState())
-                        else
-                            Modifier
-                    )
-                    .padding(contentPadding),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                content(PaddingValues(bottom = spaceLarge))
-            }
+            content(PaddingValues(bottom = spaceLarge))
         }
         FRCKrawlerSnackbar(
             snackbarHostState = scaffoldState.snackbarHostState,

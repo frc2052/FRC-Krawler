@@ -28,8 +28,6 @@ fun ScoutMatchesScreen(
     FRCKrawlerScaffold(
         modifier = modifier,
         scaffoldState = scaffoldState,
-        refreshing = false,
-        onRefresh = { },
         appBar = {
             FRCKrawlerAppBar(
                 navController = navController,

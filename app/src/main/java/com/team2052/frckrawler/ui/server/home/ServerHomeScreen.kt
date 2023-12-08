@@ -24,6 +24,7 @@ import com.team2052.frckrawler.ui.navigation.Screen.Server
 import com.team2052.frckrawler.ui.navigation.Screen.ServerHome
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import com.team2052.frckrawler.ui.theme.spaceLarge
 
 @Composable
 fun ServerHomeScreen(
@@ -77,6 +78,7 @@ fun ServerHomeScreen(
         ) { contentPadding ->
             Column(
                 modifier = Modifier.padding(contentPadding)
+                    .padding(spaceLarge)
             ) {
                 ServerConfigCard(
                     modifier = modifier,

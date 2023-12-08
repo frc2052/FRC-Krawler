@@ -24,6 +24,7 @@ import com.team2052.frckrawler.ui.components.*
 import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import com.team2052.frckrawler.ui.theme.spaceLarge
 
 @Composable
 fun ScoutHomeScreen(
@@ -56,8 +57,6 @@ fun ScoutHomeScreen(
         FRCKrawlerScaffold(
             modifier = modifier,
             scaffoldState = scaffoldState,
-            refreshing = false,
-            onRefresh = { },
             appBar = {
                 FRCKrawlerAppBar(
                     navController = navController,
@@ -95,7 +94,7 @@ private fun ScoutHomeScreenContent(
     onFindServerClicked: () -> Unit,
     onSyncClicked: () -> Unit,
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(spaceLarge)) {
         ConnectionStatusCard(
             state = serverState,
             onFindServerClicked = onFindServerClicked

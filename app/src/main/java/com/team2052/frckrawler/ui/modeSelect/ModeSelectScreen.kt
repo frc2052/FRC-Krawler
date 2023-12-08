@@ -1,7 +1,9 @@
 package com.team2052.frckrawler.ui.modeSelect
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -9,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -16,6 +19,7 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.components.*
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import com.team2052.frckrawler.ui.theme.spaceLarge
 
 @Composable
 fun ModeSelectScreen(
@@ -53,40 +57,47 @@ private fun ModeSelectScreenContent(
     viewModel: ModeSelectViewModel,
     navController: NavController,
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        ProvideTextStyle(MaterialTheme.typography.h6) {
-            Text(stringResource(R.string.welcome_message))
-            Text(stringResource(R.string.getting_started_message))
+    Column(modifier = modifier
+        .fillMaxWidth()
+        .padding(spaceLarge)) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            ProvideTextStyle(MaterialTheme.typography.h6) {
+                Text(stringResource(R.string.welcome_message))
+                Text(stringResource(R.string.getting_started_message))
+            }
         }
-    }
+        Spacer(modifier = Modifier.height(24.dp))
 
-    ExpandableCardGroup {
-        expandableCard { id ->
-            RemoteScoutCard(
-                id = id,
-                modifier = modifier,
-                viewModel = viewModel,
-                navController = navController,
-            )
-        }
-        expandableCard { id ->
-            ServerCard(
-                id = id,
-                modifier = modifier,
-                viewModel = viewModel,
-                navController = navController,
-            )
-        }
-        expandableCard { id ->
-            SoloScoutCard(
-                id = id,
-                modifier = modifier,
-                viewModel = viewModel,
-                navController = navController,
-            )
+        ExpandableCardGroup {
+            expandableCard { id ->
+                RemoteScoutCard(
+                    id = id,
+                    modifier = Modifier,
+                    viewModel = viewModel,
+                    navController = navController,
+                )
+            }
+
+            expandableCard { id ->
+                ServerCard(
+                    id = id,
+                    modifier = Modifier,
+                    viewModel = viewModel,
+                    navController = navController,
+                )
+            }
+
+            expandableCard { id ->
+                SoloScoutCard(
+                    id = id,
+                    modifier = Modifier,
+                    viewModel = viewModel,
+                    navController = navController,
+                )
+            }
         }
     }
 }

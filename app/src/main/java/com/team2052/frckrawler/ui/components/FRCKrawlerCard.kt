@@ -57,6 +57,9 @@ fun ExpandableCardGroup(
     Column(modifier = modifier) {
         for (index in cards.indices) {
             cards[index](index)
+            if (index != cards.size - 1) {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }
