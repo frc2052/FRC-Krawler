@@ -19,7 +19,9 @@ class ServerGamesViewModel @Inject constructor(
 
     fun loadGames() {
         viewModelScope.launch {
-            games = gameDao.getAll()
+            gameDao.getAll().collect() {
+                games = it
+            }
         }
     }
 
