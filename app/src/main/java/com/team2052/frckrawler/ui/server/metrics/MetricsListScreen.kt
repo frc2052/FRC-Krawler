@@ -10,33 +10,33 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.data.local.MatchMetric
+import com.team2052.frckrawler.data.local.Metric
+import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
 import com.team2052.frckrawler.ui.navigation.Screen
-import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MatchMetricsScreen(
+fun MetricsListScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
+    category: MetricCategory,
+    gameId: Int
 ) {
     val scaffoldState = rememberScaffoldState()
-    val viewModel: MatchMetricsViewModel = hiltViewModel()
+    val viewModel: MetricsListViewModel = hiltViewModel()
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(true) {
-        viewModel.loadMatchMetrics()
+        viewModel.loadMatchMetrics(category, gameId)
     }
 
     Scaffold(
@@ -68,7 +68,7 @@ fun MatchMetricsScreen(
             sheetState = sheetState,
             sheetContent = {
                 AddMetricDialog(
-                    onAddMetric = { newMetric -> viewModel.makeMatchMetric(newMetric) },
+                    onAddMetric = { newMetric -> /* TODO viewModel.makeMatchMetric(newMetric) */ },
                     onClose = {
                         scope.launch {
                             sheetState.hide()
@@ -77,24 +77,29 @@ fun MatchMetricsScreen(
                 )
             }
         ) {
-            if (viewModel.matchMetrics.isEmpty()) {
-                EmptyBackground()
-            } else {
-                Column(Modifier.padding(contentPadding)) {
-                    FRCKrawlerTabBar(
-                        navigation = Screen.Metrics,
-                        currentScreen = Screen.MatchMetrics
-                    ) { screen ->
-                        navController.navigate(screen.route) {
-                            popUpTo(Screen.Metrics.route) { inclusive = true }
-                            launchSingleTop = true
-                        }
+            Column(Modifier.padding(contentPadding)) {
+                val currentScreen = when (category) {
+                    MetricCategory.Match -> Screen.MatchMetrics(gameId)
+                    MetricCategory.Pit -> Screen.PitMetrics(gameId)
+                }
+                FRCKrawlerTabBar(
+                    navigation = Screen.Metrics(gameId),
+                    currentScreen = currentScreen
+                ) { screen ->
+                    navController.navigate(screen.route) {
+                        popUpTo(Screen.Metrics(gameId).route) { inclusive = true }
+                        launchSingleTop = true
                     }
-                    ServerSeasonsMetricContent(
+                }
+
+                if (viewModel.metrics.isEmpty()) {
+                    EmptyBackground()
+                } else {
+                    MetricListContent(
                         modifier = Modifier.padding(contentPadding),
-                        listOfMatchMetrics = viewModel.matchMetrics,
+                        metrics = viewModel.metrics,
                         onMetricClick = {
-                                        // TODO edit metric
+                            // TODO edit metric
                         },
                     )
                 }
@@ -134,13 +139,13 @@ private fun MetricActions(onAddClick: () -> Unit) {
 }
 
 @Composable
-fun ServerSeasonsMetricContent(
+fun MetricListContent(
     modifier: Modifier = Modifier,
-    listOfMatchMetrics: List<MatchMetric>,
-    onMetricClick: (MatchMetric) -> Unit,
+    metrics: List<Metric>,
+    onMetricClick: (Metric) -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
-        listOfMatchMetrics.forEach { metric ->
+        metrics.forEach { metric ->
             Text(
                 modifier = Modifier.fillMaxWidth()
                     .clickable { onMetricClick(metric) }

@@ -35,16 +35,8 @@ object DatabaseModule {
     @Singleton
     fun provideMatchMetricsDao(
         database: FRCKrawlerDatabase
-    ): MatchMetricsDao {
-        return database.matchMetricsDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providePitMetricsDao(
-        database: FRCKrawlerDatabase
-    ): PitMetricsDao {
-        return database.pitMetricsDao()
+    ): MetricDao {
+        return database.metricDao()
     }
 }
 

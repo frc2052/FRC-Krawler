@@ -71,7 +71,7 @@ fun ServerGamesScreen(
     ) { _ ->
         GamesList(
             listOfGames = viewModel.games,
-            onGameClick = { navController.navigate(Metrics.route) }
+            onGameClick = { game -> navController.navigate(Metrics(game.id).route) }
         )
         if (addGameDialogOpen) {
             AddGameDialog(
