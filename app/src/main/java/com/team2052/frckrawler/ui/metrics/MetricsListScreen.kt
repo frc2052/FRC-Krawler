@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.server.metrics
+package com.team2052.frckrawler.ui.metrics
 
 
 import androidx.compose.foundation.clickable

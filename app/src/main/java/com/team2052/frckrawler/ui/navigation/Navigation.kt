@@ -17,7 +17,7 @@ import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.server.ServerGamesScreen
 import com.team2052.frckrawler.ui.server.home.ServerHomeScreen
 import com.team2052.frckrawler.ui.server.ServerMatchesScreen
-import com.team2052.frckrawler.ui.server.metrics.MetricsListScreen
+import com.team2052.frckrawler.ui.metrics.MetricsListScreen
 
 private const val transitionOffset = 400
 private const val transitionDuration = 400
