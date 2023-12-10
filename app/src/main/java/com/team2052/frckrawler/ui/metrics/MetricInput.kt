@@ -21,7 +21,7 @@ fun MetricInput(
 ) {
     Row(
         modifier = modifier
-            .padding(horizontal = 12.dp, vertical = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

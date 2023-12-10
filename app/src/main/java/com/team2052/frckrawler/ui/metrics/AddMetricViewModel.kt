@@ -45,14 +45,7 @@ class AddMetricViewModel @Inject constructor(
             options = typeOptions
         )
 
-        // TODO there's gotta be a better way than copying twice
-        _state.value = newState.copy(
-            previewMetric = newState.toMetric(
-                id = -1,
-                category = MetricCategory.Match,
-                priority = -1
-            )
-        )
+        _state.value = newState
     }
 
     fun updateOptions(typeOptions: TypeOptions) {
@@ -70,10 +63,8 @@ class AddMetricViewModel @Inject constructor(
                 category = category,
                 priority = priority
             )
-            // Should only be null if we didn't have a type (and thus save shouldn't be enabled)
-            if (metric != null) {
-                metricRepo.saveMetric(metric, gameId)
-            }
+
+            metricRepo.saveMetric(metric, gameId)
         }
     }
 }

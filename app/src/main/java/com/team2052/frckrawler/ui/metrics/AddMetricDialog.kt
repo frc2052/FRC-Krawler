@@ -1,20 +1,27 @@
 package com.team2052.frckrawler.ui.metrics
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,7 +40,6 @@ import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddEditMetricDialog(
     category: MetricCategory,
@@ -67,52 +73,57 @@ private fun AddEditMetricContent(
     onSaveClick: () -> Unit,
     onCancelClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier.padding(24.dp)
-    ) {
-        if (state.previewMetric != null) {
-            var metricState by remember { mutableStateOf("") }
-            MetricInput(
-                modifier = Modifier.fillMaxWidth(),
-                metric = state.previewMetric,
-                state = metricState,
-                onStateChanged = { metricState = it}
+    Column {
+        Text(
+            modifier = Modifier.padding(16.dp),
+            text = "Add new metric",
+            style = MaterialTheme.typography.h6
+        )
+
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            FRCKrawlerTextField(
+                value = state.name,
+                onValueChange = onNameChange,
+                label = "Metric name"
             )
-        }
 
-        FRCKrawlerTextField(
-            modifier = Modifier.padding(top = 24.dp),
-            value = state.name,
-            onValueChange = onNameChange,
-            label = "Metric name"
-        )
+            MetricTypeSelector(
+                metricType = state.type,
+                onMetricTypeSelected = onTypeChange
+            )
 
-        MetricTypeSelector(
-            metricType = state.type,
-            onMetricTypeSelected = onTypeChange
-        )
+            when (state.options) {
+                TypeOptions.None -> {}
+                is TypeOptions.IntRange -> {
+                    IntRangeOptions(
+                        options = state.options,
+                        onOptionsChanged = onOptionsChange
+                    )
+                }
 
-        when (state.options) {
-            TypeOptions.None -> {}
-            is TypeOptions.IntRange -> {
-                IntRangeOptions(
-                    options = state.options,
-                    onOptionsChanged = onOptionsChange
-                )
-            }
-            is TypeOptions.SteppedIntRange -> {
-                SteppedIntRangeOptions(
-                    options = state.options,
-                    onOptionsChanged = onOptionsChange
-                )
-            }
-            is TypeOptions.StringList -> {
-                StringListOptions(
-                    options = state.options,
-                    onOptionsChanged = onOptionsChange
-                )
+                is TypeOptions.SteppedIntRange -> {
+                    SteppedIntRangeOptions(
+                        options = state.options,
+                        onOptionsChanged = onOptionsChange
+                    )
+                }
+
+                is TypeOptions.StringList -> {
+                    StringListOptions(
+                        options = state.options,
+                        onOptionsChanged = onOptionsChange
+                    )
+                }
             }
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        MetricPreview(
+            metric = state.previewMetric
+        )
 
         DialogButtons(
             saveEnabled = state.saveEnabled,
@@ -122,41 +133,90 @@ private fun AddEditMetricContent(
     }
 }
 
+@Composable
+private fun MetricPreview(
+    modifier: Modifier = Modifier,
+    metric: Metric
+) {
+    var metricState by remember { mutableStateOf("") }
+    Divider()
+    Box {
+        Text(
+            modifier = Modifier
+                .padding(top = 8.dp, start = 16.dp, bottom = 4.dp)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colors.primaryVariant,
+                    shape = MaterialTheme.shapes.small
+                )
+                .padding(vertical = 4.dp, horizontal = 8.dp),
+            style = MaterialTheme.typography.overline,
+            color = MaterialTheme.colors.primaryVariant,
+            text = "preview"
+        )
+        MetricInput(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            metric = metric,
+            state = metricState,
+            onStateChanged = { metricState = it }
+        )
+    }
+    Divider()
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun MetricTypeSelector(
-    metricType: MetricType?,
+    metricType: MetricType,
     onMetricTypeSelected: (MetricType) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = {
-            expanded = !expanded
-        }
+    Row(
+        modifier = Modifier.padding(top = 4.dp)
     ) {
-        Button(
-            modifier = Modifier.padding(8.dp),
-            onClick = { },
-        ) {
-            val buttonText = metricType?.name ?: "Select type "
-            Text(buttonText)
-            Icon(Icons.Rounded.Menu, contentDescription = "Open Menu")
-        }
-        ExposedDropdownMenu(
+        Text(
+            modifier = Modifier.alignByBaseline(),
+            text = "Metric type: "
+        )
+
+        Spacer(Modifier.width(12.dp))
+
+        var expanded by remember { mutableStateOf(false) }
+        ExposedDropdownMenuBox(
+            modifier = Modifier.alignByBaseline(),
             expanded = expanded,
-            onDismissRequest = {
-                expanded = false
+            onExpandedChange = {
+                expanded = !expanded
             }
         ) {
-            MetricType.entries.forEach { type ->
-                DropdownMenuItem(
-                    onClick = {
-                        expanded = false
-                        onMetricTypeSelected(type)
+            OutlinedButton(
+                modifier = Modifier.padding(8.dp),
+                onClick = { },
+            ) {
+                val buttonText = metricType.name ?: "Select type "
+                Text(buttonText)
+                Icon(
+                    modifier = Modifier.padding(start = 8.dp),
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = "Open Menu"
+                )
+            }
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = {
+                    expanded = false
+                }
+            ) {
+                MetricType.entries.forEach { type ->
+                    DropdownMenuItem(
+                        onClick = {
+                            expanded = false
+                            onMetricTypeSelected(type)
+                        }
+                    ) {
+                        Text(text = type.name)
                     }
-                ) {
-                    Text(text = type.name)
                 }
             }
         }
@@ -302,12 +362,6 @@ private fun BooleanMetricPreview() {
     val state = AddEditMetricScreenState(
         name = "Sample boolean",
         type = MetricType.Boolean,
-        previewMetric = Metric.BooleanMetric(
-            category = MetricCategory.Match,
-            name = "Sample boolean",
-            priority = 0,
-            enabled = true
-        )
     )
     FrcKrawlerTheme {
         Surface {

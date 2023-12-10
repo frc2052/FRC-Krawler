@@ -6,19 +6,20 @@ import com.team2052.frckrawler.data.model.Metric
 
 data class AddEditMetricScreenState(
     val name: String = "",
-    val type: MetricType? = null,
+    val type: MetricType = MetricType.Boolean,
     val priority: Int = 0,
     val enabled: Boolean = true,
     val options: TypeOptions = TypeOptions.None,
-    val previewMetric: Metric? = null
 ) {
-    val saveEnabled = name.isNotBlank() && type != null && options.isValid
+    val saveEnabled = name.isNotBlank() && options.isValid
+
+    val previewMetric: Metric = toMetric(-1, MetricCategory.Match, 0)
 
     fun toMetric(
         id: Int,
         category: MetricCategory,
         priority: Int
-    ): Metric? {
+    ): Metric {
         return when (type) {
             MetricType.Boolean -> Metric.BooleanMetric(
                 id = id,
@@ -28,7 +29,7 @@ data class AddEditMetricScreenState(
                 enabled = true
             )
             MetricType.Counter -> {
-                if (options !is TypeOptions.SteppedIntRange) return null
+                if (options !is TypeOptions.SteppedIntRange) throw IllegalStateException("Wrong options type")
                 Metric.CounterMetric(
                     id = id,
                     name = name,
@@ -40,7 +41,7 @@ data class AddEditMetricScreenState(
                 )
             }
             MetricType.Slider -> {
-                if (options !is TypeOptions.IntRange) return null
+                if (options !is TypeOptions.IntRange) throw IllegalStateException("Wrong options type")
                 Metric.SliderMetric(
                     id = id,
                     name = name,
@@ -51,7 +52,7 @@ data class AddEditMetricScreenState(
                 )
             }
             MetricType.Chooser -> {
-                if (options !is TypeOptions.StringList) return null
+                if (options !is TypeOptions.StringList) throw IllegalStateException("Wrong options type")
                 Metric.ChooserMetric(
                     id = id,
                     name = name,
@@ -62,7 +63,7 @@ data class AddEditMetricScreenState(
                 )
             }
             MetricType.Checkbox -> {
-                if (options !is TypeOptions.StringList) return null
+                if (options !is TypeOptions.StringList) throw IllegalStateException("Wrong options type")
                 Metric.CheckboxMetric(
                     id = id,
                     name = name,
@@ -86,7 +87,6 @@ data class AddEditMetricScreenState(
                 priority = priority,
                 enabled = true
             )
-            null -> null
         }
     }
 }
