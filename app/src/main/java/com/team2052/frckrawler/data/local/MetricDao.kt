@@ -9,16 +9,16 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MetricDao {
     @Delete
-    suspend fun delete(metric: Metric)
+    suspend fun delete(metric: MetricRecord)
 
     @Insert
-    suspend fun insert(metric: Metric)
+    suspend fun insert(metric: MetricRecord)
 
     @Query("SELECT * FROM metric WHERE category = :category AND gameId = :gameId")
     fun getGameMetricsWithCategory(
         category: MetricCategory,
         gameId: Int
-    ): Flow<List<Metric>>
+    ): Flow<List<MetricRecord>>
 
     @Query("SELECT COUNT(id) FROM metric WHERE category = :category AND gameId = :gameId")
     suspend fun getMetricCountForCategory(

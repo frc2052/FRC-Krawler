@@ -1,42 +1,38 @@
 package com.team2052.frckrawler.ui.metrics
 
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team2052.frckrawler.data.local.Metric
 import com.team2052.frckrawler.data.local.MetricCategory
-import com.team2052.frckrawler.data.local.MetricDao
 import com.team2052.frckrawler.data.local.MetricType
+import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.repository.MetricRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddMetricViewModel @Inject constructor(
-    private val metricDao: MetricDao
+    private val metricRepo: MetricRepository
 ): ViewModel() {
-    var metrics: List<Metric> by mutableStateOf(emptyList())
+
+    var name = mutableStateOf("")
+    var type = mutableStateOf<MetricType?>(null)
+
+
+    val isStateValid = derivedStateOf {
+        type.value != null && name.value.isNotBlank()
+    }
 
     fun saveMetric(
-        name: String,
+        metric: Metric,
         category: MetricCategory,
         gameId: Int,
-        type: MetricType
     ) {
         viewModelScope.launch {
-            val priority = metricDao.getMetricCountForCategory(category, gameId)
-            metricDao.insert(
-                Metric(
-                    name = name,
-                    category = category,
-                    gameId = gameId,
-                    type = type,
-                    priority = priority,
-                    enabled = true
-                )
-            )
+            val priority = metricRepo.getMetricCountForCategory(category, gameId)
+            metricRepo.saveMetric(metric, gameId)
         }
     }
 }

@@ -5,16 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team2052.frckrawler.data.local.Metric
 import com.team2052.frckrawler.data.local.MetricCategory
-import com.team2052.frckrawler.data.local.MetricDao
+import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.repository.MetricRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MetricsListViewModel @Inject constructor(
-    private val metricDao: MetricDao
+    private val metricRepo: MetricRepository
 ): ViewModel() {
     var metrics: List<Metric> by mutableStateOf(emptyList())
 
@@ -23,7 +23,7 @@ class MetricsListViewModel @Inject constructor(
         gameId: Int
     ) {
         viewModelScope.launch {
-            metricDao.getGameMetricsWithCategory(category, gameId).collect() { latestMetrics ->
+            metricRepo.getGameMetrics(category, gameId).collect() { latestMetrics ->
                 metrics = latestMetrics
             }
         }

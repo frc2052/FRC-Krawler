@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         Game::class,
-        Metric::class,
+        MetricRecord::class,
     ],
     version = 1,
     exportSchema = false
