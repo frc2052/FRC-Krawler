@@ -85,7 +85,7 @@ fun MetricsListScreen(
         ModalBottomSheetLayout(
             sheetState = sheetState,
             sheetContent = {
-                AddMetricDialog(
+                AddEditMetricDialog(
                     category = category,
                     gameId = gameId,
                     onClose = {

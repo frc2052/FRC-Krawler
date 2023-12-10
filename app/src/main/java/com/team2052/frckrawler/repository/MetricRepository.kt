@@ -5,12 +5,12 @@ import com.team2052.frckrawler.data.local.MetricDao
 import com.team2052.frckrawler.data.local.transformer.toMetric
 import com.team2052.frckrawler.data.local.transformer.toMetricRecord
 import com.team2052.frckrawler.data.model.Metric
-import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@ActivityScoped
+@Singleton
 class MetricRepository @Inject constructor(
     private val metricDao: MetricDao,
 ) {

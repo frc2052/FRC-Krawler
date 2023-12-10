@@ -7,9 +7,8 @@ import androidx.compose.material.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.team2052.frckrawler.data.local.MetricRecord
 import com.team2052.frckrawler.data.local.MetricCategory
-import com.team2052.frckrawler.data.local.MetricType
+import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
@@ -25,17 +24,17 @@ fun CounterMetric(
 
 @Preview
 @Composable
-private fun BooleanMetricPreview() {
+private fun CounterMetricPreview() {
     FrcKrawlerTheme {
         MetricInput(
             modifier = Modifier.fillMaxWidth().background(MaterialTheme.colors.surface),
-            metric = MetricRecord(
+            metric = Metric.CounterMetric(
                 name = "Boolean metric",
                 category = MetricCategory.Match,
-                type = MetricType.Boolean,
                 enabled = true,
                 priority = 0,
-                gameId = 0
+                range = 1..10,
+                step = 2
             ),
             state = "true",
             onStateChanged = {}

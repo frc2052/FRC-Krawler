@@ -10,7 +10,7 @@ sealed class Metric {
     abstract val enabled: Boolean
 
     data class BooleanMetric(
-        override val id: Int,
+        override val id: Int = 0,
         override val name: String,
         override val category: MetricCategory,
         override val priority: Int,
@@ -18,7 +18,7 @@ sealed class Metric {
     ) : Metric()
 
     data class CounterMetric(
-        override val id: Int,
+        override val id: Int = 0,
         override val name: String,
         override val category: MetricCategory,
         override val priority: Int,
@@ -28,7 +28,7 @@ sealed class Metric {
     ) : Metric()
 
     data class SliderMetric(
-        override val id: Int,
+        override val id: Int = 0,
         override val name: String,
         override val category: MetricCategory,
         override val priority: Int,
@@ -37,7 +37,7 @@ sealed class Metric {
     ) : Metric()
 
     data class ChooserMetric(
-        override val id: Int,
+        override val id: Int = 0,
         override val name: String,
         override val category: MetricCategory,
         override val priority: Int,
@@ -46,7 +46,7 @@ sealed class Metric {
     ) : Metric()
 
     data class CheckboxMetric(
-        override val id: Int,
+        override val id: Int = 0,
         override val name: String,
         override val category: MetricCategory,
         override val priority: Int,
@@ -55,7 +55,7 @@ sealed class Metric {
     ) : Metric()
 
     data class StopwatchMetric(
-        override val id: Int,
+        override val id: Int = 0,
         override val name: String,
         override val category: MetricCategory,
         override val priority: Int,
@@ -63,7 +63,7 @@ sealed class Metric {
     ) : Metric()
 
     data class TextFieldMetric(
-        override val id: Int,
+        override val id: Int = 0,
         override val name: String,
         override val category: MetricCategory,
         override val priority: Int,
