@@ -20,6 +20,64 @@ fun MetricInput(
     state: String,
     onStateChanged: (String) -> Unit
 ) {
+    when (metric) {
+        is Metric.BooleanMetric -> {
+            MetricRow(
+                modifier = modifier,
+                metric = metric
+            ) {
+                BooleanMetric(state = state, onStateChanged = onStateChanged)
+            }
+        }
+        is Metric.CounterMetric -> {
+            MetricRow(
+                modifier = modifier,
+                metric = metric
+            ) {
+                CounterMetric(
+                    state = state.toInt(),
+                    onStateChanged = { onStateChanged(it.toString()) },
+                    range = metric.range,
+                )
+            }
+        }
+        is Metric.SliderMetric -> {
+            MetricRow(
+                modifier = modifier,
+                metric = metric
+            ) {
+                SliderMetric(
+                    state = state.toInt(),
+                    onStateChanged = { onStateChanged(it.toString()) },
+                    range = metric.range
+                )
+            }
+        }
+
+        is Metric.CheckboxMetric -> {
+            MetricRow(
+                modifier = modifier,
+                metric = metric
+            ) {
+                CheckboxMetric(
+                    state = state,
+                    onStateChanged = onStateChanged,
+                    options = metric.options
+                )
+            }
+        }
+        is Metric.ChooserMetric -> TODO()
+        is Metric.StopwatchMetric -> TODO()
+        is Metric.TextFieldMetric -> TODO()
+    }
+}
+
+@Composable
+private fun MetricRow(
+    modifier: Modifier = Modifier,
+    metric: Metric,
+    content: @Composable () -> Unit
+) {
     Row(
         modifier = modifier
             .padding(horizontal = 16.dp, vertical = 16.dp),
@@ -32,36 +90,7 @@ fun MetricInput(
         )
 
         Spacer(Modifier.width(16.dp))
-        
-        when (metric) {
-            is Metric.BooleanMetric -> {
-                BooleanMetric(state = state, onStateChanged = onStateChanged)
-            }
-            is Metric.CounterMetric -> {
-                CounterMetric(
-                    state = state.toInt(),
-                    onStateChanged = { onStateChanged(it.toString()) },
-                    range = metric.range,
-                )
-            }
-            is Metric.SliderMetric -> {
-                SliderMetric(
-                    state = state.toInt(),
-                    onStateChanged = { onStateChanged(it.toString()) },
-                    range = metric.range
-                )
-            }
 
-            is Metric.CheckboxMetric -> {
-                CheckboxMetric(
-                    state = state,
-                    onStateChanged = onStateChanged,
-                    options = metric.options
-                )
-            }
-            is Metric.ChooserMetric -> TODO()
-            is Metric.StopwatchMetric -> TODO()
-            is Metric.TextFieldMetric -> TODO()
-        }
+        content()
     }
 }
