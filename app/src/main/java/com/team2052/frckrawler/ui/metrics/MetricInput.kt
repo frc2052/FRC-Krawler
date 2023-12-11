@@ -80,7 +80,17 @@ fun MetricInput(
                 )
             }
         }
-        is Metric.StopwatchMetric -> TODO()
+        is Metric.StopwatchMetric -> {
+            MetricRow(
+                modifier = modifier,
+                metric = metric
+            ) {
+                StopwatchMetric(
+                    state = state,
+                    onStateChanged = onStateChanged
+                )
+            }
+        }
         is Metric.TextFieldMetric -> {
             MetricColumn(
                 modifier = modifier,
