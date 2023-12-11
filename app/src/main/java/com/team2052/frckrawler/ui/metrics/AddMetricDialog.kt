@@ -359,8 +359,8 @@ private fun DialogButtons(
 private fun Metric.defaultValueForPreview(): String {
     return when (this) {
         is Metric.BooleanMetric -> "true"
-        is Metric.CheckboxMetric -> "true"
-        is Metric.ChooserMetric -> ""
+        is Metric.CheckboxMetric -> ""
+        is Metric.ChooserMetric -> options.first()
         is Metric.CounterMetric -> range.first.toString()
         is Metric.SliderMetric -> range.first.toString()
         is Metric.StopwatchMetric -> ""

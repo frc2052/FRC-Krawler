@@ -68,7 +68,18 @@ fun MetricInput(
                 )
             }
         }
-        is Metric.ChooserMetric -> TODO()
+        is Metric.ChooserMetric -> {
+            MetricRow(
+                modifier = modifier,
+                metric = metric
+            ) {
+                ChooserMetric(
+                    state = state,
+                    onStateChanged = onStateChanged,
+                    options = metric.options
+                )
+            }
+        }
         is Metric.StopwatchMetric -> TODO()
         is Metric.TextFieldMetric -> {
             MetricColumn(

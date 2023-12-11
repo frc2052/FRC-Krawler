@@ -26,7 +26,6 @@ fun CheckboxMetric(
     options: List<String>
 ) {
     val checkedOptions = remember(state) { state.split(",").toSet() }
-println("bherbst" + state)
     Column {
         options.forEach { option ->
             Row(
