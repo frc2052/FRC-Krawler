@@ -50,7 +50,10 @@ fun MetricsListScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
     val viewModel: MetricsListViewModel = hiltViewModel()
-    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
+    )
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(true) {

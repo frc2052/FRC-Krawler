@@ -9,7 +9,7 @@ data class AddEditMetricScreenState(
     val type: MetricType = MetricType.Boolean,
     val priority: Int = 0,
     val enabled: Boolean = true,
-    val options: TypeOptions = TypeOptions.None,
+    val options: MetricOptions = MetricOptions.None,
 ) {
     val saveEnabled = name.isNotBlank() && options.isValid
 
@@ -29,19 +29,18 @@ data class AddEditMetricScreenState(
                 enabled = true
             )
             MetricType.Counter -> {
-                if (options !is TypeOptions.SteppedIntRange) throw IllegalStateException("Wrong options type")
+                if (options !is MetricOptions.SteppedIntRange) throw IllegalStateException("Wrong options type")
                 Metric.CounterMetric(
                     id = id,
                     name = name,
                     category = category,
                     priority = priority,
                     enabled = true,
-                    range = options.range,
-                    step = options.step
+                    range = options.range step options.step,
                 )
             }
             MetricType.Slider -> {
-                if (options !is TypeOptions.IntRange) throw IllegalStateException("Wrong options type")
+                if (options !is MetricOptions.IntRange) throw IllegalStateException("Wrong options type")
                 Metric.SliderMetric(
                     id = id,
                     name = name,
@@ -52,7 +51,7 @@ data class AddEditMetricScreenState(
                 )
             }
             MetricType.Chooser -> {
-                if (options !is TypeOptions.StringList) throw IllegalStateException("Wrong options type")
+                if (options !is MetricOptions.StringList) throw IllegalStateException("Wrong options type")
                 Metric.ChooserMetric(
                     id = id,
                     name = name,
@@ -63,7 +62,7 @@ data class AddEditMetricScreenState(
                 )
             }
             MetricType.Checkbox -> {
-                if (options !is TypeOptions.StringList) throw IllegalStateException("Wrong options type")
+                if (options !is MetricOptions.StringList) throw IllegalStateException("Wrong options type")
                 Metric.CheckboxMetric(
                     id = id,
                     name = name,

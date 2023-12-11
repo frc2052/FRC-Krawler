@@ -23,8 +23,7 @@ sealed class Metric {
         override val category: MetricCategory,
         override val priority: Int,
         override val enabled: Boolean,
-        val range: IntRange,
-        val step: Int,
+        val range: IntProgression
     ) : Metric()
 
     data class SliderMetric(
@@ -33,7 +32,7 @@ sealed class Metric {
         override val category: MetricCategory,
         override val priority: Int,
         override val enabled: Boolean,
-        val range: IntRange,
+        val range: IntProgression,
     ) : Metric()
 
     data class ChooserMetric(

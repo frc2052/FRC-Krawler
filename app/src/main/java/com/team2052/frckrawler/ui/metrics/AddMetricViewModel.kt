@@ -35,10 +35,10 @@ class AddMetricViewModel @Inject constructor(
 
     fun updateType(type: MetricType) {
         val typeOptions = when (type) {
-            MetricType.Slider -> TypeOptions.IntRange()
-            MetricType.Counter -> TypeOptions.SteppedIntRange()
-            MetricType.Chooser, MetricType.Checkbox -> TypeOptions.StringList()
-            else -> TypeOptions.None
+            MetricType.Slider -> MetricOptions.IntRange()
+            MetricType.Counter -> MetricOptions.SteppedIntRange()
+            MetricType.Chooser, MetricType.Checkbox -> MetricOptions.StringList()
+            else -> MetricOptions.None
         }
         val newState = _state.value.copy(
             type = type,
@@ -48,10 +48,10 @@ class AddMetricViewModel @Inject constructor(
         _state.value = newState
     }
 
-    fun updateOptions(typeOptions: TypeOptions) {
+    fun updateOptions(metricOptions: MetricOptions) {
         // TODO validate that options type matches metrics type?
         _state.value = _state.value.copy(
-            options = typeOptions
+            options = metricOptions
         )
     }
 

@@ -69,7 +69,7 @@ private fun AddEditMetricContent(
     state: AddEditMetricScreenState,
     onNameChange: (String) -> Unit,
     onTypeChange: (MetricType) -> Unit,
-    onOptionsChange: (TypeOptions) -> Unit,
+    onOptionsChange: (MetricOptions) -> Unit,
     onSaveClick: () -> Unit,
     onCancelClick: () -> Unit
 ) {
@@ -95,22 +95,22 @@ private fun AddEditMetricContent(
             )
 
             when (state.options) {
-                TypeOptions.None -> {}
-                is TypeOptions.IntRange -> {
+                MetricOptions.None -> {}
+                is MetricOptions.IntRange -> {
                     IntRangeOptions(
                         options = state.options,
                         onOptionsChanged = onOptionsChange
                     )
                 }
 
-                is TypeOptions.SteppedIntRange -> {
+                is MetricOptions.SteppedIntRange -> {
                     SteppedIntRangeOptions(
                         options = state.options,
                         onOptionsChanged = onOptionsChange
                     )
                 }
 
-                is TypeOptions.StringList -> {
+                is MetricOptions.StringList -> {
                     StringListOptions(
                         options = state.options,
                         onOptionsChanged = onOptionsChange
@@ -135,10 +135,9 @@ private fun AddEditMetricContent(
 
 @Composable
 private fun MetricPreview(
-    modifier: Modifier = Modifier,
     metric: Metric
 ) {
-    var metricState by remember { mutableStateOf("") }
+    var metricState by remember(metric.javaClass) { mutableStateOf(metric.defaultValueForPreview()) }
     Divider()
     Box {
         Text(
@@ -226,14 +225,14 @@ private fun MetricTypeSelector(
 @Composable
 private fun StringListOptions(
     modifier: Modifier = Modifier,
-    options: TypeOptions.StringList,
-    onOptionsChanged: (TypeOptions.StringList) -> Unit
+    options: MetricOptions.StringList,
+    onOptionsChanged: (MetricOptions.StringList) -> Unit
 ) {
     FRCKrawlerTextField(
         modifier = modifier,
         value = options.options.joinToString(","),
         onValueChange = {
-            val newOptions = TypeOptions.StringList(it.split(","))
+            val newOptions = MetricOptions.StringList(it.split(","))
             onOptionsChanged(newOptions) },
         label = "Comma separated list of options"
     )
@@ -242,8 +241,8 @@ private fun StringListOptions(
 @Composable
 private fun IntRangeOptions(
     modifier: Modifier = Modifier,
-    options: TypeOptions.IntRange,
-    onOptionsChanged: (TypeOptions.IntRange) -> Unit
+    options: MetricOptions.IntRange,
+    onOptionsChanged: (MetricOptions.IntRange) -> Unit
 ) {
     Column(modifier = modifier) {
         FRCKrawlerTextField(
@@ -252,7 +251,7 @@ private fun IntRangeOptions(
             onValueChange = {
                 val newFirst = it.toIntOrNull()
                 newFirst?.let {
-                    val newOptions = TypeOptions.IntRange(newFirst..options.range.last)
+                    val newOptions = MetricOptions.IntRange(newFirst..options.range.last)
                     onOptionsChanged(newOptions)
                 }
                 // TODO validation messaging?
@@ -266,7 +265,7 @@ private fun IntRangeOptions(
             onValueChange = {
                 val newLast = it.toIntOrNull()
                 newLast?.let {
-                    val newOptions = TypeOptions.IntRange(options.range.first..newLast)
+                    val newOptions = MetricOptions.IntRange(options.range.first..newLast)
                     onOptionsChanged(newOptions)
                 }
                 // TODO validation messaging?
@@ -279,8 +278,8 @@ private fun IntRangeOptions(
 @Composable
 private fun SteppedIntRangeOptions(
     modifier: Modifier = Modifier,
-    options: TypeOptions.SteppedIntRange,
-    onOptionsChanged: (TypeOptions.SteppedIntRange) -> Unit
+    options: MetricOptions.SteppedIntRange,
+    onOptionsChanged: (MetricOptions.SteppedIntRange) -> Unit
 ) {
     Column(modifier = modifier) {
         FRCKrawlerTextField(
@@ -289,7 +288,9 @@ private fun SteppedIntRangeOptions(
             onValueChange = {
                 val newFirst = it.toIntOrNull()
                 newFirst?.let {
-                    val newOptions = options.copy(range = newFirst..options.range.last)
+                    val newOptions = options.copy(range =
+                    options.range
+                    )
                     onOptionsChanged(newOptions)
                 }
                 // TODO validation messaging?
@@ -355,6 +356,17 @@ private fun DialogButtons(
     }
 }
 
+private fun Metric.defaultValueForPreview(): String {
+    return when (this) {
+        is Metric.BooleanMetric -> "true"
+        is Metric.CheckboxMetric -> "true"
+        is Metric.ChooserMetric -> ""
+        is Metric.CounterMetric -> range.first.toString()
+        is Metric.SliderMetric -> range.first.toString()
+        is Metric.StopwatchMetric -> ""
+        is Metric.TextFieldMetric -> ""
+    }
+}
 
 @Preview
 @Composable
@@ -383,7 +395,7 @@ private fun StringListOptionsPreview() {
     FrcKrawlerTheme {
         Surface {
             StringListOptions(
-                options = TypeOptions.StringList(
+                options = MetricOptions.StringList(
                     listOf("One", "Two", "Three")
                 ),
                 onOptionsChanged = {}
@@ -398,7 +410,7 @@ private fun IntRangeOptionsPreview() {
     FrcKrawlerTheme {
         Surface {
             IntRangeOptions(
-                options = TypeOptions.IntRange(
+                options = MetricOptions.IntRange(
                     range = 1..10
                 ),
                 onOptionsChanged = {}
@@ -413,7 +425,7 @@ private fun SteppedIntRangeOptionsPreview() {
     FrcKrawlerTheme {
         Surface {
             SteppedIntRangeOptions(
-                options = TypeOptions.SteppedIntRange(
+                options = MetricOptions.SteppedIntRange(
                     range = 1..10,
                     step = 2
                 ),

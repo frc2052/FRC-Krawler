@@ -21,8 +21,7 @@ fun MetricRecord.toMetric(): Metric {
                 category = category,
                 priority = priority,
                 enabled = enabled,
-                range = min..max,
-                step = step
+                range = min..max step step,
             )
         }
         MetricType.Slider -> {
@@ -110,7 +109,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
             category = category,
             priority = priority,
             enabled = enabled,
-            options = "${range.first},${range.last},$step"
+            options = "${range.first},${range.last},${range.step}"
         )
         is Metric.SliderMetric -> MetricRecord(
             id = id,

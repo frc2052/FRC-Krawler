@@ -1,9 +1,10 @@
 package com.team2052.frckrawler.ui.metrics
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -29,52 +30,26 @@ fun MetricInput(
             text = metric.name,
             style = MaterialTheme.typography.h5
         )
+
+        Spacer(Modifier.width(16.dp))
         
         when (metric) {
             is Metric.BooleanMetric -> {
                 BooleanMetric(state = state, onStateChanged = onStateChanged)
             }
             is Metric.CounterMetric -> {
-                Column(
-                    modifier = Modifier.padding(4.dp)
-                ) {
-                    Row() {
-//                    IconButton(
-//                        onClick = {}
-//                    ) {
-//                        Icon(Icons.Rounded.Minimize, contentDescription = "Minus")
-//                    }
-//                    TextField(
-//                        value = numberText,
-//                        onValueChange = { numberText = it },
-//                        label = { Text("Number") }
-//                    )
-//                    IconButton(
-//                        onClick = {}
-//                    ) {
-//                        Icon(Icons.Rounded.Maximize, contentDescription = "Plus")
-//                    }
-                    }
-                }
+                CounterMetric(
+                    state = state.toInt(),
+                    onStateChanged = { onStateChanged(it.toString()) },
+                    range = metric.range,
+                )
             }
             is Metric.SliderMetric -> {
-                Column(
-                    modifier = Modifier.padding(4.dp)
-                ) {
-                    Row() {
-//                    TextField(
-//                        value = sliderText,
-//                        onValueChange = { sliderText = it },
-//                        label = { Text("Value") }
-//                    )
-//                    Slider(
-//                        value = sliderPosition,
-//                        onValueChange = {sliderPosition = it },
-//                        valueRange = 0f..100f,
-//                        steps = 5
-//                    )
-                    }
-                }
+                SliderMetric(
+                    state = state.toInt(),
+                    onStateChanged = { onStateChanged(it.toString()) },
+                    range = metric.range
+                )
             }
 
             is Metric.CheckboxMetric -> TODO()
