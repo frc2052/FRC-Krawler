@@ -1,8 +1,10 @@
 package com.team2052.frckrawler.ui.metrics
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
@@ -68,7 +70,17 @@ fun MetricInput(
         }
         is Metric.ChooserMetric -> TODO()
         is Metric.StopwatchMetric -> TODO()
-        is Metric.TextFieldMetric -> TODO()
+        is Metric.TextFieldMetric -> {
+            MetricColumn(
+                modifier = modifier,
+                metric = metric
+            ) {
+                TextFieldMetric(
+                    state = state,
+                    onStateChanged = onStateChanged
+                )
+            }
+        }
     }
 }
 
@@ -90,6 +102,27 @@ private fun MetricRow(
         )
 
         Spacer(Modifier.width(16.dp))
+
+        content()
+    }
+}
+
+@Composable
+private fun MetricColumn(
+    modifier: Modifier = Modifier,
+    metric: Metric,
+    content: @Composable () -> Unit
+) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 16.dp, vertical = 16.dp)
+    ) {
+        Text(
+            text = metric.name,
+            style = MaterialTheme.typography.h5
+        )
+
+        Spacer(Modifier.height(8.dp))
 
         content()
     }
