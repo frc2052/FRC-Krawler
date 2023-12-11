@@ -52,7 +52,13 @@ fun MetricInput(
                 )
             }
 
-            is Metric.CheckboxMetric -> TODO()
+            is Metric.CheckboxMetric -> {
+                CheckboxMetric(
+                    state = state,
+                    onStateChanged = onStateChanged,
+                    options = metric.options
+                )
+            }
             is Metric.ChooserMetric -> TODO()
             is Metric.StopwatchMetric -> TODO()
             is Metric.TextFieldMetric -> TODO()
