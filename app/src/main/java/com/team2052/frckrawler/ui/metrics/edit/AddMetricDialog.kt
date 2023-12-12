@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.metrics
+package com.team2052.frckrawler.ui.metrics.edit
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +39,7 @@ import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
+import com.team2052.frckrawler.ui.metrics.MetricInput
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable

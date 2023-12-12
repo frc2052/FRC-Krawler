@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.metrics
+package com.team2052.frckrawler.ui.metrics.list
 
 
 import androidx.compose.foundation.clickable
@@ -43,6 +43,7 @@ import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
+import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch

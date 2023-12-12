@@ -10,14 +10,13 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.ui.modeSelect.ModeSelectScreen
-import com.team2052.frckrawler.ui.navigation.Arguments.gameId
 import com.team2052.frckrawler.ui.scout.ScoutHomeScreen
 import com.team2052.frckrawler.ui.scout.ScoutMatchesScreen
 import com.team2052.frckrawler.ui.navigation.Screen.*
 import com.team2052.frckrawler.ui.server.ServerGamesScreen
 import com.team2052.frckrawler.ui.server.home.ServerHomeScreen
 import com.team2052.frckrawler.ui.server.ServerMatchesScreen
-import com.team2052.frckrawler.ui.metrics.MetricsListScreen
+import com.team2052.frckrawler.ui.metrics.list.MetricsListScreen
 
 private const val transitionOffset = 400
 private const val transitionDuration = 400

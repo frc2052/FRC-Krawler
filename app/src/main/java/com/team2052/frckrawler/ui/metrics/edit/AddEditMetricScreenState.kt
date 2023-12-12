@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.metrics
+package com.team2052.frckrawler.ui.metrics.edit
 
 import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.local.MetricType

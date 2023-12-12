@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.metrics
+package com.team2052.frckrawler.ui.metrics.edit
 
 sealed class MetricOptions {
     abstract val isValid: Boolean

@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.metrics
+package com.team2052.frckrawler.ui.metrics.list
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
