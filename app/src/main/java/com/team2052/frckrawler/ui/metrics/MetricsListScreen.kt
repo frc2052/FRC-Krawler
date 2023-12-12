@@ -4,10 +4,13 @@ package com.team2052.frckrawler.ui.metrics
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
@@ -170,15 +173,19 @@ private fun MetricListContent(
     metrics: List<Metric>,
     onMetricClick: (Metric) -> Unit,
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
-        metrics.forEach { metric ->
-            MetricListRow(metric = metric, onMetricClick = onMetricClick)
+    LazyColumn(modifier) {
+        items(metrics) { metric ->
+            MetricListRow(
+                metric = metric,
+                onMetricClick = onMetricClick
+            )
         }
     }
 }
 
 @Composable
 private fun MetricListRow(
+    modifier: Modifier = Modifier,
     metric: Metric,
     onMetricClick: (Metric) -> Unit
 ) {
@@ -204,21 +211,28 @@ private fun MetricListRow(
         }
     }
 
-    Column {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onMetricClick(metric) }
-                .padding(horizontal = 12.dp, vertical = 12.dp),
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onMetricClick(metric) }
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = metric.name,
-                style = MaterialTheme.typography.h5
-            )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.subtitle1
-            )
+            Column(
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
+            ) {
+                Text(
+                    text = metric.name,
+                    style = MaterialTheme.typography.h5
+                )
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.subtitle1
+                )
+            }
         }
         Divider()
     }
