@@ -88,6 +88,12 @@ class AddMetricViewModel @Inject constructor(
         }
     }
 
+    fun deleteMetric() {
+        viewModelScope.launch {
+            metricRepo.deleteMetric(metricId)
+        }
+    }
+
     private fun Metric.getMetricOptions(): MetricOptions {
         return when (this) {
             is Metric.CheckboxMetric -> MetricOptions.StringList(options)

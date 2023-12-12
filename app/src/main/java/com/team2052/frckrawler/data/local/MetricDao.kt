@@ -12,6 +12,9 @@ interface MetricDao {
     @Delete
     suspend fun delete(metric: MetricRecord)
 
+    @Delete(entity = MetricRecord::class)
+    suspend fun delete(recordId: MetricRecordId)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(metric: MetricRecord)
 

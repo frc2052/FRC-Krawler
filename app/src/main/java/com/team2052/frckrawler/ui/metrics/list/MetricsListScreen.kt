@@ -172,7 +172,7 @@ fun MetricsListScreen(
             if (showDeleteConfirmation) {
                 AlertDialog(
                     title = { Text("Delete game?")},
-                    text = { Text("This action cannot be undone.") },
+                    text = { Text("This action cannot be undone. This game and all metrics will be deleted.") },
                     onDismissRequest = { showDeleteConfirmation = false },
                     confirmButton = {
                         TextButton(onClick = {
@@ -188,7 +188,6 @@ fun MetricsListScreen(
                         }
                     },
                 )
-
             }
         }
     }

@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
@@ -51,6 +53,7 @@ fun AddEditMetricDialog(
 ) {
     val viewModel: AddMetricViewModel = hiltViewModel()
     val state = viewModel.state.collectAsState().value
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     LaunchedEffect(mode) {
         when (mode) {
@@ -68,9 +71,33 @@ fun AddEditMetricDialog(
             viewModel.save()
             onClose()
         },
+        onDeleteClick = { showDeleteConfirmation = true },
         onOptionsChange = { viewModel.updateOptions(it) },
         onCancelClick = onClose
     )
+
+
+    if (showDeleteConfirmation) {
+        AlertDialog(
+            title = { Text("Delete metric?")},
+            text = { Text("This action cannot be undone.") },
+            onDismissRequest = { showDeleteConfirmation = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.deleteMetric()
+                    showDeleteConfirmation = false
+                    onClose()
+                }) {
+                    Text("Delete")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteConfirmation = false }) {
+                    Text("Cancel")
+                }
+            },
+        )
+    }
 }
 
 @Composable
@@ -81,7 +108,8 @@ private fun AddEditMetricContent(
     onTypeChange: (MetricType) -> Unit,
     onOptionsChange: (MetricOptions) -> Unit,
     onSaveClick: () -> Unit,
-    onCancelClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onCancelClick: () -> Unit,
 ) {
     Column {
         val title = remember(mode) {
@@ -142,8 +170,11 @@ private fun AddEditMetricContent(
         )
 
         DialogButtons(
+            modifier = Modifier.fillMaxWidth(),
+            showDelete = mode is AddEditMetricMode.Edit,
             saveEnabled = state.saveEnabled,
             onSaveClick = onSaveClick,
+            onDeleteClick = onDeleteClick,
             onCancelClick = onCancelClick
         )
     }
@@ -348,26 +379,48 @@ private fun SteppedIntRangeOptions(
 
 @Composable
 private fun DialogButtons(
+    modifier: Modifier = Modifier,
+    showDelete: Boolean,
     saveEnabled: Boolean,
     onSaveClick: () -> Unit,
-    onCancelClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onCancelClick: () -> Unit,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.End
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        TextButton(
-            modifier = Modifier.padding(12.dp),
-            onClick = onCancelClick
-        ) {
-            Text("Cancel")
+        if (showDelete) {
+            TextButton(
+                modifier = Modifier.padding(12.dp),
+                onClick = onDeleteClick,
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colors.error
+                )
+            ) {
+                Text("Delete")
+            }
+        } else {
+            // Empty box so SpaceBetween still works
+            Box {}
         }
-        TextButton(
-            modifier = Modifier.padding(12.dp),
-            enabled = saveEnabled,
-            onClick = onSaveClick
+
+        Row(
+            horizontalArrangement = Arrangement.End
         ) {
-            Text("Save")
+            TextButton(
+                modifier = Modifier.padding(12.dp),
+                onClick = onCancelClick
+            ) {
+                Text("Cancel")
+            }
+            TextButton(
+                modifier = Modifier.padding(12.dp),
+                enabled = saveEnabled,
+                onClick = onSaveClick
+            ) {
+                Text("Save")
+            }
         }
     }
 }
@@ -400,6 +453,7 @@ private fun BooleanMetricPreview() {
                 onTypeChange = {},
                 onSaveClick = {},
                 onCancelClick = {},
+                onDeleteClick = {},
                 onOptionsChange = {}
             )
         }
