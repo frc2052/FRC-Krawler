@@ -364,7 +364,7 @@ private fun Metric.defaultValueForPreview(): String {
     return when (this) {
         is Metric.BooleanMetric -> "true"
         is Metric.CheckboxMetric -> ""
-        is Metric.ChooserMetric -> options.first()
+        is Metric.ChooserMetric -> options.firstOrNull() ?: ""
         is Metric.CounterMetric -> range.first.toString()
         is Metric.SliderMetric -> range.first.toString()
         is Metric.StopwatchMetric -> ""
