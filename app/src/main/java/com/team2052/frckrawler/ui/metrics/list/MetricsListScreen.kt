@@ -28,16 +28,15 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
@@ -68,6 +67,8 @@ fun MetricsListScreen(
         viewModel.loadMatchMetrics(category, gameId)
     }
 
+    val state = viewModel.state.collectAsState().value
+
     Scaffold(
         modifier = modifier,
         scaffoldState = scaffoldState,
@@ -75,7 +76,11 @@ fun MetricsListScreen(
             FRCKrawlerAppBar(
                 navController = navController,
                 scaffoldState = scaffoldState,
-                title = { Text(stringResource(R.string.metrics_screen) ) }
+                title = {
+                    if (state is MetricListScreenState.Content) {
+                        Text(state.gameName)
+                    }
+                }
             )
         },
         floatingActionButton = {
@@ -122,16 +127,20 @@ fun MetricsListScreen(
                     }
                 }
 
-                if (viewModel.metrics.isEmpty()) {
-                    EmptyBackground()
+                if (state is MetricListScreenState.Content) {
+                    if (state.metrics.isEmpty()) {
+                        EmptyBackground()
+                    } else {
+                        MetricListContent(
+                            modifier = Modifier.padding(contentPadding),
+                            metrics = state.metrics,
+                            onMetricClick = {
+                                // TODO edit metric
+                            },
+                        )
+                    }
                 } else {
-                    MetricListContent(
-                        modifier = Modifier.padding(contentPadding),
-                        metrics = viewModel.metrics,
-                        onMetricClick = {
-                            // TODO edit metric
-                        },
-                    )
+                    // Show nothing while loading. Could do a loading spinner in the future
                 }
             }
         }
