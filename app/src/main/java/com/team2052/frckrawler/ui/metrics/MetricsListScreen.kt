@@ -16,6 +16,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -24,10 +25,12 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -38,6 +41,7 @@ import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
 import com.team2052.frckrawler.ui.navigation.Screen
+import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -161,21 +165,81 @@ private fun MetricActions(onAddClick: () -> Unit) {
 }
 
 @Composable
-fun MetricListContent(
+private fun MetricListContent(
     modifier: Modifier = Modifier,
     metrics: List<Metric>,
     onMetricClick: (Metric) -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         metrics.forEach { metric ->
+            MetricListRow(metric = metric, onMetricClick = onMetricClick)
+        }
+    }
+}
+
+@Composable
+private fun MetricListRow(
+    metric: Metric,
+    onMetricClick: (Metric) -> Unit
+) {
+    val description = remember(metric) {
+        when (metric) {
+            is Metric.BooleanMetric -> "Boolean"
+            is Metric.CheckboxMetric -> {
+                val optionsString = metric.options.joinToString(", ")
+                "Checkbox ($optionsString)"
+            }
+            is Metric.ChooserMetric -> {
+                val optionsString = metric.options.joinToString(", ")
+                "Chooser ($optionsString)"
+            }
+            is Metric.CounterMetric -> {
+                "Counter (min: ${metric.range.first}, max: ${metric.range.last}, step: ${metric.range.step})"
+            }
+            is Metric.SliderMetric -> {
+                "Slider (min: ${metric.range.first}, max: ${metric.range.last})"
+            }
+            is Metric.StopwatchMetric -> "Stopwatch"
+            is Metric.TextFieldMetric -> "Text field"
+        }
+    }
+
+    Column {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onMetricClick(metric) }
+                .padding(horizontal = 12.dp, vertical = 12.dp),
+        ) {
             Text(
-                modifier = Modifier.fillMaxWidth()
-                    .clickable { onMetricClick(metric) }
-                    .padding(horizontal = 12.dp, vertical = 12.dp),
                 text = metric.name,
                 style = MaterialTheme.typography.h5
             )
-            Divider()
+            Text(
+                text = description,
+                style = MaterialTheme.typography.subtitle1
+            )
+        }
+        Divider()
+    }
+}
+
+@Preview
+@Composable
+private fun MetricListRowPreview() {
+    FrcKrawlerTheme {
+        Surface {
+            MetricListRow(
+                metric = Metric.CounterMetric(
+                    id = 1,
+                    name = "Number of LEDs",
+                    category = MetricCategory.Match,
+                    priority = 1,
+                    enabled = true,
+                    range = 1..1000 step 5
+                ),
+                onMetricClick = {}
+            )
         }
     }
 }
