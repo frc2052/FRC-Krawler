@@ -11,19 +11,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -67,6 +71,7 @@ fun MetricsListScreen(
     )
     val scope = rememberCoroutineScope()
     var sheetMode: AddEditMetricMode by remember { mutableStateOf(AddEditMetricMode.New) }
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
         viewModel.loadMatchMetrics(category, gameId)
@@ -85,13 +90,23 @@ fun MetricsListScreen(
                     if (state is MetricListScreenState.Content) {
                         Text(state.gameName)
                     }
+                },
+                actions = {
+                    if (state is MetricListScreenState.Content) {
+                        IconButton(
+                            onClick = { showDeleteConfirmation = true }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = "delete"
+                            )
+                        }
+                    }
                 }
             )
         },
         floatingActionButton = {
-            if (
-                sheetState.targetValue == ModalBottomSheetValue.Hidden
-            ) {
+            if (sheetState.targetValue == ModalBottomSheetValue.Hidden) {
                 MetricActions(
                     onAddClick = {
                         sheetMode = AddEditMetricMode.New
@@ -152,6 +167,28 @@ fun MetricsListScreen(
                 } else {
                     // Show nothing while loading. Could do a loading spinner in the future
                 }
+            }
+
+            if (showDeleteConfirmation) {
+                AlertDialog(
+                    title = { Text("Delete game?")},
+                    text = { Text("This action cannot be undone.") },
+                    onDismissRequest = { showDeleteConfirmation = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            viewModel.deleteGame()
+                            navController.popBackStack()
+                        }) {
+                            Text("Delete")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showDeleteConfirmation = false }) {
+                            Text("Cancel")
+                        }
+                    },
+                )
+
             }
         }
     }

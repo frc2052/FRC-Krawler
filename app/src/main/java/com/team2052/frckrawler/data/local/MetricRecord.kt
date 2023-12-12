@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.data.local
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 /**
@@ -10,7 +11,17 @@ import androidx.room.PrimaryKey
  * how we can store data in our database. Our `Metric` class is easier to work
  * with in most of our code, this model is easier to store in a database.
  */
-@Entity(tableName = "metric")
+@Entity(
+    tableName = "metric",
+    foreignKeys = [
+        ForeignKey(
+            entity = Game::class,
+            parentColumns = ["id"],
+            childColumns = ["gameId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class MetricRecord(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
