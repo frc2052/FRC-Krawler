@@ -58,7 +58,10 @@ fun AddEditMetricDialog(
         state = state,
         onNameChange = { viewModel.updateName(it) },
         onTypeChange = { viewModel.updateType(it) },
-        onSaveClick = { viewModel.save() },
+        onSaveClick = {
+            viewModel.save()
+            onClose()
+        },
         onOptionsChange = { viewModel.updateOptions(it) },
         onCancelClick = onClose
     )
