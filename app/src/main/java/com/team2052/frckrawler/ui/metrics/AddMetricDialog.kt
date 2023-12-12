@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
@@ -249,7 +250,7 @@ private fun IntRangeOptions(
 ) {
     Column(modifier = modifier) {
         FRCKrawlerTextField(
-            keyboardType = KeyboardType.Number,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = options.range.first.toString(),
             onValueChange = {
                 val newFirst = it.toIntOrNull()
@@ -263,7 +264,7 @@ private fun IntRangeOptions(
         )
         FRCKrawlerTextField(
             modifier = Modifier.padding(top = 12.dp),
-            keyboardType = KeyboardType.Number,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = options.range.last.toString(),
             onValueChange = {
                 val newLast = it.toIntOrNull()
@@ -286,7 +287,7 @@ private fun SteppedIntRangeOptions(
 ) {
     Column(modifier = modifier) {
         FRCKrawlerTextField(
-            keyboardType = KeyboardType.Number,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = options.range.first.toString(),
             onValueChange = {
                 val newFirst = it.toIntOrNull()
@@ -303,7 +304,7 @@ private fun SteppedIntRangeOptions(
 
         FRCKrawlerTextField(
             modifier = Modifier.padding(top = 12.dp),
-            keyboardType = KeyboardType.Number,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = options.range.last.toString(),
             onValueChange = {
                 val newLast = it.toIntOrNull()
@@ -318,8 +319,8 @@ private fun SteppedIntRangeOptions(
 
         FRCKrawlerTextField(
             modifier = Modifier.padding(top = 12.dp),
-            keyboardType = KeyboardType.Number,
-            value = options.range.last.toString(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            value = options.step.toString(),
             onValueChange = {
                 val newStep = it.toIntOrNull()
                 newStep?.let {
