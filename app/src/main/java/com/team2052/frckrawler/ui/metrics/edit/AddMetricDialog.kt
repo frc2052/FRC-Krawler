@@ -44,20 +44,24 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
 fun AddEditMetricDialog(
+    mode: AddEditMetricMode,
     category: MetricCategory,
     gameId: Int,
     onClose: () -> Unit
 ) {
     val viewModel: AddMetricViewModel = hiltViewModel()
-
     val state = viewModel.state.collectAsState().value
 
-    LaunchedEffect(true) {
-        viewModel.startEditingNewMetric(gameId, category)
+    LaunchedEffect(mode) {
+        when (mode) {
+            is AddEditMetricMode.Edit -> viewModel.startEditingMetric(mode.metric, gameId, category)
+            AddEditMetricMode.New -> viewModel.startEditingNewMetric(gameId, category)
+        }
     }
 
     AddEditMetricContent(
         state = state,
+        mode = mode,
         onNameChange = { viewModel.updateName(it) },
         onTypeChange = { viewModel.updateType(it) },
         onSaveClick = {
@@ -72,6 +76,7 @@ fun AddEditMetricDialog(
 @Composable
 private fun AddEditMetricContent(
     state: AddEditMetricScreenState,
+    mode: AddEditMetricMode,
     onNameChange: (String) -> Unit,
     onTypeChange: (MetricType) -> Unit,
     onOptionsChange: (MetricOptions) -> Unit,
@@ -79,9 +84,15 @@ private fun AddEditMetricContent(
     onCancelClick: () -> Unit
 ) {
     Column {
+        val title = remember(mode) {
+            when (mode) {
+                is AddEditMetricMode.Edit -> "Edit metric"
+                AddEditMetricMode.New -> "Add new metric"
+            }
+        }
         Text(
             modifier = Modifier.padding(16.dp),
-            text = "Add new metric",
+            text = title,
             style = MaterialTheme.typography.h6
         )
 
@@ -384,6 +395,7 @@ private fun BooleanMetricPreview() {
         Surface {
             AddEditMetricContent(
                 state = state,
+                mode = AddEditMetricMode.New,
                 onNameChange = {},
                 onTypeChange = {},
                 onSaveClick = {},

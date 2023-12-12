@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.data.model
 
 import com.team2052.frckrawler.data.local.MetricCategory
+import com.team2052.frckrawler.data.local.MetricType
 
 sealed class Metric {
     abstract val id: Int
@@ -69,4 +70,13 @@ sealed class Metric {
         override val enabled: Boolean,
     ) : Metric()
 
+    fun getType(): MetricType = when (this) {
+        is BooleanMetric -> MetricType.Boolean
+        is CheckboxMetric -> MetricType.Checkbox
+        is ChooserMetric -> MetricType.Chooser
+        is CounterMetric -> MetricType.Counter
+        is SliderMetric -> MetricType.Slider
+        is StopwatchMetric -> MetricType.Stopwatch
+        is TextFieldMetric -> MetricType.TextField
+    }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.local.MetricType
+import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.repository.MetricRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,9 +17,9 @@ class AddMetricViewModel @Inject constructor(
     private val metricRepo: MetricRepository
 ): ViewModel() {
 
+    private var metricId: Int = 0
     private var gameId: Int = -1
     private lateinit var category: MetricCategory
-
 
     private val _state = MutableStateFlow(AddEditMetricScreenState())
     val state: StateFlow<AddEditMetricScreenState> = _state
@@ -26,6 +27,25 @@ class AddMetricViewModel @Inject constructor(
     fun startEditingNewMetric(gameId: Int, category: MetricCategory) {
         this.gameId = gameId
         this.category = category
+        this.metricId = 0
+    }
+
+    fun startEditingMetric(
+        metric: Metric,
+        gameId: Int,
+        category: MetricCategory
+    ) {
+        this.gameId = gameId
+        this.category = category
+        this.metricId = metric.id
+
+        _state.value = AddEditMetricScreenState(
+            name = metric.name,
+            type = metric.getType(),
+            priority = metric.priority,
+            enabled = metric.enabled,
+            options = metric.getMetricOptions(),
+        )
     }
 
     fun updateName(name: String) {
@@ -59,12 +79,25 @@ class AddMetricViewModel @Inject constructor(
         viewModelScope.launch {
             val priority = metricRepo.getMetricCountForCategory(category, gameId)
             val metric = _state.value.toMetric(
-                id = 0,
+                id = metricId,
                 category = category,
                 priority = priority
             )
 
             metricRepo.saveMetric(metric, gameId)
+        }
+    }
+
+    private fun Metric.getMetricOptions(): MetricOptions {
+        return when (this) {
+            is Metric.CheckboxMetric -> MetricOptions.StringList(options)
+            is Metric.ChooserMetric -> MetricOptions.StringList(options)
+            is Metric.CounterMetric -> MetricOptions.SteppedIntRange(
+                range = range.first..range.last,
+                step = range.step
+            )
+            is Metric.SliderMetric -> MetricOptions.IntRange(range.first..range.last)
+            else -> MetricOptions.None
         }
     }
 }

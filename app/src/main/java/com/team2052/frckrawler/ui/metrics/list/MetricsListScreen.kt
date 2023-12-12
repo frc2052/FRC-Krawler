@@ -29,8 +29,11 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +46,7 @@ import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
+import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricMode
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
@@ -62,6 +66,7 @@ fun MetricsListScreen(
         skipHalfExpanded = true
     )
     val scope = rememberCoroutineScope()
+    var sheetMode: AddEditMetricMode by remember { mutableStateOf(AddEditMetricMode.New) }
 
     LaunchedEffect(true) {
         viewModel.loadMatchMetrics(category, gameId)
@@ -89,6 +94,7 @@ fun MetricsListScreen(
             ) {
                 MetricActions(
                     onAddClick = {
+                        sheetMode = AddEditMetricMode.New
                         scope.launch {
                             sheetState.show()
                         }
@@ -102,6 +108,7 @@ fun MetricsListScreen(
             sheetState = sheetState,
             sheetContent = {
                 AddEditMetricDialog(
+                    mode = sheetMode,
                     category = category,
                     gameId = gameId,
                     onClose = {
@@ -134,8 +141,11 @@ fun MetricsListScreen(
                         MetricListContent(
                             modifier = Modifier.padding(contentPadding),
                             metrics = state.metrics,
-                            onMetricClick = {
-                                // TODO edit metric
+                            onMetricClick = { metric ->
+                                sheetMode = AddEditMetricMode.Edit(metric)
+                                scope.launch {
+                                    sheetState.show()
+                                }
                             },
                         )
                     }

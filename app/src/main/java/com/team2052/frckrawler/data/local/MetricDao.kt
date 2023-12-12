@@ -3,6 +3,7 @@ package com.team2052.frckrawler.data.local
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
@@ -11,7 +12,7 @@ interface MetricDao {
     @Delete
     suspend fun delete(metric: MetricRecord)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(metric: MetricRecord)
 
     @Query("SELECT * FROM metric WHERE category = :category AND gameId = :gameId")
