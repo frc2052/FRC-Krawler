@@ -17,7 +17,7 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = MetricSet::class,
             parentColumns = ["id"],
-            childColumns = ["gameId"],
+            childColumns = ["metricSetId"],
             onDelete = ForeignKey.CASCADE
         )
     ]
