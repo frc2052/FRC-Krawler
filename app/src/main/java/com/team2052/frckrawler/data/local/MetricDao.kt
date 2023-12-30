@@ -18,15 +18,15 @@ interface MetricDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(metric: MetricRecord)
 
-    @Query("SELECT * FROM metric WHERE category = :category AND gameId = :gameId")
-    fun getGameMetricsWithCategory(
+    @Query("SELECT * FROM metric WHERE category = :category AND metricSetId = :metricSetId")
+    fun getMetricsWithCategory(
         category: MetricCategory,
-        gameId: Int
+        metricSetId: Int
     ): Flow<List<MetricRecord>>
 
-    @Query("SELECT COUNT(id) FROM metric WHERE category = :category AND gameId = :gameId")
+    @Query("SELECT COUNT(id) FROM metric WHERE category = :category AND metricSetId = :metricSetId")
     suspend fun getMetricCountForCategory(
         category: MetricCategory,
-        gameId: Int
+        metricSetId: Int
     ): Int
 }

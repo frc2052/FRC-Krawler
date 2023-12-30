@@ -20,7 +20,7 @@ class MetricRepository @Inject constructor(
         category: MetricCategory,
         gameId: Int
     ): Flow<List<Metric>> {
-        return metricDao.getGameMetricsWithCategory(category, gameId)
+        return metricDao.getMetricsWithCategory(category, gameId)
             .map { records ->
                 records.map { it.toMetric() }
             }

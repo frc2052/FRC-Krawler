@@ -5,29 +5,28 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team2052.frckrawler.data.local.Game
-import com.team2052.frckrawler.data.local.GameDao
+import com.team2052.frckrawler.data.local.MetricSet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ServerGamesViewModel @Inject constructor(
-    private val gameDao: GameDao
+    private val metricSetDao: MetricSetDao
 ): ViewModel() {
-    var games: List<Game> by mutableStateOf(emptyList())
+    var metricSets: List<MetricSet> by mutableStateOf(emptyList())
 
     fun loadGames() {
         viewModelScope.launch {
-            gameDao.getAll().collect() {
-                games = it
+            metricSetDao.getAll().collect() {
+                metricSets = it
             }
         }
     }
 
     fun makeGame(name: String) {
         viewModelScope.launch {
-            gameDao.insert(Game(name = name))
+            metricSetDao.insert(MetricSet(name = name))
         }
         loadGames()
     }

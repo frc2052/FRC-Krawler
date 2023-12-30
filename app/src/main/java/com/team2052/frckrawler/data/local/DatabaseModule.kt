@@ -27,7 +27,7 @@ object DatabaseModule {
     @Singleton
     fun provideGameDao(
         database: FRCKrawlerDatabase
-    ): GameDao {
+    ): MetricSetDao {
         return database.gameDao()
     }
 

@@ -73,7 +73,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
     return when (this) {
         is Metric.BooleanMetric -> MetricRecord(
             id = id,
-            gameId = gameId,
+            metricSetId = gameId,
             type = MetricType.Boolean,
             name = name,
             category = category,
@@ -83,7 +83,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
         )
         is Metric.CheckboxMetric -> MetricRecord(
             id = id,
-            gameId = gameId,
+            metricSetId = gameId,
             type = MetricType.Checkbox,
             name = name,
             category = category,
@@ -93,7 +93,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
         )
         is Metric.ChooserMetric -> MetricRecord(
             id = id,
-            gameId = gameId,
+            metricSetId = gameId,
             type = MetricType.Chooser,
             name = name,
             category = category,
@@ -103,7 +103,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
         )
         is Metric.CounterMetric -> MetricRecord(
             id = id,
-            gameId = gameId,
+            metricSetId = gameId,
             type = MetricType.Slider,
             name = name,
             category = category,
@@ -113,7 +113,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
         )
         is Metric.SliderMetric -> MetricRecord(
             id = id,
-            gameId = gameId,
+            metricSetId = gameId,
             type = MetricType.Slider,
             name = name,
             category = category,
@@ -123,7 +123,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
         )
         is Metric.StopwatchMetric -> MetricRecord(
             id = id,
-            gameId = gameId,
+            metricSetId = gameId,
             type = MetricType.Stopwatch,
             name = name,
             category = category,
@@ -133,7 +133,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
         )
         is Metric.TextFieldMetric -> MetricRecord(
             id = id,
-            gameId = gameId,
+            metricSetId = gameId,
             type = MetricType.TextField,
             name = name,
             category = category,

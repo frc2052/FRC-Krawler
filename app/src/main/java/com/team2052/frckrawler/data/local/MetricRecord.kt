@@ -15,7 +15,7 @@ import androidx.room.PrimaryKey
     tableName = "metric",
     foreignKeys = [
         ForeignKey(
-            entity = Game::class,
+            entity = MetricSet::class,
             parentColumns = ["id"],
             childColumns = ["gameId"],
             onDelete = ForeignKey.CASCADE
@@ -29,6 +29,6 @@ data class MetricRecord(
     val type: MetricType,
     val priority: Int,
     val enabled: Boolean,
-    val gameId: Int,
+    val metricSetId: Int,
     val options: String?,
 )
