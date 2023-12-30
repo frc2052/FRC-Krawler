@@ -33,10 +33,34 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideMatchMetricsDao(
+    fun provideMetricsDao(
         database: FRCKrawlerDatabase
     ): MetricDao {
         return database.metricDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGameDao(
+        database: FRCKrawlerDatabase
+    ): GameDao {
+        return database.gameDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideEventDao(
+        database: FRCKrawlerDatabase
+    ): EventDao {
+        return database.eventDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTeamAtEventDao(
+        database: FRCKrawlerDatabase
+    ): TeamAtEventDao {
+        return database.teamAtEventDao()
     }
 }
 
