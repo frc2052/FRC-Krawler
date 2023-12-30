@@ -7,6 +7,8 @@ import androidx.room.RoomDatabase
     entities = [
         MetricSet::class,
         MetricRecord::class,
+        Event::class,
+        TeamAtEvent::class,
     ],
     version = 1,
     exportSchema = false
