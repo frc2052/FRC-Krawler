@@ -61,7 +61,7 @@ fun MetricsListScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     category: MetricCategory,
-    gameId: Int
+    metricSetId: Int
 ) {
     val scaffoldState = rememberScaffoldState()
     val viewModel: MetricsListViewModel = hiltViewModel()
@@ -74,7 +74,7 @@ fun MetricsListScreen(
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
-        viewModel.loadMatchMetrics(category, gameId)
+        viewModel.loadMetrics(category, metricSetId)
     }
 
     val state = viewModel.state.collectAsState().value
@@ -88,7 +88,7 @@ fun MetricsListScreen(
                 scaffoldState = scaffoldState,
                 title = {
                     if (state is MetricListScreenState.Content) {
-                        Text(state.gameName)
+                        Text(state.setName)
                     }
                 },
                 actions = {
@@ -125,7 +125,7 @@ fun MetricsListScreen(
                 AddEditMetricDialog(
                     mode = sheetMode,
                     category = category,
-                    gameId = gameId,
+                    metricSetId = metricSetId,
                     onClose = {
                         scope.launch {
                             sheetState.hide()
@@ -136,15 +136,15 @@ fun MetricsListScreen(
         ) {
             Column(Modifier.padding(contentPadding)) {
                 val currentScreen = when (category) {
-                    MetricCategory.Match -> Screen.MatchMetrics(gameId)
-                    MetricCategory.Pit -> Screen.PitMetrics(gameId)
+                    MetricCategory.Match -> Screen.MatchMetrics(metricSetId)
+                    MetricCategory.Pit -> Screen.PitMetrics(metricSetId)
                 }
                 FRCKrawlerTabBar(
-                    navigation = Screen.Metrics(gameId),
+                    navigation = Screen.Metrics(metricSetId),
                     currentScreen = currentScreen
                 ) { screen ->
                     navController.navigate(screen.route) {
-                        popUpTo(Screen.Metrics(gameId).route) { inclusive = true }
+                        popUpTo(Screen.Metrics(metricSetId).route) { inclusive = true }
                         launchSingleTop = true
                     }
                 }
@@ -171,12 +171,12 @@ fun MetricsListScreen(
 
             if (showDeleteConfirmation) {
                 AlertDialog(
-                    title = { Text("Delete game?")},
-                    text = { Text("This action cannot be undone. This game and all metrics will be deleted.") },
+                    title = { Text("Delete metric set?")},
+                    text = { Text("This action cannot be undone. This set and all metrics will be deleted.") },
                     onDismissRequest = { showDeleteConfirmation = false },
                     confirmButton = {
                         TextButton(onClick = {
-                            viewModel.deleteGame()
+                            viewModel.deleteMetricSet()
                             navController.popBackStack()
                         }) {
                             Text("Delete")

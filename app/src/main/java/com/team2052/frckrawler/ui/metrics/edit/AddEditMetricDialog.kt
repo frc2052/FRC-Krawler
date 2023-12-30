@@ -47,7 +47,7 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 fun AddEditMetricDialog(
     mode: AddEditMetricMode,
     category: MetricCategory,
-    gameId: Int,
+    metricSetId: Int,
     onClose: () -> Unit
 ) {
     val viewModel: AddMetricViewModel = hiltViewModel()
@@ -56,8 +56,8 @@ fun AddEditMetricDialog(
 
     LaunchedEffect(mode) {
         when (mode) {
-            is AddEditMetricMode.Edit -> viewModel.startEditingMetric(mode.metric, gameId, category)
-            AddEditMetricMode.New -> viewModel.startEditingNewMetric(gameId, category)
+            is AddEditMetricMode.Edit -> viewModel.startEditingMetric(mode.metric, metricSetId, category)
+            AddEditMetricMode.New -> viewModel.startEditingNewMetric(metricSetId, category)
         }
     }
 

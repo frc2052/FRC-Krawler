@@ -1,6 +1,8 @@
 package com.team2052.frckrawler.ui.modeSelect
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.FRCKrawlerApp
@@ -9,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
 class ModeSelectViewModel @Inject constructor(
@@ -38,13 +39,13 @@ data class RemoteScoutData(
 )
 
 data class SoloScoutData(
-    val game: String = "",
+    val metricSet: String = "",
     val event: String = "",
 )
 
 data class ServerData(
     val teamNumber: String = "",
     val serverName: String = "",
-    val game: String = "",
+    val metricSet: String = "",
     val event: String = "",
 )

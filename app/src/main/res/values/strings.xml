@@ -54,7 +54,7 @@
     <string name="server_screen_title">Server</string>
     <string name="server_home_screen_title">Home</string>
     <string name="server_matches_screen_title">Matches</string>
-    <string name="server_games_screen_title">Games</string>
+    <string name="metric_sets_screen_title">Metrics</string>
 
     <!--Metrics Screens-->
     <string name="metrics_screen">Metrics</string>

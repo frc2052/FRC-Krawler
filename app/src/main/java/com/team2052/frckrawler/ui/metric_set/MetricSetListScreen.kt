@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.server
+package com.team2052.frckrawler.ui.metric_set
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,24 +35,23 @@ import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
-import com.team2052.frckrawler.ui.game.AddGameDialog
+import com.team2052.frckrawler.ui.navigation.Screen.MetricSets
 import com.team2052.frckrawler.ui.navigation.Screen.Metrics
 import com.team2052.frckrawler.ui.navigation.Screen.Server
-import com.team2052.frckrawler.ui.navigation.Screen.ServerGames
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
-fun ServerGamesScreen(
+fun MetricSetListScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
 ) {
     val scaffoldState = rememberScaffoldState()
-    val viewModel: ServerGamesViewModel = hiltViewModel()
+    val viewModel: MetricSetListViewModel = hiltViewModel()
 
-    var addGameDialogOpen by remember { mutableStateOf(false) }
+    var addMetricSetDialogOpen by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
-        viewModel.loadGames()
+        viewModel.loadMetricSets()
     }
 
     FRCKrawlerScaffold(
@@ -68,16 +67,16 @@ fun ServerGamesScreen(
             )
         },
         tabBar = {
-            FRCKrawlerTabBar(navigation = Server, currentScreen = ServerGames) { screen ->
+            FRCKrawlerTabBar(navigation = Server, currentScreen = MetricSets) { screen ->
                 navController.navigate(screen.route) {
-                    popUpTo(ServerGames.route) { inclusive = true }
+                    popUpTo(MetricSets.route) { inclusive = true }
                     launchSingleTop = true
                 }
             }
         },
         floatingActionButton = {
-            GameActions(
-                onAddClick = { addGameDialogOpen = true }
+            Actions(
+                onAddClick = { addMetricSetDialogOpen = true }
             )
         },
         drawerContent = {
@@ -89,14 +88,14 @@ fun ServerGamesScreen(
             }
         }
     ) { _ ->
-        GamesList(
+        MetricSetList(
             metricSets = viewModel.metricSets,
-            onGameClick = { game -> navController.navigate(Metrics(game.id).route) }
+            onSetClick = { set -> navController.navigate(Metrics(set.id).route) }
         )
-        if (addGameDialogOpen) {
-            AddGameDialog(
-                onAddGame = { newGame -> viewModel.makeGame(newGame)},
-                onClose = { addGameDialogOpen = false },
+        if (addMetricSetDialogOpen) {
+            AddMetricSetDialog(
+                onAddMetricSet = { newSet -> viewModel.makeMetricSet(newSet)},
+                onClose = { addMetricSetDialogOpen = false },
             )
         }
     }
@@ -115,34 +114,34 @@ private fun EmptyBackground() {
             contentDescription = "Background",
             tint = MaterialTheme.colors.secondary,
         )
-        Text(text = "No Games", style = MaterialTheme.typography.h4)
+        Text(text = "No Metric Sets", style = MaterialTheme.typography.h4)
     }
 }
 
 @Composable
-private fun GameActions(onAddClick: () -> Unit) {
+private fun Actions(onAddClick: () -> Unit) {
     val fabModifier = Modifier.padding(bottom = 24.dp)
     FloatingActionButton(
         modifier = fabModifier,
         onClick = onAddClick
     ) {
-        Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new game")
+        Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new metric set")
     }
 }
 
 @Composable
-fun GamesList(
+fun MetricSetList(
     modifier: Modifier = Modifier,
     metricSets: List<MetricSet>,
-    onGameClick: (MetricSet) -> Unit
+    onSetClick: (MetricSet) -> Unit
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        metricSets.forEach { game ->
+        metricSets.forEach { set ->
             Text(
                 modifier = Modifier.fillMaxWidth()
-                    .clickable { onGameClick(game) }
+                    .clickable { onSetClick(set) }
                     .padding(horizontal = 12.dp, vertical = 12.dp),
-                text = game.name,
+                text = set.name,
                 style = MaterialTheme.typography.h5
             )
             Divider()
@@ -152,15 +151,15 @@ fun GamesList(
 
 @Preview
 @Composable
-private fun GamesListPreview() {
+private fun MetricSetListPreview() {
     FrcKrawlerTheme(darkTheme = false) {
-        GamesList(
+        MetricSetList(
             metricSets = listOf(
                 MetricSet(name = "Infinite Recharge"),
                 MetricSet(name = "Rapid React"),
                 MetricSet(name = "Charged Up"),
             ),
-            onGameClick = {}
+            onSetClick = {}
         )
     }
 }

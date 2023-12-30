@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = MetricSet::class,
             parentColumns = ["id"],
-            childColumns = ["gameId"],
+            childColumns = ["matchMetricsSetId", "pitMetricsSetId"],
             onDelete = ForeignKey.CASCADE
         )
     ]
@@ -18,5 +18,6 @@ data class Event(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val tbaId: String?,
-    val gameId: Int
+    val matchMetricsSetId: Int?,
+    val pitMetricsSetId: Int?,
 )

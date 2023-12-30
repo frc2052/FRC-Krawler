@@ -69,11 +69,11 @@ fun MetricRecord.toMetric(): Metric {
     }
 }
 
-fun Metric.toMetricRecord(gameId: Int): MetricRecord {
+fun Metric.toMetricRecord(metricSetId: Int): MetricRecord {
     return when (this) {
         is Metric.BooleanMetric -> MetricRecord(
             id = id,
-            metricSetId = gameId,
+            metricSetId = metricSetId,
             type = MetricType.Boolean,
             name = name,
             category = category,
@@ -83,7 +83,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
         )
         is Metric.CheckboxMetric -> MetricRecord(
             id = id,
-            metricSetId = gameId,
+            metricSetId = metricSetId,
             type = MetricType.Checkbox,
             name = name,
             category = category,
@@ -93,7 +93,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
         )
         is Metric.ChooserMetric -> MetricRecord(
             id = id,
-            metricSetId = gameId,
+            metricSetId = metricSetId,
             type = MetricType.Chooser,
             name = name,
             category = category,
@@ -103,7 +103,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
         )
         is Metric.CounterMetric -> MetricRecord(
             id = id,
-            metricSetId = gameId,
+            metricSetId = metricSetId,
             type = MetricType.Slider,
             name = name,
             category = category,
@@ -113,7 +113,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
         )
         is Metric.SliderMetric -> MetricRecord(
             id = id,
-            metricSetId = gameId,
+            metricSetId = metricSetId,
             type = MetricType.Slider,
             name = name,
             category = category,
@@ -123,7 +123,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
         )
         is Metric.StopwatchMetric -> MetricRecord(
             id = id,
-            metricSetId = gameId,
+            metricSetId = metricSetId,
             type = MetricType.Stopwatch,
             name = name,
             category = category,
@@ -133,7 +133,7 @@ fun Metric.toMetricRecord(gameId: Int): MetricRecord {
         )
         is Metric.TextFieldMetric -> MetricRecord(
             id = id,
-            metricSetId = gameId,
+            metricSetId = metricSetId,
             type = MetricType.TextField,
             name = name,
             category = category,

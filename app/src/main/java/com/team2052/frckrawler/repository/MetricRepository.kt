@@ -16,11 +16,11 @@ class MetricRepository @Inject constructor(
     private val metricDao: MetricDao,
 ) {
 
-    fun getGameMetrics(
+    fun getMetrics(
         category: MetricCategory,
-        gameId: Int
+        metricSetId: Int
     ): Flow<List<Metric>> {
-        return metricDao.getMetricsWithCategory(category, gameId)
+        return metricDao.getMetricsWithCategory(category, metricSetId)
             .map { records ->
                 records.map { it.toMetric() }
             }
@@ -28,13 +28,13 @@ class MetricRepository @Inject constructor(
 
     suspend fun getMetricCountForCategory(
         category: MetricCategory,
-        gameId: Int
+        metricSetId: Int
     ): Int {
-        return metricDao.getMetricCountForCategory(category, gameId)
+        return metricDao.getMetricCountForCategory(category, metricSetId)
     }
 
-    suspend fun saveMetric(metric: Metric, gameId: Int) {
-        metricDao.insert(metric.toMetricRecord(gameId))
+    suspend fun saveMetric(metric: Metric, metricSetId: Int) {
+        metricDao.insert(metric.toMetricRecord(metricSetId))
     }
 
     suspend fun deleteMetric(id: Int) {

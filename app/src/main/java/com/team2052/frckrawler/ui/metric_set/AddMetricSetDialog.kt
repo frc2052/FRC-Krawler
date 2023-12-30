@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.game
+package com.team2052.frckrawler.ui.metric_set
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,11 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -29,16 +25,11 @@ import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
-fun AddGameDialog(
-  onAddGame: (String) -> Unit,
+fun AddMetricSetDialog(
+  onAddMetricSet: (String) -> Unit,
   onClose: () -> Unit
 ) {
-
-//  shape: Shape = MaterialTheme.shapes.medium,
-//  backgroundColor: Color = MaterialTheme.colors.surface,
-//  contentColor: Color = contentColorFor(backgroundColor),
-//  properties: DialogProperties = DialogProperties()
-  var gameName by remember { mutableStateOf("") }
+  var setName by remember { mutableStateOf("") }
   Dialog(onDismissRequest = onClose) {
     Surface(
       shape = MaterialTheme.shapes.medium,
@@ -49,14 +40,14 @@ fun AddGameDialog(
         Text(
           modifier = Modifier.padding(horizontal = 24.dp)
             .paddingFromBaseline(top = 40.dp),
-          text = "Add New Game",
+          text = "Add New Metric Set",
           style = MaterialTheme.typography.h6
         )
 
         Box (modifier = Modifier.padding(horizontal = 24.dp)) {
           FRCKrawlerTextField(
-            value = gameName,
-            onValueChange = { gameName = it },
+            value = setName,
+            onValueChange = { setName = it },
             label = "Name"
           )
         }
@@ -73,7 +64,7 @@ fun AddGameDialog(
           TextButton(
             modifier = Modifier.padding(12.dp),
             onClick = {
-              onAddGame(gameName)
+              onAddMetricSet(setName)
               onClose()
             }
           ) {
@@ -87,10 +78,10 @@ fun AddGameDialog(
 
 @Preview
 @Composable
-private fun AddGameDialogPreview() {
+private fun AddMetricSetDialogPreview() {
   FrcKrawlerTheme {
-    AddGameDialog(
-      onAddGame = {},
+    AddMetricSetDialog(
+      onAddMetricSet = {},
       onClose = {}
     )
   }

@@ -14,6 +14,6 @@ import androidx.room.RoomDatabase
     exportSchema = false
 )
 abstract class FRCKrawlerDatabase: RoomDatabase() {
-    abstract fun gameDao(): MetricSetDao
+    abstract fun metricsSetDao(): MetricSetDao
     abstract fun metricDao(): MetricDao
 }
