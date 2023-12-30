@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.ui.metrics.edit
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Divider
+import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
@@ -185,31 +184,23 @@ private fun MetricPreview(
     metric: Metric
 ) {
     var metricState by remember(metric.javaClass) { mutableStateOf(metric.defaultValueForPreview()) }
-    Divider()
-    Box {
+    Column(Modifier.padding(horizontal = 16.dp)) {
         Text(
-            modifier = Modifier
-                .padding(top = 8.dp, start = 16.dp, bottom = 4.dp)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colors.primaryVariant,
-                    shape = MaterialTheme.shapes.small
-                )
-                .padding(vertical = 4.dp, horizontal = 8.dp),
-            style = MaterialTheme.typography.overline,
-            color = MaterialTheme.colors.primaryVariant,
-            text = "preview"
+            text = "Preview",
+            style = MaterialTheme.typography.h6
         )
-        MetricInput(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            metric = metric,
-            state = metricState,
-            onStateChanged = { metricState = it }
-        )
+        Spacer(Modifier.height(12.dp))
+        Card(
+            elevation = 2.dp
+        ) {
+            MetricInput(
+                modifier = Modifier.fillMaxWidth(),
+                metric = metric,
+                state = metricState,
+                onStateChanged = { metricState = it }
+            )
+        }
     }
-    Divider()
 }
 
 @OptIn(ExperimentalMaterialApi::class)
