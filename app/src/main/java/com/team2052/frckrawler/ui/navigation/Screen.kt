@@ -43,7 +43,7 @@ sealed class Screen(
     object Server : Screen(
         "server_screen",
         getString(R.string.server_screen_title),
-        listOf(ServerHome, ServerMatches, MetricSets),
+        listOf(ServerHome, ServerMatches, GameList),
     )
     object ServerHome : Screen(
         "server_home_screen",
@@ -53,30 +53,27 @@ sealed class Screen(
         "server_matches_screen",
         getString(R.string.server_matches_screen_title)
     )
-    object MetricSets : Screen(
-        "metric_sets",
-        getString(R.string.metric_sets_screen_title)
+    object GameList : Screen(
+        "games",
+        getString(R.string.games_screen_title)
+    )
+
+    /* TODO clean up this nasty argument business */
+    data class Game(val gameId: Int? = null) : Screen(
+        route = "game/${gameId ?: "{gameId}"}",
+        title = "",
+        arguments = listOf(Arguments.gameId)
     )
 
     // Metrics screens
-    data class Metrics(val metricSetId: Int? = null) : Screen(
+    data class MetricSet(val metricSetId: Int? = null) : Screen(
         route = "metric_sets/${metricSetId ?: "{metricSetId}"}/metrics",
         title = getString(R.string.metrics_screen),
-        arguments = listOf(Arguments.metricSetId)
-    )
-
-    data class MatchMetrics(val metricSetId: Int? = null) : Screen(
-        route = "metric_sets/${metricSetId ?: "{metricSetId}"}/metrics/match",
-        title = getString(R.string.match_metrics_screen),
-        arguments = listOf(Arguments.metricSetId)
-    )
-    data class PitMetrics(val metricSetId: Int? = null) : Screen(
-        route ="metric_sets/${metricSetId ?: "{metricSetId}"}/metrics/pit",
-        title = getString(R.string.pit_metrics_screen),
         arguments = listOf(Arguments.metricSetId)
     )
 }
 
 object Arguments {
     val metricSetId = navArgument("metricSetId") { type = NavType.IntType }
+    val gameId = navArgument("gameId") { type = NavType.IntType }
 }

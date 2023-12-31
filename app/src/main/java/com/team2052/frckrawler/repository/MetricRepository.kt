@@ -16,21 +16,15 @@ class MetricRepository @Inject constructor(
     private val metricDao: MetricDao,
 ) {
 
-    fun getMetrics(
-        category: MetricCategory,
-        metricSetId: Int
-    ): Flow<List<Metric>> {
-        return metricDao.getMetricsWithCategory(category, metricSetId)
+    fun getMetrics(metricSetId: Int): Flow<List<Metric>> {
+        return metricDao.getMetrics(metricSetId)
             .map { records ->
                 records.map { it.toMetric() }
             }
     }
 
-    suspend fun getMetricCountForCategory(
-        category: MetricCategory,
-        metricSetId: Int
-    ): Int {
-        return metricDao.getMetricCountForCategory(category, metricSetId)
+    suspend fun getMetricCount(metricSetId: Int): Int {
+        return metricDao.getMetricCount(metricSetId)
     }
 
     suspend fun saveMetric(metric: Metric, metricSetId: Int) {

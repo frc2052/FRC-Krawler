@@ -9,7 +9,6 @@ fun MetricRecord.toMetric(): Metric {
         MetricType.Boolean -> Metric.BooleanMetric(
             id = id,
             name = name,
-            category = category,
             priority = priority,
             enabled = enabled
         )
@@ -18,7 +17,6 @@ fun MetricRecord.toMetric(): Metric {
             Metric.CounterMetric(
                 id = id,
                 name = name,
-                category = category,
                 priority = priority,
                 enabled = enabled,
                 range = min..max step step,
@@ -29,7 +27,6 @@ fun MetricRecord.toMetric(): Metric {
             Metric.SliderMetric(
                 id = id,
                 name = name,
-                category = category,
                 priority = priority,
                 enabled = enabled,
                 range = min..max
@@ -38,7 +35,6 @@ fun MetricRecord.toMetric(): Metric {
         MetricType.Chooser -> Metric.ChooserMetric(
             id = id,
             name = name,
-            category = category,
             priority = priority,
             enabled = enabled,
             options = deserializeStringOptionsList()
@@ -47,7 +43,6 @@ fun MetricRecord.toMetric(): Metric {
         MetricType.Checkbox -> Metric.CheckboxMetric(
             id = id,
             name = name,
-            category = category,
             priority = priority,
             enabled = enabled,
             options = deserializeStringOptionsList()
@@ -55,14 +50,12 @@ fun MetricRecord.toMetric(): Metric {
         MetricType.Stopwatch -> Metric.StopwatchMetric(
             id = id,
             name = name,
-            category = category,
             priority = priority,
             enabled = enabled
         )
         MetricType.TextField -> Metric.TextFieldMetric(
             id = id,
             name = name,
-            category = category,
             priority = priority,
             enabled = enabled
         )
@@ -76,7 +69,6 @@ fun Metric.toMetricRecord(metricSetId: Int): MetricRecord {
             metricSetId = metricSetId,
             type = MetricType.Boolean,
             name = name,
-            category = category,
             priority = priority,
             enabled = enabled,
             options = null
@@ -86,7 +78,6 @@ fun Metric.toMetricRecord(metricSetId: Int): MetricRecord {
             metricSetId = metricSetId,
             type = MetricType.Checkbox,
             name = name,
-            category = category,
             priority = priority,
             enabled = enabled,
             options = options.serializeToOptionsString()
@@ -96,7 +87,6 @@ fun Metric.toMetricRecord(metricSetId: Int): MetricRecord {
             metricSetId = metricSetId,
             type = MetricType.Chooser,
             name = name,
-            category = category,
             priority = priority,
             enabled = enabled,
             options = options.serializeToOptionsString()
@@ -106,7 +96,6 @@ fun Metric.toMetricRecord(metricSetId: Int): MetricRecord {
             metricSetId = metricSetId,
             type = MetricType.Slider,
             name = name,
-            category = category,
             priority = priority,
             enabled = enabled,
             options = "${range.first},${range.last},${range.step}"
@@ -116,7 +105,6 @@ fun Metric.toMetricRecord(metricSetId: Int): MetricRecord {
             metricSetId = metricSetId,
             type = MetricType.Slider,
             name = name,
-            category = category,
             priority = priority,
             enabled = enabled,
             options = "${range.first},${range.last}"
@@ -126,7 +114,6 @@ fun Metric.toMetricRecord(metricSetId: Int): MetricRecord {
             metricSetId = metricSetId,
             type = MetricType.Stopwatch,
             name = name,
-            category = category,
             priority = priority,
             enabled = enabled,
             options = null
@@ -136,7 +123,6 @@ fun Metric.toMetricRecord(metricSetId: Int): MetricRecord {
             metricSetId = metricSetId,
             type = MetricType.TextField,
             name = name,
-            category = category,
             priority = priority,
             enabled = enabled,
             options = null

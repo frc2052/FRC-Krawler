@@ -44,14 +44,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
-import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricMode
-import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
 
@@ -60,7 +57,6 @@ import kotlinx.coroutines.launch
 fun MetricsListScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    category: MetricCategory,
     metricSetId: Int
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -74,7 +70,7 @@ fun MetricsListScreen(
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
-        viewModel.loadMetrics(category, metricSetId)
+        viewModel.loadMetrics(metricSetId)
     }
 
     val state = viewModel.state.collectAsState().value
@@ -124,7 +120,6 @@ fun MetricsListScreen(
             sheetContent = {
                 AddEditMetricDialog(
                     mode = sheetMode,
-                    category = category,
                     metricSetId = metricSetId,
                     onClose = {
                         scope.launch {
@@ -135,20 +130,6 @@ fun MetricsListScreen(
             }
         ) {
             Column(Modifier.padding(contentPadding)) {
-                val currentScreen = when (category) {
-                    MetricCategory.Match -> Screen.MatchMetrics(metricSetId)
-                    MetricCategory.Pit -> Screen.PitMetrics(metricSetId)
-                }
-                FRCKrawlerTabBar(
-                    navigation = Screen.Metrics(metricSetId),
-                    currentScreen = currentScreen
-                ) { screen ->
-                    navController.navigate(screen.route) {
-                        popUpTo(Screen.Metrics(metricSetId).route) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                }
-
                 if (state is MetricListScreenState.Content) {
                     if (state.metrics.isEmpty()) {
                         EmptyBackground()
@@ -303,7 +284,6 @@ private fun MetricListRowPreview() {
                 metric = Metric.CounterMetric(
                     id = 1,
                     name = "Number of LEDs",
-                    category = MetricCategory.Match,
                     priority = 1,
                     enabled = true,
                     range = 1..1000 step 5

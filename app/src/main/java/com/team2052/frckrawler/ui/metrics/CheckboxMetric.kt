@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
@@ -62,7 +61,6 @@ private fun CheckboxMetricPreview() {
                 .background(MaterialTheme.colors.surface),
             metric = Metric.CheckboxMetric(
                 name = "Checkbox metric",
-                category = MetricCategory.Match,
                 enabled = true,
                 priority = 0,
                 options = listOf("one", "two", "three")

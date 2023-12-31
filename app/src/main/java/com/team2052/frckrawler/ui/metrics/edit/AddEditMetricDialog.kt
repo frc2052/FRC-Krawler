@@ -36,7 +36,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
@@ -46,7 +45,6 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 @Composable
 fun AddEditMetricDialog(
     mode: AddEditMetricMode,
-    category: MetricCategory,
     metricSetId: Int,
     onClose: () -> Unit
 ) {
@@ -56,8 +54,8 @@ fun AddEditMetricDialog(
 
     LaunchedEffect(mode) {
         when (mode) {
-            is AddEditMetricMode.Edit -> viewModel.startEditingMetric(mode.metric, metricSetId, category)
-            AddEditMetricMode.New -> viewModel.startEditingNewMetric(metricSetId, category)
+            is AddEditMetricMode.Edit -> viewModel.startEditingMetric(mode.metric, metricSetId)
+            AddEditMetricMode.New -> viewModel.startEditingNewMetric(metricSetId)
         }
     }
 

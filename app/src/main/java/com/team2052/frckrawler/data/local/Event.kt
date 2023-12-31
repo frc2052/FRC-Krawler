@@ -9,7 +9,13 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = MetricSet::class,
             parentColumns = ["id"],
-            childColumns = ["matchMetricsSetId", "pitMetricsSetId"],
+            childColumns = ["matchMetricsSetId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = MetricSet::class,
+            parentColumns = ["id"],
+            childColumns = ["pitMetricsSetId"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(

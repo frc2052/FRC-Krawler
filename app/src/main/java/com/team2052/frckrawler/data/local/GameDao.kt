@@ -17,6 +17,6 @@ interface GameDao {
     @Query("SELECT * FROM game WHERE id = :id")
     suspend fun get(id: Int): Game
 
-    @Query("SELECT * FROM metric_set")
+    @Query("SELECT * FROM game")
     fun getAll(): Flow<List<Game>>
 }

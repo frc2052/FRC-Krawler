@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
@@ -73,7 +72,6 @@ private fun CounterMetricPreview() {
                 .background(MaterialTheme.colors.surface),
             metric = Metric.CounterMetric(
                 name = "Counter metric",
-                category = MetricCategory.Match,
                 enabled = true,
                 priority = 0,
                 range = 1..10 step 2

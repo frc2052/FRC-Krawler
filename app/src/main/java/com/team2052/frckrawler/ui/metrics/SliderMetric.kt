@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlin.math.roundToInt
@@ -75,7 +74,6 @@ private fun SliderMetricPreview() {
                 .background(MaterialTheme.colors.surface),
             metric = Metric.SliderMetric(
                 name = "Slider metric",
-                category = MetricCategory.Match,
                 enabled = true,
                 priority = 0,
                 range = 1..10

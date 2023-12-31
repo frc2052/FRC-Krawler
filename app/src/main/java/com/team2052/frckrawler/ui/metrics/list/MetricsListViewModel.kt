@@ -22,13 +22,10 @@ class MetricsListViewModel @Inject constructor(
 
     private lateinit var metricSet: MetricSet
 
-    fun loadMetrics(
-        category: MetricCategory,
-        metricSetId: Int
-    ) {
+    fun loadMetrics(metricSetId: Int) {
         viewModelScope.launch {
             metricSet = metricSetDao.get(metricSetId)
-            metricRepo.getMetrics(category, metricSetId).collect { metrics ->
+            metricRepo.getMetrics(metricSetId).collect { metrics ->
                 _state.value = MetricListScreenState.Content(
                     metrics = metrics,
                     setName = metricSet.name

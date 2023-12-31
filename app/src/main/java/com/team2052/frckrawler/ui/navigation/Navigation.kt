@@ -16,14 +16,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.team2052.frckrawler.data.local.MetricCategory
-import com.team2052.frckrawler.ui.metrics.list.MetricsListScreen
+import com.team2052.frckrawler.ui.game.GameListScreen
 import com.team2052.frckrawler.ui.modeSelect.ModeSelectScreen
-import com.team2052.frckrawler.ui.navigation.Screen.MatchMetrics
-import com.team2052.frckrawler.ui.navigation.Screen.MetricSets
-import com.team2052.frckrawler.ui.navigation.Screen.Metrics
+import com.team2052.frckrawler.ui.navigation.Screen.Game
+import com.team2052.frckrawler.ui.navigation.Screen.GameList
 import com.team2052.frckrawler.ui.navigation.Screen.ModeSelect
-import com.team2052.frckrawler.ui.navigation.Screen.PitMetrics
 import com.team2052.frckrawler.ui.navigation.Screen.Scout
 import com.team2052.frckrawler.ui.navigation.Screen.ScoutHome
 import com.team2052.frckrawler.ui.navigation.Screen.ScoutMatches
@@ -32,7 +29,6 @@ import com.team2052.frckrawler.ui.navigation.Screen.ServerHome
 import com.team2052.frckrawler.ui.navigation.Screen.ServerMatches
 import com.team2052.frckrawler.ui.scout.ScoutHomeScreen
 import com.team2052.frckrawler.ui.scout.ScoutMatchesScreen
-import com.team2052.frckrawler.ui.metric_set.MetricSetListScreen
 import com.team2052.frckrawler.ui.server.ServerMatchesScreen
 import com.team2052.frckrawler.ui.server.home.ServerHomeScreen
 
@@ -106,31 +102,15 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
                 ServerMatchesScreen(navController = navController)
             }
 
-            composable(screen = MetricSets) {
-                MetricSetListScreen(navController = navController)
+            composable(screen = GameList) {
+                GameListScreen(navController = navController)
             }
+        }
 
-            navigation(
-                initialScreen = MatchMetrics(),
-                navigation = Metrics(),
-            ) {
-                composable(screen = MatchMetrics()) { backStackEntry ->
-                    val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
-                    MetricsListScreen(
-                        navController = navController,
-                        category = MetricCategory.Match,
-                        metricSetId = metricSetId
-                    )
-                }
-                composable(screen = PitMetrics()) { backStackEntry ->
-                    val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
-                    MetricsListScreen(
-                        navController = navController,
-                        category = MetricCategory.Pit,
-                        metricSetId = metricSetId
-                    )
-                }
-            }
+        composable(
+            screen = Game(),
+        ) {
+            // TODO game screen
         }
     }
 }

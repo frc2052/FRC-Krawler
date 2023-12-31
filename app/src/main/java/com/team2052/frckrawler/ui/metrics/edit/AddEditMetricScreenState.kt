@@ -13,18 +13,16 @@ data class AddEditMetricScreenState(
 ) {
     val saveEnabled = name.isNotBlank() && options.isValid
 
-    val previewMetric: Metric = toMetric(-1, MetricCategory.Match, 0)
+    val previewMetric: Metric = toMetric(-1, 0)
 
     fun toMetric(
         id: Int,
-        category: MetricCategory,
         priority: Int
     ): Metric {
         return when (type) {
             MetricType.Boolean -> Metric.BooleanMetric(
                 id = id,
                 name = name,
-                category = category,
                 priority = priority,
                 enabled = true
             )
@@ -33,7 +31,6 @@ data class AddEditMetricScreenState(
                 Metric.CounterMetric(
                     id = id,
                     name = name,
-                    category = category,
                     priority = priority,
                     enabled = true,
                     range = options.range step options.step,
@@ -44,7 +41,6 @@ data class AddEditMetricScreenState(
                 Metric.SliderMetric(
                     id = id,
                     name = name,
-                    category = category,
                     priority = priority,
                     enabled = true,
                     range = options.range
@@ -55,7 +51,6 @@ data class AddEditMetricScreenState(
                 Metric.ChooserMetric(
                     id = id,
                     name = name,
-                    category = category,
                     priority = priority,
                     enabled = true,
                     options = options.options
@@ -66,7 +61,6 @@ data class AddEditMetricScreenState(
                 Metric.CheckboxMetric(
                     id = id,
                     name = name,
-                    category = category,
                     priority = priority,
                     enabled = true,
                     options = options.options
@@ -75,14 +69,12 @@ data class AddEditMetricScreenState(
             MetricType.Stopwatch -> Metric.StopwatchMetric(
                 id = id,
                 name = name,
-                category = category,
                 priority = priority,
                 enabled = true
             )
             MetricType.TextField -> Metric.TextFieldMetric(
                 id = id,
                 name = name,
-                category = category,
                 priority = priority,
                 enabled = true
             )

@@ -19,24 +19,20 @@ class AddMetricViewModel @Inject constructor(
 
     private var metricId: Int = 0
     private var metricSetId: Int = -1
-    private lateinit var category: MetricCategory
 
     private val _state = MutableStateFlow(AddEditMetricScreenState())
     val state: StateFlow<AddEditMetricScreenState> = _state
 
-    fun startEditingNewMetric(metricSetId: Int, category: MetricCategory) {
+    fun startEditingNewMetric(metricSetId: Int) {
         this.metricSetId = metricSetId
-        this.category = category
         this.metricId = 0
     }
 
     fun startEditingMetric(
         metric: Metric,
-        metricSetId: Int,
-        category: MetricCategory
+        metricSetId: Int
     ) {
         this.metricSetId = metricSetId
-        this.category = category
         this.metricId = metric.id
 
         _state.value = AddEditMetricScreenState(
@@ -77,10 +73,9 @@ class AddMetricViewModel @Inject constructor(
 
     fun save() {
         viewModelScope.launch {
-            val priority = metricRepo.getMetricCountForCategory(category, metricSetId)
+            val priority = metricRepo.getMetricCount(metricSetId)
             val metric = _state.value.toMetric(
                 id = metricId,
-                category = category,
                 priority = priority
             )
 

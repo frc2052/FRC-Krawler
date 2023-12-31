@@ -25,7 +25,6 @@ import androidx.room.PrimaryKey
 data class MetricRecord(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val category: MetricCategory,
     val type: MetricType,
     val priority: Int,
     val enabled: Boolean,
