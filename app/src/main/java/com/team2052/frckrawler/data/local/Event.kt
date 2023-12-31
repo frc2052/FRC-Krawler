@@ -2,6 +2,7 @@ package com.team2052.frckrawler.data.local
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -24,6 +25,11 @@ import androidx.room.PrimaryKey
             childColumns = ["gameId"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [
+        Index("matchMetricsSetId"),
+        Index("pitMetricsSetId"),
+        Index("gameId"),
     ]
 )
 data class Event(

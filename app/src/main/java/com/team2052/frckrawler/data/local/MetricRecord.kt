@@ -2,6 +2,7 @@ package com.team2052.frckrawler.data.local
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
@@ -20,7 +21,8 @@ import androidx.room.PrimaryKey
             childColumns = ["metricSetId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index("metricSetId")]
 )
 data class MetricRecord(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
