@@ -1,16 +1,36 @@
 package com.team2052.frckrawler.ui.components
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalAbsoluteElevation
+import androidx.compose.material.LocalElevationOverlay
+import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,30 +39,8 @@ import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.theme.borderWidth
 import com.team2052.frckrawler.ui.theme.spaceLarge
-import com.team2052.frckrawler.ui.theme.spaceMedium
-import java.util.*
-import kotlin.math.exp
 
 private val cardElevation = 4.dp
-
-@Composable
-fun CardGroupExample(modifier: Modifier) {
-    ExpandableCardGroup(modifier = modifier) {
-        expandableCard { id ->
-            ExpandableCard(
-                header = { /*TODO*/ },
-                expanded = id == currentExpandedCardIndex,
-                onExpanded = { expanded -> currentExpandedCardIndex = if (expanded) id else -1 }
-            )
-        }
-        expandableCard { id ->
-
-        }
-        expandableCard { id ->
-
-        }
-    }
-}
 
 @Composable
 fun ExpandableCardGroup(
