@@ -30,7 +30,11 @@ class GameDetailViewModel @Inject constructor(
     private val _metricSets = MutableStateFlow<List<MetricSet>>(emptyList())
     val metricSets: StateFlow<List<MetricSet>> = _metricSets
 
+    private var gameId: Int = 0
+
     fun loadGame(gameId: Int) {
+        this.gameId = gameId
+
         viewModelScope.launch {
             _game.value = gameDao.get(gameId)
         }
@@ -45,6 +49,17 @@ class GameDetailViewModel @Inject constructor(
             metricSetDao.getAllForGame(gameId).collect {
                 _metricSets.value = it
             }
+        }
+    }
+
+    fun createNewMetricSet(name: String) {
+        viewModelScope.launch {
+            metricSetDao.insert(
+                MetricSet(
+                    name = name,
+                    gameId = gameId
+                )
+            )
         }
     }
 
