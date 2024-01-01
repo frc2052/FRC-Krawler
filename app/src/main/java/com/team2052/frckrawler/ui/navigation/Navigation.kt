@@ -16,7 +16,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.team2052.frckrawler.ui.game.GameListScreen
+import com.team2052.frckrawler.ui.game.detail.GameDetailScreen
+import com.team2052.frckrawler.ui.game.list.GameListScreen
 import com.team2052.frckrawler.ui.modeSelect.ModeSelectScreen
 import com.team2052.frckrawler.ui.navigation.Screen.Game
 import com.team2052.frckrawler.ui.navigation.Screen.GameList
@@ -109,8 +110,9 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
 
         composable(
             screen = Game(),
-        ) {
-            // TODO game screen
+        ) { backStackEntry ->
+            val gameId = backStackEntry.arguments?.getInt(Arguments.gameId.name) ?: 0
+            GameDetailScreen(gameId = gameId, navController = navController)
         }
     }
 }

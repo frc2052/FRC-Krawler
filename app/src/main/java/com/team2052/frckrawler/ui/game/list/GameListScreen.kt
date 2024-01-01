@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.game
+package com.team2052.frckrawler.ui.game.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +35,7 @@ import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
+import com.team2052.frckrawler.ui.game.AddGameDialog
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.navigation.Screen.GameList
 import com.team2052.frckrawler.ui.navigation.Screen.Server

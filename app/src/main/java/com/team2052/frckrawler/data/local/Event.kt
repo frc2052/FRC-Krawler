@@ -35,8 +35,8 @@ import androidx.room.PrimaryKey
 data class Event(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val tbaId: String?,
     val gameId: Int,
-    val matchMetricsSetId: Int?,
-    val pitMetricsSetId: Int?,
+    val tbaId: String? = null,
+    val matchMetricsSetId: Int? = null,
+    val pitMetricsSetId: Int? = null,
 )

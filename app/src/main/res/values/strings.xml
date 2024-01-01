@@ -14,6 +14,7 @@
     <!-- Common strings -->
     <string name="ok">ok</string>
     <string name="cancel">cancel</string>
+    <string name="add">add</string>
 
     <!--Shared Preferences TODO: Should this be here?-->
     <string name="preference_app_mode">&applicationID;PREFERENCE_APP_MODE</string>
@@ -60,6 +61,12 @@
     <string name="metrics_screen">Metrics</string>
     <string name="match_metrics_screen">Match</string>
     <string name="pit_metrics_screen">Pit</string>
+
+    <!--Game Detail Screen -->
+    <string name="game_detail_event_card_title">Events</string>
+    <string name="game_detail_metrics_card_title">Metric Sets</string>
+    <string name="game_detail_no_events">No events</string>
+    <string name="game_detail_no_metric_sets">No metric sets</string>
 
     <!-- Permissions -->
     <string name="bluetooth_permission_rationale_title">Permissions required</string>

@@ -17,6 +17,9 @@ interface MetricSetDao {
     @Query("SELECT * FROM metric_set WHERE id = :id")
     suspend fun get(id: Int): MetricSet
 
+    @Query("SELECT * FROM metric_set WHERE gameId = :gameId")
+    fun getAllForGame(gameId: Int): Flow<List<MetricSet>>
+
     @Query("SELECT * FROM metric_set")
     fun getAll(): Flow<List<MetricSet>>
 }
