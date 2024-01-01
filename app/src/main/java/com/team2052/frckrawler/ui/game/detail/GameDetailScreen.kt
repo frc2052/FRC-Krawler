@@ -10,12 +10,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,19 +43,26 @@ import com.team2052.frckrawler.data.local.MetricSet
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
+import com.team2052.frckrawler.ui.event.add.AddEventSheetContent
 import com.team2052.frckrawler.ui.game.AddMetricSetDialog
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GameDetailScreen(
     gameId: Int,
     navController: NavController,
 ) {
+    val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
     val viewModel: GameDetailViewModel = hiltViewModel()
     val game by viewModel.game.collectAsState()
 
-    var showAddEvent by remember { mutableStateOf(false) }
+    val addEventSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
+    )
     var showAddMetricSet by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
@@ -74,13 +86,32 @@ fun GameDetailScreen(
     ) { contentPadding ->
         val events by viewModel.events.collectAsState()
         val metricSets by viewModel.metricSets.collectAsState()
-        GameDetailContent(
-            modifier = Modifier.padding(contentPadding),
-            events = events,
-            onAddEventClick = { showAddEvent = true },
-            metricSets = metricSets,
-            onAddMetricSetClick = { showAddMetricSet = true },
-        )
+
+        ModalBottomSheetLayout(
+            sheetState = addEventSheetState,
+            sheetContent = {
+                AddEventSheetContent(
+                    gameId = gameId,
+                    onClose = {
+                        scope.launch {
+                            addEventSheetState.hide()
+                        }
+                    },
+                )
+            }
+        ) {
+            GameDetailContent(
+                modifier = Modifier.padding(contentPadding),
+                events = events,
+                onAddEventClick = {
+                    scope.launch {
+                        addEventSheetState.show()
+                    }
+                },
+                metricSets = metricSets,
+                onAddMetricSetClick = { showAddMetricSet = true },
+            )
+        }
 
         if (showAddMetricSet) {
             AddMetricSetDialog(
