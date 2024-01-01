@@ -1,6 +1,6 @@
 package com.team2052.frckrawler.repository
 
-import com.team2052.frckrawler.data.remote.model.Event
+import com.team2052.frckrawler.data.remote.model.TbaSimpleEvent
 import com.team2052.frckrawler.data.remote.EventService
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
@@ -21,7 +21,7 @@ class EventRepository @Inject constructor(
 //    suspend fun getEvent(team: Int, year: Int): Event =
 //        eventService.getEvent(team, year)
 
-    suspend fun getEvents(): List<Event> {
+    suspend fun getEvents(): List<TbaSimpleEvent> {
         val response = eventService.getEvents(2052, 2021)
         return response.body() ?: emptyList()
     }

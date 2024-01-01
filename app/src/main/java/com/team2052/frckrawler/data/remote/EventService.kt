@@ -1,6 +1,6 @@
 package com.team2052.frckrawler.data.remote
 
-import com.team2052.frckrawler.data.remote.model.Event
+import com.team2052.frckrawler.data.remote.model.TbaSimpleEvent
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -17,10 +17,9 @@ interface EventService {
 //        @Path("team_key") team: Int,
 //    ): Response<List<Event>>
 
-    @GET("team/frc{team_key}/events/{year}")
+    @GET("events/{year}/simple")
     suspend fun getEvents(
-        @Path("team_key") team: Int,
         @Path("year") year: Int,
-    ): Response<List<Event>>
+    ): Response<List<TbaSimpleEvent>>
 
 }

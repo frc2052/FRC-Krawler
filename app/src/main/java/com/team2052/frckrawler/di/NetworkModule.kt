@@ -25,7 +25,7 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(RequestInterceptor())
+            .addInterceptor(TbaAuthInterceptor())
             .cache(
                 Cache(
                     directory = File(context.cacheDir, "http_cache"),
