@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.metric_set
+package com.team2052.frckrawler.ui.game
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,9 +18,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
@@ -38,9 +40,10 @@ fun AddMetricSetDialog(
     ) {
       Column {
         Text(
-          modifier = Modifier.padding(horizontal = 24.dp)
+          modifier = Modifier
+            .padding(horizontal = 24.dp)
             .paddingFromBaseline(top = 40.dp),
-          text = "Add New Metric Set",
+          text = stringResource(R.string.add_metric_set_title),
           style = MaterialTheme.typography.h6
         )
 
@@ -48,7 +51,7 @@ fun AddMetricSetDialog(
           FRCKrawlerTextField(
             value = setName,
             onValueChange = { setName = it },
-            label = "Name"
+            label = stringResource(R.string.add_metric_set_name)
           )
         }
 
@@ -59,7 +62,7 @@ fun AddMetricSetDialog(
               onClose()
             }
           ) {
-            Text("CANCEL")
+            Text(stringResource(R.string.cancel).uppercase())
           }
           TextButton(
             modifier = Modifier.padding(12.dp),
@@ -68,7 +71,7 @@ fun AddMetricSetDialog(
               onClose()
             }
           ) {
-            Text("SAVE")
+            Text(stringResource(R.string.save).uppercase())
           }
         }
       }

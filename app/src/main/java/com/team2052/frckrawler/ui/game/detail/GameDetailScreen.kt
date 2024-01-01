@@ -212,7 +212,7 @@ private fun GameDetailCardLayout(
                         imageVector = Icons.Default.Add,
                         contentDescription = null
                     )
-                    Text(text = stringResource(R.string.add))
+                    Text(text = stringResource(R.string.add).uppercase())
                 }
             }
 

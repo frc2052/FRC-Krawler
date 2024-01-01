@@ -12,9 +12,10 @@
     <string name="viewLogsButton">View Logs</string>
 
     <!-- Common strings -->
-    <string name="ok">ok</string>
-    <string name="cancel">cancel</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
     <string name="add">add</string>
+    <string name="save">save</string>
 
     <!--Shared Preferences TODO: Should this be here?-->
     <string name="preference_app_mode">&applicationID;PREFERENCE_APP_MODE</string>
@@ -67,6 +68,14 @@
     <string name="game_detail_metrics_card_title">Metric Sets</string>
     <string name="game_detail_no_events">No events</string>
     <string name="game_detail_no_metric_sets">No metric sets</string>
+
+    <!-- Add Game -->
+    <string name="add_game_title">Add New Game</string>
+    <string name="add_game_name">Name</string>
+
+    <!-- Add Metric Set -->
+    <string name="add_metric_set_title">Add New Metric Set</string>
+    <string name="add_metric_set_name">Name</string>
 
     <!-- Permissions -->
     <string name="bluetooth_permission_rationale_title">Permissions required</string>
