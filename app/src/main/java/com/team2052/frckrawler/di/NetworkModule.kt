@@ -65,11 +65,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideStatusService(retrofit: Retrofit): StatusService =
-        retrofit.create(StatusService::class.java)
-
-    @Provides
-    @Singleton
     fun provideTeamService(retrofit: Retrofit): TeamService =
         retrofit.create(TeamService::class.java)
 

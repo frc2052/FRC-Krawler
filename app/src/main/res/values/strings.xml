@@ -78,8 +78,12 @@
     <string name="add_metric_set_name">Name</string>
 
     <!-- Add Event -->
+    <string name="add_event_sheet_title">Add event</string>
     <string name="add_event_tab_auto">Auto</string>
     <string name="add_event_tab_manual">Manual</string>
+    <string name="add_event_year_label">Year</string>
+    <string name="add_event_event_label">Event</string>
+    <string name="add_event_name_label">Event name</string>
 
     <!-- Permissions -->
     <string name="bluetooth_permission_rationale_title">Permissions required</string>

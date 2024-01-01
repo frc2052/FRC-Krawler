@@ -5,17 +5,24 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
 fun <T> FRCKrawlerDropdown(
@@ -23,7 +30,7 @@ fun <T> FRCKrawlerDropdown(
     value: T?,
     getLabel: (T?) -> String,
     onValueChange: (T?) -> Unit,
-    onFocusChange: (Boolean) -> Unit,
+    onFocusChange: (Boolean) -> Unit = {},
     validity: Boolean = true,
     enabled: Boolean = true,
     label: String,
@@ -89,6 +96,24 @@ fun <T> FRCKrawlerDropdown(
                     },
                 ) { Text(getLabel(item)) }
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun FrcKrawlerDropdownPreview() {
+    var value: String? by remember { mutableStateOf("One") }
+    FrcKrawlerTheme {
+        Surface {
+            FRCKrawlerDropdown(
+                value = value,
+                getLabel = { it ?: "select an option" },
+                onValueChange = { value = it },
+                onFocusChange = {},
+                label = "Number",
+                dropdownItems = listOf("One", "Two", "Three")
+            )
         }
     }
 }

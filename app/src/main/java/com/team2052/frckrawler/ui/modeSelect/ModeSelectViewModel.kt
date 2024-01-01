@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.FRCKrawlerApp
-import com.team2052.frckrawler.repository.EventRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -15,7 +14,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ModeSelectViewModel @Inject constructor(
     private val context: FRCKrawlerApp,
-    private val eventRepository: EventRepository,
 ) : ViewModel() {
 
     var isRefreshing by mutableStateOf(false)

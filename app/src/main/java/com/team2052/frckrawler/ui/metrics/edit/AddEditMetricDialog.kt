@@ -32,10 +32,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
@@ -401,14 +403,14 @@ private fun DialogButtons(
                 modifier = Modifier.padding(12.dp),
                 onClick = onCancelClick
             ) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel).uppercase())
             }
             TextButton(
                 modifier = Modifier.padding(12.dp),
                 enabled = saveEnabled,
                 onClick = onSaveClick
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save).uppercase())
             }
         }
     }
