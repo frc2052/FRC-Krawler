@@ -19,41 +19,41 @@ sealed class Screen(
 ) {
 
     // Mode selection screen
-    object ModeSelect : Screen(
+    data object ModeSelect : Screen(
         "mode_select_screen",
         getString(R.string.mode_select_screen_title),
     )
 
     // Scouting screens
-    object Scout : Screen(
+    data object Scout : Screen(
         "scout_screen",
         getString(R.string.scout_screen_title),
         listOf(ScoutHome, ScoutMatches),
     )
-    object ScoutHome : Screen(
+    data object ScoutHome : Screen(
         "scout_home_screen",
         getString(R.string.scout_home_screen_title)
     )
-    object ScoutMatches : Screen(
+    data object ScoutMatches : Screen(
         "scout_matches_screen",
         getString(R.string.scout_matches_screen_title)
     )
 
     // Server screens
-    object Server : Screen(
+    data object Server : Screen(
         "server_screen",
         getString(R.string.server_screen_title),
         listOf(ServerHome, ServerMatches, GameList),
     )
-    object ServerHome : Screen(
+    data object ServerHome : Screen(
         "server_home_screen",
         getString(R.string.server_home_screen_title)
     )
-    object ServerMatches : Screen(
+    data object ServerMatches : Screen(
         "server_matches_screen",
         getString(R.string.server_matches_screen_title)
     )
-    object GameList : Screen(
+    data object GameList : Screen(
         "games",
         getString(R.string.games_screen_title)
     )
