@@ -7,18 +7,22 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -64,6 +68,7 @@ fun GameDetailScreen(
         skipHalfExpanded = true
     )
     var showAddMetricSet by remember { mutableStateOf(false) }
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
         viewModel.loadGame(gameId)
@@ -77,6 +82,16 @@ fun GameDetailScreen(
                 scaffoldState = scaffoldState,
                 title = {
                     Text(game?.name ?: "")
+                },
+                actions = {
+                    IconButton(
+                        onClick = { showDeleteConfirmation = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "delete"
+                        )
+                    }
                 }
             )
         },
@@ -119,6 +134,27 @@ fun GameDetailScreen(
                     viewModel.createNewMetricSet(name)
                 },
                 onClose = { showAddMetricSet = false }
+            )
+        }
+
+        if (showDeleteConfirmation) {
+            AlertDialog(
+                title = { Text(stringResource(R.string.delete_game_confirmation_title))},
+                text = { Text(stringResource(R.string.delete_game_confirmation_body)) },
+                onDismissRequest = { showDeleteConfirmation = false },
+                confirmButton = {
+                    TextButton(onClick = {
+                        viewModel.deleteGame()
+                        navController.popBackStack()
+                    }) {
+                        Text(stringResource(R.string.delete).uppercase())
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDeleteConfirmation = false }) {
+                        Text(stringResource(R.string.cancel).uppercase())
+                    }
+                },
             )
         }
     }

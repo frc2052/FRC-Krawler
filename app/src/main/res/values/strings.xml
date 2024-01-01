@@ -15,6 +15,7 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="add">add</string>
+    <string name="delete">delete</string>
     <string name="save">save</string>
 
     <!--Shared Preferences TODO: Should this be here?-->
@@ -68,6 +69,8 @@
     <string name="game_detail_metrics_card_title">Metric Sets</string>
     <string name="game_detail_no_events">No events</string>
     <string name="game_detail_no_metric_sets">No metric sets</string>
+    <string name="delete_game_confirmation_title">Delete game?</string>
+    <string name="delete_game_confirmation_body">This action cannot be undone. This game and all associated metrics and events will be deleted.</string>
 
     <!-- Add Game -->
     <string name="add_game_title">Add New Game</string>

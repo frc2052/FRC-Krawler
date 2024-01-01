@@ -52,6 +52,14 @@ class GameDetailViewModel @Inject constructor(
         }
     }
 
+    fun deleteGame() {
+        viewModelScope.launch {
+            _game.value?.let { game ->
+                gameDao.delete(game)
+            }
+        }
+    }
+
     fun createNewMetricSet(name: String) {
         viewModelScope.launch {
             metricSetDao.insert(
