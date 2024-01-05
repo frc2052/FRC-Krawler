@@ -36,6 +36,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,8 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.data.local.Event
-import com.team2052.frckrawler.data.local.MetricSet
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
@@ -63,7 +63,7 @@ fun GameDetailScreen(
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
     val viewModel: GameDetailViewModel = hiltViewModel()
-    val game by viewModel.game.collectAsState()
+    val state = viewModel.state.collectAsState().value
 
     val addEventSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -71,6 +71,10 @@ fun GameDetailScreen(
     )
     var showAddMetricSet by remember { mutableStateOf(false) }
     var showDeleteConfirmation by remember { mutableStateOf(false) }
+
+    val title = if (state is GameDetailState.Content) {
+        state.game.name
+    } else ""
 
     LaunchedEffect(true) {
         viewModel.loadGame(gameId)
@@ -83,7 +87,7 @@ fun GameDetailScreen(
                 navController = navController,
                 scaffoldState = scaffoldState,
                 title = {
-                    Text(game?.name ?: "")
+                    Text(title)
                 },
                 actions = {
                     IconButton(
@@ -101,8 +105,6 @@ fun GameDetailScreen(
             FRCKrawlerDrawer()
         },
     ) { contentPadding ->
-        val events by viewModel.events.collectAsState()
-        val metricSets by viewModel.metricSets.collectAsState()
 
         ModalBottomSheetLayout(
             sheetState = addEventSheetState,
@@ -117,19 +119,21 @@ fun GameDetailScreen(
                 )
             }
         ) {
-            GameDetailContent(
-                modifier = Modifier.padding(contentPadding),
-                events = events,
-                onAddEventClick = {
-                    scope.launch {
-                        addEventSheetState.show()
-                    }
-                },
-                onEventClick = { event -> navController.navigate(Screen.Event(event.id).route) },
-                metricSets = metricSets,
-                onMetricSetClick = { set -> navController.navigate(Screen.MetricSet(set.id).route) },
-                onAddMetricSetClick = { showAddMetricSet = true },
-            )
+            if (state is GameDetailState.Content) {
+                GameDetailContent(
+                    modifier = Modifier.padding(contentPadding),
+                    events = state.events,
+                    onAddEventClick = {
+                        scope.launch {
+                            addEventSheetState.show()
+                        }
+                    },
+                    onEventClick = { event -> navController.navigate(Screen.Event(event.id).route) },
+                    metricSets = state.metrics,
+                    onMetricSetClick = { set -> navController.navigate(Screen.MetricSet(set.id).route) },
+                    onAddMetricSetClick = { showAddMetricSet = true },
+                )
+            }
         }
 
         if (showAddMetricSet) {
@@ -166,12 +170,12 @@ fun GameDetailScreen(
 
 @Composable
 private fun GameDetailContent(
-    events: List<Event>,
+    events: List<GameDetailEvent>,
     onAddEventClick: () -> Unit,
-    onEventClick: (Event) -> Unit,
-    metricSets: List<MetricSet>,
+    onEventClick: (GameDetailEvent) -> Unit,
+    metricSets: List<GameDetailMetricSet>,
     onAddMetricSetClick: () -> Unit,
-    onMetricSetClick: (MetricSet) -> Unit,
+    onMetricSetClick: (GameDetailMetricSet) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -195,9 +199,9 @@ private fun GameDetailContent(
 
 @Composable
 private fun EventListCard(
-    events: List<Event>,
+    events: List<GameDetailEvent>,
     onAddEventClick: () -> Unit,
-    onEventClick: (Event) -> Unit,
+    onEventClick: (GameDetailEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     GameDetailCardLayout(
@@ -227,28 +231,37 @@ private fun EventListCard(
 
 @Composable
 private fun EventRow(
-    event: Event,
-    onEventClick: (Event) -> Unit,
+    event: GameDetailEvent,
+    onEventClick: (GameDetailEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
             .clickable { onEventClick(event) }
+            .padding(vertical = 12.dp)
     ) {
         Text(
             text = event.name,
             style = MaterialTheme.typography.subtitle1
+        )
+        Text(
+            modifier = Modifier.alpha(.6f),
+            text = pluralStringResource(
+                id = R.plurals.game_event_team_count,
+                count = event.teamCount,
+                event.teamCount,
+            ),
+            style = MaterialTheme.typography.body2
         )
     }
 }
 
 @Composable
 private fun MetricSetsCard(
-    metricSets: List<MetricSet>,
+    metricSets: List<GameDetailMetricSet>,
     onAddMetricSetClick: () -> Unit,
-    onMetricSetClick: (MetricSet) -> Unit,
+    onMetricSetClick: (GameDetailMetricSet) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     GameDetailCardLayout(
@@ -268,7 +281,7 @@ private fun MetricSetsCard(
             }
         } else {
             Text(
-                modifier = Modifier.padding(vertical = 8.dp),
+                modifier = Modifier.padding(vertical = 12.dp),
                 text = stringResource(R.string.game_detail_no_metric_sets),
                 fontStyle = FontStyle.Italic
             )
@@ -278,19 +291,28 @@ private fun MetricSetsCard(
 
 @Composable
 private fun MetricSetRow(
-    metricSet: MetricSet,
-    onMetricSetClick: (MetricSet) -> Unit,
+    metricSet: GameDetailMetricSet,
+    onMetricSetClick: (GameDetailMetricSet) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
             .clickable { onMetricSetClick(metricSet) }
+            .padding(vertical = 12.dp)
     ) {
         Text(
             text = metricSet.name,
             style = MaterialTheme.typography.subtitle1
+        )
+        Text(
+            modifier = Modifier.alpha(.6f),
+            text = pluralStringResource(
+                id = R.plurals.game_metric_count,
+                count = metricSet.metricCount,
+                metricSet.metricCount,
+                ),
+            style = MaterialTheme.typography.body2
         )
     }
 }
@@ -343,21 +365,24 @@ private fun GameDetailPreview() {
         Surface {
             GameDetailContent(
                 events = listOf(
-                    Event(
+                    GameDetailEvent(
                         name = "10,000 Lakes Regional",
-                        gameId = 0,
+                        id = 0,
+                        teamCount = 36
                     ),
-                    Event(
+                    GameDetailEvent(
                         name = "Lake Superior Regional",
-                        gameId = 0,
+                        id = 0,
+                        teamCount = 49
                     )
                 ),
                 onAddEventClick = {},
                 onEventClick = {},
                 metricSets = listOf(
-                    MetricSet(
+                    GameDetailMetricSet(
                         name = "Regional metrics",
-                        gameId = 0
+                        id = 0,
+                        metricCount = 21
                     )
                 ),
                 onMetricSetClick = {},

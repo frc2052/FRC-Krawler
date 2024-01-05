@@ -14,6 +14,9 @@ interface TeamAtEventDao {
     @Insert
     suspend fun insert(teamAtEvent: TeamAtEvent)
 
+    @Query("SELECT COUNT(teamNumber) FROM team_at_event WHERE eventId = :eventId")
+    suspend fun getTeamCountAtEvent(eventId: Int): Int
+
     @Query("SELECT * FROM team_at_event WHERE eventId = :eventId")
     fun getAllTeams(eventId: Int): Flow<List<TeamAtEvent>>
 }

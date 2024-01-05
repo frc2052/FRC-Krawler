@@ -71,6 +71,14 @@
     <string name="game_detail_no_metric_sets">No metric sets</string>
     <string name="delete_game_confirmation_title">Delete game?</string>
     <string name="delete_game_confirmation_body">This action cannot be undone. This game and all associated metrics and events will be deleted.</string>
+    <plurals name="game_event_team_count">
+        <item quantity="one">%1$d team</item>
+        <item quantity="other">%1$d teams</item>
+    </plurals>
+    <plurals name="game_metric_count">
+        <item quantity="one">%1$d metric</item>
+        <item quantity="other">%1$d metrics</item>
+    </plurals>
 
     <!-- Add Game -->
     <string name="add_game_title">Add New Game</string>
