@@ -2,6 +2,8 @@ package com.team2052.frckrawler.ui.server.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
@@ -9,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -97,6 +100,8 @@ fun ServerHomeScreen(
                         viewModel.serverConfiguration = it
                     }
                 )
+
+                Spacer(Modifier.height(16.dp))
 
                 ConnectedScoutsList(
                     modifier = modifier,
