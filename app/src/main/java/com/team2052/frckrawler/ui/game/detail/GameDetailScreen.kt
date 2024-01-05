@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.game.detail
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -49,6 +50,7 @@ import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.event.add.AddEventSheetContent
 import com.team2052.frckrawler.ui.game.AddMetricSetDialog
+import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
 
@@ -123,7 +125,9 @@ fun GameDetailScreen(
                         addEventSheetState.show()
                     }
                 },
+                onEventClick = { event -> navController.navigate(Screen.Event(event.id).route) },
                 metricSets = metricSets,
+                onMetricSetClick = { set -> navController.navigate(Screen.MetricSet(set.id).route) },
                 onAddMetricSetClick = { showAddMetricSet = true },
             )
         }
@@ -164,8 +168,10 @@ fun GameDetailScreen(
 private fun GameDetailContent(
     events: List<Event>,
     onAddEventClick: () -> Unit,
+    onEventClick: (Event) -> Unit,
     metricSets: List<MetricSet>,
     onAddMetricSetClick: () -> Unit,
+    onMetricSetClick: (MetricSet) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -174,12 +180,14 @@ private fun GameDetailContent(
         EventListCard(
             modifier = Modifier.fillMaxWidth(),
             onAddEventClick = onAddEventClick,
+            onEventClick = onEventClick,
             events = events
         )
         Spacer(Modifier.height(16.dp))
         MetricSetsCard(
             modifier = Modifier.fillMaxWidth(),
             onAddMetricSetClick = onAddMetricSetClick,
+            onMetricSetClick = onMetricSetClick,
             metricSets = metricSets
         )
     }
@@ -189,6 +197,7 @@ private fun GameDetailContent(
 private fun EventListCard(
     events: List<Event>,
     onAddEventClick: () -> Unit,
+    onEventClick: (Event) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     GameDetailCardLayout(
@@ -198,7 +207,10 @@ private fun EventListCard(
     ) {
         if (events.isNotEmpty()) {
             events.forEach { event ->
-                EventRow(event = event)
+                EventRow(
+                    event = event,
+                    onEventClick = onEventClick
+                )
                 if (event != events.last()) {
                     Divider()
                 }
@@ -216,12 +228,14 @@ private fun EventListCard(
 @Composable
 private fun EventRow(
     event: Event,
+    onEventClick: (Event) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
+            .clickable { onEventClick(event) }
     ) {
         Text(
             text = event.name,
@@ -234,6 +248,7 @@ private fun EventRow(
 private fun MetricSetsCard(
     metricSets: List<MetricSet>,
     onAddMetricSetClick: () -> Unit,
+    onMetricSetClick: (MetricSet) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     GameDetailCardLayout(
@@ -243,7 +258,10 @@ private fun MetricSetsCard(
     ) {
         if (metricSets.isNotEmpty()) {
             metricSets.forEach { set ->
-                MetricSetRow(metricSet = set)
+                MetricSetRow(
+                    metricSet = set,
+                    onMetricSetClick = onMetricSetClick
+                )
                 if (set != metricSets.last()) {
                     Divider()
                 }
@@ -261,12 +279,14 @@ private fun MetricSetsCard(
 @Composable
 private fun MetricSetRow(
     metricSet: MetricSet,
+    onMetricSetClick: (MetricSet) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
+            .clickable { onMetricSetClick(metricSet) }
     ) {
         Text(
             text = metricSet.name,
@@ -333,12 +353,14 @@ private fun GameDetailPreview() {
                     )
                 ),
                 onAddEventClick = {},
+                onEventClick = {},
                 metricSets = listOf(
                     MetricSet(
                         name = "Regional metrics",
                         gameId = 0
                     )
                 ),
+                onMetricSetClick = {},
                 onAddMetricSetClick = {},
             )
         }
@@ -353,7 +375,9 @@ private fun GameDetailEmptyPreview() {
             GameDetailContent(
                 events = emptyList(),
                 onAddEventClick = {},
+                onEventClick = {},
                 metricSets = emptyList(),
+                onMetricSetClick = {},
                 onAddMetricSetClick = {},
             )
         }

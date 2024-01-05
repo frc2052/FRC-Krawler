@@ -65,15 +65,21 @@ sealed class Screen(
         arguments = listOf(Arguments.gameId)
     )
 
-    // Metrics screens
     data class MetricSet(val metricSetId: Int? = null) : Screen(
-        route = "metric_sets/${metricSetId ?: "{metricSetId}"}/metrics",
+        route = "metric_set/${metricSetId ?: "{metricSetId}"}",
         title = getString(R.string.metrics_screen),
         arguments = listOf(Arguments.metricSetId)
+    )
+
+    data class Event(val eventId: Int? = null) : Screen(
+        route = "event/${eventId ?: "{eventId}"}",
+        title = "",
+        arguments = listOf(Arguments.eventId)
     )
 }
 
 object Arguments {
     val metricSetId = navArgument("metricSetId") { type = NavType.IntType }
     val gameId = navArgument("gameId") { type = NavType.IntType }
+    val eventId = navArgument("eventId") { type = NavType.IntType }
 }
