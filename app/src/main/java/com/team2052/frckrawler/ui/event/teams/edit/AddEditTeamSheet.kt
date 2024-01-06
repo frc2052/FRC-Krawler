@@ -38,7 +38,7 @@ fun AddEditTeamSheet(
 ) {
     val viewModel: AddEditTeamViewModel = hiltViewModel()
 
-    var teamNumber: Int? by remember { mutableStateOf(team?.number) }
+    var teamNumber: String? by remember { mutableStateOf(team?.number) }
     var teamName: String by remember { mutableStateOf(team?.name ?: "") }
 
     Column {
@@ -79,8 +79,8 @@ fun AddEditTeamSheet(
 
 @Composable
 private fun AddEditTeamSheetContent(
-    teamNumber: Int?,
-    onTeamNumberChanged: (Int?) -> Unit,
+    teamNumber: String?,
+    onTeamNumberChanged: (String?) -> Unit,
     teamName: String,
     onTeamNameChanged: (String) -> Unit,
 ) {
@@ -90,9 +90,9 @@ private fun AddEditTeamSheetContent(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         FRCKrawlerTextField(
-            value = teamNumber?.toString() ?: "",
+            value = teamNumber ?: "",
             onValueChange = { newText ->
-                val newNumber = newText.filter { it.isDigit() }.toIntOrNull()
+                val newNumber = newText.filter { it.isDigit() }
                 onTeamNumberChanged(newNumber)
             },
             isError = { hasNumberHadFocus && teamNumber == null },
@@ -167,7 +167,7 @@ private fun EditTeamPreview() {
     FrcKrawlerTheme {
         Surface {
             AddEditTeamSheetContent(
-                teamNumber = 2052,
+                teamNumber = "2052",
                 onTeamNumberChanged = {},
                 teamName = "KnightKrawler",
                 onTeamNameChanged = {}

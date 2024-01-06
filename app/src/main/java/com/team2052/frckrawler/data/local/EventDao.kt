@@ -12,7 +12,7 @@ interface EventDao {
     suspend fun delete(event: Event)
 
     @Insert
-    suspend fun insert(event: Event)
+    suspend fun insert(event: Event): Long
 
     @Query("SELECT * FROM event WHERE id = :id")
     suspend fun get(id: Int): Event

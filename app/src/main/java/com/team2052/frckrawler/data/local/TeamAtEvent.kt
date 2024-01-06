@@ -18,7 +18,7 @@ import androidx.room.Index
     indices = [Index("eventId")]
 )
 data class TeamAtEvent(
-    val number: Int,
+    val number: String,
     val name: String,
     val eventId: Int
 )

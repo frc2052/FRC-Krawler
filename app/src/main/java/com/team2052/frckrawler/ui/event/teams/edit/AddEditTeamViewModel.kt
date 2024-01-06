@@ -15,7 +15,7 @@ class AddEditTeamViewModel @Inject constructor(
 
     fun saveTeam(
         eventId: Int,
-        teamNumber: Int,
+        teamNumber: String,
         teamName: String
     ) {
         viewModelScope.launch {

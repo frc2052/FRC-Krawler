@@ -181,7 +181,7 @@ private fun TeamRow(
             .padding(start = 16.dp)
     ) {
         Text(
-            text = team.number.toString(),
+            text = team.number,
             style = MaterialTheme.typography.h6
         )
         Text(
@@ -207,10 +207,10 @@ private fun Actions(onAddClick: () -> Unit) {
 @Composable
 private fun TeamListPreview() {
     val teams = listOf(
-        TeamAtEvent(number = 1234, name = "Test team", eventId = 0),
-        TeamAtEvent(number = 1234, name = "Test team", eventId = 0),
-        TeamAtEvent(number = 1234, name = "Test team", eventId = 0),
-        TeamAtEvent(number = 1234, name = "Test team", eventId = 0),
+        TeamAtEvent(number = "1234", name = "Test team", eventId = 0),
+        TeamAtEvent(number = "1234", name = "Test team", eventId = 0),
+        TeamAtEvent(number = "1234", name = "Test team", eventId = 0),
+        TeamAtEvent(number = "1234", name = "Test team", eventId = 0),
     )
     FrcKrawlerTheme {
         Surface {
