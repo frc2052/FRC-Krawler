@@ -1,11 +1,19 @@
 package com.team2052.frckrawler.ui.components
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
@@ -17,7 +25,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun FRCKrawlerAppBar(
@@ -52,7 +59,7 @@ fun FRCKrawlerAppBar(
 ) = TopAppBar(
     modifier = modifier.zIndex(1f),
     backgroundColor = MaterialTheme.colors.primary,
-    elevation = 4.dp,
+    elevation = 0.dp,
     contentColor = MaterialTheme.colors.onSurface,
     navigationIcon = navigation,
     actions = {
