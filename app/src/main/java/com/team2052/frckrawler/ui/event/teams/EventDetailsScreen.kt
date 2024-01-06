@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -163,6 +164,10 @@ private fun TeamListContent(
                 team = team,
                 onTeamClick = onTeamClicked
             )
+
+            if (team != teams.last()) {
+                Divider()
+            }
         }
     }
 }
