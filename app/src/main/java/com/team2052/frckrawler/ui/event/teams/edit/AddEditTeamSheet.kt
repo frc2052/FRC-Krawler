@@ -56,7 +56,7 @@ fun AddEditTeamSheet(
         )
 
         ActionButtons(
-            saveEnabled = teamNumber != null && teamName.isNotBlank(),
+            saveEnabled = teamNumber != null,
             onSaveClicked = {
               teamNumber?.let { number ->
                   viewModel.saveTeam(
@@ -85,7 +85,6 @@ private fun AddEditTeamSheetContent(
     onTeamNameChanged: (String) -> Unit,
 ) {
     var hasNumberHadFocus by remember { mutableStateOf(false) }
-    var hasNameHadFocus by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
@@ -106,8 +105,6 @@ private fun AddEditTeamSheetContent(
         FRCKrawlerTextField(
             value = teamName,
             onValueChange = onTeamNameChanged,
-            isError = { hasNameHadFocus && teamName.isBlank() },
-            onFocusChange = { focused -> if (!hasNameHadFocus && focused) hasNameHadFocus = true },
             label = stringResource(R.string.add_team_name_label)
         )
     }
