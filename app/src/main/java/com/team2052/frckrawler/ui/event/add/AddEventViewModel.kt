@@ -29,22 +29,38 @@ class AddEventViewModel @Inject constructor(
     val state: StateFlow<AddEventScreenState> = _state
 
     fun loadEventsForYear(year: Int) {
-        viewModelScope.launch {
-            val result = eventService.getEvents(year)
+        _state.value = _state.value.copy(
+            events = emptyList(),
+            areEventsLoading = true,
+            hasNetworkError = false,
+        )
 
-            when (result.isSuccessful) {
-                true -> {
-                    _state.value = _state.value.copy(
-                        events = result.body() ?: emptyList(),
-                        hasNetworkError = false
-                    )
+        viewModelScope.launch {
+            try {
+                val result = eventService.getEvents(year)
+
+                when (result.isSuccessful) {
+                    true -> {
+                        _state.value = _state.value.copy(
+                            events = result.body()?.sortedBy { it.name } ?: emptyList(),
+                            areEventsLoading = false,
+                            hasNetworkError = false,
+                        )
+                    }
+                    false -> {
+                        _state.value = _state.value.copy(
+                            events = emptyList(),
+                            areEventsLoading = false,
+                            hasNetworkError = true
+                        )
+                    }
                 }
-                false -> {
-                    _state.value = _state.value.copy(
-                        events = result.body()?.sortedBy { it.name } ?: emptyList(),
-                        hasNetworkError = true
-                    )
-                }
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    events = emptyList(),
+                    areEventsLoading = false,
+                    hasNetworkError = true
+                )
             }
 
         }

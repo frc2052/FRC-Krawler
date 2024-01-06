@@ -105,7 +105,6 @@ fun GameDetailScreen(
             FRCKrawlerDrawer()
         },
     ) { contentPadding ->
-
         ModalBottomSheetLayout(
             sheetState = addEventSheetState,
             sheetContent = {

@@ -3,14 +3,23 @@ package com.team2052.frckrawler.ui.event.add
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,6 +29,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -103,7 +113,12 @@ private fun AddEventSheetLayout(
                 },
                 events = state.events,
                 selectedEvent = autoEventSelectedEvent,
-                onEventSelected = { autoEventSelectedEvent = it }
+                onEventSelected = { autoEventSelectedEvent = it },
+                areEventsLoading = state.areEventsLoading,
+                hasEventNetworkError = state.hasNetworkError,
+                onRetryFetchEvents = {
+                    onYearSelected(autoEventSelectedYear)
+                }
             )
             1 -> ManualEventEntry(
                 name = manualEventName,
@@ -176,6 +191,9 @@ private fun AutoEventEntry(
     events: List<TbaSimpleEvent>,
     selectedEvent: TbaSimpleEvent?,
     onEventSelected: (TbaSimpleEvent) -> Unit,
+    areEventsLoading: Boolean,
+    hasEventNetworkError: Boolean,
+    onRetryFetchEvents: () -> Unit
 ) {
     Column(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
@@ -188,16 +206,46 @@ private fun AutoEventEntry(
             dropdownItems = years
         )
 
-        var showEventError by remember { mutableStateOf(false) }
-        FRCKrawlerDropdown(
-            value = selectedEvent,
-            getLabel = { it?.name ?: "" },
-            onValueChange = { selected -> selected?.let { onEventSelected(it) } },
-            onFocusChange = { showEventError = selectedEvent == null },
-            validity = !showEventError,
-            label = stringResource(R.string.add_event_event_label),
-            dropdownItems = events
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            var showEventError by remember { mutableStateOf(false) }
+            FRCKrawlerDropdown(
+                value = selectedEvent,
+                getLabel = { it?.name ?: "" },
+                onValueChange = { selected -> selected?.let { onEventSelected(it) } },
+                onFocusChange = { showEventError = selectedEvent == null },
+                validity = !showEventError,
+                label = stringResource(R.string.add_event_event_label),
+                dropdownItems = events,
+                enabled = !areEventsLoading && !hasEventNetworkError
+            )
+
+            Spacer(Modifier.width(8.dp))
+
+            if (areEventsLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(36.dp)
+                )
+            } else if (hasEventNetworkError) {
+                IconButton(
+                    modifier = Modifier.size(36.dp),
+                    onClick = onRetryFetchEvents) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = stringResource(R.string.add_event_retry_fetch_events)
+                    )
+                }
+            }
+        }
+
+        if (hasEventNetworkError) {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.add_event_network_error),
+                color = MaterialTheme.colors.error
+            )
+        }
     }
 }
 
@@ -230,7 +278,63 @@ private fun AddEventPreview() {
                 key = "2023mnmi",
                 name = "10,000 Lakes Regional"
             )
-        )
+        ),
+        areEventsLoading = false,
+        hasNetworkError = false,
+    )
+    FrcKrawlerTheme {
+        Surface {
+            AddEventSheetLayout(
+                state = state,
+                onSaveAutoEvent = {},
+                onSaveManualEvent = {},
+                onYearSelected = {},
+                onClose = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun AddEventErrorPreview() {
+    val state = AddEventScreenState(
+        years = listOf(2023, 2022),
+        events = listOf(
+            TbaSimpleEvent(
+                key = "2023mnmi",
+                name = "10,000 Lakes Regional"
+            )
+        ),
+        areEventsLoading = false,
+        hasNetworkError = true,
+    )
+    FrcKrawlerTheme {
+        Surface {
+            AddEventSheetLayout(
+                state = state,
+                onSaveAutoEvent = {},
+                onSaveManualEvent = {},
+                onYearSelected = {},
+                onClose = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun AddEventLoadingPreview() {
+    val state = AddEventScreenState(
+        years = listOf(2023, 2022),
+        events = listOf(
+            TbaSimpleEvent(
+                key = "2023mnmi",
+                name = "10,000 Lakes Regional"
+            )
+        ),
+        areEventsLoading = true,
+        hasNetworkError = false,
     )
     FrcKrawlerTheme {
         Surface {
