@@ -6,7 +6,7 @@ import androidx.room.Index
 
 @Entity(
     tableName = "team_at_event",
-    primaryKeys = ["teamNumber", "eventId"],
+    primaryKeys = ["number", "eventId"],
     foreignKeys = [
         ForeignKey(
             entity = Event::class,
@@ -18,6 +18,7 @@ import androidx.room.Index
     indices = [Index("eventId")]
 )
 data class TeamAtEvent(
-    val teamNumber: Int,
+    val number: Int,
+    val name: String,
     val eventId: Int
 )

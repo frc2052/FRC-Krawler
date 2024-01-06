@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.team2052.frckrawler.ui.event.teams.EventTeamListScreen
 import com.team2052.frckrawler.ui.game.detail.GameDetailScreen
 import com.team2052.frckrawler.ui.game.list.GameListScreen
 import com.team2052.frckrawler.ui.metrics.list.MetricsListScreen
@@ -120,7 +121,7 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
             screen = Screen.Event(),
         ) { backStackEntry ->
             val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
-            // todo
+            EventTeamListScreen(eventId = eventId, navController = navController)
         }
 
         composable(
