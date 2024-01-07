@@ -77,6 +77,7 @@
 
         <service
             android:name=".services.ServerService"
+            android:foregroundServiceType="connectedDevice"
             android:exported="false" />
 
         <activity
