@@ -1,15 +1,23 @@
 package com.team2052.frckrawler.ui.server.home
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.team2052.frckrawler.data.model.Event
-import com.team2052.frckrawler.data.model.TEMP_EVENTS
+import com.team2052.frckrawler.data.local.Event
+import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerDropdown
@@ -20,7 +28,7 @@ import com.team2052.frckrawler.ui.theme.spaceMedium
 internal fun ServerConfigCard(
     modifier: Modifier = Modifier,
     availableEvents: List<Event>,
-    availableMetricSets: List<String>,
+    availableGames: List<Game>,
     configuration: ServerConfiguration,
     onConfigurationChanged: (ServerConfiguration) -> Unit,
     serverState: ServerState,
@@ -35,25 +43,26 @@ internal fun ServerConfigCard(
             )
         },
     ) {
+        GamesDropdown(
+            configuration = configuration,
+            onConfigurationChanged = onConfigurationChanged,
+            availableGames = availableGames
+        )
         EventDropdown(
             configuration = configuration,
             onConfigurationChanged = onConfigurationChanged,
-            availableEvents = availableEvents
-        )
-        MetricsDropdown(
-            configuration = configuration,
-            onConfigurationChanged = onConfigurationChanged,
-            availableMetricSets = availableMetricSets
+            availableEvents = availableEvents,
+            enabled = configuration.game != null
         )
         Spacer(Modifier.height(8.dp))
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.BottomEnd
         ) {
-            // TODO disable if event and metrics are not selected
             ServerToggleButton(
                 modifier = modifier,
                 serverState = serverState,
+                serverConfigurationValid = configuration.isValid,
                 toggleServer = toggleServer
             )
         }
@@ -64,11 +73,13 @@ internal fun ServerConfigCard(
 private fun EventDropdown(
     configuration: ServerConfiguration,
     onConfigurationChanged: (ServerConfiguration) -> Unit,
-    availableEvents: List<Event>
+    availableEvents: List<Event>,
+    enabled: Boolean,
 ) {
     var eventValid by remember { mutableStateOf(true) }
     FRCKrawlerDropdown(
         modifier = Modifier.padding(bottom = spaceMedium),
+        enabled = enabled,
         value = configuration.event,
         getLabel = { it?.name ?: "" },
         onValueChange = {
@@ -91,40 +102,44 @@ private fun EventDropdown(
 }
 
 @Composable
-private fun MetricsDropdown(
+private fun GamesDropdown(
     configuration: ServerConfiguration,
     onConfigurationChanged: (ServerConfiguration) -> Unit,
-    availableMetricSets: List<String>
+    availableGames: List<Game>
 ) {
-    var metricsValid by remember { mutableStateOf(true) }
+    var gameValid by remember { mutableStateOf(true) }
     FRCKrawlerDropdown(
-        value = configuration.metricSetName,
+        value = configuration.game,
         onValueChange = {
             onConfigurationChanged(
-                configuration.copy(metricSetName = it)
+                configuration.copy(game = it)
             )
         },
-        getLabel = { it ?: "" },
-        validity = metricsValid,
+        getLabel = { it?.name ?: "" },
+        validity = gameValid,
         onFocusChange = { focused ->
             if (!focused) {
-                metricsValid = (configuration.metricSetName != null)
+                gameValid = (configuration.game != null)
             }
         },
-        label = "Metrics",
-        dropdownItems = availableMetricSets
+        label = "Games",
+        dropdownItems = availableGames,
     )
 }
 
 @Composable
 private fun ServerToggleButton(
     modifier: Modifier,
+    serverConfigurationValid: Boolean,
     serverState: ServerState,
     toggleServer: () -> Unit
 ) {
     Button(
         modifier = modifier,
-        enabled = serverState == ServerState.ENABLED || serverState == ServerState.DISABLED,
+        enabled = serverConfigurationValid && (
+                // Disable while transitioning states
+                serverState == ServerState.ENABLED || serverState == ServerState.DISABLED
+        ),
         onClick = toggleServer,
     ) {
         Text(
@@ -145,8 +160,17 @@ private fun ServerPropsPreview() {
         ServerConfigCard(
             serverState = ServerState.ENABLED,
             toggleServer = {},
-            availableEvents = TEMP_EVENTS,
-            availableMetricSets = listOf("2022 KnightKrawler Metrics"),
+            availableEvents = listOf(
+                Event(
+                    name = "10,000 Lakes Regional",
+                    gameId = 0
+                )
+            ),
+            availableGames = listOf(
+                Game(
+                    name = "Crescendo"
+                )
+            ),
             configuration = ServerConfiguration(null, null),
             onConfigurationChanged = {}
         )

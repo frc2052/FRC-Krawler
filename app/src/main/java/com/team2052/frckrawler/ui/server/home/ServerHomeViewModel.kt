@@ -8,6 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.bluetooth.server.ConnectedScoutObserver
 import com.team2052.frckrawler.bluetooth.server.SyncServiceController
+import com.team2052.frckrawler.data.local.Event
+import com.team2052.frckrawler.data.local.EventDao
+import com.team2052.frckrawler.data.local.Game
+import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.model.RemoteScout
 import com.team2052.frckrawler.ui.permissions.PermissionManager
 import com.team2052.frckrawler.ui.permissions.RequiredPermissions
@@ -21,7 +25,9 @@ class ServerHomeViewModel @Inject constructor(
     private val bluetoothAdapter: BluetoothAdapter,
     private val permissionManager: PermissionManager,
     private val syncServiceController: SyncServiceController,
-    private val connectedScoutObserver: ConnectedScoutObserver
+    private val connectedScoutObserver: ConnectedScoutObserver,
+    private val gameDao: GameDao,
+    private val eventDao: EventDao,
 ) : ViewModel() {
 
     var serverState by mutableStateOf(ServerState.DISABLED)
@@ -29,6 +35,25 @@ class ServerHomeViewModel @Inject constructor(
     var requestEnableBluetooth by mutableStateOf(false)
     var serverConfiguration by mutableStateOf(ServerConfiguration(null, null))
     var connectedScouts: List<RemoteScout> by mutableStateOf(emptyList())
+    var availableGames: List<Game> by mutableStateOf(emptyList())
+    var availableEvents: List<Event> by mutableStateOf(emptyList())
+
+    fun loadGames() {
+        viewModelScope.launch {
+            gameDao.getAll().collectLatest {
+                availableGames = it
+            }
+        }
+    }
+
+    fun loadEvents(gameId: Int) {
+        viewModelScope.launch {
+            eventDao.getAllForGame(gameId).collectLatest {
+                availableEvents = it
+            }
+        }
+    }
+
 
     /**
      * 1. State = enabling

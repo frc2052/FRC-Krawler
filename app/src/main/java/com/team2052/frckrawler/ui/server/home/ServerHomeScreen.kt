@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,7 +18,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
-import com.team2052.frckrawler.data.model.TEMP_EVENTS
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
@@ -54,6 +54,10 @@ fun ServerHomeScreen(
                 onCanceled = { viewModel.requestEnableBluetooth = false }
             )
         }
+
+        LaunchedEffect(true) {
+            viewModel.loadGames()
+        }
         
         FRCKrawlerScaffold(
             modifier = modifier,
@@ -80,7 +84,8 @@ fun ServerHomeScreen(
             },
         ) { contentPadding ->
             Column(
-                modifier = Modifier.padding(contentPadding)
+                modifier = Modifier
+                    .padding(contentPadding)
                     .padding(spaceLarge)
             ) {
                 ServerConfigCard(
@@ -93,10 +98,14 @@ fun ServerHomeScreen(
                             viewModel.startServer()
                         }
                     },
-                    availableMetricSets = listOf("2022 KnightKrawler Metrics"),
-                    availableEvents = TEMP_EVENTS,
+                    availableGames = viewModel.availableGames,
+                    availableEvents = viewModel.availableEvents,
                     configuration = viewModel.serverConfiguration,
                     onConfigurationChanged = {
+                        // TODO move to VM
+                        if (viewModel.serverConfiguration.game != it.game && it.game != null) {
+                            viewModel.loadEvents(it.game.id)
+                        }
                         viewModel.serverConfiguration = it
                     }
                 )
