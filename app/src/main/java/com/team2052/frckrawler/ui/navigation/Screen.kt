@@ -43,15 +43,11 @@ sealed class Screen(
     data object Server : Screen(
         "server_screen",
         getString(R.string.server_screen_title),
-        listOf(ServerHome, ServerMatches, GameList),
+        listOf(ServerHome, GameList),
     )
     data object ServerHome : Screen(
         "server_home_screen",
         getString(R.string.server_home_screen_title)
-    )
-    data object ServerMatches : Screen(
-        "server_matches_screen",
-        getString(R.string.server_matches_screen_title)
     )
     data object GameList : Screen(
         "games",
