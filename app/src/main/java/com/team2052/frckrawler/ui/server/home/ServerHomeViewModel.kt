@@ -79,7 +79,17 @@ class ServerHomeViewModel @Inject constructor(
             return
         }
 
-        syncServiceController.startServer()
+        val game = serverConfiguration.game
+        val event = serverConfiguration.event
+        if (game != null && event != null) {
+            syncServiceController.startServer(
+                gameId = game.id,
+                eventId = event.id
+            )
+        } else {
+            serverState = ServerState.DISABLED
+            return
+        }
 
         serverState = ServerState.ENABLED
 

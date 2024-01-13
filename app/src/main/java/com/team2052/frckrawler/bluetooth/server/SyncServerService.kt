@@ -18,21 +18,20 @@ import javax.inject.Inject
  * Service that acts as a server for syncing with scouts. This server runs as a foreground service
  * to allow syncing even when the app is not in the foreground.
  *
- * TODO add an action to the notification to stop the server?
  * TODO request notification permission
  */
 @AndroidEntryPoint
 class SyncServerService : Service() {
 
   companion object {
-    internal val ACTION_START = "com.team2052.frckrawler.bluetooth.server.START"
-    internal val ACTION_STOP = "com.team2052.frckrawler.bluetooth.server.STOP"
+    internal const val EXTRA_GAME_ID = "game_id"
+    internal const val EXTRA_EVENT_ID = "event_id"
   }
 
   @Inject
   internal lateinit var notificationChannelManager: NotificationChannelManager
 
-  lateinit var serverThread: SyncServerThread
+  private lateinit var serverThread: SyncServerThread
 
   override fun onBind(intent: Intent): IBinder? {
     return null
@@ -43,7 +42,12 @@ class SyncServerService : Service() {
     // we run in the foreground
     notificationChannelManager.ensureChannelsCreated()
     startForeground(NotificationId.ServerServiceNotification, getForegroundNotification())
-    startServer()
+
+    val extras = intent?.extras
+      ?: throw IllegalStateException("SyncServerService request game and event ID extras")
+    val gameId = extras.getInt(EXTRA_GAME_ID)
+    val eventId = extras.getInt(EXTRA_EVENT_ID)
+    startServer(gameId, eventId)
 
     return START_REDELIVER_INTENT
   }
@@ -71,8 +75,11 @@ class SyncServerService : Service() {
       .build()
   }
 
-  private fun startServer() {
-    serverThread = SyncServerThread(this)
+  private fun startServer(
+    gameId: Int,
+    eventId: Int,
+  ) {
+    serverThread = SyncServerThread(this, gameId, eventId)
     serverThread.start()
   }
 

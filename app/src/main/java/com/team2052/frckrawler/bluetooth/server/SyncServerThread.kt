@@ -8,12 +8,16 @@ import android.content.Context
 import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
 import com.team2052.frckrawler.bluetooth.bufferedIO
 import com.team2052.frckrawler.bluetooth.di.SyncEntryPoint
+import com.team2052.frckrawler.ui.navigation.Arguments.eventId
+import com.team2052.frckrawler.ui.navigation.Arguments.gameId
 import dagger.hilt.EntryPoints
 import timber.log.Timber
 
 @SuppressLint("MissingPermission")
 class SyncServerThread(
-  context: Context
+  context: Context,
+  private val gameId: Int,
+  private val eventId: Int,
 ) : Thread("frckrawler-sync-server") {
   companion object {
     private const val LOG_TAG = "SyncServer"
@@ -52,7 +56,7 @@ class SyncServerThread(
 
   private fun syncWithClient(clientSocket: BluetoothSocket) {
     clientSocket.bufferedIO { output, input ->
-      val operations = opFactory.createServerOperations()
+      val operations = opFactory.createServerOperations(gameId = gameId, eventId = eventId)
       operations.forEach { op ->
         val result = op.execute(output, input)
         Timber.d("Sync operation ${op.javaClass.simpleName} result: $result")

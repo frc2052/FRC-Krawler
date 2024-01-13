@@ -7,11 +7,13 @@ import javax.inject.Inject
 
 class SyncOperationFactory @Inject constructor() {
 
-  fun createServerOperations(): List<SyncOperation> = listOf(
+  fun createServerOperations(gameId: Int, eventId: Int): List<SyncOperation> = listOf(
     ReceiveConnectHandshake(
       versionCode = BuildConfig.VERSION_CODE,
       versionName = BuildConfig.VERSION_NAME
     )
+
+    // TODO send client game & event info if necessary
   )
 
   fun createScoutOperations(): List<SyncOperation> = listOf(
