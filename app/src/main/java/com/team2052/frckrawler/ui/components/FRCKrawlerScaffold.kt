@@ -34,7 +34,6 @@ fun FRCKrawlerScaffold(
     appBar: @Composable () -> Unit = { },
     tabBar: @Composable () -> Unit = { },
     floatingActionButton: @Composable () -> Unit = { },
-    drawerContent: @Composable ColumnScope.() -> Unit = { },
     background: @Composable () -> Unit = {
         Image(
             modifier = Modifier
@@ -68,9 +67,6 @@ fun FRCKrawlerScaffold(
     snackbarHost = { scaffoldState.snackbarHostState },
     floatingActionButton = floatingActionButton,
     floatingActionButtonPosition = FabPosition.End,
-    drawerContent = if (
-        !scaffoldState.drawerState.isClosed
-    ) drawerContent else null,
     backgroundColor = MaterialTheme.colors.background,
 ) { contentPadding ->
     Box(modifier = Modifier

@@ -15,7 +15,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Analytics
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,7 +31,6 @@ import androidx.navigation.NavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
-import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
 import com.team2052.frckrawler.ui.game.AddGameDialog
@@ -46,7 +44,6 @@ fun GameListScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
 ) {
-    val scaffoldState = rememberScaffoldState()
     val viewModel: GameListViewModel = hiltViewModel()
 
     var addGameDialogOpen by remember { mutableStateOf(false) }
@@ -57,11 +54,9 @@ fun GameListScreen(
 
     FRCKrawlerScaffold(
         modifier = modifier,
-        scaffoldState = scaffoldState,
         appBar = {
             FRCKrawlerAppBar(
                 navController = navController,
-                scaffoldState = scaffoldState,
                 title = {
                     Text(stringResource(R.string.server_screen_title))
                 }
@@ -79,9 +74,6 @@ fun GameListScreen(
             Actions(
                 onAddClick = { addGameDialogOpen = true }
             )
-        },
-        drawerContent = {
-            FRCKrawlerDrawer()
         },
         background = {
             if (viewModel.games.isEmpty()) {

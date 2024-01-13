@@ -27,21 +27,17 @@ fun ModeSelectScreen(
     navController: NavController,
 ) {
     val viewModel: ModeSelectViewModel = hiltViewModel()
-    val scaffoldState = rememberScaffoldState()
 
     FRCKrawlerScaffold(
         modifier = modifier,
-        scaffoldState = scaffoldState,
         appBar = {
             FRCKrawlerAppBar(
                 navController = navController,
-                scaffoldState = scaffoldState,
                 title = {
                     Text(stringResource(R.string.mode_select_screen_title))
                 }
             )
         },
-        drawerContent = { FRCKrawlerDrawer() },
     ) { contentPadding ->
         ModeSelectScreenContent(
             modifier = modifier.padding(contentPadding),

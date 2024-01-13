@@ -32,7 +32,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -55,7 +54,6 @@ import androidx.navigation.NavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
-import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricMode
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -69,7 +67,6 @@ fun MetricsListScreen(
     navController: NavController,
     metricSetId: Int
 ) {
-    val scaffoldState = rememberScaffoldState()
     val viewModel: MetricsListViewModel = hiltViewModel()
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -87,11 +84,9 @@ fun MetricsListScreen(
 
     Scaffold(
         modifier = modifier,
-        scaffoldState = scaffoldState,
         topBar = {
             FRCKrawlerAppBar(
                 navController = navController,
-                scaffoldState = scaffoldState,
                 title = {
                     if (state is MetricListScreenState.Content) {
                         Text(state.setName)
@@ -123,7 +118,6 @@ fun MetricsListScreen(
                 )
             }
         },
-        drawerContent = { FRCKrawlerDrawer() },
     ) { contentPadding ->
         ModalBottomSheetLayout(
             sheetState = sheetState,

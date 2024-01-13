@@ -1,15 +1,20 @@
 package com.team2052.frckrawler.ui.scout
 
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,8 +25,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.data.model.DeviceType
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
-import com.team2052.frckrawler.ui.components.*
-import com.team2052.frckrawler.ui.navigation.Screen.*
+import com.team2052.frckrawler.ui.components.Card
+import com.team2052.frckrawler.ui.components.CardHeader
+import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
+import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
+import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
+import com.team2052.frckrawler.ui.navigation.Screen.Scout
+import com.team2052.frckrawler.ui.navigation.Screen.ScoutHome
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import com.team2052.frckrawler.ui.theme.spaceLarge
@@ -32,7 +42,6 @@ fun ScoutHomeScreen(
     navController: NavController,
 ) {
     val viewModel: ScoutViewModel = hiltViewModel()
-    val scaffoldState = rememberScaffoldState()
 
     // Don't love this, but it is what we need
     val context = LocalContext.current as ComponentActivity
@@ -56,11 +65,9 @@ fun ScoutHomeScreen(
 
         FRCKrawlerScaffold(
             modifier = modifier,
-            scaffoldState = scaffoldState,
             appBar = {
                 FRCKrawlerAppBar(
                     navController = navController,
-                    scaffoldState = scaffoldState,
                     title = {
                         Text("Scout")
                     }
@@ -72,9 +79,6 @@ fun ScoutHomeScreen(
                         launchSingleTop = true
                     }
                 }
-            },
-            drawerContent = {
-                FRCKrawlerDrawer()
             },
         ) { contentPadding ->
             ScoutHomeScreenContent(

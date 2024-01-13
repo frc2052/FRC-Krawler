@@ -7,16 +7,12 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,35 +20,13 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun FRCKrawlerAppBar(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
-    scaffoldState: ScaffoldState,
     navigation: @Composable () -> Unit = {
-        DefaultNavigationButton(navController) { scaffoldState.drawerState.open() }
-    },
-    title: @Composable RowScope.() -> Unit,
-    actions: @Composable RowScope.() -> Unit = {}
-) {
-    FRCKrawlerAppBar(
-        modifier = modifier,
-        navController = navController,
-        navigation = navigation,
-        title = title,
-        actions = actions
-    )
-}
-
-@Composable
-fun FRCKrawlerAppBar(
-    modifier: Modifier = Modifier,
-    navController: NavController = rememberNavController(),
-    navigationButtonClicked: suspend () -> Unit = {},
-    navigation: @Composable () -> Unit = {
-        DefaultNavigationButton(navController, navigationButtonClicked)
+        DefaultNavigationButton(navController)
     },
     title: @Composable RowScope.() -> Unit,
     actions: @Composable RowScope.() -> Unit = { },
@@ -76,23 +50,9 @@ fun FRCKrawlerAppBar(
 
 @Composable
 private fun DefaultNavigationButton(
-    navController: NavController,
-    navigationButtonClicked: suspend () -> Unit
+    navController: NavController
 ) {
-    val scope = rememberCoroutineScope()
-    if (navController.previousBackStackEntry == null) {
-        IconButton(onClick = {
-            scope.launch {
-                navigationButtonClicked()
-            }
-        }) {
-            Icon(
-                imageVector = Icons.Filled.Menu,
-                contentDescription = "Menu",
-                tint = MaterialTheme.colors.onPrimary,
-            )
-        }
-    } else {
+    if (navController.previousBackStackEntry != null) {
         IconButton(onClick = { navController.popBackStack() }) {
             Icon(
                 imageVector = Icons.Filled.ArrowBack,
@@ -109,7 +69,6 @@ private fun FRCKrawlerAppBarPreviewLight() {
     FrcKrawlerTheme(darkTheme = false) {
         FRCKrawlerAppBar(
             title = { Text("preview") },
-            scaffoldState = rememberScaffoldState(),
         )
     }
 }
@@ -120,7 +79,6 @@ private fun FRCKrawlerAppBarPreviewDark() {
     FrcKrawlerTheme(darkTheme = true) {
         FRCKrawlerAppBar(
             title = { Text("preview") },
-            scaffoldState = rememberScaffoldState(),
         )
     }
 }

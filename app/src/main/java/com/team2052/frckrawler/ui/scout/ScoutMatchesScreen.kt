@@ -6,7 +6,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,15 +22,12 @@ fun ScoutMatchesScreen(
     navController: NavController,
 ) {
     val viewModel: ScoutViewModel = hiltViewModel()
-    val scaffoldState = rememberScaffoldState()
 
     FRCKrawlerScaffold(
         modifier = modifier,
-        scaffoldState = scaffoldState,
         appBar = {
             FRCKrawlerAppBar(
                 navController = navController,
-                scaffoldState = scaffoldState,
                 title = {
                     Text("Scout")
                 }
@@ -48,9 +44,6 @@ fun ScoutMatchesScreen(
             FloatingActionButton(onClick = { /*TODO*/ }) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "new match")
             }
-        },
-        drawerContent = {
-            FRCKrawlerDrawer()
         },
     ) { contentPadding ->
         ScoutMatchesScreenContent(modifier.padding(contentPadding), navController)

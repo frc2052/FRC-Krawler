@@ -22,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,7 +40,6 @@ import androidx.navigation.NavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
-import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.event.teams.edit.AddEditTeamSheet
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -54,7 +52,6 @@ fun EventTeamListScreen(
     navController: NavController,
 ) {
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberScaffoldState()
     val viewModel: EventDetailsViewModel = hiltViewModel()
     val editTeamSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -70,11 +67,9 @@ fun EventTeamListScreen(
     }
 
     FRCKrawlerScaffold(
-        scaffoldState = scaffoldState,
         appBar = {
             FRCKrawlerAppBar(
                 navController = navController,
-                scaffoldState = scaffoldState,
                 title = { Text(event?.name ?: "") },
                 actions = {
                     IconButton(
@@ -99,9 +94,6 @@ fun EventTeamListScreen(
                     }
                 )
             }
-        },
-        drawerContent = {
-            FRCKrawlerDrawer()
         },
     ) {
         ModalBottomSheetLayout(

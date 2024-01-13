@@ -27,7 +27,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -48,7 +47,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
-import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.event.add.AddEventSheetContent
 import com.team2052.frckrawler.ui.game.AddMetricSetDialog
@@ -63,7 +61,6 @@ fun GameDetailScreen(
     navController: NavController,
 ) {
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberScaffoldState()
     val viewModel: GameDetailViewModel = hiltViewModel()
     val state = viewModel.state.collectAsState().value
 
@@ -83,11 +80,9 @@ fun GameDetailScreen(
     }
 
     FRCKrawlerScaffold(
-        scaffoldState = scaffoldState,
         appBar = {
             FRCKrawlerAppBar(
                 navController = navController,
-                scaffoldState = scaffoldState,
                 title = {
                     Text(title)
                 },
@@ -102,9 +97,6 @@ fun GameDetailScreen(
                     }
                 }
             )
-        },
-        drawerContent = {
-            FRCKrawlerDrawer()
         },
     ) { contentPadding ->
         ModalBottomSheetLayout(
