@@ -8,18 +8,6 @@ import androidx.room.PrimaryKey
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = MetricSet::class,
-            parentColumns = ["id"],
-            childColumns = ["matchMetricsSetId"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = MetricSet::class,
-            parentColumns = ["id"],
-            childColumns = ["pitMetricsSetId"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
             entity = Game::class,
             parentColumns = ["id"],
             childColumns = ["gameId"],
@@ -27,8 +15,6 @@ import androidx.room.PrimaryKey
         )
     ],
     indices = [
-        Index("matchMetricsSetId"),
-        Index("pitMetricsSetId"),
         Index("gameId"),
     ]
 )
@@ -37,6 +23,4 @@ data class Event(
     val name: String,
     val gameId: Int,
     val tbaId: String? = null,
-    val matchMetricsSetId: Int? = null,
-    val pitMetricsSetId: Int? = null,
 )

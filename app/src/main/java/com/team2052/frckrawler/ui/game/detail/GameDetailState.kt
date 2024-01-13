@@ -20,5 +20,7 @@ class GameDetailEvent(
 class GameDetailMetricSet(
     val id: Int,
     val name: String,
-    val metricCount: Int
+    val metricCount: Int,
+    val isMatchMetrics: Boolean,
+    val isPitMetrics: Boolean,
 )

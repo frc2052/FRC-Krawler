@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.game.detail
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Card
@@ -294,26 +296,64 @@ private fun MetricSetRow(
     onMetricSetClick: (GameDetailMetricSet) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onMetricSetClick(metricSet) }
-            .padding(vertical = 12.dp)
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = metricSet.name,
-            style = MaterialTheme.typography.subtitle1
-        )
-        Text(
-            modifier = Modifier.alpha(.6f),
-            text = pluralStringResource(
-                id = R.plurals.game_metric_count,
-                count = metricSet.metricCount,
-                metricSet.metricCount,
-                ),
-            style = MaterialTheme.typography.body2
-        )
+        Column(
+
+        ) {
+            Text(
+                text = metricSet.name,
+                style = MaterialTheme.typography.subtitle1
+            )
+            Text(
+                modifier = Modifier.alpha(.6f),
+                text = pluralStringResource(
+                    id = R.plurals.game_metric_count,
+                    count = metricSet.metricCount,
+                    metricSet.metricCount,
+                    ),
+                style = MaterialTheme.typography.body2
+            )
+        }
+
+        Spacer(Modifier.width(8.dp))
+
+        if (metricSet.isMatchMetrics || metricSet.isPitMetrics) {
+            Row {
+                if (metricSet.isMatchMetrics) {
+                    MetricSetChip(text = stringResource(R.string.metric_set_match_chip_label))
+                }
+                if (metricSet.isPitMetrics) {
+                    MetricSetChip(text = stringResource(R.string.metric_set_pit_chip_label))
+                }
+            }
+        }
     }
+}
+
+@Composable
+private fun MetricSetChip(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        modifier = modifier
+            .padding(horizontal = 2.dp)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colors.primary,
+                shape = MaterialTheme.shapes.small
+            )
+            .padding(horizontal = 4.dp, vertical = 2.dp),
+        text = text,
+        style = MaterialTheme.typography.caption,
+        color = MaterialTheme.colors.primary,
+    )
 }
 
 @Composable
@@ -381,8 +421,31 @@ private fun GameDetailPreview() {
                     GameDetailMetricSet(
                         name = "Regional metrics",
                         id = 0,
-                        metricCount = 21
-                    )
+                        metricCount = 21,
+                        isMatchMetrics = true,
+                        isPitMetrics = true,
+                    ),
+                    GameDetailMetricSet(
+                        name = "Regional metrics 2",
+                        id = 0,
+                        metricCount = 21,
+                        isMatchMetrics = false,
+                        isPitMetrics = true,
+                    ),
+                    GameDetailMetricSet(
+                        name = "Regional metrics 3",
+                        id = 0,
+                        metricCount = 21,
+                        isMatchMetrics = true,
+                        isPitMetrics = false,
+                    ),
+                    GameDetailMetricSet(
+                        name = "Regional metrics 3",
+                        id = 0,
+                        metricCount = 21,
+                        isMatchMetrics = false,
+                        isPitMetrics = false,
+                    ),
                 ),
                 onMetricSetClick = {},
                 onAddMetricSetClick = {},

@@ -3,6 +3,7 @@ package com.team2052.frckrawler.ui.game.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.data.local.EventDao
+import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.MetricDao
 import com.team2052.frckrawler.data.local.MetricSet
@@ -10,13 +11,11 @@ import com.team2052.frckrawler.data.local.MetricSetDao
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,15 +36,13 @@ class GameDetailViewModel @Inject constructor(
 
     fun loadGame(gameId: Int) {
         this.gameId = gameId
-        println("loading $gameId")
 
         viewModelScope.launch {
-            val getGame = async { gameDao.get(gameId) }
+            val game = gameDao.get(gameId)
             combine(
-                flowOf(getGame.await()),
                 getEvents(gameId),
-                getMetricSets(gameId),
-            ) { game, events, metrics ->
+                getMetricSets(game),
+            ) { events, metrics ->
                 GameDetailState.Content(
                     game = game,
                     metrics = metrics,
@@ -91,7 +88,7 @@ class GameDetailViewModel @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun getMetricSets(gameId: Int): Flow<List<GameDetailMetricSet>> {
+    private fun getMetricSets(game: Game): Flow<List<GameDetailMetricSet>> {
         return metricSetDao.getAllForGame(gameId).mapLatest { sets ->
             // TODO try to parallelize
             sets.map { set ->
@@ -99,7 +96,9 @@ class GameDetailViewModel @Inject constructor(
                 GameDetailMetricSet(
                     id = set.id,
                     name = set.name,
-                    metricCount = metricCount
+                    metricCount = metricCount,
+                    isMatchMetrics = set.id == game.matchMetricsSetId,
+                    isPitMetrics = set.id == game.pitMetricsSetId,
                 )
             }
         }

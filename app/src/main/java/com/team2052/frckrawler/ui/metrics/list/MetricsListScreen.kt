@@ -1,6 +1,8 @@
 package com.team2052.frckrawler.ui.metrics.list
 
 
+import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +24,7 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
@@ -40,16 +43,23 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerDrawer
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricMode
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import com.team2052.frckrawler.ui.theme.secondarySurface
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -143,6 +153,11 @@ fun MetricsListScreen(
                                     sheetState.show()
                                 }
                             },
+                            gameName = state.gameName,
+                            isMatchMetrics = state.isMatchMetricSet,
+                            onIsMatchMetricsChanged = { viewModel.setIsMatchMetrics(it) },
+                            isPitMetrics = state.isPitMetricSet,
+                            onIsPitMetricsChanged = { viewModel.setIsPitMetrics(it) },
                         )
                     }
                 } else {
@@ -160,12 +175,12 @@ fun MetricsListScreen(
                             viewModel.deleteMetricSet()
                             navController.popBackStack()
                         }) {
-                            Text("Delete")
+                            Text(stringResource(R.string.delete))
                         }
                     },
                     dismissButton = {
                         TextButton(onClick = { showDeleteConfirmation = false }) {
-                            Text("Cancel")
+                            Text(stringResource(R.string.cancel))
                         }
                     },
                 )
@@ -209,14 +224,95 @@ private fun MetricListContent(
     modifier: Modifier = Modifier,
     metrics: List<Metric>,
     onMetricClick: (Metric) -> Unit,
+    gameName: String,
+    isMatchMetrics: Boolean,
+    onIsMatchMetricsChanged: (Boolean) -> Unit,
+    isPitMetrics: Boolean,
+    onIsPitMetricsChanged: (Boolean) -> Unit,
 ) {
     LazyColumn(modifier) {
+        item {
+            val matchMetricsLabel = getMetricsLabel(
+                prefixResId = R.string.metric_list_is_match_set,
+                gameName = gameName
+            )
+            GameMetricSetSwitchRow(
+                modifier = Modifier.fillMaxWidth(),
+                checked = isMatchMetrics,
+                onCheckedChanged = onIsMatchMetricsChanged,
+                label = matchMetricsLabel
+            )
+        }
+
+        item {
+            Divider()
+        }
+
+        item {
+            val pitMetricsLabel = getMetricsLabel(
+                prefixResId = R.string.metric_list_is_pit_set,
+                gameName = gameName
+            )
+            GameMetricSetSwitchRow(
+                modifier = Modifier.fillMaxWidth(),
+                checked = isPitMetrics,
+                onCheckedChanged = onIsPitMetricsChanged,
+                label = pitMetricsLabel
+            )
+        }
+
+        item {
+            Divider()
+        }
+
         items(metrics) { metric ->
             MetricListRow(
+                modifier = Modifier.fillMaxWidth(),
                 metric = metric,
                 onMetricClick = onMetricClick
             )
         }
+    }
+}
+
+@Composable
+private fun getMetricsLabel(
+    @StringRes prefixResId: Int,
+    gameName: String,
+): AnnotatedString {
+    val matchLabelPrefix = stringResource(prefixResId)
+    val label = remember(gameName, matchLabelPrefix) {
+        buildAnnotatedString {
+            append(matchLabelPrefix)
+            append(" ")
+            pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+            append(gameName)
+        }
+    }
+    return label
+}
+
+@Composable
+private fun GameMetricSetSwitchRow(
+    checked: Boolean,
+    onCheckedChanged: (Boolean) -> Unit,
+    label: AnnotatedString,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .background(MaterialTheme.colors.secondarySurface)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = label
+        )
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChanged
+        )
     }
 }
 
@@ -249,9 +345,7 @@ private fun MetricListRow(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onMetricClick(metric) }
+        modifier = modifier.clickable { onMetricClick(metric) }
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -289,6 +383,31 @@ private fun MetricListRowPreview() {
                     range = 1..1000 step 5
                 ),
                 onMetricClick = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun MetricListPreview() {
+    val metric = Metric.CounterMetric(
+        id = 1,
+        name = "Number of LEDs",
+        priority = 1,
+        enabled = true,
+        range = 1..1000 step 5
+    )
+    FrcKrawlerTheme {
+        Surface {
+            MetricListContent(
+                metrics = listOf(metric, metric, metric),
+                onMetricClick = {},
+                gameName = "Crescendo",
+                isMatchMetrics = false,
+                onIsMatchMetricsChanged = {},
+                isPitMetrics = true,
+                onIsPitMetricsChanged = {},
             )
         }
     }

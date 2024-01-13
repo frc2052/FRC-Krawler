@@ -6,6 +6,9 @@ sealed class MetricListScreenState {
     data object Loading: MetricListScreenState()
     data class Content(
         val metrics: List<Metric> = emptyList(),
-        val setName: String = ""
+        val setName: String = "",
+        val gameName: String = "",
+        val isPitMetricSet: Boolean = false,
+        val isMatchMetricSet: Boolean = false,
     ): MetricListScreenState()
 }

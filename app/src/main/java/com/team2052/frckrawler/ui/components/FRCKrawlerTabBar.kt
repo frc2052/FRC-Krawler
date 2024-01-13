@@ -3,13 +3,17 @@ package com.team2052.frckrawler.ui.components
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.ui.navigation.Screen
-import java.util.*
+import java.util.Locale
 
 @Composable
 fun FRCKrawlerTabBar(
@@ -20,7 +24,7 @@ fun FRCKrawlerTabBar(
 ) {
     if (navigation.screens.contains(currentScreen)) {
         val selectedTabIndex = navigation.screens.indexOf(currentScreen)
-        ScrollableTabRow(
+        TabRow(
             modifier = modifier.height(48.dp),
             selectedTabIndex = selectedTabIndex,
             backgroundColor = MaterialTheme.colors.primary,

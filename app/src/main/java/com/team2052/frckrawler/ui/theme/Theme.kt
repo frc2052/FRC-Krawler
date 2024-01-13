@@ -1,10 +1,12 @@
 package com.team2052.frckrawler.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 /*
 primary,
@@ -58,6 +60,10 @@ private val LightColorPalette = lightColors(
     error =             red,
     onError =           black,
 )
+
+// TODO create fully custom color set
+val Colors.secondarySurface: Color
+    get() = if (isLight) goldSurface else darkMaroonSurface
 
 @Composable
 fun FrcKrawlerTheme(
