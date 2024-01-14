@@ -20,6 +20,6 @@ interface GameDao {
     @Query("SELECT * FROM game WHERE id = :id")
     fun getWithUpdates(id: Int): Flow<Game>
 
-    @Query("SELECT * FROM game")
+    @Query("SELECT * FROM game WHERE id != ${Game.SCOUT_GAME_ID}")
     fun getAll(): Flow<List<Game>>
 }

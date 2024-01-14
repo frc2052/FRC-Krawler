@@ -21,7 +21,11 @@ object DatabaseModule {
             context,
             FRCKrawlerDatabase::class.java,
         "frckrawler.db"
-        ).fallbackToDestructiveMigration().build()
+        )
+            // This seed DB reserves game ID 1 for scouting
+            .createFromAsset("database/seed.db")
+            .fallbackToDestructiveMigration()
+            .build()
     }
     @Provides
     @Singleton

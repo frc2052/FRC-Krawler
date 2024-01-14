@@ -29,4 +29,12 @@ data class Game(
     val name: String,
     val matchMetricsSetId: Int? = null,
     val pitMetricsSetId: Int? = null,
-)
+) {
+    companion object {
+        /**
+         * This ID is reserved for the current game being
+         * used in the scouting client configuration
+         */
+        const val SCOUT_GAME_ID = 1
+    }
+}
