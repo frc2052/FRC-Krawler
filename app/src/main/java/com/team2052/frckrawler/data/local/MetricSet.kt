@@ -21,4 +21,18 @@ data class MetricSet(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val gameId: Int,
-)
+) {
+    companion object {
+        /**
+         * This ID is reserved for the current scouting configuration
+         * match metric set
+         */
+        const val SCOUT_MATCH_METRIC_SET_ID = 1
+
+        /**
+         * This ID is reserved for the current scouting configuration
+         * pit metric set
+         */
+        const val SCOUT_PIT_METRIC_SET_ID = 2
+    }
+}
