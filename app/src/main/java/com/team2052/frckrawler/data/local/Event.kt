@@ -23,4 +23,12 @@ data class Event(
     val name: String,
     val gameId: Int,
     val tbaId: String? = null,
-)
+) {
+    companion object {
+        /**
+         * This ID is reserved for the current event being
+         * used in the scouting client configuration
+         */
+        const val SCOUT_EVENT_ID = 1
+    }
+}
