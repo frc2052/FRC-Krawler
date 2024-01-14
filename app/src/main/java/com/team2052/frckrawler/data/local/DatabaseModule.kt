@@ -22,7 +22,7 @@ object DatabaseModule {
             FRCKrawlerDatabase::class.java,
         "frckrawler.db"
         )
-            // This seed DB reserves game ID 1 for scouting
+            // This seed DB reserves row IDs for scouting
             .createFromAsset("database/seed.db")
             .fallbackToDestructiveMigration()
             .build()
