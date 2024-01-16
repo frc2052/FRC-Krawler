@@ -19,11 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.team2052.frckrawler.data.model.DeviceType
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
 import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
@@ -200,7 +200,7 @@ private fun ServerNotConnected(
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun ScoutScreenConnectedPreview() {
     FrcKrawlerTheme {
@@ -216,7 +216,7 @@ private fun ScoutScreenConnectedPreview() {
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun ScoutScreenNotConnectedPreview() {
     FrcKrawlerTheme {

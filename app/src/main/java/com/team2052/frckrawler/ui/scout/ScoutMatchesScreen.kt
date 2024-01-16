@@ -8,7 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -58,7 +58,7 @@ private fun ScoutMatchesScreenContent(
 
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun ScoutScreenPreviewLight() {
     FrcKrawlerTheme(darkTheme = false) {
@@ -66,7 +66,7 @@ private fun ScoutScreenPreviewLight() {
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun ScoutScreenPreviewDark() {
     FrcKrawlerTheme(darkTheme = true) {

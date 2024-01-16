@@ -17,7 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlin.math.roundToInt
@@ -63,7 +63,7 @@ fun SliderMetric(
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun SliderMetricPreview() {
     var state by remember { mutableStateOf("3") }

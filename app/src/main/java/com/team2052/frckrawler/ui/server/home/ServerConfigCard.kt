@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Event
@@ -179,7 +179,7 @@ private fun ServerToggleButton(
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun ServerPropsPreview() {
     FrcKrawlerTheme(darkTheme = false) {

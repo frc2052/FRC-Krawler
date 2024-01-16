@@ -6,7 +6,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
@@ -21,7 +21,7 @@ fun BooleanMetric(
     )
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun BooleanMetricPreview() {
     FrcKrawlerTheme {

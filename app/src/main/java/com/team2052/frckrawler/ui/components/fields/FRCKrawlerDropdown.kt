@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -100,7 +100,7 @@ fun <T> FRCKrawlerDropdown(
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun FrcKrawlerDropdownPreview() {
     var value: String? by remember { mutableStateOf("One") }

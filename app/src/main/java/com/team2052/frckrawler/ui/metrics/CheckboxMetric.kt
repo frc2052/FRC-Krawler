@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
@@ -50,7 +50,7 @@ fun CheckboxMetric(
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun CheckboxMetricPreview() {
     var state by remember { mutableStateOf("two") }

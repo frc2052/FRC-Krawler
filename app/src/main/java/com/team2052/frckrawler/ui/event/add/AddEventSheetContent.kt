@@ -32,7 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.team2052.frckrawler.R
@@ -268,7 +268,7 @@ private fun ManualEventEntry(
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun AddEventPreview() {
     val state = AddEventScreenState(
@@ -295,7 +295,7 @@ private fun AddEventPreview() {
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun AddEventErrorPreview() {
     val state = AddEventScreenState(
@@ -322,7 +322,7 @@ private fun AddEventErrorPreview() {
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun AddEventLoadingPreview() {
     val state = AddEventScreenState(
@@ -349,7 +349,7 @@ private fun AddEventLoadingPreview() {
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun ManualEventEntryPreview() {
     var name by remember { mutableStateOf("") }

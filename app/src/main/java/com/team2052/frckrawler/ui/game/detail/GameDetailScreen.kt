@@ -41,7 +41,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -389,7 +389,7 @@ private fun GameDetailCardLayout(
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun GameDetailPreview() {
     FrcKrawlerTheme {
@@ -446,7 +446,7 @@ private fun GameDetailPreview() {
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun GameDetailEmptyPreview() {
     FrcKrawlerTheme {

@@ -22,7 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -88,7 +88,7 @@ fun StopwatchMetric(
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun StopwatchMetricPreview() {
     FrcKrawlerTheme {

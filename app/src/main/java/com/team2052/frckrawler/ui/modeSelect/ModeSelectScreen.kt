@@ -10,7 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -221,7 +221,7 @@ private fun SoloScoutCard(
     )
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun ModeSelectScreenPreviewLight() {
     FrcKrawlerTheme(darkTheme = false) {
@@ -229,7 +229,7 @@ private fun ModeSelectScreenPreviewLight() {
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun ModeSelectScreenPreviewDark() {
     FrcKrawlerTheme(darkTheme = true) {

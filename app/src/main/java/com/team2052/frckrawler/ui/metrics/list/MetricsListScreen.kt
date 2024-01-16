@@ -47,7 +47,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -363,7 +363,7 @@ private fun MetricListRow(
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun MetricListRowPreview() {
     FrcKrawlerTheme {
@@ -382,7 +382,7 @@ private fun MetricListRowPreview() {
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun MetricListPreview() {
     val metric = Metric.CounterMetric(

@@ -15,7 +15,7 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -62,7 +62,7 @@ fun CounterMetric(
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun CounterMetricPreview() {
     FrcKrawlerTheme {

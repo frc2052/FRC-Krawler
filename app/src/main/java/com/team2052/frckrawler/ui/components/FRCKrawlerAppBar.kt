@@ -14,7 +14,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
@@ -63,7 +63,7 @@ private fun DefaultNavigationButton(
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun FRCKrawlerAppBarPreviewLight() {
     FrcKrawlerTheme(darkTheme = false) {
@@ -73,7 +73,7 @@ private fun FRCKrawlerAppBarPreviewLight() {
     }
 }
 
-@Preview
+@FrcKrawlerPreview
 @Composable
 private fun FRCKrawlerAppBarPreviewDark() {
     FrcKrawlerTheme(darkTheme = true) {
