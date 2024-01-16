@@ -28,7 +28,7 @@ sealed class Screen(
     data object Scout : Screen(
         "scout_screen",
         getString(R.string.scout_screen_title),
-        listOf(ScoutHome, ScoutMatches),
+        listOf(ScoutHome),
     )
     data object ScoutHome : Screen(
         "scout_home_screen",

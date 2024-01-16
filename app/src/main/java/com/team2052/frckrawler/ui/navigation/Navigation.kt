@@ -26,11 +26,9 @@ import com.team2052.frckrawler.ui.navigation.Screen.GameList
 import com.team2052.frckrawler.ui.navigation.Screen.ModeSelect
 import com.team2052.frckrawler.ui.navigation.Screen.Scout
 import com.team2052.frckrawler.ui.navigation.Screen.ScoutHome
-import com.team2052.frckrawler.ui.navigation.Screen.ScoutMatches
 import com.team2052.frckrawler.ui.navigation.Screen.Server
 import com.team2052.frckrawler.ui.navigation.Screen.ServerHome
 import com.team2052.frckrawler.ui.scout.ScoutHomeScreen
-import com.team2052.frckrawler.ui.scout.ScoutMatchesScreen
 import com.team2052.frckrawler.ui.server.home.ServerHomeScreen
 
 private const val transitionOffset = 400
@@ -75,10 +73,6 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
         ) {
             composable(screen = ScoutHome) {
                 ScoutHomeScreen(navController = navController)
-            }
-
-            composable(screen = ScoutMatches) {
-                ScoutMatchesScreen(navController = navController)
             }
         }
 

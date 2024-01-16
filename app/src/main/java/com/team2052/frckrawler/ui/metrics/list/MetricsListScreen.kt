@@ -57,7 +57,7 @@ import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricMode
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import com.team2052.frckrawler.ui.theme.secondarySurface
+import com.team2052.frckrawler.ui.theme.highlightSurface
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -295,7 +295,7 @@ private fun GameMetricSetSwitchRow(
 ) {
     Row(
         modifier = modifier
-            .background(MaterialTheme.colors.secondarySurface)
+            .background(MaterialTheme.colors.highlightSurface)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,

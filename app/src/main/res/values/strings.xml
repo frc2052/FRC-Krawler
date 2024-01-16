@@ -54,8 +54,9 @@
     <string name="scout_home_screen_title">Home</string>
     <string name="scout_matches_screen_title">Matches</string>
 
-    <string name="match_scout_match_info_title">Match info</string>
+    <string name="match_scout_match_info_title">Match information</string>
     <string name="match_scout_team_label">Team</string>
+    <string name="match_scout_match_number_label">Match number</string>
 
     <!--Server Screens-->
     <string name="server_screen_title">Server</string>

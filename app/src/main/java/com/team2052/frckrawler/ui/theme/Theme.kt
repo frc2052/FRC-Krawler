@@ -62,8 +62,11 @@ private val LightColorPalette = lightColors(
 )
 
 // TODO create fully custom color set
-val Colors.secondarySurface: Color
+val Colors.highlightSurface: Color
     get() = if (isLight) goldSurface else darkMaroonSurface
+
+val Colors.secondarySurface: Color
+    get() = if (isLight) lightestGray else darkGray
 
 @Composable
 fun FrcKrawlerTheme(
