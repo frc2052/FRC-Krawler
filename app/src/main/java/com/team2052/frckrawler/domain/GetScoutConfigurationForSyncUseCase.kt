@@ -11,8 +11,6 @@ import com.team2052.frckrawler.data.sync.GamePacket
 import com.team2052.frckrawler.data.sync.MetricPacket
 import com.team2052.frckrawler.data.sync.ServerConfigurationPacket
 import com.team2052.frckrawler.data.sync.TeamPacket
-import com.team2052.frckrawler.ui.navigation.Arguments.eventId
-import com.team2052.frckrawler.ui.navigation.Arguments.gameId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -70,6 +68,7 @@ class GetScoutConfigurationForSyncUseCase @Inject constructor(
     private fun List<MetricRecord>.toPackets(): List<MetricPacket> {
         return map { metric ->
             MetricPacket(
+                id = metric.id,
                 name = metric.name,
                 type = metric.type,
                 priority = metric.priority,

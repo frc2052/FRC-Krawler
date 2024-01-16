@@ -71,6 +71,7 @@ class GetServerConfigurationForSyncUseCase @Inject constructor(
     private fun List<MetricRecord>.toPackets(): List<MetricPacket> {
         return map { metric ->
             MetricPacket(
+                id = metric.id,
                 name = metric.name,
                 type = metric.type,
                 priority = metric.priority,

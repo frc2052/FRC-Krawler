@@ -3,63 +3,79 @@ package com.team2052.frckrawler.data.model
 import com.team2052.frckrawler.data.local.MetricType
 
 sealed class Metric {
-    abstract val id: Int
+    abstract val id: String
     abstract val name: String
     abstract val priority: Int
     abstract val enabled: Boolean
 
+    abstract fun defaultValue(): String
+
     data class BooleanMetric(
-        override val id: Int = 0,
+        override val id: String = "",
         override val name: String,
         override val priority: Int,
         override val enabled: Boolean,
-    ) : Metric()
+    ) : Metric() {
+        override fun defaultValue() = "false"
+    }
 
     data class CounterMetric(
-        override val id: Int = 0,
+        override val id: String = "",
         override val name: String,
         override val priority: Int,
         override val enabled: Boolean,
         val range: IntProgression
-    ) : Metric()
+    ) : Metric() {
+        override fun defaultValue() = range.first.toString()
+    }
 
     data class SliderMetric(
-        override val id: Int = 0,
+        override val id: String = "",
         override val name: String,
         override val priority: Int,
         override val enabled: Boolean,
         val range: IntProgression,
-    ) : Metric()
+    ) : Metric() {
+        override fun defaultValue() = range.first.toString()
+    }
 
     data class ChooserMetric(
-        override val id: Int = 0,
+        override val id: String = "",
         override val name: String,
         override val priority: Int,
         override val enabled: Boolean,
         val options: List<String>,
-    ) : Metric()
+    ) : Metric() {
+        override fun defaultValue() = options.first()
+    }
 
     data class CheckboxMetric(
-        override val id: Int = 0,
+        override val id: String = "",
         override val name: String,
         override val priority: Int,
         override val enabled: Boolean,
         val options: List<String>,
-    ) : Metric()
+    ) : Metric() {
+        override fun defaultValue() = ""
+    }
 
     data class StopwatchMetric(
-        override val id: Int = 0,
+        override val id: String = "",
         override val name: String,
         override val priority: Int,
         override val enabled: Boolean,
-    ) : Metric()
+    ) : Metric() {
+        override fun defaultValue() = "0"
+    }
 
     data class TextFieldMetric(
-        override val id: Int = 0,
+        override val id: String = "",
         override val name: String,
         override val priority: Int,
         override val enabled: Boolean,
-    ) : Metric()
+    ) : Metric() {
+        override fun defaultValue() = ""
+    }
 
     fun getType(): MetricType = when (this) {
         is BooleanMetric -> MetricType.Boolean

@@ -63,22 +63,12 @@ class SaveServerConfigurationForScoutingUseCase @Inject constructor(
     ): List<MetricRecord> {
         return map { metric ->
             MetricRecord(
+                uuid = metric.uuid,
                 name = metric.name,
                 type = metric.type,
                 priority = metric.priority,
                 enabled = true,
                 metricSetId = metricSetId,
-                options = metric.options
-            )
-        }
-    }
-
-    private fun List<MetricRecord>.toPackets(): List<MetricPacket> {
-        return map { metric ->
-            MetricPacket(
-                name = metric.name,
-                type = metric.type,
-                priority = metric.priority,
                 options = metric.options
             )
         }
