@@ -18,8 +18,9 @@
     <string name="delete">delete</string>
     <string name="save">save</string>
 
-    <!--Shared Preferences TODO: Should this be here?-->
-    <string name="preference_app_mode">&applicationID;PREFERENCE_APP_MODE</string>
+    <!-- Step control -->
+    <string name="step_control_decrease">Decrease value</string>
+    <string name="step_control_increase">Increase value</string>
 
     <!--Content Descriptions-->
     <string name="cd_expandable_card">Card expansion toggle</string>
@@ -52,6 +53,9 @@
     <string name="scout_screen_title">Scout</string>
     <string name="scout_home_screen_title">Home</string>
     <string name="scout_matches_screen_title">Matches</string>
+
+    <string name="match_scout_match_info_title">Match info</string>
+    <string name="match_scout_team_label">Team</string>
 
     <!--Server Screens-->
     <string name="server_screen_title">Server</string>
