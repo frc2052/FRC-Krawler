@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.data.model.DeviceType
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
 import com.team2052.frckrawler.ui.components.Card
@@ -202,16 +202,30 @@ private fun ServerNotConnected(
 
 @Preview
 @Composable
-private fun ScoutScreenPreviewLight() {
-    FrcKrawlerTheme(darkTheme = false) {
-        ScoutHomeScreen(navController = rememberNavController())
+private fun ScoutScreenConnectedPreview() {
+    FrcKrawlerTheme {
+        Surface {
+            ScoutHomeScreenContent(
+                serverState = ServerConnectionState.Connected(
+                    "KnightKrawler Server"
+                ),
+                onFindServerClicked = { },
+                onSyncClicked = { }
+            )
+        }
     }
 }
 
 @Preview
 @Composable
-private fun ScoutScreenPreviewDark() {
-    FrcKrawlerTheme(darkTheme = true) {
-        ScoutHomeScreen(navController = rememberNavController())
+private fun ScoutScreenNotConnectedPreview() {
+    FrcKrawlerTheme {
+        Surface {
+            ScoutHomeScreenContent(
+                serverState = ServerConnectionState.NotConnected,
+                onFindServerClicked = { },
+                onSyncClicked = { }
+            )
+        }
     }
 }
