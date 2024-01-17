@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.repository
 
-import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.local.MetricDao
 import com.team2052.frckrawler.data.local.MetricRecordId
 import com.team2052.frckrawler.data.local.transformer.toMetric
@@ -31,7 +30,7 @@ class MetricRepository @Inject constructor(
         metricDao.insert(metric.toMetricRecord(metricSetId))
     }
 
-    suspend fun deleteMetric(id: Int) {
+    suspend fun deleteMetric(id: String) {
         metricDao.delete(MetricRecordId(id))
     }
 }

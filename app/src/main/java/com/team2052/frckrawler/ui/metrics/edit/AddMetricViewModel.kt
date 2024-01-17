@@ -2,7 +2,6 @@ package com.team2052.frckrawler.ui.metrics.edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.repository.MetricRepository
@@ -10,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +17,7 @@ class AddMetricViewModel @Inject constructor(
     private val metricRepo: MetricRepository
 ): ViewModel() {
 
-    private var metricId: Int = 0
+    private var metricId: String = ""
     private var metricSetId: Int = -1
 
     private val _state = MutableStateFlow(AddEditMetricScreenState())
@@ -25,7 +25,7 @@ class AddMetricViewModel @Inject constructor(
 
     fun startEditingNewMetric(metricSetId: Int) {
         this.metricSetId = metricSetId
-        this.metricId = 0
+        this.metricId = UUID.randomUUID().toString()
     }
 
     fun startEditingMetric(

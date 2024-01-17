@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.ui.metrics.edit
 
-import com.team2052.frckrawler.data.local.MetricCategory
 import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.model.Metric
 
@@ -13,10 +12,10 @@ data class AddEditMetricScreenState(
 ) {
     val saveEnabled = name.isNotBlank() && options.isValid
 
-    val previewMetric: Metric = toMetric(-1, 0)
+    val previewMetric: Metric = toMetric("no-id", 0)
 
     fun toMetric(
-        id: Int,
+        id: String,
         priority: Int
     ): Metric {
         return when (type) {

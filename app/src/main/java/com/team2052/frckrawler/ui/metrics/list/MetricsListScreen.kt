@@ -47,12 +47,12 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricMode
@@ -370,7 +370,7 @@ private fun MetricListRowPreview() {
         Surface {
             MetricListRow(
                 metric = Metric.CounterMetric(
-                    id = 1,
+                    id = "",
                     name = "Number of LEDs",
                     priority = 1,
                     enabled = true,
@@ -386,7 +386,7 @@ private fun MetricListRowPreview() {
 @Composable
 private fun MetricListPreview() {
     val metric = Metric.CounterMetric(
-        id = 1,
+        id = "",
         name = "Number of LEDs",
         priority = 1,
         enabled = true,
