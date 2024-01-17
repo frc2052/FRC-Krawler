@@ -29,7 +29,6 @@ class ScoutViewModel @Inject constructor(
     private val workManager: WorkManager,
 ) : ViewModel() {
 
-    var currentTab by mutableStateOf(Screen.ScoutHome)
     var showPermissionRequests by mutableStateOf(false)
     var requestEnableBluetooth by mutableStateOf(false)
 

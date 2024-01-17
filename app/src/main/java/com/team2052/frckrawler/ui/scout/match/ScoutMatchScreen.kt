@@ -111,7 +111,11 @@ private fun MatchInfo(
 
             FRCKrawlerDropdown(
                 value = state.selectedTeam,
-                getLabel = { "${state.selectedTeam.number} - ${state.selectedTeam.name}" },
+                getLabel = { team ->
+                    team?.let {
+                        "${team.number} - ${team.name}"
+                    } ?: ""
+                },
                 onValueChange = { newTeam ->
                     newTeam?.let { onTeamChanged(it) }
                 },

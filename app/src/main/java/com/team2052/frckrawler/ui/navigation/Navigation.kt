@@ -24,10 +24,9 @@ import com.team2052.frckrawler.ui.modeSelect.ModeSelectScreen
 import com.team2052.frckrawler.ui.navigation.Screen.Game
 import com.team2052.frckrawler.ui.navigation.Screen.GameList
 import com.team2052.frckrawler.ui.navigation.Screen.ModeSelect
-import com.team2052.frckrawler.ui.navigation.Screen.Scout
-import com.team2052.frckrawler.ui.navigation.Screen.ScoutHome
 import com.team2052.frckrawler.ui.navigation.Screen.Server
 import com.team2052.frckrawler.ui.scout.ScoutHomeScreen
+import com.team2052.frckrawler.ui.scout.match.ScoutMatchScreen
 import com.team2052.frckrawler.ui.server.home.ServerHomeScreen
 
 private const val transitionOffset = 400
@@ -66,13 +65,22 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
             ModeSelectScreen(navController = navController)
         }
 
-        navigation(
-            navigation = Scout,
-            initialScreen = ScoutHome,
+        composable(
+            screen = Screen.RemoteScoutHome
         ) {
-            composable(screen = ScoutHome) {
-                ScoutHomeScreen(navController = navController)
-            }
+            ScoutHomeScreen(navController = navController)
+        }
+
+        composable(
+            screen = Screen.MatchScout(),
+        ) { backStackEntry ->
+            val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
+            val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
+            ScoutMatchScreen(
+                metricSetId = metricSetId,
+                eventId = eventId,
+                navController = navController
+            )
         }
 
         composable(

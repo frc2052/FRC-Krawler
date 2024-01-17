@@ -29,9 +29,6 @@ import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
-import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
-import com.team2052.frckrawler.ui.navigation.Screen.Scout
-import com.team2052.frckrawler.ui.navigation.Screen.ScoutHome
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import com.team2052.frckrawler.ui.theme.spaceLarge
@@ -72,13 +69,6 @@ fun ScoutHomeScreen(
                         Text("Scout")
                     }
                 )
-            },
-            tabBar = {
-                FRCKrawlerTabBar(navigation = Scout, currentScreen = ScoutHome) { screen ->
-                    navController.navigate(screen.route) {
-                        launchSingleTop = true
-                    }
-                }
             },
         ) { contentPadding ->
             ScoutHomeScreenContent(

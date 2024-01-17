@@ -25,18 +25,23 @@ sealed class Screen(
     )
 
     // Scouting screens
-    data object Scout : Screen(
-        "scout_screen",
+    data object RemoteScoutHome : Screen(
+        "scout/remote",
         getString(R.string.scout_screen_title),
-        listOf(ScoutHome),
     )
-    data object ScoutHome : Screen(
-        "scout_home_screen",
-        getString(R.string.scout_home_screen_title)
+
+    data class MatchScout(
+        val eventId: Int? = null,
+        val metricSetId: Int? = null,
+    ) : Screen(
+        "scout/match/${eventId ?: "{eventId}"}/${metricSetId ?: "{metricSetId}"}",
+        getString(R.string.scout_matches_screen_title),
+        arguments = listOf(Arguments.eventId, Arguments.metricSetId)
     )
-    data object ScoutMatches : Screen(
-        "scout_matches_screen",
-        getString(R.string.scout_matches_screen_title)
+
+    data object PitScout : Screen(
+        "scout/pit",
+        getString(R.string.scout_pit_screen_title)
     )
 
     data object GameList : Screen(

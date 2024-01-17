@@ -9,8 +9,6 @@ import com.team2052.frckrawler.data.local.MetricDatumGroup
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.local.transformer.toMetric
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -38,7 +36,7 @@ abstract class AbstractScoutMetricsViewModel constructor(
                 teams.value = it
 
                 if (currentTeam.value == null || !it.contains(currentTeam.value)) {
-                    currentTeam.value = teams.value.first()
+                    currentTeam.value = teams.value.firstOrNull()
                 }
             }
         }

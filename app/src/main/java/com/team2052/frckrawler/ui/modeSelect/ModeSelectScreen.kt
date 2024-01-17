@@ -159,7 +159,7 @@ private fun RemoteScoutCard(
         },
         actions = {
             TextButton(onClick = {
-                navigate(Screen.Scout)
+                navigate(Screen.RemoteScoutHome)
             }) {
                 Text(stringResource(R.string.mode_remote_scout_continue))
             }
@@ -224,7 +224,14 @@ private fun SoloScoutCard(
         },
         actions = {
             TextButton(
-                onClick = { navigate(Screen.Scout) },
+                onClick = {
+                    navigate(
+                        Screen.MatchScout(
+                            metricSetId = gameEventState.selectedGame!!.matchMetricsSetId,
+                            eventId = gameEventState.selectedEvent!!.id
+                        )
+                    )
+                },
                 enabled = gameEventState.selectedGame != null && gameEventState.selectedEvent != null
             ) {
                 Text(stringResource(R.string.mode_solo_scout_continue))
