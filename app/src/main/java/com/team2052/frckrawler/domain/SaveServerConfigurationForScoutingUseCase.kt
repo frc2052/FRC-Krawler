@@ -63,7 +63,7 @@ class SaveServerConfigurationForScoutingUseCase @Inject constructor(
     ): List<MetricRecord> {
         return map { metric ->
             MetricRecord(
-                uuid = metric.uuid,
+                id = metric.id,
                 name = metric.name,
                 type = metric.type,
                 priority = metric.priority,

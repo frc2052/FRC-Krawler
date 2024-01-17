@@ -4,29 +4,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
-import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.Game
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
-import com.team2052.frckrawler.ui.components.fields.FRCKrawlerDropdown
+import com.team2052.frckrawler.ui.components.GameAndEventSelector
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import com.team2052.frckrawler.ui.theme.spaceMedium
 
 @Composable
 internal fun ServerConfigCard(
@@ -47,38 +37,22 @@ internal fun ServerConfigCard(
             )
         },
     ) {
-        GamesDropdown(
-            configuration = configuration,
-            onConfigurationChanged = onConfigurationChanged,
-            availableGames = availableGames
-        )
-        EventDropdown(
-            configuration = configuration,
-            onConfigurationChanged = onConfigurationChanged,
+        GameAndEventSelector(
             availableEvents = availableEvents,
-            enabled = configuration.game != null
+            selectedEvent = configuration.event,
+            onEventChanged = {
+                onConfigurationChanged(
+                    configuration.copy(event = it)
+                )
+            },
+            availableGames = availableGames,
+            selectedGame = configuration.game,
+            onGameChanged = {
+                onConfigurationChanged(
+                    configuration.copy(game = it)
+                )
+            },
         )
-
-        if (configuration.game != null) {
-            if (configuration.game.matchMetricsSetId == null && configuration.game.pitMetricsSetId == null) {
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = stringResource(R.string.server_home_no_metrics_warning),
-                    style = MaterialTheme.typography.body2,
-                    fontStyle = FontStyle.Italic,
-                    color = MaterialTheme.colors.error
-                )
-            }
-            if (availableEvents.isEmpty()) {
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = stringResource(R.string.server_home_no_events_warning),
-                    style = MaterialTheme.typography.body2,
-                    fontStyle = FontStyle.Italic,
-                    color = MaterialTheme.colors.error
-                )
-            }
-        }
 
         Spacer(Modifier.height(8.dp))
         Box(
@@ -94,65 +68,6 @@ internal fun ServerConfigCard(
         }
     }
 }
-
-@Composable
-private fun EventDropdown(
-    configuration: ServerConfiguration,
-    onConfigurationChanged: (ServerConfiguration) -> Unit,
-    availableEvents: List<Event>,
-    enabled: Boolean,
-) {
-    var eventValid by remember { mutableStateOf(true) }
-    FRCKrawlerDropdown(
-        modifier = Modifier.padding(bottom = spaceMedium),
-        enabled = enabled,
-        value = configuration.event,
-        getLabel = { it?.name ?: "" },
-        onValueChange = {
-            onConfigurationChanged(
-                configuration.copy(event = it)
-            )
-            if (it != null) {
-                eventValid = true
-            }
-        },
-        validity = eventValid,
-        onFocusChange = { focused ->
-            if (!focused) {
-                eventValid = (configuration.event != null)
-            }
-        },
-        label = "Event",
-        dropdownItems = availableEvents
-    )
-}
-
-@Composable
-private fun GamesDropdown(
-    configuration: ServerConfiguration,
-    onConfigurationChanged: (ServerConfiguration) -> Unit,
-    availableGames: List<Game>
-) {
-    var gameValid by remember { mutableStateOf(true) }
-    FRCKrawlerDropdown(
-        value = configuration.game,
-        onValueChange = {
-            onConfigurationChanged(
-                configuration.copy(game = it)
-            )
-        },
-        getLabel = { it?.name ?: "" },
-        validity = gameValid,
-        onFocusChange = { focused ->
-            if (!focused) {
-                gameValid = (configuration.game != null)
-            }
-        },
-        label = "Games",
-        dropdownItems = availableGames,
-    )
-}
-
 @Composable
 private fun ServerToggleButton(
     modifier: Modifier,

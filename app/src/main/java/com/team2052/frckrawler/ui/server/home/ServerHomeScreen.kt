@@ -10,13 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
@@ -116,15 +116,7 @@ fun ServerHomeScreen(
 @FrcKrawlerPreview
 @Composable
 private fun ServerHomeScreenPreviewLight() {
-    FrcKrawlerTheme(darkTheme = false) {
-        ServerHomeScreen(navController = rememberNavController())
-    }
-}
-
-@FrcKrawlerPreview
-@Composable
-private fun ServerHomeScreenPreviewDark() {
-    FrcKrawlerTheme(darkTheme = true) {
+    FrcKrawlerTheme {
         ServerHomeScreen(navController = rememberNavController())
     }
 }

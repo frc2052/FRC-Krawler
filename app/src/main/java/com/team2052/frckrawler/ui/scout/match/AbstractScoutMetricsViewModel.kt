@@ -16,11 +16,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
-import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
-@HiltViewModel
-abstract class AbstractScoutMetricsViewModel @Inject constructor(
+abstract class AbstractScoutMetricsViewModel constructor(
     private val metricDao: MetricDao,
     private val metricDatumDao: MetricDatumDao,
     private val teamDao: TeamAtEventDao,
