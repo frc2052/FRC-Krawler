@@ -22,7 +22,8 @@ object DatabaseModule {
             FRCKrawlerDatabase::class.java,
         "frckrawler.db"
         )
-            // This seed DB reserves row IDs for scouting
+            // This seed DB reserves row IDs for scouting.
+            // TODO find a more resilient solution
             .createFromAsset("database/seed.db")
             .fallbackToDestructiveMigration()
             .build()
@@ -65,6 +66,14 @@ object DatabaseModule {
         database: FRCKrawlerDatabase
     ): TeamAtEventDao {
         return database.teamAtEventDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMetricDatumDao(
+        database: FRCKrawlerDatabase
+    ): MetricDatumDao {
+        return database.metricDatumDao()
     }
 }
 

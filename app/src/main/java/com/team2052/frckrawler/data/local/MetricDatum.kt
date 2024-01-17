@@ -1,8 +1,6 @@
 package com.team2052.frckrawler.data.local
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
 import java.time.ZonedDateTime
 
 /**
@@ -10,16 +8,7 @@ import java.time.ZonedDateTime
  * scored by team 123 in match 1
  */
 @Entity(
-    foreignKeys = [
-        ForeignKey(
-            entity = MetricSet::class,
-            parentColumns = ["id"],
-            childColumns = ["metricSetId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ],
-    indices = [Index("metricSetId")],
-    primaryKeys = ["matchNumber", "teamNumber", "metricId"]
+    primaryKeys = ["group", "groupNumber", "teamNumber", "metricId"]
 )
 data class MetricDatum(
     val value: String,
