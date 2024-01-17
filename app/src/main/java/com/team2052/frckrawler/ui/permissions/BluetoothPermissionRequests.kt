@@ -2,7 +2,6 @@ package com.team2052.frckrawler.ui.permissions
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -14,15 +13,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
 import com.team2052.frckrawler.ui.components.Alert
 import com.team2052.frckrawler.ui.components.AlertState
-import com.team2052.frckrawler.ui.components.ComposableLauncher
-import com.team2052.frckrawler.ui.permissions.RequiredPermissions.serverPermissions
-import kotlinx.coroutines.launch
 
 
 /**

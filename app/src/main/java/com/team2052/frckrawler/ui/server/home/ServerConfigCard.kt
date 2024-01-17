@@ -9,22 +9,24 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
-import com.team2052.frckrawler.ui.components.GameAndEventSelector
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
 internal fun ServerConfigCard(
     modifier: Modifier = Modifier,
-    availableEvents: List<Event>,
-    availableGames: List<Game>,
-    configuration: ServerConfiguration,
-    onConfigurationChanged: (ServerConfiguration) -> Unit,
+    game: Game?,
+    event: Event?,
     serverState: ServerState,
     toggleServer: () -> Unit,
 ) {
@@ -32,29 +34,32 @@ internal fun ServerConfigCard(
         modifier = modifier,
         header = {
             CardHeader(
-                title = { Text("Server Controls") },
-                description = { Text("Control server and configuration") },
+                title = { Text(stringResource(R.string.server_controls_title)) },
             )
         },
     ) {
-        GameAndEventSelector(
-            availableEvents = availableEvents,
-            selectedEvent = configuration.event,
-            onEventChanged = {
-                onConfigurationChanged(
-                    configuration.copy(event = it)
-                )
-            },
-            availableGames = availableGames,
-            selectedGame = configuration.game,
-            onGameChanged = {
-                onConfigurationChanged(
-                    configuration.copy(game = it)
-                )
-            },
-        )
+        if (game == null || event == null) {
+            // TODO do we need a loading state? Hopefully not
+        } else {
+            val game = buildAnnotatedString {
+                pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+                append(stringResource(R.string.server_controls_game_label))
+                pop()
+                append(" ${game.name}")
+            }
+            Text(game)
 
-        Spacer(Modifier.height(8.dp))
+            val event = buildAnnotatedString {
+                pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+                append(stringResource(R.string.server_controls_event_label))
+                pop()
+                append(" ${event.name}")
+            }
+            Text(event)
+        }
+
+        Spacer(Modifier.height(16.dp))
+
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.BottomEnd
@@ -62,7 +67,6 @@ internal fun ServerConfigCard(
             ServerToggleButton(
                 modifier = modifier,
                 serverState = serverState,
-                serverConfigurationValid = configuration.isValid,
                 toggleServer = toggleServer
             )
         }
@@ -71,13 +75,12 @@ internal fun ServerConfigCard(
 @Composable
 private fun ServerToggleButton(
     modifier: Modifier,
-    serverConfigurationValid: Boolean,
     serverState: ServerState,
     toggleServer: () -> Unit
 ) {
     Button(
         modifier = modifier,
-        enabled = serverConfigurationValid && (
+        enabled = (
                 // Disable while transitioning states
                 serverState == ServerState.ENABLED || serverState == ServerState.DISABLED
         ),
@@ -96,24 +99,18 @@ private fun ServerToggleButton(
 
 @FrcKrawlerPreview
 @Composable
-private fun ServerPropsPreview() {
-    FrcKrawlerTheme(darkTheme = false) {
+private fun ServerConfigPreview() {
+    FrcKrawlerTheme {
         ServerConfigCard(
             serverState = ServerState.ENABLED,
             toggleServer = {},
-            availableEvents = listOf(
-                Event(
-                    name = "10,000 Lakes Regional",
-                    gameId = 0
-                )
+            event = Event(
+                name = "10,000 Lakes Regional",
+                gameId = 0
             ),
-            availableGames = listOf(
-                Game(
-                    name = "Crescendo"
-                )
-            ),
-            configuration = ServerConfiguration(null, null),
-            onConfigurationChanged = {}
+            game = Game(
+                name = "Crescendo"
+            )
         )
     }
 }

@@ -8,6 +8,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,31 +28,26 @@ import com.team2052.frckrawler.ui.theme.spaceMedium
 
 @Composable
 fun GameAndEventSelector(
-    availableEvents: List<Event>,
-    selectedEvent: Event?,
-    onEventChanged: (Event?) -> Unit,
-    availableGames: List<Game>,
-    selectedGame: Game?,
-    onGameChanged: (Game?) -> Unit,
+    state: GameAndEventState,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
     ) {
         GamesDropdown(
-            selectedGame = selectedGame,
-            onGameChanged = onGameChanged,
-            availableGames = availableGames
+            selectedGame = state.selectedGame,
+            onGameChanged = { state.selectedGame = it },
+            availableGames = state.availableGames
         )
         EventDropdown(
-            selectedEvent = selectedEvent,
-            onEventChanged = onEventChanged,
-            enabled = selectedGame != null,
-            availableEvents = availableEvents
+            selectedEvent = state.selectedEvent,
+            onEventChanged = { state.selectedEvent = it },
+            enabled = state.selectedGame != null && state.availableEvents.isNotEmpty(),
+            availableEvents = state.availableEvents
         )
 
-        if (selectedGame != null) {
-            if (selectedGame.matchMetricsSetId == null && selectedGame.pitMetricsSetId == null) {
+        if (state.selectedGame != null) {
+            if (state.selectedGame?.matchMetricsSetId == null && state.selectedGame?.pitMetricsSetId == null) {
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = stringResource(R.string.game_event_no_metrics_warning),
@@ -60,7 +56,7 @@ fun GameAndEventSelector(
                     color = MaterialTheme.colors.error
                 )
             }
-            if (availableEvents.isEmpty()) {
+            if (state.availableEvents.isEmpty()) {
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = stringResource(R.string.game_event_no_events_warning),
@@ -120,33 +116,42 @@ private fun GamesDropdown(
                 gameValid = (selectedGame != null)
             }
         },
+        enabled = availableGames.isNotEmpty(),
         label = stringResource(R.string.game_event_game_label),
         dropdownItems = availableGames,
     )
 }
 
+@Stable
+class GameAndEventState {
+    var selectedGame: Game? by mutableStateOf(null)
+    var availableGames: List<Game> by mutableStateOf(emptyList())
+    var selectedEvent: Event? by mutableStateOf(null)
+    var availableEvents: List<Event> by mutableStateOf(emptyList())
+}
 
 @FrcKrawlerPreview
 @Composable
 private fun GameAndEventSelectorPreview() {
+    val state = GameAndEventState().apply {
+        availableEvents = listOf(
+            Event(
+                name = "10,000 Lakes Regional",
+                gameId = 0
+            )
+        )
+        selectedEvent = null
+        availableGames = listOf(
+            Game(
+                name = "Crescendo"
+            )
+        )
+        selectedGame = null
+    }
     FrcKrawlerTheme {
         Surface {
             GameAndEventSelector(
-                availableEvents = listOf(
-                    Event(
-                        name = "10,000 Lakes Regional",
-                        gameId = 0
-                    )
-                ),
-                selectedEvent = null ,
-                onEventChanged = {},
-                availableGames = listOf(
-                    Game(
-                        name = "Crescendo"
-                    )
-                ),
-                selectedGame = null,
-                onGameChanged = {}
+                state = state
             )
         }
     }

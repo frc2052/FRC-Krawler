@@ -24,19 +24,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Game
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
-import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
 import com.team2052.frckrawler.ui.game.AddGameDialog
 import com.team2052.frckrawler.ui.navigation.Screen
-import com.team2052.frckrawler.ui.navigation.Screen.GameList
-import com.team2052.frckrawler.ui.navigation.Screen.Server
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
@@ -58,17 +55,9 @@ fun GameListScreen(
             FRCKrawlerAppBar(
                 navController = navController,
                 title = {
-                    Text(stringResource(R.string.server_screen_title))
+                    Text(stringResource(R.string.games_screen_title))
                 }
             )
-        },
-        tabBar = {
-            FRCKrawlerTabBar(navigation = Server, currentScreen = GameList) { screen ->
-                navController.navigate(screen.route) {
-                    popUpTo(GameList.route) { inclusive = true }
-                    launchSingleTop = true
-                }
-            }
         },
         floatingActionButton = {
             Actions(

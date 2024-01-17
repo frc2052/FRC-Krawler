@@ -27,7 +27,6 @@ import com.team2052.frckrawler.ui.navigation.Screen.ModeSelect
 import com.team2052.frckrawler.ui.navigation.Screen.Scout
 import com.team2052.frckrawler.ui.navigation.Screen.ScoutHome
 import com.team2052.frckrawler.ui.navigation.Screen.Server
-import com.team2052.frckrawler.ui.navigation.Screen.ServerHome
 import com.team2052.frckrawler.ui.scout.ScoutHomeScreen
 import com.team2052.frckrawler.ui.server.home.ServerHomeScreen
 
@@ -76,26 +75,20 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
             }
         }
 
-        /**
-         * Currently the animated nav-graph doesn't look good when navigating between
-         * tabs. TODO: Implement shared element transitions when they come out
-         */
+        composable(
+            screen = Server(),
+        ) { backStackEntry ->
+            val gameId = backStackEntry.arguments?.getInt(Arguments.gameId.name) ?: 0
+            val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
+            ServerHomeScreen(
+                gameId = gameId,
+                eventId = eventId,
+                navController = navController
+            )
+        }
 
-        /**
-         * Currently the animated nav-graph doesn't look good when navigating between
-         * tabs. TODO: Implement shared element transitions when they come out
-         */
-        navigation(
-            navigation = Server,
-            initialScreen = ServerHome,
-        ) {
-            composable(screen = ServerHome) {
-                ServerHomeScreen(navController = navController)
-            }
-
-            composable(screen = GameList) {
-                GameListScreen(navController = navController)
-            }
+        composable(screen = GameList) {
+            GameListScreen(navController = navController)
         }
 
         composable(

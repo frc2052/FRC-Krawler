@@ -1,49 +1,55 @@
 package com.team2052.frckrawler.ui.modeSelect
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team2052.frckrawler.FRCKrawlerApp
+import com.team2052.frckrawler.data.local.EventDao
+import com.team2052.frckrawler.data.local.GameDao
+import com.team2052.frckrawler.ui.components.GameAndEventState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ModeSelectViewModel @Inject constructor(
-    private val context: FRCKrawlerApp,
+    private val gameDao: GameDao,
+    private val eventDao: EventDao,
 ) : ViewModel() {
+    var serverConfigState = GameAndEventState()
+    var localScoutConfigState = GameAndEventState()
 
-    var isRefreshing by mutableStateOf(false)
-    fun refresh() {
-        isRefreshing = true
+    fun loadGamesAndEvents() {
         viewModelScope.launch {
-            delay(1000)
-            isRefreshing = false
+            gameDao.getAll().collect {
+                serverConfigState.availableGames = it
+                localScoutConfigState.availableGames = it
+            }
+        }
+
+        viewModelScope.launch {
+            serverConfigState.updateEventsOnGameChange()
+        }
+
+        viewModelScope.launch {
+            localScoutConfigState.updateEventsOnGameChange()
         }
     }
 
-    var expandedCard by mutableStateOf(-1)
+    private suspend fun GameAndEventState.updateEventsOnGameChange() {
+        snapshotFlow { selectedGame }
+            .flatMapLatest { game ->
+                if (game != null) {
+                    eventDao.getAllForGame(game.id)
+                } else {
+                    flowOf(emptyList())
+                }
+            }.collect { events ->
+                availableEvents = events
+            }
+    }
 
-    var remoteScoutData: RemoteScoutData by mutableStateOf(RemoteScoutData())
-    var serverData: ServerData by mutableStateOf(ServerData())
-    var soloScoutData: SoloScoutData by mutableStateOf(SoloScoutData())
 }
-
-data class RemoteScoutData(
-    val server: String = "",
-)
-
-data class SoloScoutData(
-    val metricSet: String = "",
-    val event: String = "",
-)
-
-data class ServerData(
-    val teamNumber: String = "",
-    val serverName: String = "",
-    val metricSet: String = "",
-    val event: String = "",
-)

@@ -33,27 +33,19 @@ class ServerHomeViewModel @Inject constructor(
     var serverState by mutableStateOf(ServerState.DISABLED)
     var showPermissionRequests by mutableStateOf(false)
     var requestEnableBluetooth by mutableStateOf(false)
-    var serverConfiguration by mutableStateOf(ServerConfiguration(null, null))
     var connectedScouts: List<RemoteScout> by mutableStateOf(emptyList())
-    var availableGames: List<Game> by mutableStateOf(emptyList())
-    var availableEvents: List<Event> by mutableStateOf(emptyList())
+    var game: Game? by mutableStateOf(null)
+    var event: Event? by mutableStateOf(null)
 
-    fun loadGames() {
+    fun loadGameAndEvent(gameId: Int, eventId: Int) {
         viewModelScope.launch {
-            gameDao.getAll().collectLatest {
-                availableGames = it
-            }
+            game = gameDao.get(gameId)
+        }
+
+        viewModelScope.launch {
+            event = eventDao.get(eventId)
         }
     }
-
-    fun loadEvents(gameId: Int) {
-        viewModelScope.launch {
-            eventDao.getAllForGame(gameId).collectLatest {
-                availableEvents = it
-            }
-        }
-    }
-
 
     /**
      * 1. State = enabling
@@ -79,12 +71,10 @@ class ServerHomeViewModel @Inject constructor(
             return
         }
 
-        val game = serverConfiguration.game
-        val event = serverConfiguration.event
         if (game != null && event != null) {
             syncServiceController.startServer(
-                gameId = game.id,
-                eventId = event.id
+                gameId = game!!.id,
+                eventId = event!!.id
             )
         } else {
             serverState = ServerState.DISABLED

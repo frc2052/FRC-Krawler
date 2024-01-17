@@ -1,22 +1,41 @@
 package com.team2052.frckrawler.ui.modeSelect
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.ui.components.*
+import com.team2052.frckrawler.data.local.Game
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
+import com.team2052.frckrawler.ui.components.Card
+import com.team2052.frckrawler.ui.components.CardHeader
+import com.team2052.frckrawler.ui.components.ExpandableCard
+import com.team2052.frckrawler.ui.components.ExpandableCardGroup
+import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
+import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
+import com.team2052.frckrawler.ui.components.GameAndEventSelector
+import com.team2052.frckrawler.ui.components.GameAndEventState
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import com.team2052.frckrawler.ui.theme.spaceLarge
@@ -27,6 +46,10 @@ fun ModeSelectScreen(
     navController: NavController,
 ) {
     val viewModel: ModeSelectViewModel = hiltViewModel()
+
+    LaunchedEffect(true) {
+        viewModel.loadGamesAndEvents()
+    }
 
     FRCKrawlerScaffold(
         modifier = modifier,
@@ -41,8 +64,13 @@ fun ModeSelectScreen(
     ) { contentPadding ->
         ModeSelectScreenContent(
             modifier = modifier.padding(contentPadding),
-            viewModel = viewModel,
-            navController = navController,
+            serverGameEventState = viewModel.serverConfigState,
+            localScoutGameEventState = viewModel.localScoutConfigState,
+            navigate = { screen ->
+                navController.navigate(screen.route) {
+                    popUpTo(Screen.ModeSelect.route)
+                }
+            }
         )
     }
 }
@@ -50,11 +78,16 @@ fun ModeSelectScreen(
 @Composable
 private fun ModeSelectScreenContent(
     modifier: Modifier = Modifier,
-    viewModel: ModeSelectViewModel,
-    navController: NavController,
+    serverGameEventState: GameAndEventState,
+    localScoutGameEventState: GameAndEventState,
+    navigate: (Screen) -> Unit,
 ) {
+    var expandedCard by remember { mutableIntStateOf(-1) }
+    val scrollState = rememberScrollState()
+
     Column(modifier = modifier
         .fillMaxWidth()
+        .verticalScroll(scrollState)
         .padding(spaceLarge)) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -70,44 +103,52 @@ private fun ModeSelectScreenContent(
         ExpandableCardGroup {
             expandableCard { id ->
                 RemoteScoutCard(
-                    id = id,
-                    modifier = Modifier,
-                    viewModel = viewModel,
-                    navController = navController,
+                    expanded = expandedCard == id,
+                    onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
+                    navigate = navigate,
                 )
             }
 
             expandableCard { id ->
                 ServerCard(
-                    id = id,
-                    modifier = Modifier,
-                    viewModel = viewModel,
-                    navController = navController,
+                    expanded = expandedCard == id,
+                    onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
+                    gameEventState = serverGameEventState,
+                    navigate = navigate,
                 )
             }
 
             expandableCard { id ->
                 SoloScoutCard(
-                    id = id,
-                    modifier = Modifier,
-                    viewModel = viewModel,
-                    navController = navController,
+                    expanded = expandedCard == id,
+                    onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
+                    gameEventState = localScoutGameEventState,
+                    navigate = navigate,
                 )
             }
         }
+
+
+        Spacer(modifier = Modifier.height(24.dp))
+        Card(
+            modifier = Modifier.clickable { navigate(Screen.GameList) },
+            header = {
+                CardHeader(
+                    title = { Text(stringResource(R.string.mode_select_configure)) },
+                    description = { Text(stringResource(R.string.mode_select_configure_description)) },
+                )
+            },
+        )
     }
 }
 
 @Composable
 private fun RemoteScoutCard(
-    id: Int,
+    expanded: Boolean,
+    onExpanded: (Boolean) -> Unit,
+    navigate: (Screen) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ModeSelectViewModel,
-    navController: NavController,
 ) {
-    var server by remember { mutableStateOf(viewModel.remoteScoutData.server) }
-    var serverValidity by remember { mutableStateOf(true) }
-
     ExpandableCard(
         modifier = modifier,
         header = {
@@ -118,53 +159,27 @@ private fun RemoteScoutCard(
         },
         actions = {
             TextButton(onClick = {
-                if (server.isEmpty()) serverValidity = false
-
-                if (serverValidity) {
-                    navController.navigate(Screen.Scout.route) {
-                        popUpTo(Screen.ModeSelect.route) { inclusive = true }
-                    }
-                }
+                navigate(Screen.Scout)
             }) {
                 Text(stringResource(R.string.mode_remote_scout_continue))
             }
         },
-        expanded = viewModel.expandedCard == id,
-        onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
+        expanded = expanded,
+        onExpanded = onExpanded,
         content = {
-            // Server selection dropdown
-//            Row(verticalAlignment = Alignment.CenterVertically) {
-//                FRCKrawlerDropdown(
-//                    modifier = Modifier,
-//                    value = server,
-//                    onValueChange = {
-//                        server = it
-//                        viewModel.remoteScoutData = viewModel.remoteScoutData.copy(server = server)
-//                    },
-//                    validity = serverValidity,
-//                    validityCheck = {
-//                        serverValidity = it.isNotEmpty()
-//                    },
-//                    label = "Server",
-//                    dropdownItems = listOf("KnightKrawler", "team 3053")
-//                )
-//                Spacer(modifier = Modifier.width(spaceLarge))
-//                TextButton(onClick = { /*TODO*/ }) {
-//                    Text("Refresh")
-//                }
-//            }
+
         },
     )
 }
 
 @Composable
 private fun ServerCard(
-    id: Int,
+    expanded: Boolean,
+    onExpanded: (Boolean) -> Unit,
+    gameEventState: GameAndEventState,
+    navigate: (Screen) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ModeSelectViewModel,
-    navController: NavController,
 ) {
-
     ExpandableCard(
         modifier = modifier,
         header = {
@@ -174,27 +189,30 @@ private fun ServerCard(
             )
         },
         actions = {
-            TextButton(onClick = {
-                navController.navigate(Screen.Server.route) {
-                    popUpTo(Screen.ModeSelect.route) { inclusive = true }
-                }
-            }) {
+            TextButton(
+                onClick = { navigate(Screen.Server()) },
+                enabled = gameEventState.selectedGame != null && gameEventState.selectedEvent != null
+            ) {
                 Text(stringResource(R.string.mode_server_continue))
             }
         },
-        expanded = viewModel.expandedCard == id,
-        onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
+        expanded = expanded,
+        onExpanded = onExpanded,
         content = {
+            GameAndEventSelector(
+                state = gameEventState
+            )
         },
     )
 }
 
 @Composable
 private fun SoloScoutCard(
-    id: Int,
+    expanded: Boolean,
+    onExpanded: (Boolean) -> Unit,
+    gameEventState: GameAndEventState,
+    navigate: (Screen) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ModeSelectViewModel,
-    navController: NavController,
 ) {
     ExpandableCard(
         modifier = modifier,
@@ -205,18 +223,19 @@ private fun SoloScoutCard(
             )
         },
         actions = {
-            TextButton(onClick = {
-                navController.navigate(Screen.Scout.route) {
-                    popUpTo(Screen.ModeSelect.route) { inclusive = true }
-                }
-            }) {
+            TextButton(
+                onClick = { navigate(Screen.Scout) },
+                enabled = gameEventState.selectedGame != null && gameEventState.selectedEvent != null
+            ) {
                 Text(stringResource(R.string.mode_solo_scout_continue))
             }
         },
-        expanded = viewModel.expandedCard == id,
-        onExpanded = { expanded -> viewModel.expandedCard = if (expanded) id else -1 },
+        expanded = expanded,
+        onExpanded = onExpanded,
         content = {
-
+            GameAndEventSelector(
+                state = gameEventState
+            )
         },
     )
 }
@@ -224,15 +243,70 @@ private fun SoloScoutCard(
 @FrcKrawlerPreview
 @Composable
 private fun ModeSelectScreenPreviewLight() {
-    FrcKrawlerTheme(darkTheme = false) {
-        ModeSelectScreen(navController = rememberNavController())
+    val gameEventState = GameAndEventState().apply {
+        availableGames = listOf(
+            Game(name = "Crescendo")
+        )
+    }
+    FrcKrawlerTheme {
+        ModeSelectScreenContent(
+            serverGameEventState = gameEventState,
+            localScoutGameEventState = gameEventState,
+            navigate = {}
+        )
     }
 }
 
 @FrcKrawlerPreview
 @Composable
-private fun ModeSelectScreenPreviewDark() {
-    FrcKrawlerTheme(darkTheme = true) {
-        ModeSelectScreen(navController = rememberNavController())
+private fun RemoteScoutCardPreview() {
+    FrcKrawlerTheme {
+        Surface {
+            RemoteScoutCard(
+                expanded = true,
+                onExpanded = {},
+                navigate = {}
+            )
+        }
+    }
+}
+
+@FrcKrawlerPreview
+@Composable
+private fun ServerCardPreview() {
+    val gameEventState = GameAndEventState().apply {
+        availableGames = listOf(
+            Game(name = "Crescendo")
+        )
+    }
+    FrcKrawlerTheme {
+        Surface {
+            ServerCard(
+                expanded = true,
+                onExpanded = {},
+                gameEventState = gameEventState,
+                navigate = {}
+            )
+        }
+    }
+}
+
+@FrcKrawlerPreview
+@Composable
+private fun LocalScoutCardPreview() {
+    val gameEventState = GameAndEventState().apply {
+        availableGames = listOf(
+            Game(name = "Crescendo")
+        )
+    }
+    FrcKrawlerTheme {
+        Surface {
+            SoloScoutCard(
+                expanded = true,
+                onExpanded = {},
+                gameEventState = gameEventState,
+                navigate = {}
+            )
+        }
     }
 }

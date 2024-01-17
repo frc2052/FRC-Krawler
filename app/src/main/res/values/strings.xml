@@ -49,6 +49,9 @@
     <string name="mode_solo_scout_description">I want to scout without connecting to other devices</string>
     <string name="mode_solo_scout_continue">START SCOUTING</string>
 
+    <string name="mode_select_configure">Configure Games &amp; Metrics</string>
+    <string name="mode_select_configure_description">Set this device up to run a server or scout locally by configuring a new game, adding a new event, or creating metrics.</string>
+
     <!--Scout Screens-->
     <string name="scout_screen_title">Scout</string>
     <string name="scout_home_screen_title">Home</string>
@@ -62,6 +65,9 @@
     <string name="server_screen_title">Server</string>
     <string name="server_home_screen_title">Home</string>
     <string name="games_screen_title">Games</string>
+    <string name="server_controls_title">Server controls</string>
+    <string name="server_controls_game_label">Game: </string>
+    <string name="server_controls_event_label">Event: </string>
 
     <!-- Game & Event selector -->
     <string name="game_event_no_metrics_warning">Warning: no pit or match metrics</string>

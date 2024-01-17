@@ -13,22 +13,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
-import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
-import com.team2052.frckrawler.ui.components.FRCKrawlerTabBar
-import com.team2052.frckrawler.ui.navigation.Screen.Server
-import com.team2052.frckrawler.ui.navigation.Screen.ServerHome
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
-import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import com.team2052.frckrawler.ui.theme.spaceLarge
 
 @Composable
 fun ServerHomeScreen(
+    gameId: Int,
+    eventId: Int,
     modifier: Modifier = Modifier,
     navController: NavController,
 ) {
@@ -53,7 +49,7 @@ fun ServerHomeScreen(
         }
 
         LaunchedEffect(true) {
-            viewModel.loadGames()
+            viewModel.loadGameAndEvent(gameId, eventId)
         }
         
         FRCKrawlerScaffold(
@@ -66,14 +62,6 @@ fun ServerHomeScreen(
                     }
                 )
             },
-            tabBar = {
-                FRCKrawlerTabBar(navigation = Server, currentScreen = ServerHome) { screen ->
-                    navController.navigate(screen.route) {
-                        popUpTo(ServerHome.route) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                }
-            },
         ) { contentPadding ->
             Column(
                 modifier = Modifier
@@ -83,6 +71,8 @@ fun ServerHomeScreen(
                 ServerConfigCard(
                     modifier = modifier,
                     serverState = viewModel.serverState,
+                    event = viewModel.event,
+                    game = viewModel.game,
                     toggleServer = {
                         if (viewModel.serverState == ServerState.ENABLED) {
                             viewModel.stopServer()
@@ -90,16 +80,6 @@ fun ServerHomeScreen(
                             viewModel.startServer()
                         }
                     },
-                    availableGames = viewModel.availableGames,
-                    availableEvents = viewModel.availableEvents,
-                    configuration = viewModel.serverConfiguration,
-                    onConfigurationChanged = {
-                        // TODO move to VM
-                        if (viewModel.serverConfiguration.game != it.game && it.game != null) {
-                            viewModel.loadEvents(it.game.id)
-                        }
-                        viewModel.serverConfiguration = it
-                    }
                 )
 
                 Spacer(Modifier.height(16.dp))
@@ -110,13 +90,5 @@ fun ServerHomeScreen(
                 )
             }
         }
-    }
-}
-
-@FrcKrawlerPreview
-@Composable
-private fun ServerHomeScreenPreviewLight() {
-    FrcKrawlerTheme {
-        ServerHomeScreen(navController = rememberNavController())
     }
 }

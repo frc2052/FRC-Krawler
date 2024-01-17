@@ -39,22 +39,21 @@ sealed class Screen(
         getString(R.string.scout_matches_screen_title)
     )
 
-    // Server screens
-    data object Server : Screen(
-        "server_screen",
-        getString(R.string.server_screen_title),
-        listOf(ServerHome, GameList),
-    )
-    data object ServerHome : Screen(
-        "server_home_screen",
-        getString(R.string.server_home_screen_title)
-    )
     data object GameList : Screen(
         "games",
         getString(R.string.games_screen_title)
     )
 
-    /* TODO clean up this nasty argument business */
+    /* TODO clean up this nasty argument business. Args should be non-null */
+    data class Server(
+        val gameId: Int? = null,
+        val eventId: Int? = null,
+    ) : Screen(
+        "server/${gameId ?: "{gameId}"}/${eventId ?: "{eventId}"}",
+        getString(R.string.server_screen_title),
+        arguments = listOf(Arguments.gameId, Arguments.eventId)
+    )
+
     data class Game(val gameId: Int? = null) : Screen(
         route = "game/${gameId ?: "{gameId}"}",
         title = "",
