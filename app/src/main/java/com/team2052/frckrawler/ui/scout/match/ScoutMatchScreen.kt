@@ -22,11 +22,13 @@ import androidx.navigation.NavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.data.model.MetricState
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.common.StepControl
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerDropdown
+import com.team2052.frckrawler.ui.scout.ScoutingForm
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import com.team2052.frckrawler.ui.theme.secondarySurface
 

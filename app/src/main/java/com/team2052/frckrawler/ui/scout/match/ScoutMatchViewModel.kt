@@ -6,6 +6,7 @@ import com.team2052.frckrawler.data.local.MetricDatum
 import com.team2052.frckrawler.data.local.MetricDatumDao
 import com.team2052.frckrawler.data.local.MetricDatumGroup
 import com.team2052.frckrawler.data.local.TeamAtEventDao
+import com.team2052.frckrawler.ui.scout.AbstractScoutMetricsViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.scout.match
+package com.team2052.frckrawler.ui.scout
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +9,7 @@ import com.team2052.frckrawler.data.local.MetricDatumGroup
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.local.transformer.toMetric
+import com.team2052.frckrawler.data.model.MetricState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
