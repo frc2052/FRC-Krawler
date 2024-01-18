@@ -94,7 +94,7 @@ fun Metric.toMetricRecord(metricSetId: Int): MetricRecord {
         is Metric.CounterMetric -> MetricRecord(
             id = id,
             metricSetId = metricSetId,
-            type = MetricType.Slider,
+            type = MetricType.Counter,
             name = name,
             priority = priority,
             enabled = enabled,
