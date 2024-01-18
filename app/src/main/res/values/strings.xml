@@ -61,6 +61,7 @@
     <string name="scout_matches_screen_title">Match Scouting</string>
     <string name="scout_pit_screen_title">Pit Scouting</string>
     <string name="scout_team_label">Team</string>
+    <string name="save_description">Save data</string>
 
     <string name="match_scout_match_info_title">Match information</string>
     <string name="match_scout_match_number_label">Match number</string>

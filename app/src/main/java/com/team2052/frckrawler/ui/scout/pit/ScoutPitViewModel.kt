@@ -35,13 +35,14 @@ class ScoutPitViewModel @Inject constructor(
         metricSetId: Int,
         eventId: Int,
     ) {
+        setMetricSetId(metricSetId)
         loadTeamsForEvent(eventId)
 
         viewModelScope.launch {
             combine(
                 teams,
                 currentTeam.filterNotNull(),
-                getMetricStates(metricSetId),
+                getMetricStates(),
             ) { teams, currentTeam, metricStates ->
                 ScoutPitScreenState(
                     availableTeams = teams,

@@ -10,13 +10,21 @@ import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.local.transformer.toMetric
 import com.team2052.frckrawler.data.model.MetricState
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 
-abstract class AbstractScoutMetricsViewModel constructor(
+@OptIn(ExperimentalCoroutinesApi::class)
+abstract class AbstractScoutMetricsViewModel(
     private val metricDao: MetricDao,
     private val metricDatumDao: MetricDatumDao,
     private val teamDao: TeamAtEventDao,
@@ -24,10 +32,35 @@ abstract class AbstractScoutMetricsViewModel constructor(
     protected val teams = MutableStateFlow<List<TeamAtEvent>>(emptyList())
     protected val currentTeam = MutableStateFlow<TeamAtEvent?>(null)
 
+    // map is metric ID -> value
+    private val pendingData = MutableStateFlow<Map<String, String>>(emptyMap())
+
+    // TODO don't like this
+    private val metricSetId = CompletableDeferred<Int>()
+
+    protected fun setMetricSetId(id: Int) {
+        metricSetId.complete(id)
+
+        viewModelScope.launch {
+            populatePendingDataWithDefaults()
+        }
+    }
+
     protected abstract fun getMetricData(): Flow<List<MetricDatum>>
     protected abstract fun getDatumGroup(): MetricDatumGroup
 
     protected open fun getDatumGroupNumber(): Int = 0
+
+    private val metrics = flow { emit(metricSetId.await()) }
+        .flatMapLatest { metricDao.getMetrics(it) }
+        .map { metricRecords ->
+            metricRecords.map { record -> record.toMetric() }
+        }
+        .shareIn(
+            viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            replay = 1
+        )
 
     fun loadTeamsForEvent(
         eventId: Int,
@@ -47,37 +80,68 @@ abstract class AbstractScoutMetricsViewModel constructor(
         currentTeam.value = team
     }
 
-    // TODO just need value and metric ID
+    // TODO just need value and metric ID, not whole object
     fun updateMetricState(metricState: MetricState) {
-        currentTeam.value?.let { team ->
-            val datum = MetricDatum(
-                value = metricState.value,
-                lastUpdated = ZonedDateTime.now(),
-                group = getDatumGroup(),
-                groupNumber = getDatumGroupNumber(),
-                teamNumber = team.number,
-                metricId = metricState.metric.id
-            )
-
-            viewModelScope.launch {
-                metricDatumDao.insert(datum)
-            }
+        pendingData.value = pendingData.value.toMutableMap().apply {
+            set(metricState.metric.id, metricState.value)
         }
     }
 
-    protected fun getMetricStates(metricSetId: Int): Flow<List<MetricState>> {
+    fun saveMetricData() {
+        pendingData.value.forEach { (metricId, value) ->
+            currentTeam.value?.let { team ->
+                val datum = MetricDatum(
+                    value = value,
+                    lastUpdated = ZonedDateTime.now(),
+                    group = getDatumGroup(),
+                    groupNumber = getDatumGroupNumber(),
+                    teamNumber = team.number,
+                    metricId = metricId
+                )
+
+                viewModelScope.launch {
+                    metricDatumDao.insert(datum)
+                }
+            }
+        }
+
+        pendingData.value = emptyMap()
+    }
+
+    protected fun getMetricStates(): Flow<List<MetricState>> {
         return combine(
-            metricDao.getMetrics(metricSetId),
-            getMetricData()
-        ) { metrics, data ->
-            metrics.map { metricRecord ->
-                val value = data.firstOrNull { it.metricId == metricRecord.id }?.value
-                val metric = metricRecord.toMetric()
+            metrics,
+            getMetricData(),
+            pendingData,
+        ) { metrics, data, pendingData ->
+            metrics.map { metric ->
+                val value = if (pendingData.containsKey(metric.id)) {
+                    pendingData[metric.id]
+                } else {
+                    data.firstOrNull { it.metricId == metric.id }?.value
+                }
                 MetricState(
                     metric = metric,
                     value = value ?: metric.defaultValue()
                 )
             }
+        }
+    }
+
+    private suspend fun populatePendingDataWithDefaults() {
+        combine(
+            metrics,
+            getMetricData()
+        ) { metrics, data ->
+            metrics.filterNot { metric ->
+                // Exclude any metric _without_ saved data
+                data.any { it.metricId == metric.id }
+            }
+        }.collect { metricsWithoutData ->
+            pendingData.value = metricsWithoutData.associateBy(
+                keySelector = { metric -> metric.id },
+                valueTransform = { metric -> metric.defaultValue() }
+            )
         }
     }
 }

@@ -38,6 +38,7 @@ class ScoutMatchViewModel @Inject constructor(
         metricSetId: Int,
         eventId: Int,
     ) {
+        setMetricSetId(metricSetId)
         loadTeamsForEvent(eventId)
 
         viewModelScope.launch {
@@ -45,7 +46,7 @@ class ScoutMatchViewModel @Inject constructor(
                 teams,
                 currentTeam.filterNotNull(),
                 currentMatch,
-                getMetricStates(metricSetId),
+                getMetricStates(),
             ) { teams, currentTeam, currentMatch, metricStates ->
                 ScoutMatchScreenState(
                     matchInformation = MatchInformationState(

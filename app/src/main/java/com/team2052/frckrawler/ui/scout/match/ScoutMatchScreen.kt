@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -51,6 +55,14 @@ fun ScoutMatchScreen(
     val state by viewModel.state.collectAsState()
 
     FRCKrawlerScaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = viewModel::saveMetricData,
+                modifier = Modifier.padding(bottom = 24.dp)
+            ) {
+                Icon(imageVector = Icons.Filled.Save, contentDescription = stringResource(R.string.save_description))
+            }
+        },
         appBar = {
             FRCKrawlerAppBar(
                 navController = navController,

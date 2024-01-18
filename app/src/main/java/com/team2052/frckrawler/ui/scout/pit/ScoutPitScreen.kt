@@ -6,9 +6,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -55,6 +59,14 @@ fun ScoutPitScreen(
                     Text(stringResource(R.string.scout_screen_title))
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                modifier = Modifier.padding(bottom = 24.dp),
+                onClick = viewModel::saveMetricData
+            ) {
+                Icon(imageVector = Icons.Filled.Save, contentDescription = stringResource(R.string.save_description))
+            }
         },
     ) { contentPadding ->
         state?.let { state ->
