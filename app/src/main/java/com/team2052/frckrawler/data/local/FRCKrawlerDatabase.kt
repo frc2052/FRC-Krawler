@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.team2052.frckrawler.data.local.converter.DateTimeConverters
+import com.team2052.frckrawler.data.local.view.RemoteScoutMetrics
 
 @Database(
     entities = [
@@ -13,6 +14,9 @@ import com.team2052.frckrawler.data.local.converter.DateTimeConverters
         Event::class,
         TeamAtEvent::class,
         MetricDatum::class
+    ],
+    views = [
+        RemoteScoutMetrics::class
     ],
     version = 1,
     exportSchema = false
