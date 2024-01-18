@@ -6,8 +6,10 @@ import com.team2052.frckrawler.data.local.EventDao
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.MetricDao
+import com.team2052.frckrawler.data.local.MetricRecord
 import com.team2052.frckrawler.data.local.MetricSet
 import com.team2052.frckrawler.data.local.MetricSetDao
+import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -63,10 +65,21 @@ class GameDetailViewModel @Inject constructor(
 
     fun createNewMetricSet(name: String) {
         viewModelScope.launch {
-            metricSetDao.insert(
+            val setId = metricSetDao.insert(
                 MetricSet(
                     name = name,
                     gameId = gameId
+                )
+            )
+
+            metricDao.insert(
+                MetricRecord(
+                    name = "Comments",
+                    type = MetricType.TextField,
+                    priority = 0,
+                    enabled = true,
+                    metricSetId = setId.toInt(),
+                    options = null
                 )
             )
         }

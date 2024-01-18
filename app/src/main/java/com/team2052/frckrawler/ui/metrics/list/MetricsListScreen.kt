@@ -86,12 +86,12 @@ fun MetricsListScreen(
         modifier = modifier,
         topBar = {
             FRCKrawlerAppBar(
-                navController = navController,
                 title = {
                     if (state is MetricListScreenState.Content) {
                         Text(state.setName)
                     }
                 },
+                navController = navController,
                 actions = {
                     if (state is MetricListScreenState.Content) {
                         IconButton(
