@@ -27,6 +27,7 @@ import com.team2052.frckrawler.ui.navigation.Screen.ModeSelect
 import com.team2052.frckrawler.ui.navigation.Screen.Server
 import com.team2052.frckrawler.ui.scout.ScoutHomeScreen
 import com.team2052.frckrawler.ui.scout.match.ScoutMatchScreen
+import com.team2052.frckrawler.ui.scout.pit.ScoutPitScreen
 import com.team2052.frckrawler.ui.server.home.ServerHomeScreen
 
 private const val transitionOffset = 400
@@ -77,6 +78,18 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
             val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
             val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
             ScoutMatchScreen(
+                metricSetId = metricSetId,
+                eventId = eventId,
+                navController = navController
+            )
+        }
+
+        composable(
+            screen = Screen.PitScout(),
+        ) { backStackEntry ->
+            val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
+            val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
+            ScoutPitScreen(
                 metricSetId = metricSetId,
                 eventId = eventId,
                 navController = navController

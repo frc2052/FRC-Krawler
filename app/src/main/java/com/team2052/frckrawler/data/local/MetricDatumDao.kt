@@ -20,9 +20,8 @@ interface MetricDatumDao {
         teamNumber: String
     ): Flow<List<MetricDatum>>
 
-    @Query("SELECT * FROM metricdatum WHERE `group` = 'Pit' AND groupNumber = :matchNumber AND teamNumber = :teamNumber")
+    @Query("SELECT * FROM metricdatum WHERE `group` = 'Pit' AND teamNumber = :teamNumber")
     fun getDatumForPitMetrics(
-        matchNumber: Int,
         teamNumber: String
     ): Flow<List<MetricDatum>>
 

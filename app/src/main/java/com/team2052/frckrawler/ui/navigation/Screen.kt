@@ -39,9 +39,13 @@ sealed class Screen(
         arguments = listOf(Arguments.eventId, Arguments.metricSetId)
     )
 
-    data object PitScout : Screen(
-        "scout/pit",
-        getString(R.string.scout_pit_screen_title)
+    data class PitScout(
+        val eventId: Int? = null,
+        val metricSetId: Int? = null,
+    ) : Screen(
+        "scout/pit/${eventId ?: "{eventId}"}/${metricSetId ?: "{metricSetId}"}",
+        getString(R.string.scout_matches_screen_title),
+        arguments = listOf(Arguments.eventId, Arguments.metricSetId)
     )
 
     data object GameList : Screen(

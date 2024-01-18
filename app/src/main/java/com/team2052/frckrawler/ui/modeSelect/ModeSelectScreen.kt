@@ -232,16 +232,24 @@ private fun SoloScoutCard(
         actions = {
             TextButton(
                 onClick = {
-                    val metricSetId = when (scoutMode) {
-                        ScoutMode.Match -> gameEventState.selectedGame!!.matchMetricsSetId
-                        ScoutMode.Pit -> gameEventState.selectedGame!!.pitMetricsSetId
+                    when (scoutMode) {
+                        ScoutMode.Match -> {
+                            navigate(
+                                Screen.MatchScout(
+                                    metricSetId = gameEventState.selectedGame!!.matchMetricsSetId,
+                                    eventId = gameEventState.selectedEvent!!.id
+                                )
+                            )
+                        }
+                        ScoutMode.Pit -> {
+                            navigate(
+                                Screen.PitScout(
+                                    metricSetId = gameEventState.selectedGame!!.pitMetricsSetId,
+                                    eventId = gameEventState.selectedEvent!!.id
+                                )
+                            )
+                        }
                     }
-                    navigate(
-                        Screen.MatchScout(
-                            metricSetId = metricSetId,
-                            eventId = gameEventState.selectedEvent!!.id
-                        )
-                    )
                 },
                 enabled = gameEventState.selectedGame != null && gameEventState.selectedEvent != null
             ) {
