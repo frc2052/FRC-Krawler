@@ -2,14 +2,18 @@ package com.team2052.frckrawler.ui.modeSelect
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -17,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -27,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Game
+import com.team2052.frckrawler.data.model.ScoutMode
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
@@ -214,6 +220,7 @@ private fun SoloScoutCard(
     navigate: (Screen) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var scoutMode by remember { mutableStateOf(ScoutMode.Match) }
     ExpandableCard(
         modifier = modifier,
         header = {
@@ -225,9 +232,13 @@ private fun SoloScoutCard(
         actions = {
             TextButton(
                 onClick = {
+                    val metricSetId = when (scoutMode) {
+                        ScoutMode.Match -> gameEventState.selectedGame!!.matchMetricsSetId
+                        ScoutMode.Pit -> gameEventState.selectedGame!!.pitMetricsSetId
+                    }
                     navigate(
                         Screen.MatchScout(
-                            metricSetId = gameEventState.selectedGame!!.matchMetricsSetId,
+                            metricSetId = metricSetId,
                             eventId = gameEventState.selectedEvent!!.id
                         )
                     )
@@ -243,8 +254,64 @@ private fun SoloScoutCard(
             GameAndEventSelector(
                 state = gameEventState
             )
+            Spacer(Modifier.height(4.dp))
+            ScoutModeRadioGroup(
+                mode = scoutMode,
+                onModeChanged = { scoutMode = it },
+                matchEnabled = gameEventState.selectedGame?.matchMetricsSetId != null,
+                pitEnabled = gameEventState.selectedGame?.pitMetricsSetId != null,
+            )
         },
     )
+}
+
+@Composable
+private fun ScoutModeRadioGroup(
+    mode: ScoutMode,
+    onModeChanged: (ScoutMode) -> Unit,
+    matchEnabled: Boolean,
+    pitEnabled: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Row {
+        Row(
+            modifier = modifier
+                .selectable(
+                    onClick = { onModeChanged(ScoutMode.Match) },
+                    enabled = matchEnabled,
+                    selected = mode == ScoutMode.Match && matchEnabled
+                )
+                .padding(4.dp)
+        ) {
+            RadioButton(
+                selected = mode == ScoutMode.Match && matchEnabled,
+                enabled = matchEnabled,
+                onClick = null
+            )
+            Spacer(Modifier.width(4.dp))
+            Text(stringResource(R.string.mode_select_scout_match))
+        }
+
+        Spacer(Modifier.width(8.dp))
+
+        Row(
+            modifier = modifier
+                .selectable(
+                    selected = mode == ScoutMode.Pit && pitEnabled,
+                    enabled = pitEnabled,
+                    onClick = { onModeChanged(ScoutMode.Pit) }
+                )
+                .padding(4.dp)
+        ) {
+            RadioButton(
+                selected = mode == ScoutMode.Pit && pitEnabled,
+                enabled = pitEnabled,
+                onClick = null
+            )
+            Spacer(Modifier.width(4.dp))
+            Text(stringResource(R.string.mode_select_scout_pit))
+        }
+    }
 }
 
 @FrcKrawlerPreview

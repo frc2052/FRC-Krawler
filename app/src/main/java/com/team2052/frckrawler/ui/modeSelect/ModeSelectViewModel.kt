@@ -27,6 +27,9 @@ class ModeSelectViewModel @Inject constructor(
             gameDao.getAll().collect {
                 serverConfigState.availableGames = it
                 localScoutConfigState.availableGames = it
+
+                serverConfigState.updateSelectedGame()
+                localScoutConfigState.updateSelectedGame()
             }
         }
 
@@ -49,7 +52,17 @@ class ModeSelectViewModel @Inject constructor(
                 }
             }.collect { events ->
                 availableEvents = events
+                updateSelectedEvent()
             }
     }
 
+    private fun GameAndEventState.updateSelectedGame() {
+        val matchingGame = availableGames.firstOrNull { it.id == selectedGame?.id }
+        selectedGame = matchingGame
+    }
+
+    private fun GameAndEventState.updateSelectedEvent() {
+        val matchingEvent = availableEvents.firstOrNull { it.id == selectedEvent?.id }
+        selectedEvent = matchingEvent
+    }
 }
