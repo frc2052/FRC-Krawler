@@ -34,12 +34,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.metrics.MetricInput
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -57,7 +57,7 @@ fun AddEditMetricDialog(
     LaunchedEffect(mode) {
         when (mode) {
             is AddEditMetricMode.Edit -> viewModel.startEditingMetric(mode.metric, metricSetId)
-            AddEditMetricMode.New -> viewModel.startEditingNewMetric(metricSetId)
+            is AddEditMetricMode.New -> viewModel.startEditingNewMetric(mode.metricId, metricSetId)
         }
     }
 
@@ -114,7 +114,7 @@ private fun AddEditMetricContent(
         val title = remember(mode) {
             when (mode) {
                 is AddEditMetricMode.Edit -> "Edit metric"
-                AddEditMetricMode.New -> "Add new metric"
+                is AddEditMetricMode.New -> "Add new metric"
             }
         }
         Text(
@@ -439,7 +439,7 @@ private fun BooleanMetricPreview() {
         Surface {
             AddEditMetricContent(
                 state = state,
-                mode = AddEditMetricMode.New,
+                mode = AddEditMetricMode.New(),
                 onNameChange = {},
                 onTypeChange = {},
                 onSaveClick = {},

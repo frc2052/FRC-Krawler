@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,9 +22,13 @@ class AddMetricViewModel @Inject constructor(
     private val _state = MutableStateFlow(AddEditMetricScreenState())
     val state: StateFlow<AddEditMetricScreenState> = _state
 
-    fun startEditingNewMetric(metricSetId: Int) {
+    fun startEditingNewMetric(
+        metricId: String,
+        metricSetId: Int,
+    ) {
         this.metricSetId = metricSetId
-        this.metricId = UUID.randomUUID().toString()
+        this.metricId = metricId
+        _state.value = AddEditMetricScreenState()
     }
 
     fun startEditingMetric(

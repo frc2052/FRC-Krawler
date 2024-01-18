@@ -73,7 +73,7 @@ fun MetricsListScreen(
         skipHalfExpanded = true
     )
     val scope = rememberCoroutineScope()
-    var sheetMode: AddEditMetricMode by remember { mutableStateOf(AddEditMetricMode.New) }
+    var sheetMode: AddEditMetricMode by remember { mutableStateOf(AddEditMetricMode.New()) }
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
@@ -110,7 +110,7 @@ fun MetricsListScreen(
             if (sheetState.targetValue == ModalBottomSheetValue.Hidden) {
                 MetricActions(
                     onAddClick = {
-                        sheetMode = AddEditMetricMode.New
+                        sheetMode = AddEditMetricMode.New()
                         scope.launch {
                             sheetState.show()
                         }
