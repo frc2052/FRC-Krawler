@@ -196,7 +196,10 @@ private fun ServerCard(
         },
         actions = {
             TextButton(
-                onClick = { navigate(Screen.Server()) },
+                onClick = { navigate(Screen.Server(
+                    gameId = gameEventState.selectedGame!!.id,
+                    eventId = gameEventState.selectedEvent!!.id,
+                )) },
                 enabled = gameEventState.selectedGame != null && gameEventState.selectedEvent != null
             ) {
                 Text(stringResource(R.string.mode_server_continue))

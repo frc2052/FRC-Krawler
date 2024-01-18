@@ -18,7 +18,7 @@ import com.team2052.frckrawler.data.sync.EventPacket
 import com.team2052.frckrawler.data.sync.GamePacket
 import com.team2052.frckrawler.data.sync.ServerConfigurationPacket
 import com.team2052.frckrawler.data.sync.TeamPacket
-import com.team2052.frckrawler.data.sync.toPackets
+import com.team2052.frckrawler.data.sync.toMetricPackets
 import com.team2052.frckrawler.data.sync.toRecords
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -90,8 +90,8 @@ class ReceiveServerConfiguration @Inject constructor(
         return ServerConfigurationPacket(
             game = GamePacket(
                 name = game.name,
-                matchMetrics = matchMetrics.toPackets(),
-                pitMetrics = pitMetrics.toPackets(),
+                matchMetrics = matchMetrics.toMetricPackets(),
+                pitMetrics = pitMetrics.toMetricPackets(),
             ),
             event = EventPacket(
                 name = event.name,

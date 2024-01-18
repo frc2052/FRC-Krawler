@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -50,6 +51,11 @@ abstract class AbstractScoutMetricsViewModel(
     protected abstract fun getDatumGroup(): MetricDatumGroup
 
     protected open fun getDatumGroupNumber(): Int = 0
+
+    private val metricData = getMetricData().shareIn(
+        viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000)
+    )
 
     private val metrics = flow { emit(metricSetId.await()) }
         .flatMapLatest { metricDao.getMetrics(it) }
@@ -90,16 +96,20 @@ abstract class AbstractScoutMetricsViewModel(
     fun saveMetricData() {
         pendingData.value.forEach { (metricId, value) ->
             currentTeam.value?.let { team ->
-                val datum = MetricDatum(
-                    value = value,
-                    lastUpdated = ZonedDateTime.now(),
-                    group = getDatumGroup(),
-                    groupNumber = getDatumGroupNumber(),
-                    teamNumber = team.number,
-                    metricId = metricId
-                )
-
                 viewModelScope.launch {
+                    val currentData = metricData.first()
+
+                    val datumId = currentData.firstOrNull { it.metricId == metricId }?.id ?: 0
+                    val datum = MetricDatum(
+                        id = datumId,
+                        value = value,
+                        lastUpdated = ZonedDateTime.now(),
+                        group = getDatumGroup(),
+                        groupNumber = getDatumGroupNumber(),
+                        teamNumber = team.number,
+                        metricId = metricId
+                    )
+
                     metricDatumDao.insert(datum)
                 }
             }
@@ -111,7 +121,7 @@ abstract class AbstractScoutMetricsViewModel(
     protected fun getMetricStates(): Flow<List<MetricState>> {
         return combine(
             metrics,
-            getMetricData(),
+            metricData,
             pendingData,
         ) { metrics, data, pendingData ->
             metrics.map { metric ->
@@ -131,7 +141,7 @@ abstract class AbstractScoutMetricsViewModel(
     private suspend fun populatePendingDataWithDefaults() {
         combine(
             metrics,
-            getMetricData()
+            metricData,
         ) { metrics, data ->
             metrics.filterNot { metric ->
                 // Exclude any metric _without_ saved data

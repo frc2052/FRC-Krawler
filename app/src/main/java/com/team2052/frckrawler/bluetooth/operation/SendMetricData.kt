@@ -8,7 +8,7 @@ import com.team2052.frckrawler.bluetooth.readResult
 import com.team2052.frckrawler.data.local.MetricDatum
 import com.team2052.frckrawler.data.local.MetricDatumDao
 import com.team2052.frckrawler.data.sync.MetricDataListPacket
-import com.team2052.frckrawler.data.sync.toPackets
+import com.team2052.frckrawler.data.sync.toDatumPackets
 import kotlinx.coroutines.runBlocking
 import okio.BufferedSink
 import okio.BufferedSource
@@ -22,9 +22,9 @@ class SendMetricData @Inject constructor(
     @OptIn(ExperimentalStdlibApi::class)
     override fun execute(output: BufferedSink, input: BufferedSource): OperationResult {
         return runBlocking {
-            val metrics = getMetricsToUpload()
+            val metrics = metricDatumDao.getRemoteScoutData()
             val packet = MetricDataListPacket(
-                metrics = metrics.toPackets()
+                metrics = metrics.toDatumPackets()
             )
 
             val adapter = moshi.adapter<MetricDataListPacket>()
@@ -37,14 +37,6 @@ class SendMetricData @Inject constructor(
 
             result
         }
-    }
-
-    private suspend fun getMetricsToUpload(): List<MetricDatum> {
-        val scoutData = metricDatumDao.getRemoteScoutData()
-
-        return scoutData.dataSets
-            .map { it.data }
-            .flatten()
     }
 
     private suspend fun deleteMetrics(metrics: List<MetricDatum>) {

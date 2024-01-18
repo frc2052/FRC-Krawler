@@ -19,7 +19,7 @@ fun List<MetricPacket>.toRecords(
     }
 }
 
-fun List<MetricRecord>.toPackets(): List<MetricPacket> {
+fun List<MetricRecord>.toMetricPackets(): List<MetricPacket> {
     return map { metric ->
         MetricPacket(
             id = metric.id,
@@ -31,7 +31,7 @@ fun List<MetricRecord>.toPackets(): List<MetricPacket> {
     }
 }
 
-fun List<MetricDatum>.toPackets(): List<MetricDatumPacket> {
+fun List<MetricDatum>.toDatumPackets(): List<MetricDatumPacket> {
     return map { datum ->
         MetricDatumPacket(
             value = datum.value,

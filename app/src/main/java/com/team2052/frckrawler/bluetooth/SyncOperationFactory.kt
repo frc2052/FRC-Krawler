@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.bluetooth
 
 import com.team2052.frckrawler.BuildConfig
+import com.team2052.frckrawler.bluetooth.operation.GameAndEvent
 import com.team2052.frckrawler.bluetooth.operation.ReceiveConnectHandshake
 import com.team2052.frckrawler.bluetooth.operation.ReceiveMetricData
 import com.team2052.frckrawler.bluetooth.operation.ReceiveServerConfiguration
@@ -22,8 +23,7 @@ class SyncOperationFactory @Inject constructor(
       versionName = BuildConfig.VERSION_NAME
     ),
     sendServerConfigurationFactory.create(
-      gameId = gameId,
-      eventId = eventId
+      GameAndEvent(gameId = gameId, eventId = eventId)
     ),
     receiveMetricData,
   )

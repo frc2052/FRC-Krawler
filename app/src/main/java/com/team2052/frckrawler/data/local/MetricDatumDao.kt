@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Upsert
-import com.team2052.frckrawler.data.local.view.RemoteScoutMetrics
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -33,6 +32,10 @@ interface MetricDatumDao {
         teamNumber: String
     ): Flow<List<MetricDatum>>
 
-    @Query("SELECT * FROM remotescoutmetrics")
-    suspend fun getRemoteScoutData(): RemoteScoutMetrics
+    @Query("""
+        SELECT metricdatum.* FROM metricdatum INNER JOIN metric ON metricId = metric.id
+            WHERE metricSetId = ${MetricSet.SCOUT_PIT_METRIC_SET_ID}
+                OR metricSetId = ${MetricSet.SCOUT_MATCH_METRIC_SET_ID}
+    """)
+    suspend fun getRemoteScoutData(): List<MetricDatum>
 }

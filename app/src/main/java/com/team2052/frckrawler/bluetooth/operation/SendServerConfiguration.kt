@@ -14,7 +14,7 @@ import com.team2052.frckrawler.data.sync.EventPacket
 import com.team2052.frckrawler.data.sync.GamePacket
 import com.team2052.frckrawler.data.sync.ServerConfigurationPacket
 import com.team2052.frckrawler.data.sync.TeamPacket
-import com.team2052.frckrawler.data.sync.toPackets
+import com.team2052.frckrawler.data.sync.toMetricPackets
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -29,12 +29,16 @@ import okio.BufferedSource
 
 @AssistedFactory
 interface SendServerConfigurationFactory {
-    fun create(gameId: Int, eventId: Int): SendServerConfiguration
+    fun create(gameAndEvent: GameAndEvent): SendServerConfiguration
 }
 
+data class GameAndEvent(
+    val gameId: Int,
+    val eventId: Int,
+)
+
 class SendServerConfiguration @AssistedInject constructor(
-    @Assisted private val gameId: Int,
-    @Assisted private val eventId: Int,
+    @Assisted private val gameAndEvent: GameAndEvent,
 
     private val gameDao: GameDao,
     private val metricDao: MetricDao,
@@ -47,7 +51,7 @@ class SendServerConfiguration @AssistedInject constructor(
     @OptIn(ExperimentalStdlibApi::class)
     override fun execute(output: BufferedSink, input: BufferedSource): OperationResult {
         return runBlocking {
-            val config = getConfiguration(gameId = gameId, eventId = eventId)
+            val config = getConfiguration(gameId = gameAndEvent.gameId, eventId = gameAndEvent.eventId)
 
             val scoutConfigHash = input.readInt()
             if (scoutConfigHash == config.hashCode()) {
@@ -91,8 +95,8 @@ class SendServerConfiguration @AssistedInject constructor(
         return ServerConfigurationPacket(
             game = GamePacket(
                 name = game.name,
-                matchMetrics = matchMetrics.toPackets(),
-                pitMetrics = pitMetrics.toPackets(),
+                matchMetrics = matchMetrics.toMetricPackets(),
+                pitMetrics = pitMetrics.toMetricPackets(),
             ),
             event = EventPacket(
                 name = event.name,
