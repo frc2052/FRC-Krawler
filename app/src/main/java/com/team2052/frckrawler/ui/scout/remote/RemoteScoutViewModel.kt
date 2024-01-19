@@ -34,6 +34,8 @@ class RemoteScoutViewModel @Inject constructor(
     var serverConnectionState: ServerConnectionState by mutableStateOf(ServerConnectionState.NotConnected)
     var server: BluetoothDevice? = null
 
+    var syncState: ServerSyncState by mutableStateOf(ServerSyncState.NotSynced)
+
     // TODO skip pairing if a server is already paired and on?
     fun connectToServer(activity: ComponentActivity) {
         // Check location strategy worked
@@ -71,6 +73,7 @@ class RemoteScoutViewModel @Inject constructor(
     }
 
     fun performSync() {
+        syncState = ServerSyncState.Syncing
         Timber.tag("client").d("queuing sync: $server")
         // TODO come back and clean up
         server?.let {
