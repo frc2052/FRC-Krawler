@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.ui.scout.remote
 
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,16 +13,27 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
@@ -32,6 +44,8 @@ import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import com.team2052.frckrawler.ui.theme.spaceLarge
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun ScoutHomeScreen(
@@ -71,9 +85,11 @@ fun ScoutHomeScreen(
         )
       },
     ) { contentPadding ->
+      val syncState by viewModel.syncState.collectAsState(initial = ServerSyncState.NotSynced)
       ScoutHomeScreenContent(
         modifier = modifier.padding(contentPadding),
         serverState = viewModel.serverConnectionState,
+        syncState = syncState,
         onFindServerClicked = { viewModel.connectToServer(context) },
         onSyncClicked = { viewModel.performSync() }
       )
@@ -85,26 +101,28 @@ fun ScoutHomeScreen(
 private fun ScoutHomeScreenContent(
   modifier: Modifier = Modifier,
   serverState: ServerConnectionState,
+  syncState: ServerSyncState,
   onFindServerClicked: () -> Unit,
   onSyncClicked: () -> Unit,
 ) {
   Column(modifier = modifier.padding(spaceLarge)) {
-    ConnectionStatusCard(
-      state = serverState,
-      onFindServerClicked = onFindServerClicked
+    ServerStatusCard(
+      serverState = serverState,
+      syncState = syncState,
+      onFindServerClicked = onFindServerClicked,
+      onSyncClicked = onSyncClicked,
     )
     Spacer(Modifier.height(16.dp))
-    Button(onClick = onSyncClicked) {
-      Text("Sync")
-    }
   }
 }
 
 @Composable
-private fun ConnectionStatusCard(
+private fun ServerStatusCard(
   modifier: Modifier = Modifier,
-  state: ServerConnectionState,
-  onFindServerClicked: () -> Unit
+  serverState: ServerConnectionState,
+  syncState: ServerSyncState,
+  onFindServerClicked: () -> Unit,
+  onSyncClicked: () -> Unit,
 ) {
   Card(
     modifier = modifier,
@@ -114,9 +132,13 @@ private fun ConnectionStatusCard(
       )
     },
   ) {
-    when (state) {
+    when (serverState) {
       is ServerConnectionState.Connected -> {
-        ServerConnected(state)
+        ServerConnected(
+          serverState = serverState,
+          syncState = syncState,
+          onSyncClicked = onSyncClicked,
+        )
       }
 
       is ServerConnectionState.Connecting -> {
@@ -125,7 +147,7 @@ private fun ConnectionStatusCard(
 
       else -> {
         ServerNotConnected(
-          state = state,
+          state = serverState,
           onFindServerClicked = onFindServerClicked
         )
       }
@@ -134,8 +156,61 @@ private fun ConnectionStatusCard(
 }
 
 @Composable
-private fun ServerConnected(state: ServerConnectionState.Connected) {
-  Text("Connected to ${state.name}")
+private fun ServerConnected(
+  serverState: ServerConnectionState.Connected,
+  syncState: ServerSyncState,
+  onSyncClicked: () -> Unit,
+) {
+  Column {
+    val connectedText = buildAnnotatedString {
+      append(stringResource(R.string.scout_connected_prefix))
+      append(" ")
+      pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+      append(serverState.name)
+    }
+    Text(connectedText)
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    if (syncState is ServerSyncState.Synced) {
+      Text(
+        text = stringResource(
+          id = R.string.scout_last_sync_label,
+          syncState.lastSyncTime.format(TIME_FORMAT)
+        )
+      )
+
+      Spacer(modifier = Modifier.height(16.dp))
+
+      val pendingCountText = buildAnnotatedString {
+        pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+        append(syncState.pendingDataCount.toString())
+        pop()
+        append(" ")
+        append(pluralStringResource(R.plurals.scout_unsynced_metrics_label, syncState.pendingDataCount, syncState.pendingDataCount))
+      }
+      Text(pendingCountText)
+
+      Spacer(modifier = Modifier.height(16.dp))
+    }
+
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.End
+    ) {
+      Button(
+        onClick = onSyncClicked,
+        enabled = syncState != ServerSyncState.Syncing
+      ) {
+        Icon(
+          imageVector = Icons.Default.Sync,
+          contentDescription = null
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(stringResource(R.string.scout_sync_action))
+      }
+    }
+  }
 }
 
 
@@ -194,6 +269,8 @@ private fun ServerNotConnected(
   }
 }
 
+private val TIME_FORMAT = DateTimeFormatter.ofPattern("h:mm a")
+
 @FrcKrawlerPreview
 @Composable
 private fun ScoutScreenConnectedPreview() {
@@ -203,6 +280,7 @@ private fun ScoutScreenConnectedPreview() {
         serverState = ServerConnectionState.Connected(
           "KnightKrawler Server"
         ),
+        syncState = ServerSyncState.NotSynced,
         onFindServerClicked = { },
         onSyncClicked = { }
       )
@@ -217,6 +295,27 @@ private fun ScoutScreenNotConnectedPreview() {
     Surface {
       ScoutHomeScreenContent(
         serverState = ServerConnectionState.NotConnected,
+        syncState = ServerSyncState.NotSynced,
+        onFindServerClicked = { },
+        onSyncClicked = { }
+      )
+    }
+  }
+}
+
+@FrcKrawlerPreview
+@Composable
+private fun ScoutScreenPendingSyncPreview() {
+  FrcKrawlerTheme {
+    Surface {
+      ScoutHomeScreenContent(
+        serverState = ServerConnectionState.Connected(
+          "KnightKrawler Server"
+        ),
+        syncState = ServerSyncState.Synced(
+          pendingDataCount = 12,
+          lastSyncTime = ZonedDateTime.now()
+        ),
         onFindServerClicked = { },
         onSyncClicked = { }
       )

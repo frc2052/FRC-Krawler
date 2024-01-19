@@ -10,6 +10,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import com.team2052.frckrawler.R
@@ -23,6 +24,7 @@ import com.team2052.frckrawler.ui.MainActivity
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import timber.log.Timber
+import java.time.Instant
 
 @HiltWorker
 class ScoutSyncWorker @AssistedInject constructor(
@@ -34,7 +36,8 @@ class ScoutSyncWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, workerParams) {
 
   companion object {
-    public const val DATA_SERVER_ADDRESS = "server_address"
+    const val DATA_SERVER_ADDRESS = "server_address"
+    const val RESULT_END_TIMESTAMP = "end_timestamp"
   }
 
   @SuppressLint("MissingPermission")
@@ -64,7 +67,11 @@ class ScoutSyncWorker @AssistedInject constructor(
       }
     }
 
-    return Result.success()
+    val data = Data.Builder()
+      .putLong(RESULT_END_TIMESTAMP, Instant.now().epochSecond)
+      .build()
+
+    return Result.success(data)
   }
 
   override suspend fun getForegroundInfo(): ForegroundInfo {

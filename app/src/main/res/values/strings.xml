@@ -63,6 +63,14 @@
     <string name="scout_team_label">Team</string>
     <string name="save_description">Save data</string>
 
+    <string name="scout_connected_prefix">Connected to</string>
+    <string name="scout_sync_action">Sync</string>
+    <string name="scout_last_sync_label">Last sync: %1$s</string>
+    <plurals name="scout_unsynced_metrics_label">
+        <item quantity="one">pending data point</item>
+        <item quantity="other">pending data points</item>
+    </plurals>
+
     <string name="match_scout_match_info_title">Match information</string>
     <string name="match_scout_match_number_label">Match number</string>
 

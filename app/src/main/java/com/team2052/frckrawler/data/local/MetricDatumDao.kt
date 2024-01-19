@@ -40,4 +40,13 @@ interface MetricDatumDao {
     """
   )
   suspend fun getRemoteScoutData(): List<MetricDatum>
+
+  @Query(
+    """
+        SELECT metricdatum.* FROM metricdatum INNER JOIN metric ON metricId = metric.id
+            WHERE metricSetId = ${MetricSet.SCOUT_PIT_METRIC_SET_ID}
+                OR metricSetId = ${MetricSet.SCOUT_MATCH_METRIC_SET_ID}
+    """
+  )
+  fun getRemoteScoutDataFlow(): Flow<List<MetricDatum>>
 }
