@@ -43,7 +43,7 @@ class ReceiveServerConfiguration @Inject constructor(
         return runBlocking {
             val config = getConfiguration()
             val configHash = config?.hashCode() ?: 0
-            output.writeInt(configHash)
+            output.writeInt(configHash).emit()
 
             val hashResult = input.readResult()
             if (hashResult == OperationResult.ServerConfigurationMismatch) {
@@ -112,7 +112,7 @@ class ReceiveServerConfiguration @Inject constructor(
         metricDao.insertAll(matchMetrics)
 
         metricDao.deleteAllFromSet(MetricSet.SCOUT_PIT_METRIC_SET_ID)
-        val pitMetrics = config.game.matchMetrics.toRecords(MetricSet.SCOUT_PIT_METRIC_SET_ID)
+        val pitMetrics = config.game.pitMetrics.toRecords(MetricSet.SCOUT_PIT_METRIC_SET_ID)
         metricDao.insertAll(pitMetrics)
 
         eventDao.insert(

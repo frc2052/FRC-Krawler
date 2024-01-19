@@ -8,8 +8,6 @@ import android.content.Context
 import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
 import com.team2052.frckrawler.bluetooth.bufferedIO
 import com.team2052.frckrawler.bluetooth.di.SyncEntryPoint
-import com.team2052.frckrawler.ui.navigation.Arguments.eventId
-import com.team2052.frckrawler.ui.navigation.Arguments.gameId
 import dagger.hilt.EntryPoints
 import timber.log.Timber
 
@@ -54,10 +52,12 @@ class SyncServerThread(
     }
   }
 
+  // TODO catch exceptions, handle errors
   private fun syncWithClient(clientSocket: BluetoothSocket) {
     clientSocket.bufferedIO { output, input ->
       val operations = opFactory.createServerOperations(gameId = gameId, eventId = eventId)
       operations.forEach { op ->
+        Timber.d("Sync operation ${op.javaClass.simpleName} starting")
         val result = op.execute(output, input)
         Timber.d("Sync operation ${op.javaClass.simpleName} result: $result")
       }

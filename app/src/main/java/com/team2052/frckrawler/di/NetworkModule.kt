@@ -3,6 +3,7 @@ package com.team2052.frckrawler.di
 import android.content.Context
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.team2052.frckrawler.data.adapter.ZonedDateTimeJsonAdapter
 import com.team2052.frckrawler.data.remote.*
 import com.team2052.frckrawler.util.Constants.BASE_URL
 import dagger.Module
@@ -40,6 +41,7 @@ object NetworkModule {
     fun provideMoshi(): Moshi {
         return Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
+            .add(ZonedDateTimeJsonAdapter())
             .build()
     }
 

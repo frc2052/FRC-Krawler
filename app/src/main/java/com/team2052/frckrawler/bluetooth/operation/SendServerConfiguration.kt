@@ -60,6 +60,7 @@ class SendServerConfiguration @AssistedInject constructor(
                 output.writeResult(OperationResult.ServerConfigurationMismatch)
                 val adapter = moshi.adapter<ServerConfigurationPacket>()
                 adapter.toJson(output, config)
+                output.emit()
 
                 input.readResult()
             }

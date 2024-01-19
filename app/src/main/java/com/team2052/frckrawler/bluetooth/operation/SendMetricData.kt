@@ -29,6 +29,7 @@ class SendMetricData @Inject constructor(
 
             val adapter = moshi.adapter<MetricDataListPacket>()
             adapter.toJson(output, packet)
+            output.emit()
 
             val result = input.readResult()
             if (result == OperationResult.Success) {

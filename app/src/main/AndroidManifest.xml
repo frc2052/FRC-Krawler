@@ -59,6 +59,11 @@
           android:exported="false"
           android:foregroundServiceType="connectedDevice|dataSync"/>
 
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="connectedDevice|dataSync"
+            tools:node="merge" />
+
         <!-- Remove app startup to support WorkManager Hilt injection -->
         <provider
           android:name="androidx.startup.InitializationProvider"

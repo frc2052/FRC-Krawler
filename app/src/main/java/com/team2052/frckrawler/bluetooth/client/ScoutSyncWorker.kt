@@ -5,6 +5,8 @@ import android.app.PendingIntent
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
@@ -48,11 +50,13 @@ class ScoutSyncWorker @AssistedInject constructor(
 
     val connection = serverDevice.createInsecureRfcommSocketToServiceRecord(BluetoothSyncConstants.Uuid)
 
+    // TODO catch exceptions, handle errors
     connection.connect()
     connection.use { socket ->
       socket.bufferedIO { output, input ->
         val operations = opFactory.createScoutOperations()
         operations.forEach { op ->
+          Timber.d("Sync operation ${op.javaClass.simpleName} starting")
           val result = op.execute(output, input)
           Timber.d("Sync operation ${op.javaClass.simpleName} result: $result")
         }
@@ -75,6 +79,14 @@ class ScoutSyncWorker @AssistedInject constructor(
       .setContentIntent(pendingIntent)
       .build()
 
-    return ForegroundInfo(NotificationId.ScoutSyncNotification, notification)
+    val serviceType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE or ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+    } else 0
+
+    return ForegroundInfo(
+      NotificationId.ScoutSyncNotification,
+      notification,
+      serviceType
+    )
   }
 }
