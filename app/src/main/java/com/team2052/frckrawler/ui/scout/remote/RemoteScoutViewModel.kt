@@ -63,6 +63,10 @@ class RemoteScoutViewModel @Inject constructor(
                     )
                 }
             }
+
+            if (serverConnectionState is ServerConnectionState.Connected) {
+                performSync()
+            }
         }
     }
 
