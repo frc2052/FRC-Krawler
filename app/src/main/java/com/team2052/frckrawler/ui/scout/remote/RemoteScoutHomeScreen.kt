@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.scout
+package com.team2052.frckrawler.ui.scout.remote
 
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Box
@@ -38,7 +38,7 @@ fun ScoutHomeScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
 ) {
-    val viewModel: ScoutViewModel = hiltViewModel()
+    val viewModel: RemoteScoutViewModel = hiltViewModel()
 
     // Don't love this, but it is what we need
     val context = LocalContext.current as ComponentActivity

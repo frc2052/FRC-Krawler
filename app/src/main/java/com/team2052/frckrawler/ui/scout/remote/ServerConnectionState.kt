@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.scout
+package com.team2052.frckrawler.ui.scout.remote
 
 sealed class ServerConnectionState {
   data class Connected(val name: String): ServerConnectionState()

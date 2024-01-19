@@ -1,4 +1,4 @@
-package com.team2052.frckrawler.ui.scout
+package com.team2052.frckrawler.ui.scout.remote
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -13,7 +13,6 @@ import androidx.work.workDataOf
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncWorker
 import com.team2052.frckrawler.bluetooth.client.ServerConnectionManager
 import com.team2052.frckrawler.bluetooth.client.ServerConnectionResult
-import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.permissions.PermissionManager
 import com.team2052.frckrawler.ui.permissions.RequiredPermissions
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +21,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class ScoutViewModel @Inject constructor(
+class RemoteScoutViewModel @Inject constructor(
     private val bluetoothAdapter: BluetoothAdapter,
     private val permissionManager: PermissionManager,
     private val serverManager: ServerConnectionManager,
@@ -34,7 +33,6 @@ class ScoutViewModel @Inject constructor(
 
     var serverConnectionState: ServerConnectionState by mutableStateOf(ServerConnectionState.NotConnected)
     var server: BluetoothDevice? = null
-
 
     // TODO skip pairing if a server is already paired and on?
     fun connectToServer(activity: ComponentActivity) {

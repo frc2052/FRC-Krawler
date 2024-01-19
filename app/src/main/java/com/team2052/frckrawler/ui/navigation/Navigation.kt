@@ -25,7 +25,7 @@ import com.team2052.frckrawler.ui.navigation.Screen.Game
 import com.team2052.frckrawler.ui.navigation.Screen.GameList
 import com.team2052.frckrawler.ui.navigation.Screen.ModeSelect
 import com.team2052.frckrawler.ui.navigation.Screen.Server
-import com.team2052.frckrawler.ui.scout.ScoutHomeScreen
+import com.team2052.frckrawler.ui.scout.remote.ScoutHomeScreen
 import com.team2052.frckrawler.ui.scout.match.ScoutMatchScreen
 import com.team2052.frckrawler.ui.scout.pit.ScoutPitScreen
 import com.team2052.frckrawler.ui.server.home.ServerHomeScreen
