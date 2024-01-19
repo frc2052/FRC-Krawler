@@ -12,8 +12,11 @@ import com.team2052.frckrawler.data.local.transformer.toMetric
 import com.team2052.frckrawler.data.model.MetricState
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -47,15 +50,10 @@ abstract class AbstractScoutMetricsViewModel(
     }
   }
 
-  protected abstract fun getMetricData(): Flow<List<MetricDatum>>
+  protected abstract val metricData: SharedFlow<List<MetricDatum>>
   protected abstract fun getDatumGroup(): MetricDatumGroup
 
   protected open fun getDatumGroupNumber(): Int = 0
-
-  private val metricData = getMetricData().shareIn(
-    viewModelScope,
-    started = SharingStarted.WhileSubscribed(5_000)
-  )
 
   private val metrics = flow { emit(metricSetId.await()) }
     .flatMapLatest { metricDao.getMetrics(it) }
@@ -94,28 +92,32 @@ abstract class AbstractScoutMetricsViewModel(
   }
 
   fun saveMetricData() {
-    pendingData.value.forEach { (metricId, value) ->
+    viewModelScope.launch {
+
       currentTeam.value?.let { team ->
-        viewModelScope.launch {
-          val currentData = metricData.first()
+        val dataWriteJobs = pendingData.value.map { (metricId, value) ->
+          async {
+            val currentData = metricData.first()
 
-          val datumId = currentData.firstOrNull { it.metricId == metricId }?.id ?: 0
-          val datum = MetricDatum(
-            id = datumId,
-            value = value,
-            lastUpdated = ZonedDateTime.now(),
-            group = getDatumGroup(),
-            groupNumber = getDatumGroupNumber(),
-            teamNumber = team.number,
-            metricId = metricId
-          )
-
-          metricDatumDao.insert(datum)
+            val datumId = currentData.firstOrNull { it.metricId == metricId }?.id ?: 0
+            val datum = MetricDatum(
+              id = datumId,
+              value = value,
+              lastUpdated = ZonedDateTime.now(),
+              group = getDatumGroup(),
+              groupNumber = getDatumGroupNumber(),
+              teamNumber = team.number,
+              metricId = metricId
+            )
+            metricDatumDao.insert(datum)
+          }
         }
+
+        dataWriteJobs.awaitAll()
+
+        pendingData.value = emptyMap()
       }
     }
-
-    pendingData.value = emptyMap()
   }
 
   protected fun getMetricStates(): Flow<List<MetricState>> {

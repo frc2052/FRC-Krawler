@@ -71,6 +71,9 @@
         <item quantity="other">pending data points</item>
     </plurals>
 
+    <string name="remote_scout_start_match_scouting">Start match scouting</string>
+    <string name="remote_scout_start_pit_scouting">Start pit scouting</string>
+
     <string name="match_scout_match_info_title">Match information</string>
     <string name="match_scout_match_number_label">Match number</string>
 

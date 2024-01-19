@@ -17,13 +17,18 @@ import androidx.work.workDataOf
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncWorker
 import com.team2052.frckrawler.bluetooth.client.ServerConnectionManager
 import com.team2052.frckrawler.bluetooth.client.ServerConnectionResult
+import com.team2052.frckrawler.data.local.MetricDao
 import com.team2052.frckrawler.data.local.MetricDatumDao
+import com.team2052.frckrawler.data.local.MetricSet
 import com.team2052.frckrawler.ui.permissions.PermissionManager
 import com.team2052.frckrawler.ui.permissions.RequiredPermissions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.Instant
@@ -39,7 +44,8 @@ class RemoteScoutViewModel @Inject constructor(
   private val permissionManager: PermissionManager,
   private val serverManager: ServerConnectionManager,
   private val workManager: WorkManager,
-  private val metricDatumDao: MetricDatumDao,
+  metricDatumDao: MetricDatumDao,
+  metricDao: MetricDao,
 ) : ViewModel() {
 
   companion object {
@@ -52,11 +58,11 @@ class RemoteScoutViewModel @Inject constructor(
   var serverConnectionState: ServerConnectionState by mutableStateOf(ServerConnectionState.NotConnected)
   var server: BluetoothDevice? = null
 
-  private val hasStartedSync = MutableStateFlow<Boolean>(false)
+  private val hasStartedSync = MutableStateFlow(false)
 
   private val pendingMetrics = metricDatumDao.getRemoteScoutDataFlow()
   private val syncWork = workManager.getWorkInfosForUniqueWorkFlow(SYNC_WORK_NAME)
-  val syncState = combine(
+  val syncState: StateFlow<ServerSyncState> = combine(
     syncWork,
     pendingMetrics,
     hasStartedSync
@@ -76,8 +82,33 @@ class RemoteScoutViewModel @Inject constructor(
         }
       }
     }
+  }.stateIn(
+    viewModelScope,
+    started = SharingStarted.WhileSubscribed(5_000),
+    initialValue = ServerSyncState.NotSynced
+  )
 
-  }
+  val hasMatchMetrics: StateFlow<Boolean> = combine(
+    syncState,
+    metricDao.getMetricCountFlow(MetricSet.SCOUT_MATCH_METRIC_SET_ID)
+  ) { syncState, metricsCount ->
+    syncState is ServerSyncState.Synced && metricsCount > 0
+  }.stateIn(
+    viewModelScope,
+    started = SharingStarted.WhileSubscribed(5_000),
+    initialValue = false
+  )
+
+  val hasPitMetrics: StateFlow<Boolean> = combine(
+    syncState,
+    metricDao.getMetricCountFlow(MetricSet.SCOUT_PIT_METRIC_SET_ID)
+  ) { syncState, metricsCount ->
+    syncState is ServerSyncState.Synced && metricsCount > 0
+  }.stateIn(
+    viewModelScope,
+    started = SharingStarted.WhileSubscribed(5_000),
+    initialValue = false
+  )
 
   // TODO skip pairing if a server is already paired and on?
   fun connectToServer(activity: ComponentActivity) {

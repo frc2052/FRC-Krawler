@@ -9,12 +9,14 @@ import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.ui.scout.AbstractScoutMetricsViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,6 +33,21 @@ class ScoutMatchViewModel @Inject constructor(
 
   private val currentMatch = MutableStateFlow(1)
 
+  override val metricData: SharedFlow<List<MetricDatum>> = combine(
+    currentMatch,
+    currentTeam.filterNotNull()
+  ) { match, team ->
+    Pair(match, team)
+  }.flatMapLatest { (match, team) ->
+    metricDatumDao.getTeamDatumForMatchMetrics(
+      matchNumber = match,
+      teamNumber = team.number
+    )
+  }.shareIn(
+    scope = viewModelScope,
+    started = SharingStarted.WhileSubscribed(5_000),
+    replay = 1,
+  )
   override fun getDatumGroup(): MetricDatumGroup = MetricDatumGroup.Match
   override fun getDatumGroupNumber(): Int = currentMatch.value
 
@@ -64,20 +81,6 @@ class ScoutMatchViewModel @Inject constructor(
 
   fun updateMatchNumber(match: Int) {
     currentMatch.value = match
-  }
-
-  override fun getMetricData(): Flow<List<MetricDatum>> {
-    return combine(
-      currentMatch,
-      currentTeam.filterNotNull()
-    ) { match, team ->
-      Pair(match, team)
-    }.flatMapLatest { (match, team) ->
-      metricDatumDao.getTeamDatumForMatchMetrics(
-        matchNumber = match,
-        teamNumber = team.number
-      )
-    }
   }
 
 }

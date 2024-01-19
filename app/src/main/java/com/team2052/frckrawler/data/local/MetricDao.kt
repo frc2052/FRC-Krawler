@@ -29,4 +29,7 @@ interface MetricDao {
 
   @Query("SELECT COUNT(id) FROM metric WHERE metricSetId = :metricSetId")
   suspend fun getMetricCount(metricSetId: Int): Int
+
+  @Query("SELECT COUNT(id) FROM metric WHERE metricSetId = :metricSetId")
+  fun getMetricCountFlow(metricSetId: Int): Flow<Int>
 }
