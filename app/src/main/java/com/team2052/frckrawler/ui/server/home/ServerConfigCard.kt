@@ -24,94 +24,95 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
 internal fun ServerConfigCard(
-    modifier: Modifier = Modifier,
-    game: Game?,
-    event: Event?,
-    serverState: ServerState,
-    toggleServer: () -> Unit,
+  modifier: Modifier = Modifier,
+  game: Game?,
+  event: Event?,
+  serverState: ServerState,
+  toggleServer: () -> Unit,
 ) {
-    Card(
-        modifier = modifier,
-        header = {
-            CardHeader(
-                title = { Text(stringResource(R.string.server_controls_title)) },
-            )
-        },
-    ) {
-        if (game == null || event == null) {
-            // TODO do we need a loading state? Hopefully not
-        } else {
-            val game = buildAnnotatedString {
-                pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
-                append(stringResource(R.string.server_controls_game_label))
-                pop()
-                append(" ${game.name}")
-            }
-            Text(game)
+  Card(
+    modifier = modifier,
+    header = {
+      CardHeader(
+        title = { Text(stringResource(R.string.server_controls_title)) },
+      )
+    },
+  ) {
+    if (game == null || event == null) {
+      // TODO do we need a loading state? Hopefully not
+    } else {
+      val game = buildAnnotatedString {
+        pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+        append(stringResource(R.string.server_controls_game_label))
+        pop()
+        append(" ${game.name}")
+      }
+      Text(game)
 
-            val event = buildAnnotatedString {
-                pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
-                append(stringResource(R.string.server_controls_event_label))
-                pop()
-                append(" ${event.name}")
-            }
-            Text(event)
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            ServerToggleButton(
-                modifier = modifier,
-                serverState = serverState,
-                toggleServer = toggleServer
-            )
-        }
+      val event = buildAnnotatedString {
+        pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+        append(stringResource(R.string.server_controls_event_label))
+        pop()
+        append(" ${event.name}")
+      }
+      Text(event)
     }
+
+    Spacer(Modifier.height(16.dp))
+
+    Box(
+      modifier = Modifier.fillMaxWidth(),
+      contentAlignment = Alignment.BottomEnd
+    ) {
+      ServerToggleButton(
+        modifier = modifier,
+        serverState = serverState,
+        toggleServer = toggleServer
+      )
+    }
+  }
 }
+
 @Composable
 private fun ServerToggleButton(
-    modifier: Modifier,
-    serverState: ServerState,
-    toggleServer: () -> Unit
+  modifier: Modifier,
+  serverState: ServerState,
+  toggleServer: () -> Unit
 ) {
-    Button(
-        modifier = modifier,
-        enabled = (
-                // Disable while transitioning states
-                serverState == ServerState.ENABLED || serverState == ServerState.DISABLED
-        ),
-        onClick = toggleServer,
-    ) {
-        Text(
-            when (serverState) {
-                ServerState.ENABLED -> "Stop Server"
-                ServerState.ENABLING -> "Starting Server"
-                ServerState.DISABLED -> "Start Server"
-                ServerState.DISABLING -> "Stopping Server"
-            }
-        )
-    }
+  Button(
+    modifier = modifier,
+    enabled = (
+            // Disable while transitioning states
+            serverState == ServerState.ENABLED || serverState == ServerState.DISABLED
+            ),
+    onClick = toggleServer,
+  ) {
+    Text(
+      when (serverState) {
+        ServerState.ENABLED -> "Stop Server"
+        ServerState.ENABLING -> "Starting Server"
+        ServerState.DISABLED -> "Start Server"
+        ServerState.DISABLING -> "Stopping Server"
+      }
+    )
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun ServerConfigPreview() {
-    FrcKrawlerTheme {
-        ServerConfigCard(
-            serverState = ServerState.ENABLED,
-            toggleServer = {},
-            event = Event(
-                name = "10,000 Lakes Regional",
-                gameId = 0
-            ),
-            game = Game(
-                name = "Crescendo"
-            )
-        )
-    }
+  FrcKrawlerTheme {
+    ServerConfigCard(
+      serverState = ServerState.ENABLED,
+      toggleServer = {},
+      event = Event(
+        name = "10,000 Lakes Regional",
+        gameId = 0
+      ),
+      game = Game(
+        name = "Crescendo"
+      )
+    )
+  }
 }
 

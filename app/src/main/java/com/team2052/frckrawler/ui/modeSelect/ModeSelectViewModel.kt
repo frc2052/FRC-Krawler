@@ -16,53 +16,53 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ModeSelectViewModel @Inject constructor(
-    private val gameDao: GameDao,
-    private val eventDao: EventDao,
+  private val gameDao: GameDao,
+  private val eventDao: EventDao,
 ) : ViewModel() {
-    var serverConfigState = GameAndEventState()
-    var localScoutConfigState = GameAndEventState()
+  var serverConfigState = GameAndEventState()
+  var localScoutConfigState = GameAndEventState()
 
-    fun loadGamesAndEvents() {
-        viewModelScope.launch {
-            gameDao.getAll().collect {
-                serverConfigState.availableGames = it
-                localScoutConfigState.availableGames = it
+  fun loadGamesAndEvents() {
+    viewModelScope.launch {
+      gameDao.getAll().collect {
+        serverConfigState.availableGames = it
+        localScoutConfigState.availableGames = it
 
-                serverConfigState.updateSelectedGame()
-                localScoutConfigState.updateSelectedGame()
-            }
+        serverConfigState.updateSelectedGame()
+        localScoutConfigState.updateSelectedGame()
+      }
+    }
+
+    viewModelScope.launch {
+      serverConfigState.updateEventsOnGameChange()
+    }
+
+    viewModelScope.launch {
+      localScoutConfigState.updateEventsOnGameChange()
+    }
+  }
+
+  private suspend fun GameAndEventState.updateEventsOnGameChange() {
+    snapshotFlow { selectedGame }
+      .flatMapLatest { game ->
+        if (game != null) {
+          eventDao.getAllForGame(game.id)
+        } else {
+          flowOf(emptyList())
         }
+      }.collect { events ->
+        availableEvents = events
+        updateSelectedEvent()
+      }
+  }
 
-        viewModelScope.launch {
-            serverConfigState.updateEventsOnGameChange()
-        }
+  private fun GameAndEventState.updateSelectedGame() {
+    val matchingGame = availableGames.firstOrNull { it.id == selectedGame?.id }
+    selectedGame = matchingGame
+  }
 
-        viewModelScope.launch {
-            localScoutConfigState.updateEventsOnGameChange()
-        }
-    }
-
-    private suspend fun GameAndEventState.updateEventsOnGameChange() {
-        snapshotFlow { selectedGame }
-            .flatMapLatest { game ->
-                if (game != null) {
-                    eventDao.getAllForGame(game.id)
-                } else {
-                    flowOf(emptyList())
-                }
-            }.collect { events ->
-                availableEvents = events
-                updateSelectedEvent()
-            }
-    }
-
-    private fun GameAndEventState.updateSelectedGame() {
-        val matchingGame = availableGames.firstOrNull { it.id == selectedGame?.id }
-        selectedGame = matchingGame
-    }
-
-    private fun GameAndEventState.updateSelectedEvent() {
-        val matchingEvent = availableEvents.firstOrNull { it.id == selectedEvent?.id }
-        selectedEvent = matchingEvent
-    }
+  private fun GameAndEventState.updateSelectedEvent() {
+    val matchingEvent = availableEvents.firstOrNull { it.id == selectedEvent?.id }
+    selectedEvent = matchingEvent
+  }
 }

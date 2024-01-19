@@ -48,350 +48,357 @@ import com.team2052.frckrawler.ui.theme.spaceLarge
 
 @Composable
 fun ModeSelectScreen(
-    modifier: Modifier = Modifier,
-    navController: NavController,
+  modifier: Modifier = Modifier,
+  navController: NavController,
 ) {
-    val viewModel: ModeSelectViewModel = hiltViewModel()
+  val viewModel: ModeSelectViewModel = hiltViewModel()
 
-    LaunchedEffect(true) {
-        viewModel.loadGamesAndEvents()
-    }
+  LaunchedEffect(true) {
+    viewModel.loadGamesAndEvents()
+  }
 
-    FRCKrawlerScaffold(
-        modifier = modifier,
-        appBar = {
-            FRCKrawlerAppBar(
-                navController = navController,
-                title = {
-                    Text(stringResource(R.string.mode_select_screen_title))
-                }
-            )
-        },
-    ) { contentPadding ->
-        ModeSelectScreenContent(
-            modifier = modifier.padding(contentPadding),
-            serverGameEventState = viewModel.serverConfigState,
-            localScoutGameEventState = viewModel.localScoutConfigState,
-            navigate = { screen ->
-                navController.navigate(screen.route) {
-                    popUpTo(Screen.ModeSelect.route)
-                }
-            }
-        )
-    }
+  FRCKrawlerScaffold(
+    modifier = modifier,
+    appBar = {
+      FRCKrawlerAppBar(
+        navController = navController,
+        title = {
+          Text(stringResource(R.string.mode_select_screen_title))
+        }
+      )
+    },
+  ) { contentPadding ->
+    ModeSelectScreenContent(
+      modifier = modifier.padding(contentPadding),
+      serverGameEventState = viewModel.serverConfigState,
+      localScoutGameEventState = viewModel.localScoutConfigState,
+      navigate = { screen ->
+        navController.navigate(screen.route) {
+          popUpTo(Screen.ModeSelect.route)
+        }
+      }
+    )
+  }
 }
 
 @Composable
 private fun ModeSelectScreenContent(
-    modifier: Modifier = Modifier,
-    serverGameEventState: GameAndEventState,
-    localScoutGameEventState: GameAndEventState,
-    navigate: (Screen) -> Unit,
+  modifier: Modifier = Modifier,
+  serverGameEventState: GameAndEventState,
+  localScoutGameEventState: GameAndEventState,
+  navigate: (Screen) -> Unit,
 ) {
-    var expandedCard by remember { mutableIntStateOf(-1) }
-    val scrollState = rememberScrollState()
+  var expandedCard by remember { mutableIntStateOf(-1) }
+  val scrollState = rememberScrollState()
 
-    Column(modifier = modifier
+  Column(
+    modifier = modifier
         .fillMaxWidth()
         .verticalScroll(scrollState)
-        .padding(spaceLarge)) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            ProvideTextStyle(MaterialTheme.typography.h6) {
-                Text(stringResource(R.string.welcome_message))
-                Text(stringResource(R.string.getting_started_message))
-            }
-        }
-        Spacer(modifier = Modifier.height(24.dp))
-
-        ExpandableCardGroup {
-            expandableCard { id ->
-                RemoteScoutCard(
-                    expanded = expandedCard == id,
-                    onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
-                    navigate = navigate,
-                )
-            }
-
-            expandableCard { id ->
-                ServerCard(
-                    expanded = expandedCard == id,
-                    onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
-                    gameEventState = serverGameEventState,
-                    navigate = navigate,
-                )
-            }
-
-            expandableCard { id ->
-                SoloScoutCard(
-                    expanded = expandedCard == id,
-                    onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
-                    gameEventState = localScoutGameEventState,
-                    navigate = navigate,
-                )
-            }
-        }
-
-
-        Spacer(modifier = Modifier.height(24.dp))
-        Card(
-            modifier = Modifier.clickable { navigate(Screen.GameList) },
-            header = {
-                CardHeader(
-                    title = { Text(stringResource(R.string.mode_select_configure)) },
-                    description = { Text(stringResource(R.string.mode_select_configure_description)) },
-                )
-            },
-        )
+        .padding(spaceLarge)
+  ) {
+    Column(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      ProvideTextStyle(MaterialTheme.typography.h6) {
+        Text(stringResource(R.string.welcome_message))
+        Text(stringResource(R.string.getting_started_message))
+      }
     }
+    Spacer(modifier = Modifier.height(24.dp))
+
+    ExpandableCardGroup {
+      expandableCard { id ->
+        RemoteScoutCard(
+          expanded = expandedCard == id,
+          onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
+          navigate = navigate,
+        )
+      }
+
+      expandableCard { id ->
+        ServerCard(
+          expanded = expandedCard == id,
+          onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
+          gameEventState = serverGameEventState,
+          navigate = navigate,
+        )
+      }
+
+      expandableCard { id ->
+        SoloScoutCard(
+          expanded = expandedCard == id,
+          onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
+          gameEventState = localScoutGameEventState,
+          navigate = navigate,
+        )
+      }
+    }
+
+
+    Spacer(modifier = Modifier.height(24.dp))
+    Card(
+      modifier = Modifier.clickable { navigate(Screen.GameList) },
+      header = {
+        CardHeader(
+          title = { Text(stringResource(R.string.mode_select_configure)) },
+          description = { Text(stringResource(R.string.mode_select_configure_description)) },
+        )
+      },
+    )
+  }
 }
 
 @Composable
 private fun RemoteScoutCard(
-    expanded: Boolean,
-    onExpanded: (Boolean) -> Unit,
-    navigate: (Screen) -> Unit,
-    modifier: Modifier = Modifier,
+  expanded: Boolean,
+  onExpanded: (Boolean) -> Unit,
+  navigate: (Screen) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    ExpandableCard(
-        modifier = modifier,
-        header = {
-            CardHeader(
-                title = { Text(stringResource(R.string.mode_remote_scout)) },
-                description = { Text(stringResource(R.string.mode_remote_scout_description)) },
-            )
-        },
-        actions = {
-            TextButton(onClick = {
-                navigate(Screen.RemoteScoutHome)
-            }) {
-                Text(stringResource(R.string.mode_remote_scout_continue))
-            }
-        },
-        expanded = expanded,
-        onExpanded = onExpanded,
-        content = {
+  ExpandableCard(
+    modifier = modifier,
+    header = {
+      CardHeader(
+        title = { Text(stringResource(R.string.mode_remote_scout)) },
+        description = { Text(stringResource(R.string.mode_remote_scout_description)) },
+      )
+    },
+    actions = {
+      TextButton(onClick = {
+        navigate(Screen.RemoteScoutHome)
+      }) {
+        Text(stringResource(R.string.mode_remote_scout_continue))
+      }
+    },
+    expanded = expanded,
+    onExpanded = onExpanded,
+    content = {
 
-        },
-    )
+    },
+  )
 }
 
 @Composable
 private fun ServerCard(
-    expanded: Boolean,
-    onExpanded: (Boolean) -> Unit,
-    gameEventState: GameAndEventState,
-    navigate: (Screen) -> Unit,
-    modifier: Modifier = Modifier,
+  expanded: Boolean,
+  onExpanded: (Boolean) -> Unit,
+  gameEventState: GameAndEventState,
+  navigate: (Screen) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    ExpandableCard(
-        modifier = modifier,
-        header = {
-            CardHeader(
-                title = { Text(stringResource(R.string.mode_server)) },
-                description = { Text(stringResource(R.string.mode_server_description)) },
+  ExpandableCard(
+    modifier = modifier,
+    header = {
+      CardHeader(
+        title = { Text(stringResource(R.string.mode_server)) },
+        description = { Text(stringResource(R.string.mode_server_description)) },
+      )
+    },
+    actions = {
+      TextButton(
+        onClick = {
+          navigate(
+            Screen.Server(
+              gameId = gameEventState.selectedGame!!.id,
+              eventId = gameEventState.selectedEvent!!.id,
             )
+          )
         },
-        actions = {
-            TextButton(
-                onClick = { navigate(Screen.Server(
-                    gameId = gameEventState.selectedGame!!.id,
-                    eventId = gameEventState.selectedEvent!!.id,
-                )) },
-                enabled = gameEventState.selectedGame != null && gameEventState.selectedEvent != null
-            ) {
-                Text(stringResource(R.string.mode_server_continue))
-            }
-        },
-        expanded = expanded,
-        onExpanded = onExpanded,
-        content = {
-            GameAndEventSelector(
-                state = gameEventState
-            )
-        },
-    )
+        enabled = gameEventState.selectedGame != null && gameEventState.selectedEvent != null
+      ) {
+        Text(stringResource(R.string.mode_server_continue))
+      }
+    },
+    expanded = expanded,
+    onExpanded = onExpanded,
+    content = {
+      GameAndEventSelector(
+        state = gameEventState
+      )
+    },
+  )
 }
 
 @Composable
 private fun SoloScoutCard(
-    expanded: Boolean,
-    onExpanded: (Boolean) -> Unit,
-    gameEventState: GameAndEventState,
-    navigate: (Screen) -> Unit,
-    modifier: Modifier = Modifier,
+  expanded: Boolean,
+  onExpanded: (Boolean) -> Unit,
+  gameEventState: GameAndEventState,
+  navigate: (Screen) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    var scoutMode by remember { mutableStateOf(ScoutMode.Match) }
-    ExpandableCard(
-        modifier = modifier,
-        header = {
-            CardHeader(
-                title = { Text(stringResource(R.string.mode_solo_scout)) },
-                description = { Text(stringResource(R.string.mode_solo_scout_description)) },
-            )
-        },
-        actions = {
-            TextButton(
-                onClick = {
-                    when (scoutMode) {
-                        ScoutMode.Match -> {
-                            navigate(
-                                Screen.MatchScout(
-                                    metricSetId = gameEventState.selectedGame!!.matchMetricsSetId,
-                                    eventId = gameEventState.selectedEvent!!.id
-                                )
-                            )
-                        }
-                        ScoutMode.Pit -> {
-                            navigate(
-                                Screen.PitScout(
-                                    metricSetId = gameEventState.selectedGame!!.pitMetricsSetId,
-                                    eventId = gameEventState.selectedEvent!!.id
-                                )
-                            )
-                        }
-                    }
-                },
-                enabled = gameEventState.selectedGame != null && gameEventState.selectedEvent != null
-            ) {
-                Text(stringResource(R.string.mode_solo_scout_continue))
+  var scoutMode by remember { mutableStateOf(ScoutMode.Match) }
+  ExpandableCard(
+    modifier = modifier,
+    header = {
+      CardHeader(
+        title = { Text(stringResource(R.string.mode_solo_scout)) },
+        description = { Text(stringResource(R.string.mode_solo_scout_description)) },
+      )
+    },
+    actions = {
+      TextButton(
+        onClick = {
+          when (scoutMode) {
+            ScoutMode.Match -> {
+              navigate(
+                Screen.MatchScout(
+                  metricSetId = gameEventState.selectedGame!!.matchMetricsSetId,
+                  eventId = gameEventState.selectedEvent!!.id
+                )
+              )
             }
+
+            ScoutMode.Pit -> {
+              navigate(
+                Screen.PitScout(
+                  metricSetId = gameEventState.selectedGame!!.pitMetricsSetId,
+                  eventId = gameEventState.selectedEvent!!.id
+                )
+              )
+            }
+          }
         },
-        expanded = expanded,
-        onExpanded = onExpanded,
-        content = {
-            GameAndEventSelector(
-                state = gameEventState
-            )
-            Spacer(Modifier.height(4.dp))
-            ScoutModeRadioGroup(
-                mode = scoutMode,
-                onModeChanged = { scoutMode = it },
-                matchEnabled = gameEventState.selectedGame?.matchMetricsSetId != null,
-                pitEnabled = gameEventState.selectedGame?.pitMetricsSetId != null,
-            )
-        },
-    )
+        enabled = gameEventState.selectedGame != null && gameEventState.selectedEvent != null
+      ) {
+        Text(stringResource(R.string.mode_solo_scout_continue))
+      }
+    },
+    expanded = expanded,
+    onExpanded = onExpanded,
+    content = {
+      GameAndEventSelector(
+        state = gameEventState
+      )
+      Spacer(Modifier.height(4.dp))
+      ScoutModeRadioGroup(
+        mode = scoutMode,
+        onModeChanged = { scoutMode = it },
+        matchEnabled = gameEventState.selectedGame?.matchMetricsSetId != null,
+        pitEnabled = gameEventState.selectedGame?.pitMetricsSetId != null,
+      )
+    },
+  )
 }
 
 @Composable
 private fun ScoutModeRadioGroup(
-    mode: ScoutMode,
-    onModeChanged: (ScoutMode) -> Unit,
-    matchEnabled: Boolean,
-    pitEnabled: Boolean,
-    modifier: Modifier = Modifier,
+  mode: ScoutMode,
+  onModeChanged: (ScoutMode) -> Unit,
+  matchEnabled: Boolean,
+  pitEnabled: Boolean,
+  modifier: Modifier = Modifier,
 ) {
-    Row {
-        Row(
-            modifier = modifier
-                .selectable(
-                    onClick = { onModeChanged(ScoutMode.Match) },
-                    enabled = matchEnabled,
-                    selected = mode == ScoutMode.Match && matchEnabled
-                )
-                .padding(4.dp)
-        ) {
-            RadioButton(
-                selected = mode == ScoutMode.Match && matchEnabled,
-                enabled = matchEnabled,
-                onClick = null
-            )
-            Spacer(Modifier.width(4.dp))
-            Text(stringResource(R.string.mode_select_scout_match))
-        }
-
-        Spacer(Modifier.width(8.dp))
-
-        Row(
-            modifier = modifier
-                .selectable(
-                    selected = mode == ScoutMode.Pit && pitEnabled,
-                    enabled = pitEnabled,
-                    onClick = { onModeChanged(ScoutMode.Pit) }
-                )
-                .padding(4.dp)
-        ) {
-            RadioButton(
-                selected = mode == ScoutMode.Pit && pitEnabled,
-                enabled = pitEnabled,
-                onClick = null
-            )
-            Spacer(Modifier.width(4.dp))
-            Text(stringResource(R.string.mode_select_scout_pit))
-        }
+  Row {
+    Row(
+      modifier = modifier
+          .selectable(
+              onClick = { onModeChanged(ScoutMode.Match) },
+              enabled = matchEnabled,
+              selected = mode == ScoutMode.Match && matchEnabled
+          )
+          .padding(4.dp)
+    ) {
+      RadioButton(
+        selected = mode == ScoutMode.Match && matchEnabled,
+        enabled = matchEnabled,
+        onClick = null
+      )
+      Spacer(Modifier.width(4.dp))
+      Text(stringResource(R.string.mode_select_scout_match))
     }
+
+    Spacer(Modifier.width(8.dp))
+
+    Row(
+      modifier = modifier
+          .selectable(
+              selected = mode == ScoutMode.Pit && pitEnabled,
+              enabled = pitEnabled,
+              onClick = { onModeChanged(ScoutMode.Pit) }
+          )
+          .padding(4.dp)
+    ) {
+      RadioButton(
+        selected = mode == ScoutMode.Pit && pitEnabled,
+        enabled = pitEnabled,
+        onClick = null
+      )
+      Spacer(Modifier.width(4.dp))
+      Text(stringResource(R.string.mode_select_scout_pit))
+    }
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun ModeSelectScreenPreviewLight() {
-    val gameEventState = GameAndEventState().apply {
-        availableGames = listOf(
-            Game(name = "Crescendo")
-        )
-    }
-    FrcKrawlerTheme {
-        ModeSelectScreenContent(
-            serverGameEventState = gameEventState,
-            localScoutGameEventState = gameEventState,
-            navigate = {}
-        )
-    }
+  val gameEventState = GameAndEventState().apply {
+    availableGames = listOf(
+      Game(name = "Crescendo")
+    )
+  }
+  FrcKrawlerTheme {
+    ModeSelectScreenContent(
+      serverGameEventState = gameEventState,
+      localScoutGameEventState = gameEventState,
+      navigate = {}
+    )
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun RemoteScoutCardPreview() {
-    FrcKrawlerTheme {
-        Surface {
-            RemoteScoutCard(
-                expanded = true,
-                onExpanded = {},
-                navigate = {}
-            )
-        }
+  FrcKrawlerTheme {
+    Surface {
+      RemoteScoutCard(
+        expanded = true,
+        onExpanded = {},
+        navigate = {}
+      )
     }
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun ServerCardPreview() {
-    val gameEventState = GameAndEventState().apply {
-        availableGames = listOf(
-            Game(name = "Crescendo")
-        )
+  val gameEventState = GameAndEventState().apply {
+    availableGames = listOf(
+      Game(name = "Crescendo")
+    )
+  }
+  FrcKrawlerTheme {
+    Surface {
+      ServerCard(
+        expanded = true,
+        onExpanded = {},
+        gameEventState = gameEventState,
+        navigate = {}
+      )
     }
-    FrcKrawlerTheme {
-        Surface {
-            ServerCard(
-                expanded = true,
-                onExpanded = {},
-                gameEventState = gameEventState,
-                navigate = {}
-            )
-        }
-    }
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun LocalScoutCardPreview() {
-    val gameEventState = GameAndEventState().apply {
-        availableGames = listOf(
-            Game(name = "Crescendo")
-        )
+  val gameEventState = GameAndEventState().apply {
+    availableGames = listOf(
+      Game(name = "Crescendo")
+    )
+  }
+  FrcKrawlerTheme {
+    Surface {
+      SoloScoutCard(
+        expanded = true,
+        onExpanded = {},
+        gameEventState = gameEventState,
+        navigate = {}
+      )
     }
-    FrcKrawlerTheme {
-        Surface {
-            SoloScoutCard(
-                expanded = true,
-                onExpanded = {},
-                gameEventState = gameEventState,
-                navigate = {}
-            )
-        }
-    }
+  }
 }

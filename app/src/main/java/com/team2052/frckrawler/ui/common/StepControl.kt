@@ -22,59 +22,59 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
 fun StepControl(
-    value: Int,
-    onValueChanged: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-    step: Int = 1,
-    range: IntRange = Int.MIN_VALUE..Int.MAX_VALUE
+  value: Int,
+  onValueChanged: (Int) -> Unit,
+  modifier: Modifier = Modifier,
+  step: Int = 1,
+  range: IntRange = Int.MIN_VALUE..Int.MAX_VALUE
 ) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+  Row(
+    modifier = modifier,
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    IconButton(
+      onClick = { onValueChanged(value - step) },
+      enabled = range.contains(value - step)
     ) {
-        IconButton(
-            onClick = { onValueChanged(value - step) },
-            enabled = range.contains(value - step)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Remove,
-                contentDescription = stringResource(R.string.step_control_decrease),
-                tint = MaterialTheme.colors.primary
-            )
-        }
-
-        Spacer(Modifier.width(8.dp))
-
-        Text(
-            text = value.toString(),
-            style = MaterialTheme.typography.h5
-        )
-
-        Spacer(Modifier.width(8.dp))
-
-        IconButton(
-            onClick = { onValueChanged(value + range.step) },
-            enabled = range.contains(value + range.step)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = stringResource(R.string.step_control_increase),
-                tint = MaterialTheme.colors.primary
-            )
-        }
+      Icon(
+        imageVector = Icons.Default.Remove,
+        contentDescription = stringResource(R.string.step_control_decrease),
+        tint = MaterialTheme.colors.primary
+      )
     }
+
+    Spacer(Modifier.width(8.dp))
+
+    Text(
+      text = value.toString(),
+      style = MaterialTheme.typography.h5
+    )
+
+    Spacer(Modifier.width(8.dp))
+
+    IconButton(
+      onClick = { onValueChanged(value + range.step) },
+      enabled = range.contains(value + range.step)
+    ) {
+      Icon(
+        imageVector = Icons.Default.Add,
+        contentDescription = stringResource(R.string.step_control_increase),
+        tint = MaterialTheme.colors.primary
+      )
+    }
+  }
 }
 
 
 @FrcKrawlerPreview
 @Composable
 private fun CounterMetricPreview() {
-    FrcKrawlerTheme {
-        Surface {
-            StepControl(
-                value = 5,
-                onValueChanged = {}
-            )
-        }
+  FrcKrawlerTheme {
+    Surface {
+      StepControl(
+        value = 5,
+        onValueChanged = {}
+      )
     }
+  }
 }

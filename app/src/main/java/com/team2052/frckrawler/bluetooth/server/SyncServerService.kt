@@ -58,13 +58,16 @@ class SyncServerService : Service() {
 
   private fun getForegroundNotification(): Notification {
     // TODO format with actual number of connected clients
-    val notificationText = resources.getQuantityString(R.plurals.server_sync_clients_connected, 0, 0)
+    val notificationText =
+      resources.getQuantityString(R.plurals.server_sync_clients_connected, 0, 0)
 
     // TODO deep link to server screen
     val pendingIntent: PendingIntent =
       Intent(this, MainActivity::class.java).let { notificationIntent ->
-        PendingIntent.getActivity(this, 0, notificationIntent,
-          PendingIntent.FLAG_IMMUTABLE)
+        PendingIntent.getActivity(
+          this, 0, notificationIntent,
+          PendingIntent.FLAG_IMMUTABLE
+        )
       }
 
     return NotificationCompat.Builder(this, FrcKrawlerNotificationChannel.Sync.id)

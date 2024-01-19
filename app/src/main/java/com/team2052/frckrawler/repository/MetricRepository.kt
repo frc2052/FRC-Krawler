@@ -12,25 +12,25 @@ import javax.inject.Singleton
 
 @Singleton
 class MetricRepository @Inject constructor(
-    private val metricDao: MetricDao,
+  private val metricDao: MetricDao,
 ) {
 
-    fun getMetrics(metricSetId: Int): Flow<List<Metric>> {
-        return metricDao.getMetrics(metricSetId)
-            .map { records ->
-                records.map { it.toMetric() }
-            }
-    }
+  fun getMetrics(metricSetId: Int): Flow<List<Metric>> {
+    return metricDao.getMetrics(metricSetId)
+      .map { records ->
+        records.map { it.toMetric() }
+      }
+  }
 
-    suspend fun getMetricCount(metricSetId: Int): Int {
-        return metricDao.getMetricCount(metricSetId)
-    }
+  suspend fun getMetricCount(metricSetId: Int): Int {
+    return metricDao.getMetricCount(metricSetId)
+  }
 
-    suspend fun saveMetric(metric: Metric, metricSetId: Int) {
-        metricDao.insert(metric.toMetricRecord(metricSetId))
-    }
+  suspend fun saveMetric(metric: Metric, metricSetId: Int) {
+    metricDao.insert(metric.toMetricRecord(metricSetId))
+  }
 
-    suspend fun deleteMetric(id: String) {
-        metricDao.delete(MetricRecordId(id))
-    }
+  suspend fun deleteMetric(id: String) {
+    metricDao.delete(MetricRecordId(id))
+  }
 }

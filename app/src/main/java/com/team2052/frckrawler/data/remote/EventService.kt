@@ -8,14 +8,14 @@ import retrofit2.http.Path
 
 interface EventService {
 
-    @GET("events/{year}/simple")
-    suspend fun getEvents(
-        @Path("year") year: Int,
-    ): Response<List<TbaSimpleEvent>>
+  @GET("events/{year}/simple")
+  suspend fun getEvents(
+    @Path("year") year: Int,
+  ): Response<List<TbaSimpleEvent>>
 
-    @GET("event/{key}/teams/simple")
-    suspend fun getEventTeams(
-        @Path("key") eventKey: String,
-    ): Response<List<TbaSimpleTeam>>
+  @GET("event/{key}/teams/simple")
+  suspend fun getEventTeams(
+    @Path("key") eventKey: String,
+  ): Response<List<TbaSimpleTeam>>
 
 }

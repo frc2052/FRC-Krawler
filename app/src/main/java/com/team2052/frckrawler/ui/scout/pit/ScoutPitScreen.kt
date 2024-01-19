@@ -36,141 +36,144 @@ import com.team2052.frckrawler.ui.theme.secondarySurface
 
 @Composable
 fun ScoutPitScreen(
-    navController: NavController,
-    metricSetId: Int,
-    eventId: Int,
+  navController: NavController,
+  metricSetId: Int,
+  eventId: Int,
 ) {
-    val viewModel: ScoutPitViewModel = hiltViewModel()
+  val viewModel: ScoutPitViewModel = hiltViewModel()
 
-    LaunchedEffect(true) {
-        viewModel.loadMetricsAndTeams(
-            metricSetId = metricSetId,
-            eventId = eventId
-        )
-    }
+  LaunchedEffect(true) {
+    viewModel.loadMetricsAndTeams(
+      metricSetId = metricSetId,
+      eventId = eventId
+    )
+  }
 
-    val state by viewModel.state.collectAsState()
+  val state by viewModel.state.collectAsState()
 
-    FRCKrawlerScaffold(
-        appBar = {
-            FRCKrawlerAppBar(
-                navController = navController,
-                title = {
-                    Text(stringResource(R.string.scout_screen_title))
-                }
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                modifier = Modifier.padding(bottom = 24.dp),
-                onClick = viewModel::saveMetricData
-            ) {
-                Icon(imageVector = Icons.Filled.Save, contentDescription = stringResource(R.string.save_description))
-            }
-        },
-    ) { contentPadding ->
-        state?.let { state ->
-            ScoutingForm(
-                header = {
-                    TeamInfo(
-                        modifier = Modifier.fillMaxWidth(),
-                        availableTeams = state.availableTeams,
-                        selectedTeam = state.selectedTeam,
-                        onTeamChanged = viewModel::updateTeam
-                    )
-                },
-                metrics = state.metricStates,
-                onMetricStateChanged = viewModel::updateMetricState,
-            )
+  FRCKrawlerScaffold(
+    appBar = {
+      FRCKrawlerAppBar(
+        navController = navController,
+        title = {
+          Text(stringResource(R.string.scout_screen_title))
         }
-
+      )
+    },
+    floatingActionButton = {
+      FloatingActionButton(
+        modifier = Modifier.padding(bottom = 24.dp),
+        onClick = viewModel::saveMetricData
+      ) {
+        Icon(
+          imageVector = Icons.Filled.Save,
+          contentDescription = stringResource(R.string.save_description)
+        )
+      }
+    },
+  ) { contentPadding ->
+    state?.let { state ->
+      ScoutingForm(
+        header = {
+          TeamInfo(
+            modifier = Modifier.fillMaxWidth(),
+            availableTeams = state.availableTeams,
+            selectedTeam = state.selectedTeam,
+            onTeamChanged = viewModel::updateTeam
+          )
+        },
+        metrics = state.metricStates,
+        onMetricStateChanged = viewModel::updateMetricState,
+      )
     }
+
+  }
 }
 
 @Composable
 private fun TeamInfo(
-    availableTeams: List<TeamAtEvent>,
-    selectedTeam: TeamAtEvent,
-    onTeamChanged: (TeamAtEvent) -> Unit,
-    modifier: Modifier = Modifier,
+  availableTeams: List<TeamAtEvent>,
+  selectedTeam: TeamAtEvent,
+  onTeamChanged: (TeamAtEvent) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .background(
-                color = MaterialTheme.colors.secondarySurface
-            )
-            .padding(16.dp)
-    ) {
-        Text(
-            text = stringResource(R.string.pit_scout_team_info_title),
-            style = MaterialTheme.typography.h6
+  Column(
+    modifier = modifier
+        .background(
+            color = MaterialTheme.colors.secondarySurface
         )
+        .padding(16.dp)
+  ) {
+    Text(
+      text = stringResource(R.string.pit_scout_team_info_title),
+      style = MaterialTheme.typography.h6
+    )
 
-        Spacer(Modifier.height(16.dp))
+    Spacer(Modifier.height(16.dp))
 
-        FRCKrawlerDropdown(
-            value = selectedTeam,
-            getLabel = { team ->
-                team?.let {
-                    "${team.number} - ${team.name}"
-                } ?: ""
-            },
-            onValueChange = { newTeam ->
-                newTeam?.let { onTeamChanged(it) }
-            },
-            label = stringResource(R.string.scout_team_label),
-            dropdownItems = availableTeams,
-        )
-    }
+    FRCKrawlerDropdown(
+      value = selectedTeam,
+      getLabel = { team ->
+        team?.let {
+          "${team.number} - ${team.name}"
+        } ?: ""
+      },
+      onValueChange = { newTeam ->
+        newTeam?.let { onTeamChanged(it) }
+      },
+      label = stringResource(R.string.scout_team_label),
+      dropdownItems = availableTeams,
+    )
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun ScoutPitPreview() {
-    val demoMetrics = listOf(
-        MetricState(
-            metric = Metric.SliderMetric(
-                name = "Sample metric",
-                priority = 1,
-                enabled = true,
-                range = 0..10 step 1
-            ),
-            value = "10"
-        ),
-        MetricState(
-            metric = Metric.SliderMetric(
-                name = "Sample metric",
-                priority = 1,
-                enabled = true,
-                range = 0..10 step 1
-            ),
-            value = "10"
-        )
+  val demoMetrics = listOf(
+    MetricState(
+      metric = Metric.SliderMetric(
+        name = "Sample metric",
+        priority = 1,
+        enabled = true,
+        range = 0..10 step 1
+      ),
+      value = "10"
+    ),
+    MetricState(
+      metric = Metric.SliderMetric(
+        name = "Sample metric",
+        priority = 1,
+        enabled = true,
+        range = 0..10 step 1
+      ),
+      value = "10"
     )
+  )
 
-    FrcKrawlerTheme {
-        Surface {
-            ScoutingForm(
-                header = {
-                    TeamInfo(
-                        availableTeams = listOf(
-                            TeamAtEvent(
-                                number = "2052",
-                                name = "KnightKrawler",
-                                eventId = 0
-                            )
-                        ),
-                        selectedTeam = TeamAtEvent(
-                            number = "2052",
-                            name = "KnightKrawler",
-                            eventId = 0
-                        ),
-                        onTeamChanged = {},
-                    )
-                },
-                metrics = demoMetrics,
-                onMetricStateChanged = {},
-            )
-        }
+  FrcKrawlerTheme {
+    Surface {
+      ScoutingForm(
+        header = {
+          TeamInfo(
+            availableTeams = listOf(
+              TeamAtEvent(
+                number = "2052",
+                name = "KnightKrawler",
+                eventId = 0
+              )
+            ),
+            selectedTeam = TeamAtEvent(
+              number = "2052",
+              name = "KnightKrawler",
+              eventId = 0
+            ),
+            onTeamChanged = {},
+          )
+        },
+        metrics = demoMetrics,
+        onMetricStateChanged = {},
+      )
     }
+  }
 }

@@ -14,30 +14,30 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-        // Reset the theme after the splash screen finishes
-        setTheme(R.style.Theme_FRCKrawler)
+    // Reset the theme after the splash screen finishes
+    setTheme(R.style.Theme_FRCKrawler)
 
-        setContent {
-            FrcKrawlerTheme(darkTheme = false) {
-                // TODO: Future versions of Jetpack Compose will offer shared element transitions for the nav bar
-                Navigation()
-            }
-        }
+    setContent {
+      FrcKrawlerTheme(darkTheme = false) {
+        // TODO: Future versions of Jetpack Compose will offer shared element transitions for the nav bar
+        Navigation()
+      }
     }
+  }
 
-    // Provides focus clearing when tapping outside the keyboard to close the keyboard automatically
-    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
-        if (event?.action != null && event.action == MotionEvent.ACTION_DOWN) {
-            val view = currentFocus
-            if (view is ViewGroup) {
-                view.clearFocus()
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(view.windowToken, 0)
-            }
-        }
-        return super.dispatchTouchEvent(event)
+  // Provides focus clearing when tapping outside the keyboard to close the keyboard automatically
+  override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+    if (event?.action != null && event.action == MotionEvent.ACTION_DOWN) {
+      val view = currentFocus
+      if (view is ViewGroup) {
+        view.clearFocus()
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+      }
     }
+    return super.dispatchTouchEvent(event)
+  }
 }

@@ -17,69 +17,69 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlin.math.roundToInt
 
 @Composable
 fun SliderMetric(
-    range: IntProgression,
-    state: Int,
-    onStateChanged: (Int) -> Unit
+  range: IntProgression,
+  state: Int,
+  onStateChanged: (Int) -> Unit
 ) {
-    var sliderPosition by remember { mutableFloatStateOf(state.toFloat()) }
-    val interactionSource = remember { MutableInteractionSource() }
-    val isDragging by interactionSource.collectIsDraggedAsState()
+  var sliderPosition by remember { mutableFloatStateOf(state.toFloat()) }
+  val interactionSource = remember { MutableInteractionSource() }
+  val isDragging by interactionSource.collectIsDraggedAsState()
 
-    Column {
-        Slider(
-            interactionSource = interactionSource,
-            value = if (isDragging) sliderPosition else state.toFloat(),
-            valueRange = range.first.toFloat()..range.last.toFloat(),
-            steps = range.count() - 2,
-            onValueChange = {
-                sliderPosition = it
-                onStateChanged(sliderPosition.roundToInt())
-            },
-        )
+  Column {
+    Slider(
+      interactionSource = interactionSource,
+      value = if (isDragging) sliderPosition else state.toFloat(),
+      valueRange = range.first.toFloat()..range.last.toFloat(),
+      steps = range.count() - 2,
+      onValueChange = {
+        sliderPosition = it
+        onStateChanged(sliderPosition.roundToInt())
+      },
+    )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = range.first.toString()
-            )
-            Text(
-                text = state.toString(),
-                style = MaterialTheme.typography.h6
-            )
-            Text(
-                text = range.last.toString()
-            )
-        }
-
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+      Text(
+        text = range.first.toString()
+      )
+      Text(
+        text = state.toString(),
+        style = MaterialTheme.typography.h6
+      )
+      Text(
+        text = range.last.toString()
+      )
     }
+
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun SliderMetricPreview() {
-    var state by remember { mutableStateOf("3") }
-    FrcKrawlerTheme {
-        MetricInput(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colors.surface),
-            metric = Metric.SliderMetric(
-                name = "Slider metric",
-                enabled = true,
-                priority = 0,
-                range = 1..10
-            ),
-            state = state,
-            onStateChanged = { state = it }
-        )
-    }
+  var state by remember { mutableStateOf("3") }
+  FrcKrawlerTheme {
+    MetricInput(
+      modifier = Modifier
+        .fillMaxWidth()
+        .background(MaterialTheme.colors.surface),
+      metric = Metric.SliderMetric(
+        name = "Slider metric",
+        enabled = true,
+        priority = 0,
+        range = 1..10
+      ),
+      state = state,
+      onStateChanged = { state = it }
+    )
+  }
 }

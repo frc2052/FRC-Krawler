@@ -9,21 +9,21 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TeamAtEventDao {
-    @Delete
-    suspend fun delete(teamAtEvent: TeamAtEvent)
+  @Delete
+  suspend fun delete(teamAtEvent: TeamAtEvent)
 
-    @Query("DELETE FROM team_at_event WHERE eventId = :eventId")
-    suspend fun deleteAllFromEvent(eventId: Int)
+  @Query("DELETE FROM team_at_event WHERE eventId = :eventId")
+  suspend fun deleteAllFromEvent(eventId: Int)
 
-    @Upsert
-    suspend fun insert(teamAtEvent: TeamAtEvent)
+  @Upsert
+  suspend fun insert(teamAtEvent: TeamAtEvent)
 
-    @Insert
-    suspend fun insertAll(teams: List<TeamAtEvent>)
+  @Insert
+  suspend fun insertAll(teams: List<TeamAtEvent>)
 
-    @Query("SELECT COUNT(number) FROM team_at_event WHERE eventId = :eventId")
-    suspend fun getTeamCountAtEvent(eventId: Int): Int
+  @Query("SELECT COUNT(number) FROM team_at_event WHERE eventId = :eventId")
+  suspend fun getTeamCountAtEvent(eventId: Int): Int
 
-    @Query("SELECT * FROM team_at_event WHERE eventId = :eventId")
-    fun getAllTeams(eventId: Int): Flow<List<TeamAtEvent>>
+  @Query("SELECT * FROM team_at_event WHERE eventId = :eventId")
+  fun getAllTeams(eventId: Int): Flow<List<TeamAtEvent>>
 }

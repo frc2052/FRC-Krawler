@@ -5,11 +5,11 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class GamePacket(
-    val name: String,
+  val name: String,
 
-    @Json(name = "match_metrics")
-    val matchMetrics: List<MetricPacket>,
+  @Json(name = "match_metrics")
+  val matchMetrics: List<MetricPacket>,
 
-    @Json(name = "pit_metrics")
-    val pitMetrics: List<MetricPacket>,
+  @Json(name = "pit_metrics")
+  val pitMetrics: List<MetricPacket>,
 )

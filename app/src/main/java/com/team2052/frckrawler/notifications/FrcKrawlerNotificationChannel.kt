@@ -1,7 +1,5 @@
 package com.team2052.frckrawler.notifications
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import androidx.annotation.StringRes
 import com.team2052.frckrawler.R
 

@@ -4,6 +4,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class TeamPacket(
-    val name: String,
-    val number: String,
+  val name: String,
+  val number: String,
 )

@@ -14,23 +14,23 @@ import okio.BufferedSource
 import javax.inject.Inject
 
 class ReceiveMetricData @Inject constructor(
-    private val metricDatumDao: MetricDatumDao,
-    private val moshi: Moshi,
+  private val metricDatumDao: MetricDatumDao,
+  private val moshi: Moshi,
 ) : SyncOperation {
 
-    @OptIn(ExperimentalStdlibApi::class)
-    override fun execute(output: BufferedSink, input: BufferedSource): OperationResult {
-        return runBlocking {
-            val adapter = moshi.adapter<MetricDataListPacket>()
-            val packet = adapter.fromJson(input)
+  @OptIn(ExperimentalStdlibApi::class)
+  override fun execute(output: BufferedSink, input: BufferedSource): OperationResult {
+    return runBlocking {
+      val adapter = moshi.adapter<MetricDataListPacket>()
+      val packet = adapter.fromJson(input)
 
-            packet?.let { persistMetricsToDatabase(packet) }
+      packet?.let { persistMetricsToDatabase(packet) }
 
-            output.writeResult(OperationResult.Success)
-        }
+      output.writeResult(OperationResult.Success)
     }
+  }
 
-    private suspend fun persistMetricsToDatabase(packet: MetricDataListPacket) {
-        metricDatumDao.insertAll(packet.metrics.toData())
-    }
+  private suspend fun persistMetricsToDatabase(packet: MetricDataListPacket) {
+    metricDatumDao.insertAll(packet.metrics.toData())
+  }
 }

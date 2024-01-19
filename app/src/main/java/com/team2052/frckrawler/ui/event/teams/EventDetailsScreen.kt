@@ -33,12 +33,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
-import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.event.teams.edit.AddEditTeamSheet
@@ -48,173 +48,176 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun EventTeamListScreen(
-    eventId: Int,
-    navController: NavController,
+  eventId: Int,
+  navController: NavController,
 ) {
-    val scope = rememberCoroutineScope()
-    val viewModel: EventDetailsViewModel = hiltViewModel()
-    val editTeamSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = true
-    )
-    var teamBeingEdited: TeamAtEvent? by remember {  mutableStateOf(null) }
-    val event by viewModel.event.collectAsState()
-    val teams by viewModel.teams.collectAsState()
-    var showDeleteConfirmation by remember { mutableStateOf(false) }
+  val scope = rememberCoroutineScope()
+  val viewModel: EventDetailsViewModel = hiltViewModel()
+  val editTeamSheetState = rememberModalBottomSheetState(
+    initialValue = ModalBottomSheetValue.Hidden,
+    skipHalfExpanded = true
+  )
+  var teamBeingEdited: TeamAtEvent? by remember { mutableStateOf(null) }
+  val event by viewModel.event.collectAsState()
+  val teams by viewModel.teams.collectAsState()
+  var showDeleteConfirmation by remember { mutableStateOf(false) }
 
-    LaunchedEffect(true) {
-        viewModel.loadEvent(eventId)
-    }
+  LaunchedEffect(true) {
+    viewModel.loadEvent(eventId)
+  }
 
-    FRCKrawlerScaffold(
-        appBar = {
-            FRCKrawlerAppBar(
-                navController = navController,
-                title = { Text(event?.name ?: "") },
-                actions = {
-                    IconButton(
-                        onClick = { showDeleteConfirmation = true }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = stringResource(R.string.delete)
-                        )
-                    }
-                }
+  FRCKrawlerScaffold(
+    appBar = {
+      FRCKrawlerAppBar(
+        navController = navController,
+        title = { Text(event?.name ?: "") },
+        actions = {
+          IconButton(
+            onClick = { showDeleteConfirmation = true }
+          ) {
+            Icon(
+              imageVector = Icons.Filled.Delete,
+              contentDescription = stringResource(R.string.delete)
             )
-        },
-        floatingActionButton = {
-            if (editTeamSheetState.targetValue == ModalBottomSheetValue.Hidden) {
-                Actions(
-                    onAddClick = {
-                        teamBeingEdited = null
-                        scope.launch {
-                            editTeamSheetState.show()
-                        }
-                    }
-                )
+          }
+        }
+      )
+    },
+    floatingActionButton = {
+      if (editTeamSheetState.targetValue == ModalBottomSheetValue.Hidden) {
+        Actions(
+          onAddClick = {
+            teamBeingEdited = null
+            scope.launch {
+              editTeamSheetState.show()
             }
-        },
+          }
+        )
+      }
+    },
+  ) {
+    ModalBottomSheetLayout(
+      sheetState = editTeamSheetState,
+      sheetContent = {
+        AddEditTeamSheet(
+          eventId = eventId,
+          team = teamBeingEdited,
+          onClose = {
+            scope.launch {
+              editTeamSheetState.hide()
+            }
+            teamBeingEdited = null
+          },
+        )
+      }
     ) {
-        ModalBottomSheetLayout(
-            sheetState = editTeamSheetState,
-            sheetContent = {
-                AddEditTeamSheet(
-                    eventId = eventId,
-                    team = teamBeingEdited,
-                    onClose = {
-                        scope.launch {
-                            editTeamSheetState.hide()
-                        }
-                        teamBeingEdited = null
-                    },
-                )
-            }
-        ) {
-            TeamListContent(
-                teams = teams,
-                onTeamClicked = { team ->
-                    scope.launch {
-                        teamBeingEdited = team
-                        editTeamSheetState.show()
-                    }
-                }
-            )
+      TeamListContent(
+        teams = teams,
+        onTeamClicked = { team ->
+          scope.launch {
+            teamBeingEdited = team
+            editTeamSheetState.show()
+          }
         }
-
-        if (showDeleteConfirmation) {
-            AlertDialog(
-                title = { Text(stringResource(R.string.delete_event_title)) },
-                text = { Text(stringResource(R.string.delete_event_body)) },
-                onDismissRequest = { showDeleteConfirmation = false },
-                confirmButton = {
-                    TextButton(onClick = {
-                        viewModel.deleteEvent()
-                        navController.popBackStack()
-                    }) {
-                        Text(stringResource(R.string.delete).uppercase())
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showDeleteConfirmation = false }) {
-                        Text(stringResource(R.string.cancel).uppercase())
-                    }
-                },
-            )
-        }
+      )
     }
+
+    if (showDeleteConfirmation) {
+      AlertDialog(
+        title = { Text(stringResource(R.string.delete_event_title)) },
+        text = { Text(stringResource(R.string.delete_event_body)) },
+        onDismissRequest = { showDeleteConfirmation = false },
+        confirmButton = {
+          TextButton(onClick = {
+            viewModel.deleteEvent()
+            navController.popBackStack()
+          }) {
+            Text(stringResource(R.string.delete).uppercase())
+          }
+        },
+        dismissButton = {
+          TextButton(onClick = { showDeleteConfirmation = false }) {
+            Text(stringResource(R.string.cancel).uppercase())
+          }
+        },
+      )
+    }
+  }
 }
 
 @Composable
 private fun TeamListContent(
-    teams: List<TeamAtEvent>,
-    onTeamClicked: (TeamAtEvent) -> Unit,
+  teams: List<TeamAtEvent>,
+  onTeamClicked: (TeamAtEvent) -> Unit,
 ) {
-    LazyColumn {
-        items(teams) { team ->
-            TeamRow(
-                team = team,
-                onTeamClick = onTeamClicked
-            )
+  LazyColumn {
+    items(teams) { team ->
+      TeamRow(
+        team = team,
+        onTeamClick = onTeamClicked
+      )
 
-            if (team != teams.last()) {
-                Divider()
-            }
-        }
+      if (team != teams.last()) {
+        Divider()
+      }
     }
+  }
 }
 
 @Composable
 private fun TeamRow(
-    team: TeamAtEvent,
-    onTeamClick: (TeamAtEvent) -> Unit,
-    modifier: Modifier = Modifier,
+  team: TeamAtEvent,
+  onTeamClick: (TeamAtEvent) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onTeamClick(team) }
-            .padding(vertical = 12.dp)
-            .padding(start = 16.dp)
-    ) {
-        Text(
-            text = team.number,
-            style = MaterialTheme.typography.h6
-        )
-        Text(
-            modifier = Modifier.alpha(.6f),
-            text = team.name,
-            style = MaterialTheme.typography.body1
-        )
-    }
+  Column(
+    modifier = modifier
+      .fillMaxWidth()
+      .clickable { onTeamClick(team) }
+      .padding(vertical = 12.dp)
+      .padding(start = 16.dp)
+  ) {
+    Text(
+      text = team.number,
+      style = MaterialTheme.typography.h6
+    )
+    Text(
+      modifier = Modifier.alpha(.6f),
+      text = team.name,
+      style = MaterialTheme.typography.body1
+    )
+  }
 }
 
 @Composable
 private fun Actions(onAddClick: () -> Unit) {
-    val fabModifier = Modifier.padding(bottom = 24.dp)
-    FloatingActionButton(
-        modifier = fabModifier,
-        onClick = onAddClick
-    ) {
-        Icon(imageVector = Icons.Filled.Add, contentDescription = stringResource(R.string.event_add_team_description))
-    }
+  val fabModifier = Modifier.padding(bottom = 24.dp)
+  FloatingActionButton(
+    modifier = fabModifier,
+    onClick = onAddClick
+  ) {
+    Icon(
+      imageVector = Icons.Filled.Add,
+      contentDescription = stringResource(R.string.event_add_team_description)
+    )
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun TeamListPreview() {
-    val teams = listOf(
-        TeamAtEvent(number = "1234", name = "Test team", eventId = 0),
-        TeamAtEvent(number = "1234", name = "Test team", eventId = 0),
-        TeamAtEvent(number = "1234", name = "Test team", eventId = 0),
-        TeamAtEvent(number = "1234", name = "Test team", eventId = 0),
-    )
-    FrcKrawlerTheme {
-        Surface {
-            TeamListContent(
-                teams = teams,
-                onTeamClicked = {}
-            )
-        }
+  val teams = listOf(
+    TeamAtEvent(number = "1234", name = "Test team", eventId = 0),
+    TeamAtEvent(number = "1234", name = "Test team", eventId = 0),
+    TeamAtEvent(number = "1234", name = "Test team", eventId = 0),
+    TeamAtEvent(number = "1234", name = "Test team", eventId = 0),
+  )
+  FrcKrawlerTheme {
+    Surface {
+      TeamListContent(
+        teams = teams,
+        onTeamClicked = {}
+      )
     }
+  }
 }

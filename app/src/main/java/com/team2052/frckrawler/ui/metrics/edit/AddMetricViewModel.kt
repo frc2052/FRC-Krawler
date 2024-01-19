@@ -13,95 +13,96 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddMetricViewModel @Inject constructor(
-    private val metricRepo: MetricRepository
-): ViewModel() {
+  private val metricRepo: MetricRepository
+) : ViewModel() {
 
-    private var metricId: String = ""
-    private var metricSetId: Int = -1
+  private var metricId: String = ""
+  private var metricSetId: Int = -1
 
-    private val _state = MutableStateFlow(AddEditMetricScreenState())
-    val state: StateFlow<AddEditMetricScreenState> = _state
+  private val _state = MutableStateFlow(AddEditMetricScreenState())
+  val state: StateFlow<AddEditMetricScreenState> = _state
 
-    fun startEditingNewMetric(
-        metricId: String,
-        metricSetId: Int,
-    ) {
-        this.metricSetId = metricSetId
-        this.metricId = metricId
-        _state.value = AddEditMetricScreenState()
+  fun startEditingNewMetric(
+    metricId: String,
+    metricSetId: Int,
+  ) {
+    this.metricSetId = metricSetId
+    this.metricId = metricId
+    _state.value = AddEditMetricScreenState()
+  }
+
+  fun startEditingMetric(
+    metric: Metric,
+    metricSetId: Int
+  ) {
+    this.metricSetId = metricSetId
+    this.metricId = metric.id
+
+    _state.value = AddEditMetricScreenState(
+      name = metric.name,
+      type = metric.getType(),
+      priority = metric.priority,
+      enabled = metric.enabled,
+      options = metric.getMetricOptions(),
+    )
+  }
+
+  fun updateName(name: String) {
+    // TODO add some visible validation messaging?
+    _state.value = _state.value.copy(name = name)
+  }
+
+  fun updateType(type: MetricType) {
+    val typeOptions = when (type) {
+      MetricType.Slider -> MetricOptions.IntRange()
+      MetricType.Counter -> MetricOptions.SteppedIntRange()
+      MetricType.Chooser, MetricType.Checkbox -> MetricOptions.StringList()
+      else -> MetricOptions.None
     }
+    val newState = _state.value.copy(
+      type = type,
+      options = typeOptions
+    )
 
-    fun startEditingMetric(
-        metric: Metric,
-        metricSetId: Int
-    ) {
-        this.metricSetId = metricSetId
-        this.metricId = metric.id
+    _state.value = newState
+  }
 
-        _state.value = AddEditMetricScreenState(
-            name = metric.name,
-            type = metric.getType(),
-            priority = metric.priority,
-            enabled = metric.enabled,
-            options = metric.getMetricOptions(),
-        )
+  fun updateOptions(metricOptions: MetricOptions) {
+    // TODO validate that options type matches metrics type?
+    _state.value = _state.value.copy(
+      options = metricOptions
+    )
+  }
+
+  fun save() {
+    viewModelScope.launch {
+      val priority = metricRepo.getMetricCount(metricSetId)
+      val metric = _state.value.toMetric(
+        id = metricId,
+        priority = priority
+      )
+
+      metricRepo.saveMetric(metric, metricSetId)
     }
+  }
 
-    fun updateName(name: String) {
-        // TODO add some visible validation messaging?
-        _state.value = _state.value.copy(name = name)
+  fun deleteMetric() {
+    viewModelScope.launch {
+      metricRepo.deleteMetric(metricId)
     }
+  }
 
-    fun updateType(type: MetricType) {
-        val typeOptions = when (type) {
-            MetricType.Slider -> MetricOptions.IntRange()
-            MetricType.Counter -> MetricOptions.SteppedIntRange()
-            MetricType.Chooser, MetricType.Checkbox -> MetricOptions.StringList()
-            else -> MetricOptions.None
-        }
-        val newState = _state.value.copy(
-            type = type,
-            options = typeOptions
-        )
+  private fun Metric.getMetricOptions(): MetricOptions {
+    return when (this) {
+      is Metric.CheckboxMetric -> MetricOptions.StringList(options)
+      is Metric.ChooserMetric -> MetricOptions.StringList(options)
+      is Metric.CounterMetric -> MetricOptions.SteppedIntRange(
+        range = range.first..range.last,
+        step = range.step
+      )
 
-        _state.value = newState
+      is Metric.SliderMetric -> MetricOptions.IntRange(range.first..range.last)
+      else -> MetricOptions.None
     }
-
-    fun updateOptions(metricOptions: MetricOptions) {
-        // TODO validate that options type matches metrics type?
-        _state.value = _state.value.copy(
-            options = metricOptions
-        )
-    }
-
-    fun save() {
-        viewModelScope.launch {
-            val priority = metricRepo.getMetricCount(metricSetId)
-            val metric = _state.value.toMetric(
-                id = metricId,
-                priority = priority
-            )
-
-            metricRepo.saveMetric(metric, metricSetId)
-        }
-    }
-
-    fun deleteMetric() {
-        viewModelScope.launch {
-            metricRepo.deleteMetric(metricId)
-        }
-    }
-
-    private fun Metric.getMetricOptions(): MetricOptions {
-        return when (this) {
-            is Metric.CheckboxMetric -> MetricOptions.StringList(options)
-            is Metric.ChooserMetric -> MetricOptions.StringList(options)
-            is Metric.CounterMetric -> MetricOptions.SteppedIntRange(
-                range = range.first..range.last,
-                step = range.step
-            )
-            is Metric.SliderMetric -> MetricOptions.IntRange(range.first..range.last)
-            else -> MetricOptions.None
-        }
-    }
+  }
 }

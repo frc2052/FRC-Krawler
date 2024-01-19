@@ -4,6 +4,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class ServerConfigurationPacket(
-    val game: GamePacket,
-    val event: EventPacket,
+  val game: GamePacket,
+  val event: EventPacket,
 )

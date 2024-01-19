@@ -6,35 +6,36 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    foreignKeys = [
-        ForeignKey(
-            entity = MetricSet::class,
-            parentColumns = ["id"],
-            childColumns = ["matchMetricsSetId"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = MetricSet::class,
-            parentColumns = ["id"],
-            childColumns = ["pitMetricsSetId"],
-            onDelete = ForeignKey.CASCADE
-        ),
-    ],
-    indices = [
-        Index("matchMetricsSetId"),
-        Index("pitMetricsSetId"),
-    ])
+  foreignKeys = [
+    ForeignKey(
+      entity = MetricSet::class,
+      parentColumns = ["id"],
+      childColumns = ["matchMetricsSetId"],
+      onDelete = ForeignKey.CASCADE
+    ),
+    ForeignKey(
+      entity = MetricSet::class,
+      parentColumns = ["id"],
+      childColumns = ["pitMetricsSetId"],
+      onDelete = ForeignKey.CASCADE
+    ),
+  ],
+  indices = [
+    Index("matchMetricsSetId"),
+    Index("pitMetricsSetId"),
+  ]
+)
 data class Game(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val name: String,
-    val matchMetricsSetId: Int? = null,
-    val pitMetricsSetId: Int? = null,
+  @PrimaryKey(autoGenerate = true) val id: Int = 0,
+  val name: String,
+  val matchMetricsSetId: Int? = null,
+  val pitMetricsSetId: Int? = null,
 ) {
-    companion object {
-        /**
-         * This ID is reserved for the current game being
-         * used in the scouting client configuration
-         */
-        const val SCOUT_GAME_ID = 1
-    }
+  companion object {
+    /**
+     * This ID is reserved for the current game being
+     * used in the scouting client configuration
+     */
+    const val SCOUT_GAME_ID = 1
+  }
 }

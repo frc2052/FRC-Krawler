@@ -15,32 +15,32 @@ import okio.BufferedSource
 import javax.inject.Inject
 
 class SendMetricData @Inject constructor(
-    private val metricDatumDao: MetricDatumDao,
-    private val moshi: Moshi,
+  private val metricDatumDao: MetricDatumDao,
+  private val moshi: Moshi,
 ) : SyncOperation {
 
-    @OptIn(ExperimentalStdlibApi::class)
-    override fun execute(output: BufferedSink, input: BufferedSource): OperationResult {
-        return runBlocking {
-            val metrics = metricDatumDao.getRemoteScoutData()
-            val packet = MetricDataListPacket(
-                metrics = metrics.toDatumPackets()
-            )
+  @OptIn(ExperimentalStdlibApi::class)
+  override fun execute(output: BufferedSink, input: BufferedSource): OperationResult {
+    return runBlocking {
+      val metrics = metricDatumDao.getRemoteScoutData()
+      val packet = MetricDataListPacket(
+        metrics = metrics.toDatumPackets()
+      )
 
-            val adapter = moshi.adapter<MetricDataListPacket>()
-            adapter.toJson(output, packet)
-            output.emit()
+      val adapter = moshi.adapter<MetricDataListPacket>()
+      adapter.toJson(output, packet)
+      output.emit()
 
-            val result = input.readResult()
-            if (result == OperationResult.Success) {
-                deleteMetrics(metrics)
-            }
+      val result = input.readResult()
+      if (result == OperationResult.Success) {
+        deleteMetrics(metrics)
+      }
 
-            result
-        }
+      result
     }
+  }
 
-    private suspend fun deleteMetrics(metrics: List<MetricDatum>) {
-        metricDatumDao.deleteAll(metrics)
-    }
+  private suspend fun deleteMetrics(metrics: List<MetricDatum>) {
+    metricDatumDao.deleteAll(metrics)
+  }
 }

@@ -15,58 +15,58 @@ import javax.inject.Inject
  * download a team list.
  */
 class CreateEventUseCase @Inject constructor(
-    private val eventDao: EventDao,
-    private val teamAtEventDao: TeamAtEventDao,
-    private val eventService: EventService,
+  private val eventDao: EventDao,
+  private val teamAtEventDao: TeamAtEventDao,
+  private val eventService: EventService,
 ) {
-    // Using a separate scope so this doesn't get automatically cancelled
-    private val eventTeamScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+  // Using a separate scope so this doesn't get automatically cancelled
+  private val eventTeamScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
-    // TODO how to share status of download
+  // TODO how to share status of download
 
-    suspend operator fun invoke(
-        name: String,
-        gameId: Int,
-        tbaId: String? = null
-    ) {
-        val eventId = eventDao.insert(
-            Event(
-                name = name,
-                tbaId = tbaId,
-                gameId = gameId
-            )
+  suspend operator fun invoke(
+    name: String,
+    gameId: Int,
+    tbaId: String? = null
+  ) {
+    val eventId = eventDao.insert(
+      Event(
+        name = name,
+        tbaId = tbaId,
+        gameId = gameId
+      )
+    )
+    println("inserted $eventId, tbaId is $tbaId")
+    if (tbaId != null) {
+      eventTeamScope.launch {
+        saveTeamsForEvent(
+          eventId = eventId.toInt(),
+          tbaId = tbaId
         )
-        println("inserted $eventId, tbaId is $tbaId")
-        if (tbaId != null) {
-            eventTeamScope.launch {
-                saveTeamsForEvent(
-                    eventId = eventId.toInt(),
-                    tbaId = tbaId
-                )
-            }
-        }
+      }
     }
+  }
 
-    private suspend fun saveTeamsForEvent(eventId: Int, tbaId: String) {
-        try {
-            val teams = eventService.getEventTeams(tbaId)
-            println("result is success: ${teams.isSuccessful}")
-            println("result: ${teams.code()} - ${teams.errorBody()}")
-            if (teams.isSuccessful) {
-                println("attempting to insert ${teams.body()?.size} teams")
-                teams.body()?.forEach { team ->
-                    teamAtEventDao.insert(
-                        TeamAtEvent(
-                            number = team.number,
-                            name = team.nickname,
-                            eventId =  eventId
-                        )
-                    )
-                }
-            }
-
-        } catch (e: Exception) {
-            // TODO log this
+  private suspend fun saveTeamsForEvent(eventId: Int, tbaId: String) {
+    try {
+      val teams = eventService.getEventTeams(tbaId)
+      println("result is success: ${teams.isSuccessful}")
+      println("result: ${teams.code()} - ${teams.errorBody()}")
+      if (teams.isSuccessful) {
+        println("attempting to insert ${teams.body()?.size} teams")
+        teams.body()?.forEach { team ->
+          teamAtEventDao.insert(
+            TeamAtEvent(
+              number = team.number,
+              name = team.nickname,
+              eventId = eventId
+            )
+          )
         }
+      }
+
+    } catch (e: Exception) {
+      // TODO log this
     }
+  }
 }

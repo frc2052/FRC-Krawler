@@ -63,346 +63,350 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MetricsListScreen(
-    modifier: Modifier = Modifier,
-    navController: NavController,
-    metricSetId: Int
+  modifier: Modifier = Modifier,
+  navController: NavController,
+  metricSetId: Int
 ) {
-    val viewModel: MetricsListViewModel = hiltViewModel()
-    val sheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = true
-    )
-    val scope = rememberCoroutineScope()
-    var sheetMode: AddEditMetricMode by remember { mutableStateOf(AddEditMetricMode.New()) }
-    var showDeleteConfirmation by remember { mutableStateOf(false) }
+  val viewModel: MetricsListViewModel = hiltViewModel()
+  val sheetState = rememberModalBottomSheetState(
+    initialValue = ModalBottomSheetValue.Hidden,
+    skipHalfExpanded = true
+  )
+  val scope = rememberCoroutineScope()
+  var sheetMode: AddEditMetricMode by remember { mutableStateOf(AddEditMetricMode.New()) }
+  var showDeleteConfirmation by remember { mutableStateOf(false) }
 
-    LaunchedEffect(true) {
-        viewModel.loadMetrics(metricSetId)
-    }
+  LaunchedEffect(true) {
+    viewModel.loadMetrics(metricSetId)
+  }
 
-    val state = viewModel.state.collectAsState().value
+  val state = viewModel.state.collectAsState().value
 
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            FRCKrawlerAppBar(
-                title = {
-                    if (state is MetricListScreenState.Content) {
-                        Text(state.setName)
-                    }
-                },
-                navController = navController,
-                actions = {
-                    if (state is MetricListScreenState.Content) {
-                        IconButton(
-                            onClick = { showDeleteConfirmation = true }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = "delete"
-                            )
-                        }
-                    }
-                }
-            )
+  Scaffold(
+    modifier = modifier,
+    topBar = {
+      FRCKrawlerAppBar(
+        title = {
+          if (state is MetricListScreenState.Content) {
+            Text(state.setName)
+          }
         },
-        floatingActionButton = {
-            if (sheetState.targetValue == ModalBottomSheetValue.Hidden) {
-                MetricActions(
-                    onAddClick = {
-                        sheetMode = AddEditMetricMode.New()
-                        scope.launch {
-                            sheetState.show()
-                        }
-                    }
-                )
+        navController = navController,
+        actions = {
+          if (state is MetricListScreenState.Content) {
+            IconButton(
+              onClick = { showDeleteConfirmation = true }
+            ) {
+              Icon(
+                imageVector = Icons.Filled.Delete,
+                contentDescription = "delete"
+              )
             }
-        },
-    ) { contentPadding ->
-        ModalBottomSheetLayout(
-            sheetState = sheetState,
-            sheetContent = {
-                AddEditMetricDialog(
-                    mode = sheetMode,
-                    metricSetId = metricSetId,
-                    onClose = {
-                        scope.launch {
-                            sheetState.hide()
-                        }
-                    },
-                )
-            }
-        ) {
-            Column(Modifier.padding(contentPadding)) {
-                if (state is MetricListScreenState.Content) {
-                    if (state.metrics.isEmpty()) {
-                        EmptyBackground()
-                    } else {
-                        MetricListContent(
-                            modifier = Modifier.padding(contentPadding),
-                            metrics = state.metrics,
-                            onMetricClick = { metric ->
-                                sheetMode = AddEditMetricMode.Edit(metric)
-                                scope.launch {
-                                    sheetState.show()
-                                }
-                            },
-                            gameName = state.gameName,
-                            isMatchMetrics = state.isMatchMetricSet,
-                            onIsMatchMetricsChanged = { viewModel.setIsMatchMetrics(it) },
-                            isPitMetrics = state.isPitMetricSet,
-                            onIsPitMetricsChanged = { viewModel.setIsPitMetrics(it) },
-                        )
-                    }
-                } else {
-                    // Show nothing while loading. Could do a loading spinner in the future
-                }
-            }
-
-            if (showDeleteConfirmation) {
-                AlertDialog(
-                    title = { Text("Delete metric set?")},
-                    text = { Text("This action cannot be undone. This set and all metrics will be deleted.") },
-                    onDismissRequest = { showDeleteConfirmation = false },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            viewModel.deleteMetricSet()
-                            navController.popBackStack()
-                        }) {
-                            Text(stringResource(R.string.delete))
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { showDeleteConfirmation = false }) {
-                            Text(stringResource(R.string.cancel))
-                        }
-                    },
-                )
-            }
+          }
         }
+      )
+    },
+    floatingActionButton = {
+      if (sheetState.targetValue == ModalBottomSheetValue.Hidden) {
+        MetricActions(
+          onAddClick = {
+            sheetMode = AddEditMetricMode.New()
+            scope.launch {
+              sheetState.show()
+            }
+          }
+        )
+      }
+    },
+  ) { contentPadding ->
+    ModalBottomSheetLayout(
+      sheetState = sheetState,
+      sheetContent = {
+        AddEditMetricDialog(
+          mode = sheetMode,
+          metricSetId = metricSetId,
+          onClose = {
+            scope.launch {
+              sheetState.hide()
+            }
+          },
+        )
+      }
+    ) {
+      Column(Modifier.padding(contentPadding)) {
+        if (state is MetricListScreenState.Content) {
+          if (state.metrics.isEmpty()) {
+            EmptyBackground()
+          } else {
+            MetricListContent(
+              modifier = Modifier.padding(contentPadding),
+              metrics = state.metrics,
+              onMetricClick = { metric ->
+                sheetMode = AddEditMetricMode.Edit(metric)
+                scope.launch {
+                  sheetState.show()
+                }
+              },
+              gameName = state.gameName,
+              isMatchMetrics = state.isMatchMetricSet,
+              onIsMatchMetricsChanged = { viewModel.setIsMatchMetrics(it) },
+              isPitMetrics = state.isPitMetricSet,
+              onIsPitMetricsChanged = { viewModel.setIsPitMetrics(it) },
+            )
+          }
+        } else {
+          // Show nothing while loading. Could do a loading spinner in the future
+        }
+      }
+
+      if (showDeleteConfirmation) {
+        AlertDialog(
+          title = { Text("Delete metric set?") },
+          text = { Text("This action cannot be undone. This set and all metrics will be deleted.") },
+          onDismissRequest = { showDeleteConfirmation = false },
+          confirmButton = {
+            TextButton(onClick = {
+              viewModel.deleteMetricSet()
+              navController.popBackStack()
+            }) {
+              Text(stringResource(R.string.delete))
+            }
+          },
+          dismissButton = {
+            TextButton(onClick = { showDeleteConfirmation = false }) {
+              Text(stringResource(R.string.cancel))
+            }
+          },
+        )
+      }
     }
+  }
 }
 
 @Composable
 private fun EmptyBackground() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            modifier = Modifier.size(128.dp),
-            imageVector = Icons.Filled.Analytics,
-            contentDescription = "Background",
-            tint = MaterialTheme.colors.secondary
-        )
-        Text(text = "No Metrics", style = MaterialTheme.typography.h4)
-    }
+  Column(
+    modifier = Modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Icon(
+      modifier = Modifier.size(128.dp),
+      imageVector = Icons.Filled.Analytics,
+      contentDescription = "Background",
+      tint = MaterialTheme.colors.secondary
+    )
+    Text(text = "No Metrics", style = MaterialTheme.typography.h4)
+  }
 }
 
 @Composable
 private fun MetricActions(onAddClick: () -> Unit) {
-    FloatingActionButton(
-        onClick = { onAddClick() }
+  FloatingActionButton(
+    onClick = { onAddClick() }
 
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Add,
-            contentDescription = "Manual Metric Add"
-        )
-    }
+  ) {
+    Icon(
+      imageVector = Icons.Filled.Add,
+      contentDescription = "Manual Metric Add"
+    )
+  }
 }
 
 @Composable
 private fun MetricListContent(
-    modifier: Modifier = Modifier,
-    metrics: List<Metric>,
-    onMetricClick: (Metric) -> Unit,
-    gameName: String,
-    isMatchMetrics: Boolean,
-    onIsMatchMetricsChanged: (Boolean) -> Unit,
-    isPitMetrics: Boolean,
-    onIsPitMetricsChanged: (Boolean) -> Unit,
+  modifier: Modifier = Modifier,
+  metrics: List<Metric>,
+  onMetricClick: (Metric) -> Unit,
+  gameName: String,
+  isMatchMetrics: Boolean,
+  onIsMatchMetricsChanged: (Boolean) -> Unit,
+  isPitMetrics: Boolean,
+  onIsPitMetricsChanged: (Boolean) -> Unit,
 ) {
-    LazyColumn(modifier) {
-        item {
-            val matchMetricsLabel = getMetricsLabel(
-                prefixResId = R.string.metric_list_is_match_set,
-                gameName = gameName
-            )
-            GameMetricSetSwitchRow(
-                modifier = Modifier.fillMaxWidth(),
-                checked = isMatchMetrics,
-                onCheckedChanged = onIsMatchMetricsChanged,
-                label = matchMetricsLabel
-            )
-        }
-
-        item {
-            Divider()
-        }
-
-        item {
-            val pitMetricsLabel = getMetricsLabel(
-                prefixResId = R.string.metric_list_is_pit_set,
-                gameName = gameName
-            )
-            GameMetricSetSwitchRow(
-                modifier = Modifier.fillMaxWidth(),
-                checked = isPitMetrics,
-                onCheckedChanged = onIsPitMetricsChanged,
-                label = pitMetricsLabel
-            )
-        }
-
-        item {
-            Divider()
-        }
-
-        items(metrics) { metric ->
-            MetricListRow(
-                modifier = Modifier.fillMaxWidth(),
-                metric = metric,
-                onMetricClick = onMetricClick
-            )
-        }
+  LazyColumn(modifier) {
+    item {
+      val matchMetricsLabel = getMetricsLabel(
+        prefixResId = R.string.metric_list_is_match_set,
+        gameName = gameName
+      )
+      GameMetricSetSwitchRow(
+        modifier = Modifier.fillMaxWidth(),
+        checked = isMatchMetrics,
+        onCheckedChanged = onIsMatchMetricsChanged,
+        label = matchMetricsLabel
+      )
     }
+
+    item {
+      Divider()
+    }
+
+    item {
+      val pitMetricsLabel = getMetricsLabel(
+        prefixResId = R.string.metric_list_is_pit_set,
+        gameName = gameName
+      )
+      GameMetricSetSwitchRow(
+        modifier = Modifier.fillMaxWidth(),
+        checked = isPitMetrics,
+        onCheckedChanged = onIsPitMetricsChanged,
+        label = pitMetricsLabel
+      )
+    }
+
+    item {
+      Divider()
+    }
+
+    items(metrics) { metric ->
+      MetricListRow(
+        modifier = Modifier.fillMaxWidth(),
+        metric = metric,
+        onMetricClick = onMetricClick
+      )
+    }
+  }
 }
 
 @Composable
 private fun getMetricsLabel(
-    @StringRes prefixResId: Int,
-    gameName: String,
+  @StringRes prefixResId: Int,
+  gameName: String,
 ): AnnotatedString {
-    val matchLabelPrefix = stringResource(prefixResId)
-    val label = remember(gameName, matchLabelPrefix) {
-        buildAnnotatedString {
-            append(matchLabelPrefix)
-            append(" ")
-            pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
-            append(gameName)
-        }
+  val matchLabelPrefix = stringResource(prefixResId)
+  val label = remember(gameName, matchLabelPrefix) {
+    buildAnnotatedString {
+      append(matchLabelPrefix)
+      append(" ")
+      pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+      append(gameName)
     }
-    return label
+  }
+  return label
 }
 
 @Composable
 private fun GameMetricSetSwitchRow(
-    checked: Boolean,
-    onCheckedChanged: (Boolean) -> Unit,
-    label: AnnotatedString,
-    modifier: Modifier = Modifier,
+  checked: Boolean,
+  onCheckedChanged: (Boolean) -> Unit,
+  label: AnnotatedString,
+  modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier
-            .background(MaterialTheme.colors.highlightSurface)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = label
-        )
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChanged
-        )
-    }
+  Row(
+    modifier = modifier
+        .background(MaterialTheme.colors.highlightSurface)
+        .padding(horizontal = 16.dp, vertical = 12.dp),
+    horizontalArrangement = Arrangement.SpaceBetween,
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Text(
+      text = label
+    )
+    Switch(
+      checked = checked,
+      onCheckedChange = onCheckedChanged
+    )
+  }
 }
 
 @Composable
 private fun MetricListRow(
-    modifier: Modifier = Modifier,
-    metric: Metric,
-    onMetricClick: (Metric) -> Unit
+  modifier: Modifier = Modifier,
+  metric: Metric,
+  onMetricClick: (Metric) -> Unit
 ) {
-    val description = remember(metric) {
-        when (metric) {
-            is Metric.BooleanMetric -> "Boolean"
-            is Metric.CheckboxMetric -> {
-                val optionsString = metric.options.joinToString(", ")
-                "Checkbox ($optionsString)"
-            }
-            is Metric.ChooserMetric -> {
-                val optionsString = metric.options.joinToString(", ")
-                "Chooser ($optionsString)"
-            }
-            is Metric.CounterMetric -> {
-                "Counter (min: ${metric.range.first}, max: ${metric.range.last}, step: ${metric.range.step})"
-            }
-            is Metric.SliderMetric -> {
-                "Slider (min: ${metric.range.first}, max: ${metric.range.last})"
-            }
-            is Metric.StopwatchMetric -> "Stopwatch"
-            is Metric.TextFieldMetric -> "Text field"
-        }
-    }
+  val description = remember(metric) {
+    when (metric) {
+      is Metric.BooleanMetric -> "Boolean"
+      is Metric.CheckboxMetric -> {
+        val optionsString = metric.options.joinToString(", ")
+        "Checkbox ($optionsString)"
+      }
 
-    Column(
-        modifier = modifier.clickable { onMetricClick(metric) }
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
-            ) {
-                Text(
-                    text = metric.name,
-                    style = MaterialTheme.typography.h5
-                )
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.subtitle1
-                )
-            }
-        }
-        Divider()
+      is Metric.ChooserMetric -> {
+        val optionsString = metric.options.joinToString(", ")
+        "Chooser ($optionsString)"
+      }
+
+      is Metric.CounterMetric -> {
+        "Counter (min: ${metric.range.first}, max: ${metric.range.last}, step: ${metric.range.step})"
+      }
+
+      is Metric.SliderMetric -> {
+        "Slider (min: ${metric.range.first}, max: ${metric.range.last})"
+      }
+
+      is Metric.StopwatchMetric -> "Stopwatch"
+      is Metric.TextFieldMetric -> "Text field"
     }
+  }
+
+  Column(
+    modifier = modifier.clickable { onMetricClick(metric) }
+  ) {
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Column(
+        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
+      ) {
+        Text(
+          text = metric.name,
+          style = MaterialTheme.typography.h5
+        )
+        Text(
+          text = description,
+          style = MaterialTheme.typography.subtitle1
+        )
+      }
+    }
+    Divider()
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun MetricListRowPreview() {
-    FrcKrawlerTheme {
-        Surface {
-            MetricListRow(
-                metric = Metric.CounterMetric(
-                    id = "",
-                    name = "Number of LEDs",
-                    priority = 1,
-                    enabled = true,
-                    range = 1..1000 step 5
-                ),
-                onMetricClick = {}
-            )
-        }
+  FrcKrawlerTheme {
+    Surface {
+      MetricListRow(
+        metric = Metric.CounterMetric(
+          id = "",
+          name = "Number of LEDs",
+          priority = 1,
+          enabled = true,
+          range = 1..1000 step 5
+        ),
+        onMetricClick = {}
+      )
     }
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun MetricListPreview() {
-    val metric = Metric.CounterMetric(
-        id = "",
-        name = "Number of LEDs",
-        priority = 1,
-        enabled = true,
-        range = 1..1000 step 5
-    )
-    FrcKrawlerTheme {
-        Surface {
-            MetricListContent(
-                metrics = listOf(metric, metric, metric),
-                onMetricClick = {},
-                gameName = "Crescendo",
-                isMatchMetrics = false,
-                onIsMatchMetricsChanged = {},
-                isPitMetrics = true,
-                onIsPitMetricsChanged = {},
-            )
-        }
+  val metric = Metric.CounterMetric(
+    id = "",
+    name = "Number of LEDs",
+    priority = 1,
+    enabled = true,
+    range = 1..1000 step 5
+  )
+  FrcKrawlerTheme {
+    Surface {
+      MetricListContent(
+        metrics = listOf(metric, metric, metric),
+        onMetricClick = {},
+        gameName = "Crescendo",
+        isMatchMetrics = false,
+        onIsMatchMetricsChanged = {},
+        isPitMetrics = true,
+        onIsPitMetricsChanged = {},
+      )
     }
+  }
 }

@@ -14,32 +14,32 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EventDetailsViewModel @Inject constructor(
-    private val eventDao: EventDao,
-    private val teamAtEventDao: TeamAtEventDao,
+  private val eventDao: EventDao,
+  private val teamAtEventDao: TeamAtEventDao,
 ) : ViewModel() {
-    private val _teams = MutableStateFlow<List<TeamAtEvent>>(emptyList())
-    val teams: StateFlow<List<TeamAtEvent>> = _teams
+  private val _teams = MutableStateFlow<List<TeamAtEvent>>(emptyList())
+  val teams: StateFlow<List<TeamAtEvent>> = _teams
 
-    private val _event = MutableStateFlow<Event?>(null)
-    val event: StateFlow<Event?> = _event
+  private val _event = MutableStateFlow<Event?>(null)
+  val event: StateFlow<Event?> = _event
 
-    fun loadEvent(eventId: Int) {
-        viewModelScope.launch {
-            _event.value = eventDao.get(eventId)
-        }
-
-        viewModelScope.launch {
-            teamAtEventDao.getAllTeams(eventId).collect {
-                _teams.value = it
-            }
-        }
+  fun loadEvent(eventId: Int) {
+    viewModelScope.launch {
+      _event.value = eventDao.get(eventId)
     }
 
-    fun deleteEvent() {
-        viewModelScope.launch {
-            _event.value?.let {
-                eventDao.delete(it)
-            }
-        }
+    viewModelScope.launch {
+      teamAtEventDao.getAllTeams(eventId).collect {
+        _teams.value = it
+      }
     }
+  }
+
+  fun deleteEvent() {
+    viewModelScope.launch {
+      _event.value?.let {
+        eventDao.delete(it)
+      }
+    }
+  }
 }

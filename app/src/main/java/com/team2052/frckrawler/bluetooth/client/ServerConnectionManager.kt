@@ -66,7 +66,7 @@ class ServerConnectionManager internal @Inject constructor(
       pairedDevice = pairingResult.device
     } else {
       pairedDevice = deviceToPair
-  }
+    }
 
     val hasFrcKrawlerService = checkForFrcKrawlerServiceWithTimeout(pairedDevice)
 

@@ -4,5 +4,5 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class MetricDataListPacket(
-    val metrics: List<MetricDatumPacket>
+  val metrics: List<MetricDatumPacket>
 )

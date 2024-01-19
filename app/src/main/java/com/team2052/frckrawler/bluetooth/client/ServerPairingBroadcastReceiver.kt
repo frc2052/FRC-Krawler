@@ -12,7 +12,7 @@ class ServerPairingBroadcastReceiver(
   private val deviceToPair: BluetoothDevice,
   private val onBonded: () -> Unit,
   private val onCanceled: () -> Unit
-): BroadcastReceiver() {
+) : BroadcastReceiver() {
   override fun onReceive(context: Context, intent: Intent) {
     when (intent.action) {
       BluetoothDevice.ACTION_BOND_STATE_CHANGED -> {
@@ -26,6 +26,7 @@ class ServerPairingBroadcastReceiver(
               onBonded()
               context.unregisterReceiver(this)
             }
+
             BluetoothDevice.BOND_NONE -> {
               if (previousState == BluetoothDevice.BOND_BONDING) {
                 // We were bonding and are not anymore, so it was canceled

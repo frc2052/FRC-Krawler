@@ -13,9 +13,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    @Singleton
-    @Provides
-    fun provideFRCKrawlerApp(@ApplicationContext app: Context): FRCKrawlerApp =
-        app as FRCKrawlerApp
+  @Singleton
+  @Provides
+  fun provideFRCKrawlerApp(@ApplicationContext app: Context): FRCKrawlerApp =
+    app as FRCKrawlerApp
 
 }

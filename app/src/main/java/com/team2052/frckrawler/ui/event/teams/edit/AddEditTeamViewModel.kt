@@ -10,28 +10,28 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditTeamViewModel @Inject constructor(
-    private val teamAtEventDao: TeamAtEventDao,
+  private val teamAtEventDao: TeamAtEventDao,
 ) : ViewModel() {
 
-    fun saveTeam(
-        eventId: Int,
-        teamNumber: String,
-        teamName: String
-    ) {
-        viewModelScope.launch {
-            teamAtEventDao.insert(
-                TeamAtEvent(
-                    eventId = eventId,
-                    number = teamNumber,
-                    name = teamName,
-                )
-            )
-        }
+  fun saveTeam(
+    eventId: Int,
+    teamNumber: String,
+    teamName: String
+  ) {
+    viewModelScope.launch {
+      teamAtEventDao.insert(
+        TeamAtEvent(
+          eventId = eventId,
+          number = teamNumber,
+          name = teamName,
+        )
+      )
     }
+  }
 
-    fun deleteTeam(teamAtEvent: TeamAtEvent) {
-        viewModelScope.launch {
-            teamAtEventDao.delete(teamAtEvent)
-        }
+  fun deleteTeam(teamAtEvent: TeamAtEvent) {
+    viewModelScope.launch {
+      teamAtEventDao.delete(teamAtEvent)
     }
+  }
 }

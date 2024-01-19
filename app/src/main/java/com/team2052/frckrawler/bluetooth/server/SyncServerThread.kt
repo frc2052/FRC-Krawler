@@ -21,7 +21,8 @@ class SyncServerThread(
     private const val LOG_TAG = "SyncServer"
   }
 
-  private val bluetoothManager: BluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+  private val bluetoothManager: BluetoothManager =
+    context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
 
   private val entryPoint = EntryPoints.get(context.applicationContext, SyncEntryPoint::class.java)
   private val opFactory = entryPoint.syncOperationFactory()

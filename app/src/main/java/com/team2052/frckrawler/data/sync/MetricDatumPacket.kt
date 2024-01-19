@@ -6,10 +6,10 @@ import java.time.ZonedDateTime
 
 @JsonClass(generateAdapter = true)
 data class MetricDatumPacket(
-    val value: String,
-    val lastUpdated: ZonedDateTime,
-    val group: MetricDatumGroup,
-    val groupNumber: Int,
-    val teamNumber: String,
-    val metricId: String,
+  val value: String,
+  val lastUpdated: ZonedDateTime,
+  val group: MetricDatumGroup,
+  val groupNumber: Int,
+  val teamNumber: String,
+  val metricId: String,
 )

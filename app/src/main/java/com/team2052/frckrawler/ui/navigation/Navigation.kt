@@ -25,9 +25,9 @@ import com.team2052.frckrawler.ui.navigation.Screen.Game
 import com.team2052.frckrawler.ui.navigation.Screen.GameList
 import com.team2052.frckrawler.ui.navigation.Screen.ModeSelect
 import com.team2052.frckrawler.ui.navigation.Screen.Server
-import com.team2052.frckrawler.ui.scout.remote.ScoutHomeScreen
 import com.team2052.frckrawler.ui.scout.match.ScoutMatchScreen
 import com.team2052.frckrawler.ui.scout.pit.ScoutPitScreen
+import com.team2052.frckrawler.ui.scout.remote.ScoutHomeScreen
 import com.team2052.frckrawler.ui.server.home.ServerHomeScreen
 
 private const val transitionOffset = 400
@@ -36,159 +36,159 @@ private const val transitionDuration = 400
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation(initialScreen: Screen = ModeSelect) {
-    // The universal navigation controller used for all navigation throughout the app.
-    val navController = rememberNavController()
+  // The universal navigation controller used for all navigation throughout the app.
+  val navController = rememberNavController()
 
-    NavHost(
-        navController = navController,
-        startDestination = initialScreen.route,
-        enterTransition = {
-            EnterTransition.None
-        },
-        exitTransition = {
-            ExitTransition.None
-        },
+  NavHost(
+    navController = navController,
+    startDestination = initialScreen.route,
+    enterTransition = {
+      EnterTransition.None
+    },
+    exitTransition = {
+      ExitTransition.None
+    },
+  ) {
+    composable(
+      screen = ModeSelect,
+      enterTransition = {
+        // Check if mode select is the first screen and run the startup animation accordingly.
+        if (initialState.destination.route == null) {
+          fadeIn(animationSpec = tween(transitionDuration))
+        } else {
+          slideInHorizontally(
+            initialOffsetX = { -transitionOffset },
+            animationSpec = tween(transitionDuration)
+          ) + fadeIn(animationSpec = tween(transitionDuration))
+        }
+      }
     ) {
-        composable(
-            screen = ModeSelect,
-            enterTransition = {
-                // Check if mode select is the first screen and run the startup animation accordingly.
-                if (initialState.destination.route == null) {
-                    fadeIn(animationSpec = tween(transitionDuration))
-                } else {
-                    slideInHorizontally(
-                        initialOffsetX = { -transitionOffset },
-                        animationSpec = tween(transitionDuration)
-                    ) + fadeIn(animationSpec = tween(transitionDuration))
-                }
-            }
-        ) {
-            ModeSelectScreen(navController = navController)
-        }
-
-        composable(
-            screen = Screen.RemoteScoutHome
-        ) {
-            ScoutHomeScreen(navController = navController)
-        }
-
-        composable(
-            screen = Screen.MatchScout(),
-        ) { backStackEntry ->
-            val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
-            val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
-            ScoutMatchScreen(
-                metricSetId = metricSetId,
-                eventId = eventId,
-                navController = navController
-            )
-        }
-
-        composable(
-            screen = Screen.PitScout(),
-        ) { backStackEntry ->
-            val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
-            val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
-            ScoutPitScreen(
-                metricSetId = metricSetId,
-                eventId = eventId,
-                navController = navController
-            )
-        }
-
-        composable(
-            screen = Server(),
-        ) { backStackEntry ->
-            val gameId = backStackEntry.arguments?.getInt(Arguments.gameId.name) ?: 0
-            val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
-            ServerHomeScreen(
-                gameId = gameId,
-                eventId = eventId,
-                navController = navController
-            )
-        }
-
-        composable(screen = GameList) {
-            GameListScreen(navController = navController)
-        }
-
-        composable(
-            screen = Game(),
-        ) { backStackEntry ->
-            val gameId = backStackEntry.arguments?.getInt(Arguments.gameId.name) ?: 0
-            GameDetailScreen(gameId = gameId, navController = navController)
-        }
-
-        composable(
-            screen = Screen.Event(),
-        ) { backStackEntry ->
-            val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
-            EventTeamListScreen(eventId = eventId, navController = navController)
-        }
-
-        composable(
-            screen = Screen.MetricSet(),
-        ) { backStackEntry ->
-            val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
-            MetricsListScreen(metricSetId = metricSetId, navController = navController)
-        }
+      ModeSelectScreen(navController = navController)
     }
+
+    composable(
+      screen = Screen.RemoteScoutHome
+    ) {
+      ScoutHomeScreen(navController = navController)
+    }
+
+    composable(
+      screen = Screen.MatchScout(),
+    ) { backStackEntry ->
+      val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
+      val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
+      ScoutMatchScreen(
+        metricSetId = metricSetId,
+        eventId = eventId,
+        navController = navController
+      )
+    }
+
+    composable(
+      screen = Screen.PitScout(),
+    ) { backStackEntry ->
+      val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
+      val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
+      ScoutPitScreen(
+        metricSetId = metricSetId,
+        eventId = eventId,
+        navController = navController
+      )
+    }
+
+    composable(
+      screen = Server(),
+    ) { backStackEntry ->
+      val gameId = backStackEntry.arguments?.getInt(Arguments.gameId.name) ?: 0
+      val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
+      ServerHomeScreen(
+        gameId = gameId,
+        eventId = eventId,
+        navController = navController
+      )
+    }
+
+    composable(screen = GameList) {
+      GameListScreen(navController = navController)
+    }
+
+    composable(
+      screen = Game(),
+    ) { backStackEntry ->
+      val gameId = backStackEntry.arguments?.getInt(Arguments.gameId.name) ?: 0
+      GameDetailScreen(gameId = gameId, navController = navController)
+    }
+
+    composable(
+      screen = Screen.Event(),
+    ) { backStackEntry ->
+      val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
+      EventTeamListScreen(eventId = eventId, navController = navController)
+    }
+
+    composable(
+      screen = Screen.MetricSet(),
+    ) { backStackEntry ->
+      val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
+      MetricsListScreen(metricSetId = metricSetId, navController = navController)
+    }
+  }
 }
 
 // Wrapper function for adding a composable element using the Screen class
 @ExperimentalAnimationApi
 private fun NavGraphBuilder.composable(
-    screen: Screen,
-    deepLinks: List<NavDeepLink> = emptyList(),
-    enterTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
-    )? = null,
-    exitTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
-    )? = null,
-    popEnterTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
-    )? = enterTransition,
-    popExitTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
-    )? = exitTransition,
-    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit,
+  screen: Screen,
+  deepLinks: List<NavDeepLink> = emptyList(),
+  enterTransition: (
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
+  )? = null,
+  exitTransition: (
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
+  )? = null,
+  popEnterTransition: (
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
+  )? = enterTransition,
+  popExitTransition: (
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
+  )? = exitTransition,
+  content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit,
 ) = composable(
-    route = screen.route,
-    deepLinks = deepLinks,
-    enterTransition = enterTransition,
-    exitTransition = exitTransition,
-    popEnterTransition = popEnterTransition,
-    popExitTransition = popExitTransition,
-    arguments = screen.arguments,
-    content = content
+  route = screen.route,
+  deepLinks = deepLinks,
+  enterTransition = enterTransition,
+  exitTransition = exitTransition,
+  popEnterTransition = popEnterTransition,
+  popExitTransition = popExitTransition,
+  arguments = screen.arguments,
+  content = content
 )
 
 // Wrapper function for adding a composable element using the Screen class
 @ExperimentalAnimationApi
 private fun NavGraphBuilder.navigation(
-    initialScreen: Screen,
-    navigation: Screen,
-    enterTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
-    )? = null,
-    exitTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
-    )? = null,
-    popEnterTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
-    )? = enterTransition,
-    popExitTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
-    )? = exitTransition,
-    builder: NavGraphBuilder.() -> Unit
+  initialScreen: Screen,
+  navigation: Screen,
+  enterTransition: (
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
+  )? = null,
+  exitTransition: (
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
+  )? = null,
+  popEnterTransition: (
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
+  )? = enterTransition,
+  popExitTransition: (
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
+  )? = exitTransition,
+  builder: NavGraphBuilder.() -> Unit
 ) = navigation(
-    startDestination = initialScreen.route,
-    route = navigation.route,
-    arguments = navigation.arguments,
-    enterTransition = enterTransition,
-    exitTransition = exitTransition,
-    popEnterTransition = popEnterTransition,
-    popExitTransition = popExitTransition,
-    builder = builder,
+  startDestination = initialScreen.route,
+  route = navigation.route,
+  arguments = navigation.arguments,
+  enterTransition = enterTransition,
+  exitTransition = exitTransition,
+  popEnterTransition = popEnterTransition,
+  popExitTransition = popExitTransition,
+  builder = builder,
 )

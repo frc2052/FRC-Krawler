@@ -21,47 +21,46 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ScoutPitViewModel @Inject constructor(
-    metricDao: MetricDao,
-    teamDao: TeamAtEventDao,
-    private val metricDatumDao: MetricDatumDao,
-): AbstractScoutMetricsViewModel(metricDao, metricDatumDao, teamDao) {
+  metricDao: MetricDao,
+  teamDao: TeamAtEventDao,
+  private val metricDatumDao: MetricDatumDao,
+) : AbstractScoutMetricsViewModel(metricDao, metricDatumDao, teamDao) {
 
-    private val _state = MutableStateFlow<ScoutPitScreenState?>(null)
-    val state: StateFlow<ScoutPitScreenState?> = _state
+  private val _state = MutableStateFlow<ScoutPitScreenState?>(null)
+  val state: StateFlow<ScoutPitScreenState?> = _state
 
-    override fun getDatumGroup(): MetricDatumGroup = MetricDatumGroup.Pit
+  override fun getDatumGroup(): MetricDatumGroup = MetricDatumGroup.Pit
 
-    fun loadMetricsAndTeams(
-        metricSetId: Int,
-        eventId: Int,
-    ) {
-        setMetricSetId(metricSetId)
-        loadTeamsForEvent(eventId)
+  fun loadMetricsAndTeams(
+    metricSetId: Int,
+    eventId: Int,
+  ) {
+    setMetricSetId(metricSetId)
+    loadTeamsForEvent(eventId)
 
-        viewModelScope.launch {
-            combine(
-                teams,
-                currentTeam.filterNotNull(),
-                getMetricStates(),
-            ) { teams, currentTeam, metricStates ->
-                ScoutPitScreenState(
-                    availableTeams = teams,
-                    selectedTeam = currentTeam,
-                    metricStates = metricStates
-                )
-            }.collect {
-                _state.value = it
-            }
-        }
+    viewModelScope.launch {
+      combine(
+        teams,
+        currentTeam.filterNotNull(),
+        getMetricStates(),
+      ) { teams, currentTeam, metricStates ->
+        ScoutPitScreenState(
+          availableTeams = teams,
+          selectedTeam = currentTeam,
+          metricStates = metricStates
+        )
+      }.collect {
+        _state.value = it
+      }
     }
+  }
 
-    override fun getMetricData(): Flow<List<MetricDatum>> {
-        return currentTeam.filterNotNull().
-            flatMapLatest { team ->
-            metricDatumDao.getDatumForPitMetrics(
-                teamNumber = team.number
-            )
-        }
+  override fun getMetricData(): Flow<List<MetricDatum>> {
+    return currentTeam.filterNotNull().flatMapLatest { team ->
+      metricDatumDao.getDatumForPitMetrics(
+        teamNumber = team.number
+      )
     }
+  }
 
 }

@@ -8,18 +8,18 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface EventDao {
-    @Delete
-    suspend fun delete(event: Event)
+  @Delete
+  suspend fun delete(event: Event)
 
-    @Upsert
-    suspend fun insert(event: Event): Long
+  @Upsert
+  suspend fun insert(event: Event): Long
 
-    @Query("SELECT * FROM event WHERE id = :id")
-    suspend fun get(id: Int): Event
+  @Query("SELECT * FROM event WHERE id = :id")
+  suspend fun get(id: Int): Event
 
-    @Query("SELECT * FROM event WHERE gameId = :gameId")
-    fun getAllForGame(gameId: Int): Flow<List<Event>>
+  @Query("SELECT * FROM event WHERE gameId = :gameId")
+  fun getAllForGame(gameId: Int): Flow<List<Event>>
 
-    @Query("SELECT * FROM event")
-    fun getAll(): Flow<List<Event>>
+  @Query("SELECT * FROM event")
+  fun getAll(): Flow<List<Event>>
 }

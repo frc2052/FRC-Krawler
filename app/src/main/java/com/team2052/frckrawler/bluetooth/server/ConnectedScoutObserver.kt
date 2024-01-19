@@ -13,29 +13,29 @@ import javax.inject.Singleton
 import kotlin.coroutines.EmptyCoroutineContext
 
 @Singleton
-class ConnectedScoutObserver @Inject constructor(){
-    private val scope = CoroutineScope(EmptyCoroutineContext)
-    private val _devices = MutableStateFlow<Map<String, RemoteScout>>(emptyMap())
+class ConnectedScoutObserver @Inject constructor() {
+  private val scope = CoroutineScope(EmptyCoroutineContext)
+  private val _devices = MutableStateFlow<Map<String, RemoteScout>>(emptyMap())
 
-    /**
-     * Flow containing a list of devices that have performed a sync operation with this server
-     */
-    val devices: Flow<List<RemoteScout>> = _devices.map { it.values.toList() }
+  /**
+   * Flow containing a list of devices that have performed a sync operation with this server
+   */
+  val devices: Flow<List<RemoteScout>> = _devices.map { it.values.toList() }
 
-    /**
-     * Notify this observer that a scout has synced
-     */
-    internal fun notifyScoutSynced(name: String, address: String) {
-        scope.launch {
-            val deviceMap = _devices.last().toMutableMap()
-            val syncedScout = deviceMap[address]
-                ?.copy(lastSync = LocalDateTime.now())
-                ?: RemoteScout(
-                    name = name,
-                    address = address
-                )
-            deviceMap[address] = syncedScout
-            _devices.emit(deviceMap)
-        }
+  /**
+   * Notify this observer that a scout has synced
+   */
+  internal fun notifyScoutSynced(name: String, address: String) {
+    scope.launch {
+      val deviceMap = _devices.last().toMutableMap()
+      val syncedScout = deviceMap[address]
+        ?.copy(lastSync = LocalDateTime.now())
+        ?: RemoteScout(
+          name = name,
+          address = address
+        )
+      deviceMap[address] = syncedScout
+      _devices.emit(deviceMap)
     }
+  }
 }

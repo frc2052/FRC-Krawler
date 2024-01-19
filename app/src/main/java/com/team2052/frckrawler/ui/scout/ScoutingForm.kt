@@ -11,33 +11,33 @@ import com.team2052.frckrawler.ui.metrics.MetricInput
 
 @Composable
 fun ScoutingForm(
-    header: @Composable () -> Unit,
-    metrics: List<MetricState>,
-    onMetricStateChanged: (MetricState) -> Unit,
-    modifier: Modifier = Modifier,
+  header: @Composable () -> Unit,
+  metrics: List<MetricState>,
+  onMetricStateChanged: (MetricState) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier,
-    ) {
-        item {
-            header()
-        }
-
-        items(metrics) { metric ->
-            MetricInput(
-                modifier = Modifier.fillMaxWidth(),
-                metric = metric.metric,
-                state = metric.value,
-                onStateChanged = { newValue ->
-                    onMetricStateChanged(
-                        metric.copy(value = newValue)
-                    )
-                }
-            )
-
-            if (metric != metrics.last()) {
-                Divider()
-            }
-        }
+  LazyColumn(
+    modifier = modifier,
+  ) {
+    item {
+      header()
     }
+
+    items(metrics) { metric ->
+      MetricInput(
+        modifier = Modifier.fillMaxWidth(),
+        metric = metric.metric,
+        state = metric.value,
+        onStateChanged = { newValue ->
+          onMetricStateChanged(
+            metric.copy(value = newValue)
+          )
+        }
+      )
+
+      if (metric != metrics.last()) {
+        Divider()
+      }
+    }
+  }
 }

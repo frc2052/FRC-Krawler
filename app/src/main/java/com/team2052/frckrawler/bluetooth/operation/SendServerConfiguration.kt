@@ -29,80 +29,81 @@ import okio.BufferedSource
 
 @AssistedFactory
 interface SendServerConfigurationFactory {
-    fun create(gameAndEvent: GameAndEvent): SendServerConfiguration
+  fun create(gameAndEvent: GameAndEvent): SendServerConfiguration
 }
 
 data class GameAndEvent(
-    val gameId: Int,
-    val eventId: Int,
+  val gameId: Int,
+  val eventId: Int,
 )
 
 class SendServerConfiguration @AssistedInject constructor(
-    @Assisted private val gameAndEvent: GameAndEvent,
+  @Assisted private val gameAndEvent: GameAndEvent,
 
-    private val gameDao: GameDao,
-    private val metricDao: MetricDao,
-    private val eventDao: EventDao,
-    private val teamAtEventDao: TeamAtEventDao,
-    private val moshi: Moshi,
+  private val gameDao: GameDao,
+  private val metricDao: MetricDao,
+  private val eventDao: EventDao,
+  private val teamAtEventDao: TeamAtEventDao,
+  private val moshi: Moshi,
 ) : SyncOperation {
-    private val scope = CoroutineScope(Dispatchers.IO)
+  private val scope = CoroutineScope(Dispatchers.IO)
 
-    @OptIn(ExperimentalStdlibApi::class)
-    override fun execute(output: BufferedSink, input: BufferedSource): OperationResult {
-        return runBlocking {
-            val config = getConfiguration(gameId = gameAndEvent.gameId, eventId = gameAndEvent.eventId)
+  @OptIn(ExperimentalStdlibApi::class)
+  override fun execute(output: BufferedSink, input: BufferedSource): OperationResult {
+    return runBlocking {
+      val config = getConfiguration(gameId = gameAndEvent.gameId, eventId = gameAndEvent.eventId)
 
-            val scoutConfigHash = input.readInt()
-            if (scoutConfigHash == config.hashCode()) {
-               output.writeResult(OperationResult.Success)
-            } else {
-                output.writeResult(OperationResult.ServerConfigurationMismatch)
-                val adapter = moshi.adapter<ServerConfigurationPacket>()
-                adapter.toJson(output, config)
-                output.emit()
+      val scoutConfigHash = input.readInt()
+      if (scoutConfigHash == config.hashCode()) {
+        output.writeResult(OperationResult.Success)
+      } else {
+        output.writeResult(OperationResult.ServerConfigurationMismatch)
+        val adapter = moshi.adapter<ServerConfigurationPacket>()
+        adapter.toJson(output, config)
+        output.emit()
 
-                input.readResult()
-            }
-        }
+        input.readResult()
+      }
     }
-    private suspend fun getConfiguration(
-        gameId: Int,
-        eventId: Int,
-    ): ServerConfigurationPacket {
+  }
 
-        val deferredGame = scope.async { gameDao.get(gameId) }
-        val deferredEvent = scope.async { eventDao.get(eventId) }
+  private suspend fun getConfiguration(
+    gameId: Int,
+    eventId: Int,
+  ): ServerConfigurationPacket {
 
-        val game = deferredGame.await()
-        val deferredMatchMetrics = game.matchMetricsSetId?.let { setId ->
-            scope.async { metricDao.getMetrics(setId).first() }
-        }
-        val deferredPitMetrics = game.pitMetricsSetId?.let { setId ->
-            scope.async { metricDao.getMetrics(setId).first() }
-        }
+    val deferredGame = scope.async { gameDao.get(gameId) }
+    val deferredEvent = scope.async { eventDao.get(eventId) }
 
-        val deferredTeams = scope.async {
-            teamAtEventDao.getAllTeams(eventId).first()
-        }
-
-        val event = deferredEvent.await()
-        val matchMetrics = deferredMatchMetrics?.await() ?: emptyList()
-        val pitMetrics = deferredPitMetrics?.await() ?: emptyList()
-        val teams = deferredTeams.await().map { team ->
-            TeamPacket(name = team.name, number = team.number)
-        }
-
-        return ServerConfigurationPacket(
-            game = GamePacket(
-                name = game.name,
-                matchMetrics = matchMetrics.toMetricPackets(),
-                pitMetrics = pitMetrics.toMetricPackets(),
-            ),
-            event = EventPacket(
-                name = event.name,
-                teams = teams
-            )
-        )
+    val game = deferredGame.await()
+    val deferredMatchMetrics = game.matchMetricsSetId?.let { setId ->
+      scope.async { metricDao.getMetrics(setId).first() }
     }
+    val deferredPitMetrics = game.pitMetricsSetId?.let { setId ->
+      scope.async { metricDao.getMetrics(setId).first() }
+    }
+
+    val deferredTeams = scope.async {
+      teamAtEventDao.getAllTeams(eventId).first()
+    }
+
+    val event = deferredEvent.await()
+    val matchMetrics = deferredMatchMetrics?.await() ?: emptyList()
+    val pitMetrics = deferredPitMetrics?.await() ?: emptyList()
+    val teams = deferredTeams.await().map { team ->
+      TeamPacket(name = team.name, number = team.number)
+    }
+
+    return ServerConfigurationPacket(
+      game = GamePacket(
+        name = game.name,
+        matchMetrics = matchMetrics.toMetricPackets(),
+        pitMetrics = pitMetrics.toMetricPackets(),
+      ),
+      event = EventPacket(
+        name = event.name,
+        teams = teams
+      )
+    )
+  }
 }

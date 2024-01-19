@@ -24,56 +24,56 @@ onError,
 */
 
 private val DarkColorPalette = darkColors(
-    primary =           maroon200,
-    primaryVariant =    maroon500,
-    onPrimary =         white,
+  primary = maroon200,
+  primaryVariant = maroon500,
+  onPrimary = white,
 
-    secondary =         yellow200,
-    secondaryVariant =  yellow500,
-    onSecondary =       black,
+  secondary = yellow200,
+  secondaryVariant = yellow500,
+  onSecondary = black,
 
-    surface =           black,
-    onSurface =         white,
+  surface = black,
+  onSurface = white,
 
-    background =        black,
-    onBackground =      white,
+  background = black,
+  onBackground = white,
 
-    error =             red,
-    onError =           white,
+  error = red,
+  onError = white,
 )
 
 private val LightColorPalette = lightColors(
-    primary =           maroon200,
-    primaryVariant =    maroon500,
-    onPrimary =         white,
+  primary = maroon200,
+  primaryVariant = maroon500,
+  onPrimary = white,
 
-    secondary =         yellow200,
-    secondaryVariant =  yellow500,
-    onSecondary =       black,
+  secondary = yellow200,
+  secondaryVariant = yellow500,
+  onSecondary = black,
 
-    surface =           white,
-    onSurface =         black,
+  surface = white,
+  onSurface = black,
 
-    background =        white,
-    onBackground =      black,
+  background = white,
+  onBackground = black,
 
-    error =             red,
-    onError =           black,
+  error = red,
+  onError = black,
 )
 
 // TODO create fully custom color set
 val Colors.highlightSurface: Color
-    get() = if (isLight) goldSurface else darkMaroonSurface
+  get() = if (isLight) goldSurface else darkMaroonSurface
 
 val Colors.secondarySurface: Color
-    get() = if (isLight) lightestGray else darkGray
+  get() = if (isLight) lightestGray else darkGray
 
 @Composable
 fun FrcKrawlerTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit,
+  darkTheme: Boolean = isSystemInDarkTheme(),
+  content: @Composable () -> Unit,
 ) = MaterialTheme(
-    colors = if (darkTheme) DarkColorPalette else LightColorPalette,
-    shapes = shapes,
-    content = content
+  colors = if (darkTheme) DarkColorPalette else LightColorPalette,
+  shapes = shapes,
+  content = content
 )

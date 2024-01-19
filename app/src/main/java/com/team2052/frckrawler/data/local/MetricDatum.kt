@@ -10,11 +10,11 @@ import java.time.ZonedDateTime
  */
 @Entity
 data class MetricDatum(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val value: String,
-    val lastUpdated: ZonedDateTime,
-    val group: MetricDatumGroup,
-    val groupNumber: Int, // AKA match number in all current cases
-    val teamNumber: String,
-    val metricId: String,
+  @PrimaryKey(autoGenerate = true) val id: Long = 0,
+  val value: String,
+  val lastUpdated: ZonedDateTime,
+  val group: MetricDatumGroup,
+  val groupNumber: Int, // AKA match number in all current cases
+  val teamNumber: String,
+  val metricId: String,
 )

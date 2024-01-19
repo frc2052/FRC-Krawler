@@ -7,15 +7,15 @@ import java.time.ZonedDateTime
 
 class DateTimeConverters {
 
-    @TypeConverter
-    fun toZonedDateTime(value: Long?): ZonedDateTime? {
-        return value?.let {
-            ZonedDateTime.ofInstant(Instant.ofEpochSecond(value), ZoneId.systemDefault())
-        }
+  @TypeConverter
+  fun toZonedDateTime(value: Long?): ZonedDateTime? {
+    return value?.let {
+      ZonedDateTime.ofInstant(Instant.ofEpochSecond(value), ZoneId.systemDefault())
     }
+  }
 
-    @TypeConverter
-    fun fromZonedDateTime(value: ZonedDateTime?): Long? {
-        return value?.toEpochSecond()
-    }
+  @TypeConverter
+  fun fromZonedDateTime(value: ZonedDateTime?): Long? {
+    return value?.toEpochSecond()
+  }
 }

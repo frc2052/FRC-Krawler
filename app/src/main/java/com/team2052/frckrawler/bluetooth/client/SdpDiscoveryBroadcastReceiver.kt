@@ -12,7 +12,7 @@ import android.os.Parcelable
  */
 class SdpDiscoveryBroadcastReceiver(
   private val onServicesDiscovered: (List<ParcelUuid>) -> Unit
-): BroadcastReceiver() {
+) : BroadcastReceiver() {
   override fun onReceive(context: Context, intent: Intent) {
     when (intent.action) {
       BluetoothDevice.ACTION_UUID -> {

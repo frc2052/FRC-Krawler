@@ -19,10 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
@@ -47,7 +47,7 @@ fun AddGameDialog(
           style = MaterialTheme.typography.h6
         )
 
-        Box (modifier = Modifier.padding(horizontal = 24.dp)) {
+        Box(modifier = Modifier.padding(horizontal = 24.dp)) {
           FRCKrawlerTextField(
             value = gameName,
             onValueChange = { gameName = it },

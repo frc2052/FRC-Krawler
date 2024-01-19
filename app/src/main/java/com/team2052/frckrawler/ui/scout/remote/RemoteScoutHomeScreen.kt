@@ -35,187 +35,191 @@ import com.team2052.frckrawler.ui.theme.spaceLarge
 
 @Composable
 fun ScoutHomeScreen(
-    modifier: Modifier = Modifier,
-    navController: NavController,
+  modifier: Modifier = Modifier,
+  navController: NavController,
 ) {
-    val viewModel: RemoteScoutViewModel = hiltViewModel()
+  val viewModel: RemoteScoutViewModel = hiltViewModel()
 
-    // Don't love this, but it is what we need
-    val context = LocalContext.current as ComponentActivity
+  // Don't love this, but it is what we need
+  val context = LocalContext.current as ComponentActivity
 
-    Box {
-        if (viewModel.showPermissionRequests) {
-            BluetoothPermissionRequestDialogs(
-                deviceType = DeviceType.Client,
-                onAllPermissionsGranted = { viewModel.connectToServer(context) },
-                onCanceled = { viewModel.showPermissionRequests = false }
-            )
-        }
-
-        if (viewModel.requestEnableBluetooth) {
-            RequestEnableBluetooth(
-                deviceType = DeviceType.Client,
-                onEnabled = { viewModel.connectToServer(context) },
-                onCanceled = { viewModel.requestEnableBluetooth = false }
-            )
-        }
-
-        FRCKrawlerScaffold(
-            modifier = modifier,
-            appBar = {
-                FRCKrawlerAppBar(
-                    navController = navController,
-                    title = {
-                        Text("Scout")
-                    }
-                )
-            },
-        ) { contentPadding ->
-            ScoutHomeScreenContent(
-                modifier = modifier.padding(contentPadding),
-                serverState = viewModel.serverConnectionState,
-                onFindServerClicked = { viewModel.connectToServer(context) },
-                onSyncClicked = { viewModel.performSync() }
-            )
-        }
+  Box {
+    if (viewModel.showPermissionRequests) {
+      BluetoothPermissionRequestDialogs(
+        deviceType = DeviceType.Client,
+        onAllPermissionsGranted = { viewModel.connectToServer(context) },
+        onCanceled = { viewModel.showPermissionRequests = false }
+      )
     }
+
+    if (viewModel.requestEnableBluetooth) {
+      RequestEnableBluetooth(
+        deviceType = DeviceType.Client,
+        onEnabled = { viewModel.connectToServer(context) },
+        onCanceled = { viewModel.requestEnableBluetooth = false }
+      )
+    }
+
+    FRCKrawlerScaffold(
+      modifier = modifier,
+      appBar = {
+        FRCKrawlerAppBar(
+          navController = navController,
+          title = {
+            Text("Scout")
+          }
+        )
+      },
+    ) { contentPadding ->
+      ScoutHomeScreenContent(
+        modifier = modifier.padding(contentPadding),
+        serverState = viewModel.serverConnectionState,
+        onFindServerClicked = { viewModel.connectToServer(context) },
+        onSyncClicked = { viewModel.performSync() }
+      )
+    }
+  }
 }
 
 @Composable
 private fun ScoutHomeScreenContent(
-    modifier: Modifier = Modifier,
-    serverState: ServerConnectionState,
-    onFindServerClicked: () -> Unit,
-    onSyncClicked: () -> Unit,
+  modifier: Modifier = Modifier,
+  serverState: ServerConnectionState,
+  onFindServerClicked: () -> Unit,
+  onSyncClicked: () -> Unit,
 ) {
-    Column(modifier = modifier.padding(spaceLarge)) {
-        ConnectionStatusCard(
-            state = serverState,
-            onFindServerClicked = onFindServerClicked
-        )
-        Spacer(Modifier.height(16.dp))
-        Button(onClick = onSyncClicked) {
-            Text("Sync")
-        }
+  Column(modifier = modifier.padding(spaceLarge)) {
+    ConnectionStatusCard(
+      state = serverState,
+      onFindServerClicked = onFindServerClicked
+    )
+    Spacer(Modifier.height(16.dp))
+    Button(onClick = onSyncClicked) {
+      Text("Sync")
     }
+  }
 }
 
 @Composable
 private fun ConnectionStatusCard(
-    modifier: Modifier = Modifier,
-    state: ServerConnectionState,
-    onFindServerClicked: () -> Unit
+  modifier: Modifier = Modifier,
+  state: ServerConnectionState,
+  onFindServerClicked: () -> Unit
 ) {
-    Card(
-        modifier = modifier,
-        header = {
-            CardHeader(
-                title = { Text("Server Connection") }
-            )
-        },
-    ) {
-        when (state) {
-            is ServerConnectionState.Connected -> {
-                ServerConnected(state)
-            }
-            is ServerConnectionState.Connecting -> {
-                ServerConnecting()
-            }
-            else -> {
-                ServerNotConnected(
-                    state = state,
-                    onFindServerClicked = onFindServerClicked
-                )
-            }
-        }
+  Card(
+    modifier = modifier,
+    header = {
+      CardHeader(
+        title = { Text("Server Connection") }
+      )
+    },
+  ) {
+    when (state) {
+      is ServerConnectionState.Connected -> {
+        ServerConnected(state)
+      }
+
+      is ServerConnectionState.Connecting -> {
+        ServerConnecting()
+      }
+
+      else -> {
+        ServerNotConnected(
+          state = state,
+          onFindServerClicked = onFindServerClicked
+        )
+      }
     }
+  }
 }
 
 @Composable
 private fun ServerConnected(state: ServerConnectionState.Connected) {
-    Text("Connected to ${state.name}")
+  Text("Connected to ${state.name}")
 }
 
 
 @Composable
 private fun ServerConnecting() {
-    Row {
-        CircularProgressIndicator(
-            modifier = Modifier.size(28.dp)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Text("Connecting...")
-    }
+  Row {
+    CircularProgressIndicator(
+      modifier = Modifier.size(28.dp)
+    )
+    Spacer(modifier = Modifier.width(16.dp))
+    Text("Connecting...")
+  }
 }
 
 @Composable
 private fun ServerNotConnected(
-    state: ServerConnectionState,
-    onFindServerClicked: () -> Unit
+  state: ServerConnectionState,
+  onFindServerClicked: () -> Unit
 ) {
-    Column {
-        Text("Connect to a server to start scouting.")
+  Column {
+    Text("Connect to a server to start scouting.")
 
-        when (state) {
-            is ServerConnectionState.PairingFailed -> {
-                Text(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    color = MaterialTheme.colors.error,
-                    text = "Pairing failed, please try again."
-                )
-            }
-            is ServerConnectionState.NoFrcKrawlerServiceFound -> {
-                Text(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    color = MaterialTheme.colors.error,
-                    text = "FRCKrawler server is not running on the selected device. " +
-                      "Please ensure it is running and try again."
-                )
-            }
-            else -> {} // No error, so no text needed
-        }
-        
-        Spacer(modifier = Modifier.height(16.dp))
+    when (state) {
+      is ServerConnectionState.PairingFailed -> {
+        Text(
+          modifier = Modifier.padding(vertical = 16.dp),
+          color = MaterialTheme.colors.error,
+          text = "Pairing failed, please try again."
+        )
+      }
 
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            Button(
-                onClick = onFindServerClicked,
-            ) {
-                Text("Find Server")
-            }
-        }
+      is ServerConnectionState.NoFrcKrawlerServiceFound -> {
+        Text(
+          modifier = Modifier.padding(vertical = 16.dp),
+          color = MaterialTheme.colors.error,
+          text = "FRCKrawler server is not running on the selected device. " +
+                  "Please ensure it is running and try again."
+        )
+      }
+
+      else -> {} // No error, so no text needed
     }
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    Box(
+      modifier = Modifier.fillMaxWidth(),
+      contentAlignment = Alignment.BottomEnd
+    ) {
+      Button(
+        onClick = onFindServerClicked,
+      ) {
+        Text("Find Server")
+      }
+    }
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun ScoutScreenConnectedPreview() {
-    FrcKrawlerTheme {
-        Surface {
-            ScoutHomeScreenContent(
-                serverState = ServerConnectionState.Connected(
-                    "KnightKrawler Server"
-                ),
-                onFindServerClicked = { },
-                onSyncClicked = { }
-            )
-        }
+  FrcKrawlerTheme {
+    Surface {
+      ScoutHomeScreenContent(
+        serverState = ServerConnectionState.Connected(
+          "KnightKrawler Server"
+        ),
+        onFindServerClicked = { },
+        onSyncClicked = { }
+      )
     }
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun ScoutScreenNotConnectedPreview() {
-    FrcKrawlerTheme {
-        Surface {
-            ScoutHomeScreenContent(
-                serverState = ServerConnectionState.NotConnected,
-                onFindServerClicked = { },
-                onSyncClicked = { }
-            )
-        }
+  FrcKrawlerTheme {
+    Surface {
+      ScoutHomeScreenContent(
+        serverState = ServerConnectionState.NotConnected,
+        onFindServerClicked = { },
+        onSyncClicked = { }
+      )
     }
+  }
 }

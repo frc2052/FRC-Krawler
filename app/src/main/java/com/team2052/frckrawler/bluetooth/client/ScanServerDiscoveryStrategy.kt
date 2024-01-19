@@ -24,7 +24,7 @@ internal class ScanServerDiscoveryStrategy @Inject constructor(
 
   override suspend fun launchDeviceDiscovery(
     activity: ComponentActivity
-  ): DeviceSelectionResult  = suspendCoroutine { continuation ->
+  ): DeviceSelectionResult = suspendCoroutine { continuation ->
     val launcher = activity.activityResultRegistry.register(
       LAUNCHER_KEY,
       ActivityResultContracts.StartActivityForResult()
@@ -41,7 +41,7 @@ internal class ScanServerDiscoveryStrategy @Inject constructor(
     result: ActivityResult
   ): DeviceSelectionResult {
     when (result.resultCode) {
-      Activity.RESULT_OK-> {
+      Activity.RESULT_OK -> {
         val deviceToPair: BluetoothDevice? =
           result.data?.getParcelableExtra(BluetoothDeviceChooserActivity.EXTRA_DEVICE)
         if (deviceToPair != null) {

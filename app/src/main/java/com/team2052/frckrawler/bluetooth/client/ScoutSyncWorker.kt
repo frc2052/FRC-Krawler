@@ -48,7 +48,8 @@ class ScoutSyncWorker @AssistedInject constructor(
     val serverAddress = inputData.getString(DATA_SERVER_ADDRESS)
     val serverDevice = bluetoothAdapter.getRemoteDevice(serverAddress)
 
-    val connection = serverDevice.createInsecureRfcommSocketToServiceRecord(BluetoothSyncConstants.Uuid)
+    val connection =
+      serverDevice.createInsecureRfcommSocketToServiceRecord(BluetoothSyncConstants.Uuid)
 
     // TODO catch exceptions, handle errors
     connection.connect()
@@ -69,15 +70,18 @@ class ScoutSyncWorker @AssistedInject constructor(
   override suspend fun getForegroundInfo(): ForegroundInfo {
     val pendingIntent: PendingIntent =
       Intent(applicationContext, MainActivity::class.java).let { notificationIntent ->
-        PendingIntent.getActivity(applicationContext, 0, notificationIntent,
-          PendingIntent.FLAG_IMMUTABLE)
+        PendingIntent.getActivity(
+          applicationContext, 0, notificationIntent,
+          PendingIntent.FLAG_IMMUTABLE
+        )
       }
     val title = applicationContext.getText(R.string.scout_sync_notification_title)
-    val notification = NotificationCompat.Builder(applicationContext, FrcKrawlerNotificationChannel.Sync.id)
-      .setContentTitle(title)
-      .setSmallIcon(R.drawable.ic_logo)
-      .setContentIntent(pendingIntent)
-      .build()
+    val notification =
+      NotificationCompat.Builder(applicationContext, FrcKrawlerNotificationChannel.Sync.id)
+        .setContentTitle(title)
+        .setSmallIcon(R.drawable.ic_logo)
+        .setContentIntent(pendingIntent)
+        .build()
 
     val serviceType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE or ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC

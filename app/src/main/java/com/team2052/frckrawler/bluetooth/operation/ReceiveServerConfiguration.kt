@@ -30,107 +30,109 @@ import okio.BufferedSource
 import javax.inject.Inject
 
 class ReceiveServerConfiguration @Inject constructor(
-    private val gameDao: GameDao,
-    private val metricDao: MetricDao,
-    private val eventDao: EventDao,
-    private val teamAtEventDao: TeamAtEventDao,
-    private val moshi: Moshi,
+  private val gameDao: GameDao,
+  private val metricDao: MetricDao,
+  private val eventDao: EventDao,
+  private val teamAtEventDao: TeamAtEventDao,
+  private val moshi: Moshi,
 ) : SyncOperation {
-    private val scope = CoroutineScope(Dispatchers.IO)
+  private val scope = CoroutineScope(Dispatchers.IO)
 
-    @OptIn(ExperimentalStdlibApi::class)
-    override fun execute(output: BufferedSink, input: BufferedSource): OperationResult {
-        return runBlocking {
-            val config = getConfiguration()
-            val configHash = config?.hashCode() ?: 0
-            output.writeInt(configHash).emit()
+  @OptIn(ExperimentalStdlibApi::class)
+  override fun execute(output: BufferedSink, input: BufferedSource): OperationResult {
+    return runBlocking {
+      val config = getConfiguration()
+      val configHash = config?.hashCode() ?: 0
+      output.writeInt(configHash).emit()
 
-            val hashResult = input.readResult()
-            if (hashResult == OperationResult.ServerConfigurationMismatch) {
-                val adapter = moshi.adapter<ServerConfigurationPacket>()
-                val configuration = adapter.fromJson(input)
+      val hashResult = input.readResult()
+      if (hashResult == OperationResult.ServerConfigurationMismatch) {
+        val adapter = moshi.adapter<ServerConfigurationPacket>()
+        val configuration = adapter.fromJson(input)
 
-                if (configuration != null) {
-                    saveConfiguration(configuration)
-                } else {
-                    return@runBlocking output.writeResult(OperationResult.FailedToSaveConfiguration)
-                }
-
-                output.writeResult(OperationResult.Success)
-            } else {
-                hashResult
-            }
+        if (configuration != null) {
+          saveConfiguration(configuration)
+        } else {
+          return@runBlocking output.writeResult(OperationResult.FailedToSaveConfiguration)
         }
+
+        output.writeResult(OperationResult.Success)
+      } else {
+        hashResult
+      }
+    }
+  }
+
+  private suspend fun getConfiguration(): ServerConfigurationPacket? {
+    val deferredGame = scope.async { gameDao.get(Game.SCOUT_GAME_ID) }
+    val deferredEvent =
+      scope.async { eventDao.getAllForGame(Game.SCOUT_GAME_ID).first().firstOrNull() }
+
+    val game = deferredGame.await()
+    val deferredMatchMetrics = game.matchMetricsSetId?.let { setId ->
+      scope.async { metricDao.getMetrics(setId).first() }
+    }
+    val deferredPitMetrics = game.pitMetricsSetId?.let { setId ->
+      scope.async { metricDao.getMetrics(setId).first() }
     }
 
-    private suspend fun getConfiguration(): ServerConfigurationPacket? {
-        val deferredGame = scope.async { gameDao.get(Game.SCOUT_GAME_ID) }
-        val deferredEvent = scope.async { eventDao.getAllForGame(Game.SCOUT_GAME_ID).first().firstOrNull() }
+    val event = deferredEvent.await() ?: return null
 
-        val game = deferredGame.await()
-        val deferredMatchMetrics = game.matchMetricsSetId?.let { setId ->
-            scope.async { metricDao.getMetrics(setId).first() }
-        }
-        val deferredPitMetrics = game.pitMetricsSetId?.let { setId ->
-            scope.async { metricDao.getMetrics(setId).first() }
-        }
-
-        val event = deferredEvent.await() ?: return null
-
-        val deferredTeams = scope.async {
-            teamAtEventDao.getAllTeams(event.id).first()
-        }
-
-        val matchMetrics = deferredMatchMetrics?.await() ?: emptyList()
-        val pitMetrics = deferredPitMetrics?.await() ?: emptyList()
-        val teams = deferredTeams.await().map { team ->
-            TeamPacket(name = team.name, number = team.number)
-        }
-
-        return ServerConfigurationPacket(
-            game = GamePacket(
-                name = game.name,
-                matchMetrics = matchMetrics.toMetricPackets(),
-                pitMetrics = pitMetrics.toMetricPackets(),
-            ),
-            event = EventPacket(
-                name = event.name,
-                teams = teams
-            )
-        )
+    val deferredTeams = scope.async {
+      teamAtEventDao.getAllTeams(event.id).first()
     }
-    private suspend fun saveConfiguration(config: ServerConfigurationPacket) {
-        gameDao.insert(
-            Game(
-                id = Game.SCOUT_GAME_ID,
-                name = config.game.name
-            )
-        )
 
-        metricDao.deleteAllFromSet(MetricSet.SCOUT_MATCH_METRIC_SET_ID)
-        val matchMetrics = config.game.matchMetrics.toRecords(MetricSet.SCOUT_MATCH_METRIC_SET_ID)
-        metricDao.insertAll(matchMetrics)
-
-        metricDao.deleteAllFromSet(MetricSet.SCOUT_PIT_METRIC_SET_ID)
-        val pitMetrics = config.game.pitMetrics.toRecords(MetricSet.SCOUT_PIT_METRIC_SET_ID)
-        metricDao.insertAll(pitMetrics)
-
-        eventDao.insert(
-            Event(
-                id = Event.SCOUT_EVENT_ID,
-                gameId = Game.SCOUT_GAME_ID,
-                name = config.event.name,
-            )
-        )
-
-        teamAtEventDao.deleteAllFromEvent(Event.SCOUT_EVENT_ID)
-        val teams = config.event.teams.map { team ->
-            TeamAtEvent(
-                number = team.number,
-                name = team.name,
-                eventId = Event.SCOUT_EVENT_ID
-            )
-        }
-        teamAtEventDao.insertAll(teams)
+    val matchMetrics = deferredMatchMetrics?.await() ?: emptyList()
+    val pitMetrics = deferredPitMetrics?.await() ?: emptyList()
+    val teams = deferredTeams.await().map { team ->
+      TeamPacket(name = team.name, number = team.number)
     }
+
+    return ServerConfigurationPacket(
+      game = GamePacket(
+        name = game.name,
+        matchMetrics = matchMetrics.toMetricPackets(),
+        pitMetrics = pitMetrics.toMetricPackets(),
+      ),
+      event = EventPacket(
+        name = event.name,
+        teams = teams
+      )
+    )
+  }
+
+  private suspend fun saveConfiguration(config: ServerConfigurationPacket) {
+    gameDao.insert(
+      Game(
+        id = Game.SCOUT_GAME_ID,
+        name = config.game.name
+      )
+    )
+
+    metricDao.deleteAllFromSet(MetricSet.SCOUT_MATCH_METRIC_SET_ID)
+    val matchMetrics = config.game.matchMetrics.toRecords(MetricSet.SCOUT_MATCH_METRIC_SET_ID)
+    metricDao.insertAll(matchMetrics)
+
+    metricDao.deleteAllFromSet(MetricSet.SCOUT_PIT_METRIC_SET_ID)
+    val pitMetrics = config.game.pitMetrics.toRecords(MetricSet.SCOUT_PIT_METRIC_SET_ID)
+    metricDao.insertAll(pitMetrics)
+
+    eventDao.insert(
+      Event(
+        id = Event.SCOUT_EVENT_ID,
+        gameId = Game.SCOUT_GAME_ID,
+        name = config.event.name,
+      )
+    )
+
+    teamAtEventDao.deleteAllFromEvent(Event.SCOUT_EVENT_ID)
+    val teams = config.event.teams.map { team ->
+      TeamAtEvent(
+        number = team.number,
+        name = team.name,
+        eventId = Event.SCOUT_EVENT_ID
+      )
+    }
+    teamAtEventDao.insertAll(teams)
+  }
 }

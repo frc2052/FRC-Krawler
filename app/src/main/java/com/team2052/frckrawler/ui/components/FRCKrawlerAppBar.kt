@@ -14,71 +14,73 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
 fun FRCKrawlerAppBar(
-    modifier: Modifier = Modifier,
-    navController: NavController = rememberNavController(),
-    navigation: @Composable () -> Unit = {
-        DefaultNavigationButton(navController)
-    },
-    title: @Composable RowScope.() -> Unit,
-    actions: @Composable RowScope.() -> Unit = { },
+  modifier: Modifier = Modifier,
+  navController: NavController = rememberNavController(),
+  navigation: @Composable () -> Unit = {
+    DefaultNavigationButton(navController)
+  },
+  title: @Composable RowScope.() -> Unit,
+  actions: @Composable RowScope.() -> Unit = { },
 ) = TopAppBar(
-    modifier = modifier.zIndex(1f),
-    backgroundColor = MaterialTheme.colors.primary,
-    elevation = 0.dp,
-    contentColor = MaterialTheme.colors.onSurface,
-    navigationIcon = navigation,
-    actions = {
-        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.onPrimary) {
-            actions()
-        }
-    },
-    title = {
-        ProvideTextStyle(MaterialTheme.typography.h6.copy(
-            color = MaterialTheme.colors.onPrimary
-        )) { Row { title() } }
-    },
+  modifier = modifier.zIndex(1f),
+  backgroundColor = MaterialTheme.colors.primary,
+  elevation = 0.dp,
+  contentColor = MaterialTheme.colors.onSurface,
+  navigationIcon = navigation,
+  actions = {
+    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.onPrimary) {
+      actions()
+    }
+  },
+  title = {
+    ProvideTextStyle(
+      MaterialTheme.typography.h6.copy(
+        color = MaterialTheme.colors.onPrimary
+      )
+    ) { Row { title() } }
+  },
 )
 
 @Composable
 private fun DefaultNavigationButton(
-    navController: NavController
+  navController: NavController
 ) {
-    if (navController.previousBackStackEntry != null) {
-        IconButton(onClick = { navController.popBackStack() }) {
-            Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = "Backwards Navigation",
-                tint = MaterialTheme.colors.onPrimary,
-            )
-        }
+  if (navController.previousBackStackEntry != null) {
+    IconButton(onClick = { navController.popBackStack() }) {
+      Icon(
+        imageVector = Icons.Filled.ArrowBack,
+        contentDescription = "Backwards Navigation",
+        tint = MaterialTheme.colors.onPrimary,
+      )
     }
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun FRCKrawlerAppBarPreviewLight() {
-    FrcKrawlerTheme(darkTheme = false) {
-        FRCKrawlerAppBar(
-            title = { Text("preview") },
-        )
-    }
+  FrcKrawlerTheme(darkTheme = false) {
+    FRCKrawlerAppBar(
+      title = { Text("preview") },
+    )
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun FRCKrawlerAppBarPreviewDark() {
-    FrcKrawlerTheme(darkTheme = true) {
-        FRCKrawlerAppBar(
-            title = { Text("preview") },
-        )
-    }
+  FrcKrawlerTheme(darkTheme = true) {
+    FRCKrawlerAppBar(
+      title = { Text("preview") },
+    )
+  }
 }

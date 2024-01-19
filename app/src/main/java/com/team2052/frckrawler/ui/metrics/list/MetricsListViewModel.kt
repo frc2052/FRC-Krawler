@@ -16,63 +16,63 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MetricsListViewModel @Inject constructor(
-    private val metricRepo: MetricRepository,
-    private val metricSetDao: MetricSetDao,
-    private val gameDao: GameDao,
-): ViewModel() {
-    private val _state = MutableStateFlow<MetricListScreenState>(MetricListScreenState.Loading)
-    val state: StateFlow<MetricListScreenState> = _state
+  private val metricRepo: MetricRepository,
+  private val metricSetDao: MetricSetDao,
+  private val gameDao: GameDao,
+) : ViewModel() {
+  private val _state = MutableStateFlow<MetricListScreenState>(MetricListScreenState.Loading)
+  val state: StateFlow<MetricListScreenState> = _state
 
-    private lateinit var metricSet: MetricSet
-    private lateinit var game: Game
+  private lateinit var metricSet: MetricSet
+  private lateinit var game: Game
 
-    fun loadMetrics(metricSetId: Int) {
-        viewModelScope.launch {
-            metricSet = metricSetDao.get(metricSetId)
+  fun loadMetrics(metricSetId: Int) {
+    viewModelScope.launch {
+      metricSet = metricSetDao.get(metricSetId)
 
-            combine(
-                metricRepo.getMetrics(metricSetId),
-                gameDao.getWithUpdates(metricSet.gameId)
-            ) { metrics, game ->
-                this@MetricsListViewModel.game = game
-                MetricListScreenState.Content(
-                    metrics = metrics,
-                    setName = metricSet.name,
-                    gameName = game.name,
-                    isPitMetricSet = metricSetId == game.pitMetricsSetId,
-                    isMatchMetricSet = metricSetId == game.matchMetricsSetId,
-                )
-            }.collect {
-                _state.value = it
-            }
-        }
+      combine(
+        metricRepo.getMetrics(metricSetId),
+        gameDao.getWithUpdates(metricSet.gameId)
+      ) { metrics, game ->
+        this@MetricsListViewModel.game = game
+        MetricListScreenState.Content(
+          metrics = metrics,
+          setName = metricSet.name,
+          gameName = game.name,
+          isPitMetricSet = metricSetId == game.pitMetricsSetId,
+          isMatchMetricSet = metricSetId == game.matchMetricsSetId,
+        )
+      }.collect {
+        _state.value = it
+      }
     }
+  }
 
-    fun deleteMetricSet() {
-        viewModelScope.launch {
-            metricSetDao.delete(metricSet)
-        }
+  fun deleteMetricSet() {
+    viewModelScope.launch {
+      metricSetDao.delete(metricSet)
     }
+  }
 
-    fun setIsMatchMetrics(state: Boolean) {
-        viewModelScope.launch {
-            val updatedGame = if (state) {
-                game.copy(matchMetricsSetId = metricSet.id)
-            } else {
-                game.copy(matchMetricsSetId = null)
-            }
-            gameDao.insert(updatedGame)
-        }
+  fun setIsMatchMetrics(state: Boolean) {
+    viewModelScope.launch {
+      val updatedGame = if (state) {
+        game.copy(matchMetricsSetId = metricSet.id)
+      } else {
+        game.copy(matchMetricsSetId = null)
+      }
+      gameDao.insert(updatedGame)
     }
+  }
 
-    fun setIsPitMetrics(state: Boolean) {
-        viewModelScope.launch {
-            val updatedGame = if (state) {
-                game.copy(pitMetricsSetId = metricSet.id)
-            } else {
-                game.copy(pitMetricsSetId = null)
-            }
-            gameDao.insert(updatedGame)
-        }
+  fun setIsPitMetrics(state: Boolean) {
+    viewModelScope.launch {
+      val updatedGame = if (state) {
+        game.copy(pitMetricsSetId = metricSet.id)
+      } else {
+        game.copy(pitMetricsSetId = null)
+      }
+      gameDao.insert(updatedGame)
     }
+  }
 }

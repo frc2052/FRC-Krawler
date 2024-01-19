@@ -18,7 +18,8 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @RequiresApi(Build.VERSION_CODES.O)
-internal class CompanionDeviceServerDiscoveryStrategy @Inject constructor() : ServerDiscoveryStrategy {
+internal class CompanionDeviceServerDiscoveryStrategy @Inject constructor() :
+  ServerDiscoveryStrategy {
 
   override suspend fun launchDeviceDiscovery(
     activity: ComponentActivity
@@ -60,7 +61,7 @@ internal class CompanionDeviceServerDiscoveryStrategy @Inject constructor() : Se
     result: ActivityResult
   ): DeviceSelectionResult {
     when (result.resultCode) {
-      Activity.RESULT_OK-> {
+      Activity.RESULT_OK -> {
         val deviceToPair: BluetoothDevice? =
           result.data?.getParcelableExtra(CompanionDeviceManager.EXTRA_DEVICE)
         if (deviceToPair != null) {

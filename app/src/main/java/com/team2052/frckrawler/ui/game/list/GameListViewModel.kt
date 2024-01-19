@@ -13,22 +13,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameListViewModel @Inject constructor(
-    private val gameDao: GameDao
-): ViewModel() {
-    var games: List<Game> by mutableStateOf(emptyList())
+  private val gameDao: GameDao
+) : ViewModel() {
+  var games: List<Game> by mutableStateOf(emptyList())
 
-    fun loadGames() {
-        viewModelScope.launch {
-            gameDao.getAll().collect {
-                games = it
-            }
-        }
+  fun loadGames() {
+    viewModelScope.launch {
+      gameDao.getAll().collect {
+        games = it
+      }
     }
+  }
 
-    fun createGame(name: String) {
-        viewModelScope.launch {
-            gameDao.insert(Game(name = name))
-        }
+  fun createGame(name: String) {
+    viewModelScope.launch {
+      gameDao.insert(Game(name = name))
     }
+  }
 
 }

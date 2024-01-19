@@ -22,80 +22,80 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ServerHomeViewModel @Inject constructor(
-    private val bluetoothAdapter: BluetoothAdapter,
-    private val permissionManager: PermissionManager,
-    private val syncServiceController: SyncServiceController,
-    private val connectedScoutObserver: ConnectedScoutObserver,
-    private val gameDao: GameDao,
-    private val eventDao: EventDao,
+  private val bluetoothAdapter: BluetoothAdapter,
+  private val permissionManager: PermissionManager,
+  private val syncServiceController: SyncServiceController,
+  private val connectedScoutObserver: ConnectedScoutObserver,
+  private val gameDao: GameDao,
+  private val eventDao: EventDao,
 ) : ViewModel() {
 
-    var serverState by mutableStateOf(ServerState.DISABLED)
-    var showPermissionRequests by mutableStateOf(false)
-    var requestEnableBluetooth by mutableStateOf(false)
-    var connectedScouts: List<RemoteScout> by mutableStateOf(emptyList())
-    var game: Game? by mutableStateOf(null)
-    var event: Event? by mutableStateOf(null)
+  var serverState by mutableStateOf(ServerState.DISABLED)
+  var showPermissionRequests by mutableStateOf(false)
+  var requestEnableBluetooth by mutableStateOf(false)
+  var connectedScouts: List<RemoteScout> by mutableStateOf(emptyList())
+  var game: Game? by mutableStateOf(null)
+  var event: Event? by mutableStateOf(null)
 
-    fun loadGameAndEvent(gameId: Int, eventId: Int) {
-        viewModelScope.launch {
-            game = gameDao.get(gameId)
-        }
-
-        viewModelScope.launch {
-            event = eventDao.get(eventId)
-        }
+  fun loadGameAndEvent(gameId: Int, eventId: Int) {
+    viewModelScope.launch {
+      game = gameDao.get(gameId)
     }
 
-    /**
-     * 1. State = enabling
-     * 2. Request & await permissions
-     * 3. Request Bluetooth
-     * 4. Start server thread
-     * 5. State = enabled
-     */
-    fun startServer() {
-        serverState = ServerState.ENABLING
+    viewModelScope.launch {
+      event = eventDao.get(eventId)
+    }
+  }
 
-        // Check location strategy worked
-        if (!permissionManager.hasPermissions(RequiredPermissions.serverPermissions)) {
-            serverState = ServerState.DISABLED
-            showPermissionRequests = true
-            return
-        }
+  /**
+   * 1. State = enabling
+   * 2. Request & await permissions
+   * 3. Request Bluetooth
+   * 4. Start server thread
+   * 5. State = enabled
+   */
+  fun startServer() {
+    serverState = ServerState.ENABLING
 
-        // Request bluetooth if not all ready enabled
-        if (!bluetoothAdapter.isEnabled) {
-            serverState = ServerState.DISABLED
-            requestEnableBluetooth = true
-            return
-        }
-
-        if (game != null && event != null) {
-            syncServiceController.startServer(
-                gameId = game!!.id,
-                eventId = event!!.id
-            )
-        } else {
-            serverState = ServerState.DISABLED
-            return
-        }
-
-        serverState = ServerState.ENABLED
-
-        viewModelScope.launch {
-            connectedScoutObserver.devices.collectLatest {
-                connectedScouts = it
-            }
-        }
+    // Check location strategy worked
+    if (!permissionManager.hasPermissions(RequiredPermissions.serverPermissions)) {
+      serverState = ServerState.DISABLED
+      showPermissionRequests = true
+      return
     }
 
-    fun stopServer() {
-        serverState = ServerState.DISABLING
-
-        syncServiceController.stopServer()
-
-        serverState = ServerState.DISABLED
+    // Request bluetooth if not all ready enabled
+    if (!bluetoothAdapter.isEnabled) {
+      serverState = ServerState.DISABLED
+      requestEnableBluetooth = true
+      return
     }
+
+    if (game != null && event != null) {
+      syncServiceController.startServer(
+        gameId = game!!.id,
+        eventId = event!!.id
+      )
+    } else {
+      serverState = ServerState.DISABLED
+      return
+    }
+
+    serverState = ServerState.ENABLED
+
+    viewModelScope.launch {
+      connectedScoutObserver.devices.collectLatest {
+        connectedScouts = it
+      }
+    }
+  }
+
+  fun stopServer() {
+    serverState = ServerState.DISABLING
+
+    syncServiceController.stopServer()
+
+    serverState = ServerState.DISABLED
+  }
 
 }

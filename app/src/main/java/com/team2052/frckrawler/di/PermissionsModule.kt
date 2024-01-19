@@ -10,9 +10,9 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class PermissionsModule {
-    @Binds
-    abstract fun bindPermissionManager(
-        manager: RealPermissionManager
-    ): PermissionManager
+  @Binds
+  abstract fun bindPermissionManager(
+    manager: RealPermissionManager
+  ): PermissionManager
 
 }

@@ -8,18 +8,18 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MetricSetDao {
-    @Delete
-    suspend fun delete(metricSet: MetricSet)
+  @Delete
+  suspend fun delete(metricSet: MetricSet)
 
-    @Insert
-    suspend fun insert(metricSet: MetricSet): Long
+  @Insert
+  suspend fun insert(metricSet: MetricSet): Long
 
-    @Query("SELECT * FROM metric_set WHERE id = :id")
-    suspend fun get(id: Int): MetricSet
+  @Query("SELECT * FROM metric_set WHERE id = :id")
+  suspend fun get(id: Int): MetricSet
 
-    @Query("SELECT * FROM metric_set WHERE gameId = :gameId")
-    fun getAllForGame(gameId: Int): Flow<List<MetricSet>>
+  @Query("SELECT * FROM metric_set WHERE gameId = :gameId")
+  fun getAllForGame(gameId: Int): Flow<List<MetricSet>>
 
-    @Query("SELECT * FROM metric_set")
-    fun getAll(): Flow<List<MetricSet>>
+  @Query("SELECT * FROM metric_set")
+  fun getAll(): Flow<List<MetricSet>>
 }

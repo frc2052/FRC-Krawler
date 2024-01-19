@@ -38,110 +38,111 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
 fun GameListScreen(
-    modifier: Modifier = Modifier,
-    navController: NavController,
+  modifier: Modifier = Modifier,
+  navController: NavController,
 ) {
-    val viewModel: GameListViewModel = hiltViewModel()
+  val viewModel: GameListViewModel = hiltViewModel()
 
-    var addGameDialogOpen by remember { mutableStateOf(false) }
+  var addGameDialogOpen by remember { mutableStateOf(false) }
 
-    LaunchedEffect(true) {
-        viewModel.loadGames()
-    }
+  LaunchedEffect(true) {
+    viewModel.loadGames()
+  }
 
-    FRCKrawlerScaffold(
-        modifier = modifier,
-        appBar = {
-            FRCKrawlerAppBar(
-                navController = navController,
-                title = {
-                    Text(stringResource(R.string.games_screen_title))
-                }
-            )
-        },
-        floatingActionButton = {
-            Actions(
-                onAddClick = { addGameDialogOpen = true }
-            )
-        },
-        background = {
-            if (viewModel.games.isEmpty()) {
-                EmptyBackground()
-            }
+  FRCKrawlerScaffold(
+    modifier = modifier,
+    appBar = {
+      FRCKrawlerAppBar(
+        navController = navController,
+        title = {
+          Text(stringResource(R.string.games_screen_title))
         }
-    ) { _ ->
-        GameList(
-            games = viewModel.games,
-            onGameClick = { game -> navController.navigate(Screen.Game(game.id).route) }
-        )
-        if (addGameDialogOpen) {
-            AddGameDialog(
-                onAddGame = { newGame -> viewModel.createGame(newGame)},
-                onClose = { addGameDialogOpen = false },
-            )
-        }
+      )
+    },
+    floatingActionButton = {
+      Actions(
+        onAddClick = { addGameDialogOpen = true }
+      )
+    },
+    background = {
+      if (viewModel.games.isEmpty()) {
+        EmptyBackground()
+      }
     }
+  ) { _ ->
+    GameList(
+      games = viewModel.games,
+      onGameClick = { game -> navController.navigate(Screen.Game(game.id).route) }
+    )
+    if (addGameDialogOpen) {
+      AddGameDialog(
+        onAddGame = { newGame -> viewModel.createGame(newGame) },
+        onClose = { addGameDialogOpen = false },
+      )
+    }
+  }
 }
 
 @Composable
 private fun EmptyBackground() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Icon(
-            modifier = Modifier.size(128.dp),
-            imageVector = Icons.Filled.Analytics,
-            tint = MaterialTheme.colors.secondary,
-            contentDescription = null
-        )
-        Text(text = "No Games", style = MaterialTheme.typography.h4)
-    }
+  Column(
+    modifier = Modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    Icon(
+      modifier = Modifier.size(128.dp),
+      imageVector = Icons.Filled.Analytics,
+      tint = MaterialTheme.colors.secondary,
+      contentDescription = null
+    )
+    Text(text = "No Games", style = MaterialTheme.typography.h4)
+  }
 }
 
 @Composable
 private fun Actions(onAddClick: () -> Unit) {
-    val fabModifier = Modifier.padding(bottom = 24.dp)
-    FloatingActionButton(
-        modifier = fabModifier,
-        onClick = onAddClick
-    ) {
-        Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new metric set")
-    }
+  val fabModifier = Modifier.padding(bottom = 24.dp)
+  FloatingActionButton(
+    modifier = fabModifier,
+    onClick = onAddClick
+  ) {
+    Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new metric set")
+  }
 }
 
 @Composable
 fun GameList(
-    modifier: Modifier = Modifier,
-    games: List<Game>,
-    onGameClick: (Game) -> Unit
+  modifier: Modifier = Modifier,
+  games: List<Game>,
+  onGameClick: (Game) -> Unit
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        games.forEach { set ->
-            Text(
-                modifier = Modifier.fillMaxWidth()
-                    .clickable { onGameClick(set) }
-                    .padding(horizontal = 12.dp, vertical = 12.dp),
-                text = set.name,
-                style = MaterialTheme.typography.h5
-            )
-            Divider()
-        }
+  Column(modifier = modifier.fillMaxWidth()) {
+    games.forEach { set ->
+      Text(
+        modifier = Modifier
+          .fillMaxWidth()
+          .clickable { onGameClick(set) }
+          .padding(horizontal = 12.dp, vertical = 12.dp),
+        text = set.name,
+        style = MaterialTheme.typography.h5
+      )
+      Divider()
     }
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun GameListPreview() {
-    FrcKrawlerTheme(darkTheme = false) {
-        GameList(
-            games = listOf(
-                Game(name = "Infinite Recharge"),
-                Game(name = "Rapid React"),
-                Game(name = "Charged Up"),
-            ),
-            onGameClick = {}
-        )
-    }
+  FrcKrawlerTheme(darkTheme = false) {
+    GameList(
+      games = listOf(
+        Game(name = "Infinite Recharge"),
+        Game(name = "Rapid React"),
+        Game(name = "Charged Up"),
+      ),
+      onGameClick = {}
+    )
+  }
 }

@@ -14,73 +14,74 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEventViewModel @Inject constructor(
-    private val eventService: EventService,
-    private val createEventUseCase: CreateEventUseCase
+  private val eventService: EventService,
+  private val createEventUseCase: CreateEventUseCase
 ) : ViewModel() {
 
-    private val validYears = 1992..Year.now().value
+  private val validYears = 1992..Year.now().value
 
-    private val _state = MutableStateFlow(
-        AddEventScreenState(
-            years = validYears.toList().reversed()
-        )
+  private val _state = MutableStateFlow(
+    AddEventScreenState(
+      years = validYears.toList().reversed()
     )
-    val state: StateFlow<AddEventScreenState> = _state
+  )
+  val state: StateFlow<AddEventScreenState> = _state
 
-    fun loadEventsForYear(year: Int) {
+  fun loadEventsForYear(year: Int) {
+    _state.value = _state.value.copy(
+      events = emptyList(),
+      areEventsLoading = true,
+      hasNetworkError = false,
+    )
+
+    viewModelScope.launch {
+      try {
+        val result = eventService.getEvents(year)
+
+        when (result.isSuccessful) {
+          true -> {
+            _state.value = _state.value.copy(
+              events = result.body()?.sortedBy { it.name } ?: emptyList(),
+              areEventsLoading = false,
+              hasNetworkError = false,
+            )
+          }
+
+          false -> {
+            _state.value = _state.value.copy(
+              events = emptyList(),
+              areEventsLoading = false,
+              hasNetworkError = true
+            )
+          }
+        }
+      } catch (e: Exception) {
         _state.value = _state.value.copy(
-            events = emptyList(),
-            areEventsLoading = true,
-            hasNetworkError = false,
+          events = emptyList(),
+          areEventsLoading = false,
+          hasNetworkError = true
         )
+      }
 
-        viewModelScope.launch {
-            try {
-                val result = eventService.getEvents(year)
-
-                when (result.isSuccessful) {
-                    true -> {
-                        _state.value = _state.value.copy(
-                            events = result.body()?.sortedBy { it.name } ?: emptyList(),
-                            areEventsLoading = false,
-                            hasNetworkError = false,
-                        )
-                    }
-                    false -> {
-                        _state.value = _state.value.copy(
-                            events = emptyList(),
-                            areEventsLoading = false,
-                            hasNetworkError = true
-                        )
-                    }
-                }
-            } catch (e: Exception) {
-                _state.value = _state.value.copy(
-                    events = emptyList(),
-                    areEventsLoading = false,
-                    hasNetworkError = true
-                )
-            }
-
-        }
     }
+  }
 
-    fun saveAutoEvent(gameId: Int, tbaSimpleEvent: TbaSimpleEvent) {
-        viewModelScope.launch {
-            createEventUseCase(
-                name = tbaSimpleEvent.name,
-                tbaId = tbaSimpleEvent.key,
-                gameId = gameId
-            )
-        }
+  fun saveAutoEvent(gameId: Int, tbaSimpleEvent: TbaSimpleEvent) {
+    viewModelScope.launch {
+      createEventUseCase(
+        name = tbaSimpleEvent.name,
+        tbaId = tbaSimpleEvent.key,
+        gameId = gameId
+      )
     }
+  }
 
-    fun saveManualEvent(gameId: Int, name: String) {
-        viewModelScope.launch {
-            createEventUseCase(
-                name = name,
-                gameId = gameId
-            )
-        }
+  fun saveManualEvent(gameId: Int, name: String) {
+    viewModelScope.launch {
+      createEventUseCase(
+        name = name,
+        gameId = gameId
+      )
     }
+  }
 }

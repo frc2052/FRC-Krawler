@@ -1,3 +1,3 @@
 package com.team2052.frckrawler.data.remote
 
-interface TeamService { }
+interface TeamService {}

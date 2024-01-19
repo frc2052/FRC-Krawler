@@ -5,6 +5,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class TbaSimpleTeam(
-    @Json(name = "team_number") val number: String,
-    val nickname: String,
+  @Json(name = "team_number") val number: String,
+  val nickname: String,
 )

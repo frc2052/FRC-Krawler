@@ -14,23 +14,23 @@ import java.util.UUID
  * with in most of our code, this model is easier to store in a database.
  */
 @Entity(
-    tableName = "metric",
-    foreignKeys = [
-        ForeignKey(
-            entity = MetricSet::class,
-            parentColumns = ["id"],
-            childColumns = ["metricSetId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ],
-    indices = [Index("metricSetId")]
+  tableName = "metric",
+  foreignKeys = [
+    ForeignKey(
+      entity = MetricSet::class,
+      parentColumns = ["id"],
+      childColumns = ["metricSetId"],
+      onDelete = ForeignKey.CASCADE
+    )
+  ],
+  indices = [Index("metricSetId")]
 )
 data class MetricRecord(
-    @PrimaryKey val id: String = UUID.randomUUID().toString(),
-    val name: String,
-    val type: MetricType,
-    val priority: Int,
-    val enabled: Boolean,
-    val metricSetId: Int,
-    val options: String?,
+  @PrimaryKey val id: String = UUID.randomUUID().toString(),
+  val name: String,
+  val type: MetricType,
+  val priority: Int,
+  val enabled: Boolean,
+  val metricSetId: Int,
+  val options: String?,
 )

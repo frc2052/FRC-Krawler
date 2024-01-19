@@ -21,63 +21,63 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ScoutMatchViewModel @Inject constructor(
-    metricDao: MetricDao,
-    teamDao: TeamAtEventDao,
-    private val metricDatumDao: MetricDatumDao,
-): AbstractScoutMetricsViewModel(metricDao, metricDatumDao, teamDao) {
+  metricDao: MetricDao,
+  teamDao: TeamAtEventDao,
+  private val metricDatumDao: MetricDatumDao,
+) : AbstractScoutMetricsViewModel(metricDao, metricDatumDao, teamDao) {
 
-    private val _state = MutableStateFlow<ScoutMatchScreenState?>(null)
-    val state: StateFlow<ScoutMatchScreenState?> = _state
+  private val _state = MutableStateFlow<ScoutMatchScreenState?>(null)
+  val state: StateFlow<ScoutMatchScreenState?> = _state
 
-    private val currentMatch = MutableStateFlow(1)
+  private val currentMatch = MutableStateFlow(1)
 
-    override fun getDatumGroup(): MetricDatumGroup = MetricDatumGroup.Match
-    override fun getDatumGroupNumber(): Int = currentMatch.value
+  override fun getDatumGroup(): MetricDatumGroup = MetricDatumGroup.Match
+  override fun getDatumGroupNumber(): Int = currentMatch.value
 
-    fun loadMetricsAndTeams(
-        metricSetId: Int,
-        eventId: Int,
-    ) {
-        setMetricSetId(metricSetId)
-        loadTeamsForEvent(eventId)
+  fun loadMetricsAndTeams(
+    metricSetId: Int,
+    eventId: Int,
+  ) {
+    setMetricSetId(metricSetId)
+    loadTeamsForEvent(eventId)
 
-        viewModelScope.launch {
-            combine(
-                teams,
-                currentTeam.filterNotNull(),
-                currentMatch,
-                getMetricStates(),
-            ) { teams, currentTeam, currentMatch, metricStates ->
-                ScoutMatchScreenState(
-                    matchInformation = MatchInformationState(
-                        matchNumber = currentMatch,
-                        teams = teams,
-                        selectedTeam = currentTeam
-                    ),
-                    metricStates = metricStates
-                )
-            }.collect {
-                _state.value = it
-            }
-        }
+    viewModelScope.launch {
+      combine(
+        teams,
+        currentTeam.filterNotNull(),
+        currentMatch,
+        getMetricStates(),
+      ) { teams, currentTeam, currentMatch, metricStates ->
+        ScoutMatchScreenState(
+          matchInformation = MatchInformationState(
+            matchNumber = currentMatch,
+            teams = teams,
+            selectedTeam = currentTeam
+          ),
+          metricStates = metricStates
+        )
+      }.collect {
+        _state.value = it
+      }
     }
+  }
 
-    fun updateMatchNumber(match: Int) {
-        currentMatch.value = match
-    }
+  fun updateMatchNumber(match: Int) {
+    currentMatch.value = match
+  }
 
-    override fun getMetricData(): Flow<List<MetricDatum>> {
-        return combine(
-            currentMatch,
-            currentTeam.filterNotNull()
-        ) { match, team ->
-            Pair(match, team)
-        }.flatMapLatest { (match, team) ->
-            metricDatumDao.getTeamDatumForMatchMetrics(
-                matchNumber = match,
-                teamNumber = team.number
-            )
-        }
+  override fun getMetricData(): Flow<List<MetricDatum>> {
+    return combine(
+      currentMatch,
+      currentTeam.filterNotNull()
+    ) { match, team ->
+      Pair(match, team)
+    }.flatMapLatest { (match, team) ->
+      metricDatumDao.getTeamDatumForMatchMetrics(
+        matchNumber = match,
+        teamNumber = team.number
+      )
     }
+  }
 
 }

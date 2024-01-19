@@ -39,162 +39,165 @@ import com.team2052.frckrawler.ui.theme.secondarySurface
 
 @Composable
 fun ScoutMatchScreen(
-    navController: NavController,
-    metricSetId: Int,
-    eventId: Int,
+  navController: NavController,
+  metricSetId: Int,
+  eventId: Int,
 ) {
-    val viewModel: ScoutMatchViewModel = hiltViewModel()
+  val viewModel: ScoutMatchViewModel = hiltViewModel()
 
-    LaunchedEffect(true) {
-        viewModel.loadMetricsAndTeams(
-            metricSetId = metricSetId,
-            eventId = eventId
+  LaunchedEffect(true) {
+    viewModel.loadMetricsAndTeams(
+      metricSetId = metricSetId,
+      eventId = eventId
+    )
+  }
+
+  val state by viewModel.state.collectAsState()
+
+  FRCKrawlerScaffold(
+    floatingActionButton = {
+      FloatingActionButton(
+        onClick = viewModel::saveMetricData,
+        modifier = Modifier.padding(bottom = 24.dp)
+      ) {
+        Icon(
+          imageVector = Icons.Filled.Save,
+          contentDescription = stringResource(R.string.save_description)
         )
-    }
-
-    val state by viewModel.state.collectAsState()
-
-    FRCKrawlerScaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = viewModel::saveMetricData,
-                modifier = Modifier.padding(bottom = 24.dp)
-            ) {
-                Icon(imageVector = Icons.Filled.Save, contentDescription = stringResource(R.string.save_description))
-            }
-        },
-        appBar = {
-            FRCKrawlerAppBar(
-                navController = navController,
-                title = {
-                    Text(stringResource(R.string.scout_screen_title))
-                }
-            )
-        },
-    ) { contentPadding ->
-        state?.let { state ->
-            ScoutingForm(
-                header = {
-                    MatchInfo(
-                        modifier = Modifier.fillMaxWidth(),
-                        state = state.matchInformation,
-                        onMatchChanged = viewModel::updateMatchNumber,
-                        onTeamChanged = viewModel::updateTeam
-                    )
-                },
-                metrics = state.metricStates,
-                onMetricStateChanged = viewModel::updateMetricState,
-            )
+      }
+    },
+    appBar = {
+      FRCKrawlerAppBar(
+        navController = navController,
+        title = {
+          Text(stringResource(R.string.scout_screen_title))
         }
-
+      )
+    },
+  ) { contentPadding ->
+    state?.let { state ->
+      ScoutingForm(
+        header = {
+          MatchInfo(
+            modifier = Modifier.fillMaxWidth(),
+            state = state.matchInformation,
+            onMatchChanged = viewModel::updateMatchNumber,
+            onTeamChanged = viewModel::updateTeam
+          )
+        },
+        metrics = state.metricStates,
+        onMetricStateChanged = viewModel::updateMetricState,
+      )
     }
+
+  }
 }
 
 @Composable
 private fun MatchInfo(
-    state: MatchInformationState,
-    onMatchChanged: (Int) -> Unit,
-    onTeamChanged: (TeamAtEvent) -> Unit,
-    modifier: Modifier = Modifier,
+  state: MatchInformationState,
+  onMatchChanged: (Int) -> Unit,
+  onTeamChanged: (TeamAtEvent) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .background(
-                color = MaterialTheme.colors.secondarySurface
-            )
-            .padding(16.dp)
-    ) {
-        Text(
-            text = stringResource(R.string.match_scout_match_info_title),
-            style = MaterialTheme.typography.h6
+  Column(
+    modifier = modifier
+        .background(
+            color = MaterialTheme.colors.secondarySurface
         )
+        .padding(16.dp)
+  ) {
+    Text(
+      text = stringResource(R.string.match_scout_match_info_title),
+      style = MaterialTheme.typography.h6
+    )
 
-        Spacer(Modifier.height(16.dp))
+    Spacer(Modifier.height(16.dp))
 
-        Row {
-            Column {
-                Text(
-                    text = stringResource(R.string.match_scout_match_number_label),
-                    style = MaterialTheme.typography.subtitle2
-                )
-                StepControl(
-                    value = state.matchNumber,
-                    onValueChanged = onMatchChanged
-                )
-            }
+    Row {
+      Column {
+        Text(
+          text = stringResource(R.string.match_scout_match_number_label),
+          style = MaterialTheme.typography.subtitle2
+        )
+        StepControl(
+          value = state.matchNumber,
+          onValueChanged = onMatchChanged
+        )
+      }
 
-            Spacer(Modifier.width(16.dp))
+      Spacer(Modifier.width(16.dp))
 
-            FRCKrawlerDropdown(
-                value = state.selectedTeam,
-                getLabel = { team ->
-                    team?.let {
-                        "${team.number} - ${team.name}"
-                    } ?: ""
-                },
-                onValueChange = { newTeam ->
-                    newTeam?.let { onTeamChanged(it) }
-                },
-                label = stringResource(R.string.scout_team_label),
-                dropdownItems = state.teams,
-            )
-        }
+      FRCKrawlerDropdown(
+        value = state.selectedTeam,
+        getLabel = { team ->
+          team?.let {
+            "${team.number} - ${team.name}"
+          } ?: ""
+        },
+        onValueChange = { newTeam ->
+          newTeam?.let { onTeamChanged(it) }
+        },
+        label = stringResource(R.string.scout_team_label),
+        dropdownItems = state.teams,
+      )
     }
+  }
 }
 
 @FrcKrawlerPreview
 @Composable
 private fun ScoutMatchPreview() {
-    val demoMetrics = listOf(
-        MetricState(
-            metric = Metric.SliderMetric(
-                name = "Sample metric",
-                priority = 1,
-                enabled = true,
-                range = 0..10 step 1
-            ),
-            value = "10"
-        ),
-        MetricState(
-            metric = Metric.SliderMetric(
-                name = "Sample metric",
-                priority = 1,
-                enabled = true,
-                range = 0..10 step 1
-            ),
-            value = "10"
-        )
+  val demoMetrics = listOf(
+    MetricState(
+      metric = Metric.SliderMetric(
+        name = "Sample metric",
+        priority = 1,
+        enabled = true,
+        range = 0..10 step 1
+      ),
+      value = "10"
+    ),
+    MetricState(
+      metric = Metric.SliderMetric(
+        name = "Sample metric",
+        priority = 1,
+        enabled = true,
+        range = 0..10 step 1
+      ),
+      value = "10"
     )
+  )
 
-    val demoMatchInfo = MatchInformationState(
-        matchNumber = 8,
-        teams = listOf(
-            TeamAtEvent(
-                number = "2052",
-                name = "KnightKrawler",
-                eventId = 0
-            )
-        ),
-        selectedTeam = TeamAtEvent(
-            number = "2052",
-            name = "KnightKrawler",
-            eventId = 0
-        )
+  val demoMatchInfo = MatchInformationState(
+    matchNumber = 8,
+    teams = listOf(
+      TeamAtEvent(
+        number = "2052",
+        name = "KnightKrawler",
+        eventId = 0
+      )
+    ),
+    selectedTeam = TeamAtEvent(
+      number = "2052",
+      name = "KnightKrawler",
+      eventId = 0
     )
+  )
 
-    FrcKrawlerTheme {
-        Surface {
-            ScoutingForm(
-                header = {
-                    MatchInfo(
-                        state = demoMatchInfo,
-                        onMatchChanged = {},
-                        onTeamChanged = {},
-                    )
-                },
-                metrics = demoMetrics,
-                onMetricStateChanged = {},
-            )
-        }
+  FrcKrawlerTheme {
+    Surface {
+      ScoutingForm(
+        header = {
+          MatchInfo(
+            state = demoMatchInfo,
+            onMatchChanged = {},
+            onTeamChanged = {},
+          )
+        },
+        metrics = demoMetrics,
+        onMetricStateChanged = {},
+      )
     }
+  }
 }

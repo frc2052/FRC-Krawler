@@ -17,32 +17,32 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object BluetoothModule {
-    @Singleton
-    @Provides
-    fun provideBluetoothManager(
-        @ApplicationContext context: Context
-    ): BluetoothManager {
-        return context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    }
+  @Singleton
+  @Provides
+  fun provideBluetoothManager(
+    @ApplicationContext context: Context
+  ): BluetoothManager {
+    return context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+  }
 
-    @Singleton
-    @Provides
-    fun provideBluetoothAdapter(
-        manager: BluetoothManager
-    ): BluetoothAdapter {
-        return manager.adapter
-    }
+  @Singleton
+  @Provides
+  fun provideBluetoothAdapter(
+    manager: BluetoothManager
+  ): BluetoothAdapter {
+    return manager.adapter
+  }
 
-    @Singleton
-    @Provides
-    fun provideServerDiscoveryStrategy(
-        bluetoothAdapter: BluetoothAdapter,
-        @ApplicationContext context: Context
-    ): ServerDiscoveryStrategy {
-        if (Build.VERSION.SDK_INT >= 26) {
-            return CompanionDeviceServerDiscoveryStrategy()
-        } else {
-            return ScanServerDiscoveryStrategy(bluetoothAdapter, context)
-        }
+  @Singleton
+  @Provides
+  fun provideServerDiscoveryStrategy(
+    bluetoothAdapter: BluetoothAdapter,
+    @ApplicationContext context: Context
+  ): ServerDiscoveryStrategy {
+    if (Build.VERSION.SDK_INT >= 26) {
+      return CompanionDeviceServerDiscoveryStrategy()
+    } else {
+      return ScanServerDiscoveryStrategy(bluetoothAdapter, context)
     }
+  }
 }

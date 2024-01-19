@@ -23,72 +23,72 @@ import com.team2052.frckrawler.ui.theme.spaceLarge
 
 @Composable
 fun ServerHomeScreen(
-    gameId: Int,
-    eventId: Int,
-    modifier: Modifier = Modifier,
-    navController: NavController,
+  gameId: Int,
+  eventId: Int,
+  modifier: Modifier = Modifier,
+  navController: NavController,
 ) {
-    val viewModel: ServerHomeViewModel = hiltViewModel()
+  val viewModel: ServerHomeViewModel = hiltViewModel()
 
-    Box {
-        
-        if (viewModel.showPermissionRequests) {
-            BluetoothPermissionRequestDialogs(
-                deviceType = DeviceType.Server,
-                onAllPermissionsGranted = { viewModel.startServer() },
-                onCanceled = { viewModel.showPermissionRequests = false }
-            )
-        }
+  Box {
 
-        if (viewModel.requestEnableBluetooth) {
-            RequestEnableBluetooth(
-                deviceType = DeviceType.Server,
-                onEnabled = { viewModel.startServer() },
-                onCanceled = { viewModel.requestEnableBluetooth = false }
-            )
-        }
-
-        LaunchedEffect(true) {
-            viewModel.loadGameAndEvent(gameId, eventId)
-        }
-        
-        FRCKrawlerScaffold(
-            modifier = modifier,
-            appBar = {
-                FRCKrawlerAppBar(
-                    navController = navController,
-                    title = {
-                        Text(stringResource(R.string.server_screen_title))
-                    }
-                )
-            },
-        ) { contentPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(contentPadding)
-                    .padding(spaceLarge)
-            ) {
-                ServerConfigCard(
-                    modifier = modifier,
-                    serverState = viewModel.serverState,
-                    event = viewModel.event,
-                    game = viewModel.game,
-                    toggleServer = {
-                        if (viewModel.serverState == ServerState.ENABLED) {
-                            viewModel.stopServer()
-                        } else {
-                            viewModel.startServer()
-                        }
-                    },
-                )
-
-                Spacer(Modifier.height(16.dp))
-
-                ConnectedScoutsList(
-                    modifier = modifier,
-                    scouts = viewModel.connectedScouts
-                )
-            }
-        }
+    if (viewModel.showPermissionRequests) {
+      BluetoothPermissionRequestDialogs(
+        deviceType = DeviceType.Server,
+        onAllPermissionsGranted = { viewModel.startServer() },
+        onCanceled = { viewModel.showPermissionRequests = false }
+      )
     }
+
+    if (viewModel.requestEnableBluetooth) {
+      RequestEnableBluetooth(
+        deviceType = DeviceType.Server,
+        onEnabled = { viewModel.startServer() },
+        onCanceled = { viewModel.requestEnableBluetooth = false }
+      )
+    }
+
+    LaunchedEffect(true) {
+      viewModel.loadGameAndEvent(gameId, eventId)
+    }
+
+    FRCKrawlerScaffold(
+      modifier = modifier,
+      appBar = {
+        FRCKrawlerAppBar(
+          navController = navController,
+          title = {
+            Text(stringResource(R.string.server_screen_title))
+          }
+        )
+      },
+    ) { contentPadding ->
+      Column(
+        modifier = Modifier
+          .padding(contentPadding)
+          .padding(spaceLarge)
+      ) {
+        ServerConfigCard(
+          modifier = modifier,
+          serverState = viewModel.serverState,
+          event = viewModel.event,
+          game = viewModel.game,
+          toggleServer = {
+            if (viewModel.serverState == ServerState.ENABLED) {
+              viewModel.stopServer()
+            } else {
+              viewModel.startServer()
+            }
+          },
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        ConnectedScoutsList(
+          modifier = modifier,
+          scouts = viewModel.connectedScouts
+        )
+      }
+    }
+  }
 }
