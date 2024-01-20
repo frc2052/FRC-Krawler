@@ -32,7 +32,7 @@
     <string name="cd_dropdown_collapse">Collapse Dropdown</string>
 
     <!--Mode Select-->
-    <string name="mode_select_screen_title">mode select</string>
+    <string name="mode_select_screen_title">FRCKrawler</string>
 
     <string name="welcome_message">Welcome to &appName;!</string>
     <string name="getting_started_message">To get started, select from the options below</string>

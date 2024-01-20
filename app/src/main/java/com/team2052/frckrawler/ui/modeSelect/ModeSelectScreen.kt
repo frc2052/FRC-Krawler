@@ -13,8 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -31,7 +29,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -104,17 +101,6 @@ private fun ModeSelectScreenContent(
         .verticalScroll(scrollState)
         .padding(spaceLarge)
   ) {
-    Column(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-      ProvideTextStyle(MaterialTheme.typography.h6) {
-        Text(stringResource(R.string.welcome_message))
-        Text(stringResource(R.string.getting_started_message))
-      }
-    }
-    Spacer(modifier = Modifier.height(24.dp))
-
     ExpandableCardGroup {
       expandableCard { id ->
         RemoteScoutCard(
