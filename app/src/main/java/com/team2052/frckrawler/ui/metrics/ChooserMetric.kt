@@ -45,7 +45,7 @@ fun ChooserMetric(
       Icon(
         modifier = Modifier.padding(start = 8.dp),
         imageVector = Icons.Default.KeyboardArrowDown,
-        contentDescription = "Open Menu"
+        contentDescription = null
       )
     }
     ExposedDropdownMenu(

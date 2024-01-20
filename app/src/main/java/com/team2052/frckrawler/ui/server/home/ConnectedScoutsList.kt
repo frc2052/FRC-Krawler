@@ -9,7 +9,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
+import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.RemoteScout
 import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
@@ -24,7 +26,7 @@ internal fun ConnectedScoutsList(
     modifier = modifier,
     header = {
       CardHeader(
-        title = { Text("Connected Scouts") }
+        title = { Text(stringResource(R.string.server_connected_scouts_title)) }
       )
     },
   ) {
@@ -37,7 +39,7 @@ internal fun ConnectedScoutsList(
         context.startActivity(discoverableIntent)
       }
     ) {
-      Text("Connect new scouts")
+      Text(stringResource(R.string.server_connect_new_scouts_button))
     }
 
     Column {
@@ -60,7 +62,8 @@ private fun SyncedScout(
       style = MaterialTheme.typography.subtitle1
     )
     Text(
-      text = "Last sync: $lastSyncText",
+      text = stringResource(
+        R.string.server_connected_scout_last_sync, lastSyncText),
       style = MaterialTheme.typography.body2,
       fontStyle = FontStyle.Italic
     )

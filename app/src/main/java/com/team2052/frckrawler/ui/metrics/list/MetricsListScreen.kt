@@ -99,7 +99,7 @@ fun MetricsListScreen(
             ) {
               Icon(
                 imageVector = Icons.Filled.Delete,
-                contentDescription = "delete"
+                contentDescription = stringResource(R.string.delete)
               )
             }
           }
@@ -161,8 +161,8 @@ fun MetricsListScreen(
 
       if (showDeleteConfirmation) {
         AlertDialog(
-          title = { Text("Delete metric set?") },
-          text = { Text("This action cannot be undone. This set and all metrics will be deleted.") },
+          title = { Text(stringResource(R.string.delete_metric_set_dialog_title)) },
+          text = { Text(stringResource(R.string.delete_metric_set_dialog_description)) },
           onDismissRequest = { showDeleteConfirmation = false },
           confirmButton = {
             TextButton(onClick = {
@@ -193,10 +193,13 @@ private fun EmptyBackground() {
     Icon(
       modifier = Modifier.size(128.dp),
       imageVector = Icons.Filled.Analytics,
-      contentDescription = "Background",
+      contentDescription = null,
       tint = MaterialTheme.colors.secondary
     )
-    Text(text = "No Metrics", style = MaterialTheme.typography.h4)
+    Text(
+      text = stringResource(R.string.metric_list_empty_text),
+      style = MaterialTheme.typography.h4
+    )
   }
 }
 
@@ -208,7 +211,7 @@ private fun MetricActions(onAddClick: () -> Unit) {
   ) {
     Icon(
       imageVector = Icons.Filled.Add,
-      contentDescription = "Manual Metric Add"
+      contentDescription = stringResource(R.string.add_metric_button_description)
     )
   }
 }
@@ -295,8 +298,8 @@ private fun GameMetricSetSwitchRow(
 ) {
   Row(
     modifier = modifier
-        .background(MaterialTheme.colors.highlightSurface)
-        .padding(horizontal = 16.dp, vertical = 12.dp),
+      .background(MaterialTheme.colors.highlightSurface)
+      .padding(horizontal = 16.dp, vertical = 12.dp),
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically,
   ) {

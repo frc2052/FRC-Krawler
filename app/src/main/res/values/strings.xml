@@ -17,6 +17,7 @@
     <string name="add">add</string>
     <string name="delete">delete</string>
     <string name="save">save</string>
+    <string name="navigate_up">Navigate up</string>
 
     <!-- Step control -->
     <string name="step_control_decrease">Decrease value</string>
@@ -62,7 +63,10 @@
     <string name="scout_pit_screen_title">Pit Scouting</string>
     <string name="scout_team_label">Team</string>
     <string name="save_description">Save data</string>
+    <string name="scout_find_server_button">Find Server</string>
 
+    <string name="scout_server_connection_title">Server Connection</string>
+    <string name="scout_server_connecting">Connecting…</string>
     <string name="scout_connected_prefix">Connected to</string>
     <string name="scout_sync_action">Sync</string>
     <string name="scout_last_sync_label">Last sync: %1$s</string>
@@ -70,6 +74,8 @@
         <item quantity="one">pending data point</item>
         <item quantity="other">pending data points</item>
     </plurals>
+
+    <string name="remote_scout_connect_to_server">Connect to a server to start scouting.</string>
 
     <string name="remote_scout_start_match_scouting">Start match scouting</string>
     <string name="remote_scout_start_pit_scouting">Start pit scouting</string>
@@ -87,6 +93,12 @@
     <string name="server_controls_game_label">Game: </string>
     <string name="server_controls_event_label">Event: </string>
 
+    <string name="game_list_empty_text">No games</string>
+
+    <string name="server_connected_scouts_title">Connected Scouts</string>
+    <string name="server_connected_scout_last_sync">Last sync: %1$s</string>
+    <string name="server_connect_new_scouts_button">Connect new scouts</string>
+
     <!-- Game & Event selector -->
     <string name="game_event_no_metrics_warning">Warning: no pit or match metrics</string>
     <string name="game_event_no_events_warning">No events configured</string>
@@ -100,6 +112,22 @@
     <string name="pit_metrics_screen">Pit</string>
     <string name="metric_list_is_match_set">Set as match metrics for</string>
     <string name="metric_list_is_pit_set">Set as pit metrics for</string>
+    <string name="metric_list_empty_text">No metrics</string>
+
+    <string name="edit_metric_type_label">Metric type:</string>
+    <string name="edit_metric_preview_label">Preview</string>
+    <string name="add_metric_button_description">Add new metric</string>
+
+    <string name="delete_metric_dialog_title">Delete metric?</string>
+    <string name="delete_metric_dialog_description">This action cannot be undone.</string>
+
+    <string name="delete_metric_set_dialog_title">Delete metric set?</string>
+    <string name="delete_metric_set_dialog_description">This action cannot be undone. This set and all metrics will be deleted.</string>
+
+    <!-- Metric controls -->
+    <string name="metric_stopwatch_start">start</string>
+    <string name="metric_stopwatch_pause">pause</string>
+    <string name="metric_stopwatch_reset">reset</string>
 
     <!--Game Detail Screen -->
     <string name="game_detail_event_card_title">Events</string>
@@ -172,6 +200,8 @@
 
     <!-- Scout syncing -->
     <string name="scout_sync_notification_title">Syncing with server</string>
+    <string name="scout_pairing_failed">Pairing failed, please try again.</string>
+    <string name="scout_paring_server_not_running">FRCKrawler server is not running on the selected device.\nPlease ensure it is running and try again.</string>
 
     <!-- Notifications -->
     <string name="notification_channel_sync_name">Sync</string>

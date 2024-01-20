@@ -78,7 +78,7 @@ fun ScoutHomeScreen(
         FRCKrawlerAppBar(
           navController = navController,
           title = {
-            Text("Scout")
+            Text(stringResource(R.string.scout_screen_title))
           }
         )
       },

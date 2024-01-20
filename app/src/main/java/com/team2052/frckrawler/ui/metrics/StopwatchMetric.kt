@@ -22,7 +22,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -52,7 +54,7 @@ fun StopwatchMetric(
       Icon(
         imageVector = Icons.Default.RestartAlt,
         tint = MaterialTheme.colors.primary,
-        contentDescription = "play"
+        contentDescription = stringResource(R.string.metric_stopwatch_reset)
       )
     }
 
@@ -75,13 +77,13 @@ fun StopwatchMetric(
         Icon(
           imageVector = Icons.Default.Pause,
           tint = MaterialTheme.colors.primary,
-          contentDescription = "pause"
+          contentDescription = stringResource(R.string.metric_stopwatch_pause)
         )
       } else {
         Icon(
           imageVector = Icons.Default.PlayArrow,
           tint = MaterialTheme.colors.primary,
-          contentDescription = "play"
+          contentDescription = stringResource(R.string.metric_stopwatch_start)
         )
       }
     }

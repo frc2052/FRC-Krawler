@@ -96,7 +96,10 @@ private fun EmptyBackground() {
       tint = MaterialTheme.colors.secondary,
       contentDescription = null
     )
-    Text(text = "No Games", style = MaterialTheme.typography.h4)
+    Text(
+      text = stringResource(R.string.game_list_empty_text),
+      style = MaterialTheme.typography.h4
+    )
   }
 }
 
@@ -107,7 +110,7 @@ private fun Actions(onAddClick: () -> Unit) {
     modifier = fabModifier,
     onClick = onAddClick
   ) {
-    Icon(imageVector = Icons.Filled.Add, contentDescription = "Add new metric set")
+    Icon(imageVector = Icons.Filled.Add, contentDescription = null)
   }
 }
 

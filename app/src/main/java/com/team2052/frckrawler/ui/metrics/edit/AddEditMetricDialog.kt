@@ -78,8 +78,8 @@ fun AddEditMetricDialog(
 
   if (showDeleteConfirmation) {
     AlertDialog(
-      title = { Text("Delete metric?") },
-      text = { Text("This action cannot be undone.") },
+      title = { Text(stringResource(R.string.delete_metric_dialog_title)) },
+      text = { Text(stringResource(R.string.delete_metric_dialog_description)) },
       onDismissRequest = { showDeleteConfirmation = false },
       confirmButton = {
         TextButton(onClick = {
@@ -87,12 +87,12 @@ fun AddEditMetricDialog(
           showDeleteConfirmation = false
           onClose()
         }) {
-          Text("Delete")
+          Text(stringResource(R.string.delete))
         }
       },
       dismissButton = {
         TextButton(onClick = { showDeleteConfirmation = false }) {
-          Text("Cancel")
+          Text(stringResource(R.string.cancel))
         }
       },
     )
@@ -186,7 +186,7 @@ private fun MetricPreview(
   var metricState by remember(metric.javaClass) { mutableStateOf(metric.defaultValueForPreview()) }
   Column(Modifier.padding(horizontal = 16.dp)) {
     Text(
-      text = "Preview",
+      text = stringResource(R.string.edit_metric_preview_label),
       style = MaterialTheme.typography.h6
     )
     Spacer(Modifier.height(12.dp))
@@ -214,7 +214,7 @@ private fun MetricTypeSelector(
   ) {
     Text(
       modifier = Modifier.alignByBaseline(),
-      text = "Metric type: "
+      text = stringResource(R.string.edit_metric_type_label)
     )
 
     Spacer(Modifier.width(12.dp))
@@ -231,12 +231,12 @@ private fun MetricTypeSelector(
         modifier = Modifier.padding(8.dp),
         onClick = { },
       ) {
-        val buttonText = metricType.name ?: "Select type "
+        val buttonText = metricType.name
         Text(buttonText)
         Icon(
           modifier = Modifier.padding(start = 8.dp),
           imageVector = Icons.Default.KeyboardArrowDown,
-          contentDescription = "Open Menu"
+          contentDescription = null
         )
       }
       ExposedDropdownMenu(
@@ -391,7 +391,7 @@ private fun DialogButtons(
           contentColor = MaterialTheme.colors.error
         )
       ) {
-        Text("Delete")
+        Text(stringResource(R.string.delete))
       }
     } else {
       // Empty box so SpaceBetween still works

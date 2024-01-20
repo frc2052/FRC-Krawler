@@ -132,7 +132,7 @@ private fun ActionButtons(
           contentColor = MaterialTheme.colors.error
         )
       ) {
-        Text("Delete")
+        Text(stringResource(R.string.delete))
       }
     } else {
       // Empty box so SpaceBetween still works

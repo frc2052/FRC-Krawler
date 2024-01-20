@@ -48,7 +48,7 @@ fun RemoteScoutServerStatusCard(
     modifier = modifier,
     header = {
       CardHeader(
-        title = { Text("Server Connection") }
+        title = { Text(stringResource(R.string.scout_server_connection_title)) }
       )
     },
   ) {
@@ -141,7 +141,7 @@ private fun ServerConnecting() {
       modifier = Modifier.size(28.dp)
     )
     Spacer(modifier = Modifier.width(16.dp))
-    Text("Connecting...")
+    Text(stringResource(R.string.scout_server_connecting))
   }
 }
 
@@ -151,14 +151,14 @@ private fun ServerNotConnected(
   onFindServerClicked: () -> Unit
 ) {
   Column {
-    Text("Connect to a server to start scouting.")
+    Text(stringResource(R.string.remote_scout_connect_to_server))
 
     when (state) {
       is ServerConnectionState.PairingFailed -> {
         Text(
           modifier = Modifier.padding(vertical = 16.dp),
           color = MaterialTheme.colors.error,
-          text = "Pairing failed, please try again."
+          text = stringResource(R.string.scout_pairing_failed)
         )
       }
 
@@ -166,8 +166,7 @@ private fun ServerNotConnected(
         Text(
           modifier = Modifier.padding(vertical = 16.dp),
           color = MaterialTheme.colors.error,
-          text = "FRCKrawler server is not running on the selected device. " +
-                  "Please ensure it is running and try again."
+          text = stringResource(R.string.scout_paring_server_not_running)
         )
       }
 
@@ -183,7 +182,7 @@ private fun ServerNotConnected(
       Button(
         onClick = onFindServerClicked,
       ) {
-        Text("Find Server")
+        Text(stringResource(R.string.scout_find_server_button))
       }
     }
   }

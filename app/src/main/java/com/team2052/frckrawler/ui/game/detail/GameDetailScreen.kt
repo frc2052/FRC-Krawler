@@ -92,7 +92,7 @@ fun GameDetailScreen(
           ) {
             Icon(
               imageVector = Icons.Filled.Delete,
-              contentDescription = "delete"
+              contentDescription = stringResource(R.string.delete)
             )
           }
         }

@@ -14,10 +14,12 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
@@ -58,7 +60,7 @@ private fun DefaultNavigationButton(
     IconButton(onClick = { navController.popBackStack() }) {
       Icon(
         imageVector = Icons.Filled.ArrowBack,
-        contentDescription = "Backwards Navigation",
+        contentDescription = stringResource(R.string.navigate_up),
         tint = MaterialTheme.colors.onPrimary,
       )
     }
