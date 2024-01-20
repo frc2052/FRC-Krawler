@@ -20,7 +20,7 @@ fun CounterMetric(
     value = state,
     onValueChanged = onStateChanged,
     step = range.step,
-    range = range.last..range.last
+    range = range.first..range.last
   )
 }
 
