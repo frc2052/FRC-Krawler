@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.metrics
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -118,6 +119,7 @@ private fun MetricRow(
 ) {
   Row(
     modifier = modifier
+      .background(color = MaterialTheme.colors.surface)
       .padding(horizontal = 16.dp, vertical = 16.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween
@@ -141,6 +143,7 @@ private fun MetricColumn(
 ) {
   Column(
     modifier = modifier
+      .background(color = MaterialTheme.colors.surface)
       .padding(horizontal = 16.dp, vertical = 16.dp)
   ) {
     Text(
