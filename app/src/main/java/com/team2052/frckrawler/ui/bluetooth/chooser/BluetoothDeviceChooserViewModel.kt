@@ -10,14 +10,15 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.Optional
 import javax.inject.Inject
 
 @HiltViewModel
 class BluetoothDeviceChooserViewModel @Inject constructor(
-  private val bluetoothAdapter: BluetoothAdapter,
+  bluetoothAdapterOptional: Optional<BluetoothAdapter>,
   @ApplicationContext private val context: Context
 ) : ViewModel() {
-
+  val bluetoothAdapter = bluetoothAdapterOptional.get()
   val devices = mutableStateListOf<BluetoothDevice>()
 
   private val receiver = DeviceScanReceiver(

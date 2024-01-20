@@ -13,6 +13,7 @@ import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import java.util.Optional
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -21,13 +22,14 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
 class ServerConnectionManager internal @Inject constructor(
-  private val bluetoothAdapter: BluetoothAdapter,
+  bluetoothAdapterOptional: Optional<BluetoothAdapter>,
   private val discoveryStrategy: ServerDiscoveryStrategy,
   @ApplicationContext private val context: Context
 ) {
 
   private val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
   private val coroutineContext = dispatcher + SupervisorJob()
+  private val bluetoothAdapter = bluetoothAdapterOptional.get()
 
   /**
    * Get a list of all paired bluetooth devices that are running FRCKrawler servers

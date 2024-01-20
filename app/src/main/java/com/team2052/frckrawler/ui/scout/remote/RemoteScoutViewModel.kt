@@ -34,13 +34,14 @@ import timber.log.Timber
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
 // TODO cancel work if disconnected from server
 @HiltViewModel
 class RemoteScoutViewModel @Inject constructor(
-  private val bluetoothAdapter: BluetoothAdapter,
+  bluetoothAdapterOptional: Optional<BluetoothAdapter>,
   private val permissionManager: PermissionManager,
   private val serverManager: ServerConnectionManager,
   private val workManager: WorkManager,
@@ -51,6 +52,8 @@ class RemoteScoutViewModel @Inject constructor(
   companion object {
     private const val SYNC_WORK_NAME = "remote_scout_sync"
   }
+
+  private val bluetoothAdapter = bluetoothAdapterOptional.get()
 
   var showPermissionRequests by mutableStateOf(false)
   var requestEnableBluetooth by mutableStateOf(false)

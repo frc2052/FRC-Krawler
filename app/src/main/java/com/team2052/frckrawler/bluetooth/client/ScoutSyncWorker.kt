@@ -25,15 +25,18 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import timber.log.Timber
 import java.time.Instant
+import java.util.Optional
 
 @HiltWorker
 class ScoutSyncWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParams: WorkerParameters,
+  bluetoothAdapterOptional: Optional<BluetoothAdapter>,
   private val opFactory: SyncOperationFactory,
-  private val bluetoothAdapter: BluetoothAdapter,
   private val notificationChannelManager: NotificationChannelManager
 ) : CoroutineWorker(appContext, workerParams) {
+
+  private val bluetoothAdapter = bluetoothAdapterOptional.get()
 
   companion object {
     const val DATA_SERVER_ADDRESS = "server_address"

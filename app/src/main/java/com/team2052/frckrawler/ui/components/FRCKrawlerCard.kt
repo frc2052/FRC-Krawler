@@ -3,7 +3,6 @@ package com.team2052.frckrawler.ui.components
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,11 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.LocalAbsoluteElevation
-import androidx.compose.material.LocalElevationOverlay
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
@@ -36,11 +32,12 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.ui.theme.borderWidth
+import com.team2052.frckrawler.ui.theme.disabledSurface
 import com.team2052.frckrawler.ui.theme.spaceLarge
 
 private val cardElevation = 4.dp
@@ -78,24 +75,19 @@ open class CardGroupBuilder {
 }
 
 // TODO: Extract border color into material theme background color
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Card(
   modifier: Modifier = Modifier,
+  backgroundColor: Color = MaterialTheme.colors.surface,
   header: (@Composable () -> Unit)? = null,
   actions: (@Composable RowScope.(Modifier) -> Unit)? = null,
   content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
-  val elevationOverlay = LocalElevationOverlay.current
-  val absoluteElevation = LocalAbsoluteElevation.current + cardElevation / 2
-  val borderColor = elevationOverlay?.apply(MaterialTheme.colors.surface, absoluteElevation)
-    ?: MaterialTheme.colors.surface
-
   Card(
     modifier = modifier
       .fillMaxWidth(),
+    backgroundColor = backgroundColor,
     shape = RoundedCornerShape(4.dp),
-    border = BorderStroke(borderWidth, borderColor),
     elevation = cardElevation,
   ) {
     Column(
@@ -174,40 +166,52 @@ fun CardHeader(
 @Composable
 fun ExpandableCard(
   modifier: Modifier = Modifier,
+  enabled: Boolean = true,
   header: @Composable () -> Unit,
   actions: (@Composable RowScope.(Modifier) -> Unit)? = null,
   expanded: Boolean,
   onExpanded: (Boolean) -> Unit = { },
   content: (@Composable ColumnScope.() -> Unit)? = null,
-) = Card(
-  modifier = modifier,
-  header = {
-    Row(
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-      Row(modifier = Modifier.weight(0.5f)) { header() }
-      IconButton(
-        modifier = Modifier
-          .padding(end = 24.dp)
-          .size(36.dp),
-        onClick = { onExpanded(!expanded) },
+) {
+  val color = if (enabled) {
+    MaterialTheme.colors.surface
+  } else {
+    MaterialTheme.colors.disabledSurface
+  }
+  Card(
+    modifier = modifier,
+    backgroundColor = color,
+    header = {
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
       ) {
-        Icon(
-          modifier = Modifier.fillMaxSize(),
-          imageVector = if (content != null || actions != null) {
-            when (expanded) {
-              true -> Icons.Filled.KeyboardArrowDown
-              false -> Icons.Filled.KeyboardArrowUp
-            }
-          } else {
-            Icons.Filled.KeyboardArrowRight
-          },
-          contentDescription = stringResource(R.string.cd_expandable_card),
-        )
+        Row(modifier = Modifier.weight(0.5f)) { header() }
+
+        if (enabled) {
+          IconButton(
+            modifier = Modifier
+              .padding(end = 24.dp)
+              .size(36.dp),
+            onClick = { onExpanded(!expanded) },
+          ) {
+            Icon(
+              modifier = Modifier.fillMaxSize(),
+              imageVector = if (content != null || actions != null) {
+                when (expanded) {
+                  true -> Icons.Filled.KeyboardArrowDown
+                  false -> Icons.Filled.KeyboardArrowUp
+                }
+              } else {
+                Icons.Filled.KeyboardArrowRight
+              },
+              contentDescription = stringResource(R.string.cd_expandable_card),
+            )
+          }
+        }
       }
-    }
-  },
-  actions = if (expanded) actions else null,
-  content = if (expanded) content else null,
-)
+    },
+    actions = if (expanded) actions else null,
+    content = if (expanded) content else null,
+  )
+}

@@ -17,9 +17,6 @@ class SyncServerThread(
   private val gameId: Int,
   private val eventId: Int,
 ) : Thread("frckrawler-sync-server") {
-  companion object {
-    private const val LOG_TAG = "SyncServer"
-  }
 
   private val bluetoothManager: BluetoothManager =
     context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager

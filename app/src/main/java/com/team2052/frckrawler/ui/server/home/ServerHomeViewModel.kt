@@ -18,17 +18,19 @@ import com.team2052.frckrawler.ui.permissions.RequiredPermissions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.Optional
 import javax.inject.Inject
 
 @HiltViewModel
 class ServerHomeViewModel @Inject constructor(
-  private val bluetoothAdapter: BluetoothAdapter,
+  bluetoothAdapterOptional: Optional<BluetoothAdapter>,
   private val permissionManager: PermissionManager,
   private val syncServiceController: SyncServiceController,
   private val connectedScoutObserver: ConnectedScoutObserver,
   private val gameDao: GameDao,
   private val eventDao: EventDao,
 ) : ViewModel() {
+  private val bluetoothAdapter = bluetoothAdapterOptional.get()
 
   var serverState by mutableStateOf(ServerState.DISABLED)
   var showPermissionRequests by mutableStateOf(false)

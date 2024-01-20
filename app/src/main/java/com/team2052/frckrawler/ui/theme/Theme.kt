@@ -68,6 +68,9 @@ val Colors.highlightSurface: Color
 val Colors.secondarySurface: Color
   get() = if (isLight) lightestGray else darkGray
 
+val Colors.disabledSurface: Color
+  get() = if (isLight) lightGray else darkGray
+
 @Composable
 fun FrcKrawlerTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),

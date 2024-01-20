@@ -74,6 +74,7 @@ fun ModeSelectScreen(
   ) { contentPadding ->
     ModeSelectScreenContent(
       modifier = modifier.padding(contentPadding),
+      isBluetoothAvailable = viewModel.bluetoothAvailability.isAvailable,
       serverGameEventState = viewModel.serverConfigState,
       localScoutGameEventState = viewModel.localScoutConfigState,
       navigate = { screen ->
@@ -88,6 +89,7 @@ fun ModeSelectScreen(
 @Composable
 private fun ModeSelectScreenContent(
   modifier: Modifier = Modifier,
+  isBluetoothAvailable: Boolean,
   serverGameEventState: GameAndEventState,
   localScoutGameEventState: GameAndEventState,
   navigate: (Screen) -> Unit,
@@ -107,6 +109,7 @@ private fun ModeSelectScreenContent(
           expanded = expandedCard == id,
           onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
           navigate = navigate,
+          enabled = isBluetoothAvailable,
         )
       }
 
@@ -116,6 +119,7 @@ private fun ModeSelectScreenContent(
           onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
           gameEventState = serverGameEventState,
           navigate = navigate,
+          enabled = isBluetoothAvailable,
         )
       }
 
@@ -155,10 +159,12 @@ private fun RemoteScoutCard(
   expanded: Boolean,
   onExpanded: (Boolean) -> Unit,
   navigate: (Screen) -> Unit,
+  enabled: Boolean,
   modifier: Modifier = Modifier,
 ) {
   ExpandableCard(
     modifier = modifier,
+    enabled = enabled,
     header = {
       CardHeader(
         icon = {
@@ -169,7 +175,13 @@ private fun RemoteScoutCard(
           )
         },
         title = { Text(stringResource(R.string.mode_remote_scout)) },
-        description = { Text(stringResource(R.string.mode_remote_scout_description)) },
+        description = {
+          if (enabled) {
+            Text(stringResource(R.string.mode_remote_scout_description))
+          } else {
+            Text(stringResource(R.string.mode_unavailable_no_bluetooth))
+          }
+       },
       )
     },
     actions = {
@@ -193,10 +205,12 @@ private fun ServerCard(
   onExpanded: (Boolean) -> Unit,
   gameEventState: GameAndEventState,
   navigate: (Screen) -> Unit,
+  enabled: Boolean,
   modifier: Modifier = Modifier,
 ) {
   ExpandableCard(
     modifier = modifier,
+    enabled = enabled,
     header = {
       CardHeader(
         icon = {
@@ -207,7 +221,13 @@ private fun ServerCard(
           )
         },
         title = { Text(stringResource(R.string.mode_server)) },
-        description = { Text(stringResource(R.string.mode_server_description)) },
+        description = {
+          if (enabled) {
+            Text(stringResource(R.string.mode_server_description))
+          } else {
+            Text(stringResource(R.string.mode_unavailable_no_bluetooth))
+          }
+        },
       )
     },
     actions = {
@@ -365,6 +385,7 @@ private fun ModeSelectScreenPreviewLight() {
     ModeSelectScreenContent(
       serverGameEventState = gameEventState,
       localScoutGameEventState = gameEventState,
+      isBluetoothAvailable = true,
       navigate = {}
     )
   }
@@ -378,7 +399,8 @@ private fun RemoteScoutCardPreview() {
       RemoteScoutCard(
         expanded = true,
         onExpanded = {},
-        navigate = {}
+        navigate = {},
+        enabled = true,
       )
     }
   }
@@ -398,7 +420,8 @@ private fun ServerCardPreview() {
         expanded = true,
         onExpanded = {},
         gameEventState = gameEventState,
-        navigate = {}
+        navigate = {},
+        enabled = true,
       )
     }
   }

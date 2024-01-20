@@ -3,6 +3,7 @@ package com.team2052.frckrawler.ui.modeSelect
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team2052.frckrawler.bluetooth.BluetoothAvailabilityProvider
 import com.team2052.frckrawler.data.local.EventDao
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.ui.components.GameAndEventState
@@ -18,9 +19,12 @@ import javax.inject.Inject
 class ModeSelectViewModel @Inject constructor(
   private val gameDao: GameDao,
   private val eventDao: EventDao,
+  private val bluetoothAvailabilityProvider: BluetoothAvailabilityProvider
 ) : ViewModel() {
   var serverConfigState = GameAndEventState()
   var localScoutConfigState = GameAndEventState()
+
+  val bluetoothAvailability = bluetoothAvailabilityProvider.availability
 
   fun loadGamesAndEvents() {
     viewModelScope.launch {

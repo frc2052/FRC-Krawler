@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.bluetooth.client
 
 import android.app.Activity
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
@@ -15,7 +14,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 internal class ScanServerDiscoveryStrategy @Inject constructor(
-  private val bluetoothAdapter: BluetoothAdapter,
   @ApplicationContext private val context: Context
 ) : ServerDiscoveryStrategy {
   companion object {

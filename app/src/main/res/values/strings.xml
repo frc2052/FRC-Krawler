@@ -38,6 +38,8 @@
     <string name="welcome_message">Welcome to &appName;!</string>
     <string name="getting_started_message">To get started, select from the options below</string>
 
+    <string name="mode_unavailable_no_bluetooth">Unavailable because this device does not support Bluetooth.</string>
+
     <string name="mode_remote_scout">Remote Scout</string>
     <string name="mode_remote_scout_description">I want to connect to a server and scout</string>
     <string name="mode_remote_scout_continue">START SCOUTING</string>

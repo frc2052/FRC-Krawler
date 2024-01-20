@@ -1,7 +1,6 @@
 package com.team2052.frckrawler.ui.scout.remote
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,7 +41,7 @@ import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import com.team2052.frckrawler.ui.theme.secondarySurface
+import com.team2052.frckrawler.ui.theme.disabledSurface
 import com.team2052.frckrawler.ui.theme.spaceLarge
 
 @Composable
@@ -173,9 +172,7 @@ private fun StartScoutingCard(
   } else {
     // TODO - make this more clearly not enabled
     Card(
-      modifier = modifier.background(
-        color = MaterialTheme.colors.secondarySurface
-      ),
+      backgroundColor = MaterialTheme.colors.disabledSurface,
     ) {
       StartScoutingCardContent(
         icon = icon,

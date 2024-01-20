@@ -24,7 +24,7 @@
 
     <uses-feature
       android:name="android.hardware.bluetooth"
-      android:required="true" />
+      android:required="false" />
 
     <uses-feature
         android:name="android.software.companion_device_setup"
