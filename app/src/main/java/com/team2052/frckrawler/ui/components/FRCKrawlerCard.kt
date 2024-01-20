@@ -5,6 +5,7 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -80,7 +82,7 @@ open class CardGroupBuilder {
 @Composable
 fun Card(
   modifier: Modifier = Modifier,
-  header: @Composable () -> Unit = { CardHeader() },
+  header: (@Composable () -> Unit)? = null,
   actions: (@Composable RowScope.(Modifier) -> Unit)? = null,
   content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
@@ -106,7 +108,9 @@ fun Card(
         ),
       verticalArrangement = Arrangement.Center,
     ) {
-      header()
+      if (header != null) {
+        header()
+      }
       if (content != null) {
         Column(
           modifier = Modifier
@@ -133,23 +137,37 @@ fun Card(
 @Composable
 fun CardHeader(
   modifier: Modifier = Modifier,
+  icon: (@Composable () -> Unit)? = null,
   title: (@Composable RowScope.() -> Unit)? = null,
   description: (@Composable RowScope.() -> Unit)? = null,
-) = Column(
-  modifier = modifier
-    .fillMaxWidth()
-    .padding(horizontal = 24.dp)
-    .padding(bottom = 24.dp)
 ) {
-  title?.let { title ->
-    CompositionLocalProvider(
-      LocalTextStyle provides MaterialTheme.typography.h6.copy(fontWeight = FontWeight.SemiBold)
-    ) { Row(modifier = Modifier.padding(top = 24.dp)) { title() } }
-  }
-  description?.let { description ->
-    CompositionLocalProvider(
-      LocalTextStyle provides MaterialTheme.typography.subtitle1
-    ) { Row { description() } }
+  Box(
+    modifier = modifier
+      .fillMaxWidth()
+      .padding(horizontal = 16.dp, vertical = 24.dp),
+  ) {
+    Row {
+      icon?.let {
+        Box(
+          modifier = modifier.padding(vertical = 6.dp)
+        ) {
+            icon()
+        }
+        Spacer(Modifier.width(12.dp))
+      }
+      Column {
+        title?.let { title ->
+          CompositionLocalProvider(
+            LocalTextStyle provides MaterialTheme.typography.h6.copy(fontWeight = FontWeight.SemiBold)
+          ) { Row { title() } }
+        }
+        description?.let { description ->
+          CompositionLocalProvider(
+            LocalTextStyle provides MaterialTheme.typography.subtitle1
+          ) { Row { description() } }
+        }
+      }
+    }
   }
 }
 

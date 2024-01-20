@@ -7,16 +7,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Aod
+import androidx.compose.material.icons.outlined.Hub
+import androidx.compose.material.icons.outlined.TapAndPlay
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -142,6 +149,13 @@ private fun ModeSelectScreenContent(
       modifier = Modifier.clickable { navigate(Screen.GameList) },
       header = {
         CardHeader(
+          icon = {
+            Icon(
+              modifier = modifier.size(36.dp),
+              imageVector = Icons.Default.Settings,
+              contentDescription = null,
+            )
+          },
           title = { Text(stringResource(R.string.mode_select_configure)) },
           description = { Text(stringResource(R.string.mode_select_configure_description)) },
         )
@@ -161,6 +175,13 @@ private fun RemoteScoutCard(
     modifier = modifier,
     header = {
       CardHeader(
+        icon = {
+          Icon(
+            modifier = modifier.size(36.dp),
+            imageVector = Icons.Outlined.TapAndPlay,
+            contentDescription = null,
+          )
+        },
         title = { Text(stringResource(R.string.mode_remote_scout)) },
         description = { Text(stringResource(R.string.mode_remote_scout_description)) },
       )
@@ -192,6 +213,13 @@ private fun ServerCard(
     modifier = modifier,
     header = {
       CardHeader(
+        icon = {
+          Icon(
+            modifier = modifier.size(36.dp),
+            imageVector = Icons.Outlined.Hub,
+            contentDescription = null,
+          )
+        },
         title = { Text(stringResource(R.string.mode_server)) },
         description = { Text(stringResource(R.string.mode_server_description)) },
       )
@@ -234,6 +262,13 @@ private fun SoloScoutCard(
     modifier = modifier,
     header = {
       CardHeader(
+        icon = {
+          Icon(
+            modifier = modifier.size(36.dp),
+            imageVector = Icons.Outlined.Aod,
+            contentDescription = null,
+          )
+        },
         title = { Text(stringResource(R.string.mode_solo_scout)) },
         description = { Text(stringResource(R.string.mode_solo_scout_description)) },
       )
