@@ -46,25 +46,26 @@ fun GameAndEventSelector(
       availableEvents = state.availableEvents
     )
 
-    if (state.selectedGame != null) {
-      if (state.selectedGame?.matchMetricsSetId == null && state.selectedGame?.pitMetricsSetId == null) {
-        Spacer(Modifier.height(4.dp))
-        Text(
-          text = stringResource(R.string.game_event_no_metrics_warning),
-          style = MaterialTheme.typography.body2,
-          fontStyle = FontStyle.Italic,
-          color = MaterialTheme.colors.error
-        )
+
+    val errorText: String? = when {
+      state.availableGames.isEmpty() -> stringResource(R.string.game_event_no_games_warning)
+      state.selectedGame != null && state.availableEvents.isEmpty() -> stringResource(R.string.game_event_no_events_warning)
+      state.selectedEvent != null
+              && state.selectedGame?.matchMetricsSetId == null
+              && state.selectedGame?.pitMetricsSetId == null -> {
+        stringResource(R.string.game_event_no_metrics_warning)
       }
-      if (state.availableEvents.isEmpty()) {
-        Spacer(Modifier.height(4.dp))
-        Text(
-          text = stringResource(R.string.game_event_no_events_warning),
-          style = MaterialTheme.typography.body2,
-          fontStyle = FontStyle.Italic,
-          color = MaterialTheme.colors.error
-        )
-      }
+      else -> null
+    }
+    if (errorText != null) {
+      Spacer(Modifier.height(4.dp))
+      Text(
+        text = errorText,
+        style = MaterialTheme.typography.body2,
+        fontStyle = FontStyle.Italic,
+        color = MaterialTheme.colors.error
+      )
+      Spacer(Modifier.height(8.dp))
     }
   }
 }
@@ -146,6 +147,24 @@ private fun GameAndEventSelectorPreview() {
         name = "Crescendo"
       )
     )
+    selectedGame = null
+  }
+  FrcKrawlerTheme {
+    Surface {
+      GameAndEventSelector(
+        state = state
+      )
+    }
+  }
+}
+
+@FrcKrawlerPreview
+@Composable
+private fun GameAndEventSelectornoGamesPreview() {
+  val state = GameAndEventState().apply {
+    availableEvents = emptyList()
+    selectedEvent = null
+    availableGames = emptyList()
     selectedGame = null
   }
   FrcKrawlerTheme {

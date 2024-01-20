@@ -89,7 +89,8 @@
 
     <!-- Game & Event selector -->
     <string name="game_event_no_metrics_warning">Warning: no pit or match metrics</string>
-    <string name="game_event_no_events_warning">Error: no events configured</string>
+    <string name="game_event_no_events_warning">No events configured</string>
+    <string name="game_event_no_games_warning">No games configured</string>
     <string name="game_event_event_label">Event</string>
     <string name="game_event_game_label">Game</string>
 
