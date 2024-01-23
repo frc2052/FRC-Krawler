@@ -4,15 +4,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,19 +35,11 @@ fun FRCKrawlerAppBar(
   modifier = modifier.zIndex(1f),
   backgroundColor = MaterialTheme.colors.primary,
   elevation = 0.dp,
-  contentColor = MaterialTheme.colors.onSurface,
+  contentColor = MaterialTheme.colors.onPrimary,
   navigationIcon = navigation,
-  actions = {
-    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.onPrimary) {
-      actions()
-    }
-  },
+  actions = actions,
   title = {
-    ProvideTextStyle(
-      MaterialTheme.typography.h6.copy(
-        color = MaterialTheme.colors.onPrimary
-      )
-    ) { Row { title() } }
+    ProvideTextStyle(MaterialTheme.typography.h6) { Row { title() } }
   },
 )
 
@@ -83,6 +74,16 @@ private fun FRCKrawlerAppBarPreviewDark() {
   FrcKrawlerTheme(darkTheme = true) {
     FRCKrawlerAppBar(
       title = { Text("preview") },
+      actions = {
+        IconButton(
+          onClick = { }
+        ) {
+          Icon(
+            imageVector = Icons.Filled.Delete,
+            contentDescription = stringResource(R.string.delete)
+          )
+        }
+      },
     )
   }
 }
