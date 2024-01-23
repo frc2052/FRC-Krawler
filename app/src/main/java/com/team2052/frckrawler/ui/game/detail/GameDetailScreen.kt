@@ -98,7 +98,7 @@ fun GameDetailScreen(
         }
       )
     },
-  ) { contentPadding ->
+  ) {
     ModalBottomSheetLayout(
       sheetState = addEventSheetState,
       sheetContent = {
@@ -114,7 +114,6 @@ fun GameDetailScreen(
     ) {
       if (state is GameDetailState.Content) {
         GameDetailContent(
-          modifier = Modifier.padding(contentPadding),
           events = state.events,
           onAddEventClick = {
             scope.launch {

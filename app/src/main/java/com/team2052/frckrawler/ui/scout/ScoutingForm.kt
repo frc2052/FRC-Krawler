@@ -17,7 +17,7 @@ fun ScoutingForm(
   modifier: Modifier = Modifier,
 ) {
   LazyColumn(
-    modifier = modifier,
+    modifier = modifier
   ) {
     item {
       header()

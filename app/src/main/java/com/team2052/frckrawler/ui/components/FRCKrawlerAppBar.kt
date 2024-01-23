@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -34,7 +33,6 @@ fun FRCKrawlerAppBar(
 ) = TopAppBar(
   modifier = modifier.zIndex(1f),
   backgroundColor = MaterialTheme.colors.primary,
-  elevation = 0.dp,
   contentColor = MaterialTheme.colors.onPrimary,
   navigationIcon = navigation,
   actions = actions,

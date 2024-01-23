@@ -1,18 +1,21 @@
 package com.team2052.frckrawler.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.FabPosition
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,19 +23,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.theme.darkGray
 import com.team2052.frckrawler.ui.theme.lightGray
 import com.team2052.frckrawler.ui.theme.spaceExtraLarge
-import com.team2052.frckrawler.ui.theme.spaceLarge
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FRCKrawlerScaffold(
   modifier: Modifier = Modifier,
   scaffoldState: ScaffoldState = rememberScaffoldState(),
   appBar: @Composable () -> Unit = { },
-  tabBar: @Composable () -> Unit = { },
   floatingActionButton: @Composable () -> Unit = { },
   background: @Composable () -> Unit = {
     Image(
@@ -50,18 +51,19 @@ fun FRCKrawlerScaffold(
       ),
     )
   },
-  content: @Composable ColumnScope.(PaddingValues) -> Unit,
+  content: @Composable ColumnScope.() -> Unit,
 ) = Scaffold(
   modifier = modifier,
   scaffoldState = scaffoldState,
   topBar = {
-    Surface(
-      elevation = 4.dp
-    ) {
-      Column {
-        appBar()
-        tabBar()
-      }
+    Column {
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .background(MaterialTheme.colors.primaryVariant)
+          .statusBarsPadding()
+      )
+      appBar()
     }
   },
   snackbarHost = { scaffoldState.snackbarHostState },
@@ -72,16 +74,16 @@ fun FRCKrawlerScaffold(
   Box(
     modifier = Modifier
       .fillMaxSize()
+      .imePadding()
       .padding(contentPadding)
+      .consumeWindowInsets(contentPadding)
   ) {
     background()
     Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(contentPadding),
+      modifier = Modifier.fillMaxSize(),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-      content(PaddingValues(bottom = spaceLarge))
+      content()
     }
     FRCKrawlerSnackbar(
       snackbarHostState = scaffoldState.snackbarHostState,

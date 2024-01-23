@@ -62,10 +62,9 @@ fun ServerHomeScreen(
           }
         )
       },
-    ) { contentPadding ->
+    ) {
       Column(
         modifier = Modifier
-          .padding(contentPadding)
           .padding(spaceLarge)
       ) {
         ServerConfigCard(

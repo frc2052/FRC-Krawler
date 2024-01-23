@@ -3,10 +3,15 @@ package com.team2052.frckrawler.ui.game.list
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -69,7 +74,7 @@ fun GameListScreen(
         EmptyBackground()
       }
     }
-  ) { _ ->
+  ) {
     GameList(
       games = viewModel.games,
       onGameClick = { game -> navController.navigate(Screen.Game(game.id).route) }
@@ -120,14 +125,17 @@ fun GameList(
   games: List<Game>,
   onGameClick: (Game) -> Unit
 ) {
-  Column(modifier = modifier.fillMaxWidth()) {
-    games.forEach { set ->
+  LazyColumn(
+    modifier = modifier.fillMaxWidth(),
+    contentPadding = WindowInsets.navigationBars.asPaddingValues()
+  ) {
+    items(games) { game ->
       Text(
+        text = game.name,
         modifier = Modifier
           .fillMaxWidth()
-          .clickable { onGameClick(set) }
+          .clickable { onGameClick(game) }
           .padding(horizontal = 12.dp, vertical = 12.dp),
-        text = set.name,
         style = MaterialTheme.typography.h5
       )
       Divider()

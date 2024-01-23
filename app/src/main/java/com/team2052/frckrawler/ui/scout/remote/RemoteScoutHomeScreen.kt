@@ -81,12 +81,12 @@ fun ScoutHomeScreen(
           }
         )
       },
-    ) { contentPadding ->
+    ) {
       val hasMatchMetrics by viewModel.hasMatchMetrics.collectAsState()
       val hasPitMetrics by viewModel.hasPitMetrics.collectAsState()
       val syncState by viewModel.syncState.collectAsState()
       ScoutHomeScreenContent(
-        modifier = modifier.padding(contentPadding),
+        modifier = modifier,
         hasMatchMetrics = hasMatchMetrics,
         onStartMatchScouting = {
           navController.navigate(

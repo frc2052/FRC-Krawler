@@ -74,7 +74,7 @@ fun ScoutMatchScreen(
         }
       )
     },
-  ) { contentPadding ->
+  ) {
     state?.let { state ->
       ScoutingForm(
         header = {

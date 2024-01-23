@@ -1,12 +1,16 @@
 package com.team2052.frckrawler.ui
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsControllerCompat
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.navigation.Navigation
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -20,9 +24,14 @@ class MainActivity : AppCompatActivity() {
     // Reset the theme after the splash screen finishes
     setTheme(R.style.Theme_FRCKrawler)
 
+    enableEdgeToEdge(
+      navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT)
+    )
+
+    WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
+
     setContent {
       FrcKrawlerTheme {
-        // TODO: Future versions of Jetpack Compose will offer shared element transitions for the nav bar
         Navigation()
       }
     }

@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,7 +27,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
@@ -56,6 +58,7 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
+import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricMode
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -84,9 +87,9 @@ fun MetricsListScreen(
 
   val state = viewModel.state.collectAsState().value
 
-  Scaffold(
+  FRCKrawlerScaffold(
     modifier = modifier,
-    topBar = {
+    appBar = {
       FRCKrawlerAppBar(
         title = {
           if (state is MetricListScreenState.Content) {
@@ -120,7 +123,7 @@ fun MetricsListScreen(
         )
       }
     },
-  ) { contentPadding ->
+  ) {
     ModalBottomSheetLayout(
       sheetState = sheetState,
       sheetContent = {
@@ -135,13 +138,12 @@ fun MetricsListScreen(
         )
       }
     ) {
-      Column(Modifier.padding(contentPadding)) {
+      Column {
         if (state is MetricListScreenState.Content) {
           if (state.metrics.isEmpty()) {
             EmptyBackground()
           } else {
             MetricListContent(
-              modifier = Modifier.padding(contentPadding),
               metrics = state.metrics,
               onMetricClick = { metric ->
                 sheetMode = AddEditMetricMode.Edit(metric)
@@ -229,7 +231,9 @@ private fun MetricListContent(
   isPitMetrics: Boolean,
   onIsPitMetricsChanged: (Boolean) -> Unit,
 ) {
-  LazyColumn(modifier) {
+  LazyColumn(
+    contentPadding = WindowInsets.navigationBars.asPaddingValues()
+  ) {
     item {
       val matchMetricsLabel = getMetricsLabel(
         prefixResId = R.string.metric_list_is_match_set,
@@ -349,7 +353,9 @@ private fun MetricListRow(
   }
 
   Column(
-    modifier = modifier.clickable { onMetricClick(metric) }
+    modifier = modifier
+      .background(color = MaterialTheme.colors.background)
+      .clickable { onMetricClick(metric) }
   ) {
     Row(
       modifier = Modifier.fillMaxWidth(),
