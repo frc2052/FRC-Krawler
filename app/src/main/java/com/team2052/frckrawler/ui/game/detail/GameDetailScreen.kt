@@ -232,7 +232,7 @@ private fun EventRow(
     modifier = modifier
         .fillMaxWidth()
         .clickable { onEventClick(event) }
-        .padding(vertical = 12.dp)
+        .padding(horizontal = 16.dp, vertical = 12.dp)
   ) {
     Text(
       text = event.name,
@@ -292,12 +292,10 @@ private fun MetricSetRow(
     modifier = modifier
         .fillMaxWidth()
         .clickable { onMetricSetClick(metricSet) }
-        .padding(vertical = 12.dp),
+        .padding(horizontal = 16.dp, vertical = 12.dp),
     horizontalArrangement = Arrangement.SpaceBetween
   ) {
-    Column(
-
-    ) {
+    Column {
       Text(
         text = metricSet.name,
         style = MaterialTheme.typography.subtitle1
@@ -359,12 +357,11 @@ private fun GameDetailCardLayout(
     modifier = modifier,
     elevation = 2.dp
   ) {
-    Column(
-      modifier = Modifier.padding(16.dp)
-    ) {
+    Column {
       Row(
         modifier = Modifier
-          .fillMaxWidth(),
+          .fillMaxWidth()
+          .padding(top = 16.dp, start = 16.dp, end = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
