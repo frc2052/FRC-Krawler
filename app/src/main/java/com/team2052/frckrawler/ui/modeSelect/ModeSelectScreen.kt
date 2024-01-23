@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -348,7 +350,13 @@ private fun ScoutModeRadioGroup(
         onClick = null
       )
       Spacer(Modifier.width(4.dp))
-      Text(stringResource(R.string.mode_select_scout_match))
+      Text(
+        text = stringResource(R.string.mode_select_scout_match),
+        color = if (matchEnabled) {
+          LocalContentColor.current
+        } else {
+          LocalContentColor.current.copy(alpha = ContentAlpha.disabled)
+        })
     }
 
     Spacer(Modifier.width(8.dp))
@@ -368,7 +376,14 @@ private fun ScoutModeRadioGroup(
         onClick = null
       )
       Spacer(Modifier.width(4.dp))
-      Text(stringResource(R.string.mode_select_scout_pit))
+      Text(
+        text = stringResource(R.string.mode_select_scout_pit),
+        color = if (pitEnabled) {
+          LocalContentColor.current
+        } else {
+          LocalContentColor.current.copy(alpha = ContentAlpha.disabled)
+        }
+      )
     }
   }
 }
