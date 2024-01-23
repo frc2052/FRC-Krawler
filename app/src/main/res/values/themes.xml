@@ -10,7 +10,7 @@
     <!--        <item name="colorSecondaryVariant">@color/maroon_500</item> -->
     <item name="colorOnSecondary">@color/black_000</item>
     <!-- Status bar color. -->
-    <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    <item name="android:statusBarColor">@color/maroon_500</item>
   </style>
 
   <style name="Theme.FRCKrawlerSplash" parent="Theme.MaterialComponents.Light.NoActionBar">
