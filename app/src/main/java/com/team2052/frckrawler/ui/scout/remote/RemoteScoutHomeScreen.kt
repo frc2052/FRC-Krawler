@@ -170,7 +170,6 @@ private fun StartScoutingCard(
       )
     }
   } else {
-    // TODO - make this more clearly not enabled
     Card(
       backgroundColor = MaterialTheme.colors.disabledSurface,
     ) {

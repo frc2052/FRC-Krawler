@@ -99,9 +99,9 @@ private fun ModeSelectScreenContent(
 
   Column(
     modifier = modifier
-        .fillMaxWidth()
-        .verticalScroll(scrollState)
-        .padding(spaceLarge)
+      .fillMaxWidth()
+      .verticalScroll(scrollState)
+      .padding(spaceLarge)
   ) {
     ExpandableCardGroup {
       expandableCard { id ->
@@ -335,12 +335,12 @@ private fun ScoutModeRadioGroup(
   Row {
     Row(
       modifier = modifier
-          .selectable(
-              onClick = { onModeChanged(ScoutMode.Match) },
-              enabled = matchEnabled,
-              selected = mode == ScoutMode.Match && matchEnabled
-          )
-          .padding(4.dp)
+        .selectable(
+          onClick = { onModeChanged(ScoutMode.Match) },
+          enabled = matchEnabled,
+          selected = mode == ScoutMode.Match && matchEnabled
+        )
+        .padding(4.dp)
     ) {
       RadioButton(
         selected = mode == ScoutMode.Match && matchEnabled,

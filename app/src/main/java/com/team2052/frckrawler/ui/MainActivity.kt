@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     setTheme(R.style.Theme_FRCKrawler)
 
     setContent {
-      FrcKrawlerTheme(darkTheme = false) {
+      FrcKrawlerTheme {
         // TODO: Future versions of Jetpack Compose will offer shared element transitions for the nav bar
         Navigation()
       }

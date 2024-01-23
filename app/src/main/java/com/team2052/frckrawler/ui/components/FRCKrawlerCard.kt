@@ -117,7 +117,7 @@ fun Card(
             .padding(12.dp),
           horizontalArrangement = Arrangement.End,
         ) {
-          ProvideTextStyle(MaterialTheme.typography.button.copy(color = MaterialTheme.colors.primary)) {
+          ProvideTextStyle(MaterialTheme.typography.button) {
             actions(Modifier.padding(start = spaceLarge))
           }
         }
