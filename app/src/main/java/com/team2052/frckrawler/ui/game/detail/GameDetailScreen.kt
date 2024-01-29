@@ -213,7 +213,7 @@ private fun EventListCard(
       }
     } else {
       Text(
-        modifier = Modifier.padding(vertical = 8.dp),
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         text = stringResource(R.string.game_detail_no_events),
         fontStyle = FontStyle.Italic
       )
@@ -273,7 +273,7 @@ private fun MetricSetsCard(
       }
     } else {
       Text(
-        modifier = Modifier.padding(vertical = 12.dp),
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         text = stringResource(R.string.game_detail_no_metric_sets),
         fontStyle = FontStyle.Italic
       )
