@@ -4,7 +4,9 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
+import com.team2052.frckrawler.data.model.Metric
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,6 +25,20 @@ interface MetricDao {
 
   @Insert
   suspend fun insertAll(metrics: List<MetricRecord>)
+
+  @Query("UPDATE metric SET priority = :priority WHERE id = :id")
+  suspend fun updateMetricPriority(id: String, priority: Int)
+
+  /**
+   * Update all metrics in the provided list so their priority matches their index
+   * in the list.
+   */
+  @Transaction
+  suspend fun updateMetricPriorities(metrics: List<Metric>) {
+    metrics.forEachIndexed { index, metric ->
+      updateMetricPriority(metric.id, index)
+    }
+  }
 
   @Query("SELECT * FROM metric WHERE metricSetId = :metricSetId")
   fun getMetrics(metricSetId: Int): Flow<List<MetricRecord>>

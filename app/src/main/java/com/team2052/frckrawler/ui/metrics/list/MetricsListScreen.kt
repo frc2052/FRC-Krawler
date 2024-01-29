@@ -2,6 +2,7 @@ package com.team2052.frckrawler.ui.metrics.list
 
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,10 +15,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
@@ -35,6 +38,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -57,6 +61,12 @@ import androidx.navigation.NavController
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
+import com.team2052.frckrawler.ui.common.BasicDraggableContent
+import com.team2052.frckrawler.ui.common.DragDropState
+import com.team2052.frckrawler.ui.common.DraggableItem
+import com.team2052.frckrawler.ui.common.dragContainer
+import com.team2052.frckrawler.ui.common.dragHandle
+import com.team2052.frckrawler.ui.common.rememberDragDropState
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
@@ -156,6 +166,7 @@ fun MetricsListScreen(
               onIsMatchMetricsChanged = { viewModel.setIsMatchMetrics(it) },
               isPitMetrics = state.isPitMetricSet,
               onIsPitMetricsChanged = { viewModel.setIsPitMetrics(it) },
+              onMetricsReordered = { metrics ->  viewModel.updateMetricsOrder(metrics) }
             )
           }
         } else {
@@ -230,9 +241,30 @@ private fun MetricListContent(
   onIsMatchMetricsChanged: (Boolean) -> Unit,
   isPitMetrics: Boolean,
   onIsPitMetricsChanged: (Boolean) -> Unit,
+  onMetricsReordered: (List<Metric>) -> Unit,
 ) {
+  // This copy of the metric list is reorderable to support drag and drop
+  var localMetricList by remember(metrics) {
+    mutableStateOf(metrics)
+  }
+
+  val listState = rememberLazyListState()
+  val dragDropState = rememberDragDropState(
+    lazyListState = listState,
+    onMove = { fromIndex, toIndex ->
+      localMetricList = localMetricList.toMutableList().apply {
+        add(toIndex, removeAt(fromIndex))
+      }
+    },
+    onDragEnded = {
+      onMetricsReordered(localMetricList)
+    }
+  )
+
   LazyColumn(
-    contentPadding = WindowInsets.navigationBars.asPaddingValues()
+    modifier = modifier.dragContainer(dragDropState),
+    state = listState,
+    contentPadding = WindowInsets.navigationBars.asPaddingValues(),
   ) {
     item {
       val matchMetricsLabel = getMetricsLabel(
@@ -268,12 +300,30 @@ private fun MetricListContent(
       Divider()
     }
 
-    items(metrics) { metric ->
-      MetricListRow(
-        modifier = Modifier.fillMaxWidth(),
-        metric = metric,
-        onMetricClick = onMetricClick
-      )
+    itemsIndexed(
+      items = localMetricList,
+      key = { _, metric -> metric.id },
+      contentType = { index, _ -> BasicDraggableContent(index) }
+    ) { _, metric ->
+      DraggableItem(
+        dragDropState = dragDropState,
+        key = metric.id
+      ) { isDragging ->
+        val elevation by animateDpAsState(
+          targetValue = if (isDragging) 4.dp else 1.dp,
+          label = "drag elevation"
+        )
+        Surface(
+          elevation = elevation
+        ) {
+          MetricListRow(
+            modifier = Modifier.fillMaxWidth(),
+            dragDropState = dragDropState,
+            metric = metric,
+            onMetricClick = onMetricClick
+          )
+        }
+      }
     }
   }
 }
@@ -323,6 +373,7 @@ private fun GameMetricSetSwitchRow(
 @Composable
 private fun MetricListRow(
   modifier: Modifier = Modifier,
+  dragDropState: DragDropState,
   metric: Metric,
   onMetricClick: (Metric) -> Unit
 ) {
@@ -354,11 +405,12 @@ private fun MetricListRow(
 
   Column(
     modifier = modifier
-      .background(color = MaterialTheme.colors.background)
       .clickable { onMetricClick(metric) }
   ) {
     Row(
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier
+        .background(color = MaterialTheme.colors.surface)
+        .fillMaxWidth(),
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
     ) {
@@ -374,6 +426,17 @@ private fun MetricListRow(
           style = MaterialTheme.typography.subtitle1
         )
       }
+
+      Spacer(Modifier.width(12.dp))
+
+      Icon(
+        modifier = Modifier
+          .requiredSize(48.dp)
+          .dragHandle(dragDropState, metric.id)
+          .padding(12.dp),
+        imageVector = Icons.Default.DragHandle,
+        contentDescription = stringResource(R.string.cd_drag)
+      )
     }
     Divider()
   }
@@ -382,9 +445,15 @@ private fun MetricListRow(
 @FrcKrawlerPreview
 @Composable
 private fun MetricListRowPreview() {
+  val dragDropState = rememberDragDropState(
+    lazyListState = rememberLazyListState(),
+    onMove = { _, _ -> },
+    onDragEnded = {}
+  )
   FrcKrawlerTheme {
     Surface {
       MetricListRow(
+        dragDropState = dragDropState,
         metric = Metric.CounterMetric(
           id = "",
           name = "Number of LEDs",
@@ -402,22 +471,29 @@ private fun MetricListRowPreview() {
 @Composable
 private fun MetricListPreview() {
   val metric = Metric.CounterMetric(
-    id = "",
+    id = "metric1",
     name = "Number of LEDs",
     priority = 1,
     enabled = true,
     range = 1..1000 step 5
   )
+  val metric2 = Metric.BooleanMetric(
+    id = "metric8",
+    name = "smol",
+    priority = 1,
+    enabled = true,
+  )
   FrcKrawlerTheme {
     Surface {
       MetricListContent(
-        metrics = listOf(metric, metric, metric),
+        metrics = listOf(metric, metric.copy(id = "metric2"), metric.copy(id = "metric3"), metric2),
         onMetricClick = {},
         gameName = "Crescendo",
         isMatchMetrics = false,
         onIsMatchMetricsChanged = {},
         isPitMetrics = true,
         onIsPitMetricsChanged = {},
+        onMetricsReordered = {}
       )
     }
   }

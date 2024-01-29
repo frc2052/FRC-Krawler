@@ -32,6 +32,8 @@
     <string name="cd_dropdown_expand">Expand Dropdown</string>
     <string name="cd_dropdown_collapse">Collapse Dropdown</string>
 
+    <string name="cd_drag">drag</string>
+
     <!--Mode Select-->
     <string name="mode_select_screen_title">FRCKrawler</string>
 

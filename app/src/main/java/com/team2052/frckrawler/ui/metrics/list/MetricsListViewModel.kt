@@ -6,6 +6,7 @@ import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.MetricSet
 import com.team2052.frckrawler.data.local.MetricSetDao
+import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.repository.MetricRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,6 +52,12 @@ class MetricsListViewModel @Inject constructor(
   fun deleteMetricSet() {
     viewModelScope.launch {
       metricSetDao.delete(metricSet)
+    }
+  }
+
+  fun updateMetricsOrder(metrics: List<Metric>) {
+    viewModelScope.launch {
+      metricRepo.updatePriorities(metrics)
     }
   }
 

@@ -30,6 +30,14 @@ class MetricRepository @Inject constructor(
     metricDao.insert(metric.toMetricRecord(metricSetId))
   }
 
+  /**
+   * Save a list of metrics and update their priority to match their position in the list
+   */
+  suspend fun updatePriorities(metrics: List<Metric>) {
+    metricDao.updateMetricPriorities(metrics)
+  }
+
+
   suspend fun deleteMetric(id: String) {
     metricDao.delete(MetricRecordId(id))
   }
