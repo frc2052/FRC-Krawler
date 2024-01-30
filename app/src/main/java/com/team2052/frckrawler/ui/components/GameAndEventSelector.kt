@@ -50,8 +50,10 @@ fun GameAndEventSelector(
 
     val errorText: String? = when {
       state.availableGames.isEmpty() -> stringResource(R.string.game_event_no_games_warning)
-      state.selectedGame != null && state.availableEvents.isEmpty() -> stringResource(R.string.game_event_no_events_warning)
-      state.selectedEvent != null && !state.hasTeams -> {
+      state.selectedGame != null && !state.loadingEvents
+              && state.availableEvents.isEmpty() -> stringResource(R.string.game_event_no_events_warning)
+      state.selectedEvent != null && !state.loadingTeams
+              && !state.hasTeams -> {
         stringResource(R.string.game_event_no_teams_warning)
       }
       state.selectedEvent != null
@@ -131,8 +133,12 @@ private fun GamesDropdown(
 class GameAndEventState {
   var selectedGame: Game? by mutableStateOf(null)
   var availableGames: List<Game> by mutableStateOf(emptyList())
+
+  var loadingEvents: Boolean by mutableStateOf(false)
   var selectedEvent: Event? by mutableStateOf(null)
   var availableEvents: List<Event> by mutableStateOf(emptyList())
+
+  var loadingTeams: Boolean by mutableStateOf(false)
   var hasTeams: Boolean by mutableStateOf(false)
 
   val isReadyForScouting by derivedStateOf {

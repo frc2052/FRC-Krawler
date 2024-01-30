@@ -59,12 +59,14 @@ class ModeSelectViewModel @Inject constructor(
   private suspend fun GameAndEventState.updateEventsOnGameChange() {
     snapshotFlow { selectedGame }
       .flatMapLatest { game ->
+        loadingEvents = true
         if (game != null) {
           eventDao.getAllForGame(game.id)
         } else {
           flowOf(emptyList())
         }
       }.collect { events ->
+        loadingEvents = false
         availableEvents = events
         updateSelectedEvent()
       }
@@ -73,12 +75,14 @@ class ModeSelectViewModel @Inject constructor(
   private suspend fun GameAndEventState.updateTeamsOnEventChange() {
     snapshotFlow { selectedEvent }
       .flatMapLatest { event ->
+        loadingTeams = true
         if (event != null) {
           teamDao.getAllTeams(event.id)
         } else {
           flowOf(emptyList())
         }
       }.collect { teams ->
+        loadingTeams = false
         hasTeams = teams.isNotEmpty()
       }
   }
