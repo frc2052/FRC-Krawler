@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.bluetooth.BluetoothAvailabilityProvider
 import com.team2052.frckrawler.data.local.EventDao
 import com.team2052.frckrawler.data.local.GameDao
+import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.ui.components.GameAndEventState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class ModeSelectViewModel @Inject constructor(
   private val gameDao: GameDao,
   private val eventDao: EventDao,
-  private val bluetoothAvailabilityProvider: BluetoothAvailabilityProvider
+  private val teamDao: TeamAtEventDao,
+  bluetoothAvailabilityProvider: BluetoothAvailabilityProvider
 ) : ViewModel() {
   var serverConfigState = GameAndEventState()
   var localScoutConfigState = GameAndEventState()
@@ -44,6 +46,14 @@ class ModeSelectViewModel @Inject constructor(
     viewModelScope.launch {
       localScoutConfigState.updateEventsOnGameChange()
     }
+
+    viewModelScope.launch {
+      serverConfigState.updateTeamsOnEventChange()
+    }
+
+    viewModelScope.launch {
+      localScoutConfigState.updateTeamsOnEventChange()
+    }
   }
 
   private suspend fun GameAndEventState.updateEventsOnGameChange() {
@@ -57,6 +67,19 @@ class ModeSelectViewModel @Inject constructor(
       }.collect { events ->
         availableEvents = events
         updateSelectedEvent()
+      }
+  }
+
+  private suspend fun GameAndEventState.updateTeamsOnEventChange() {
+    snapshotFlow { selectedEvent }
+      .flatMapLatest { event ->
+        if (event != null) {
+          teamDao.getAllTeams(event.id)
+        } else {
+          flowOf(emptyList())
+        }
+      }.collect { teams ->
+        hasTeams = teams.isNotEmpty()
       }
   }
 

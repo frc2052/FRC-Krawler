@@ -9,6 +9,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +51,9 @@ fun GameAndEventSelector(
     val errorText: String? = when {
       state.availableGames.isEmpty() -> stringResource(R.string.game_event_no_games_warning)
       state.selectedGame != null && state.availableEvents.isEmpty() -> stringResource(R.string.game_event_no_events_warning)
+      state.selectedEvent != null && !state.hasTeams -> {
+        stringResource(R.string.game_event_no_teams_warning)
+      }
       state.selectedEvent != null
               && state.selectedGame?.matchMetricsSetId == null
               && state.selectedGame?.pitMetricsSetId == null -> {
@@ -129,6 +133,11 @@ class GameAndEventState {
   var availableGames: List<Game> by mutableStateOf(emptyList())
   var selectedEvent: Event? by mutableStateOf(null)
   var availableEvents: List<Event> by mutableStateOf(emptyList())
+  var hasTeams: Boolean by mutableStateOf(false)
+
+  val isReadyForScouting by derivedStateOf {
+    selectedGame != null && selectedEvent != null && hasTeams
+  }
 }
 
 @FrcKrawlerPreview

@@ -306,7 +306,7 @@ private fun SoloScoutCard(
             }
           }
         },
-        enabled = gameEventState.selectedGame != null && gameEventState.selectedEvent != null
+        enabled = gameEventState.isReadyForScouting
       ) {
         Text(stringResource(R.string.mode_solo_scout_continue))
       }
