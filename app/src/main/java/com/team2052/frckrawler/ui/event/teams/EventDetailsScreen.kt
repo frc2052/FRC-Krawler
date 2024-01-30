@@ -1,9 +1,12 @@
 package com.team2052.frckrawler.ui.event.teams
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AlertDialog
@@ -21,6 +24,7 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
@@ -82,6 +87,11 @@ fun EventTeamListScreen(
           }
         }
       )
+    },
+    background = {
+     if (teams.isEmpty()) {
+       NoTeamsContent()
+     }
     },
     floatingActionButton = {
       if (editTeamSheetState.targetValue == ModalBottomSheetValue.Hidden) {
@@ -199,6 +209,26 @@ private fun Actions(onAddClick: () -> Unit) {
     Icon(
       imageVector = Icons.Filled.Add,
       contentDescription = stringResource(R.string.event_add_team_description)
+    )
+  }
+}
+
+@Composable
+private fun NoTeamsContent() {
+  Column(
+    modifier = Modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    Icon(
+      modifier = Modifier.size(128.dp),
+      imageVector = Icons.Filled.Groups,
+      tint = MaterialTheme.colors.secondary,
+      contentDescription = null
+    )
+    Text(
+      text = stringResource(R.string.event_no_teams),
+      style = MaterialTheme.typography.h4
     )
   }
 }
