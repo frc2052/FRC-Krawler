@@ -25,13 +25,13 @@ fun MetricRecord.toMetric(): Metric {
     }
 
     MetricType.Slider -> {
-      val (min, max) = deserializeIntList()
+      val (min, max, step) = deserializeIntList()
       Metric.SliderMetric(
         id = id,
         name = name,
         priority = priority,
         enabled = enabled,
-        range = min..max
+        range = min..max step step
       )
     }
 
@@ -117,7 +117,7 @@ fun Metric.toMetricRecord(metricSetId: Int): MetricRecord {
       name = name,
       priority = priority,
       enabled = enabled,
-      options = "${range.first},${range.last}"
+      options = "${range.first},${range.last},${range.step}"
     )
 
     is Metric.StopwatchMetric -> MetricRecord(
