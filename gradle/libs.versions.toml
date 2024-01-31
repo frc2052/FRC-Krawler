@@ -87,3 +87,4 @@ junit = { module = "junit:junit", version.ref = "junit" }
 [plugins]
 ksp = "com.google.devtools.ksp:1.9.21-1.0.15"
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+room = { id = "androidx.room", version.ref = "room" }
