@@ -41,6 +41,7 @@ abstract class AbstractScoutMetricsViewModel(
 
   // TODO don't like this
   private val metricSetId = CompletableDeferred<Int>()
+  private val eventId = CompletableDeferred<Int>()
 
   protected fun setMetricSetId(id: Int) {
     metricSetId.complete(id)
@@ -69,6 +70,7 @@ abstract class AbstractScoutMetricsViewModel(
   fun loadTeamsForEvent(
     eventId: Int,
   ) {
+    this.eventId.complete(eventId)
     viewModelScope.launch {
       teamDao.getAllTeams(eventId).collect {
         teams.value = it
@@ -107,7 +109,8 @@ abstract class AbstractScoutMetricsViewModel(
               group = getDatumGroup(),
               groupNumber = getDatumGroupNumber(),
               teamNumber = team.number,
-              metricId = metricId
+              metricId = metricId,
+              eventId = eventId.await()
             )
             metricDatumDao.insert(datum)
           }

@@ -44,7 +44,7 @@ fun List<MetricDatum>.toDatumPackets(): List<MetricDatumPacket> {
   }
 }
 
-fun List<MetricDatumPacket>.toData(): List<MetricDatum> {
+fun List<MetricDatumPacket>.toData(eventId: Int): List<MetricDatum> {
   return map { packet ->
     MetricDatum(
       value = packet.value,
@@ -52,7 +52,8 @@ fun List<MetricDatumPacket>.toData(): List<MetricDatum> {
       group = packet.group,
       groupNumber = packet.groupNumber,
       teamNumber = packet.teamNumber,
-      metricId = packet.metricId
+      metricId = packet.metricId,
+      eventId = eventId,
     )
   }
 }

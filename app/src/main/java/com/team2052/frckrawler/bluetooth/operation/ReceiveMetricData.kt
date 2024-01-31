@@ -8,12 +8,25 @@ import com.team2052.frckrawler.bluetooth.writeResult
 import com.team2052.frckrawler.data.local.MetricDatumDao
 import com.team2052.frckrawler.data.sync.MetricDataListPacket
 import com.team2052.frckrawler.data.sync.toData
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
 import kotlinx.coroutines.runBlocking
 import okio.BufferedSink
 import okio.BufferedSource
 import javax.inject.Inject
 
+@AssistedFactory
+interface ReceiveMetricDataFactory {
+  fun create(args: ReceiveMetricDataArgs): ReceiveMetricData
+}
+
+data class ReceiveMetricDataArgs(
+  val eventId: Int,
+)
+
 class ReceiveMetricData @Inject constructor(
+  @Assisted private val args: ReceiveMetricDataArgs,
+
   private val metricDatumDao: MetricDatumDao,
   private val moshi: Moshi,
 ) : SyncOperation {
@@ -31,6 +44,6 @@ class ReceiveMetricData @Inject constructor(
   }
 
   private suspend fun persistMetricsToDatabase(packet: MetricDataListPacket) {
-    metricDatumDao.insertAll(packet.metrics.toData())
+    metricDatumDao.insertAll(packet.metrics.toData(args.eventId))
   }
 }

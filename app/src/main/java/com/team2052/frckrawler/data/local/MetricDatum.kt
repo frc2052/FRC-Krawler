@@ -17,4 +17,5 @@ data class MetricDatum(
   val groupNumber: Int, // AKA match number in all current cases
   val teamNumber: String,
   val metricId: String,
+  val eventId: Int,
 )
