@@ -10,10 +10,10 @@ import com.team2052.frckrawler.data.sync.MetricDataListPacket
 import com.team2052.frckrawler.data.sync.toData
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.runBlocking
 import okio.BufferedSink
 import okio.BufferedSource
-import javax.inject.Inject
 
 @AssistedFactory
 interface ReceiveMetricDataFactory {
@@ -24,7 +24,7 @@ data class ReceiveMetricDataArgs(
   val eventId: Int,
 )
 
-class ReceiveMetricData @Inject constructor(
+class ReceiveMetricData @AssistedInject constructor(
   @Assisted private val args: ReceiveMetricDataArgs,
 
   private val metricDatumDao: MetricDatumDao,
