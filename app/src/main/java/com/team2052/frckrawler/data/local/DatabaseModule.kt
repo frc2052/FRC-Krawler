@@ -2,6 +2,7 @@ package com.team2052.frckrawler.data.local
 
 import android.content.Context
 import androidx.room.Room
+import com.team2052.frckrawler.data.local.migration.Migration1to2
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +26,7 @@ object DatabaseModule {
       // This seed DB reserves row IDs for scouting.
       // TODO find a more resilient solution
       .createFromAsset("database/seed.db")
-      .fallbackToDestructiveMigration()
+      .addMigrations(Migration1to2(context))
       .build()
   }
 

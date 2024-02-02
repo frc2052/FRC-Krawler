@@ -14,7 +14,7 @@ import com.team2052.frckrawler.data.local.converter.DateTimeConverters
     TeamAtEvent::class,
     MetricDatum::class
   ],
-  version = 1,
+  version = 2,
   exportSchema = false
 )
 @TypeConverters(DateTimeConverters::class)
