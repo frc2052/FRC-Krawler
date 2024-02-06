@@ -188,7 +188,7 @@ class Migration1to2(
     )
 
     robots.moveToFirst()
-    val teamNumber = robots.getInt(robots.getColumnIndexOrThrow("TEAM_ID"))
+    val teamNumber = robots.getInt(0)
 
     robots.close()
     return teamNumber
@@ -197,8 +197,8 @@ class Migration1to2(
   private fun SQLiteDatabase.getTeamName(teamNumber: Int): String {
     val teams = query(
       "TEAM",
-      arrayOf("TEAM_ID", "NAME"),
-      "${BaseColumns._ID} = ?",
+      arrayOf("NAME"),
+      "NUMBER = ?",
       arrayOf(teamNumber.toString()),
       null,
       null,
@@ -206,7 +206,7 @@ class Migration1to2(
     )
 
     teams.moveToFirst()
-    val name = teams.getString(teams.getColumnIndexOrThrow("NAME"))
+    val name = teams.getString(0)
 
     teams.close()
     return name
@@ -431,7 +431,7 @@ class Migration1to2(
           values = ContentValues().apply {
             put("value", value)
             put("lastUpdated", lastUpdate)
-            put("group", MetricDatumGroup.Match.name)
+            put("[group]", MetricDatumGroup.Match.name)
             put("groupNumber", matchNumber)
             put("teamNumber", teamNumber)
             put("metricId", metricId)
@@ -479,7 +479,7 @@ class Migration1to2(
           values = ContentValues().apply {
             put("value", value)
             put("lastUpdated", lastUpdate)
-            put("group", MetricDatumGroup.Pit.name)
+            put("[group]", MetricDatumGroup.Pit.name)
             put("groupNumber", 0)
             put("teamNumber", teamNumber)
             put("metricId", metricId)
@@ -530,7 +530,7 @@ class Migration1to2(
           values = ContentValues().apply {
             put("value", comment)
             put("lastUpdated", lastUpdate)
-            put("group", MetricDatumGroup.Match.name)
+            put("[group]", MetricDatumGroup.Match.name)
             put("groupNumber", matchNumber)
             put("teamNumber", teamNumber)
             put("metricId", metricId)
@@ -552,7 +552,7 @@ class Migration1to2(
   ) {
     val robotComments = legacyDb.query(
       "ROBOT",
-      arrayOf("ROBOT_ID", "TEAM_ID", "GAME_ID", "COMMENTS", "LAST_UPDATED"),
+      arrayOf(BaseColumns._ID, "TEAM_ID", "GAME_ID", "COMMENTS", "LAST_UPDATED"),
       null,
       null,
       null,
@@ -562,7 +562,7 @@ class Migration1to2(
 
     with(robotComments) {
       while (moveToNext()) {
-        val robotId = getInt(getColumnIndexOrThrow("ROBOT_ID"))
+        val robotId = getInt(getColumnIndexOrThrow(BaseColumns._ID))
         val teamNumber = getInt(getColumnIndexOrThrow("TEAM_ID"))
         val oldGameId = getInt(getColumnIndexOrThrow("GAME_ID"))
         val comment = getString(getColumnIndexOrThrow("COMMENTS"))
@@ -588,7 +588,7 @@ class Migration1to2(
         )
 
         while (robotEvents.moveToNext()) {
-          val oldEventId = robotEvents.getInt(robotEvents.getColumnIndexOrThrow("EVENT_ID"))
+          val oldEventId = robotEvents.getInt(0)
           val eventId = eventInfoMap[oldEventId]?.newEventId ?: continue
 
           db.insert(
@@ -597,7 +597,7 @@ class Migration1to2(
             values = ContentValues().apply {
               put("value", comment)
               put("lastUpdated", lastUpdate)
-              put("group", MetricDatumGroup.Pit.name)
+              put("[group]", MetricDatumGroup.Pit.name)
               put("groupNumber", 0)
               put("teamNumber", teamNumber)
               put("metricId", metricId)
@@ -618,6 +618,7 @@ class Migration1to2(
     val metadata = info.migratedMetrics[legacyId] ?: return null
     val reader = JsonReader(StringReader(data))
     reader.beginObject()
+    reader.nextName() // skip "value" key
     return when (metadata.type) {
       MetricType.Boolean -> {
         reader.nextBoolean().toString()
