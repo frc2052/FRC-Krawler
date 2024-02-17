@@ -15,7 +15,7 @@ import com.team2052.frckrawler.data.local.converter.DateTimeConverters
     MetricDatum::class
   ],
   version = 1,
-  exportSchema = false
+  exportSchema = true
 )
 @TypeConverters(DateTimeConverters::class)
 abstract class FRCKrawlerDatabase : RoomDatabase() {
