@@ -17,6 +17,11 @@ android {
         versionCode 1
         versionName "1.0"
 
+        def tbaKey = rootProject.ext.localProps.getProperty("frckrawler.tba-api-key")
+                ?: project.findProperty("frckrawler.tba-api-key")
+                        ?: "no-api-key"
+        buildConfigField("String", "TBA_API_KEY", "\"$tbaKey\"")
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

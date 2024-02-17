@@ -23,6 +23,11 @@ allprojects {
     }
 }
 
+rootProject.ext {
+    localProps = new Properties()
+    localProps.load(new FileInputStream(rootProject.file("local.properties")))
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

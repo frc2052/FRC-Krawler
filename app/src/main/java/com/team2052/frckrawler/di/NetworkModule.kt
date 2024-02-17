@@ -5,7 +5,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.team2052.frckrawler.data.adapter.ZonedDateTimeJsonAdapter
 import com.team2052.frckrawler.data.remote.*
-import com.team2052.frckrawler.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +20,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+  private const val BASE_TBA_URL = "https://www.thebluealliance.com/api/v3/"
 
   @Provides
   @Singleton
@@ -49,7 +50,7 @@ object NetworkModule {
   @Singleton
   fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
     return Retrofit.Builder()
-      .baseUrl(BASE_URL)
+      .baseUrl(BASE_TBA_URL)
       .client(okHttpClient)
       .addConverterFactory(MoshiConverterFactory.create(moshi))
       .build()
