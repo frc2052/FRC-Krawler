@@ -132,6 +132,14 @@
     <string name="delete_metric_set_dialog_title">Delete metric set?</string>
     <string name="delete_metric_set_dialog_description">This action cannot be undone. This set and all metrics will be deleted.</string>
 
+    <string name="metric_list_boolean_description">Boolean</string>
+    <string name="metric_list_checkbox_description">Checkbox (%1$s)</string>
+    <string name="metric_list_chooser_description">Chooser (%1$s)</string>
+    <string name="metric_list_counter_description">Counter (min: %1$d, max: %2$d, step: %3$d)</string>
+    <string name="metric_list_slider_description">Slider (min: %1$d, max: %2$d)</string>
+    <string name="metric_list_stopwatch_description">Stopwatch</string>
+    <string name="metric_list_textfield_description">Text field</string>
+
     <!-- Metric controls -->
     <string name="metric_stopwatch_start">start</string>
     <string name="metric_stopwatch_pause">pause</string>

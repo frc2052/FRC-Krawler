@@ -377,30 +377,28 @@ private fun MetricListRow(
   metric: Metric,
   onMetricClick: (Metric) -> Unit
 ) {
-  val description = remember(metric) {
-    when (metric) {
-      is Metric.BooleanMetric -> "Boolean"
-      is Metric.CheckboxMetric -> {
-        val optionsString = metric.options.joinToString(", ")
-        "Checkbox ($optionsString)"
-      }
-
-      is Metric.ChooserMetric -> {
-        val optionsString = metric.options.joinToString(", ")
-        "Chooser ($optionsString)"
-      }
-
-      is Metric.CounterMetric -> {
-        "Counter (min: ${metric.range.first}, max: ${metric.range.last}, step: ${metric.range.step})"
-      }
-
-      is Metric.SliderMetric -> {
-        "Slider (min: ${metric.range.first}, max: ${metric.range.last})"
-      }
-
-      is Metric.StopwatchMetric -> "Stopwatch"
-      is Metric.TextFieldMetric -> "Text field"
+  val description: String =  when (metric) {
+    is Metric.BooleanMetric -> stringResource(R.string.metric_list_boolean_description)
+    is Metric.CheckboxMetric -> {
+      val optionsString = metric.options.joinToString(", ")
+      stringResource(R.string.metric_list_checkbox_description, optionsString)
     }
+
+    is Metric.ChooserMetric -> {
+      val optionsString = metric.options.joinToString(", ")
+      stringResource(R.string.metric_list_chooser_description, optionsString)
+    }
+
+    is Metric.CounterMetric -> {
+      stringResource(R.string.metric_list_counter_description, metric.range.first, metric.range.last, metric.range.step)
+    }
+
+    is Metric.SliderMetric -> {
+      stringResource(R.string.metric_list_slider_description, metric.range.first, metric.range.last)
+    }
+
+    is Metric.StopwatchMetric -> stringResource(R.string.metric_list_stopwatch_description)
+    is Metric.TextFieldMetric -> stringResource(R.string.metric_list_textfield_description)
   }
 
   Column(
