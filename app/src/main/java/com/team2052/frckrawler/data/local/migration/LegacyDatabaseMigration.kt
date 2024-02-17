@@ -1,58 +1,92 @@
 package com.team2052.frckrawler.data.local.migration
 
-import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.JsonReader
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
+import com.team2052.frckrawler.data.local.Event
+import com.team2052.frckrawler.data.local.EventDao
+import com.team2052.frckrawler.data.local.Game
+import com.team2052.frckrawler.data.local.GameDao
+import com.team2052.frckrawler.data.local.MetricDao
+import com.team2052.frckrawler.data.local.MetricDatum
+import com.team2052.frckrawler.data.local.MetricDatumDao
 import com.team2052.frckrawler.data.local.MetricDatumGroup
+import com.team2052.frckrawler.data.local.MetricRecord
+import com.team2052.frckrawler.data.local.MetricSet
+import com.team2052.frckrawler.data.local.MetricSetDao
 import com.team2052.frckrawler.data.local.MetricType
+import com.team2052.frckrawler.data.local.TeamAtEvent
+import com.team2052.frckrawler.data.local.TeamAtEventDao
+import com.team2052.frckrawler.data.local.init.SeedDatabaseTask
+import dagger.hilt.android.qualifiers.ApplicationContext
+import timber.log.Timber
 import java.io.StringReader
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.UUID
+import javax.inject.Inject
 
-class Migration1to2(
-  private val context: Context
-) : Migration(1, 2) {
+class LegacyDatabaseMigration @Inject constructor(
+  @ApplicationContext private val context: Context,
+  private val seedDatabaseTask: SeedDatabaseTask,
+  private val gameDao: GameDao,
+  private val metricSetDao: MetricSetDao,
+  private val metricsDao: MetricDao,
+  private val metricDatumDao: MetricDatumDao,
+  private val eventDao: EventDao,
+  private val teamAtEventDao: TeamAtEventDao,
+) {
   companion object {
-    private const val LEGACY_DB_NAME = "com.team2052.frckrawler.db"
+    private const val LEGACY_DB_NAME = "frc-krawler-database-v3"
   }
 
   private val moshi: Moshi = Moshi.Builder().build()
 
-  override fun migrate(db: SupportSQLiteDatabase) {
-    // TODO can we handle older versions of the legacy database?
+  fun requiresMigration(): Boolean {
     val legacyDbFile  = context.getDatabasePath(LEGACY_DB_NAME)
-    if (!legacyDbFile.exists()) {
-      return
-    }
+    return legacyDbFile.exists()
+  }
+
+  suspend fun migrate() {
+    if (!requiresMigration()) return
+
+    // Make sure our reserved game/event/metrics are set up first
+    seedDatabaseTask.seed()
 
     val legacyDb = LegacyDatabaseOpenHelper().readableDatabase
-    db.beginTransaction()
 
-    val gameIdMap = migrateGames(legacyDb, db)
-    val eventIdMap = migrateEvents(legacyDb, db, gameIdMap)
-    val robotIdMap = migrateTeamAtEvent(legacyDb, db, eventIdMap)
-    val metricsInfo = migrateMetrics(legacyDb, db, gameIdMap)
+    Timber.d("migrating games")
+    val gameIdMap = migrateGames(legacyDb)
+    Timber.d("migrating events")
+    val eventIdMap = migrateEvents(legacyDb, gameIdMap)
+    Timber.d("migrating teams at events")
+    val robotIdMap = migrateTeamAtEvent(legacyDb, eventIdMap)
+    Timber.d("migrating metrics")
+    val metricsInfo = migrateMetrics(legacyDb, gameIdMap)
 
-    migrateMatchMetricsData(legacyDb, db, robotIdMap, eventIdMap, metricsInfo)
-    migratePitMetricsData(legacyDb, db, robotIdMap, eventIdMap, metricsInfo)
+    Timber.d("migrating match data")
+    migrateMatchMetricsData(legacyDb, robotIdMap, eventIdMap, metricsInfo)
+    Timber.d("migrating pit data")
+    migratePitMetricsData(legacyDb, robotIdMap, eventIdMap, metricsInfo)
 
-    migrateMatchComments(legacyDb, db, robotIdMap, gameIdMap, eventIdMap, metricsInfo)
-    migratePitComments(legacyDb, db, gameIdMap, eventIdMap, metricsInfo)
+    Timber.d("migrating match comments")
+    migrateMatchComments(legacyDb, robotIdMap, gameIdMap, eventIdMap, metricsInfo)
+    Timber.d("migrating pit comments")
+    migratePitComments(legacyDb, gameIdMap, eventIdMap, metricsInfo)
 
-    db.setTransactionSuccessful()
-    db.endTransaction()
+    Timber.d("finished migrating data")
+    legacyDb.close()
 
     context.deleteDatabase(LEGACY_DB_NAME)
   }
 
   // Returns map of old ID -> new ID
-  private fun migrateGames(legacyDb: SQLiteDatabase, db: SupportSQLiteDatabase): MutableMap<Int, MigratedGameMetadata> {
+  private suspend fun migrateGames(legacyDb: SQLiteDatabase): MutableMap<Int, MigratedGameMetadata> {
     val idMap = mutableMapOf<Int, MigratedGameMetadata>()
     val games = legacyDb.query(
       "GAME",
@@ -68,12 +102,8 @@ class Migration1to2(
         val oldId = getInt(getColumnIndexOrThrow(BaseColumns._ID))
         val name = getString(getColumnIndexOrThrow("NAME"))
 
-        val newId = db.insert(
-          table = "Game",
-          conflictAlgorithm = SQLiteDatabase.CONFLICT_REPLACE,
-          values = ContentValues().apply {
-            put("name", name)
-          }
+        val newId = gameDao.insert(
+          Game(name = name)
         )
 
         idMap[oldId] = MigratedGameMetadata(
@@ -87,9 +117,8 @@ class Migration1to2(
   }
 
   // Returns map of old ID -> new ID
-  private fun migrateEvents(
+  private suspend fun migrateEvents(
     legacyDb: SQLiteDatabase,
-    db: SupportSQLiteDatabase,
     gameInfoMap: Map<Int, MigratedGameMetadata>
   ): Map<Int, MigratedEventMetadata> {
     val idMap = mutableMapOf<Int, MigratedEventMetadata>()
@@ -111,14 +140,12 @@ class Migration1to2(
 
         val gameInfo = gameInfoMap[oldGameId] ?: continue
 
-        val newId = db.insert(
-          table = "Event",
-          conflictAlgorithm = SQLiteDatabase.CONFLICT_REPLACE,
-          values = ContentValues().apply {
-            put("name", name)
-            put("gameId", gameInfo.newGameId)
-            put("tbaId", fmsId)
-          }
+        val newId = eventDao.insert(
+          Event(
+            name = name,
+            gameId = gameInfo.newGameId,
+            tbaId = fmsId
+          )
         )
 
         idMap[oldId] = MigratedEventMetadata(
@@ -134,9 +161,8 @@ class Migration1to2(
   }
 
   // Returns map of robot ID -> team number
-  private fun migrateTeamAtEvent(
+  private suspend fun migrateTeamAtEvent(
     legacyDb: SQLiteDatabase,
-    db: SupportSQLiteDatabase,
     eventInfoMap: Map<Int, MigratedEventMetadata>,
   ): Map<Int, String> {
     val robotIdMap = mutableMapOf<Int, String>()
@@ -160,14 +186,12 @@ class Migration1to2(
 
         robotIdMap[robotId] = teamNumber.toString()
 
-        db.insert(
-          table = "team_at_event",
-          conflictAlgorithm = SQLiteDatabase.CONFLICT_REPLACE,
-          values = ContentValues().apply {
-            put("number", teamNumber.toString())
-            put("name", teamName)
-            put("eventId", eventInfo.newEventId)
-          }
+        teamAtEventDao.insert(
+          TeamAtEvent(
+            number = teamNumber.toString(),
+            name = teamName,
+            eventId = eventInfo.newEventId
+          )
         )
       }
     }
@@ -213,9 +237,8 @@ class Migration1to2(
   }
 
   // Returns map of old ID -> new MigratedMetricMetadata
-  private fun migrateMetrics(
+  private suspend fun migrateMetrics(
     legacyDb: SQLiteDatabase,
-    db: SupportSQLiteDatabase,
     gameInfoMap: MutableMap<Int, MigratedGameMetadata>
   ): MigratedMetricsInfo {
     val idMap = mutableMapOf<Int, MigratedMetricMetadata>()
@@ -239,14 +262,14 @@ class Migration1to2(
         val enabled = getInt(getColumnIndexOrThrow("ENABLED"))
 
         val newGameId = gameInfoMap[oldGameId]!!.newGameId
-        val gameMetrics = gameInfoMap[newGameId] ?: continue
+        val gameMetrics = gameInfoMap[oldGameId] ?: continue
         val metricSetId = when (category) {
           0 -> { // Match metrics
             if (gameMetrics.matchMetricsSetId != null) {
               gameMetrics.matchMetricsSetId
             } else {
-              val setId = db.createMetricSet(newGameId, category)
-              gameInfoMap[newGameId] = gameMetrics.copy(matchMetricsSetId = setId)
+              val setId = createMetricSet(newGameId, category)
+              gameInfoMap[oldGameId] = gameMetrics.copy(matchMetricsSetId = setId)
               setId
             }
           }
@@ -254,8 +277,8 @@ class Migration1to2(
             if (gameMetrics.pitMetricsSetId != null) {
               gameMetrics.pitMetricsSetId
             } else {
-              val setId = db.createMetricSet(newGameId, category)
-              gameInfoMap[newGameId] = gameMetrics.copy(pitMetricsSetId = setId)
+              val setId = createMetricSet(newGameId, category)
+              gameInfoMap[oldGameId] = gameMetrics.copy(pitMetricsSetId = setId)
               setId
             }
           }
@@ -265,18 +288,17 @@ class Migration1to2(
         val newMetricId = UUID.randomUUID()
         val metricType = legacyTypeToMetricType(type) ?: continue
         val options = migrateOptions(metricType, data)
-        db.insert(
-          table = "metric",
-          conflictAlgorithm = SQLiteDatabase.CONFLICT_REPLACE,
-          values = ContentValues().apply {
-            put("id", newMetricId.toString())
-            put("name", name)
-            put("type", metricType.name)
-            put("priority", oldId.toString()) // just use old ID for initial ordering
-            put("enabled", enabled)
-            put("metricSetId", metricSetId)
-            put("options", options)
-          }
+
+        metricsDao.insert(
+          MetricRecord(
+            id = newMetricId.toString(),
+            name = name,
+            type = metricType,
+            priority = oldId,
+            enabled = enabled == 1,
+            metricSetId = metricSetId,
+            options = options
+          )
         )
 
         idMap[oldId] = MigratedMetricMetadata(
@@ -294,7 +316,7 @@ class Migration1to2(
     idMap.values.map { it.metricSetId }
       .toSet()
       .forEach { setId ->
-        val commentMetricId = db.addCommentsMetric(setId)
+        val commentMetricId = addCommentsMetric(setId)
         commentMetrics[setId] = commentMetricId
       }
 
@@ -305,7 +327,7 @@ class Migration1to2(
     )
   }
 
-  private fun SupportSQLiteDatabase.createMetricSet(
+  private suspend fun createMetricSet(
     gameId: Int,
     category: Int,
   ): Int {
@@ -315,13 +337,11 @@ class Migration1to2(
       else -> "Metrics"
     }
 
-    val setId = insert(
-      table = "metric_set",
-      conflictAlgorithm = SQLiteDatabase.CONFLICT_REPLACE,
-      values = ContentValues().apply {
-        put("name", name)
-        put("gameId", gameId.toString())
-      }
+    val setId = metricSetDao.insert(
+      MetricSet(
+        name = name,
+        gameId = gameId
+      )
     )
 
     val setIdColumnName = when(category) {
@@ -330,15 +350,12 @@ class Migration1to2(
       else -> null
     } ?: return setId.toInt()
 
-    update(
-      "Game",
-      conflictAlgorithm = SQLiteDatabase.CONFLICT_REPLACE,
-      values = ContentValues().apply {
-        put(setIdColumnName, setId.toInt())
-      },
-      whereClause = "id = ?",
-      whereArgs = arrayOf(gameId)
-    )
+    val game = gameDao.get(gameId)
+    val gameWithSet = when (category) {
+      0 -> game.copy(matchMetricsSetId = setId.toInt())
+      else -> game.copy(pitMetricsSetId = setId.toInt())
+    }
+    gameDao.insert(gameWithSet)
 
     return setId.toInt()
   }
@@ -375,29 +392,26 @@ class Migration1to2(
   }
 
   // Returns new comment metric ID
-  private fun SupportSQLiteDatabase.addCommentsMetric(
+  private suspend fun addCommentsMetric(
     metricSetId: Int,
   ): String {
     val newMetricId = UUID.randomUUID().toString()
-    insert(
-      table = "metric",
-      conflictAlgorithm = SQLiteDatabase.CONFLICT_REPLACE,
-      values = ContentValues().apply {
-        put("id", newMetricId)
-        put("name", "Comments")
-        put("type", MetricType.TextField.name)
-        put("priority", Int.MAX_VALUE) // just use old ID for initial ordering
-        put("enabled", true)
-        put("metricSetId", metricSetId)
-        put("options", null as String?)
-      }
+    metricsDao.insert(
+      MetricRecord(
+        id = newMetricId,
+        name = "Comments",
+        type = MetricType.TextField,
+        priority = Int.MAX_VALUE,
+        enabled = true,
+        metricSetId = metricSetId,
+        options = null
+      )
     )
     return newMetricId
   }
 
-  private fun migrateMatchMetricsData(
+  private suspend fun migrateMatchMetricsData(
     legacyDb: SQLiteDatabase,
-    db: SupportSQLiteDatabase,
     robotIdMap: Map<Int, String>,
     eventInfoMap: Map<Int, MigratedEventMetadata>,
     metricsInfo: MigratedMetricsInfo,
@@ -423,20 +437,21 @@ class Migration1to2(
         val eventId = eventInfoMap[oldEventId]?.newEventId ?: continue
         val teamNumber = robotIdMap[robotId] ?: continue
         val metricId = metricsInfo.migratedMetrics[oldMetricId]?.newId ?: continue
-        val value = extractMetricDatumValueString(metricsInfo, oldMetricId, data)
+        val value = extractMetricDatumValueString(metricsInfo, oldMetricId, data) ?: continue
 
-        db.insert(
-          table = "MetricDatum",
-          conflictAlgorithm = SQLiteDatabase.CONFLICT_REPLACE,
-          values = ContentValues().apply {
-            put("value", value)
-            put("lastUpdated", lastUpdate)
-            put("[group]", MetricDatumGroup.Match.name)
-            put("groupNumber", matchNumber)
-            put("teamNumber", teamNumber)
-            put("metricId", metricId)
-            put("eventId", eventId)
-          }
+        metricDatumDao.insert(
+          MetricDatum(
+            value = value,
+            lastUpdated = ZonedDateTime.ofInstant(
+              Instant.ofEpochMilli(lastUpdate),
+              ZoneId.systemDefault()
+            ),
+            group = MetricDatumGroup.Match,
+            groupNumber = matchNumber,
+            teamNumber = teamNumber,
+            metricId = metricId,
+            eventId = eventId
+          )
         )
       }
     }
@@ -444,9 +459,8 @@ class Migration1to2(
     matchData.close()
   }
 
-  private fun migratePitMetricsData(
+  private suspend fun migratePitMetricsData(
     legacyDb: SQLiteDatabase,
-    db: SupportSQLiteDatabase,
     robotIdMap: Map<Int, String>,
     eventInfoMap: Map<Int, MigratedEventMetadata>,
     metricsInfo: MigratedMetricsInfo,
@@ -471,20 +485,21 @@ class Migration1to2(
         val eventId = eventInfoMap[oldEventId]?.newEventId ?: continue
         val teamNumber = robotIdMap[robotId] ?: continue
         val metricId = metricsInfo.migratedMetrics[oldMetricId]?.newId ?: continue
-        val value = extractMetricDatumValueString(metricsInfo, oldMetricId, data)
+        val value = extractMetricDatumValueString(metricsInfo, oldMetricId, data) ?: continue
 
-        db.insert(
-          table = "MetricDatum",
-          conflictAlgorithm = SQLiteDatabase.CONFLICT_REPLACE,
-          values = ContentValues().apply {
-            put("value", value)
-            put("lastUpdated", lastUpdate)
-            put("[group]", MetricDatumGroup.Pit.name)
-            put("groupNumber", 0)
-            put("teamNumber", teamNumber)
-            put("metricId", metricId)
-            put("eventId", eventId)
-          }
+        metricDatumDao.insert(
+          MetricDatum(
+            value = value,
+            lastUpdated = ZonedDateTime.ofInstant(
+              Instant.ofEpochMilli(lastUpdate),
+              ZoneId.systemDefault()
+            ),
+            group = MetricDatumGroup.Pit,
+            groupNumber = 0,
+            teamNumber = teamNumber,
+            metricId = metricId,
+            eventId = eventId
+          )
         )
       }
     }
@@ -492,9 +507,8 @@ class Migration1to2(
     pitData.close()
   }
 
-  private fun migrateMatchComments(
+  private suspend fun migrateMatchComments(
     legacyDb: SQLiteDatabase,
-    db: SupportSQLiteDatabase,
     robotIdMap: Map<Int, String>,
     gameInfoMap: MutableMap<Int, MigratedGameMetadata>,
     eventInfoMap: Map<Int, MigratedEventMetadata>,
@@ -524,18 +538,19 @@ class Migration1to2(
         val gameInfo = gameInfoMap[oldGameId] ?: continue
         val metricId = metricsInfo.commentMetricIds[gameInfo.matchMetricsSetId] ?: continue
 
-        db.insert(
-          table = "MetricDatum",
-          conflictAlgorithm = SQLiteDatabase.CONFLICT_REPLACE,
-          values = ContentValues().apply {
-            put("value", comment)
-            put("lastUpdated", lastUpdate)
-            put("[group]", MetricDatumGroup.Match.name)
-            put("groupNumber", matchNumber)
-            put("teamNumber", teamNumber)
-            put("metricId", metricId)
-            put("eventId", eventId)
-          }
+        metricDatumDao.insert(
+          MetricDatum(
+            value = comment,
+            lastUpdated = ZonedDateTime.ofInstant(
+              Instant.ofEpochMilli(lastUpdate),
+              ZoneId.systemDefault()
+            ),
+            group = MetricDatumGroup.Match,
+            groupNumber = matchNumber,
+            teamNumber = teamNumber,
+            metricId = metricId,
+            eventId = eventId
+          )
         )
       }
     }
@@ -543,9 +558,8 @@ class Migration1to2(
     comments.close()
   }
 
-  private fun migratePitComments(
+  private suspend fun migratePitComments(
     legacyDb: SQLiteDatabase,
-    db: SupportSQLiteDatabase,
     gameInfoMap: MutableMap<Int, MigratedGameMetadata>,
     eventInfoMap: Map<Int, MigratedEventMetadata>,
     metricsInfo: MigratedMetricsInfo,
@@ -575,7 +589,6 @@ class Migration1to2(
         val gameInfo = gameInfoMap[oldGameId] ?: continue
         val metricId = metricsInfo.commentMetricIds[gameInfo.pitMetricsSetId] ?: continue
 
-
         // For each event, should copy comment
         val robotEvents = legacyDb.query(
           "ROBOT_EVENT",
@@ -591,18 +604,19 @@ class Migration1to2(
           val oldEventId = robotEvents.getInt(0)
           val eventId = eventInfoMap[oldEventId]?.newEventId ?: continue
 
-          db.insert(
-            table = "MetricDatum",
-            conflictAlgorithm = SQLiteDatabase.CONFLICT_REPLACE,
-            values = ContentValues().apply {
-              put("value", comment)
-              put("lastUpdated", lastUpdate)
-              put("[group]", MetricDatumGroup.Pit.name)
-              put("groupNumber", 0)
-              put("teamNumber", teamNumber)
-              put("metricId", metricId)
-              put("eventId", eventId)
-            }
+          metricDatumDao.insert(
+            MetricDatum(
+              value = comment,
+              lastUpdated = ZonedDateTime.ofInstant(
+                Instant.ofEpochMilli(lastUpdate),
+                ZoneId.systemDefault()
+              ),
+              group = MetricDatumGroup.Match,
+              groupNumber = 0,
+              teamNumber = teamNumber.toString(),
+              metricId = metricId,
+              eventId = eventId
+            )
           )
         }
 

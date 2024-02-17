@@ -61,6 +61,7 @@ fun ModeSelectScreen(
   val viewModel: ModeSelectViewModel = hiltViewModel()
 
   LaunchedEffect(true) {
+    viewModel.ensureDatabaseInitialized()
     viewModel.loadGamesAndEvents()
   }
 

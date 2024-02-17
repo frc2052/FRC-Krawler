@@ -12,7 +12,7 @@ interface GameDao {
   suspend fun delete(game: Game)
 
   @Upsert
-  suspend fun insert(game: Game)
+  suspend fun insert(game: Game): Long
 
   @Query("SELECT * FROM game WHERE id = :id")
   suspend fun get(id: Int): Game
@@ -22,4 +22,7 @@ interface GameDao {
 
   @Query("SELECT * FROM game WHERE id != ${Game.SCOUT_GAME_ID}")
   fun getAll(): Flow<List<Game>>
+
+  @Query("SELECT COUNT(id) FROM game")
+  suspend fun getGameCount(): Int
 }

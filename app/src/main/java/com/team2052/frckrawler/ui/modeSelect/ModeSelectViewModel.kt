@@ -7,6 +7,7 @@ import com.team2052.frckrawler.bluetooth.BluetoothAvailabilityProvider
 import com.team2052.frckrawler.data.local.EventDao
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.TeamAtEventDao
+import com.team2052.frckrawler.data.local.init.DatabaseInitializer
 import com.team2052.frckrawler.ui.components.GameAndEventState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ModeSelectViewModel @Inject constructor(
+  private val dbInitializer: DatabaseInitializer,
   private val gameDao: GameDao,
   private val eventDao: EventDao,
   private val teamDao: TeamAtEventDao,
@@ -27,6 +29,12 @@ class ModeSelectViewModel @Inject constructor(
   var localScoutConfigState = GameAndEventState()
 
   val bluetoothAvailability = bluetoothAvailabilityProvider.availability
+
+  fun ensureDatabaseInitialized() {
+    viewModelScope.launch {
+      dbInitializer.ensureInitialized()
+    }
+  }
 
   fun loadGamesAndEvents() {
     viewModelScope.launch {

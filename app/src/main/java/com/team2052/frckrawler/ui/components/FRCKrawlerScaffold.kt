@@ -28,7 +28,6 @@ import com.team2052.frckrawler.ui.theme.darkGray
 import com.team2052.frckrawler.ui.theme.lightGray
 import com.team2052.frckrawler.ui.theme.spaceExtraLarge
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FRCKrawlerScaffold(
   modifier: Modifier = Modifier,
