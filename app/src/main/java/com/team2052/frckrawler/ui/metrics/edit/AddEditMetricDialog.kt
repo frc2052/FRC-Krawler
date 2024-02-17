@@ -10,20 +10,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ExposedDropdownMenuBox
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -120,7 +120,7 @@ private fun AddEditMetricContent(
     Text(
       modifier = Modifier.padding(16.dp),
       text = title,
-      style = MaterialTheme.typography.h6
+      style = MaterialTheme.typography.titleLarge
     )
 
     Column(
@@ -187,12 +187,10 @@ private fun MetricPreview(
   Column(Modifier.padding(horizontal = 16.dp)) {
     Text(
       text = stringResource(R.string.edit_metric_preview_label),
-      style = MaterialTheme.typography.h6
+      style = MaterialTheme.typography.titleLarge
     )
     Spacer(Modifier.height(12.dp))
-    Card(
-      elevation = 2.dp
-    ) {
+    Card {
       MetricInput(
         modifier = Modifier.fillMaxWidth(),
         metric = metric,
@@ -203,7 +201,7 @@ private fun MetricPreview(
   }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MetricTypeSelector(
   metricType: MetricType,
@@ -228,8 +226,9 @@ private fun MetricTypeSelector(
       }
     ) {
       OutlinedButton(
-        modifier = Modifier.padding(8.dp),
-        onClick = { },
+        modifier = Modifier.menuAnchor()
+          .padding(8.dp),
+        onClick = { expanded = true },
       ) {
         val buttonText = metricType.name
         Text(buttonText)
@@ -247,13 +246,12 @@ private fun MetricTypeSelector(
       ) {
         MetricType.entries.forEach { type ->
           DropdownMenuItem(
+            text = { Text(type.name) },
             onClick = {
               expanded = false
               onMetricTypeSelected(type)
             }
-          ) {
-            Text(text = type.name)
-          }
+          )
         }
       }
     }
@@ -388,10 +386,10 @@ private fun DialogButtons(
         modifier = Modifier.padding(12.dp),
         onClick = onDeleteClick,
         colors = ButtonDefaults.textButtonColors(
-          contentColor = MaterialTheme.colors.error
+          contentColor = MaterialTheme.colorScheme.error
         )
       ) {
-        Text(stringResource(R.string.delete))
+        Text(stringResource(R.string.delete).uppercase())
       }
     } else {
       // Empty box so SpaceBetween still works

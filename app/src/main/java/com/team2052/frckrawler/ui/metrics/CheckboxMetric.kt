@@ -4,9 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Checkbox
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,7 +58,7 @@ private fun CheckboxMetricPreview() {
     MetricInput(
       modifier = Modifier
         .fillMaxWidth()
-        .background(MaterialTheme.colors.surface),
+        .background(MaterialTheme.colorScheme.surface),
       metric = Metric.CheckboxMetric(
         name = "Checkbox metric",
         enabled = true,

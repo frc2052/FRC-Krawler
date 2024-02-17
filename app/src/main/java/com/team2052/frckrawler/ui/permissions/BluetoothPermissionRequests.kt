@@ -3,7 +3,7 @@ package com.team2052.frckrawler.ui.permissions
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue

@@ -10,23 +10,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -54,7 +55,7 @@ import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameDetailScreen(
   gameId: Int,
@@ -64,10 +65,8 @@ fun GameDetailScreen(
   val viewModel: GameDetailViewModel = hiltViewModel()
   val state = viewModel.state.collectAsState().value
 
-  val addEventSheetState = rememberModalBottomSheetState(
-    initialValue = ModalBottomSheetValue.Hidden,
-    skipHalfExpanded = true
-  )
+  var showAddEventSheet by remember { mutableStateOf(false) }
+  val addEventSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   var showAddMetricSet by remember { mutableStateOf(false) }
   var showDeleteConfirmation by remember { mutableStateOf(false) }
 
@@ -99,31 +98,35 @@ fun GameDetailScreen(
       )
     },
   ) {
-    ModalBottomSheetLayout(
-      sheetState = addEventSheetState,
-      sheetContent = {
+    if (state is GameDetailState.Content) {
+      GameDetailContent(
+        events = state.events,
+        onAddEventClick = {
+          showAddEventSheet = true
+        },
+        onEventClick = { event -> navController.navigate(Screen.Event(event.id).route) },
+        metricSets = state.metrics,
+        onMetricSetClick = { set -> navController.navigate(Screen.MetricSet(set.id).route) },
+        onAddMetricSetClick = { showAddMetricSet = true },
+      )
+    }
+
+    if (showAddEventSheet) {
+      ModalBottomSheet(
+        sheetState = addEventSheetState,
+        onDismissRequest = { showAddEventSheet = false }
+      ) {
         AddEventSheetContent(
           gameId = gameId,
           onClose = {
             scope.launch {
               addEventSheetState.hide()
+            }.invokeOnCompletion {
+              if (!addEventSheetState.isVisible) {
+                showAddEventSheet = false
+              }
             }
           },
-        )
-      }
-    ) {
-      if (state is GameDetailState.Content) {
-        GameDetailContent(
-          events = state.events,
-          onAddEventClick = {
-            scope.launch {
-              addEventSheetState.show()
-            }
-          },
-          onEventClick = { event -> navController.navigate(Screen.Event(event.id).route) },
-          metricSets = state.metrics,
-          onMetricSetClick = { set -> navController.navigate(Screen.MetricSet(set.id).route) },
-          onAddMetricSetClick = { showAddMetricSet = true },
         )
       }
     }
@@ -170,8 +173,11 @@ private fun GameDetailContent(
   onMetricSetClick: (GameDetailMetricSet) -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val scrollState = rememberScrollState()
   Column(
-    modifier = modifier.padding(16.dp)
+    modifier = modifier
+      .padding(16.dp)
+      .verticalScroll(scrollState)
   ) {
     EventListCard(
       modifier = Modifier.fillMaxWidth(),
@@ -208,7 +214,7 @@ private fun EventListCard(
           onEventClick = onEventClick
         )
         if (event != events.last()) {
-          Divider()
+          HorizontalDivider()
         }
       }
     } else {
@@ -229,13 +235,13 @@ private fun EventRow(
 ) {
   Column(
     modifier = modifier
-        .fillMaxWidth()
-        .clickable { onEventClick(event) }
-        .padding(horizontal = 16.dp, vertical = 12.dp)
+      .fillMaxWidth()
+      .clickable { onEventClick(event) }
+      .padding(horizontal = 16.dp, vertical = 12.dp)
   ) {
     Text(
       text = event.name,
-      style = MaterialTheme.typography.subtitle1
+      style = MaterialTheme.typography.bodyLarge
     )
     Text(
       modifier = Modifier.alpha(.6f),
@@ -244,7 +250,7 @@ private fun EventRow(
         count = event.teamCount,
         event.teamCount,
       ),
-      style = MaterialTheme.typography.body2
+      style = MaterialTheme.typography.bodyMedium
     )
   }
 }
@@ -268,7 +274,7 @@ private fun MetricSetsCard(
           onMetricSetClick = onMetricSetClick
         )
         if (set != metricSets.last()) {
-          Divider()
+          HorizontalDivider()
         }
       }
     } else {
@@ -289,15 +295,15 @@ private fun MetricSetRow(
 ) {
   Row(
     modifier = modifier
-        .fillMaxWidth()
-        .clickable { onMetricSetClick(metricSet) }
-        .padding(horizontal = 16.dp, vertical = 12.dp),
+      .fillMaxWidth()
+      .clickable { onMetricSetClick(metricSet) }
+      .padding(horizontal = 16.dp, vertical = 12.dp),
     horizontalArrangement = Arrangement.SpaceBetween
   ) {
     Column {
       Text(
         text = metricSet.name,
-        style = MaterialTheme.typography.subtitle1
+        style = MaterialTheme.typography.bodyLarge
       )
       Text(
         modifier = Modifier.alpha(.6f),
@@ -306,7 +312,7 @@ private fun MetricSetRow(
           count = metricSet.metricCount,
           metricSet.metricCount,
         ),
-        style = MaterialTheme.typography.body2
+        style = MaterialTheme.typography.bodyMedium
       )
     }
 
@@ -332,16 +338,16 @@ private fun MetricSetChip(
 ) {
   Text(
     modifier = modifier
-        .padding(horizontal = 2.dp)
-        .border(
-            width = 1.dp,
-            color = MaterialTheme.colors.primary,
-            shape = MaterialTheme.shapes.small
-        )
-        .padding(horizontal = 4.dp, vertical = 2.dp),
+      .padding(horizontal = 2.dp)
+      .border(
+        width = 1.dp,
+        color = MaterialTheme.colorScheme.primary,
+        shape = MaterialTheme.shapes.small
+      )
+      .padding(horizontal = 4.dp, vertical = 2.dp),
     text = text,
-    style = MaterialTheme.typography.caption,
-    color = MaterialTheme.colors.primary,
+    style = MaterialTheme.typography.bodySmall,
+    color = MaterialTheme.colorScheme.primary,
   )
 }
 
@@ -352,9 +358,8 @@ private fun GameDetailCardLayout(
   onAddClicked: () -> Unit,
   content: @Composable () -> Unit,
 ) {
-  Card(
-    modifier = modifier,
-    elevation = 2.dp
+  ElevatedCard(
+    modifier = modifier
   ) {
     Column {
       Row(
@@ -366,7 +371,7 @@ private fun GameDetailCardLayout(
       ) {
         Text(
           text = title,
-          style = MaterialTheme.typography.h6
+          style = MaterialTheme.typography.titleLarge
         )
 
         Button(onClick = onAddClicked) {

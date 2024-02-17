@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Slider
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -53,7 +53,7 @@ fun SliderMetric(
       )
       Text(
         text = state.toString(),
-        style = MaterialTheme.typography.h6
+        style = MaterialTheme.typography.titleLarge
       )
       Text(
         text = range.last.toString()
@@ -71,7 +71,7 @@ private fun SliderMetricPreview() {
     MetricInput(
       modifier = Modifier
         .fillMaxWidth()
-        .background(MaterialTheme.colors.surface),
+        .background(MaterialTheme.colorScheme.surface),
       metric = Metric.SliderMetric(
         name = "Slider metric",
         enabled = true,

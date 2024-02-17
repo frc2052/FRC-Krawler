@@ -85,7 +85,7 @@ dependencies {
     implementation libs.compose.ui
     implementation libs.compose.uiTooling
     implementation libs.compose.foundation
-    implementation libs.compose.material
+    implementation libs.compose.material3
     implementation libs.compose.materialIcons.core
     implementation libs.compose.materialIcons.extended
     implementation libs.compose.livedata

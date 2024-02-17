@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.contentColorFor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,8 +35,8 @@ fun AddMetricSetDialog(
   Dialog(onDismissRequest = onClose) {
     Surface(
       shape = MaterialTheme.shapes.medium,
-      color = MaterialTheme.colors.surface,
-      contentColor = contentColorFor(MaterialTheme.colors.surface)
+      color = MaterialTheme.colorScheme.surface,
+      contentColor = contentColorFor(MaterialTheme.colorScheme.surface)
     ) {
       Column {
         Text(
@@ -44,7 +44,7 @@ fun AddMetricSetDialog(
             .padding(horizontal = 24.dp)
             .paddingFromBaseline(top = 40.dp),
           text = stringResource(R.string.add_metric_set_title),
-          style = MaterialTheme.typography.h6
+          style = MaterialTheme.typography.titleLarge
         )
 
         Box(modifier = Modifier.padding(horizontal = 24.dp)) {

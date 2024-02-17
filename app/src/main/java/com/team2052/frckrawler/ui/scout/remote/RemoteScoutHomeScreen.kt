@@ -10,15 +10,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Hardware
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -41,7 +40,6 @@ import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import com.team2052.frckrawler.ui.theme.disabledSurface
 import com.team2052.frckrawler.ui.theme.spaceLarge
 
 @Composable
@@ -150,7 +148,6 @@ private fun ScoutHomeScreenContent(
   }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun StartScoutingCard(
   icon: ImageVector,
@@ -159,29 +156,18 @@ private fun StartScoutingCard(
   enabled: Boolean,
   modifier: Modifier = Modifier,
 ) {
-  if (enabled) {
-    Card(
-      modifier = modifier,
-      onClick = onClick,
-    ) {
-      StartScoutingCardContent(
-        icon = icon,
-        label = label
-      )
-    }
-  } else {
-    Card(
-      backgroundColor = MaterialTheme.colors.disabledSurface,
-    ) {
-      StartScoutingCardContent(
-        icon = icon,
-        label = label
-      )
-    }
+  Card(
+    modifier = modifier,
+    enabled = enabled,
+    onClick = onClick,
+  ) {
+    StartScoutingCardContent(
+      icon = icon,
+      label = label
+    )
   }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun StartScoutingCardContent(
   icon: ImageVector,
@@ -204,7 +190,7 @@ private fun StartScoutingCardContent(
 
     Text(
       text = label,
-      style = MaterialTheme.typography.h5
+      style = MaterialTheme.typography.headlineSmall
     )
   }
 }

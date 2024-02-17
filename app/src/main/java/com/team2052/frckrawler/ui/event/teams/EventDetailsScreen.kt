@@ -9,23 +9,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -50,7 +50,7 @@ import com.team2052.frckrawler.ui.event.teams.edit.AddEditTeamSheet
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventTeamListScreen(
   eventId: Int,
@@ -58,10 +58,8 @@ fun EventTeamListScreen(
 ) {
   val scope = rememberCoroutineScope()
   val viewModel: EventDetailsViewModel = hiltViewModel()
-  val editTeamSheetState = rememberModalBottomSheetState(
-    initialValue = ModalBottomSheetValue.Hidden,
-    skipHalfExpanded = true
-  )
+  var showEditTeamSheet by remember { mutableStateOf(false) }
+  val editTeamSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   var teamBeingEdited: TeamAtEvent? by remember { mutableStateOf(null) }
   val event by viewModel.event.collectAsState()
   val teams by viewModel.teams.collectAsState()
@@ -88,48 +86,53 @@ fun EventTeamListScreen(
         }
       )
     },
-    background = {
-     if (teams.isEmpty()) {
-       NoTeamsContent()
-     }
-    },
     floatingActionButton = {
-      if (editTeamSheetState.targetValue == ModalBottomSheetValue.Hidden) {
+      if (editTeamSheetState.targetValue == SheetValue.Hidden) {
         Actions(
           onAddClick = {
             teamBeingEdited = null
-            scope.launch {
-              editTeamSheetState.show()
-            }
+            showEditTeamSheet = true
           }
         )
       }
     },
   ) {
-    ModalBottomSheetLayout(
-      sheetState = editTeamSheetState,
-      sheetContent = {
+
+    if (teams.isEmpty()) {
+      NoTeamsContent()
+    } else {
+      TeamListContent(
+        teams = teams,
+        onTeamClicked = { team ->
+          teamBeingEdited = team
+          showEditTeamSheet = true
+        }
+      )
+    }
+
+    if (showEditTeamSheet) {
+      ModalBottomSheet(
+        sheetState = editTeamSheetState,
+        onDismissRequest = {
+          showEditTeamSheet = false
+          teamBeingEdited = null
+        }
+      ) {
         AddEditTeamSheet(
           eventId = eventId,
           team = teamBeingEdited,
           onClose = {
             scope.launch {
               editTeamSheetState.hide()
+            }.invokeOnCompletion {
+              if (!editTeamSheetState.isVisible) {
+                showEditTeamSheet = false
+              }
             }
             teamBeingEdited = null
           },
         )
       }
-    ) {
-      TeamListContent(
-        teams = teams,
-        onTeamClicked = { team ->
-          scope.launch {
-            teamBeingEdited = team
-            editTeamSheetState.show()
-          }
-        }
-      )
     }
 
     if (showDeleteConfirmation) {
@@ -168,7 +171,7 @@ private fun TeamListContent(
       )
 
       if (team != teams.last()) {
-        Divider()
+        HorizontalDivider()
       }
     }
   }
@@ -189,12 +192,12 @@ private fun TeamRow(
   ) {
     Text(
       text = team.number,
-      style = MaterialTheme.typography.h6
+      style = MaterialTheme.typography.titleLarge
     )
     Text(
       modifier = Modifier.alpha(.6f),
       text = team.name,
-      style = MaterialTheme.typography.body1
+      style = MaterialTheme.typography.bodyLarge
     )
   }
 }
@@ -223,12 +226,12 @@ private fun NoTeamsContent() {
     Icon(
       modifier = Modifier.size(128.dp),
       imageVector = Icons.Filled.Groups,
-      tint = MaterialTheme.colors.secondary,
+      tint = MaterialTheme.colorScheme.primary,
       contentDescription = null
     )
     Text(
       text = stringResource(R.string.event_no_teams),
-      style = MaterialTheme.typography.h4
+      style = MaterialTheme.typography.headlineMedium
     )
   }
 }

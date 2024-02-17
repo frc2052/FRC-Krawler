@@ -21,25 +21,25 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Surface
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DragHandle
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -72,10 +72,9 @@ import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricMode
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import com.team2052.frckrawler.ui.theme.highlightSurface
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MetricsListScreen(
   modifier: Modifier = Modifier,
@@ -83,10 +82,8 @@ fun MetricsListScreen(
   metricSetId: Int
 ) {
   val viewModel: MetricsListViewModel = hiltViewModel()
-  val sheetState = rememberModalBottomSheetState(
-    initialValue = ModalBottomSheetValue.Hidden,
-    skipHalfExpanded = true
-  )
+  var showMetricSheet by remember { mutableStateOf(false) }
+  val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   val scope = rememberCoroutineScope()
   var sheetMode: AddEditMetricMode by remember { mutableStateOf(AddEditMetricMode.New()) }
   var showDeleteConfirmation by remember { mutableStateOf(false) }
@@ -122,78 +119,80 @@ fun MetricsListScreen(
       )
     },
     floatingActionButton = {
-      if (sheetState.targetValue == ModalBottomSheetValue.Hidden) {
+      if (sheetState.targetValue == SheetValue.Hidden) {
         MetricActions(
           onAddClick = {
             sheetMode = AddEditMetricMode.New()
-            scope.launch {
-              sheetState.show()
-            }
+            showMetricSheet = true
           }
         )
       }
     },
   ) {
-    ModalBottomSheetLayout(
-      sheetState = sheetState,
-      sheetContent = {
+    Column {
+      if (state is MetricListScreenState.Content) {
+        if (state.metrics.isEmpty()) {
+          EmptyBackground()
+        } else {
+          MetricListContent(
+            metrics = state.metrics,
+            onMetricClick = { metric ->
+              sheetMode = AddEditMetricMode.Edit(metric)
+              showMetricSheet = true
+            },
+            gameName = state.gameName,
+            isMatchMetrics = state.isMatchMetricSet,
+            onIsMatchMetricsChanged = { viewModel.setIsMatchMetrics(it) },
+            isPitMetrics = state.isPitMetricSet,
+            onIsPitMetricsChanged = { viewModel.setIsPitMetrics(it) },
+            onMetricsReordered = { metrics ->  viewModel.updateMetricsOrder(metrics) }
+          )
+        }
+      } else {
+        // Show nothing while loading. Could do a loading spinner in the future
+      }
+    }
+
+    if (showMetricSheet) {
+      ModalBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = { showMetricSheet = false }
+      ) {
         AddEditMetricDialog(
           mode = sheetMode,
           metricSetId = metricSetId,
           onClose = {
             scope.launch {
               sheetState.hide()
+            }.invokeOnCompletion {
+              if (!sheetState.isVisible) {
+                showMetricSheet = false
+              }
             }
           },
         )
       }
-    ) {
-      Column {
-        if (state is MetricListScreenState.Content) {
-          if (state.metrics.isEmpty()) {
-            EmptyBackground()
-          } else {
-            MetricListContent(
-              metrics = state.metrics,
-              onMetricClick = { metric ->
-                sheetMode = AddEditMetricMode.Edit(metric)
-                scope.launch {
-                  sheetState.show()
-                }
-              },
-              gameName = state.gameName,
-              isMatchMetrics = state.isMatchMetricSet,
-              onIsMatchMetricsChanged = { viewModel.setIsMatchMetrics(it) },
-              isPitMetrics = state.isPitMetricSet,
-              onIsPitMetricsChanged = { viewModel.setIsPitMetrics(it) },
-              onMetricsReordered = { metrics ->  viewModel.updateMetricsOrder(metrics) }
-            )
-          }
-        } else {
-          // Show nothing while loading. Could do a loading spinner in the future
-        }
-      }
+    }
 
-      if (showDeleteConfirmation) {
-        AlertDialog(
-          title = { Text(stringResource(R.string.delete_metric_set_dialog_title)) },
-          text = { Text(stringResource(R.string.delete_metric_set_dialog_description)) },
-          onDismissRequest = { showDeleteConfirmation = false },
-          confirmButton = {
-            TextButton(onClick = {
-              viewModel.deleteMetricSet()
-              navController.popBackStack()
-            }) {
-              Text(stringResource(R.string.delete))
-            }
-          },
-          dismissButton = {
-            TextButton(onClick = { showDeleteConfirmation = false }) {
-              Text(stringResource(R.string.cancel))
-            }
-          },
-        )
-      }
+    if (showDeleteConfirmation) {
+      AlertDialog(
+        title = { Text(stringResource(R.string.delete_metric_set_dialog_title)) },
+        text = { Text(stringResource(R.string.delete_metric_set_dialog_description)) },
+        onDismissRequest = { showDeleteConfirmation = false },
+        confirmButton = {
+          TextButton(onClick = {
+            viewModel.deleteMetricSet()
+            navController.popBackStack()
+          }) {
+            Text(stringResource(R.string.delete))
+          }
+        },
+        dismissButton = {
+          TextButton(onClick = { showDeleteConfirmation = false }) {
+            Text(stringResource(R.string.cancel))
+          }
+        },
+      )
     }
   }
 }
@@ -209,11 +208,11 @@ private fun EmptyBackground() {
       modifier = Modifier.size(128.dp),
       imageVector = Icons.Filled.Analytics,
       contentDescription = null,
-      tint = MaterialTheme.colors.secondary
+      tint = MaterialTheme.colorScheme.outlineVariant
     )
     Text(
       text = stringResource(R.string.metric_list_empty_text),
-      style = MaterialTheme.typography.h4
+      style = MaterialTheme.typography.headlineMedium
     )
   }
 }
@@ -280,7 +279,7 @@ private fun MetricListContent(
     }
 
     item {
-      Divider()
+      HorizontalDivider()
     }
 
     item {
@@ -297,7 +296,7 @@ private fun MetricListContent(
     }
 
     item {
-      Divider()
+      HorizontalDivider()
     }
 
     itemsIndexed(
@@ -314,7 +313,7 @@ private fun MetricListContent(
           label = "drag elevation"
         )
         Surface(
-          elevation = elevation
+          shadowElevation = elevation
         ) {
           MetricListRow(
             modifier = Modifier.fillMaxWidth(),
@@ -354,7 +353,7 @@ private fun GameMetricSetSwitchRow(
 ) {
   Row(
     modifier = modifier
-      .background(MaterialTheme.colors.highlightSurface)
+      .background(MaterialTheme.colorScheme.surfaceContainer)
       .padding(horizontal = 16.dp, vertical = 12.dp),
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically,
@@ -407,7 +406,7 @@ private fun MetricListRow(
   ) {
     Row(
       modifier = Modifier
-        .background(color = MaterialTheme.colors.surface)
+        .background(color = MaterialTheme.colorScheme.surface)
         .fillMaxWidth(),
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
@@ -417,11 +416,11 @@ private fun MetricListRow(
       ) {
         Text(
           text = metric.name,
-          style = MaterialTheme.typography.h5
+          style = MaterialTheme.typography.headlineSmall
         )
         Text(
           text = description,
-          style = MaterialTheme.typography.subtitle1
+          style = MaterialTheme.typography.bodyLarge
         )
       }
 
@@ -436,7 +435,7 @@ private fun MetricListRow(
         contentDescription = stringResource(R.string.cd_drag)
       )
     }
-    Divider()
+    HorizontalDivider()
   }
 }
 

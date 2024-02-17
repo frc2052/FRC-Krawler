@@ -8,18 +8,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -93,14 +95,14 @@ private fun AddEventSheetLayout(
     Text(
       modifier = Modifier.padding(16.dp),
       text = stringResource(R.string.add_event_sheet_title),
-      style = MaterialTheme.typography.h6
+      style = MaterialTheme.typography.titleLarge
     )
 
     AddEventTabs(
       selectedTabIndex = selectedTabIndex,
       onTabSelected = { selectedTabIndex = it }
     )
-    Divider(color = MaterialTheme.colors.primary)
+    HorizontalDivider(color = MaterialTheme.colorScheme.primary)
 
     when (selectedTabIndex) {
       0 -> AutoEventEntry(
@@ -152,35 +154,26 @@ private fun AddEventSheetLayout(
   }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AddEventTabs(
   selectedTabIndex: Int,
   onTabSelected: (Int) -> Unit,
 ) {
-  TabRow(
+  SecondaryTabRow(
     selectedTabIndex = selectedTabIndex,
-    backgroundColor = MaterialTheme.colors.surface,
-    contentColor = MaterialTheme.colors.primary
+    contentColor = TabRowDefaults.secondaryContentColor
   ) {
     Tab(
-      modifier = Modifier.padding(vertical = 16.dp),
       selected = selectedTabIndex == 0,
       onClick = { onTabSelected(0) },
-
-      ) {
-      Text(
-        text = stringResource(R.string.add_event_tab_auto).uppercase(),
-      )
-    }
+      text = { Text(stringResource(R.string.add_event_tab_auto)) }
+    )
     Tab(
-      modifier = Modifier.padding(vertical = 12.dp),
       selected = selectedTabIndex == 1,
       onClick = { onTabSelected(1) },
-    ) {
-      Text(
-        text = stringResource(R.string.add_event_tab_manual).uppercase(),
-      )
-    }
+      text = { Text(stringResource(R.string.add_event_tab_manual)) }
+    )
   }
 }
 
@@ -245,7 +238,7 @@ private fun AutoEventEntry(
       Spacer(Modifier.height(8.dp))
       Text(
         text = stringResource(R.string.add_event_network_error),
-        color = MaterialTheme.colors.error
+        color = MaterialTheme.colorScheme.error
       )
     }
   }

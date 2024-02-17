@@ -10,14 +10,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -157,7 +157,7 @@ private fun ServerNotConnected(
       is ServerConnectionState.PairingFailed -> {
         Text(
           modifier = Modifier.padding(vertical = 16.dp),
-          color = MaterialTheme.colors.error,
+          color = MaterialTheme.colorScheme.error,
           text = stringResource(R.string.scout_pairing_failed)
         )
       }
@@ -165,7 +165,7 @@ private fun ServerNotConnected(
       is ServerConnectionState.NoFrcKrawlerServiceFound -> {
         Text(
           modifier = Modifier.padding(vertical = 16.dp),
-          color = MaterialTheme.colors.error,
+          color = MaterialTheme.colorScheme.error,
           text = stringResource(R.string.scout_paring_server_not_running)
         )
       }

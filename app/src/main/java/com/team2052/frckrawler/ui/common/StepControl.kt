@@ -9,13 +9,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,7 +54,7 @@ fun StepControl(
       Icon(
         imageVector = Icons.Default.Remove,
         contentDescription = stringResource(R.string.step_control_decrease),
-        tint = MaterialTheme.colors.primary
+        tint = MaterialTheme.colorScheme.primary
       )
     }
 
@@ -87,7 +87,7 @@ fun StepControl(
           }.toString()
         } ?: "" // Input isn't an int, use empty text
       },
-      textStyle = MaterialTheme.typography.h5.copy(
+      textStyle = MaterialTheme.typography.headlineSmall.copy(
         textAlign = TextAlign.Center
       ),
       singleLine = true,
@@ -112,7 +112,7 @@ fun StepControl(
       Icon(
         imageVector = Icons.Default.Add,
         contentDescription = stringResource(R.string.step_control_increase),
-        tint = MaterialTheme.colors.primary
+        tint = MaterialTheme.colorScheme.primary
       )
     }
   }

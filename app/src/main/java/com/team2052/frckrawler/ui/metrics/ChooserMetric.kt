@@ -3,15 +3,15 @@ package com.team2052.frckrawler.ui.metrics
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ExposedDropdownMenuBox
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +23,7 @@ import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChooserMetric(
   state: String,
@@ -38,8 +38,9 @@ fun ChooserMetric(
     }
   ) {
     OutlinedButton(
-      modifier = Modifier.padding(8.dp),
-      onClick = { },
+      modifier = Modifier.menuAnchor()
+        .padding(8.dp),
+      onClick = { expanded = true },
     ) {
       Text(state)
       Icon(
@@ -56,13 +57,12 @@ fun ChooserMetric(
     ) {
       options.forEach { option ->
         DropdownMenuItem(
+          text = { Text(option) },
           onClick = {
             expanded = false
             onStateChanged(option)
           }
-        ) {
-          Text(text = option)
-        }
+        )
       }
     }
   }
@@ -76,7 +76,7 @@ private fun ChooserMetricPreview() {
     MetricInput(
       modifier = Modifier
         .fillMaxWidth()
-        .background(MaterialTheme.colors.surface),
+        .background(MaterialTheme.colorScheme.surface),
       metric = Metric.ChooserMetric(
         name = "Chooser metric",
         enabled = true,

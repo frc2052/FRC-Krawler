@@ -3,7 +3,7 @@ package com.team2052.frckrawler.ui.scout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.team2052.frckrawler.data.model.MetricState
@@ -36,7 +36,7 @@ fun ScoutingForm(
       )
 
       if (metric != metrics.last()) {
-        Divider()
+        HorizontalDivider()
       }
     }
   }

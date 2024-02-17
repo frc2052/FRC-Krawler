@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.ui.modeSelect
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,18 +12,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Aod
 import androidx.compose.material.icons.outlined.Hub
 import androidx.compose.material.icons.outlined.TapAndPlay
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,7 +43,6 @@ import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
 import com.team2052.frckrawler.ui.components.ExpandableCard
 import com.team2052.frckrawler.ui.components.ExpandableCardGroup
-import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.components.GameAndEventSelector
 import com.team2052.frckrawler.ui.components.GameAndEventState
@@ -67,14 +64,6 @@ fun ModeSelectScreen(
 
   FRCKrawlerScaffold(
     modifier = modifier,
-    appBar = {
-      FRCKrawlerAppBar(
-        navController = navController,
-        title = {
-          Text(stringResource(R.string.mode_select_screen_title))
-        }
-      )
-    },
   ) {
     ModeSelectScreenContent(
       modifier = modifier,
@@ -141,7 +130,7 @@ private fun ModeSelectScreenContent(
 
     Spacer(modifier = Modifier.height(24.dp))
     Card(
-      modifier = Modifier.clickable { navigate(Screen.GameList) },
+      onClick = { navigate(Screen.GameList) },
       header = {
         CardHeader(
           icon = {
@@ -358,7 +347,7 @@ private fun ScoutModeRadioGroup(
         color = if (matchEnabled) {
           LocalContentColor.current
         } else {
-          LocalContentColor.current.copy(alpha = ContentAlpha.disabled)
+          LocalContentColor.current.copy(alpha = disabledAlpha)
         })
     }
 
@@ -384,12 +373,14 @@ private fun ScoutModeRadioGroup(
         color = if (pitEnabled) {
           LocalContentColor.current
         } else {
-          LocalContentColor.current.copy(alpha = ContentAlpha.disabled)
+          LocalContentColor.current.copy(alpha = disabledAlpha)
         }
       )
     }
   }
 }
+
+private const val disabledAlpha = 0.38f
 
 @FrcKrawlerPreview
 @Composable

@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -53,7 +53,7 @@ fun StopwatchMetric(
     IconButton(onClick = { elapsedTime = 0.0 }) {
       Icon(
         imageVector = Icons.Default.RestartAlt,
-        tint = MaterialTheme.colors.primary,
+        tint = MaterialTheme.colorScheme.primary,
         contentDescription = stringResource(R.string.metric_stopwatch_reset)
       )
     }
@@ -62,7 +62,7 @@ fun StopwatchMetric(
 
     Text(
       text = String.format("%.1f", elapsedTime),
-      style = MaterialTheme.typography.h6
+      style = MaterialTheme.typography.titleLarge
     )
 
     Spacer(Modifier.width(4.dp))
@@ -76,13 +76,13 @@ fun StopwatchMetric(
       if (isRunning) {
         Icon(
           imageVector = Icons.Default.Pause,
-          tint = MaterialTheme.colors.primary,
+          tint = MaterialTheme.colorScheme.primary,
           contentDescription = stringResource(R.string.metric_stopwatch_pause)
         )
       } else {
         Icon(
           imageVector = Icons.Default.PlayArrow,
-          tint = MaterialTheme.colors.primary,
+          tint = MaterialTheme.colorScheme.primary,
           contentDescription = stringResource(R.string.metric_stopwatch_start)
         )
       }
@@ -97,7 +97,7 @@ private fun StopwatchMetricPreview() {
     MetricInput(
       modifier = Modifier
         .fillMaxWidth()
-        .background(MaterialTheme.colors.surface),
+        .background(MaterialTheme.colorScheme.surface),
       metric = Metric.StopwatchMetric(
         name = "Stopwatch metric",
         enabled = true,

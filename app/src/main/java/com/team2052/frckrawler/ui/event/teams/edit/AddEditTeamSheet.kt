@@ -8,11 +8,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,8 +44,12 @@ fun AddEditTeamSheet(
   Column {
     Text(
       modifier = Modifier.padding(16.dp),
-      text = stringResource(R.string.add_team_sheet_title),
-      style = MaterialTheme.typography.h6
+      text = if (team != null) {
+        stringResource(R.string.edit_team_sheet_title)
+      } else {
+        stringResource(R.string.add_team_sheet_title)
+      },
+      style = MaterialTheme.typography.titleLarge
     )
 
     AddEditTeamSheetContent(
@@ -129,10 +133,10 @@ private fun ActionButtons(
         modifier = Modifier.padding(12.dp),
         onClick = onDeleteClicked,
         colors = ButtonDefaults.textButtonColors(
-          contentColor = MaterialTheme.colors.error
+          contentColor = MaterialTheme.colorScheme.error
         )
       ) {
-        Text(stringResource(R.string.delete))
+        Text(stringResource(R.string.delete).uppercase())
       }
     } else {
       // Empty box so SpaceBetween still works

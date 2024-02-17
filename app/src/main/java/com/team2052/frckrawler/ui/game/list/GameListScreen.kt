@@ -12,14 +12,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -69,16 +69,16 @@ fun GameListScreen(
         onAddClick = { addGameDialogOpen = true }
       )
     },
-    background = {
-      if (viewModel.games.isEmpty()) {
-        EmptyBackground()
-      }
-    }
   ) {
-    GameList(
-      games = viewModel.games,
-      onGameClick = { game -> navController.navigate(Screen.Game(game.id).route) }
-    )
+    if (viewModel.games.isEmpty()) {
+      EmptyBackground()
+    } else {
+      GameList(
+        games = viewModel.games,
+        onGameClick = { game -> navController.navigate(Screen.Game(game.id).route) }
+      )
+    }
+
     if (addGameDialogOpen) {
       AddGameDialog(
         onAddGame = { newGame -> viewModel.createGame(newGame) },
@@ -98,12 +98,12 @@ private fun EmptyBackground() {
     Icon(
       modifier = Modifier.size(128.dp),
       imageVector = Icons.Filled.Analytics,
-      tint = MaterialTheme.colors.secondary,
+      tint = MaterialTheme.colorScheme.outlineVariant,
       contentDescription = null
     )
     Text(
       text = stringResource(R.string.game_list_empty_text),
-      style = MaterialTheme.typography.h4
+      style = MaterialTheme.typography.headlineMedium
     )
   }
 }
@@ -136,9 +136,9 @@ fun GameList(
           .fillMaxWidth()
           .clickable { onGameClick(game) }
           .padding(horizontal = 12.dp, vertical = 12.dp),
-        style = MaterialTheme.typography.h5
+        style = MaterialTheme.typography.headlineSmall
       )
-      Divider()
+      HorizontalDivider()
     }
   }
 }

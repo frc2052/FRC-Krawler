@@ -2,7 +2,7 @@ package com.team2052.frckrawler.ui.metrics
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.team2052.frckrawler.data.model.Metric
@@ -31,7 +31,7 @@ private fun CounterMetricPreview() {
     MetricInput(
       modifier = Modifier
         .fillMaxWidth()
-        .background(MaterialTheme.colors.surface),
+        .background(MaterialTheme.colorScheme.surface),
       metric = Metric.CounterMetric(
         name = "Counter metric",
         enabled = true,

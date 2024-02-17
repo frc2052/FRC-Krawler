@@ -18,14 +18,14 @@ import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -108,7 +108,7 @@ private fun DeviceChooserDialog(
           .constrainAs(title) {
             top.linkTo(parent.top)
           },
-        style = MaterialTheme.typography.h6,
+        style = MaterialTheme.typography.titleLarge,
         text = stringResource(R.string.bluetooth_scan_choose_dialog_title)
       )
       Text(
@@ -165,7 +165,7 @@ private fun DeviceList(
       ) {
         Icon(imageVector = Icons.Default.Bluetooth, contentDescription = null)
         Text(
-          style = MaterialTheme.typography.subtitle1,
+          style = MaterialTheme.typography.bodyLarge,
           text = device.name ?: device.address
         )
       }

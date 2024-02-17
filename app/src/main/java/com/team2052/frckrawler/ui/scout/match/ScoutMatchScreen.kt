@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -35,7 +35,6 @@ import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerDropdown
 import com.team2052.frckrawler.ui.scout.ScoutingForm
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import com.team2052.frckrawler.ui.theme.secondarySurface
 
 @Composable
 fun ScoutMatchScreen(
@@ -103,13 +102,13 @@ private fun MatchInfo(
   Column(
     modifier = modifier
         .background(
-            color = MaterialTheme.colors.secondarySurface
+            color = MaterialTheme.colorScheme.surfaceContainerLow
         )
         .padding(16.dp)
   ) {
     Text(
       text = stringResource(R.string.match_scout_match_info_title),
-      style = MaterialTheme.typography.h6
+      style = MaterialTheme.typography.titleLarge
     )
 
     Spacer(Modifier.height(16.dp))
@@ -118,7 +117,7 @@ private fun MatchInfo(
       Column {
         Text(
           text = stringResource(R.string.match_scout_match_number_label),
-          style = MaterialTheme.typography.subtitle2
+          style = MaterialTheme.typography.titleSmall
         )
         StepControl(
           value = state.matchNumber,

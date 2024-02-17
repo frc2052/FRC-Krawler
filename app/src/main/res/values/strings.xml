@@ -187,6 +187,7 @@
     <string name="delete_event_body">This action cannot be undone. This event and all associated data will be deleted.</string>
     <string name="event_add_team_description">Add team</string>
     <string name="add_team_sheet_title">Add team</string>
+    <string name="edit_team_sheet_title">Edit team</string>
     <string name="add_team_number_label">Team number</string>
     <string name="add_team_name_label">Team name</string>
 

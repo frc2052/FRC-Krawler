@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -119,14 +119,14 @@ private fun MetricRow(
 ) {
   Row(
     modifier = modifier
-      .background(color = MaterialTheme.colors.surface)
+      .background(color = MaterialTheme.colorScheme.surface)
       .padding(horizontal = 16.dp, vertical = 16.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween
   ) {
     Text(
       text = metric.name,
-      style = MaterialTheme.typography.h5
+      style = MaterialTheme.typography.headlineSmall
     )
 
     Spacer(Modifier.width(16.dp))
@@ -143,12 +143,12 @@ private fun MetricColumn(
 ) {
   Column(
     modifier = modifier
-      .background(color = MaterialTheme.colors.surface)
+      .background(color = MaterialTheme.colorScheme.surface)
       .padding(horizontal = 16.dp, vertical = 16.dp)
   ) {
     Text(
       text = metric.name,
-      style = MaterialTheme.typography.h5
+      style = MaterialTheme.typography.headlineSmall
     )
 
     Spacer(Modifier.height(8.dp))

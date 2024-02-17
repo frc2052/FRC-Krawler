@@ -1,29 +1,21 @@
 package com.team2052.frckrawler.ui.components.fields
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> FRCKrawlerDropdown(
   modifier: Modifier = Modifier,
@@ -36,65 +28,42 @@ fun <T> FRCKrawlerDropdown(
   label: String,
   dropdownItems: List<T>,
 ) {
-  // TODO: Implement interaction between modeselect screen and the server home screen
-  val focusManager = LocalFocusManager.current
+  var expanded by remember { mutableStateOf(false) }
 
-  var width by remember { mutableStateOf(0) }
-
-  var hasFocus by remember { mutableStateOf(false) }
-
-  var lastValue by remember { mutableStateOf(value) }
-
-  Column(modifier = modifier) {
+  ExposedDropdownMenuBox(
+    modifier = modifier,
+    expanded = expanded,
+    onExpandedChange = {
+      expanded = it
+    }
+  ) {
     FRCKrawlerTextField(
-      modifier = Modifier.onGloballyPositioned { width = it.size.width },
+      modifier = Modifier.menuAnchor(),
+      readOnly = true,
       value = getLabel(value),
       onValueChange = { },
-      icon = {
-        if (hasFocus) {
-          Icon(
-            imageVector = Icons.Filled.ArrowDropUp,
-            contentDescription = stringResource(R.string.cd_dropdown_collapse),
-          )
-        } else {
-          Icon(
-            imageVector = Icons.Filled.ArrowDropDown,
-            contentDescription = stringResource(R.string.cd_dropdown_expand),
-          )
-        }
-      },
+      onFocusChange = onFocusChange,
+      icon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
       validity = validity,
       isError = { validity -> !validity },
       enabled = enabled,
-      readOnly = true,
       label = label,
-      onFocusChange = { focus ->
-        hasFocus = focus
-        onFocusChange(focus)
-      }
     )
 
-    DropdownMenu(
-      modifier = Modifier.width(width.dp),
-      expanded = hasFocus,
+    ExposedDropdownMenu(
+      expanded = expanded,
       onDismissRequest = {
-        focusManager.clearFocus()
+        expanded = false
       }
     ) {
       dropdownItems.forEach { item ->
         DropdownMenuItem(
+          text = { Text(getLabel(item)) },
           onClick = {
-            lastValue = if (item != lastValue) {
-              onValueChange(item)
-              item
-            } else {
-              onValueChange(null)
-              null
-            }
-
-            focusManager.clearFocus()
+            onValueChange(item)
+            expanded = false
           },
-        ) { Text(getLabel(item)) }
+        )
       }
     }
   }
@@ -110,7 +79,6 @@ private fun FrcKrawlerDropdownPreview() {
         value = value,
         getLabel = { it ?: "select an option" },
         onValueChange = { value = it },
-        onFocusChange = {},
         label = "Number",
         dropdownItems = listOf("One", "Two", "Three")
       )

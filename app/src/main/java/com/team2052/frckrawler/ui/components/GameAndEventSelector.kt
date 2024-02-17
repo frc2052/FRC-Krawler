@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
@@ -67,9 +67,9 @@ fun GameAndEventSelector(
       Spacer(Modifier.height(4.dp))
       Text(
         text = errorText,
-        style = MaterialTheme.typography.body2,
+        style = MaterialTheme.typography.bodyMedium,
         fontStyle = FontStyle.Italic,
-        color = MaterialTheme.colors.error
+        color = MaterialTheme.colorScheme.error
       )
       Spacer(Modifier.height(8.dp))
     }

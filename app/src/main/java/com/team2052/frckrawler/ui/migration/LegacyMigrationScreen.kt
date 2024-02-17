@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -26,8 +26,6 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.migration.LegacyDatabaseMigration
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import com.team2052.frckrawler.ui.theme.darkGray
-import com.team2052.frckrawler.ui.theme.lightGray
 import com.team2052.frckrawler.ui.theme.spaceExtraLarge
 
 @Composable
@@ -40,9 +38,7 @@ fun LegacyMigrationScreen(
     onMigrationCompleted()
   }
 
-  FRCKrawlerScaffold(
-    background = {}
-  ) {
+  FRCKrawlerScaffold {
     MigratingContent()
   }
 }
@@ -58,13 +54,7 @@ private fun MigratingContent() {
   ) {
     Image(
       modifier = Modifier.fillMaxWidth(),
-      colorFilter = ColorFilter.tint(
-        if (MaterialTheme.colors.isLight) {
-          darkGray.copy(alpha = 0.1f)
-        } else {
-          lightGray.copy(alpha = 0.1f)
-        }
-      ),
+      colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.outline),
       painter = painterResource(R.drawable.ic_logo),
       contentDescription = null,
     )
@@ -77,7 +67,7 @@ private fun MigratingContent() {
 
     Text(
       text = stringResource(R.string.migrating_message),
-      style = MaterialTheme.typography.h5,
+      style = MaterialTheme.typography.headlineSmall,
       textAlign = TextAlign.Center
     )
   }
