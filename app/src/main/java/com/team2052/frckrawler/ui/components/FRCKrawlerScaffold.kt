@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun FRCKrawlerScaffold(
   modifier: Modifier = Modifier,
-  appBar: @Composable () -> Unit = { },
+  appBar: @Composable () -> Unit = {},
   snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
   floatingActionButton: @Composable () -> Unit = { },
   content: @Composable ColumnScope.() -> Unit,

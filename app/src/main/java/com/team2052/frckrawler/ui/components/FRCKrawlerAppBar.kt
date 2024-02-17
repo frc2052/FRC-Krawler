@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
@@ -30,16 +31,24 @@ fun FRCKrawlerAppBar(
   navigation: @Composable () -> Unit = {
     DefaultNavigationButton(navController)
   },
+  darkTheme: Boolean = isSystemInDarkTheme(),
   title: @Composable RowScope.() -> Unit,
   actions: @Composable RowScope.() -> Unit = { },
 ) = TopAppBar(
-  colors = TopAppBarDefaults.topAppBarColors(
-    containerColor = MaterialTheme.colorScheme.primary,
-    scrolledContainerColor = MaterialTheme.colorScheme.primary,
-    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
-  ),
+  modifier = modifier,
+  colors = if (darkTheme) {
+    TopAppBarDefaults.topAppBarColors(
+      containerColor = MaterialTheme.colorScheme.surfaceContainer,
+      scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer,)
+  } else {
+    TopAppBarDefaults.topAppBarColors(
+      containerColor = MaterialTheme.colorScheme.primary,
+      scrolledContainerColor = MaterialTheme.colorScheme.primary,
+      navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+      titleContentColor = MaterialTheme.colorScheme.onPrimary,
+      actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+    )
+ },
   navigationIcon = navigation,
   actions = actions,
   title = {
