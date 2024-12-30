@@ -32,7 +32,6 @@ import com.team2052.frckrawler.data.model.MetricState
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.common.StepControl
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
-import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerDropdown
 import com.team2052.frckrawler.ui.scout.ScoutingForm
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -57,8 +56,7 @@ fun ScoutMatchScreen(
   Scaffold(
     floatingActionButton = {
       FloatingActionButton(
-        onClick = viewModel::saveMetricData,
-        modifier = Modifier.padding(bottom = 24.dp)
+        onClick = viewModel::saveMetricData
       ) {
         Icon(
           imageVector = Icons.Filled.Save,

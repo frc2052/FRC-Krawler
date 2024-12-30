@@ -213,10 +213,12 @@ private fun TeamRow(
 }
 
 @Composable
-private fun Actions(onAddClick: () -> Unit) {
-  val fabModifier = Modifier.padding(bottom = 24.dp)
+private fun Actions(
+  onAddClick: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
   FloatingActionButton(
-    modifier = fabModifier,
+    modifier = modifier,
     onClick = onAddClick
   ) {
     Icon(

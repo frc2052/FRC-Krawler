@@ -228,7 +228,6 @@ private fun EmptyBackground(
 private fun MetricActions(onAddClick: () -> Unit) {
   FloatingActionButton(
     onClick = { onAddClick() }
-
   ) {
     Icon(
       imageVector = Icons.Filled.Add,
