@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -234,7 +235,7 @@ fun ExpandableCard(
                   false -> Icons.Filled.KeyboardArrowUp
                 }
               } else {
-                Icons.Filled.KeyboardArrowRight
+                Icons.AutoMirrored.Filled.KeyboardArrowRight
               },
               contentDescription = stringResource(R.string.cd_expandable_card),
             )

@@ -93,7 +93,7 @@ fun StepControl(
       ),
       singleLine = true,
       keyboardOptions = KeyboardOptions(
-        autoCorrect = false,
+        autoCorrectEnabled = false,
         keyboardType = KeyboardType.Number,
       ),
       decorationBox = { innerTextField ->

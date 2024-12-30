@@ -7,6 +7,7 @@ import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.IntentCompat
 import com.team2052.frckrawler.ui.bluetooth.chooser.BluetoothDeviceChooserActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -40,8 +41,9 @@ internal class ScanServerDiscoveryStrategy @Inject constructor(
   ): DeviceSelectionResult {
     when (result.resultCode) {
       Activity.RESULT_OK -> {
-        val deviceToPair: BluetoothDevice? =
-          result.data?.getParcelableExtra(BluetoothDeviceChooserActivity.EXTRA_DEVICE)
+        val deviceToPair: BluetoothDevice? = result.data?.let { data ->
+          IntentCompat.getParcelableExtra(data, BluetoothDeviceChooserActivity.EXTRA_DEVICE, BluetoothDevice::class.java)
+        }
         if (deviceToPair != null) {
           return DeviceSelectionResult.DeviceSelected(deviceToPair)
         }

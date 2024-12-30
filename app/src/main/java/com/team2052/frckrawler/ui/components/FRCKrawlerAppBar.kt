@@ -4,6 +4,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -63,7 +64,7 @@ private fun DefaultNavigationButton(
   if (navController.previousBackStackEntry != null) {
     IconButton(onClick = { navController.popBackStack() }) {
       Icon(
-        imageVector = Icons.Filled.ArrowBack,
+        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = stringResource(R.string.navigate_up),
       )
     }

@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.core.content.IntentCompat
 
 /**
  * Listens for ACTION_BOND_STATE_CHANGED and calls [onBonded] once the desired device is paired.
@@ -16,7 +17,7 @@ class ServerPairingBroadcastReceiver(
   override fun onReceive(context: Context, intent: Intent) {
     when (intent.action) {
       BluetoothDevice.ACTION_BOND_STATE_CHANGED -> {
-        val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+        val device: BluetoothDevice? = IntentCompat.getParcelableExtra(intent, BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
         val bondState: Int = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, 0)
         val previousState: Int = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, 0)
 

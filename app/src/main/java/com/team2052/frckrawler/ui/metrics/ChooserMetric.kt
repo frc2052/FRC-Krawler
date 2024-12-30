@@ -10,6 +10,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +39,7 @@ fun ChooserMetric(
     }
   ) {
     OutlinedButton(
-      modifier = Modifier.menuAnchor()
+      modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
         .padding(8.dp),
       onClick = { expanded = true },
     ) {

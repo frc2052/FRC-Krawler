@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.content.IntentCompat
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -62,8 +63,9 @@ internal class CompanionDeviceServerDiscoveryStrategy @Inject constructor() :
   ): DeviceSelectionResult {
     when (result.resultCode) {
       Activity.RESULT_OK -> {
-        val deviceToPair: BluetoothDevice? =
-          result.data?.getParcelableExtra(CompanionDeviceManager.EXTRA_DEVICE)
+        val deviceToPair: BluetoothDevice? = result.data?.let { data ->
+          IntentCompat.getParcelableExtra(data, CompanionDeviceManager.EXTRA_DEVICE, BluetoothDevice::class.java)
+        }
         if (deviceToPair != null) {
           return DeviceSelectionResult.DeviceSelected(deviceToPair)
         }
