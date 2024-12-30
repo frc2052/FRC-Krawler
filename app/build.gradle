@@ -73,6 +73,7 @@ dependencies {
     implementation libs.androidx.viewmodel
     implementation libs.androidx.lifecycle.runtime
     implementation libs.kotlin.stdlib.jdk7
+    implementation libs.kotlinx.immutableCollections
 
     coreLibraryDesugaring libs.desugar.jdk.libs
 

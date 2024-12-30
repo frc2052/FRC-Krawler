@@ -47,6 +47,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,6 +73,11 @@ import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricMode
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.mutate
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -233,7 +239,7 @@ private fun MetricActions(onAddClick: () -> Unit) {
 @Composable
 private fun MetricListContent(
   modifier: Modifier = Modifier,
-  metrics: List<Metric>,
+  metrics: ImmutableList<Metric>,
   onMetricClick: (Metric) -> Unit,
   gameName: String,
   isMatchMetrics: Boolean,
@@ -242,7 +248,6 @@ private fun MetricListContent(
   onIsPitMetricsChanged: (Boolean) -> Unit,
   onMetricsReordered: (List<Metric>) -> Unit,
 ) {
-  // This copy of the metric list is reorderable to support drag and drop
   var localMetricList by remember(metrics) {
     mutableStateOf(metrics)
   }
@@ -250,9 +255,9 @@ private fun MetricListContent(
   val listState = rememberLazyListState()
   val dragDropState = rememberDragDropState(
     lazyListState = listState,
-    onMove = { fromIndex, toIndex ->
-      localMetricList = localMetricList.toMutableList().apply {
-        add(toIndex, removeAt(fromIndex))
+    onMove =  { fromIndex, toIndex ->
+      localMetricList = metrics.toPersistentList().mutate {
+        it.add(toIndex, it.removeAt(fromIndex))
       }
     },
     onDragEnded = {
@@ -483,7 +488,7 @@ private fun MetricListPreview() {
   FrcKrawlerTheme {
     Surface {
       MetricListContent(
-        metrics = listOf(metric, metric.copy(id = "metric2"), metric.copy(id = "metric3"), metric2),
+        metrics = persistentListOf(metric, metric.copy(id = "metric2"), metric.copy(id = "metric3"), metric2),
         onMetricClick = {},
         gameName = "Crescendo",
         isMatchMetrics = false,

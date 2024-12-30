@@ -20,7 +20,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
@@ -44,11 +46,13 @@ fun rememberDragDropState(
   onDragEnded: () -> Unit,
 ): DragDropState {
   val scope = rememberCoroutineScope()
+  val currentOnDragEnded = rememberUpdatedState(onDragEnded)
+  val currentOnMove = rememberUpdatedState(onMove)
   val state = remember(lazyListState) {
     DragDropState(
       state = lazyListState,
-      onMove = onMove,
-      onDragEnded = onDragEnded,
+      onMove = currentOnMove,
+      onDragEnded = currentOnDragEnded,
       scope = scope
     )
   }
@@ -64,8 +68,8 @@ fun rememberDragDropState(
 class DragDropState internal constructor(
   private val state: LazyListState,
   private val scope: CoroutineScope,
-  private val onMove: (Int, Int) -> Unit,
-  private val onDragEnded: () -> Unit,
+  private val onMove: State<(Int, Int) -> Unit>,
+  private val onDragEnded: State<() -> Unit>,
 ) {
   var draggingItemKey by mutableStateOf<Any?>(null)
     private set
@@ -158,7 +162,7 @@ class DragDropState internal constructor(
 
   internal fun onDragEnded() {
     onDragInterrupted()
-    onDragEnded.invoke()
+    onDragEnded.value.invoke()
   }
 
   internal fun onDrag(offset: Offset) {
@@ -191,10 +195,10 @@ class DragDropState internal constructor(
           scope.launch {
             // this is needed to neutralize automatic keeping the first item first.
             state.scrollToItem(scrollToIndex, state.firstVisibleItemScrollOffset)
-            onMove.invoke(fromIndex, toIndex)
+            onMove.value.invoke(fromIndex, toIndex)
           }
         } else {
-          onMove.invoke(fromIndex, toIndex)
+          onMove.value.invoke(fromIndex, toIndex)
         }
       }
     } else {

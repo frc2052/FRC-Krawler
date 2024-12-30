@@ -9,6 +9,7 @@ import com.team2052.frckrawler.data.local.MetricSetDao
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.repository.MetricRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -37,7 +38,7 @@ class MetricsListViewModel @Inject constructor(
       ) { metrics, game ->
         this@MetricsListViewModel.game = game
         MetricListScreenState.Content(
-          metrics = metrics,
+          metrics = metrics.toImmutableList(),
           setName = metricSet.name,
           gameName = game.name,
           isPitMetricSet = metricSetId == game.pitMetricsSetId,
