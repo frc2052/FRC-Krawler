@@ -73,27 +73,7 @@ private fun DefaultNavigationButton(
 @FrcKrawlerPreview
 @Composable
 private fun FRCKrawlerAppBarPreviewLight() {
-  FrcKrawlerTheme(darkTheme = false) {
-    FRCKrawlerAppBar(
-      title = { Text("preview") },
-      actions = {
-        IconButton(
-          onClick = { }
-        ) {
-          Icon(
-            imageVector = Icons.Filled.Delete,
-            contentDescription = stringResource(R.string.delete)
-          )
-        }
-      },
-    )
-  }
-}
-
-@FrcKrawlerPreview
-@Composable
-private fun FRCKrawlerAppBarPreviewDark() {
-  FrcKrawlerTheme(darkTheme = true) {
+  FrcKrawlerTheme {
     FRCKrawlerAppBar(
       title = { Text("preview") },
       actions = {

@@ -88,7 +88,8 @@ fun StepControl(
         } ?: "" // Input isn't an int, use empty text
       },
       textStyle = MaterialTheme.typography.headlineSmall.copy(
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onSurface
       ),
       singleLine = true,
       keyboardOptions = KeyboardOptions(

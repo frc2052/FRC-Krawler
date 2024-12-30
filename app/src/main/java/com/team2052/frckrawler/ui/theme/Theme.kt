@@ -98,10 +98,16 @@ fun FrcKrawlerTheme(
   }
   val view = LocalView.current
   if (!view.isInEditMode) {
+    val statusBarColor = if (darkTheme) {
+      colorScheme.surfaceContainer.toArgb()
+    } else {
+      colorScheme.surface.toArgb()
+    }
+
     SideEffect {
       val window = (view.context as Activity).window
-      window.statusBarColor = colorScheme.primary.toArgb()
-      WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+      window.statusBarColor = statusBarColor
+      WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
     }
   }
 
