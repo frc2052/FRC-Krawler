@@ -11,13 +11,11 @@ import androidx.room.PrimaryKey
       entity = MetricSet::class,
       parentColumns = ["id"],
       childColumns = ["matchMetricsSetId"],
-      onDelete = ForeignKey.CASCADE
     ),
     ForeignKey(
       entity = MetricSet::class,
       parentColumns = ["id"],
       childColumns = ["pitMetricsSetId"],
-      onDelete = ForeignKey.CASCADE
     ),
   ],
   indices = [

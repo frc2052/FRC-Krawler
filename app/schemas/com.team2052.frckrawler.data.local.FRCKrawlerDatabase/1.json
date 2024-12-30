@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "aa994c9e61d78cb3b2349999fce17110",
+    "identityHash": "8416e2b7e0a99e4f97d71644be8cb12b",
     "entities": [
       {
         "tableName": "Game",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `matchMetricsSetId` INTEGER, `pitMetricsSetId` INTEGER, FOREIGN KEY(`matchMetricsSetId`) REFERENCES `metric_set`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`pitMetricsSetId`) REFERENCES `metric_set`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `matchMetricsSetId` INTEGER, `pitMetricsSetId` INTEGER, FOREIGN KEY(`matchMetricsSetId`) REFERENCES `metric_set`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`pitMetricsSetId`) REFERENCES `metric_set`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -62,7 +62,7 @@
         "foreignKeys": [
           {
             "table": "metric_set",
-            "onDelete": "CASCADE",
+            "onDelete": "NO ACTION",
             "onUpdate": "NO ACTION",
             "columns": [
               "matchMetricsSetId"
@@ -73,7 +73,7 @@
           },
           {
             "table": "metric_set",
-            "onDelete": "CASCADE",
+            "onDelete": "NO ACTION",
             "onUpdate": "NO ACTION",
             "columns": [
               "pitMetricsSetId"
@@ -397,7 +397,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'aa994c9e61d78cb3b2349999fce17110')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8416e2b7e0a99e4f97d71644be8cb12b')"
     ]
   }
 }

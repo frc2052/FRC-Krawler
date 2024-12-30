@@ -51,6 +51,17 @@ class MetricsListViewModel @Inject constructor(
 
   fun deleteMetricSet() {
     viewModelScope.launch {
+      var updatedGame: Game? = game
+      if (game.pitMetricsSetId == metricSet.id) {
+        updatedGame = game.copy(pitMetricsSetId = null)
+      }
+      if (game.matchMetricsSetId == metricSet.id) {
+        updatedGame = game.copy(matchMetricsSetId = null)
+      }
+      if (updatedGame != null && updatedGame != game) {
+        gameDao.insert(updatedGame)
+      }
+
       metricSetDao.delete(metricSet)
     }
   }
