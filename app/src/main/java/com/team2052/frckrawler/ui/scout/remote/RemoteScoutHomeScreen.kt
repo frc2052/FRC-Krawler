@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.filled.Hardware
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -69,9 +71,9 @@ fun ScoutHomeScreen(
       )
     }
 
-    FRCKrawlerScaffold(
+    Scaffold(
       modifier = modifier,
-      appBar = {
+      topBar = {
         FRCKrawlerAppBar(
           navController = navController,
           title = {
@@ -79,12 +81,13 @@ fun ScoutHomeScreen(
           }
         )
       },
-    ) {
+    ) { contentPadding ->
       val hasMatchMetrics by viewModel.hasMatchMetrics.collectAsState()
       val hasPitMetrics by viewModel.hasPitMetrics.collectAsState()
       val syncState by viewModel.syncState.collectAsState()
       ScoutHomeScreenContent(
-        modifier = modifier,
+        modifier = Modifier.padding(contentPadding)
+          .consumeWindowInsets(contentPadding),
         hasMatchMetrics = hasMatchMetrics,
         onStartMatchScouting = {
           navController.navigate(

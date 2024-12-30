@@ -4,12 +4,20 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -24,6 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -78,8 +87,8 @@ fun GameDetailScreen(
     viewModel.loadGame(gameId)
   }
 
-  FRCKrawlerScaffold(
-    appBar = {
+  Scaffold(
+    topBar = {
       FRCKrawlerAppBar(
         navController = navController,
         title = {
@@ -97,7 +106,7 @@ fun GameDetailScreen(
         }
       )
     },
-  ) {
+  ) { contentPadding ->
     if (state is GameDetailState.Content) {
       GameDetailContent(
         events = state.events,
@@ -108,6 +117,7 @@ fun GameDetailScreen(
         metricSets = state.metrics,
         onMetricSetClick = { set -> navController.navigate(Screen.MetricSet(set.id).route) },
         onAddMetricSetClick = { showAddMetricSet = true },
+        contentPadding = contentPadding,
       )
     }
 
@@ -172,12 +182,14 @@ private fun GameDetailContent(
   onAddMetricSetClick: () -> Unit,
   onMetricSetClick: (GameDetailMetricSet) -> Unit,
   modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
   val scrollState = rememberScrollState()
   Column(
     modifier = modifier
-      .padding(16.dp)
       .verticalScroll(scrollState)
+      .padding(16.dp)
+      .padding(contentPadding)
   ) {
     EventListCard(
       modifier = Modifier.fillMaxWidth(),
@@ -191,6 +203,10 @@ private fun GameDetailContent(
       onAddMetricSetClick = onAddMetricSetClick,
       onMetricSetClick = onMetricSetClick,
       metricSets = metricSets
+    )
+    Spacer(
+      Modifier.windowInsetsBottomHeight(WindowInsets.systemBars)
+        .consumeWindowInsets(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
     )
   }
 }

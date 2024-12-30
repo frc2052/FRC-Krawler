@@ -1,11 +1,11 @@
 package com.team2052.frckrawler.ui.modeSelect
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,6 +20,7 @@ import androidx.compose.material.icons.outlined.TapAndPlay
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -44,7 +45,6 @@ import com.team2052.frckrawler.ui.components.CardHeader
 import com.team2052.frckrawler.ui.components.ExpandableCard
 import com.team2052.frckrawler.ui.components.ExpandableCardGroup
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
-import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.components.GameAndEventSelector
 import com.team2052.frckrawler.ui.components.GameAndEventState
 import com.team2052.frckrawler.ui.navigation.Screen
@@ -63,9 +63,9 @@ fun ModeSelectScreen(
     viewModel.loadGamesAndEvents()
   }
 
-  FRCKrawlerScaffold(
+  Scaffold(
     modifier = modifier,
-    appBar = {
+    topBar = {
       FRCKrawlerAppBar(
         navController = navController,
         title = {
@@ -73,9 +73,8 @@ fun ModeSelectScreen(
         }
       )
     }
-  ) {
+  ) { contentPadding ->
     ModeSelectScreenContent(
-      modifier = modifier,
       isBluetoothAvailable = viewModel.bluetoothAvailability.isAvailable,
       serverGameEventState = viewModel.serverConfigState,
       localScoutGameEventState = viewModel.localScoutConfigState,
@@ -83,7 +82,8 @@ fun ModeSelectScreen(
         navController.navigate(screen.route) {
           popUpTo(Screen.ModeSelect.route)
         }
-      }
+      },
+      contentPadding = contentPadding,
     )
   }
 }
@@ -95,6 +95,7 @@ private fun ModeSelectScreenContent(
   serverGameEventState: GameAndEventState,
   localScoutGameEventState: GameAndEventState,
   navigate: (Screen) -> Unit,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
   var expandedCard by remember { mutableIntStateOf(-1) }
   val scrollState = rememberScrollState()
@@ -104,7 +105,7 @@ private fun ModeSelectScreenContent(
       .fillMaxSize()
       .verticalScroll(scrollState)
       .padding(spaceLarge)
-      .navigationBarsPadding()
+      .padding(contentPadding)
   ) {
     ExpandableCardGroup {
       expandableCard { id ->

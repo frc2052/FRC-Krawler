@@ -3,11 +3,10 @@ package com.team2052.frckrawler.ui.game.list
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,10 +14,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Analytics
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +37,6 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
-import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.game.AddGameDialog
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -55,9 +54,9 @@ fun GameListScreen(
     viewModel.loadGames()
   }
 
-  FRCKrawlerScaffold(
+  Scaffold(
     modifier = modifier,
-    appBar = {
+    topBar = {
       FRCKrawlerAppBar(
         navController = navController,
         title = {
@@ -70,13 +69,17 @@ fun GameListScreen(
         onAddClick = { addGameDialogOpen = true }
       )
     },
-  ) {
+  ) { contentPadding ->
     if (viewModel.games.isEmpty()) {
-      EmptyBackground()
+      EmptyBackground(
+        modifier = Modifier.padding(contentPadding)
+          .consumeWindowInsets(contentPadding)
+      )
     } else {
       GameList(
         games = viewModel.games,
-        onGameClick = { game -> navController.navigate(Screen.Game(game.id).route) }
+        onGameClick = { game -> navController.navigate(Screen.Game(game.id).route) },
+        contentPadding = contentPadding,
       )
     }
 
@@ -90,9 +93,11 @@ fun GameListScreen(
 }
 
 @Composable
-private fun EmptyBackground() {
+private fun EmptyBackground(
+  modifier: Modifier,
+) {
   Column(
-    modifier = Modifier.fillMaxSize(),
+    modifier = modifier.fillMaxSize(),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
@@ -122,13 +127,15 @@ private fun Actions(onAddClick: () -> Unit) {
 
 @Composable
 fun GameList(
-  modifier: Modifier = Modifier,
   games: List<Game>,
-  onGameClick: (Game) -> Unit
+  onGameClick: (Game) -> Unit,
+  modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
   LazyColumn(
-    modifier = modifier.fillMaxWidth(),
-    contentPadding = WindowInsets.navigationBars.asPaddingValues()
+    modifier = modifier.fillMaxWidth()
+      .consumeWindowInsets(contentPadding),
+    contentPadding = contentPadding,
   ) {
     items(games) { game ->
       Text(

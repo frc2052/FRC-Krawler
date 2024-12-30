@@ -3,6 +3,8 @@ package com.team2052.frckrawler.ui.event.teams
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,7 +48,6 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
-import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.event.teams.edit.AddEditTeamSheet
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
@@ -69,8 +71,8 @@ fun EventTeamListScreen(
     viewModel.loadEvent(eventId)
   }
 
-  FRCKrawlerScaffold(
-    appBar = {
+  Scaffold(
+    topBar = {
       FRCKrawlerAppBar(
         navController = navController,
         title = { Text(event?.name ?: "") },
@@ -96,12 +98,15 @@ fun EventTeamListScreen(
         )
       }
     },
-  ) {
-
+  ) { contentPadding ->
     if (teams.isEmpty()) {
-      NoTeamsContent()
+      NoTeamsContent(
+        modifier = Modifier.padding(contentPadding)
+          .consumeWindowInsets(contentPadding)
+      )
     } else {
       TeamListContent(
+        contentPadding = contentPadding,
         teams = teams,
         onTeamClicked = { team ->
           teamBeingEdited = team
@@ -160,10 +165,15 @@ fun EventTeamListScreen(
 
 @Composable
 private fun TeamListContent(
+  modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
   teams: List<TeamAtEvent>,
   onTeamClicked: (TeamAtEvent) -> Unit,
 ) {
-  LazyColumn {
+  LazyColumn(
+    modifier = modifier.consumeWindowInsets(contentPadding),
+    contentPadding = contentPadding,
+  ) {
     items(teams) { team ->
       TeamRow(
         team = team,
@@ -217,9 +227,11 @@ private fun Actions(onAddClick: () -> Unit) {
 }
 
 @Composable
-private fun NoTeamsContent() {
+private fun NoTeamsContent(
+  modifier: Modifier = Modifier,
+) {
   Column(
-    modifier = Modifier.fillMaxSize(),
+    modifier = modifier.fillMaxSize(),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {

@@ -1,11 +1,14 @@
 package com.team2052.frckrawler.ui.scout
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.data.model.MetricState
 import com.team2052.frckrawler.ui.metrics.MetricInput
 
@@ -15,9 +18,11 @@ fun ScoutingForm(
   metrics: List<MetricState>,
   onMetricStateChanged: (MetricState) -> Unit,
   modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
   LazyColumn(
-    modifier = modifier
+    modifier = modifier.consumeWindowInsets(contentPadding),
+    contentPadding = contentPadding,
   ) {
     item {
       header()

@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,8 +51,8 @@ fun ScoutPitScreen(
 
   val state by viewModel.state.collectAsState()
 
-  FRCKrawlerScaffold(
-    appBar = {
+  Scaffold(
+    topBar = {
       FRCKrawlerAppBar(
         navController = navController,
         title = {
@@ -70,7 +71,7 @@ fun ScoutPitScreen(
         )
       }
     },
-  ) {
+  ) { contentPadding ->
     state?.let { state ->
       ScoutingForm(
         header = {
@@ -83,6 +84,7 @@ fun ScoutPitScreen(
         },
         metrics = state.metricStates,
         onMetricStateChanged = viewModel::updateMetricState,
+        contentPadding = contentPadding,
       )
     }
 

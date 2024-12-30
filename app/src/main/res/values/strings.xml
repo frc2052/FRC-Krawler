@@ -35,7 +35,7 @@
     <string name="cd_drag">drag</string>
 
 
-    <string name="migrating_message">Migrating old database</string>
+    <string name="migrating_message">Migrating database to v4</string>
 
     <!--Mode Select-->
     <string name="mode_select_screen_title">FRCKrawler</string>

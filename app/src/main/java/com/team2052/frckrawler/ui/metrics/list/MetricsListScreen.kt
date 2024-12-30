@@ -7,13 +7,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
@@ -34,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -47,7 +47,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,14 +68,12 @@ import com.team2052.frckrawler.ui.common.dragContainer
 import com.team2052.frckrawler.ui.common.dragHandle
 import com.team2052.frckrawler.ui.common.rememberDragDropState
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
-import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricMode
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
@@ -100,9 +97,9 @@ fun MetricsListScreen(
 
   val state = viewModel.state.collectAsState().value
 
-  FRCKrawlerScaffold(
+  Scaffold(
     modifier = modifier,
-    appBar = {
+    topBar = {
       FRCKrawlerAppBar(
         title = {
           if (state is MetricListScreenState.Content) {
@@ -134,29 +131,31 @@ fun MetricsListScreen(
         )
       }
     },
-  ) {
-    Column {
-      if (state is MetricListScreenState.Content) {
-        if (state.metrics.isEmpty()) {
-          EmptyBackground()
-        } else {
-          MetricListContent(
-            metrics = state.metrics,
-            onMetricClick = { metric ->
-              sheetMode = AddEditMetricMode.Edit(metric)
-              showMetricSheet = true
-            },
-            gameName = state.gameName,
-            isMatchMetrics = state.isMatchMetricSet,
-            onIsMatchMetricsChanged = { viewModel.setIsMatchMetrics(it) },
-            isPitMetrics = state.isPitMetricSet,
-            onIsPitMetricsChanged = { viewModel.setIsPitMetrics(it) },
-            onMetricsReordered = { metrics ->  viewModel.updateMetricsOrder(metrics) }
-          )
-        }
+  ) { contentPadding ->
+    if (state is MetricListScreenState.Content) {
+      if (state.metrics.isEmpty()) {
+        EmptyBackground(
+          modifier = Modifier.padding(contentPadding)
+            .consumeWindowInsets(contentPadding)
+        )
       } else {
-        // Show nothing while loading. Could do a loading spinner in the future
+        MetricListContent(
+          metrics = state.metrics,
+          onMetricClick = { metric ->
+            sheetMode = AddEditMetricMode.Edit(metric)
+            showMetricSheet = true
+          },
+          gameName = state.gameName,
+          isMatchMetrics = state.isMatchMetricSet,
+          onIsMatchMetricsChanged = { viewModel.setIsMatchMetrics(it) },
+          isPitMetrics = state.isPitMetricSet,
+          onIsPitMetricsChanged = { viewModel.setIsPitMetrics(it) },
+          onMetricsReordered = { metrics ->  viewModel.updateMetricsOrder(metrics) },
+          contentPadding = contentPadding,
+        )
       }
+    } else {
+      // Show nothing while loading. Could do a loading spinner in the future
     }
 
     if (showMetricSheet) {
@@ -204,9 +203,11 @@ fun MetricsListScreen(
 }
 
 @Composable
-private fun EmptyBackground() {
+private fun EmptyBackground(
+  modifier: Modifier = Modifier
+) {
   Column(
-    modifier = Modifier.fillMaxSize(),
+    modifier = modifier.fillMaxSize(),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
@@ -247,6 +248,7 @@ private fun MetricListContent(
   isPitMetrics: Boolean,
   onIsPitMetricsChanged: (Boolean) -> Unit,
   onMetricsReordered: (List<Metric>) -> Unit,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
   var localMetricList by remember(metrics) {
     mutableStateOf(metrics)
@@ -266,9 +268,10 @@ private fun MetricListContent(
   )
 
   LazyColumn(
-    modifier = modifier.dragContainer(dragDropState),
+    modifier = modifier.dragContainer(dragDropState)
+      .consumeWindowInsets(contentPadding),
     state = listState,
-    contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+    contentPadding = contentPadding,
   ) {
     item {
       val matchMetricsLabel = getMetricsLabel(
