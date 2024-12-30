@@ -186,7 +186,12 @@ private fun AddEditMetricContent(
 private fun MetricPreview(
   metric: Metric
 ) {
-  var metricState by remember(metric.javaClass) { mutableStateOf(metric.defaultValueForPreview()) }
+  var metricState by remember(
+    metric.getType(),
+    metric.defaultValueForPreview() // Reset our state if our desired default value changes
+  ) {
+    mutableStateOf(metric.defaultValueForPreview())
+  }
   Column(Modifier.padding(horizontal = 16.dp)) {
     Text(
       text = stringResource(R.string.edit_metric_preview_label),
@@ -198,7 +203,9 @@ private fun MetricPreview(
         modifier = Modifier.fillMaxWidth(),
         metric = metric,
         state = metricState,
-        onStateChanged = { metricState = it }
+        onStateChanged = {
+          metricState = it
+        }
       )
     }
   }
