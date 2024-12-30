@@ -1,9 +1,12 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
     alias libs.plugins.ksp
     alias libs.plugins.hilt
     alias libs.plugins.room
+    alias libs.plugins.compose.compiler
 }
 
 android {
@@ -12,7 +15,7 @@ android {
     defaultConfig {
         applicationId "com.team2052.frckrawler"
         minSdkVersion 21
-        compileSdk 34
+        compileSdk 35
         targetSdkVersion 34
         versionCode 1
         versionName "1.0"
@@ -42,18 +45,13 @@ android {
     }
 
     compileOptions {
-        coreLibraryDesugaringEnabled true
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     kotlinOptions {
-        jvmTarget = "17"
         freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.6"
     }
 }
 

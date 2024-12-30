@@ -14,6 +14,7 @@ plugins {
     alias libs.plugins.ksp apply false
     alias libs.plugins.hilt apply false
     alias libs.plugins.room apply false
+    alias libs.plugins.compose.compiler apply false
 }
 
 allprojects {
@@ -28,6 +29,6 @@ rootProject.ext {
     localProps.load(new FileInputStream(rootProject.file("local.properties")))
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
