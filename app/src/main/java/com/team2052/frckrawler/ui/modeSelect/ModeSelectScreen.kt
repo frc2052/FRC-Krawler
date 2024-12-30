@@ -43,6 +43,7 @@ import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
 import com.team2052.frckrawler.ui.components.ExpandableCard
 import com.team2052.frckrawler.ui.components.ExpandableCardGroup
+import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.FRCKrawlerScaffold
 import com.team2052.frckrawler.ui.components.GameAndEventSelector
 import com.team2052.frckrawler.ui.components.GameAndEventState
@@ -64,6 +65,14 @@ fun ModeSelectScreen(
 
   FRCKrawlerScaffold(
     modifier = modifier,
+    appBar = {
+      FRCKrawlerAppBar(
+        navController = navController,
+        title = {
+          Text(stringResource(R.string.app_name))
+        }
+      )
+    }
   ) {
     ModeSelectScreenContent(
       modifier = modifier,
