@@ -118,10 +118,12 @@ private fun AddEditMetricContent(
       }
     }
     Text(
-      modifier = Modifier.padding(16.dp),
+      modifier = Modifier.padding(horizontal = 16.dp),
       text = title,
       style = MaterialTheme.typography.titleLarge
     )
+
+    Spacer(modifier = Modifier.height(12.dp))
 
     Column(
       modifier = Modifier.padding(horizontal = 16.dp)

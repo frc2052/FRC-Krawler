@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -22,6 +23,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -93,10 +95,12 @@ private fun AddEventSheetLayout(
 
   Column {
     Text(
-      modifier = Modifier.padding(16.dp),
+      modifier = Modifier.padding(horizontal = 16.dp),
       text = stringResource(R.string.add_event_sheet_title),
       style = MaterialTheme.typography.titleLarge
     )
+
+    Spacer(Modifier.height(12.dp))
 
     AddEventTabs(
       selectedTabIndex = selectedTabIndex,
@@ -162,7 +166,8 @@ private fun AddEventTabs(
 ) {
   SecondaryTabRow(
     selectedTabIndex = selectedTabIndex,
-    contentColor = TabRowDefaults.secondaryContentColor
+    contentColor = contentColorFor(BottomSheetDefaults.ContainerColor),
+    containerColor = BottomSheetDefaults.ContainerColor
   ) {
     Tab(
       selected = selectedTabIndex == 0,

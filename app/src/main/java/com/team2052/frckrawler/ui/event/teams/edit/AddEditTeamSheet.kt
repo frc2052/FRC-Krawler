@@ -43,7 +43,7 @@ fun AddEditTeamSheet(
 
   Column {
     Text(
-      modifier = Modifier.padding(16.dp),
+      modifier = Modifier.padding(horizontal = 16.dp),
       text = if (team != null) {
         stringResource(R.string.edit_team_sheet_title)
       } else {
@@ -51,6 +51,8 @@ fun AddEditTeamSheet(
       },
       style = MaterialTheme.typography.titleLarge
     )
+
+    Spacer(Modifier.height(12.dp))
 
     AddEditTeamSheetContent(
       teamNumber = teamNumber,
