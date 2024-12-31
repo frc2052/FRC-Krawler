@@ -9,6 +9,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalDensity
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
@@ -39,28 +41,31 @@ fun Navigation(initialScreen: Screen = ModeSelect) {
   // The universal navigation controller used for all navigation throughout the app.
   val navController = rememberNavController()
 
+  val density = LocalDensity.current
+  val slideDistance = remember(density) {
+    with(density) { DFEAULT_SLIDE_DISTANCE.roundToPx() }
+  }
+
   NavHost(
     navController = navController,
     startDestination = initialScreen.route,
     enterTransition = {
-      EnterTransition.None
+      sharedAxisEnterX(forward = true, slideDistance = slideDistance)
+    },
+    popEnterTransition = {
+      sharedAxisEnterX(forward = false, slideDistance = slideDistance)
     },
     exitTransition = {
-      ExitTransition.None
+      sharedAxisExitX(forward = true, slideDistance = slideDistance)
     },
+    popExitTransition = {
+      sharedAxisExitX(forward = false, slideDistance = slideDistance)
+    }
   ) {
     composable(
       screen = ModeSelect,
       enterTransition = {
-        // Check if mode select is the first screen and run the startup animation accordingly.
-        if (initialState.destination.route == null) {
-          fadeIn(animationSpec = tween(transitionDuration))
-        } else {
-          slideInHorizontally(
-            initialOffsetX = { -transitionOffset },
-            animationSpec = tween(transitionDuration)
-          ) + fadeIn(animationSpec = tween(transitionDuration))
-        }
+        fadeIn(animationSpec = tween(transitionDuration))
       }
     ) {
       ModeSelectScreen(navController = navController)

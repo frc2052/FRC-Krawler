@@ -68,9 +68,10 @@ fun ModeSelectScreen(
     topBar = {
       FRCKrawlerAppBar(
         navController = navController,
+        navigation = {},
         title = {
           Text(stringResource(R.string.app_name))
-        }
+        },
       )
     }
   ) { contentPadding ->
