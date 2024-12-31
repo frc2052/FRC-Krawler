@@ -15,12 +15,13 @@ import javax.inject.Inject
 class GameListViewModel @Inject constructor(
   private val gameDao: GameDao
 ) : ViewModel() {
-  var games: List<Game> by mutableStateOf(emptyList())
+  var state: GameListState by mutableStateOf(GameListState.Loading)
+    private set
 
   fun loadGames() {
     viewModelScope.launch {
-      gameDao.getAll().collect {
-        games = it
+      gameDao.getAll().collect { games ->
+        state = GameListState.Content(games = games)
       }
     }
   }

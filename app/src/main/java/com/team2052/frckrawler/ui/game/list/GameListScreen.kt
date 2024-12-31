@@ -70,17 +70,26 @@ fun GameListScreen(
       )
     },
   ) { contentPadding ->
-    if (viewModel.games.isEmpty()) {
-      EmptyBackground(
-        modifier = Modifier.padding(contentPadding)
-          .consumeWindowInsets(contentPadding)
-      )
-    } else {
-      GameList(
-        games = viewModel.games,
-        onGameClick = { game -> navController.navigate(Screen.Game(game.id).route) },
-        contentPadding = contentPadding,
-      )
+    val state = viewModel.state
+    when (state) {
+      is GameListState.Loading -> {
+        // Just showing nothing is moderately better than flashing our empty state, and this should
+        // be very quick
+      }
+      is GameListState.Content -> {
+        if (state.games.isEmpty()) {
+          EmptyBackground(
+            modifier = Modifier.padding(contentPadding)
+              .consumeWindowInsets(contentPadding)
+          )
+        } else {
+          GameList(
+            games = state.games,
+            onGameClick = { game -> navController.navigate(Screen.Game(game.id).route) },
+            contentPadding = contentPadding,
+          )
+        }
+      }
     }
 
     if (addGameDialogOpen) {
