@@ -3,7 +3,6 @@ package com.team2052.frckrawler.ui.common
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.scrollBy
@@ -78,6 +77,7 @@ class DragDropState internal constructor(
 
   private var draggingItemDraggedDelta by mutableFloatStateOf(0f)
   private var draggingItemInitialOffset by mutableIntStateOf(0)
+
   private val maxDragOffset: Int
     get() {
       val lastDraggableItem = state.layoutInfo.visibleItemsInfo.lastOrNull {
@@ -119,18 +119,7 @@ class DragDropState internal constructor(
   internal var previousItemOffset = Animatable(0f)
     private set
 
-  internal fun onDragStart(offset: Offset) {
-    state.layoutInfo.visibleItemsInfo
-      .firstOrNull { item ->
-        offset.y.toInt() in item.offset..(item.offset + item.size)
-                && item.contentType is DraggableContent
-      }?.also {
-        draggingItemKey = it.key
-        draggingItemInitialOffset = it.offset
-      }
-  }
-
-  internal fun onDragHandleStart(key: Any) {
+  internal fun onDragStart(key: Any) {
     draggingItemKey = key
 
     val item = state.layoutInfo.visibleItemsInfo.firstOrNull { item -> item.key == key }
@@ -219,14 +208,14 @@ class DragDropState internal constructor(
     get() = this.offset + this.size
 }
 
-fun Modifier.dragContainer(dragDropState: DragDropState): Modifier {
+private fun Modifier.draggableItem(dragDropState: DragDropState, key: Any): Modifier {
   return this.pointerInput(dragDropState) {
     detectDragGesturesAfterLongPress(
       onDrag = { change, offset ->
         change.consume()
         dragDropState.onDrag(offset = offset)
       },
-      onDragStart = { offset -> dragDropState.onDragStart(offset) },
+      onDragStart = { _ -> dragDropState.onDragStart(key) },
       onDragEnd = { dragDropState.onDragEnded() },
       onDragCancel = { dragDropState.onDragInterrupted() }
     )
@@ -240,14 +229,13 @@ fun Modifier.dragHandle(dragDropState: DragDropState, key: Any): Modifier {
         change.consume()
         dragDropState.onDrag(offset = offset)
       },
-      onDragStart = { _ -> dragDropState.onDragHandleStart(key) },
-      onDragEnd = { dragDropState.onDragInterrupted() },
+      onDragStart = { _ -> dragDropState.onDragStart(key) },
+      onDragEnd = { dragDropState.onDragEnded() },
       onDragCancel = { dragDropState.onDragInterrupted() }
     )
   }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LazyItemScope.DraggableItem(
   dragDropState: DragDropState,
@@ -270,7 +258,10 @@ fun LazyItemScope.DraggableItem(
   } else {
     Modifier.animateItem()
   }
-  Box(modifier = modifier.then(draggingModifier)) {
+  Box(modifier = modifier
+    .then(Modifier.draggableItem(dragDropState, key))
+    .then(draggingModifier)
+  ) {
     content(dragging)
   }
 }

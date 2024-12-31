@@ -40,7 +40,7 @@ interface MetricDao {
     }
   }
 
-  @Query("SELECT * FROM metric WHERE metricSetId = :metricSetId")
+  @Query("SELECT * FROM metric WHERE metricSetId = :metricSetId ORDER BY priority")
   fun getMetrics(metricSetId: Int): Flow<List<MetricRecord>>
 
   @Query("SELECT COUNT(id) FROM metric WHERE metricSetId = :metricSetId")

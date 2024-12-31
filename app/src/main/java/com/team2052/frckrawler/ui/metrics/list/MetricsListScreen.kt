@@ -64,7 +64,6 @@ import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.common.BasicDraggableContent
 import com.team2052.frckrawler.ui.common.DragDropState
 import com.team2052.frckrawler.ui.common.DraggableItem
-import com.team2052.frckrawler.ui.common.dragContainer
 import com.team2052.frckrawler.ui.common.dragHandle
 import com.team2052.frckrawler.ui.common.rememberDragDropState
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
@@ -257,7 +256,7 @@ private fun MetricListContent(
   val dragDropState = rememberDragDropState(
     lazyListState = listState,
     onMove =  { fromIndex, toIndex ->
-      localMetricList = metrics.toPersistentList().mutate {
+      localMetricList = localMetricList.toPersistentList().mutate {
         it.add(toIndex, it.removeAt(fromIndex))
       }
     },
@@ -267,8 +266,7 @@ private fun MetricListContent(
   )
 
   LazyColumn(
-    modifier = modifier.dragContainer(dragDropState)
-      .consumeWindowInsets(contentPadding),
+    modifier = modifier.consumeWindowInsets(contentPadding),
     state = listState,
     contentPadding = contentPadding,
   ) {
