@@ -1,6 +1,11 @@
 package com.team2052.frckrawler.ui.theme
 import androidx.compose.ui.graphics.Color
 
+object StaticColors {
+  val onSuccess = Color(0xFF7ca873)
+  val successContainer = Color(0xFF226f08)
+}
+
 val primaryLight = Color(0xFF390000)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFF6F1008)

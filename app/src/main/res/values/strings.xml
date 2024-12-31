@@ -70,6 +70,7 @@
     <string name="scout_pit_screen_title">Pit Scouting</string>
     <string name="scout_team_label">Team</string>
     <string name="save_description">Save data</string>
+    <string name="data_saved_description">Data saved</string>
     <string name="scout_find_server_button">Find Server</string>
 
     <string name="scout_server_connection_title">Server Connection</string>

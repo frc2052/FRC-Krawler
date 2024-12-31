@@ -30,6 +30,7 @@ import com.team2052.frckrawler.data.model.MetricState
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerDropdown
+import com.team2052.frckrawler.ui.scout.AnimatedSaveButton
 import com.team2052.frckrawler.ui.scout.ScoutingForm
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
@@ -60,14 +61,9 @@ fun ScoutPitScreen(
       )
     },
     floatingActionButton = {
-      FloatingActionButton(
-        onClick = viewModel::saveMetricData
-      ) {
-        Icon(
-          imageVector = Icons.Filled.Save,
-          contentDescription = stringResource(R.string.save_description)
-        )
-      }
+      AnimatedSaveButton(
+        onSave = viewModel::saveMetricData
+      )
     },
   ) { contentPadding ->
     state?.let { state ->
