@@ -7,4 +7,5 @@ data class AddEventScreenState(
   val events: List<TbaSimpleEvent> = emptyList(),
   val areEventsLoading: Boolean = false,
   val hasNetworkError: Boolean = false,
+  val isSavingEvent: Boolean = false,
 )

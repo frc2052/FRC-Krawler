@@ -66,22 +66,26 @@ class AddEventViewModel @Inject constructor(
     }
   }
 
-  fun saveAutoEvent(gameId: Int, tbaSimpleEvent: TbaSimpleEvent) {
-    viewModelScope.launch {
-      createEventUseCase(
-        name = tbaSimpleEvent.name,
-        tbaId = tbaSimpleEvent.key,
-        gameId = gameId
-      )
-    }
+  suspend fun saveAutoEvent(gameId: Int, tbaSimpleEvent: TbaSimpleEvent) {
+    _state.value = _state.value.copy(
+      isSavingEvent = true
+    )
+
+    createEventUseCase(
+      name = tbaSimpleEvent.name,
+      tbaId = tbaSimpleEvent.key,
+      gameId = gameId
+    )
   }
 
-  fun saveManualEvent(gameId: Int, name: String) {
-    viewModelScope.launch {
-      createEventUseCase(
-        name = name,
-        gameId = gameId
-      )
-    }
+  suspend fun saveManualEvent(gameId: Int, name: String) {
+    _state.value = _state.value.copy(
+      isSavingEvent = true
+    )
+
+    createEventUseCase(
+      name = name,
+      gameId = gameId
+    )
   }
 }

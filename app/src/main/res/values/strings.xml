@@ -180,6 +180,7 @@
     <string name="add_event_name_label">Event name</string>
     <string name="add_event_network_error">Couldn\'t retrieve events, please check your network connection.</string>
     <string name="add_event_retry_fetch_events">Retry fetching events</string>
+    <string name="add_event_saving">Saving event</string>
 
     <!-- Event details -->
     <string name="event_no_teams">No teams</string>

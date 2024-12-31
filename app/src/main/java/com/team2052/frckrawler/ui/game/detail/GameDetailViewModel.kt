@@ -16,8 +16,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -87,15 +91,20 @@ class GameDetailViewModel @Inject constructor(
 
   @OptIn(ExperimentalCoroutinesApi::class)
   private fun getEvents(gameId: Int): Flow<List<GameDetailEvent>> {
-    return eventDao.getAllForGame(gameId).mapLatest { events ->
-      // TODO try to parallelize
-      events.map { event ->
-        val teamCount = teamAtEventDao.getTeamCountAtEvent(event.id)
-        GameDetailEvent(
-          id = event.id,
-          name = event.name,
-          teamCount = teamCount
-        )
+    return eventDao.getAllForGame(gameId).flatMapLatest { events ->
+      val gameEventDetails = events.map { event ->
+        teamAtEventDao.getTeamCountAtEvent(event.id)
+          .map { teamCount ->
+            GameDetailEvent(
+              id = event.id,
+              name = event.name,
+              teamCount = teamCount
+            )
+          }
+      }
+
+      combine(gameEventDetails) { details ->
+        details.asList()
       }
     }
   }

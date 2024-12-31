@@ -19,10 +19,6 @@ class CreateEventUseCase @Inject constructor(
   private val teamAtEventDao: TeamAtEventDao,
   private val eventService: EventService,
 ) {
-  // Using a separate scope so this doesn't get automatically cancelled
-  private val eventTeamScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-
-  // TODO how to share status of download
 
   suspend operator fun invoke(
     name: String,
@@ -36,24 +32,19 @@ class CreateEventUseCase @Inject constructor(
         gameId = gameId
       )
     )
-    println("inserted $eventId, tbaId is $tbaId")
+
     if (tbaId != null) {
-      eventTeamScope.launch {
-        saveTeamsForEvent(
-          eventId = eventId.toInt(),
-          tbaId = tbaId
-        )
-      }
+      saveTeamsForEvent(
+        eventId = eventId.toInt(),
+        tbaId = tbaId
+      )
     }
   }
 
   private suspend fun saveTeamsForEvent(eventId: Int, tbaId: String) {
     try {
       val teams = eventService.getEventTeams(tbaId)
-      println("result is success: ${teams.isSuccessful}")
-      println("result: ${teams.code()} - ${teams.errorBody()}")
       if (teams.isSuccessful) {
-        println("attempting to insert ${teams.body()?.size} teams")
         teams.body()?.forEach { team ->
           teamAtEventDao.insert(
             TeamAtEvent(
