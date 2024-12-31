@@ -117,8 +117,6 @@ abstract class AbstractScoutMetricsViewModel(
         }
 
         dataWriteJobs.awaitAll()
-
-        pendingData.value = emptyMap()
       }
     }
   }
