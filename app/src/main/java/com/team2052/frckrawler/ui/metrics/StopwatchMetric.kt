@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.RestartAlt
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,7 +38,7 @@ fun StopwatchMetric(
   onStateChanged: (String) -> Unit
 ) {
   var isRunning by remember { mutableStateOf(false) }
-  var elapsedTime by remember { mutableDoubleStateOf(state.toDoubleOrNull() ?: 0.0) }
+  var elapsedTime by remember(state) { mutableDoubleStateOf(state.toDoubleOrNull() ?: 0.0) }
   LaunchedEffect(isRunning) {
     if (isRunning) {
       while (true) {
@@ -94,17 +95,19 @@ fun StopwatchMetric(
 @Composable
 private fun StopwatchMetricPreview() {
   FrcKrawlerTheme {
-    MetricInput(
-      modifier = Modifier
-        .fillMaxWidth()
-        .background(MaterialTheme.colorScheme.surface),
-      metric = Metric.StopwatchMetric(
-        name = "Stopwatch metric",
-        enabled = true,
-        priority = 0
-      ),
-      state = "",
-      onStateChanged = {}
-    )
+    Surface {
+      MetricInput(
+        modifier = Modifier
+          .fillMaxWidth()
+          .background(MaterialTheme.colorScheme.surface),
+        metric = Metric.StopwatchMetric(
+          name = "Stopwatch metric",
+          enabled = true,
+          priority = 0
+        ),
+        state = "",
+        onStateChanged = {}
+      )
+    }
   }
 }

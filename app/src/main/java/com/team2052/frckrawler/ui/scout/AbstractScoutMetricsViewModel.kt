@@ -147,7 +147,7 @@ abstract class AbstractScoutMetricsViewModel(
       metricData,
     ) { metrics, data ->
       metrics.filterNot { metric ->
-        // Exclude any metric _without_ saved data
+        // Remove any metrics that have data
         data.any { it.metricId == metric.id }
       }
     }.collect { metricsWithoutData ->
