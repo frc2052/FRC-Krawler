@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!--TODO: Update colors-->
 <resources>
-
-    <!--Material Colors-->
-    <color name="primary">#450000</color>
-    <color name="primary_dark">#2a0000</color>
-    <color name="color_accent">#ffd740</color>
-
-    <color name="dark_background">#303030</color>
-    <color name="light_background">#F5F5F5</color>
+    <color name="maroon_200">#450000</color>
+    <color name="maroon_500">#2A0000</color>
+    <color name="yellow_200">#FFD740</color>
+    <color name="black_121">#121212</color>
+    <color name="black_000">#000000</color>
+    <color name="red_ERROR">#CF6679</color>
+    <color name="white_FFF">#FAFAFA</color>
 </resources>

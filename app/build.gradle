@@ -1,102 +1,133 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    alias libs.plugins.ksp
+    alias libs.plugins.hilt
+    alias libs.plugins.room
+    alias libs.plugins.compose.compiler
+    alias libs.plugins.googleServices
+    alias libs.plugins.firebaseCrashlytics
+}
 
 android {
-    compileSdkVersion 34
+    namespace 'com.team2052.frckrawler'
 
     defaultConfig {
-        applicationId 'com.team2052.frckrawler'
-        minSdkVersion 19
-        targetSdkVersion 34
-        versionCode 53
-        versionName "3.3.9"
-        multiDexEnabled true
+        applicationId "com.team2052.frckrawler"
+        minSdkVersion 21
+        compileSdk 35
+        targetSdkVersion 35
+        versionCode 1
+        versionName "1.0"
 
-        // Needed for support lib 23.2.0+ on pre-L devices
-        vectorDrawables.useSupportLibrary = true
+        def tbaKey = rootProject.ext.localProps.getProperty("frckrawler.tba-api-key")
+                ?: project.findProperty("frckrawler.tba-api-key")
+                        ?: "no-api-key"
+        buildConfigField("String", "TBA_API_KEY", "\"$tbaKey\"")
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        debug {
-            applicationIdSuffix '.development'
-        }
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+        debug {
+            applicationIdSuffix ".debug"
         }
     }
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/java-gen'
-        main.java.srcDirs += 'src/main/kotlin'
+    buildFeatures {
+        viewBinding true
+        compose true
+        buildConfig true
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
+    kotlinOptions {
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+    }
+}
 
-    repositories {
-        maven { url "https://jitpack.io" }
-    }
-    namespace 'com.team2052.frckrawler'
-    lint {
-        abortOnError false
-        checkReleaseBuilds false
-    }
+room {
+    schemaDirectory "$projectDir/schemas"
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation libs.androidx.legacy
+    implementation libs.androidx.core
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.multidex
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
 
-    //Support Libraries
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support:support-annotations:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:multidex:1.0.3'
+    // Kotlin
+    implementation libs.kotlinx.coroutines.android
+    implementation libs.androidx.viewmodel
+    implementation libs.androidx.lifecycle.runtime
+    implementation libs.kotlin.stdlib.jdk7
+    implementation libs.kotlinx.immutableCollections
 
-    implementation 'org.greenrobot:greendao:3.3.0'
-    implementation 'org.greenrobot:eventbus:3.0.0'
-    kapt "javax.annotation:javax.annotation-api:1.3.2"
+    coreLibraryDesugaring libs.desugar.jdk.libs
 
-    implementation 'com.jakewharton:butterknife:8.0.1'
-    kapt 'com.jakewharton:butterknife-compiler:8.0.1'
+    // UI
+    implementation libs.material
 
-    //Http
-    implementation 'com.facebook.stetho:stetho:1.1.1'
-    implementation 'com.facebook.stetho:stetho-okhttp:1.1.1'
+    // Compose
+    implementation libs.compose.ui
+    implementation libs.compose.uiTooling
+    implementation libs.compose.foundation
+    implementation libs.compose.material3
+    implementation libs.compose.materialIcons.core
+    implementation libs.compose.materialIcons.extended
+    implementation libs.compose.livedata
+    implementation libs.compose.constraintLayout
+    implementation libs.androidx.activity.compose
+    implementation libs.androidx.lifecycle.viewmodel.compose
+    implementation libs.navigation.compose
+    implementation libs.accompanist.permissions
+    androidTestImplementation libs.compose.test
 
-    implementation 'com.google.code.gson:gson:2.8.0'
-    implementation 'com.google.guava:guava:19.0'
-    implementation 'com.google.dagger:dagger:2.6.1'
-    kapt 'com.google.dagger:dagger-compiler:2.6.1'
+    // Accompanist
+    implementation libs.accompanist.swiperefresh
 
-    implementation 'com.google.firebase:firebase-core:16.0.4'
-    implementation 'com.google.firebase:firebase-crash:16.2.1'
-    implementation 'com.google.firebase:firebase-database:16.0.4'
-    implementation 'com.google.firebase:firebase-messaging:17.3.4'
-    implementation 'com.firebaseui:firebase-ui-database:3.3.1'
+    // Retrofit
+    implementation libs.retrofit.core
+    implementation libs.retrofit.moshi
+    implementation libs.okhttp.core
+    implementation libs.okhttp.logging
+    implementation libs.moshi.core
+    ksp libs.moshi.codegen
 
-    implementation 'com.jakewharton.rxbinding:rxbinding:0.4.0'
-    implementation 'com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0'
-    implementation 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
-    implementation 'com.jakewharton.rxbinding:rxbinding-design:0.4.0'
-    implementation 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
+    // Room
+    implementation libs.room.runtime
+    implementation libs.room.ktx
+    ksp libs.room.compiler
+    testImplementation libs.room.testing
 
-    implementation 'io.nlopez.smartadapters:library:1.3.1'
-    implementation 'net.sf.opencsv:opencsv:2.3'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    // Dagger - Hilt
+    implementation libs.hilt.android
+    ksp libs.hilt.androidCompiler
+    ksp libs.hilt.compiler
+    implementation libs.hilt.navigationCompose
 
-    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
-}
+    implementation libs.okio
 
-apply plugin: 'com.google.gms.google-services'
-repositories {
-    mavenCentral()
+    // Firebase
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.crashlytics
+
+    // Work Manager
+    implementation libs.androidx.work.runtime
+    implementation libs.hilt.work
+    
+    // Timber
+    implementation libs.timber
 }

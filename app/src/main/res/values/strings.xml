@@ -1,108 +1,229 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE resources [
+    <!ENTITY appName "FRC Krawler">
+    <!ENTITY appVersion "v4.0">
+    <!ENTITY applicationID "com.team2052.frckrawler">
+]>
 
 <resources>
-    <string name="app_name">FRC Krawler</string>
-    <string name="navigation_drawer_sub_title">By <i>Team 2052 KnightKrawler</i></string>
+    <string name="app_name">&appName;</string>
+    <string name="app_version">&appVersion;</string>
+    <string name="bluetooth_Text">Bluetooth Server Running:</string>
+    <string name="viewLogsButton">View Logs</string>
 
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <!-- Common strings -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">add</string>
+    <string name="delete">delete</string>
+    <string name="save">save</string>
+    <string name="navigate_up">Navigate up</string>
 
-    <string name="scout">Scout</string>
-    <string name="server">Server</string>
-    <string name="teams">Teams</string>
-    <string name="games">Games</string>
-    <string name="settings">Settings</string>
+    <!-- Step control -->
+    <string name="step_control_decrease">Decrease value</string>
+    <string name="step_control_increase">Increase value</string>
 
-    <!--Initial Setup Screen-->
-    <string name="welcome_message">Before you can you can use the app. The app needs to get setup.\nClick \"Next\" when you are ready.</string>
-    <string name="server_description">The Server is known as the \"Master Tablet\". All the data from the scouters get synced to this device. Data is compiled, shared, and viewed on this device.</string>
-    <string name="scouter_description">The Scouter receives data from matches and the pits. Data is synced from this device to the \"Master Tablet\". Data is saved until you sync, but then is deleted after it has synced to the \"Master Tablet\"</string>
-    <string name="enable_bluetooth_message">First, you need to enable Bluetooth.</string>
+    <!--Content Descriptions-->
+    <string name="cd_expandable_card">Card expansion toggle</string>
+    <string name="cd_background_logo">Background Logo</string>
 
+    <string name="cd_text_field_error">Incomplete text field</string>
 
-    <string name="bluetooth_message">Enable Bluetooth on your device. Bluetooth must be kept on at all times when the server is on and or scouting.</string>
-    <!--End Initial Setup Screen-->
+    <string name="cd_dropdown_expand">Expand Dropdown</string>
+    <string name="cd_dropdown_collapse">Collapse Dropdown</string>
 
-
-    <!--Tabs Titles-->
-    <string-array name="robot_tab_titles">
-        <!--<item>Info</item>-->
-        <item>Events</item>
-        <item>Summary</item>
-    </string-array>
-    <string-array name="robot_event_tab_titles">
-        <!--<item>Info</item>-->
-        <item>Summary</item>
-        <!--<item>Matches</item>-->
-    </string-array>
-
-    <string-array name="team_tab_titles">
-        <item>Info</item>
-        <item>Robots</item>
-        <!--<item>Contacts</item>-->
-    </string-array>
-    <!--End Tab Titles-->
-
-    <!--Settings-->
-
-    <!--End Settings -->
-
-    <!--Info Fragments-->
-    <string name="game_info_num_of_event">Number of Events</string>
-    <string name="game_info_num_of_match_metrics">Number of Match Metrics</string>
-    <string name="game_info_num_of_pit_metrics">Number of Pit Metrics</string>
-    <string name="game_info_num_of_robots">Number of Robots</string>
-
-    <string name="event_info_num_of_teams">Number of Teams</string>
-    <string name="event_info_num_of_matches">Number of Matches</string>
-    <string name="event_info_num_of_pit_data">Amount of Pit Robot Data</string>
-    <string name="event_info_num_of_match_data">Amount of Match Data</string>
-
-    <!--End Info Fragments-->
-
-    <!--Scounting-->
-    <string name="pit_scout">Pit Scout</string>
-    <string name="match_scout">Match Scout</string>
-    <string name="practice_match_scout">Practice Match Scout</string>
-    <string name="comments">Comments</string>
-    <string name="sync_error_title">Sync Error</string>
-
-    <string name="sync_error_message">There was an error in syncing with the server. Check if the server is on and check to see if you are running the same verion of FRC Krawler on both devices.</string>
-    <string name="bluetooth_not_supported_message">Sorry, your device does not support Bluetooth</string>
-    <!--End Scouting -->
+    <string name="cd_drag">drag</string>
 
 
-    <!-- Metrics -->
-    <string-array name="metric_types">
-        <item>Boolean</item>
-        <item>Counter</item>
-        <item>Slider</item>
-        <item>Chooser</item>
-        <item>Checkbox</item>
-        <item>Stopwatch</item>
-        <item>Text Field</item>
-    </string-array>
-    <!--End Metrics-->
+    <string name="migrating_message">Migrating database to v4</string>
 
-    <!-- Titles -->
-    <string name="summary_title">Summary</string>
-    <string name="event_title">Event</string>
-    <string name="robot_title">Robot</string>
-    <string name="team_title">Team</string>
-    <string name="game_title">Game</string>
-    <!--End Titles-->
+    <!--Mode Select-->
+    <string name="mode_select_screen_title">FRCKrawler</string>
 
-    <!-- Misc -->
-    <string name="drawer_open">Drawer Open</string>
-    <string name="drawer_close">Drawer Close</string>
-    <string name="close">Close</string>
+    <string name="welcome_message">Welcome to &appName;!</string>
+    <string name="getting_started_message">To get started, select from the options below</string>
 
-    <string name="metric_type_prefix">Metric Type:</string>
+    <string name="mode_unavailable_no_bluetooth">Unavailable because this device does not support Bluetooth.</string>
 
-    <string name="server_open">Server Open</string>
-    <string name="server_open_description">The FRC Krawler server is open for scouts to sync</string>
+    <string name="mode_remote_scout">Remote Scout</string>
+    <string name="mode_remote_scout_description">I want to connect to a server and scout</string>
+    <string name="mode_remote_scout_continue">START SCOUTING</string>
 
-    <string name="server_status_on">The server is on and ready to sync</string>
-    <string name="server_status_off">The server is off</string>
-    <string name="select_theme">Select Theme</string>
+    <string name="mode_server">Server</string>
+    <string name="mode_server_description">This device will be a server for remote scouts</string>
+    <string name="mode_server_continue">START SERVER</string>
+
+    <string name="mode_solo_scout">Solo Scout</string>
+    <string name="mode_solo_scout_description">I want to scout without connecting to other devices</string>
+    <string name="mode_solo_scout_continue">START SCOUTING</string>
+
+    <string name="mode_select_configure">Configure Games &amp; Metrics</string>
+    <string name="mode_select_configure_description">Set this device up to run a server or scout locally by configuring a new game, adding a new event, or creating metrics.</string>
+
+    <string name="mode_select_scout_match">Match</string>
+    <string name="mode_select_scout_pit">Pit</string>
+
+    <!--Scout Screens-->
+    <string name="scout_screen_title">Scout</string>
+    <string name="scout_home_screen_title">Home</string>
+    <string name="scout_matches_screen_title">Match Scouting</string>
+    <string name="scout_pit_screen_title">Pit Scouting</string>
+    <string name="scout_team_label">Team</string>
+    <string name="save_description">Save data</string>
+    <string name="data_saved_description">Data saved</string>
+    <string name="scout_find_server_button">Find Server</string>
+
+    <string name="scout_server_connection_title">Server Connection</string>
+    <string name="scout_server_connecting">Connecting…</string>
+    <string name="scout_connected_prefix">Connected to</string>
+    <string name="scout_sync_action">Sync</string>
+    <string name="scout_last_sync_label">Last sync: %1$s</string>
+    <plurals name="scout_unsynced_metrics_label">
+        <item quantity="one">pending data point</item>
+        <item quantity="other">pending data points</item>
+    </plurals>
+
+    <string name="remote_scout_connect_to_server">Connect to a server to start scouting.</string>
+
+    <string name="remote_scout_start_match_scouting">Start match scouting</string>
+    <string name="remote_scout_start_pit_scouting">Start pit scouting</string>
+
+    <string name="match_scout_match_info_title">Match information</string>
+    <string name="match_scout_match_number_label">Match number</string>
+
+    <string name="pit_scout_team_info_title">Team information</string>
+
+    <!--Server Screens-->
+    <string name="server_screen_title">Server</string>
+    <string name="server_home_screen_title">Home</string>
+    <string name="games_screen_title">Games</string>
+    <string name="server_controls_title">Server controls</string>
+    <string name="server_controls_game_label">Game: </string>
+    <string name="server_controls_event_label">Event: </string>
+
+    <string name="game_list_empty_text">No games</string>
+
+    <string name="server_connected_scouts_title">Connected Scouts</string>
+    <string name="server_connected_scout_last_sync">Last sync: %1$s</string>
+    <string name="server_connect_new_scouts_button">Connect new scouts</string>
+
+    <!-- Game & Event selector -->
+    <string name="game_event_no_metrics_warning">Warning: no pit or match metrics</string>
+    <string name="game_event_no_events_warning">No events configured</string>
+    <string name="game_event_no_games_warning">No games configured</string>
+    <string name="game_event_no_teams_warning">No teams configured</string>
+    <string name="game_event_event_label">Event</string>
+    <string name="game_event_game_label">Game</string>
+
+    <!--Metrics Screens-->
+    <string name="metrics_screen">Metrics</string>
+    <string name="match_metrics_screen">Match</string>
+    <string name="pit_metrics_screen">Pit</string>
+    <string name="metric_list_is_match_set">Set as match metrics for</string>
+    <string name="metric_list_is_pit_set">Set as pit metrics for</string>
+    <string name="metric_list_empty_text">No metrics</string>
+
+    <string name="edit_metric_type_label">Metric type:</string>
+    <string name="edit_metric_preview_label">Preview</string>
+    <string name="add_metric_button_description">Add new metric</string>
+
+    <string name="delete_metric_dialog_title">Delete metric?</string>
+    <string name="delete_metric_dialog_description">This action cannot be undone.</string>
+
+    <string name="delete_metric_set_dialog_title">Delete metric set?</string>
+    <string name="delete_metric_set_dialog_description">This action cannot be undone. This set and all metrics will be deleted.</string>
+
+    <string name="metric_list_boolean_description">Boolean</string>
+    <string name="metric_list_checkbox_description">Checkbox (%1$s)</string>
+    <string name="metric_list_chooser_description">Chooser (%1$s)</string>
+    <string name="metric_list_counter_description">Counter (min: %1$d, max: %2$d, step: %3$d)</string>
+    <string name="metric_list_slider_description">Slider (min: %1$d, max: %2$d)</string>
+    <string name="metric_list_stopwatch_description">Stopwatch</string>
+    <string name="metric_list_textfield_description">Text field</string>
+
+    <!-- Metric controls -->
+    <string name="metric_stopwatch_start">start</string>
+    <string name="metric_stopwatch_pause">pause</string>
+    <string name="metric_stopwatch_reset">reset</string>
+
+    <!--Game Detail Screen -->
+    <string name="game_detail_event_card_title">Events</string>
+    <string name="game_detail_metrics_card_title">Metric Sets</string>
+    <string name="game_detail_no_events">No events</string>
+    <string name="game_detail_no_metric_sets">No metric sets</string>
+    <string name="delete_game_confirmation_title">Delete game?</string>
+    <string name="metric_set_match_chip_label">match</string>
+    <string name="metric_set_pit_chip_label">pit</string>
+    <string name="delete_game_confirmation_body">This action cannot be undone. This game and all associated metrics and events will be deleted.</string>
+    <plurals name="game_event_team_count">
+        <item quantity="one">%1$d team</item>
+        <item quantity="other">%1$d teams</item>
+    </plurals>
+    <plurals name="game_metric_count">
+        <item quantity="one">%1$d metric</item>
+        <item quantity="other">%1$d metrics</item>
+    </plurals>
+
+    <!-- Add Game -->
+    <string name="add_game_title">Add New Game</string>
+    <string name="add_game_name">Name</string>
+
+    <!-- Add Metric Set -->
+    <string name="add_metric_set_title">Add New Metric Set</string>
+    <string name="add_metric_set_name">Name</string>
+
+    <!-- Add Event -->
+    <string name="add_event_sheet_title">Add event</string>
+    <string name="add_event_tab_auto">Auto</string>
+    <string name="add_event_tab_manual">Manual</string>
+    <string name="add_event_year_label">Year</string>
+    <string name="add_event_event_label">Event</string>
+    <string name="add_event_name_label">Event name</string>
+    <string name="add_event_network_error">Couldn\'t retrieve events, please check your network connection.</string>
+    <string name="add_event_retry_fetch_events">Retry fetching events</string>
+    <string name="add_event_saving">Saving event</string>
+
+    <!-- Event details -->
+    <string name="event_no_teams">No teams</string>
+    <string name="delete_event_title">Delete event?</string>
+    <string name="delete_event_body">This action cannot be undone. This event and all associated data will be deleted.</string>
+    <string name="event_add_team_description">Add team</string>
+    <string name="add_team_sheet_title">Add team</string>
+    <string name="edit_team_sheet_title">Edit team</string>
+    <string name="add_team_number_label">Team number</string>
+    <string name="add_team_name_label">Team name</string>
+
+    <!-- Permissions -->
+    <string name="bluetooth_permission_rationale_title">Permissions required</string>
+    <string name="bluetooth_permission_rationale_description_server">FRCKrawler requires bluetooth permissions to create a server. This will allow scouts to connect and sync data.</string>
+    <string name="bluetooth_permission_rationale_description_client">FRCKrawler requires bluetooth permissions to connect to a scouting server. This will allow syncing data between this device and the server.</string>
+    <string name="bluetooth_denied_title">Permissions required</string>
+    <string name="bluetooth_denied_description_server">FRCKrawler cannot enable the server without bluetooth permissions. Please enable the permissions in settings.</string>
+    <string name="bluetooth_denied_description_client">FRCKrawler cannot connect to a server without bluetooth permissions. Please enable the permissions in settings.</string>
+    <string name="bluetooth_denied_launch_settings">go to settings</string>
+
+    <!-- Enable bluetooth -->
+    <string name="bluetooth_enable_title">Bluetooth not enabled</string>
+    <string name="bluetooth_enable_server_description">Running an FRCKrawler server requires you to enable bluetooth. Please enable bluetooth and try again.</string>
+    <string name="bluetooth_enable_client_description">Connecting to an FRCKrawler server requires you to enable bluetooth. Please enable bluetooth and try again.</string>
+
+    <!-- Bluetooth scan - devices dialog -->
+    <string name="bluetooth_scan_choose_dialog_title">Connect to server</string>
+    <string name="bluetooth_scan_choose_dialog_body">Choose a Bluetooth device to connect with</string>
+
+    <!-- Server syncing -->
+    <string name="server_sync_notification_title">FRCKrawler Server Running</string>
+    <plurals name="server_sync_clients_connected">
+        <item quantity="one">%1$d scout connected</item>
+        <item quantity="other">%1$d scouts connected</item>
+    </plurals>
+
+    <!-- Scout syncing -->
+    <string name="scout_sync_notification_title">Syncing with server</string>
+    <string name="scout_pairing_failed">Pairing failed, please try again.</string>
+    <string name="scout_paring_server_not_running">FRCKrawler server is not running on the selected device.\nPlease ensure it is running and try again.</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_sync_name">Sync</string>
+    <string name="notification_channel_sync_description">Data sync notifications</string>
 </resources>
