@@ -4,11 +4,10 @@
 
 FRC Krawler is a *FIRST* Robotics Competition scouting app developed by Team 2052 - KnightKrawler.
 
-# Project Management/Contributing
-
-### Project setup
+## Project setup
 You will need to set up some project secrets to properly build this project.
 
+### TBA API Key
 Update your `local.properties` file with the following:
 
  * `frckrawler.tba-api-key`: [An auth key for The Blue Alliance](https://www.thebluealliance.com/apidocs)
@@ -16,13 +15,17 @@ Update your `local.properties` file with the following:
 ```
 frckrawler.tba-api-key=abc123
 ```
+
+### Firebase configuration (optional)
+This repo includes a fake Firebase configuration file, and you should be able to run the app as-is.
+If you want to test Firebase integration, you will need to replace the default configuration file 
+with a real one.
+
+Set up a Firebase project and [follow steps 1 & 2 here](https://firebase.google.com/docs/android/setup?authuser=1&hl=en#console) to add an Android app to your project.
+
+Follow the instructions in step 3 to download the `google-services.json` file and replace the one in this project at `app/google-services.json`.
   
-### Contributing
-  1. Fork this repository, import into Android Studio, and create a separate branch for your changes
-  2. Make your changes, bug fixes, or new feature
-  3. Submit a pull request on this repository and we'll review and get it added
-  
-### Issues?
+## Issues?
 Please feel free to open feature requests and bug reports here on GitHub! We'll do our best to 
 address them in a timely manner.
 

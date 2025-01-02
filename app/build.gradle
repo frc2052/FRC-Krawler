@@ -5,6 +5,8 @@ plugins {
     alias libs.plugins.hilt
     alias libs.plugins.room
     alias libs.plugins.compose.compiler
+    alias libs.plugins.googleServices
+    alias libs.plugins.firebaseCrashlytics
 }
 
 android {
@@ -117,6 +119,10 @@ dependencies {
     implementation libs.hilt.navigationCompose
 
     implementation libs.okio
+
+    // Firebase
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.crashlytics
 
     // Work Manager
     implementation libs.androidx.work.runtime

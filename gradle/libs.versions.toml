@@ -59,6 +59,9 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8"
 
+firebase-bom = "com.google.firebase:firebase-bom:33.7.0"
+firebase-crashlytics      = { module = "com.google.firebase:firebase-crashlytics" }
+
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-androidCompiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-compiler = "androidx.hilt:hilt-compiler:1.2.0"
@@ -91,3 +94,5 @@ ksp = "com.google.devtools.ksp:2.1.0-1.0.29"
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 room = { id = "androidx.room", version.ref = "room" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+googleServices = { id = "com.google.gms.google-services", version = "4.4.2" }
+firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.2" }
