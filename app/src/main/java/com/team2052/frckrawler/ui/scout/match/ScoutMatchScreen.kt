@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -170,7 +171,7 @@ private fun ScoutMatchPreview() {
         enabled = true,
         range = 0..10 step 1
       ),
-      value = "10"
+      value = "7"
     ),
     MetricState(
       metric = Metric.SliderMetric(
@@ -179,7 +180,7 @@ private fun ScoutMatchPreview() {
         enabled = true,
         range = 0..10 step 1
       ),
-      value = "10"
+      value = "7"
     )
   )
 

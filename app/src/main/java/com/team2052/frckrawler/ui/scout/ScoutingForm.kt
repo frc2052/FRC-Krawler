@@ -1,8 +1,10 @@
 package com.team2052.frckrawler.ui.scout
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
@@ -40,9 +42,12 @@ fun ScoutingForm(
         }
       )
 
-      if (metric != metrics.last()) {
-        HorizontalDivider()
-      }
+      HorizontalDivider()
+    }
+
+    item {
+      // Leave some extra space for the FAB so it doesn't cover up controls
+      Spacer(modifier.height(56.dp))
     }
   }
 }
