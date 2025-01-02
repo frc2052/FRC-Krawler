@@ -135,7 +135,8 @@ private fun MatchInfo(
         )
         StepControl(
           value = state.matchNumber,
-          onValueChanged = onMatchChanged
+          onValueChanged = onMatchChanged,
+          range = 1..Int.MAX_VALUE
         )
       }
 
