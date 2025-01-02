@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
@@ -92,6 +93,8 @@ class GameDetailViewModel @Inject constructor(
   @OptIn(ExperimentalCoroutinesApi::class)
   private fun getEvents(gameId: Int): Flow<List<GameDetailEvent>> {
     return eventDao.getAllForGame(gameId).flatMapLatest { events ->
+      if (events.isEmpty()) return@flatMapLatest flowOf(emptyList())
+
       val gameEventDetails = events.map { event ->
         teamAtEventDao.getTeamCountAtEvent(event.id)
           .map { teamCount ->
@@ -112,7 +115,6 @@ class GameDetailViewModel @Inject constructor(
   @OptIn(ExperimentalCoroutinesApi::class)
   private fun getMetricSets(game: Game): Flow<List<GameDetailMetricSet>> {
     return metricSetDao.getAllForGame(gameId).mapLatest { sets ->
-      // TODO try to parallelize
       sets.map { set ->
         val metricCount = metricDao.getMetricCount(set.id)
         GameDetailMetricSet(
