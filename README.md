@@ -1,6 +1,6 @@
 # FRC Krawler
 
-<img src="https://raw.githubusercontent.com/frc2052/FRC-Krawler/master/art/logoformarketing.jpg" width="64"> [![Google Play](https://github.com/pioug/google-play-badges/blob/main/svg/English.svg)](https://play.google.com/store/apps/details?id=com.team2052.frckrawler&hl=en)
+<img src="https://raw.githubusercontent.com/frc2052/FRC-Krawler/master/art/logoformarketing.jpg" width="64"> [<img src="https://github.com/pioug/google-play-badges/blob/main/svg/English.svg" alt="Google Play"/>](https://play.google.com/store/apps/details?id=com.team2052.frckrawler&hl=en)
 
 FRC Krawler is a *FIRST* Robotics Competition scouting app developed by Team 2052 - KnightKrawler.
 
