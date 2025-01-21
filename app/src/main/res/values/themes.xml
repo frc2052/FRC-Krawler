@@ -7,7 +7,6 @@
     <item name="colorOnPrimary">@color/white_FFF</item>
     <!-- Secondary brand color. -->
     <item name="colorSecondary">@color/yellow_200</item>
-    <!--        <item name="colorSecondaryVariant">@color/maroon_500</item> -->
     <item name="colorOnSecondary">@color/black_000</item>
     <!-- Status bar color. -->
     <item name="android:statusBarColor">@color/maroon_500</item>
@@ -22,6 +21,5 @@
     <item name="windowFixedHeightMajor">100%</item>
     <item name="windowFixedHeightMinor">100%</item>
     <item name="android:windowBackground">@android:color/transparent</item>
-    <item name="android:forceDarkAllowed">true</item>
   </style>
 </resources>
