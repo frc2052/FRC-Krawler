@@ -28,7 +28,10 @@ allprojects {
 
 rootProject.ext {
     localProps = new Properties()
-    localProps.load(new FileInputStream(rootProject.file("local.properties")))
+    propsFile = rootProject.file("local.properties")
+    if (propsFile.exists()) {
+        localProps.load(new FileInputStream(propsFile))
+    }
 }
 
 tasks.register('clean', Delete) {
