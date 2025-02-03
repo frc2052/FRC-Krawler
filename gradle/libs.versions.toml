@@ -1,5 +1,5 @@
 [versions]
-accompanist-permissions = "0.32.0"
+accompanist-permissions = "0.37.0"
 accompanist-swiperefresh = "0.36.0"
 activity-compose = "1.10.0"
 androidx-junit = "1.2.1"
@@ -47,7 +47,7 @@ compose-material3 = { module = "androidx.compose.material3:material3", version.r
 compose-test = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
 compose-constraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.1.0"
 
-navigation-compose = "androidx.navigation:navigation-compose:2.8.5"
+navigation-compose = "androidx.navigation:navigation-compose:2.8.6"
 
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
 accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanist-swiperefresh" }
@@ -90,7 +90,7 @@ ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit"
 junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]
-ksp = "com.google.devtools.ksp:2.1.0-1.0.29"
+ksp = "com.google.devtools.ksp:2.1.10-1.0.29"
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 room = { id = "androidx.room", version.ref = "room" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
