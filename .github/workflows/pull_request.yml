@@ -20,6 +20,7 @@ jobs:
         run: |
           echo "test"
           echo $GOOGLE_SERVICES_JSON
+          echo $GOOGLE_SERVICES_JSON | base64 -d
           echo $GOOGLE_SERVICES_JSON | base64 -d > app/google-services.json
           cat app/google-services.json
         
