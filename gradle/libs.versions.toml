@@ -1,7 +1,7 @@
 [versions]
 accompanist-permissions = "0.37.2"
 accompanist-swiperefresh = "0.36.0"
-activity-compose = "1.10.0"
+activity-compose = "1.10.1"
 androidx-junit = "1.2.1"
 appcompat = "1.7.0"
 core-ktx = "1.15.0"
