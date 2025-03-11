@@ -13,6 +13,7 @@
   </style>
 
   <style name="Theme.FRCKrawlerSplash" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <item name="colorPrimary">@color/maroon_200</item>
     <item name="android:windowBackground">@drawable/splash_background</item>
     <item name="android:statusBarColor">@color/maroon_500</item>
   </style>
