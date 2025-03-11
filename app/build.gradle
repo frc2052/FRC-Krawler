@@ -90,6 +90,7 @@ dependencies {
     implementation libs.compose.constraintLayout
     implementation libs.androidx.activity.compose
     implementation libs.androidx.lifecycle.viewmodel.compose
+    implementation libs.androidx.datastore
     implementation libs.navigation.compose
     implementation libs.accompanist.permissions
     androidTestImplementation libs.compose.test
