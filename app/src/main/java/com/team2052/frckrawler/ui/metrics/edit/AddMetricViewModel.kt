@@ -80,7 +80,9 @@ class AddMetricViewModel @Inject constructor(
 
   fun save() {
     viewModelScope.launch {
-      val priority = metricRepo.getMetricCount(metricSetId)
+      val priority = if (_state.value.priority == -1) {
+        metricRepo.getMetricCount(metricSetId)
+      } else _state.value.priority
       val metric = _state.value.toMetric(
         id = metricId,
         priority = priority
