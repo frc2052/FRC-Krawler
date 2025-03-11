@@ -6,7 +6,7 @@ import com.team2052.frckrawler.data.model.Metric
 data class AddEditMetricScreenState(
   val name: String = "",
   val type: MetricType = MetricType.Boolean,
-  val priority: Int = 0,
+  val priority: Int = -1,
   val enabled: Boolean = true,
   val options: MetricOptions = MetricOptions.None,
 ) {
