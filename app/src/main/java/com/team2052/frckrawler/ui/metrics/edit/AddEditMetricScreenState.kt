@@ -23,7 +23,7 @@ data class AddEditMetricScreenState(
         id = id,
         name = name,
         priority = priority,
-        enabled = true
+        enabled = enabled
       )
 
       MetricType.Counter -> {
@@ -32,7 +32,7 @@ data class AddEditMetricScreenState(
           id = id,
           name = name,
           priority = priority,
-          enabled = true,
+          enabled = enabled,
           range = options.range step options.step,
         )
       }
@@ -43,7 +43,7 @@ data class AddEditMetricScreenState(
           id = id,
           name = name,
           priority = priority,
-          enabled = true,
+          enabled = enabled,
           range = options.range
         )
       }
@@ -54,7 +54,7 @@ data class AddEditMetricScreenState(
           id = id,
           name = name,
           priority = priority,
-          enabled = true,
+          enabled = enabled,
           options = options.options
         )
       }
@@ -65,7 +65,7 @@ data class AddEditMetricScreenState(
           id = id,
           name = name,
           priority = priority,
-          enabled = true,
+          enabled = enabled,
           options = options.options
         )
       }
@@ -74,14 +74,14 @@ data class AddEditMetricScreenState(
         id = id,
         name = name,
         priority = priority,
-        enabled = true
+        enabled = enabled
       )
 
       MetricType.TextField -> Metric.TextFieldMetric(
         id = id,
         name = name,
         priority = priority,
-        enabled = true
+        enabled = enabled
       )
     }
   }
