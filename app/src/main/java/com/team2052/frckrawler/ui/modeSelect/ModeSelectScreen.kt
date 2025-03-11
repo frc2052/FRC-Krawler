@@ -80,9 +80,7 @@ fun ModeSelectScreen(
       serverGameEventState = viewModel.serverConfigState,
       localScoutGameEventState = viewModel.localScoutConfigState,
       navigate = { screen ->
-        navController.navigate(screen.route) {
-          popUpTo(Screen.ModeSelect.route)
-        }
+        navController.navigate(screen.route)
       },
       contentPadding = contentPadding,
     )
