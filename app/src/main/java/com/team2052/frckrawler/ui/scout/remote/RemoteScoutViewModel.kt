@@ -74,7 +74,6 @@ class RemoteScoutViewModel @Inject constructor(
     val lastSyncTime = getLastSyncTime(workInfos)
     val lastSyncInfo = workInfos.firstOrNull { it.id == lastSyncId }
     val lastSyncFailed = lastSyncInfo != null && lastSyncInfo.state == WorkInfo.State.FAILED
-    println("last sync info: $lastSyncInfo")
     when {
       lastSyncId == null -> ServerSyncState.NotSynced(hasSyncFailure = false)
       workInfos.any { it.isWaitingOrRunning() } -> ServerSyncState.Syncing

@@ -34,6 +34,8 @@ import java.time.LocalTime
 import java.time.Month
 import java.time.format.DateTimeFormatter
 
+private val TIME_FORMAT = DateTimeFormatter.ofPattern("h:mm a")
+
 @Composable
 internal fun ConnectedScoutsList(
   modifier: Modifier = Modifier,
@@ -80,7 +82,7 @@ private fun SyncedScout(
   scout: RemoteScout,
   modifier: Modifier = Modifier,
 ) {
-  val lastSyncText = scout.lastSync.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+  val lastSyncText = scout.lastSync.format(TIME_FORMAT)
   Column(modifier = modifier) {
     Row(
       verticalAlignment = Alignment.CenterVertically
