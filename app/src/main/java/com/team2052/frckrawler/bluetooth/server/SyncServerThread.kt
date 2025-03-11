@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
+import com.team2052.frckrawler.bluetooth.OperationResult
 import com.team2052.frckrawler.bluetooth.bufferedIO
 import com.team2052.frckrawler.bluetooth.di.SyncEntryPoint
 import dagger.hilt.EntryPoints
@@ -50,19 +51,29 @@ class SyncServerThread(
     }
   }
 
-  // TODO catch exceptions, handle errors
   private fun syncWithClient(clientSocket: BluetoothSocket) {
+    var syncSucceeded = true
     clientSocket.bufferedIO { output, input ->
       val operations = opFactory.createServerOperations(gameId = gameId, eventId = eventId)
       operations.forEach { op ->
         Timber.d("Sync operation ${op.javaClass.simpleName} starting")
-        val result = op.execute(output, input)
-        Timber.d("Sync operation ${op.javaClass.simpleName} result: $result")
+        try {
+          val result = op.execute(output, input)
+          if (result != OperationResult.Success) {
+            syncSucceeded = false
+            Timber.e("Sync operation ${op.javaClass.simpleName} failed: $result")
+          } else {
+            Timber.d("Sync operation ${op.javaClass.simpleName} completed successfully")
+          }
+        } catch (e: Exception) {
+          syncSucceeded = false
+          Timber.e(e, "Sync operation ${op.javaClass.simpleName} failed")
+        }
       }
     }
 
     val device = clientSocket.remoteDevice
-    scoutObserver.notifyScoutSynced(device.name, device.address)
+    scoutObserver.notifyScoutSynced(device.name, device.address, syncSucceeded)
   }
 
   // TODO handle closing sockets?

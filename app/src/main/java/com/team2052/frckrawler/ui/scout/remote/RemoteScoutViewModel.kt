@@ -10,10 +10,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.Operation
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import com.google.common.util.concurrent.ListenableFuture
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncWorker
 import com.team2052.frckrawler.bluetooth.client.ServerConnectionManager
 import com.team2052.frckrawler.bluetooth.client.ServerConnectionResult
@@ -27,7 +29,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -61,27 +62,30 @@ class RemoteScoutViewModel @Inject constructor(
   var serverConnectionState: ServerConnectionState by mutableStateOf(ServerConnectionState.NotConnected)
   var server: BluetoothDevice? = null
 
-  private val hasStartedSync = MutableStateFlow(false)
+  private val lastSyncId: MutableStateFlow<UUID?> = MutableStateFlow(null)
 
   private val pendingMetrics = metricDatumDao.getRemoteScoutDataFlow()
   private val syncWork = workManager.getWorkInfosForUniqueWorkFlow(SYNC_WORK_NAME)
   val syncState: StateFlow<ServerSyncState> = combine(
     syncWork,
     pendingMetrics,
-    hasStartedSync
-  ) { workInfos, pendingMetrics, hasStartedSync ->
+    lastSyncId,
+  ) { workInfos, pendingMetrics, lastSyncId ->
+    val lastSyncTime = getLastSyncTime(workInfos)
+    val lastSyncInfo = workInfos.firstOrNull { it.id == lastSyncId }
+    val lastSyncFailed = lastSyncInfo != null && lastSyncInfo.state == WorkInfo.State.FAILED
+    println("last sync info: $lastSyncInfo")
     when {
-      !hasStartedSync -> ServerSyncState.NotSynced
+      lastSyncId == null -> ServerSyncState.NotSynced(hasSyncFailure = false)
       workInfos.any { it.isWaitingOrRunning() } -> ServerSyncState.Syncing
       else -> {
-        // TODO show when a sync fails
-        val lastSyncTime = getLastSyncTime(workInfos)
         if (lastSyncTime == null) {
-          ServerSyncState.NotSynced
+          ServerSyncState.NotSynced(hasSyncFailure = lastSyncFailed)
         } else {
           ServerSyncState.Synced(
             pendingDataCount = pendingMetrics.size,
-            lastSyncTime = lastSyncTime
+            lastSyncTime = lastSyncTime,
+            hasSyncFailure = lastSyncFailed
           )
         }
       }
@@ -89,7 +93,7 @@ class RemoteScoutViewModel @Inject constructor(
   }.stateIn(
     viewModelScope,
     started = SharingStarted.WhileSubscribed(5_000),
-    initialValue = ServerSyncState.NotSynced
+    initialValue = ServerSyncState.NotSynced(hasSyncFailure = false)
   )
 
   val hasMatchMetrics: StateFlow<Boolean> = combine(
@@ -167,8 +171,7 @@ class RemoteScoutViewModel @Inject constructor(
         ExistingWorkPolicy.APPEND_OR_REPLACE,
         workRequest,
       )
-
-      hasStartedSync.value = true
+      lastSyncId.value = workRequest.id
     }
   }
 

@@ -4,10 +4,16 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -76,10 +82,24 @@ private fun SyncedScout(
 ) {
   val lastSyncText = scout.lastSync.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
   Column(modifier = modifier) {
-    Text(
-      text = scout.name,
-      style = MaterialTheme.typography.bodyLarge
-    )
+    Row(
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Text(
+        text = scout.name,
+        style = MaterialTheme.typography.bodyLarge
+      )
+
+      if (!scout.lastSyncSuccessful) {
+        Spacer(Modifier.width(4.dp))
+        Icon(
+          modifier = Modifier.size(20.dp),
+          imageVector = Icons.Default.Error,
+          contentDescription = "Failed to sync",
+          tint = MaterialTheme.colorScheme.error
+        )
+      }
+    }
     Text(
       text = stringResource(
         R.string.server_connected_scout_last_sync, lastSyncText),
@@ -100,7 +120,8 @@ private fun ConnectedScoutListPreview() {
         lastSync = LocalDateTime.of(
           LocalDate.of(2025, Month.MARCH, 10),
           LocalTime.of(8, 52)
-        )
+        ),
+        lastSyncSuccessful = true
       ),
 
       RemoteScout(
@@ -109,7 +130,8 @@ private fun ConnectedScoutListPreview() {
         lastSync = LocalDateTime.of(
           LocalDate.of(2025, Month.MARCH, 10),
           LocalTime.of(8, 52)
-        )
+        ),
+        lastSyncSuccessful = false
       ),
 
       RemoteScout(
@@ -118,7 +140,8 @@ private fun ConnectedScoutListPreview() {
         lastSync = LocalDateTime.of(
           LocalDate.of(2025, Month.MARCH, 10),
           LocalTime.of(8, 52)
-        )
+        ),
+        lastSyncSuccessful = true
       )
     )
   )

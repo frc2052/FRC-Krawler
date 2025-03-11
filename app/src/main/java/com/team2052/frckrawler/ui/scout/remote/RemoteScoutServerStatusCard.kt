@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -92,25 +93,15 @@ private fun ServerConnected(
 
     Spacer(modifier = Modifier.height(16.dp))
 
+    if (syncState is ServerSyncState.Synced && syncState.hasSyncFailure
+      || syncState is ServerSyncState.NotSynced && syncState.hasSyncFailure) {
+      SyncFailedText()
+    }
+
     if (syncState is ServerSyncState.Synced) {
-      Text(
-        text = stringResource(
-          id = R.string.scout_last_sync_label,
-          syncState.lastSyncTime.format(TIME_FORMAT)
-        )
-      )
-
+      LastSyncText(syncState.lastSyncTime)
       Spacer(modifier = Modifier.height(16.dp))
-
-      val pendingCountText = buildAnnotatedString {
-        pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
-        append(syncState.pendingDataCount.toString())
-        pop()
-        append(" ")
-        append(pluralStringResource(R.plurals.scout_unsynced_metrics_label, syncState.pendingDataCount, syncState.pendingDataCount))
-      }
-      Text(pendingCountText)
-
+      PendingDataCount(syncState.pendingDataCount)
       Spacer(modifier = Modifier.height(16.dp))
     }
 
@@ -133,6 +124,43 @@ private fun ServerConnected(
   }
 }
 
+@Composable
+private fun SyncFailedText() {
+  Row(
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Icon(
+      modifier = Modifier.size(24.dp),
+      imageVector = Icons.Default.Error,
+      contentDescription = "Failed to sync",
+      tint = MaterialTheme.colorScheme.error
+    )
+    Spacer(Modifier.width(12.dp))
+    Text("Sync failed")
+  }
+}
+
+@Composable
+private fun LastSyncText(dateTime: ZonedDateTime) {
+  Text(
+    text = stringResource(
+      id = R.string.scout_last_sync_label,
+      dateTime.format(TIME_FORMAT)
+    )
+  )
+}
+
+@Composable
+private fun PendingDataCount(count: Int) {
+  val pendingCountText = buildAnnotatedString {
+    pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+    append(count.toString())
+    pop()
+    append(" ")
+    append(pluralStringResource(R.plurals.scout_unsynced_metrics_label, count, count))
+  }
+  Text(pendingCountText)
+}
 
 @Composable
 private fun ServerConnecting() {
@@ -199,7 +227,7 @@ private fun ServerStatusConnectedPreview() {
         serverState = ServerConnectionState.Connected(
           "KnightKrawler Server"
         ),
-        syncState = ServerSyncState.NotSynced,
+        syncState = ServerSyncState.NotSynced(hasSyncFailure = false),
         onFindServerClicked = { },
         onSyncClicked = { }
       )
@@ -214,7 +242,7 @@ private fun ServerStatusNotConnectedPreview() {
     Surface {
       RemoteScoutServerStatusCard(
         serverState = ServerConnectionState.NotConnected,
-        syncState = ServerSyncState.NotSynced,
+        syncState = ServerSyncState.NotSynced(hasSyncFailure = false),
         onFindServerClicked = { },
         onSyncClicked = { }
       )
@@ -233,7 +261,28 @@ private fun ServerStatusPendingSyncPreview() {
         ),
         syncState = ServerSyncState.Synced(
           pendingDataCount = 12,
-          lastSyncTime = ZonedDateTime.now()
+          lastSyncTime = ZonedDateTime.now(),
+        ),
+        onFindServerClicked = { },
+        onSyncClicked = { }
+      )
+    }
+  }
+}
+
+@FrcKrawlerPreview
+@Composable
+private fun ServerStatusFailedSyncPreview() {
+  FrcKrawlerTheme {
+    Surface {
+      RemoteScoutServerStatusCard(
+        serverState = ServerConnectionState.Connected(
+          "KnightKrawler Server"
+        ),
+        syncState = ServerSyncState.Synced(
+          pendingDataCount = 12,
+          lastSyncTime = ZonedDateTime.now(),
+          hasSyncFailure = true,
         ),
         onFindServerClicked = { },
         onSyncClicked = { }

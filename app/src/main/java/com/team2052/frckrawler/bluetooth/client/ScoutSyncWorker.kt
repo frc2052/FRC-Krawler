@@ -64,8 +64,13 @@ class ScoutSyncWorker @AssistedInject constructor(
         val operations = opFactory.createScoutOperations()
         operations.forEach { op ->
           Timber.d("Sync operation ${op.javaClass.simpleName} starting")
-          val result = op.execute(output, input)
-          Timber.d("Sync operation ${op.javaClass.simpleName} result: $result")
+          try {
+            val result = op.execute(output, input)
+            Timber.d("Sync operation ${op.javaClass.simpleName} result: $result")
+          } catch (e: Exception) {
+            Timber.d(e, "Sync operation ${op.javaClass.simpleName} failed")
+            return Result.failure()
+          }
         }
       }
     }

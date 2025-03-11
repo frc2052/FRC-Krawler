@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,16 +23,14 @@ class ConnectedScoutObserver @Inject constructor() {
   /**
    * Notify this observer that a scout has synced
    */
-  internal fun notifyScoutSynced(name: String, address: String) {
+  internal fun notifyScoutSynced(name: String, address: String, success: Boolean) {
     scope.launch {
       val deviceMap = _devices.value.toMutableMap()
-      val syncedScout = deviceMap[address]
-        ?.copy(lastSync = LocalDateTime.now())
-        ?: RemoteScout(
-          name = name,
-          address = address
-        )
-      deviceMap[address] = syncedScout
+      deviceMap[address] = RemoteScout(
+        name = name,
+        address = address,
+        lastSyncSuccessful = success
+      )
       _devices.emit(deviceMap)
     }
   }
