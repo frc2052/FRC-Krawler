@@ -70,13 +70,7 @@ class ServerConnectionManager internal @Inject constructor(
       pairedDevice = deviceToPair
     }
 
-    val hasFrcKrawlerService = checkForFrcKrawlerServiceWithTimeout(pairedDevice)
-
-    if (hasFrcKrawlerService) {
-      return@withContext ServerConnectionResult.ServerConnected(pairedDevice)
-    } else {
-      return@withContext ServerConnectionResult.NoFrcKrawlerServiceFound
-    }
+    return@withContext ServerConnectionResult.ServerConnected(pairedDevice)
   }
 
   @OptIn(ExperimentalTime::class)
@@ -103,37 +97,6 @@ class ServerConnectionManager internal @Inject constructor(
 
     context.registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED))
     device.createBond()
-  }
-
-
-  @OptIn(ExperimentalTime::class)
-  private suspend fun checkForFrcKrawlerServiceWithTimeout(
-    device: BluetoothDevice
-  ): Boolean {
-    return try {
-      withTimeout(30.seconds) {
-        checkForFrcKrawlerService(device)
-      }
-    } catch (e: TimeoutCancellationException) {
-      false
-    }
-  }
-
-  private suspend fun checkForFrcKrawlerService(
-    device: BluetoothDevice
-  ): Boolean = suspendCoroutine { continuation ->
-    val receiver = SdpDiscoveryBroadcastReceiver(
-      onServicesDiscovered = { uuids ->
-        if (uuids.contains(ParcelUuid((BluetoothSyncConstants.Uuid)))) {
-          continuation.resume(true)
-        } else {
-          continuation.resume(false)
-        }
-      }
-    )
-
-    context.registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_UUID))
-    device.fetchUuidsWithSdp()
   }
 
 }
