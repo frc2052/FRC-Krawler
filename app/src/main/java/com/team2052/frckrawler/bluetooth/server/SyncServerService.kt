@@ -52,10 +52,6 @@ class SyncServerService : Service() {
     return START_REDELIVER_INTENT
   }
 
-  override fun onDestroy() {
-    super.onDestroy()
-  }
-
   private fun getForegroundNotification(): Notification {
     // TODO format with actual number of connected clients
     val notificationText =

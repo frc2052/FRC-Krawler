@@ -74,6 +74,7 @@ class RemoteScoutViewModel @Inject constructor(
       !hasStartedSync -> ServerSyncState.NotSynced
       workInfos.any { it.isWaitingOrRunning() } -> ServerSyncState.Syncing
       else -> {
+        // TODO show when a sync fails
         val lastSyncTime = getLastSyncTime(workInfos)
         if (lastSyncTime == null) {
           ServerSyncState.NotSynced
@@ -164,7 +165,7 @@ class RemoteScoutViewModel @Inject constructor(
         .build()
       workManager.enqueueUniqueWork(
         SYNC_WORK_NAME,
-        ExistingWorkPolicy.APPEND,
+        ExistingWorkPolicy.APPEND_OR_REPLACE,
         workRequest,
       )
 
