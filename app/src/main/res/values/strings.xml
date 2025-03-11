@@ -124,6 +124,7 @@
     <string name="metric_list_empty_text">No metrics</string>
 
     <string name="edit_metric_type_label">Metric type:</string>
+    <string name="edit_metric_enabled_label">Enabled</string>
     <string name="edit_metric_preview_label">Preview</string>
     <string name="add_metric_button_description">Add new metric</string>
 

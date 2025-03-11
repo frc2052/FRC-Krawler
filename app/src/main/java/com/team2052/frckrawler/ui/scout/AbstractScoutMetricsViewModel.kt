@@ -60,6 +60,7 @@ abstract class AbstractScoutMetricsViewModel(
     .flatMapLatest { metricDao.getMetrics(it) }
     .map { metricRecords ->
       metricRecords.map { record -> record.toMetric() }
+        .filter { it.enabled }
     }
     .shareIn(
       viewModelScope,

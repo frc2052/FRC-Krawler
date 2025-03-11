@@ -47,6 +47,10 @@ class AddMetricViewModel @Inject constructor(
     )
   }
 
+  fun setEnabled(enabled: Boolean) {
+    _state.value = _state.value.copy(enabled = enabled)
+  }
+
   fun updateName(name: String) {
     // TODO add some visible validation messaging?
     _state.value = _state.value.copy(name = name)

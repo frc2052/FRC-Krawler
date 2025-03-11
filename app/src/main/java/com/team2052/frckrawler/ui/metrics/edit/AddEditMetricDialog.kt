@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -32,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -65,6 +67,7 @@ fun AddEditMetricDialog(
   AddEditMetricContent(
     state = state,
     mode = mode,
+    onEnabledChanged = { enabled -> viewModel.setEnabled(enabled) },
     onNameChange = { viewModel.updateName(it) },
     onTypeChange = { viewModel.updateType(it) },
     onSaveClick = {
@@ -104,6 +107,7 @@ fun AddEditMetricDialog(
 private fun AddEditMetricContent(
   state: AddEditMetricScreenState,
   mode: AddEditMetricMode,
+  onEnabledChanged: (Boolean) -> Unit,
   onNameChange: (String) -> Unit,
   onTypeChange: (MetricType) -> Unit,
   onOptionsChange: (MetricOptions) -> Unit,
@@ -134,6 +138,20 @@ private fun AddEditMetricContent(
         onValueChange = onNameChange,
         label = "Metric name"
       )
+
+      Spacer(Modifier.height(8.dp))
+
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        Text(text = stringResource(R.string.edit_metric_enabled_label))
+        Spacer(Modifier.width(12.dp))
+        Switch(
+          checked = state.enabled,
+          onCheckedChange = onEnabledChanged
+        )
+      }
 
       MetricTypeSelector(
         metricType = state.type,
@@ -450,6 +468,7 @@ private fun BooleanMetricPreview() {
       AddEditMetricContent(
         state = state,
         mode = AddEditMetricMode.New(),
+        onEnabledChanged = {},
         onNameChange = {},
         onTypeChange = {},
         onSaveClick = {},
