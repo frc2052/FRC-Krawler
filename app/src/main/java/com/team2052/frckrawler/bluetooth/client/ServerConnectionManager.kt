@@ -52,12 +52,21 @@ class ServerConnectionManager internal @Inject constructor(
   suspend fun connectToNewServer(
     activity: ComponentActivity
   ): ServerConnectionResult = withContext(coroutineContext) {
-    val discoveryResult = discoveryStrategy.launchDeviceDiscovery(activity)
-    if (discoveryResult is DeviceSelectionResult.Cancelled) {
-      return@withContext ServerConnectionResult.Cancelled(discoveryResult.message)
+    var deviceToPair: BluetoothDevice? = null
+    val pairedServers = getPairedFrcKrawlerServers()
+    if (pairedServers.isNotEmpty()) {
+      // TODO support multiple available servers
+      deviceToPair = pairedServers.first()
     }
 
-    val deviceToPair = (discoveryResult as DeviceSelectionResult.DeviceSelected).device
+    if (deviceToPair == null) {
+      val discoveryResult = discoveryStrategy.launchDeviceDiscovery(activity)
+      if (discoveryResult is DeviceSelectionResult.Cancelled) {
+        return@withContext ServerConnectionResult.Cancelled(discoveryResult.message)
+      }
+
+      deviceToPair = (discoveryResult as DeviceSelectionResult.DeviceSelected).device
+    }
 
     val pairedDevice: BluetoothDevice
     if (deviceToPair.bondState != BluetoothDevice.BOND_BONDED) {

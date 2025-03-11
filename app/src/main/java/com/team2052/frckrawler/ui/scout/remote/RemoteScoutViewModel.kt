@@ -114,7 +114,6 @@ class RemoteScoutViewModel @Inject constructor(
     initialValue = false
   )
 
-  // TODO skip pairing if a server is already paired and on?
   fun connectToServer(activity: ComponentActivity) {
     // Check location strategy worked
     if (!permissionManager.hasPermissions(RequiredPermissions.clientPermissions)) {

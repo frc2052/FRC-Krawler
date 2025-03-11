@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.ui.scout.remote
 
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -51,7 +52,7 @@ fun ScoutHomeScreen(
   val viewModel: RemoteScoutViewModel = hiltViewModel()
 
   // Don't love this, but it is what we need
-  val context = LocalContext.current as ComponentActivity
+  val context = LocalActivity.current as ComponentActivity
 
   Box {
     if (viewModel.showPermissionRequests) {
