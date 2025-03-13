@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.team2052.frckrawler.ui.scout.remote
 
 import android.bluetooth.BluetoothAdapter
@@ -19,16 +21,25 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncWorker
 import com.team2052.frckrawler.bluetooth.client.ServerConnectionManager
 import com.team2052.frckrawler.bluetooth.client.ServerConnectionResult
+import com.team2052.frckrawler.data.local.Game
+import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.MetricDao
 import com.team2052.frckrawler.data.local.MetricDatumDao
 import com.team2052.frckrawler.data.local.MetricSet
 import com.team2052.frckrawler.ui.permissions.PermissionManager
 import com.team2052.frckrawler.ui.permissions.RequiredPermissions
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMap
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -48,6 +59,7 @@ class RemoteScoutViewModel @Inject constructor(
   private val workManager: WorkManager,
   metricDatumDao: MetricDatumDao,
   metricDao: MetricDao,
+  gameDao: GameDao,
 ) : ViewModel() {
 
   companion object {
@@ -95,9 +107,27 @@ class RemoteScoutViewModel @Inject constructor(
     initialValue = ServerSyncState.NotSynced(hasSyncFailure = false)
   )
 
+  private val gameFlow = gameDao.getWithUpdates(Game.SCOUT_GAME_ID)
+  private val matchMetricsCountFlow: Flow<Int> = gameFlow
+    .flatMapLatest { game ->
+      if (game.matchMetricsSetId != null) {
+        metricDao.getMetricCountFlow(game.matchMetricsSetId)
+      } else {
+        flowOf(0)
+      }
+    }
+  private val pitMetricsCountFlow: Flow<Int> = gameFlow
+    .flatMapLatest { game ->
+      if (game.pitMetricsSetId != null) {
+        metricDao.getMetricCountFlow(game.pitMetricsSetId)
+      } else {
+        flowOf(0)
+      }
+    }
+
   val hasMatchMetrics: StateFlow<Boolean> = combine(
     syncState,
-    metricDao.getMetricCountFlow(MetricSet.SCOUT_MATCH_METRIC_SET_ID)
+    matchMetricsCountFlow,
   ) { syncState, metricsCount ->
     syncState is ServerSyncState.Synced && metricsCount > 0
   }.stateIn(
@@ -108,7 +138,7 @@ class RemoteScoutViewModel @Inject constructor(
 
   val hasPitMetrics: StateFlow<Boolean> = combine(
     syncState,
-    metricDao.getMetricCountFlow(MetricSet.SCOUT_PIT_METRIC_SET_ID)
+    pitMetricsCountFlow,
   ) { syncState, metricsCount ->
     syncState is ServerSyncState.Synced && metricsCount > 0
   }.stateIn(

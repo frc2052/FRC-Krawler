@@ -102,12 +102,11 @@ class ReceiveServerConfiguration @Inject constructor(
   }
 
   private suspend fun saveConfiguration(config: ServerConfigurationPacket) {
-    gameDao.insert(
-      Game(
-        id = Game.SCOUT_GAME_ID,
-        name = config.game.name
-      )
+    var game = Game(
+      id = Game.SCOUT_GAME_ID,
+      name = config.game.name,
     )
+    gameDao.insert(game)
 
     metricDao.deleteAllFromSet(MetricSet.SCOUT_MATCH_METRIC_SET_ID)
     val matchMetrics = config.game.matchMetrics.toRecords(MetricSet.SCOUT_MATCH_METRIC_SET_ID)
@@ -115,7 +114,25 @@ class ReceiveServerConfiguration @Inject constructor(
 
     metricDao.deleteAllFromSet(MetricSet.SCOUT_PIT_METRIC_SET_ID)
     val pitMetrics = config.game.pitMetrics.toRecords(MetricSet.SCOUT_PIT_METRIC_SET_ID)
-    metricDao.insertAll(pitMetrics)
+
+    val sameMetricSetForBoth = matchMetrics.map { it.id } == pitMetrics.map { it.id }
+    if (!sameMetricSetForBoth) {
+      // We can't insert the same metrics twice, since there would be duplicate IDs.
+      metricDao.insertAll(pitMetrics)
+    }
+
+    if (matchMetrics.isNotEmpty()) {
+      game = game.copy(matchMetricsSetId = MetricSet.SCOUT_MATCH_METRIC_SET_ID)
+    }
+
+    if (pitMetrics.isNotEmpty()) {
+      if (sameMetricSetForBoth) {
+        game = game.copy(pitMetricsSetId = MetricSet.SCOUT_MATCH_METRIC_SET_ID)
+      } else {
+        game = game.copy(pitMetricsSetId = MetricSet.SCOUT_PIT_METRIC_SET_ID)
+      }
+    }
+    gameDao.insert(game)
 
     eventDao.insert(
       Event(
