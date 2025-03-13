@@ -72,6 +72,7 @@
     <string name="save_description">Save data</string>
     <string name="data_saved_description">Data saved</string>
     <string name="scout_find_server_button">Find Server</string>
+    <string name="scout_syncing">Syncing</string>
 
     <string name="scout_server_connection_title">Server Connection</string>
     <string name="scout_server_connecting">Connecting…</string>

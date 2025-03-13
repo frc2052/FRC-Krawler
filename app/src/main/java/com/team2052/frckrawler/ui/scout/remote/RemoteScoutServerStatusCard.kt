@@ -105,6 +105,20 @@ private fun ServerConnected(
       Spacer(modifier = Modifier.height(16.dp))
     }
 
+    if (syncState is ServerSyncState.Syncing) {
+      Row(
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        CircularProgressIndicator(
+          modifier = Modifier.size(28.dp)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(stringResource(R.string.scout_syncing))
+      }
+
+      Spacer(modifier = Modifier.height(16.dp))
+    }
+
     Row(
       modifier = Modifier.fillMaxWidth(),
       horizontalArrangement = Arrangement.End
@@ -263,6 +277,23 @@ private fun ServerStatusPendingSyncPreview() {
           pendingDataCount = 12,
           lastSyncTime = ZonedDateTime.now(),
         ),
+        onFindServerClicked = { },
+        onSyncClicked = { }
+      )
+    }
+  }
+}
+
+@FrcKrawlerPreview
+@Composable
+private fun ServerStatusSyncingPreview() {
+  FrcKrawlerTheme {
+    Surface {
+      RemoteScoutServerStatusCard(
+        serverState = ServerConnectionState.Connected(
+          "KnightKrawler Server"
+        ),
+        syncState = ServerSyncState.Syncing,
         onFindServerClicked = { },
         onSyncClicked = { }
       )
