@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Aod
 import androidx.compose.material.icons.outlined.Hub
@@ -77,8 +78,7 @@ fun ModeSelectScreen(
   ) { contentPadding ->
     ModeSelectScreenContent(
       isBluetoothAvailable = viewModel.bluetoothAvailability.isAvailable,
-      serverGameEventState = viewModel.serverConfigState,
-      localScoutGameEventState = viewModel.localScoutConfigState,
+      gameEventState = viewModel.gameEventState,
       navigate = { screen ->
         navController.navigate(screen.route)
       },
@@ -91,8 +91,7 @@ fun ModeSelectScreen(
 private fun ModeSelectScreenContent(
   modifier: Modifier = Modifier,
   isBluetoothAvailable: Boolean,
-  serverGameEventState: GameAndEventState,
-  localScoutGameEventState: GameAndEventState,
+  gameEventState: GameAndEventState,
   navigate: (Screen) -> Unit,
   contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -120,7 +119,7 @@ private fun ModeSelectScreenContent(
         ServerCard(
           expanded = expandedCard == id,
           onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
-          gameEventState = serverGameEventState,
+          gameEventState = gameEventState,
           navigate = navigate,
           enabled = isBluetoothAvailable,
         )
@@ -130,7 +129,16 @@ private fun ModeSelectScreenContent(
         SoloScoutCard(
           expanded = expandedCard == id,
           onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
-          gameEventState = localScoutGameEventState,
+          gameEventState = gameEventState,
+          navigate = navigate,
+        )
+      }
+
+      expandableCard { id ->
+        AnalyzeDataCard(
+          expanded = expandedCard == id,
+          onExpanded = { expanded -> expandedCard = if (expanded) id else -1 },
+          gameEventState = gameEventState,
           navigate = navigate,
         )
       }
@@ -246,6 +254,56 @@ private fun ServerCard(
         enabled = gameEventState.selectedGame != null && gameEventState.selectedEvent != null
       ) {
         Text(stringResource(R.string.mode_server_continue))
+      }
+    },
+    expanded = expanded,
+    onExpanded = onExpanded,
+    content = {
+      GameAndEventSelector(
+        state = gameEventState
+      )
+    },
+  )
+}
+
+@Composable
+private fun AnalyzeDataCard(
+  expanded: Boolean,
+  onExpanded: (Boolean) -> Unit,
+  gameEventState: GameAndEventState,
+  navigate: (Screen) -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  ExpandableCard(
+    modifier = modifier,
+    header = {
+      CardHeader(
+        title = { Text(stringResource(R.string.mode_analyze)) },
+        icon = {
+          Icon(
+            modifier = modifier.size(36.dp),
+            imageVector = Icons.Default.Leaderboard,
+            contentDescription = null,
+          )
+        },
+        description = {
+          Text(stringResource(R.string.mode_analyze_description))
+        },
+      )
+    },
+    actions = {
+      TextButton(
+        onClick = {
+          navigate(
+            Screen.Analyze(
+              gameId = gameEventState.selectedGame!!.id,
+              eventId = gameEventState.selectedEvent!!.id,
+            )
+          )
+        },
+        enabled = gameEventState.selectedGame != null && gameEventState.selectedEvent != null
+      ) {
+        Text(stringResource(R.string.mode_analyze_continue))
       }
     },
     expanded = expanded,
@@ -401,8 +459,7 @@ private fun ModeSelectScreenPreviewLight() {
   }
   FrcKrawlerTheme {
     ModeSelectScreenContent(
-      serverGameEventState = gameEventState,
-      localScoutGameEventState = gameEventState,
+      gameEventState = gameEventState,
       isBluetoothAvailable = true,
       navigate = {}
     )

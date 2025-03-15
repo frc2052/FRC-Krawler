@@ -29,8 +29,7 @@ class ModeSelectViewModel @Inject constructor(
   private val prefs: FrcKrawlerPreferences,
   bluetoothAvailabilityProvider: BluetoothAvailabilityProvider
 ) : ViewModel() {
-  var serverConfigState = GameAndEventState()
-  var localScoutConfigState = GameAndEventState()
+  var gameEventState = GameAndEventState()
 
   val bluetoothAvailability = bluetoothAvailabilityProvider.availability
 
@@ -44,28 +43,18 @@ class ModeSelectViewModel @Inject constructor(
     viewModelScope.launch {
       val previouslySelectedGameId = prefs.lastGameId.firstOrNull()
       gameDao.getAll().collect {
-        serverConfigState.availableGames = it
-        localScoutConfigState.availableGames = it
+        gameEventState.availableGames = it
 
-        serverConfigState.updateSelectedGame(previouslySelectedGameId)
-        localScoutConfigState.updateSelectedGame(previouslySelectedGameId)
+        gameEventState.updateSelectedGame(previouslySelectedGameId)
       }
     }
 
     viewModelScope.launch {
-      serverConfigState.updateEventsOnGameChange()
+      gameEventState.updateEventsOnGameChange()
     }
 
     viewModelScope.launch {
-      localScoutConfigState.updateEventsOnGameChange()
-    }
-
-    viewModelScope.launch {
-      serverConfigState.updateTeamsOnEventChange()
-    }
-
-    viewModelScope.launch {
-      localScoutConfigState.updateTeamsOnEventChange()
+      gameEventState.updateTeamsOnEventChange()
     }
   }
 

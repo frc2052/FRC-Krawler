@@ -63,6 +63,24 @@ sealed class Screen(
     arguments = listOf(Arguments.gameId, Arguments.eventId)
   )
 
+  data class Analyze(
+    val gameId: Int? = null,
+    val eventId: Int? = null,
+  ) : Screen(
+    "analyze/${gameId ?: "{gameId}"}/${eventId ?: "{eventId}"}",
+    getString(R.string.server_screen_title),
+    arguments = listOf(Arguments.gameId, Arguments.eventId)
+  )
+
+  data class Export(
+    val gameId: Int? = null,
+    val eventId: Int? = null,
+  ) : Screen(
+    "export/${gameId ?: "{gameId}"}/${eventId ?: "{eventId}"}",
+    getString(R.string.server_screen_title),
+    arguments = listOf(Arguments.gameId, Arguments.eventId)
+  )
+
   data class Game(val gameId: Int? = null) : Screen(
     route = "game/${gameId ?: "{gameId}"}",
     title = "",

@@ -18,7 +18,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.team2052.frckrawler.ui.analyze.AnalyzeDataScreen
 import com.team2052.frckrawler.ui.event.teams.EventTeamListScreen
+import com.team2052.frckrawler.ui.export.ExportDataScreen
 import com.team2052.frckrawler.ui.game.detail.GameDetailScreen
 import com.team2052.frckrawler.ui.game.list.GameListScreen
 import com.team2052.frckrawler.ui.metrics.list.MetricsListScreen
@@ -149,6 +151,30 @@ fun Navigation() {
     ) { backStackEntry ->
       val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
       MetricsListScreen(metricSetId = metricSetId, navController = navController)
+    }
+
+    composable(
+      screen = Screen.Analyze(),
+    ) { backStackEntry ->
+      val gameId = backStackEntry.arguments?.getInt(Arguments.gameId.name) ?: 0
+      val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
+      AnalyzeDataScreen(
+        gameId = gameId,
+        eventId = eventId,
+        navController = navController
+      )
+    }
+
+    composable(
+      screen = Screen.Export(),
+    ) { backStackEntry ->
+      val gameId = backStackEntry.arguments?.getInt(Arguments.gameId.name) ?: 0
+      val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
+      ExportDataScreen(
+        gameId = gameId,
+        eventId = eventId,
+        navController = navController
+      )
     }
   }
 }

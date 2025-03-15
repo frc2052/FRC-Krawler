@@ -53,6 +53,10 @@
     <string name="mode_server_description">This device will be a server for remote scouts</string>
     <string name="mode_server_continue">START SERVER</string>
 
+    <string name="mode_analyze">Analyze data</string>
+    <string name="mode_analyze_description">View and export data</string>
+    <string name="mode_analyze_continue">ANALYZE</string>
+
     <string name="mode_solo_scout">Solo Scout</string>
     <string name="mode_solo_scout_description">I want to scout without connecting to other devices</string>
     <string name="mode_solo_scout_continue">START SCOUTING</string>
@@ -195,11 +199,15 @@
     <string name="add_team_number_label">Team number</string>
     <string name="add_team_name_label">Team name</string>
 
+    <!--Analyze screens-->
+    <string name="analyze_screen_title">Analyze data</string>
+    <string name="analyze_export_label">Export data</string>
+
     <!--Export screens-->
     <string name="export_screen_title">Export data</string>
     <string name="export_section_label">Export</string>
     <string name="export_summary_label">Export summary</string>
-    <string name="export_summary_description">Export data as a CSV with a summary of metrics for each team averaged and weighted</string>
+    <string name="export_summary_description">Export data as a CSV with a summary of metrics for each team, averaged across matches</string>
     <string name="export_raw_label">Export raw</string>
     <string name="export_raw_description">Export all data as a CSV with raw data from each match and each scout</string>
     <string name="export_config_section_label">Options</string>
