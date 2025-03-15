@@ -9,4 +9,13 @@ interface FrcKrawlerPreferences {
 
   val lastGameId: Flow<Int?>
   suspend fun setLastGameId(id: Int?)
+
+  val exportIncludeTeamNames: Flow<Boolean>
+  suspend fun setExportIncludeTeamNames(includeNames: Boolean)
+
+  val exportIncludeMatchMetrics: Flow<Boolean>
+  suspend fun setExportIncludeMatchMetrics(includeMatchMetrics: Boolean)
+
+  val exportIncludePitMetrics: Flow<Boolean>
+  suspend fun setExportIncludePitMetrics(includePitMetrics: Boolean)
 }

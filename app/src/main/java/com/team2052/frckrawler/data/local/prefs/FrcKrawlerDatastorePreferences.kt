@@ -3,6 +3,7 @@ package com.team2052.frckrawler.data.local.prefs
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -21,6 +22,9 @@ class FrcKrawlerDatastorePreferences @Inject constructor(
   companion object {
     private val LAST_EVENT_ID_KEY = intPreferencesKey("last_event_id")
     private val LAST_GAME_ID_KEY = intPreferencesKey("last_game_id")
+    private val EXPORT_INCLUDE_TEAM_NAMES = booleanPreferencesKey("export_include_team_names")
+    private val EXPORT_INCLUDE_MATCH_METRICS = booleanPreferencesKey("export_include_match_metrics")
+    private val EXPORT_INCLUDE_PIT_METRICS = booleanPreferencesKey("export_include_pit_metrics")
   }
 
   override val lastEventId: Flow<Int?> = context.dataStore.data
@@ -50,6 +54,33 @@ class FrcKrawlerDatastorePreferences @Inject constructor(
       } else {
         data[LAST_GAME_ID_KEY] = id
       }
+    }
+  }
+
+  override val exportIncludeTeamNames: Flow<Boolean> = context.dataStore.data
+    .map { data -> data[EXPORT_INCLUDE_TEAM_NAMES] ?: true }
+
+  override suspend fun setExportIncludeTeamNames(includeNames: Boolean) {
+    context.dataStore.edit { data ->
+      data[EXPORT_INCLUDE_TEAM_NAMES] = includeNames
+    }
+  }
+
+  override val exportIncludeMatchMetrics: Flow<Boolean> = context.dataStore.data
+  .map { data -> data[EXPORT_INCLUDE_MATCH_METRICS] ?: true }
+
+  override suspend fun setExportIncludeMatchMetrics(includeMatchMetrics: Boolean) {
+    context.dataStore.edit { data ->
+      data[EXPORT_INCLUDE_MATCH_METRICS] = includeMatchMetrics
+    }
+  }
+
+  override val exportIncludePitMetrics: Flow<Boolean> = context.dataStore.data
+    .map { data -> data[EXPORT_INCLUDE_PIT_METRICS] ?: true }
+
+  override suspend fun setExportIncludePitMetrics(includePitMetrics: Boolean) {
+    context.dataStore.edit { data ->
+      data[EXPORT_INCLUDE_PIT_METRICS] = includePitMetrics
     }
   }
 }
