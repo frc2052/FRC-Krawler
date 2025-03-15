@@ -1,5 +1,7 @@
 package com.team2052.frckrawler.ui.export
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.data.export.ExportType
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
@@ -47,6 +50,22 @@ fun ExportDataScreen(
 
   LaunchedEffect(gameId, eventId) {
     viewModel.loadGameAndEvent(gameId, eventId)
+  }
+
+  val createSummaryExportFileLauncher = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.CreateDocument("text/csv")
+  ) { uri ->
+    if (uri != null) {
+      viewModel.exportToFile(type = ExportType.Summary, uri)
+    }
+  }
+
+  val createRawExportFileLauncher = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.CreateDocument("text/csv")
+  ) { uri ->
+    if (uri != null) {
+      viewModel.exportToFile(type = ExportType.Raw, uri)
+    }
   }
 
   Scaffold(
@@ -67,8 +86,13 @@ fun ExportDataScreen(
     ExportScreenContent(
       game = viewModel.game,
       event = viewModel.event,
-      onExportSummary = {},
-      onExportRaw = {},
+      onExportClicked = { type ->
+        val fileName = "${viewModel.game?.name}-${viewModel.event?.name}-$type.csv"
+        when(type) {
+          ExportType.Summary -> createSummaryExportFileLauncher.launch(fileName)
+          ExportType.Raw -> createRawExportFileLauncher.launch(fileName)
+        }
+      },
       includeTeamNames = includeTeamNames,
       onIncludeTeamNamesChanged = viewModel::setIncludeTeamNames,
       includeMatchMetrics = includeMatchMetrics,
@@ -91,8 +115,7 @@ private fun ExportScreenContent(
   onIncludeMatchMetricsChanged: (Boolean) -> Unit,
   includePitMetrics: Boolean,
   onIncludePitMetricsChanged: (Boolean) -> Unit,
-  onExportSummary: () -> Unit,
-  onExportRaw: () -> Unit,
+  onExportClicked: (ExportType) -> Unit,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -118,12 +141,12 @@ private fun ExportScreenContent(
     ExportAction(
       title = stringResource(R.string.export_summary_label),
       description = stringResource(R.string.export_summary_description),
-      onClick = onExportSummary,
+      onClick = { onExportClicked(ExportType.Summary) },
     )
     ExportAction(
       title = stringResource(R.string.export_raw_label),
       description = stringResource(R.string.export_raw_description),
-      onClick = onExportRaw,
+      onClick = { onExportClicked(ExportType.Raw) },
     )
     HorizontalDivider()
     SectionHeader(stringResource(R.string.export_config_section_label))
@@ -223,8 +246,7 @@ private fun ExportScreenPreview() {
         onIncludeMatchMetricsChanged = {},
         includePitMetrics = true,
         onIncludePitMetricsChanged = {},
-        onExportSummary = {},
-        onExportRaw = {}
+        onExportClicked = {},
       )
     }
   }

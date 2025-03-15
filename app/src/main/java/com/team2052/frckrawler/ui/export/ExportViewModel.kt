@@ -1,10 +1,12 @@
 package com.team2052.frckrawler.ui.export
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team2052.frckrawler.data.export.ExportType
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.EventDao
 import com.team2052.frckrawler.data.local.Game
@@ -53,5 +55,9 @@ class ExportViewModel @Inject constructor(
     viewModelScope.launch {
       prefs.setExportIncludePitMetrics(includePitMetrics)
     }
+  }
+
+  fun exportToFile(type: ExportType, uri: Uri) {
+    println("type: $type, uri: $uri")
   }
 }
