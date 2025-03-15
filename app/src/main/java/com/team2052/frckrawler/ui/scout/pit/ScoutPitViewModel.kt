@@ -29,9 +29,17 @@ class ScoutPitViewModel @Inject constructor(
   private val _state = MutableStateFlow<ScoutPitScreenState?>(null)
   val state: StateFlow<ScoutPitScreenState?> = _state
 
-  override val metricData = currentTeam.filterNotNull().flatMapLatest { team ->
+  private val eventId: MutableStateFlow<Int?> = MutableStateFlow(null)
+
+  override val metricData = combine(
+    currentTeam.filterNotNull(),
+    eventId.filterNotNull(),
+  ) { team, eventId ->
+    Pair(team, eventId)
+  }.flatMapLatest { (team, eventId) ->
     metricDatumDao.getDatumForPitMetrics(
-      teamNumber = team.number
+      teamNumber = team.number,
+      eventId = eventId,
     )
   }.shareIn(
     scope = viewModelScope,
@@ -46,6 +54,7 @@ class ScoutPitViewModel @Inject constructor(
     eventId: Int,
   ) {
     setMetricSetId(metricSetId)
+    this.eventId.value = eventId
     loadTeamsForEvent(eventId)
 
     viewModelScope.launch {

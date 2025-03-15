@@ -21,15 +21,23 @@ interface MetricDatumDao {
   @Insert
   suspend fun insertAll(data: List<MetricDatum>)
 
-  @Query("SELECT * FROM metricdatum WHERE `group` = 'Match' AND groupNumber = :matchNumber AND teamNumber = :teamNumber")
+  @Query("SELECT * FROM metricdatum WHERE `group` = 'Match' AND eventId = :eventId")
+  suspend fun getEventPitData(eventId: Int): List<MetricDatum>
+
+  @Query("SELECT * FROM metricdatum WHERE `group` = 'Pit' AND eventId = :eventId")
+  suspend fun getEventMatchData(eventId: Int): List<MetricDatum>
+
+  @Query("SELECT * FROM metricdatum WHERE `group` = 'Match' AND groupNumber = :matchNumber AND teamNumber = :teamNumber AND eventId = :eventId")
   fun getTeamDatumForMatchMetrics(
     matchNumber: Int,
-    teamNumber: String
+    teamNumber: String,
+    eventId: Int,
   ): Flow<List<MetricDatum>>
 
-  @Query("SELECT * FROM metricdatum WHERE `group` = 'Pit' AND teamNumber = :teamNumber")
+  @Query("SELECT * FROM metricdatum WHERE `group` = 'Pit' AND teamNumber = :teamNumber AND eventId = :eventId")
   fun getDatumForPitMetrics(
-    teamNumber: String
+    teamNumber: String,
+    eventId: Int,
   ): Flow<List<MetricDatum>>
 
   @Query(

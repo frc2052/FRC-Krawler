@@ -32,16 +32,19 @@ class ScoutMatchViewModel @Inject constructor(
   val state: StateFlow<ScoutMatchScreenState?> = _state
 
   private val currentMatch = MutableStateFlow(1)
+  private val eventId: MutableStateFlow<Int?> = MutableStateFlow(null)
 
   override val metricData: SharedFlow<List<MetricDatum>> = combine(
     currentMatch,
-    currentTeam.filterNotNull()
-  ) { match, team ->
-    Pair(match, team)
-  }.flatMapLatest { (match, team) ->
+    currentTeam.filterNotNull(),
+    eventId.filterNotNull(),
+  ) { match, team, eventId ->
+    Triple(match, team, eventId)
+  }.flatMapLatest { (match, team, eventId) ->
     metricDatumDao.getTeamDatumForMatchMetrics(
       matchNumber = match,
-      teamNumber = team.number
+      teamNumber = team.number,
+      eventId
     )
   }.shareIn(
     scope = viewModelScope,
@@ -56,6 +59,7 @@ class ScoutMatchViewModel @Inject constructor(
     eventId: Int,
   ) {
     setMetricSetId(metricSetId)
+    this.eventId.value = eventId
     loadTeamsForEvent(eventId)
 
     viewModelScope.launch {
