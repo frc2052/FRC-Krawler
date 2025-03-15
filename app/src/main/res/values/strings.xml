@@ -195,6 +195,18 @@
     <string name="add_team_number_label">Team number</string>
     <string name="add_team_name_label">Team name</string>
 
+    <!--Export screens-->
+    <string name="export_screen_title">Export data</string>
+    <string name="export_section_label">Export</string>
+    <string name="export_summary_label">Export summary</string>
+    <string name="export_summary_description">Export data as a CSV with a summary of metrics for each team averaged and weighted</string>
+    <string name="export_raw_label">Export raw</string>
+    <string name="export_raw_description">Export all data as a CSV with raw data from each match and each scout</string>
+    <string name="export_config_section_label">Options</string>
+    <string name="export_include_names">Include team names</string>
+    <string name="export_include_match_metrics">Include match metrics</string>
+    <string name="export_include_pit_metrics">Include pit metrics</string>
+
     <!-- Permissions -->
     <string name="bluetooth_permission_rationale_title">Permissions required</string>
     <string name="bluetooth_permission_rationale_description_server">FRCKrawler requires bluetooth permissions to create a server. This will allow scouts to connect and sync data.</string>
