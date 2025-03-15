@@ -58,7 +58,7 @@
     <string name="mode_solo_scout_continue">START SCOUTING</string>
 
     <string name="mode_select_configure">Configure Games &amp; Metrics</string>
-    <string name="mode_select_configure_description">Set this device up to run a server or scout locally by configuring a new game, adding a new event, or creating metrics.</string>
+    <string name="mode_select_configure_description">Set this device up to run a server or scout locally by configuring games, events, and metrics.</string>
 
     <string name="mode_select_scout_match">Match</string>
     <string name="mode_select_scout_pit">Pit</string>

@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -191,7 +190,7 @@ fun CardHeader(
         }
         description?.let { description ->
           CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.bodyLarge
+            LocalTextStyle provides MaterialTheme.typography.bodyMedium
           ) { Row { description() } }
         }
       }
