@@ -4,33 +4,22 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Hardware
-import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -40,9 +29,9 @@ import com.team2052.frckrawler.data.local.MetricSet
 import com.team2052.frckrawler.data.model.DeviceType
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
+import com.team2052.frckrawler.ui.components.StartScoutingCard
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
-import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import com.team2052.frckrawler.ui.theme.spaceLarge
 
 @Composable
@@ -152,82 +141,5 @@ private fun ScoutHomeScreenContent(
       onClick = onStartPitScouting,
       enabled = hasPitMetrics,
     )
-  }
-}
-
-@Composable
-private fun StartScoutingCard(
-  icon: ImageVector,
-  label: String,
-  onClick: () -> Unit,
-  enabled: Boolean,
-  modifier: Modifier = Modifier,
-) {
-  Card(
-    modifier = modifier,
-    enabled = enabled,
-    onClick = onClick,
-  ) {
-    StartScoutingCardContent(
-      icon = icon,
-      label = label
-    )
-  }
-}
-
-@Composable
-private fun StartScoutingCardContent(
-  icon: ImageVector,
-  label: String,
-  modifier: Modifier = Modifier,
-) {
-  Row(
-    modifier = modifier
-      .fillMaxWidth()
-      .padding(16.dp),
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    Icon(
-      modifier = Modifier.size(36.dp),
-      imageVector = icon,
-      contentDescription = null
-    )
-
-    Spacer(Modifier.width(24.dp))
-
-    Text(
-      text = label,
-      style = MaterialTheme.typography.headlineSmall
-    )
-  }
-}
-
-@Preview
-@Composable
-private fun StartScoutingCardPreview() {
-  FrcKrawlerTheme {
-    Surface {
-      StartScoutingCard(
-        icon = Icons.Default.EmojiEvents,
-        label = "Start match scouting",
-        onClick = { /*TODO*/ },
-        enabled = true,
-      )
-    }
-  }
-}
-
-@Preview
-@Composable
-private fun StartScoutingCardDisabledPreview() {
-  FrcKrawlerTheme {
-    Surface {
-      StartScoutingCard(
-        icon = Icons.Default.EmojiEvents,
-        label = "Start match scouting",
-        onClick = { /*TODO*/ },
-        enabled = false,
-      )
-    }
   }
 }

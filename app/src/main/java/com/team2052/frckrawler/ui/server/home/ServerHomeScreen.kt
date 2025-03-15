@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Hardware
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +24,8 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
+import com.team2052.frckrawler.ui.components.StartScoutingCard
+import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.permissions.BluetoothPermissionRequestDialogs
 import com.team2052.frckrawler.ui.theme.spaceLarge
 
@@ -34,7 +39,6 @@ fun ServerHomeScreen(
   val viewModel: ServerHomeViewModel = hiltViewModel()
 
   Box {
-
     if (viewModel.showPermissionRequests) {
       BluetoothPermissionRequestDialogs(
         deviceType = DeviceType.Server,
@@ -92,6 +96,38 @@ fun ServerHomeScreen(
         ConnectedScoutsList(
           modifier = modifier,
           scouts = viewModel.connectedScouts
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        StartScoutingCard(
+          icon = Icons.Default.EmojiEvents,
+          label = stringResource(R.string.remote_scout_start_match_scouting),
+          onClick = {
+            navController.navigate(
+              Screen.MatchScout(
+                eventId = viewModel.event?.id,
+                metricSetId = viewModel.game?.matchMetricsSetId
+              ).route
+            )
+          },
+          enabled = viewModel.event != null && viewModel.game?.matchMetricsSetId != null,
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        StartScoutingCard(
+          icon = Icons.Default.Hardware,
+          label = stringResource(R.string.remote_scout_start_pit_scouting),
+          onClick = {
+            navController.navigate(
+              Screen.MatchScout(
+                eventId = viewModel.event?.id,
+                metricSetId = viewModel.game?.pitMetricsSetId
+              ).route
+            )
+          },
+          enabled = viewModel.event != null && viewModel.game?.pitMetricsSetId != null,
         )
       }
     }
