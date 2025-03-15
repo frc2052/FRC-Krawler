@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,7 +27,7 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 @Composable
 fun FRCKrawlerAppBar(
   modifier: Modifier = Modifier,
-  navController: NavController = rememberNavController(),
+  navController: NavController,
   navigation: @Composable () -> Unit = {
     DefaultNavigationButton(navController)
   },
@@ -77,6 +76,7 @@ private fun FRCKrawlerAppBarPreviewLight() {
   FrcKrawlerTheme {
     FRCKrawlerAppBar(
       title = { Text("preview") },
+      navController = rememberNavController(),
       actions = {
         IconButton(
           onClick = { }
