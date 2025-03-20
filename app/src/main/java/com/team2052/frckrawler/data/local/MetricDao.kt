@@ -40,6 +40,9 @@ interface MetricDao {
     }
   }
 
+  @Query("SELECT * FROM metric WHERE id = :id")
+  suspend fun getMetric(id: String): MetricRecord
+
   @Query("SELECT * FROM metric WHERE metricSetId = :metricSetId ORDER BY priority")
   fun getMetrics(metricSetId: Int): Flow<List<MetricRecord>>
 
