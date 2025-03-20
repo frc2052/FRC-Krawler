@@ -13,8 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -102,6 +106,10 @@ fun ExportDataScreen(
       modifier = Modifier.fillMaxSize(),
       contentPadding = contentPadding
     )
+
+    if (viewModel.isExporting) {
+      ExportingDialog()
+    }
   }
 }
 
@@ -187,8 +195,8 @@ private fun ExportAction(
 ) {
   Column(
     modifier = Modifier
-      .padding(horizontal = 16.dp, vertical = 8.dp)
       .clickable(onClick = onClick)
+      .padding(horizontal = 16.dp, vertical = 8.dp)
   ) {
     Text(
       text = title,
@@ -227,6 +235,28 @@ private fun ExportToggleOption(
   }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ExportingDialog() {
+  BasicAlertDialog(
+    onDismissRequest = {}
+  ) {
+    Surface {
+      Row(
+        modifier = Modifier.padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        CircularProgressIndicator()
+        Spacer(Modifier.width(16.dp))
+        Text(
+          text = stringResource(R.string.exporting_dialog_text),
+          style = MaterialTheme.typography.bodyMedium
+        )
+      }
+    }
+  }
+}
+
 @Preview
 @Composable
 private fun ExportScreenPreview() {
@@ -249,5 +279,13 @@ private fun ExportScreenPreview() {
         onExportClicked = {},
       )
     }
+  }
+}
+
+@Preview
+@Composable
+private fun ExportingDialogPreview() {
+  FrcKrawlerTheme {
+    ExportingDialog()
   }
 }

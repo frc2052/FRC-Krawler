@@ -1,21 +1,20 @@
 package com.team2052.frckrawler.data.export
 
+import android.content.Context
 import android.net.Uri
-import androidx.core.net.toFile
 import com.team2052.frckrawler.data.export.aggregator.MetricDataAggregator
 import com.team2052.frckrawler.data.export.aggregator.RawMetricDataAggregator
 import com.team2052.frckrawler.data.export.aggregator.SummaryMetricDataAggregator
 import com.team2052.frckrawler.data.export.converter.CsvRowConverter
 import com.team2052.frckrawler.data.export.converter.RawMetricsCsvRowConverter
 import com.team2052.frckrawler.data.export.converter.SummaryMetricsCsvRowConverter
-import com.team2052.frckrawler.data.local.EventDao
-import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.MetricDao
 import com.team2052.frckrawler.data.local.MetricDatum
 import com.team2052.frckrawler.data.local.MetricDatumDao
 import com.team2052.frckrawler.data.local.MetricRecord
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.local.prefs.FrcKrawlerPreferences
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -28,13 +27,12 @@ import javax.inject.Inject
 
 class OkioDataExporter @Inject constructor(
   private val metricDatumDao: MetricDatumDao,
-  private val eventDao: EventDao,
-  private val gameDao: GameDao,
   private val teamAtEventDao: TeamAtEventDao,
   private val metricDao: MetricDao,
   private val prefs: FrcKrawlerPreferences,
+  @ApplicationContext private val context: Context,
 ) : DataExporter {
-  override suspend fun export(fileUri: Uri, type: ExportType, gameId: Int, eventId: Int) {
+  override suspend fun export(fileUri: Uri, type: ExportType, eventId: Int) {
     withContext(Dispatchers.IO + CoroutineName("OkioDataExporter")) {
       val includeTeamNames = prefs.exportIncludeTeamNames.first()
       val includeMatchMetrics = prefs.exportIncludeMatchMetrics.first()
@@ -55,8 +53,9 @@ class OkioDataExporter @Inject constructor(
       val metrics = metricsAsync.await()
       val teams = teamsAsync.await()
 
-      val file = fileUri.toFile()
-      val writer = file.sink().buffer()
+      // TODO return error
+      val sink = context.contentResolver.openOutputStream(fileUri)?.sink() ?: return@withContext
+      val writer = sink.buffer()
 
       when (type) {
         ExportType.Summary -> {
@@ -72,6 +71,7 @@ class OkioDataExporter @Inject constructor(
       }
 
       writer.close()
+      sink.close()
     }
   }
 

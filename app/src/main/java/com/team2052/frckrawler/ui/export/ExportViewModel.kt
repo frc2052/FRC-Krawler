@@ -1,11 +1,13 @@
 package com.team2052.frckrawler.ui.export
 
+import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team2052.frckrawler.data.export.DataExporter
 import com.team2052.frckrawler.data.export.ExportType
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.EventDao
@@ -13,6 +15,7 @@ import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.prefs.FrcKrawlerPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,7 +25,10 @@ class ExportViewModel @Inject constructor(
   private val gameDao: GameDao,
   private val eventDao: EventDao,
   private val prefs: FrcKrawlerPreferences,
+  private val exporter: DataExporter,
+  @ApplicationContext private val context: Context,
 ) : ViewModel() {
+  var isExporting: Boolean by mutableStateOf(false)
   var game: Game? by mutableStateOf(null)
   var event: Event? by mutableStateOf(null)
   val includeTeamNames: Flow<Boolean> = prefs.exportIncludeTeamNames
@@ -58,6 +64,15 @@ class ExportViewModel @Inject constructor(
   }
 
   fun exportToFile(type: ExportType, uri: Uri) {
-    println("type: $type, uri: $uri")
+    val eventId = event?.id ?: return
+    viewModelScope.launch {
+      isExporting = true
+      exporter.export(
+        fileUri = uri,
+        type = type,
+        eventId = eventId
+      )
+      isExporting = false
+    }
   }
 }
