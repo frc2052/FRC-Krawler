@@ -13,7 +13,7 @@ class FullStringMetricSummarizerTest {
       generateMetricDatum("Didn't move", groupNumber = 1)
     )
     val result = FullStringMetricSummarizer.summarize(data)
-    val expected = "\"1: Didn't move\""
+    val expected = "1: Didn't move"
     assertEquals(expected, result)
   }
 
@@ -24,7 +24,7 @@ class FullStringMetricSummarizerTest {
       generateMetricDatum("Got a red card", groupNumber = 27)
     )
     val result = FullStringMetricSummarizer.summarize(data)
-    val expected = "\"1: Didn't move\n27: Got a red card\""
+    val expected = "1: Didn't move\n27: Got a red card"
     assertEquals(expected, result)
   }
 
@@ -35,7 +35,7 @@ class FullStringMetricSummarizerTest {
       generateMetricDatum(value = "", groupNumber = 27)
     )
     val result = FullStringMetricSummarizer.summarize(data)
-    val expected = "\"\""
+    val expected = ""
     assertEquals(expected, result)
   }
 
@@ -47,7 +47,7 @@ class FullStringMetricSummarizerTest {
       generateMetricDatum(value = "Got a red card", groupNumber = 27)
     )
     val result = FullStringMetricSummarizer.summarize(data)
-    val expected = "\"1: Didn't move\n27: Got a red card\""
+    val expected = "1: Didn't move\n27: Got a red card"
     assertEquals(expected, result)
   }
 
@@ -55,7 +55,7 @@ class FullStringMetricSummarizerTest {
   fun `summarize with empty data`() {
     val data = emptyList<MetricDatum>()
     val result = FullStringMetricSummarizer.summarize(data)
-    val expected = "\"\""
+    val expected = ""
     assertEquals(expected, result)
   }
 }

@@ -2,6 +2,9 @@ package com.team2052.frckrawler.data.export.converter
 
 import com.team2052.frckrawler.data.local.MetricRecord
 
+/**
+ * Convert metrics & data to CSV rows (as a string)
+ */
 interface CsvRowConverter<T> {
   /**
    * Get the header for the CSV export

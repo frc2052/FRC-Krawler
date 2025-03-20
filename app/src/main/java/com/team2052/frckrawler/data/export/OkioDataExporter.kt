@@ -40,9 +40,9 @@ class OkioDataExporter @Inject constructor(
 
       val data = getMetricData(includeMatchMetrics, includePitMetrics, eventId)
       val metricsAsync = async {
-        data.map {
-          metricDao.getMetric(it.metricId)
-        }
+        data.map { it.metricId }
+          .distinct()
+          .map { metricDao.getMetric(it) }
       }
       val teamsAsync = async {
         teamAtEventDao.getAllTeams(eventId)

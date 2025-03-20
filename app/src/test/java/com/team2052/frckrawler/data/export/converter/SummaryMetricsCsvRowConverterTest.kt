@@ -37,7 +37,7 @@ class SummaryMetricsCsvRowConverterTest {
       data = listOf("60", "Yes")
     )
     val converter = SummaryMetricsCsvRowConverter(includeTeamNames = false)
-    val expectedRow = "\"2052\",\"60\",\"Yes\""
+    val expectedRow = "\"2052\",\"60\",\"Yes\"\n"
     assertEquals(expectedRow, converter.getDataRow(csvDataRow))
   }
 
@@ -48,7 +48,7 @@ class SummaryMetricsCsvRowConverterTest {
       data = listOf("60", "Yes")
     )
     val converter = SummaryMetricsCsvRowConverter(includeTeamNames = true)
-    val expectedRow = "\"2052\",\"KnightKrawler\",\"60\",\"Yes\""
+    val expectedRow = "\"2052\",\"KnightKrawler\",\"60\",\"Yes\"\n"
     assertEquals(expectedRow, converter.getDataRow(csvDataRow))
   }
 
@@ -59,7 +59,7 @@ class SummaryMetricsCsvRowConverterTest {
       data = listOf("Blue")
     )
     val converter = SummaryMetricsCsvRowConverter(includeTeamNames = false)
-    val expectedRow = "\"2052\",\"Blue\""
+    val expectedRow = "\"2052\",\"Blue\"\n"
     assertEquals(expectedRow, converter.getDataRow(csvDataRow))
   }
 
@@ -70,7 +70,7 @@ class SummaryMetricsCsvRowConverterTest {
       data = listOf("Blue")
     )
     val converter = SummaryMetricsCsvRowConverter(includeTeamNames = true)
-    val expectedRow = "\"2052\",\"KnightKrawler\",\"Blue\""
+    val expectedRow = "\"2052\",\"KnightKrawler\",\"Blue\"\n"
     assertEquals(expectedRow, converter.getDataRow(csvDataRow))
   }
 
@@ -81,7 +81,7 @@ class SummaryMetricsCsvRowConverterTest {
       data = listOf(null)
     )
     val converter = SummaryMetricsCsvRowConverter(includeTeamNames = true)
-    val expectedRow = "\"2052\",\"KnightKrawler\","
+    val expectedRow = "\"2052\",\"KnightKrawler\",\n"
     assertEquals(expectedRow, converter.getDataRow(csvDataRow))
   }
 }

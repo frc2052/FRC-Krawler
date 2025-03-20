@@ -16,9 +16,7 @@ object FullStringMetricSummarizer: MetricSummarizer {
   override fun summarize(data: List<MetricDatum>): String {
     return data.filter { it.value.isNotEmpty() }
       .joinToString(
-      prefix = "\"",
       separator = "\n",
-      postfix = "\"",
       transform = { "${it.groupNumber}: ${it.value}" }
     )
   }

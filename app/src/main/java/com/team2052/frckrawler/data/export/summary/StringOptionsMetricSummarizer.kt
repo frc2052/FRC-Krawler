@@ -33,10 +33,6 @@ object StringOptionsMetricSummarizer: MetricSummarizer {
     }
     return percentageByOption.map { (option, percentage) ->
       "$option - $percentage%"
-    }.joinToString(
-      prefix = "\"",
-      separator = "\n",
-      postfix = "\""
-    )
+    }.joinToString(separator = "\n")
   }
 }

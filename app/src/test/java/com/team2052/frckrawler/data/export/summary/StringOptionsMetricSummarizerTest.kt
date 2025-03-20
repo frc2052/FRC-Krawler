@@ -16,7 +16,7 @@ class StringOptionsMetricSummarizerTest {
       generateMetricDatum("Option 1"),
     )
     val result = StringOptionsMetricSummarizer.summarize(data)
-    val expected = "\"Option 1 - 75.0%\nOption 2 - 25.0%\""
+    val expected = "Option 1 - 75.0%\nOption 2 - 25.0%"
     assertEquals(expected, result)
   }
 
@@ -39,7 +39,7 @@ class StringOptionsMetricSummarizerTest {
       generateMetricDatum("Option 2")
     )
     val result = StringOptionsMetricSummarizer.summarize(data)
-    val expected = "\"Option 1 - 50.0%\nOption 2 - 50.0%\""
+    val expected = "Option 1 - 50.0%\nOption 2 - 50.0%"
     assertEquals(expected, result)
   }
 
@@ -49,7 +49,7 @@ class StringOptionsMetricSummarizerTest {
       generateMetricDatum("Option 1"),
     )
     val result = StringOptionsMetricSummarizer.summarize(data)
-    val expected = "\"Option 1 - 100.0%\""
+    val expected = "Option 1 - 100.0%"
     assertEquals(expected, result)
   }
 

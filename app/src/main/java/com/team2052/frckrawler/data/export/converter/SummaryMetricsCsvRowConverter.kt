@@ -29,6 +29,6 @@ class SummaryMetricsCsvRowConverter(
 
     values += csvDataRow.data.map { it?.let { "\"$it\"" } ?: "" }
 
-    return values.joinToString(",")
+    return values.joinToString(",", postfix = "\n")
   }
 }

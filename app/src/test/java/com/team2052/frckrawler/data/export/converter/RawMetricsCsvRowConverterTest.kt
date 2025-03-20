@@ -44,7 +44,7 @@ class RawMetricsCsvRowConverterTest {
       )
     )
     val converter = RawMetricsCsvRowConverter(includeTeamNames = false)
-    val expectedRow = "\"2052\",\"Match\",\"1\",\"60\",\"Yes\""
+    val expectedRow = "\"2052\",\"Match\",\"1\",\"60\",\"Yes\"\n"
     assertEquals(expectedRow, converter.getDataRow(csvDataRow))
   }
 
@@ -60,7 +60,7 @@ class RawMetricsCsvRowConverterTest {
       )
     )
     val converter = RawMetricsCsvRowConverter(includeTeamNames = true)
-    val expectedRow = "\"2052\",\"KnightKrawler\",\"Match\",\"1\",\"60\",\"Yes\""
+    val expectedRow = "\"2052\",\"KnightKrawler\",\"Match\",\"1\",\"60\",\"Yes\"\n"
     assertEquals(expectedRow, converter.getDataRow(csvDataRow))
   }
 
@@ -75,7 +75,7 @@ class RawMetricsCsvRowConverterTest {
       )
     )
     val converter = RawMetricsCsvRowConverter(includeTeamNames = false)
-    val expectedRow = "\"2052\",\"Pit\",\"0\",\"Blue\""
+    val expectedRow = "\"2052\",\"Pit\",\"0\",\"Blue\"\n"
     assertEquals(expectedRow, converter.getDataRow(csvDataRow))
   }
 
@@ -90,7 +90,7 @@ class RawMetricsCsvRowConverterTest {
       )
     )
     val converter = RawMetricsCsvRowConverter(includeTeamNames = true)
-    val expectedRow = "\"2052\",\"KnightKrawler\",\"Pit\",\"0\",\"Blue\""
+    val expectedRow = "\"2052\",\"KnightKrawler\",\"Pit\",\"0\",\"Blue\"\n"
     assertEquals(expectedRow, converter.getDataRow(csvDataRow))
   }
 
@@ -105,7 +105,7 @@ class RawMetricsCsvRowConverterTest {
       )
     )
     val converter = RawMetricsCsvRowConverter(includeTeamNames = true)
-    val expectedRow = "\"2052\",\"KnightKrawler\",\"Pit\",\"0\","
+    val expectedRow = "\"2052\",\"KnightKrawler\",\"Pit\",\"0\",\n"
     assertEquals(expectedRow, converter.getDataRow(csvDataRow))
   }
 }

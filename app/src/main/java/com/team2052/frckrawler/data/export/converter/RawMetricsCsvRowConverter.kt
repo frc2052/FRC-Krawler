@@ -39,6 +39,6 @@ class RawMetricsCsvRowConverter(
       data?.let { "\"${it.value}\"" } ?: ""
     }
 
-    return values.joinToString(",")
+    return values.joinToString(",", postfix = "\n")
   }
 }
