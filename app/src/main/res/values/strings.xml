@@ -202,6 +202,10 @@
     <!--Analyze screens-->
     <string name="analyze_screen_title">Analyze data</string>
     <string name="analyze_export_label">Export data</string>
+    <string name="sort_label">Sort by:</string>
+    <string name="sort_ascending">Asc.</string>
+    <string name="sort_descending">Desc.</string>
+    <string name="filter_selected_decription">selected</string>
 
     <!--Export screens-->
     <string name="export_screen_title">Export data</string>
