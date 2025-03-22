@@ -314,7 +314,7 @@ private fun MetricListContent(
         key = metric.id
       ) { isDragging ->
         val elevation by animateDpAsState(
-          targetValue = if (isDragging) 4.dp else 1.dp,
+          targetValue = if (isDragging) 4.dp else 0.dp,
           label = "drag elevation"
         )
         Surface(
