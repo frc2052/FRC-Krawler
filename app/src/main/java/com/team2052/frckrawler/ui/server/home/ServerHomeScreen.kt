@@ -55,7 +55,7 @@ fun ServerHomeScreen(
       )
     }
 
-    LaunchedEffect(true) {
+    LaunchedEffect(gameId, eventId) {
       viewModel.loadGameAndEvent(gameId, eventId)
     }
 

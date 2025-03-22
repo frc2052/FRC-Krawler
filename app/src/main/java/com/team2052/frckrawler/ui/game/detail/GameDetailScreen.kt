@@ -81,7 +81,7 @@ fun GameDetailScreen(
     state.game.name
   } else ""
 
-  LaunchedEffect(true) {
+  LaunchedEffect(gameId) {
     viewModel.loadGame(gameId)
   }
 

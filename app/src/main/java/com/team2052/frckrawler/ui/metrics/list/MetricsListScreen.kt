@@ -90,7 +90,7 @@ fun MetricsListScreen(
   var sheetMode: AddEditMetricMode by remember { mutableStateOf(AddEditMetricMode.New()) }
   var showDeleteConfirmation by remember { mutableStateOf(false) }
 
-  LaunchedEffect(true) {
+  LaunchedEffect(metricSetId) {
     viewModel.loadMetrics(metricSetId)
   }
 

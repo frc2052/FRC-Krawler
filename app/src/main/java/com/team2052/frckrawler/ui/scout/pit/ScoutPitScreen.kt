@@ -42,7 +42,7 @@ fun ScoutPitScreen(
 ) {
   val viewModel: ScoutPitViewModel = hiltViewModel()
 
-  LaunchedEffect(true) {
+  LaunchedEffect(metricSetId, eventId) {
     viewModel.loadMetricsAndTeams(
       metricSetId = metricSetId,
       eventId = eventId
