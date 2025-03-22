@@ -10,18 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -44,6 +37,7 @@ import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
+import com.team2052.frckrawler.ui.components.fields.UnlabeledDropdown
 import com.team2052.frckrawler.ui.metrics.MetricInput
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
@@ -245,44 +239,13 @@ private fun MetricTypeSelector(
 
     Spacer(Modifier.width(12.dp))
 
-    var expanded by remember { mutableStateOf(false) }
-    ExposedDropdownMenuBox(
+    UnlabeledDropdown(
       modifier = Modifier.alignByBaseline(),
-      expanded = expanded,
-      onExpandedChange = {
-        expanded = !expanded
-      }
-    ) {
-      OutlinedButton(
-        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
-          .padding(8.dp),
-        onClick = { expanded = true },
-      ) {
-        val buttonText = metricType.name
-        Text(buttonText)
-        Icon(
-          modifier = Modifier.padding(start = 8.dp),
-          imageVector = Icons.Default.KeyboardArrowDown,
-          contentDescription = null
-        )
-      }
-      ExposedDropdownMenu(
-        expanded = expanded,
-        onDismissRequest = {
-          expanded = false
-        }
-      ) {
-        MetricType.entries.forEach { type ->
-          DropdownMenuItem(
-            text = { Text(type.name) },
-            onClick = {
-              expanded = false
-              onMetricTypeSelected(type)
-            }
-          )
-        }
-      }
-    }
+      value = metricType,
+      onValueChange = onMetricTypeSelected,
+      getValueLabel = { type -> type.name },
+      dropdownItems = MetricType.entries
+    )
   }
 }
 
