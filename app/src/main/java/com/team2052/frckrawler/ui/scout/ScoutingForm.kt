@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
@@ -23,7 +24,9 @@ fun ScoutingForm(
   contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
   LazyColumn(
-    modifier = modifier.consumeWindowInsets(contentPadding),
+    modifier = modifier
+      .imePadding()
+      .consumeWindowInsets(contentPadding),
     contentPadding = contentPadding,
   ) {
     item {
