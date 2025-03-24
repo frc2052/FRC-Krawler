@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.ui.analyze
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -29,6 +30,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -166,6 +168,7 @@ private fun AnalyzeDataHeader(
   }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun AnalyzeFilterOptions(
   modifier: Modifier = Modifier,
@@ -182,6 +185,7 @@ private fun AnalyzeFilterOptions(
     )
     OutlinedButton(
       modifier = Modifier.alignByBaseline()
+        .weight(1f, fill = false)
         .padding(8.dp),
       onClick = onFilterClick,
     ) {
@@ -190,7 +194,12 @@ private fun AnalyzeFilterOptions(
       } else {
         state.selectedMetric.name
       }
-      Text(filterLabel)
+      Text(
+        modifier = Modifier.weight(1f, fill = false),
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1,
+        text = filterLabel
+      )
       Icon(
         modifier = Modifier.padding(start = 8.dp),
         imageVector = Icons.Default.KeyboardArrowDown,
