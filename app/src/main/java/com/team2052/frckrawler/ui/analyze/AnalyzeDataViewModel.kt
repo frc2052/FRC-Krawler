@@ -101,8 +101,14 @@ class AnalyzeDataViewModel @Inject constructor(
       )
     }
 
-    teamSummaries.sortedBy {
-      it.sortValue(filterState.sortMode, filterState.selectedMetricOption)
+    return@combine when (filterState.sortMode) {
+      AnalyzeSortMode.Ascending -> teamSummaries.sortedBy {
+        it.sortValue(filterState.sortMode, filterState.selectedMetricOption)
+      }
+
+      AnalyzeSortMode.Descending -> teamSummaries.sortedByDescending {
+        it.sortValue(filterState.sortMode, filterState.selectedMetricOption)
+      }
     }
   }
 

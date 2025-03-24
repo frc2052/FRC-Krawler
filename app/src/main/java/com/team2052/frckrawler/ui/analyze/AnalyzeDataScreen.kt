@@ -1,18 +1,24 @@
 package com.team2052.frckrawler.ui.analyze
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,13 +37,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.data.summary.DoubleSummaryValue
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.fields.UnlabeledDropdown
 import com.team2052.frckrawler.ui.navigation.Screen
@@ -123,7 +136,11 @@ private fun AnalyzeScreenContent(
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
-  Column(modifier = modifier.padding(contentPadding)) {
+  Column(modifier = modifier.padding(
+    top = contentPadding.calculateTopPadding(),
+  ).consumeWindowInsets(
+    PaddingValues(top = contentPadding.calculateTopPadding())
+  )) {
     AnalyzeDataHeader(
       modifier = Modifier.fillMaxWidth(),
       onSortSelected = onSortSelected,
@@ -131,12 +148,34 @@ private fun AnalyzeScreenContent(
       state = state,
     )
 
+
+    val listState = rememberLazyListState()
+    // Keep current scroll position when reordering items
+    SideEffect {
+      listState.requestScrollToItem(
+        index = listState.firstVisibleItemIndex,
+        scrollOffset = listState.firstVisibleItemScrollOffset
+      )
+    }
+
     LazyColumn(
-      modifier = modifier
-        .padding(contentPadding)
-        .consumeWindowInsets(contentPadding)
+      modifier = Modifier
+        .padding(bottom = contentPadding.calculateBottomPadding())
+        .consumeWindowInsets(
+          PaddingValues(bottom = contentPadding.calculateBottomPadding())
+        ),
+      state = listState
     ) {
-      item {
+
+      items(
+        items = state.teamData,
+        key = { it.team.number }
+      ) { teamData ->
+        TeamDataRow(
+          data = teamData,
+          modifier = Modifier.fillMaxWidth()
+        )
+        HorizontalDivider()
       }
     }
   }
@@ -224,6 +263,32 @@ private fun AnalyzeFilterOptions(
   }
 }
 
+@Composable
+private fun TeamDataRow(
+  data: TeamMetricData,
+  modifier: Modifier = Modifier,
+) {
+  Row(
+    modifier = modifier.padding(vertical = 12.dp, horizontal = 16.dp),
+    horizontalArrangement = Arrangement.SpaceBetween,
+  ) {
+    val teamNameNumber = buildAnnotatedString {
+      append(data.team.name)
+      append(" - ")
+      withStyle(SpanStyle(fontWeight = FontWeight.Medium)) {
+        append(data.team.number)
+      }
+    }
+    Text(
+      modifier = Modifier.weight(weight = 1f, fill = false),
+      text = teamNameNumber,
+      style = MaterialTheme.typography.titleLarge
+    )
+    Spacer(Modifier.width(16.dp))
+    Text(data.summary.asDisplayString())
+  }
+}
+
 @Preview
 @Composable
 private fun AnalyzeScreenPreview() {
@@ -233,10 +298,20 @@ private fun AnalyzeScreenPreview() {
     priority = 0,
     enabled = true
   )
+  val teamData = listOf(
+    TeamMetricData(
+      team = TeamAtEvent(
+        number = "2052",
+        name = "KnightKrawler",
+        eventId = 0
+      ),
+      summary = DoubleSummaryValue(100.0, true)
+    )
+  )
   val state = AnalyzeDataScreenState.Content(
     gameName = "Reefscape",
     eventName = "Northern Lights",
-    teamData = emptyList(),
+    teamData = teamData,
     filterState = SortFilterState(
       availableMetrics = listOf(metric),
       selectedMetric = metric,

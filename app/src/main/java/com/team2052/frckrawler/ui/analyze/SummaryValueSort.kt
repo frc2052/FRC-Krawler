@@ -15,7 +15,8 @@ import com.team2052.frckrawler.data.summary.RawStringListSummaryValue
 fun TeamMetricData.sortValue(mode: AnalyzeSortMode, option: String?): Double {
   return when (this.summary) {
     // Empty values should always be last, adjust for sort mode
-    is EmptySummaryValue -> if (mode == AnalyzeSortMode.Ascending) Double.MAX_VALUE else Double.MIN_VALUE
+    // Fun fact - Double.MIN_VALUE is positive, so we want negative Double.MAX_VALUE
+    is EmptySummaryValue -> if (mode == AnalyzeSortMode.Ascending) Double.MAX_VALUE else -Double.MAX_VALUE
 
     // Find the correct option for the sort and use that value
     is OptionPercentageSummaryValue -> {

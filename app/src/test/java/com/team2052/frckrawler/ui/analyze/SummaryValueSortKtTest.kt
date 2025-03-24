@@ -38,11 +38,32 @@ class SummaryValueSortKtTest {
       TeamMetricData(team2, DoubleSummaryValue(1.0, isPercent = false)),
       TeamMetricData(team3, DoubleSummaryValue(2.0, isPercent = false)),
     )
+
     val sorted = data.sortedByDescending { it.sortValue(AnalyzeSortMode.Descending, null) }
 
     val expected = listOf(
       TeamMetricData(team3, DoubleSummaryValue(2.0, isPercent = false)),
       TeamMetricData(team2, DoubleSummaryValue(1.0, isPercent = false)),
+      TeamMetricData(team1, EmptySummaryValue),
+    )
+    assertEquals(expected, sorted)
+  }
+
+  @Test
+  fun `empty value desc below 0`() {
+    val data = listOf(
+      TeamMetricData(team1, EmptySummaryValue),
+      TeamMetricData(team2, DoubleSummaryValue(0.0, isPercent = false)),
+      TeamMetricData(team3, DoubleSummaryValue(2.0, isPercent = false)),
+    )
+    val mapped = data.map { it.sortValue(AnalyzeSortMode.Descending, null) }
+    System.err.println(mapped)
+    System.err.println(mapped.sorted())
+    val sorted = data.sortedByDescending { it.sortValue(AnalyzeSortMode.Descending, null) }
+
+    val expected = listOf(
+      TeamMetricData(team3, DoubleSummaryValue(2.0, isPercent = false)),
+      TeamMetricData(team2, DoubleSummaryValue(0.0, isPercent = false)),
       TeamMetricData(team1, EmptySummaryValue),
     )
     assertEquals(expected, sorted)
