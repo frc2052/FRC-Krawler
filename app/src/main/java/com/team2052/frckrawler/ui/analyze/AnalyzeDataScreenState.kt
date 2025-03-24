@@ -2,6 +2,7 @@ package com.team2052.frckrawler.ui.analyze
 
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.data.summary.SummaryValue
 
 sealed class AnalyzeDataScreenState{
   data class Content(
@@ -22,7 +23,7 @@ data class SortFilterState(
 
 data class TeamMetricData(
   val team: TeamAtEvent,
-  val data: String,
+  val summary: SummaryValue,
 )
 
 enum class AnalyzeSortMode {

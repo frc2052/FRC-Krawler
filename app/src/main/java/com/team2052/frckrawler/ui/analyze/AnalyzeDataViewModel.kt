@@ -4,9 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.data.local.EventDao
 import com.team2052.frckrawler.data.local.GameDao
+import com.team2052.frckrawler.data.local.MetricDatum
 import com.team2052.frckrawler.data.local.MetricDatumDao
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.data.summary.BooleanMetricSummarizer
+import com.team2052.frckrawler.data.summary.FullStringMetricSummarizer
+import com.team2052.frckrawler.data.summary.NumericMetricSummarizer
+import com.team2052.frckrawler.data.summary.StringOptionsMetricSummarizer
+import com.team2052.frckrawler.data.summary.SummaryValue
 import com.team2052.frckrawler.repository.MetricRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -83,29 +89,30 @@ class AnalyzeDataViewModel @Inject constructor(
   private val teamData: Flow<List<TeamMetricData>> = combine(
     teams, eventData, filterState,
   ) { teams, data, filterState ->
-    teams.map { team ->
-      val teamDataForMetric = data.filter {
+    val teamSummaries = teams.map { team ->
+      val teamMetricData = data.filter {
         it.teamNumber == team.number && it.metricId == filterState.selectedMetric.id
       }
-
-      // TODO summarize
-      // TODO sort
-      val value = teamDataForMetric.firstOrNull()?.value ?: "N/A"
+      val summary = getSummaryValue(filterState.selectedMetric, teamMetricData)
 
       TeamMetricData(
         team = team,
-        data = value,
+        summary = summary,
       )
+    }
+
+    teamSummaries.sortedBy {
+      it.sortValue(filterState.sortMode, filterState.selectedMetricOption)
     }
   }
 
   val state: StateFlow<AnalyzeDataScreenState> = combine(
-    game, event, filterState
-  ) { game, event, filterState ->
+    game, event, filterState, teamData,
+  ) { game, event, filterState, teamData ->
     AnalyzeDataScreenState.Content(
       gameName = game.name,
       eventName = event.name,
-      teamData = emptyList(),
+      teamData = teamData,
       filterState = filterState,
     )
   }.stateIn(
@@ -138,5 +145,21 @@ class AnalyzeDataViewModel @Inject constructor(
     viewModelScope.launch {
       selectedMetricOption.value = option
     }
+  }
+
+  private fun getSummaryValue(
+    metric: Metric,
+    data: List<MetricDatum>,
+  ): SummaryValue {
+    val summarizer = when (metric) {
+      is Metric.BooleanMetric -> BooleanMetricSummarizer
+      is Metric.CounterMetric -> NumericMetricSummarizer
+      is Metric.SliderMetric -> NumericMetricSummarizer
+      is Metric.ChooserMetric -> StringOptionsMetricSummarizer
+      is Metric.CheckboxMetric -> StringOptionsMetricSummarizer
+      is Metric.StopwatchMetric -> StringOptionsMetricSummarizer
+      is Metric.TextFieldMetric -> FullStringMetricSummarizer
+    }
+    return summarizer.summarize(data)
   }
 }
