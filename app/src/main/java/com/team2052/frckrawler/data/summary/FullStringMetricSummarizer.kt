@@ -13,11 +13,10 @@ import com.team2052.frckrawler.data.local.MetricDatum
  * ```
  */
 object FullStringMetricSummarizer: MetricSummarizer {
-  override fun summarize(data: List<MetricDatum>): String {
-    return data.filter { it.value.isNotEmpty() }
-      .joinToString(
-      separator = "\n",
-      transform = { "${it.groupNumber}: ${it.value}" }
-    )
+  override fun summarize(data: List<MetricDatum>): SummaryValue {
+    val stringValues =  data.filter { it.value.isNotEmpty() }
+      .map { "${it.groupNumber}: ${it.value}" }
+    if (stringValues.isEmpty()) return EmptySummaryValue
+    return RawStringListSummaryValue(stringValues)
   }
 }

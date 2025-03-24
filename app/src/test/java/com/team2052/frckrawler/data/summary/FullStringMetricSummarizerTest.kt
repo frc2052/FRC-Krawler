@@ -2,7 +2,6 @@ package com.team2052.frckrawler.data.summary
 
 import com.team2052.frckrawler.data.export.generateMetricDatum
 import com.team2052.frckrawler.data.local.MetricDatum
-import com.team2052.frckrawler.data.summary.FullStringMetricSummarizer
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -14,8 +13,8 @@ class FullStringMetricSummarizerTest {
       generateMetricDatum("Didn't move", groupNumber = 1)
     )
     val result = FullStringMetricSummarizer.summarize(data)
-    val expected = "1: Didn't move"
-    assertEquals(expected, result)
+    val expected = listOf("1: Didn't move")
+    assertEquals(RawStringListSummaryValue(expected), result)
   }
 
   @Test
@@ -25,8 +24,8 @@ class FullStringMetricSummarizerTest {
       generateMetricDatum("Got a red card", groupNumber = 27)
     )
     val result = FullStringMetricSummarizer.summarize(data)
-    val expected = "1: Didn't move\n27: Got a red card"
-    assertEquals(expected, result)
+    val expected = listOf("1: Didn't move", "27: Got a red card")
+    assertEquals(RawStringListSummaryValue(expected), result)
   }
 
   @Test
@@ -36,8 +35,7 @@ class FullStringMetricSummarizerTest {
       generateMetricDatum(value = "", groupNumber = 27)
     )
     val result = FullStringMetricSummarizer.summarize(data)
-    val expected = ""
-    assertEquals(expected, result)
+    assertEquals(EmptySummaryValue, result)
   }
 
   @Test
@@ -48,15 +46,14 @@ class FullStringMetricSummarizerTest {
       generateMetricDatum(value = "Got a red card", groupNumber = 27)
     )
     val result = FullStringMetricSummarizer.summarize(data)
-    val expected = "1: Didn't move\n27: Got a red card"
-    assertEquals(expected, result)
+    val expected = listOf("1: Didn't move", "27: Got a red card")
+    assertEquals(RawStringListSummaryValue(expected), result)
   }
 
   @Test
   fun `summarize with empty data`() {
     val data = emptyList<MetricDatum>()
     val result = FullStringMetricSummarizer.summarize(data)
-    val expected = ""
-    assertEquals(expected, result)
+    assertEquals(EmptySummaryValue, result)
   }
 }

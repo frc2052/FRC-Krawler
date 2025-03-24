@@ -16,8 +16,11 @@ class StringOptionsMetricSummarizerTest {
       generateMetricDatum("Option 1"),
     )
     val result = StringOptionsMetricSummarizer.summarize(data)
-    val expected = "Option 1 - 75.0%\nOption 2 - 25.0%"
-    assertEquals(expected, result)
+    val expected = mapOf(
+      "Option 1" to 75.0,
+      "Option 2" to 25.0
+    )
+    assertEquals(OptionPercentageSummaryValue(expected), result)
   }
 
   @Test
@@ -27,8 +30,7 @@ class StringOptionsMetricSummarizerTest {
       generateMetricDatum("")
     )
     val result = StringOptionsMetricSummarizer.summarize(data)
-    val expected = ""
-    assertEquals(expected, result)
+    assertEquals(EmptySummaryValue, result)
   }
 
   @Test
@@ -39,8 +41,11 @@ class StringOptionsMetricSummarizerTest {
       generateMetricDatum("Option 2")
     )
     val result = StringOptionsMetricSummarizer.summarize(data)
-    val expected = "Option 1 - 50.0%\nOption 2 - 50.0%"
-    assertEquals(expected, result)
+    val expected = mapOf(
+      "Option 1" to 50.0,
+      "Option 2" to 50.0
+    )
+    assertEquals(OptionPercentageSummaryValue(expected), result)
   }
 
   @Test
@@ -49,16 +54,17 @@ class StringOptionsMetricSummarizerTest {
       generateMetricDatum("Option 1"),
     )
     val result = StringOptionsMetricSummarizer.summarize(data)
-    val expected = "Option 1 - 100.0%"
-    assertEquals(expected, result)
+    val expected = mapOf(
+      "Option 1" to 100.0
+    )
+    assertEquals(OptionPercentageSummaryValue(expected), result)
   }
 
   @Test
   fun `summarize with empty data`() {
     val data = emptyList<MetricDatum>()
     val result = StringOptionsMetricSummarizer.summarize(data)
-    val expected = ""
-    assertEquals(expected, result)
+    assertEquals(EmptySummaryValue, result)
   }
 
 }

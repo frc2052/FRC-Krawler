@@ -6,12 +6,13 @@ import com.team2052.frckrawler.data.local.MetricDatum
  * Summarizes boolean metrics as an average of "true" values
  */
 object BooleanMetricSummarizer: MetricSummarizer {
-  override fun summarize(data: List<MetricDatum>): String {
+  override fun summarize(data: List<MetricDatum>): SummaryValue {
     val values = data.mapNotNull { it.value.toBooleanStrictOrNull() }
     if (values.isEmpty()) {
-      return ""
+      return EmptySummaryValue
     }
     val trueCount = values.count { it }
-    return (trueCount / values.size.toDouble() * 100).toString()
+    val percentage = (trueCount / values.size.toDouble() * 100)
+    return DoubleSummaryValue(value = percentage, isPercent = true)
   }
 }

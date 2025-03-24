@@ -15,7 +15,7 @@ class BooleanMetricSummarizerTest {
       generateMetricDatum("true")
     )
     val result = BooleanMetricSummarizer.summarize(data)
-    assertEquals("100.0", result)
+    assertEquals(DoubleSummaryValue(100.0, true), result)
   }
 
   @Test
@@ -26,7 +26,7 @@ class BooleanMetricSummarizerTest {
       generateMetricDatum("false")
     )
     val result = BooleanMetricSummarizer.summarize(data)
-    assertEquals("0.0", result)
+    assertEquals(DoubleSummaryValue(0.0, true), result)
   }
 
   @Test
@@ -38,7 +38,7 @@ class BooleanMetricSummarizerTest {
       generateMetricDatum("true"),
     )
     val result = BooleanMetricSummarizer.summarize(data)
-    assertEquals("75.0", result)
+    assertEquals(DoubleSummaryValue(75.0, true), result)
   }
 
   @Test
@@ -49,13 +49,13 @@ class BooleanMetricSummarizerTest {
       generateMetricDatum("maybe")
     )
     val result = BooleanMetricSummarizer.summarize(data)
-    assertEquals("", result)
+    assertEquals(EmptySummaryValue, result)
   }
 
   @Test
   fun `test summarize with empty data`() {
     val data = emptyList<MetricDatum>()
     val result = BooleanMetricSummarizer.summarize(data)
-    assertEquals("", result)
+    assertEquals(EmptySummaryValue, result)
   }
 }

@@ -17,13 +17,13 @@ import com.team2052.frckrawler.data.local.MetricDatum
  * ```
  */
 object StringOptionsMetricSummarizer: MetricSummarizer {
-  override fun summarize(data: List<MetricDatum>): String {
+  override fun summarize(data: List<MetricDatum>): SummaryValue {
     val values = data.map { it.value }
       .filter { it.isNotEmpty() }
       .map { it.split(",") }
       .flatten()
     if (values.isEmpty()) {
-      return ""
+      return EmptySummaryValue
     }
 
     val total = values.size.toDouble()
@@ -31,8 +31,7 @@ object StringOptionsMetricSummarizer: MetricSummarizer {
     val percentageByOption = dataByOption.mapValues { (_, data) ->
       data.size / total * 100
     }
-    return percentageByOption.map { (option, percentage) ->
-      "$option - $percentage%"
-    }.joinToString(separator = "\n")
+
+    return OptionPercentageSummaryValue(percentageByOption)
   }
 }
