@@ -65,7 +65,21 @@ class StringOptionsMetricSummarizerTest {
     )
     val result = StringOptionsMetricSummarizer.summarize(metric, data)
     val expected = mapOf(
-      "Option 1" to 100.0
+      "Option 1" to 100.0,
+      "Option 2" to 0.0
+    )
+    assertEquals(OptionPercentageSummaryValue(expected), result)
+  }
+
+  @Test
+  fun `summarize with unknown option`() {
+    val data = listOf(
+      generateMetricDatum("Option 3"),
+    )
+    val result = StringOptionsMetricSummarizer.summarize(metric, data)
+    val expected = mapOf(
+      "Option 1" to 0.0,
+      "Option 2" to 0.0
     )
     assertEquals(OptionPercentageSummaryValue(expected), result)
   }

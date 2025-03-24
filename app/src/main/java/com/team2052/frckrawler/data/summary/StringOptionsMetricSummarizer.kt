@@ -29,10 +29,20 @@ object StringOptionsMetricSummarizer: MetricSummarizer {
 
     val total = values.size.toDouble()
     val dataByOption = values.groupBy { it }
-    val percentageByOption = dataByOption.mapValues { (_, data) ->
+    val dataPercentages = dataByOption.mapValues { (_, data) ->
       data.size / total * 100
     }
 
-    return OptionPercentageSummaryValue(percentageByOption)
+    val allOptions: List<String> = when (metric) {
+      is Metric.ChooserMetric -> metric.options
+      is Metric.CheckboxMetric -> metric.options
+      else -> emptyList()
+    }
+
+    val optionPercentages = allOptions.associate { option ->
+      Pair(option, dataPercentages[option] ?: 0.0)
+    }
+
+    return OptionPercentageSummaryValue(optionPercentages)
   }
 }
