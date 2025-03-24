@@ -8,12 +8,12 @@ import com.team2052.frckrawler.data.export.aggregator.SummaryMetricDataAggregato
 import com.team2052.frckrawler.data.export.converter.CsvRowConverter
 import com.team2052.frckrawler.data.export.converter.RawMetricsCsvRowConverter
 import com.team2052.frckrawler.data.export.converter.SummaryMetricsCsvRowConverter
-import com.team2052.frckrawler.data.local.MetricDao
 import com.team2052.frckrawler.data.local.MetricDatum
 import com.team2052.frckrawler.data.local.MetricDatumDao
-import com.team2052.frckrawler.data.local.MetricRecord
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.local.prefs.FrcKrawlerPreferences
+import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.repository.MetricRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class OkioDataExporter @Inject constructor(
   private val metricDatumDao: MetricDatumDao,
   private val teamAtEventDao: TeamAtEventDao,
-  private val metricDao: MetricDao,
+  private val metricRepository: MetricRepository,
   private val prefs: FrcKrawlerPreferences,
   @ApplicationContext private val context: Context,
 ) : DataExporter {
@@ -42,7 +42,7 @@ class OkioDataExporter @Inject constructor(
       val metricsAsync = async {
         data.map { it.metricId }
           .distinct()
-          .map { metricDao.getMetric(it) }
+          .map { metricRepository.getMetric(it) }
       }
       val teamsAsync = async {
         teamAtEventDao.getAllTeams(eventId)
@@ -78,7 +78,7 @@ class OkioDataExporter @Inject constructor(
   private fun <T> BufferedSink.writeCsv(
     aggregator: MetricDataAggregator<T>,
     converter: CsvRowConverter<T>,
-    metrics: List<MetricRecord>,
+    metrics: List<Metric>,
     data: List<MetricDatum>,
   ) {
     val aggregatedRows = aggregator.aggregate(

@@ -1,12 +1,11 @@
 package com.team2052.frckrawler.data.export.aggregator
 
 import com.team2052.frckrawler.data.export.CsvRawDataRow
-import com.team2052.frckrawler.data.export.generateMetric
 import com.team2052.frckrawler.data.export.generateMetricDatum
 import com.team2052.frckrawler.data.local.MetricDatum
 import com.team2052.frckrawler.data.local.MetricDatumGroup
-import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.local.TeamAtEvent
+import com.team2052.frckrawler.data.model.Metric
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -18,8 +17,8 @@ class RawMetricDataAggregatorTest {
   )
 
   private val metrics = listOf(
-    generateMetric(id = "1", name = "Metric 1", type = MetricType.Boolean),
-    generateMetric(id = "2", name = "Metric 2", type = MetricType.Counter)
+    Metric.BooleanMetric(id = "1", name = "Metric 1", priority = 1, enabled = true),
+    Metric.CounterMetric(id = "2", name = "Metric 2", priority = 2, enabled = true, range = (0..10))
   )
 
   private val aggregator = RawMetricDataAggregator(teamsByNumber)
@@ -52,10 +51,7 @@ class RawMetricDataAggregatorTest {
 
   @Test
   fun `sorts correctly`() {
-    val reversedMetrics = listOf(
-      generateMetric(id = "2", name = "Metric 2", type = MetricType.Counter),
-      generateMetric(id = "1", name = "Metric 1", type = MetricType.Boolean),
-    )
+    val reversedMetrics = metrics.reversed()
     val data = listOf(
       generateMetricDatum(value = "true", metricId = "1", teamNumber = "2052"),
       generateMetricDatum(value = "5", metricId = "2", teamNumber = "2052"),

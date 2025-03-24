@@ -2,13 +2,9 @@ package com.team2052.frckrawler.data.export.aggregator
 
 import com.team2052.frckrawler.data.export.CsvSummaryDataRow
 import com.team2052.frckrawler.data.local.MetricDatum
-import com.team2052.frckrawler.data.local.MetricRecord
-import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.local.TeamAtEvent
-import com.team2052.frckrawler.data.summary.BooleanMetricSummarizer
-import com.team2052.frckrawler.data.summary.FullStringMetricSummarizer
-import com.team2052.frckrawler.data.summary.NumericMetricSummarizer
-import com.team2052.frckrawler.data.summary.StringOptionsMetricSummarizer
+import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.data.summary.getSummarizer
 
 /**
  * Summarizes data such that each team has a single row of data
@@ -21,7 +17,7 @@ class SummaryMetricDataAggregator(
   private val teamsByNumber: Map<String, TeamAtEvent>
 ) : MetricDataAggregator<CsvSummaryDataRow> {
   override fun aggregate(
-    metrics: List<MetricRecord>,
+    metrics: List<Metric>,
     data: List<MetricDatum>
   ): List<CsvSummaryDataRow> {
     // Get a list of all data points for each team
@@ -48,19 +44,12 @@ class SummaryMetricDataAggregator(
   }
 
   private fun getSummaryValue(
-    metric: MetricRecord,
+    metric: Metric,
     data: List<MetricDatum>,
   ): String {
-    val summarizer = when (metric.type) {
-      MetricType.Boolean -> BooleanMetricSummarizer
-      MetricType.Counter -> NumericMetricSummarizer
-      MetricType.Slider -> NumericMetricSummarizer
-      MetricType.Chooser -> StringOptionsMetricSummarizer
-      MetricType.Checkbox -> StringOptionsMetricSummarizer
-      MetricType.Stopwatch -> StringOptionsMetricSummarizer
-      MetricType.TextField -> FullStringMetricSummarizer
-    }
-    return summarizer.summarize(data).asDisplayString()
+    return metric.getSummarizer()
+      .summarize(metric, data)
+      .asDisplayString()
   }
 
 }

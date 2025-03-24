@@ -15,6 +15,10 @@ class MetricRepository @Inject constructor(
   private val metricDao: MetricDao,
 ) {
 
+  suspend fun getMetric(metricId: String): Metric {
+    return metricDao.getMetric(metricId).toMetric()
+  }
+
   fun getMetrics(metricSetId: Int): Flow<List<Metric>> {
     return metricDao.getMetrics(metricSetId)
       .map { records ->

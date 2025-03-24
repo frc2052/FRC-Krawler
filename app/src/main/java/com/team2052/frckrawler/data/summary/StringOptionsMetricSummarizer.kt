@@ -1,6 +1,7 @@
 package com.team2052.frckrawler.data.summary
 
 import com.team2052.frckrawler.data.local.MetricDatum
+import com.team2052.frckrawler.data.model.Metric
 
 /**
  * Summarizes a metric that has a finite set of String-based options
@@ -17,7 +18,7 @@ import com.team2052.frckrawler.data.local.MetricDatum
  * ```
  */
 object StringOptionsMetricSummarizer: MetricSummarizer {
-  override fun summarize(data: List<MetricDatum>): SummaryValue {
+  override fun summarize(metric: Metric, data: List<MetricDatum>): SummaryValue {
     val values = data.map { it.value }
       .filter { it.isNotEmpty() }
       .map { it.split(",") }

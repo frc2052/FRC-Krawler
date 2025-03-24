@@ -1,12 +1,12 @@
 package com.team2052.frckrawler.data.export.converter
 
 import com.team2052.frckrawler.data.export.CsvSummaryDataRow
-import com.team2052.frckrawler.data.local.MetricRecord
+import com.team2052.frckrawler.data.model.Metric
 
 class SummaryMetricsCsvRowConverter(
   private val includeTeamNames: Boolean,
 ): CsvRowConverter<CsvSummaryDataRow> {
-  override fun getHeader(metrics: List<MetricRecord>): String {
+  override fun getHeader(metrics: List<Metric>): String {
     val labels = mutableListOf("\"Team Number\"")
     if (includeTeamNames) {
       labels += "\"Team Name\""

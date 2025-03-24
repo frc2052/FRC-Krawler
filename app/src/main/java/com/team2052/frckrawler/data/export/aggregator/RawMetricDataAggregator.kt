@@ -2,8 +2,8 @@ package com.team2052.frckrawler.data.export.aggregator
 
 import com.team2052.frckrawler.data.export.CsvRawDataRow
 import com.team2052.frckrawler.data.local.MetricDatum
-import com.team2052.frckrawler.data.local.MetricRecord
 import com.team2052.frckrawler.data.local.TeamAtEvent
+import com.team2052.frckrawler.data.model.Metric
 
 /**
  * Aggregate raw metric data for teams for CSV export
@@ -14,7 +14,7 @@ class RawMetricDataAggregator(
   private val teamsByNumber: Map<String, TeamAtEvent>
 ) : MetricDataAggregator<CsvRawDataRow> {
   override fun aggregate(
-    metrics: List<MetricRecord>,
+    metrics: List<Metric>,
     data: List<MetricDatum>
   ): List<CsvRawDataRow> {
     // Convert the metric list into a map of metricId to index in sort list
