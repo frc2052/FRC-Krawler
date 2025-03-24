@@ -57,7 +57,7 @@ class AnalyzeDataViewModel @Inject constructor(
   }
     .shareIn(viewModelScope, replay = 1, started = SharingStarted.Lazily)
 
-  private val sortMode = MutableStateFlow(AnalyzeSortMode.Ascending)
+  private val sortMode = MutableStateFlow(AnalyzeSortMode.Descending)
   private val selectedMetricOption = MutableStateFlow<String?>(null)
   private val selectedMetricId = MutableStateFlow<String?>(null)
   private val selectedMetric = combine(metrics, selectedMetricId) { metrics, selectedMetricId ->
