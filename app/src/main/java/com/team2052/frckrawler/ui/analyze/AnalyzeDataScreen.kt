@@ -37,11 +37,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -272,18 +268,18 @@ private fun TeamDataRow(
     modifier = modifier.padding(vertical = 12.dp, horizontal = 16.dp),
     horizontalArrangement = Arrangement.SpaceBetween,
   ) {
-    val teamNameNumber = buildAnnotatedString {
-      append(data.team.name)
-      append(" - ")
-      withStyle(SpanStyle(fontWeight = FontWeight.Medium)) {
-        append(data.team.number)
-      }
-    }
-    Text(
+    Column(
       modifier = Modifier.weight(weight = 1f, fill = false),
-      text = teamNameNumber,
-      style = MaterialTheme.typography.titleLarge
-    )
+    ) {
+      Text(
+        text = data.team.name,
+        style = MaterialTheme.typography.titleMedium
+      )
+      Text(
+        text = data.team.number,
+        style = MaterialTheme.typography.bodyMedium
+      )
+    }
     Spacer(Modifier.width(16.dp))
     Text(data.summary.asDisplayString())
   }
