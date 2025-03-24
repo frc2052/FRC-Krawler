@@ -1,7 +1,8 @@
-package com.team2052.frckrawler.data.export.summary
+package com.team2052.frckrawler.data.summary
 
 import com.team2052.frckrawler.data.export.generateMetricDatum
 import com.team2052.frckrawler.data.local.MetricDatum
+import com.team2052.frckrawler.data.summary.FullStringMetricSummarizer
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
