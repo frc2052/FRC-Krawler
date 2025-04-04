@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.bluetooth.client
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
@@ -21,6 +22,7 @@ import kotlin.coroutines.suspendCoroutine
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
+@SuppressLint("MissingPermission")
 class ServerConnectionManager internal @Inject constructor(
   bluetoothAdapterOptional: Optional<BluetoothAdapter>,
   private val discoveryStrategy: ServerDiscoveryStrategy,

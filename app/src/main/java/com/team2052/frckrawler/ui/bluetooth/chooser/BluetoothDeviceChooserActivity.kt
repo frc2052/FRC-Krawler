@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.bluetooth.chooser
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
@@ -145,6 +146,7 @@ private fun DeviceChooserDialog(
   }
 }
 
+@SuppressLint("MissingPermission")
 @Composable
 private fun DeviceList(
   modifier: Modifier = Modifier,

@@ -8,8 +8,6 @@
 <resources>
     <string name="app_name">&appName;</string>
     <string name="app_version">&appVersion;</string>
-    <string name="bluetooth_Text">Bluetooth Server Running:</string>
-    <string name="viewLogsButton">View Logs</string>
 
     <!-- Common strings -->
     <string name="ok">OK</string>
@@ -25,7 +23,6 @@
 
     <!--Content Descriptions-->
     <string name="cd_expandable_card">Card expansion toggle</string>
-    <string name="cd_background_logo">Background Logo</string>
 
     <string name="cd_text_field_error">Incomplete text field</string>
 
@@ -38,11 +35,6 @@
     <string name="migrating_message">Migrating database to v4</string>
 
     <!--Mode Select-->
-    <string name="mode_select_screen_title">FRCKrawler</string>
-
-    <string name="welcome_message">Welcome to &appName;!</string>
-    <string name="getting_started_message">To get started, select from the options below</string>
-
     <string name="mode_unavailable_no_bluetooth">Unavailable because this device does not support Bluetooth.</string>
 
     <string name="mode_remote_scout">Remote Scout</string>
@@ -69,9 +61,6 @@
 
     <!--Scout Screens-->
     <string name="scout_screen_title">Scout</string>
-    <string name="scout_home_screen_title">Home</string>
-    <string name="scout_matches_screen_title">Match Scouting</string>
-    <string name="scout_pit_screen_title">Pit Scouting</string>
     <string name="scout_team_label">Team</string>
     <string name="save_description">Save data</string>
     <string name="data_saved_description">Data saved</string>
@@ -100,7 +89,6 @@
 
     <!--Server Screens-->
     <string name="server_screen_title">Server</string>
-    <string name="server_home_screen_title">Home</string>
     <string name="games_screen_title">Games</string>
     <string name="server_controls_title">Server controls</string>
     <string name="server_controls_game_label">Game: </string>
@@ -121,9 +109,6 @@
     <string name="game_event_game_label">Game</string>
 
     <!--Metrics Screens-->
-    <string name="metrics_screen">Metrics</string>
-    <string name="match_metrics_screen">Match</string>
-    <string name="pit_metrics_screen">Pit</string>
     <string name="metric_list_is_match_set">Set as match metrics for</string>
     <string name="metric_list_is_pit_set">Set as pit metrics for</string>
     <string name="metric_list_empty_text">No metrics</string>
@@ -227,7 +212,6 @@
     <string name="bluetooth_denied_title">Permissions required</string>
     <string name="bluetooth_denied_description_server">FRCKrawler cannot enable the server without bluetooth permissions. Please enable the permissions in settings.</string>
     <string name="bluetooth_denied_description_client">FRCKrawler cannot connect to a server without bluetooth permissions. Please enable the permissions in settings.</string>
-    <string name="bluetooth_denied_launch_settings">go to settings</string>
 
     <!-- Enable bluetooth -->
     <string name="bluetooth_enable_title">Bluetooth not enabled</string>

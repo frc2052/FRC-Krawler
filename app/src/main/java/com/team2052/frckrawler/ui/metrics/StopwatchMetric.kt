@@ -30,6 +30,7 @@ import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.delay
+import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -62,7 +63,7 @@ fun StopwatchMetric(
     Spacer(Modifier.width(4.dp))
 
     Text(
-      text = String.format("%.1f", elapsedTime),
+      text = String.format(Locale.US, "%.1f", elapsedTime),
       style = MaterialTheme.typography.titleLarge
     )
 
