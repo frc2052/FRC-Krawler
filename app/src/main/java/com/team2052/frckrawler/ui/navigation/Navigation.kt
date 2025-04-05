@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.team2052.frckrawler.ui.analyze.AnalyzeDataScreen
+import com.team2052.frckrawler.ui.analyze.team.TeamDataScreen
 import com.team2052.frckrawler.ui.event.teams.EventTeamListScreen
 import com.team2052.frckrawler.ui.export.ExportDataScreen
 import com.team2052.frckrawler.ui.game.detail.GameDetailScreen
@@ -162,6 +163,17 @@ fun Navigation() {
       ExportDataScreen(
         gameId = gameId,
         eventId = eventId,
+        navController = navController
+      )
+    }
+
+    composable(
+      route = Screen.TeamData().route,
+      arguments = Screen.TeamData().arguments,
+    ) { backStackEntry ->
+      val teamNumber = backStackEntry.arguments?.getString(Arguments.teamNumber.name) ?: ""
+      TeamDataScreen(
+        teamNumber = teamNumber,
         navController = navController
       )
     }

@@ -56,6 +56,13 @@ sealed class Screen(
     arguments = listOf(Arguments.gameId, Arguments.eventId)
   )
 
+  data class TeamData(
+    val teamNumber: String? = null,
+  ) : Screen(
+    "analyze/team/${teamNumber ?: "{teamNumber}"}",
+    arguments = listOf(Arguments.teamNumber)
+  )
+
   data class Export(
     val gameId: Int? = null,
     val eventId: Int? = null,
@@ -84,4 +91,5 @@ object Arguments {
   val metricSetId = navArgument("metricSetId") { type = NavType.IntType }
   val gameId = navArgument("gameId") { type = NavType.IntType }
   val eventId = navArgument("eventId") { type = NavType.IntType }
+  val teamNumber = navArgument("teamNumber") { type = NavType.StringType }
 }

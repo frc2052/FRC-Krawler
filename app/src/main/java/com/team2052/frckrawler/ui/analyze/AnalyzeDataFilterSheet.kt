@@ -103,7 +103,7 @@ private fun MetricRow(
         if (isSelected) {
           Icon(
             imageVector = Icons.Default.Check,
-            contentDescription = stringResource(R.string.filter_selected_decription),
+            contentDescription = stringResource(R.string.filter_selected_description),
           )
           Spacer(Modifier.width(8.dp))
         }
@@ -178,7 +178,7 @@ private fun MetricOptions(
             Icon(
               modifier = Modifier.size(16.dp),
               imageVector = Icons.Default.Check,
-              contentDescription = stringResource(R.string.filter_selected_decription),
+              contentDescription = stringResource(R.string.filter_selected_description),
             )
             Spacer(Modifier.width(8.dp))
           }

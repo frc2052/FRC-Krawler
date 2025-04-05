@@ -27,6 +27,9 @@ interface MetricDatumDao {
   @Query("SELECT * FROM metricdatum WHERE `group` = 'Pit' AND eventId = :eventId")
   suspend fun getEventMatchData(eventId: Int): List<MetricDatum>
 
+  @Query("SELECT * FROM metricdatum WHERE teamNumber = :teamNumber")
+  suspend fun getAllTeamDatum(teamNumber: String): List<MetricDatum>
+
   @Query("SELECT * FROM metricdatum WHERE `group` = 'Match' AND groupNumber = :matchNumber AND teamNumber = :teamNumber AND eventId = :eventId")
   fun getTeamDatumForMatchMetrics(
     matchNumber: Int,

@@ -26,4 +26,7 @@ interface TeamAtEventDao {
 
   @Query("SELECT * FROM team_at_event WHERE eventId = :eventId")
   fun getAllTeams(eventId: Int): Flow<List<TeamAtEvent>>
+
+  @Query("SELECT * FROM team_at_event WHERE eventId = :eventId AND number = :teamNumber")
+  suspend fun getTeamAtEvent(eventId: Int, teamNumber: String): TeamAtEvent?
 }

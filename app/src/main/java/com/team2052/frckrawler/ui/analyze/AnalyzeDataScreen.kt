@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.analyze
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -33,7 +34,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -60,7 +60,6 @@ fun AnalyzeDataScreen(
   modifier: Modifier = Modifier,
 ) {
   val viewModel: AnalyzeDataViewModel = hiltViewModel()
-  val scope = rememberCoroutineScope()
   var showFilterSheet by remember { mutableStateOf(false) }
 
   LaunchedEffect(gameId, eventId) {
@@ -106,6 +105,7 @@ fun AnalyzeDataScreen(
         state = content,
         onSortSelected = viewModel::setSortMode,
         onFilterClick = { showFilterSheet = true },
+        onTeamClick = { team -> navController.navigate(Screen.TeamData(team).route) }
       )
 
       if (showFilterSheet) {
@@ -129,6 +129,7 @@ private fun AnalyzeScreenContent(
   state: AnalyzeDataScreenState.Content,
   onFilterClick: () -> Unit,
   onSortSelected: (AnalyzeSortMode) -> Unit,
+  onTeamClick: (String) -> Unit,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -170,6 +171,9 @@ private fun AnalyzeScreenContent(
         TeamDataRow(
           data = teamData,
           modifier = Modifier.fillMaxWidth()
+            .clickable(
+              onClick = { onTeamClick(teamData.team.number) }
+            )
         )
         HorizontalDivider()
       }
@@ -321,6 +325,7 @@ private fun AnalyzeScreenPreview() {
         state = state,
         onFilterClick = {},
         onSortSelected = {},
+        onTeamClick = {},
       )
     }
   }

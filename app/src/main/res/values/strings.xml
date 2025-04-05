@@ -190,7 +190,8 @@
     <string name="sort_label">Sort by:</string>
     <string name="sort_ascending">Asc.</string>
     <string name="sort_descending">Desc.</string>
-    <string name="filter_selected_decription">selected</string>
+    <string name="filter_selected_description">selected</string>
+    <string name="analyze_team_no_data">No data recorded</string>
 
     <!--Export screens-->
     <string name="export_screen_title">Export data</string>
