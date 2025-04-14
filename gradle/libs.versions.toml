@@ -90,7 +90,7 @@ ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit"
 junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]
-ksp = "com.google.devtools.ksp:2.1.10-1.0.31"
+ksp = "com.google.devtools.ksp:2.1.20-2.0.0"
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 room = { id = "androidx.room", version.ref = "room" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
