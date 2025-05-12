@@ -47,7 +47,7 @@ compose-material3 = { module = "androidx.compose.material3:material3", version.r
 compose-test = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
 compose-constraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.1.1"
 
-navigation-compose = "androidx.navigation:navigation-compose:2.8.9"
+navigation-compose = "androidx.navigation:navigation-compose:2.9.0"
 
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
 accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanist-swiperefresh" }
