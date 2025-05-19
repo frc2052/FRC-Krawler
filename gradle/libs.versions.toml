@@ -57,7 +57,7 @@ desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref 
 kotlin-stdlib-jdk7 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-kotlinx-immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8"
+kotlinx-immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0"
 
 firebase-bom = "com.google.firebase:firebase-bom:33.13.0"
 firebase-crashlytics      = { module = "com.google.firebase:firebase-crashlytics" }
