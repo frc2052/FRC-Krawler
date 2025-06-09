@@ -44,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation3.runtime.NavBackStack
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
@@ -56,7 +57,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun EventTeamListScreen(
   eventId: Int,
-  navController: NavController,
+  backStack: NavBackStack,
 ) {
   val scope = rememberCoroutineScope()
   val viewModel: EventDetailsViewModel = hiltViewModel()
@@ -74,7 +75,7 @@ fun EventTeamListScreen(
   Scaffold(
     topBar = {
       FRCKrawlerAppBar(
-        navController = navController,
+        backStack = backStack,
         title = { Text(event?.name ?: "") },
         actions = {
           IconButton(
@@ -148,7 +149,7 @@ fun EventTeamListScreen(
         confirmButton = {
           TextButton(onClick = {
             viewModel.deleteEvent()
-            navController.popBackStack()
+            backStack.removeLastOrNull()
           }) {
             Text(stringResource(R.string.delete).uppercase())
           }

@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation3.runtime.NavBackStack
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.MetricSet
@@ -37,7 +38,7 @@ import com.team2052.frckrawler.ui.theme.spaceLarge
 @Composable
 fun ScoutHomeScreen(
   modifier: Modifier = Modifier,
-  navController: NavController,
+  backStack: NavBackStack,
 ) {
   val viewModel: RemoteScoutViewModel = hiltViewModel()
 
@@ -65,7 +66,7 @@ fun ScoutHomeScreen(
       modifier = modifier,
       topBar = {
         FRCKrawlerAppBar(
-          navController = navController,
+          backStack = backStack,
           title = {
             Text(stringResource(R.string.scout_screen_title))
           }
@@ -80,20 +81,20 @@ fun ScoutHomeScreen(
           .consumeWindowInsets(contentPadding),
         hasMatchMetrics = hasMatchMetrics,
         onStartMatchScouting = {
-          navController.navigate(
+          backStack.add(
             Screen.MatchScout(
               eventId = Event.SCOUT_EVENT_ID,
               metricSetId = MetricSet.SCOUT_MATCH_METRIC_SET_ID
-            ).route
+            )
           )
         },
         hasPitMetrics = hasPitMetrics,
         onStartPitScouting = {
-          navController.navigate(
+          backStack.add(
             Screen.MatchScout(
               eventId = Event.SCOUT_EVENT_ID,
               metricSetId = MetricSet.SCOUT_PIT_METRIC_SET_ID
-            ).route
+            )
           )
         },
         serverStatus = {

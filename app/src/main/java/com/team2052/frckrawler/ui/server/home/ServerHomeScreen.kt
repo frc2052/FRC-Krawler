@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation3.runtime.NavBackStack
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
@@ -34,7 +35,7 @@ fun ServerHomeScreen(
   gameId: Int,
   eventId: Int,
   modifier: Modifier = Modifier,
-  navController: NavController,
+  backStack: NavBackStack,
 ) {
   val viewModel: ServerHomeViewModel = hiltViewModel()
 
@@ -63,7 +64,7 @@ fun ServerHomeScreen(
       modifier = modifier,
       topBar = {
         FRCKrawlerAppBar(
-          navController = navController,
+          backStack = backStack,
           title = {
             Text(stringResource(R.string.server_screen_title))
           }
@@ -104,11 +105,11 @@ fun ServerHomeScreen(
           icon = Icons.Default.EmojiEvents,
           label = stringResource(R.string.remote_scout_start_match_scouting),
           onClick = {
-            navController.navigate(
+            backStack.add(
               Screen.MatchScout(
-                eventId = viewModel.event?.id,
-                metricSetId = viewModel.game?.matchMetricsSetId
-              ).route
+                eventId = viewModel.event?.id!!,
+                metricSetId = viewModel.game?.matchMetricsSetId!!
+              )
             )
           },
           enabled = viewModel.event != null && viewModel.game?.matchMetricsSetId != null,
@@ -120,11 +121,11 @@ fun ServerHomeScreen(
           icon = Icons.Default.Hardware,
           label = stringResource(R.string.remote_scout_start_pit_scouting),
           onClick = {
-            navController.navigate(
+            backStack.add(
               Screen.MatchScout(
-                eventId = viewModel.event?.id,
-                metricSetId = viewModel.game?.pitMetricsSetId
-              ).route
+                eventId = viewModel.event?.id!!,
+                metricSetId = viewModel.game?.pitMetricsSetId!!
+              )
             )
           },
           enabled = viewModel.event != null && viewModel.game?.pitMetricsSetId != null,

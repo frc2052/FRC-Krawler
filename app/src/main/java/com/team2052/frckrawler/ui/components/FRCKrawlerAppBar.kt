@@ -17,19 +17,20 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.rememberNavBackStack
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
+import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FRCKrawlerAppBar(
   modifier: Modifier = Modifier,
-  navController: NavController,
+  backStack: NavBackStack,
   navigation: @Composable () -> Unit = {
-    DefaultNavigationButton(navController)
+    DefaultNavigationButton(backStack)
   },
   darkTheme: Boolean = isSystemInDarkTheme(),
   title: @Composable RowScope.() -> Unit,
@@ -58,10 +59,10 @@ fun FRCKrawlerAppBar(
 
 @Composable
 private fun DefaultNavigationButton(
-  navController: NavController
+  backStack: NavBackStack
 ) {
-  if (navController.previousBackStackEntry != null) {
-    IconButton(onClick = { navController.popBackStack() }) {
+  if (backStack.size > 1) {
+    IconButton(onClick = { backStack.removeLastOrNull()}) {
       Icon(
         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = stringResource(R.string.navigate_up),
@@ -76,7 +77,7 @@ private fun FRCKrawlerAppBarPreviewLight() {
   FrcKrawlerTheme {
     FRCKrawlerAppBar(
       title = { Text("preview") },
-      navController = rememberNavController(),
+      backStack = rememberNavBackStack(Screen.ModeSelect),
       actions = {
         IconButton(
           onClick = { }

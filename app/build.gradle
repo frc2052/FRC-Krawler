@@ -7,6 +7,7 @@ plugins {
     alias libs.plugins.compose.compiler
     alias libs.plugins.googleServices
     alias libs.plugins.firebaseCrashlytics
+    alias libs.plugins.kotlin.serialization
 }
 
 android {
@@ -15,7 +16,7 @@ android {
     defaultConfig {
         applicationId "com.team2052.frckrawler"
         minSdkVersion 21
-        compileSdk 35
+        compileSdk 36
         targetSdkVersion 35
         versionCode 1
         versionName "1.0"
@@ -91,9 +92,14 @@ dependencies {
     implementation libs.androidx.activity.compose
     implementation libs.androidx.lifecycle.viewmodel.compose
     implementation libs.androidx.datastore
-    implementation libs.navigation.compose
     implementation libs.accompanist.permissions
     androidTestImplementation libs.compose.test
+
+    // Navigation
+    implementation(libs.nav3.runtime)
+    implementation(libs.nav3.ui)
+    implementation(libs.nav3.lifecycle)
+    implementation(libs.kotlinx.serialization.core)
 
     // Accompanist
     implementation libs.accompanist.swiperefresh

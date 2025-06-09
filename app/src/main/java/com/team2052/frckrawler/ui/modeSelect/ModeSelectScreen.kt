@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation3.runtime.NavBackStack
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.model.ScoutMode
@@ -55,7 +56,7 @@ import com.team2052.frckrawler.ui.theme.spaceLarge
 @Composable
 fun ModeSelectScreen(
   modifier: Modifier = Modifier,
-  navController: NavController,
+  backStack: NavBackStack,
 ) {
   val viewModel: ModeSelectViewModel = hiltViewModel()
 
@@ -68,7 +69,7 @@ fun ModeSelectScreen(
     modifier = modifier,
     topBar = {
       FRCKrawlerAppBar(
-        navController = navController,
+        backStack = backStack,
         navigation = {},
         title = {
           Text(stringResource(R.string.app_name))
@@ -80,7 +81,7 @@ fun ModeSelectScreen(
       isBluetoothAvailable = viewModel.bluetoothAvailability.isAvailable,
       gameEventState = viewModel.gameEventState,
       navigate = { screen ->
-        navController.navigate(screen.route)
+        backStack.add(screen)
       },
       contentPadding = contentPadding,
     )
@@ -347,7 +348,7 @@ private fun SoloScoutCard(
             ScoutMode.Match -> {
               navigate(
                 Screen.MatchScout(
-                  metricSetId = gameEventState.selectedGame!!.matchMetricsSetId,
+                  metricSetId = gameEventState.selectedGame!!.matchMetricsSetId!!,
                   eventId = gameEventState.selectedEvent!!.id
                 )
               )
@@ -356,7 +357,7 @@ private fun SoloScoutCard(
             ScoutMode.Pit -> {
               navigate(
                 Screen.PitScout(
-                  metricSetId = gameEventState.selectedGame!!.pitMetricsSetId,
+                  metricSetId = gameEventState.selectedGame!!.pitMetricsSetId!!,
                   eventId = gameEventState.selectedEvent!!.id
                 )
               )

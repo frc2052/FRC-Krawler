@@ -39,7 +39,7 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/Theme.FRCKrawlerSplash"
-      android:enableOnBackInvokedCallback="false"
+      android:enableOnBackInvokedCallback="true"
       tools:ignore="UnusedAttribute">
         <activity
           android:name=".ui.MainActivity"

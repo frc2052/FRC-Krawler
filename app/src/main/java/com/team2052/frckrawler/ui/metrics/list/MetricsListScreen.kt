@@ -58,6 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation3.runtime.NavBackStack
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
@@ -80,7 +81,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MetricsListScreen(
   modifier: Modifier = Modifier,
-  navController: NavController,
+  backStack: NavBackStack,
   metricSetId: Int
 ) {
   val viewModel: MetricsListViewModel = hiltViewModel()
@@ -105,7 +106,7 @@ fun MetricsListScreen(
             Text(state.setName)
           }
         },
-        navController = navController,
+        backStack = backStack,
         actions = {
           if (state is MetricListScreenState.Content) {
             IconButton(
@@ -186,7 +187,7 @@ fun MetricsListScreen(
         confirmButton = {
           TextButton(onClick = {
             viewModel.deleteMetricSet()
-            navController.popBackStack()
+            backStack.removeLastOrNull()
           }) {
             Text(stringResource(R.string.delete))
           }

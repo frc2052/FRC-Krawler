@@ -53,6 +53,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation3.runtime.NavBackStack
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
@@ -66,7 +67,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun GameDetailScreen(
   gameId: Int,
-  navController: NavController,
+  backStack: NavBackStack,
 ) {
   val scope = rememberCoroutineScope()
   val viewModel: GameDetailViewModel = hiltViewModel()
@@ -88,7 +89,7 @@ fun GameDetailScreen(
   Scaffold(
     topBar = {
       FRCKrawlerAppBar(
-        navController = navController,
+        backStack = backStack,
         title = {
           Text(title)
         },
@@ -111,9 +112,9 @@ fun GameDetailScreen(
         onAddEventClick = {
           showAddEventSheet = true
         },
-        onEventClick = { event -> navController.navigate(Screen.Event(event.id).route) },
+        onEventClick = { event -> backStack.add(Screen.Event(event.id)) },
         metricSets = state.metrics,
-        onMetricSetClick = { set -> navController.navigate(Screen.MetricSet(set.id).route) },
+        onMetricSetClick = { set -> backStack.add(Screen.MetricSet(set.id)) },
         onAddMetricSetClick = { showAddMetricSet = true },
         contentPadding = contentPadding,
       )
@@ -156,7 +157,7 @@ fun GameDetailScreen(
         confirmButton = {
           TextButton(onClick = {
             viewModel.deleteGame()
-            navController.popBackStack()
+            backStack.removeLastOrNull()
           }) {
             Text(stringResource(R.string.delete).uppercase())
           }

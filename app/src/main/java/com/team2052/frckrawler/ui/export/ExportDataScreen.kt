@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation3.runtime.NavBackStack
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.export.ExportType
 import com.team2052.frckrawler.data.local.Event
@@ -47,7 +48,7 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 fun ExportDataScreen(
   gameId: Int,
   eventId: Int,
-  navController: NavController,
+  backStack: NavBackStack,
   modifier: Modifier = Modifier,
 ) {
   val viewModel: ExportViewModel = hiltViewModel()
@@ -76,7 +77,7 @@ fun ExportDataScreen(
     modifier = modifier,
     topBar = {
       FRCKrawlerAppBar(
-        navController = navController,
+        backStack = backStack,
         title = {
           Text(stringResource(R.string.export_screen_title))
         }

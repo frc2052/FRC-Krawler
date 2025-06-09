@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation3.runtime.NavBackStack
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
@@ -44,7 +45,7 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 @Composable
 fun GameListScreen(
   modifier: Modifier = Modifier,
-  navController: NavController,
+  backStack: NavBackStack,
 ) {
   val viewModel: GameListViewModel = hiltViewModel()
 
@@ -58,7 +59,7 @@ fun GameListScreen(
     modifier = modifier,
     topBar = {
       FRCKrawlerAppBar(
-        navController = navController,
+        backStack = backStack,
         title = {
           Text(stringResource(R.string.games_screen_title))
         }
@@ -85,7 +86,7 @@ fun GameListScreen(
         } else {
           GameList(
             games = state.games,
-            onGameClick = { game -> navController.navigate(Screen.Game(game.id).route) },
+            onGameClick = { game -> backStack.add(Screen.Game(game.id)) },
             contentPadding = contentPadding,
           )
         }

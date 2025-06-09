@@ -1,95 +1,65 @@
 package com.team2052.frckrawler.ui.navigation
 
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
+import android.R.attr.data
+import android.R.attr.type
+import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a unique screen consisting of properties for the route, title, and sub-screens
- *
- * TODO refactor to better support arguments in routes
  */
-sealed class Screen(
-  val route: String,
-  val screens: List<Screen> = emptyList(),
-  val arguments: List<NamedNavArgument> = emptyList(),
-) {
+sealed interface Screen : NavKey {
 
-  // Mode selection screen
-  data object ModeSelect : Screen("mode_select_screen")
+  @Serializable
+  data object ModeSelect : Screen
 
-  // Scouting screens
-  data object RemoteScoutHome : Screen("scout/remote")
+  @Serializable
+  data object RemoteScoutHome : Screen
 
+  @Serializable
   data class MatchScout(
-    val eventId: Int? = null,
-    val metricSetId: Int? = null,
-  ) : Screen(
-    "scout/match/${eventId ?: "{eventId}"}/${metricSetId ?: "{metricSetId}"}",
-    arguments = listOf(Arguments.eventId, Arguments.metricSetId)
-  )
+    val eventId: Int,
+    val metricSetId: Int,
+  ) : Screen
 
+  @Serializable
   data class PitScout(
-    val eventId: Int? = null,
-    val metricSetId: Int? = null,
-  ) : Screen(
-    "scout/pit/${eventId ?: "{eventId}"}/${metricSetId ?: "{metricSetId}"}",
-    arguments = listOf(Arguments.eventId, Arguments.metricSetId)
-  )
+    val eventId: Int,
+    val metricSetId: Int,
+  ) : Screen
 
-  data object GameList : Screen("games" )
+  @Serializable
+  data object GameList : Screen
 
-  /* TODO clean up this nasty argument business. Args should be non-null */
+  @Serializable
   data class Server(
-    val gameId: Int? = null,
-    val eventId: Int? = null,
-  ) : Screen(
-    "server/${gameId ?: "{gameId}"}/${eventId ?: "{eventId}"}",
-    arguments = listOf(Arguments.gameId, Arguments.eventId)
-  )
+    val gameId: Int,
+    val eventId: Int,
+  ) : Screen
 
+  @Serializable
   data class Analyze(
-    val gameId: Int? = null,
-    val eventId: Int? = null,
-  ) : Screen(
-    "analyze/${gameId ?: "{gameId}"}/${eventId ?: "{eventId}"}",
-    arguments = listOf(Arguments.gameId, Arguments.eventId)
-  )
+    val gameId: Int,
+    val eventId: Int,
+  ) : Screen
 
+  @Serializable
   data class TeamData(
-    val teamNumber: String? = null,
-  ) : Screen(
-    "analyze/team/${teamNumber ?: "{teamNumber}"}",
-    arguments = listOf(Arguments.teamNumber)
-  )
+    val teamNumber: String,
+  ) : Screen
 
+  @Serializable
   data class Export(
-    val gameId: Int? = null,
-    val eventId: Int? = null,
-  ) : Screen(
-    "export/${gameId ?: "{gameId}"}/${eventId ?: "{eventId}"}",
-    arguments = listOf(Arguments.gameId, Arguments.eventId)
-  )
+    val gameId: Int,
+    val eventId: Int,
+  ) : Screen
 
-  data class Game(val gameId: Int? = null) : Screen(
-    route = "game/${gameId ?: "{gameId}"}",
-    arguments = listOf(Arguments.gameId)
-  )
+  @Serializable
+  data class Game(val gameId: Int) : Screen
 
-  data class MetricSet(val metricSetId: Int? = null) : Screen(
-    route = "metric_set/${metricSetId ?: "{metricSetId}"}",
-    arguments = listOf(Arguments.metricSetId)
-  )
+  @Serializable
+  data class MetricSet(val metricSetId: Int) : Screen
 
-  data class Event(val eventId: Int? = null) : Screen(
-    route = "event/${eventId ?: "{eventId}"}",
-    arguments = listOf(Arguments.eventId)
-  )
-}
-
-object Arguments {
-  val metricSetId = navArgument("metricSetId") { type = NavType.IntType }
-  val gameId = navArgument("gameId") { type = NavType.IntType }
-  val eventId = navArgument("eventId") { type = NavType.IntType }
-  val teamNumber = navArgument("teamNumber") { type = NavType.StringType }
+  @Serializable
+  data class Event(val eventId: Int) : Screen
 }

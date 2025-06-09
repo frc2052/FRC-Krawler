@@ -2,12 +2,18 @@ package com.team2052.frckrawler.ui.navigation
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.entry
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.team2052.frckrawler.ui.analyze.AnalyzeDataScreen
 import com.team2052.frckrawler.ui.analyze.team.TeamDataScreen
 import com.team2052.frckrawler.ui.event.teams.EventTeamListScreen
@@ -29,153 +35,113 @@ private const val transitionDuration = 400
 
 @Composable
 fun Navigation() {
-  // The universal navigation controller used for all navigation throughout the app.
-  val navController = rememberNavController()
-
   val density = LocalDensity.current
   val slideDistance = remember(density) {
     with(density) { DFEAULT_SLIDE_DISTANCE.roundToPx() }
   }
-  println("Main navController: $navController")
 
-  NavHost(
-    navController = navController,
-    startDestination = ModeSelect.route,
-    enterTransition = {
-      sharedAxisEnterX(forward = true, slideDistance = slideDistance)
+  val backStack = rememberNavBackStack(ModeSelect)
+  
+  NavDisplay(
+    entryDecorators = listOf(
+      rememberSceneSetupNavEntryDecorator(),
+      rememberSavedStateNavEntryDecorator(),
+      rememberViewModelStoreNavEntryDecorator(),
+    ),
+    backStack = backStack,
+    onBack = { backStack.removeLastOrNull() },
+    transitionSpec = {
+      sharedAxisEnterX(forward = true, slideDistance = slideDistance) togetherWith
+        sharedAxisExitX(forward = true, slideDistance = slideDistance)
     },
-    popEnterTransition = {
-      sharedAxisEnterX(forward = false, slideDistance = slideDistance)
+    popTransitionSpec = {
+      sharedAxisEnterX(forward = false, slideDistance = slideDistance) togetherWith
+        sharedAxisExitX(forward = false, slideDistance = slideDistance)
     },
-    exitTransition = {
-      sharedAxisExitX(forward = true, slideDistance = slideDistance)
+    predictivePopTransitionSpec = {
+      sharedAxisEnterX(forward = false, slideDistance = slideDistance) togetherWith
+        sharedAxisExitX(forward = false, slideDistance = slideDistance)
     },
-    popExitTransition = {
-      sharedAxisExitX(forward = false, slideDistance = slideDistance)
-    }
-  ) {
-    composable(
-      route = ModeSelect.route,
-      enterTransition = {
-        fadeIn(animationSpec = tween(transitionDuration))
-      },
-      arguments = ModeSelect.arguments
-    ) {
-      ModeSelectScreen(navController = navController)
-    }
+    entryProvider = entryProvider {
+      entry<Screen.ModeSelect> {
+        ModeSelectScreen(backStack = backStack)
+      }
 
-    composable(
-      route = Screen.RemoteScoutHome.route,
-      arguments = Screen.RemoteScoutHome.arguments
-    ) {
-      ScoutHomeScreen(navController = navController)
-    }
+      entry<Screen.RemoteScoutHome> {
+        ScoutHomeScreen(backStack = backStack)
+      }
+      
+      entry<Screen.MatchScout> { key ->
+        ScoutMatchScreen(
+          metricSetId = key.metricSetId,
+          eventId = key.eventId,
+          backStack = backStack
+        )
+      }
 
-    composable(
-      route = Screen.MatchScout().route,
-      arguments = Screen.MatchScout().arguments,
-    ) { backStackEntry ->
-      val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
-      val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
-      ScoutMatchScreen(
-        metricSetId = metricSetId,
-        eventId = eventId,
-        navController = navController
-      )
-    }
+      entry<Screen.PitScout> { key ->
+        ScoutPitScreen(
+          metricSetId = key.metricSetId,
+          eventId = key.eventId,
+          backStack = backStack
+        )
+      }
 
-    composable(
-      route = Screen.PitScout().route,
-      arguments = Screen.PitScout().arguments,
-    ) { backStackEntry ->
-      val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
-      val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
-      ScoutPitScreen(
-        metricSetId = metricSetId,
-        eventId = eventId,
-        navController = navController
-      )
-    }
+      entry<Screen.Server> { key ->
+        ServerHomeScreen(
+          gameId = key.gameId,
+          eventId = key.eventId,
+          backStack = backStack
+        )
+      }
 
-    composable(
-      route = Server().route,
-      arguments = Server().arguments,
-    ) { backStackEntry ->
-      val gameId = backStackEntry.arguments?.getInt(Arguments.gameId.name) ?: 0
-      val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
-      ServerHomeScreen(
-        gameId = gameId,
-        eventId = eventId,
-        navController = navController
-      )
-    }
+      entry<Screen.GameList> {
+        GameListScreen(backStack = backStack)
+      }
 
-    composable(
-      route = GameList.route,
-      arguments = GameList.arguments,
-    ) {
-      GameListScreen(navController = navController)
-    }
+      entry<Screen.Game> { key ->
+        GameDetailScreen(
+          gameId = key.gameId,
+          backStack = backStack
+        )
+      }
 
-    composable(
-      route = Game().route,
-      arguments = Game().arguments,
-    ) { backStackEntry ->
-      val gameId = backStackEntry.arguments?.getInt(Arguments.gameId.name) ?: 0
-      GameDetailScreen(gameId = gameId, navController = navController)
-    }
+      entry<Screen.Event> { key ->
+        EventTeamListScreen(
+          eventId = key.eventId,
+          backStack = backStack
+        )
+      }
 
-    composable(
-      route = Screen.Event().route,
-      arguments = Screen.Event().arguments,
-    ) { backStackEntry ->
-      val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
-      EventTeamListScreen(eventId = eventId, navController = navController)
-    }
+      entry<Screen.MetricSet> { key ->
+        MetricsListScreen(
+          metricSetId = key.metricSetId,
+          backStack = backStack
+        )
+      }
 
-    composable(
-      route = Screen.MetricSet().route,
-      arguments = Screen.MetricSet().arguments,
-    ) { backStackEntry ->
-      val metricSetId = backStackEntry.arguments?.getInt(Arguments.metricSetId.name) ?: 0
-      MetricsListScreen(metricSetId = metricSetId, navController = navController)
-    }
+      entry<Screen.Analyze> { key ->
+        AnalyzeDataScreen(
+          gameId = key.gameId,
+          eventId = key.eventId,
+          backStack = backStack
+        )
+      }
 
-    composable(
-      route = Screen.Analyze().route,
-      arguments = Screen.Analyze().arguments,
-    ) { backStackEntry ->
-      val gameId = backStackEntry.arguments?.getInt(Arguments.gameId.name) ?: 0
-      val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
-      AnalyzeDataScreen(
-        gameId = gameId,
-        eventId = eventId,
-        navController = navController
-      )
-    }
+      entry<Screen.Export> { key ->
+        ExportDataScreen(
+          gameId = key.gameId,
+          eventId = key.eventId,
+          backStack = backStack
+        )
+      }
 
-    composable(
-      route = Screen.Export().route,
-      arguments = Screen.Export().arguments,
-    ) { backStackEntry ->
-      val gameId = backStackEntry.arguments?.getInt(Arguments.gameId.name) ?: 0
-      val eventId = backStackEntry.arguments?.getInt(Arguments.eventId.name) ?: 0
-      ExportDataScreen(
-        gameId = gameId,
-        eventId = eventId,
-        navController = navController
-      )
+      entry<Screen.TeamData> { key ->
+        TeamDataScreen(
+          teamNumber = key.teamNumber,
+          backStack = backStack
+        )
+      }
     }
-
-    composable(
-      route = Screen.TeamData().route,
-      arguments = Screen.TeamData().arguments,
-    ) { backStackEntry ->
-      val teamNumber = backStackEntry.arguments?.getString(Arguments.teamNumber.name) ?: ""
-      TeamDataScreen(
-        teamNumber = teamNumber,
-        navController = navController
-      )
-    }
-  }
+  )
 }

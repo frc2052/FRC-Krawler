@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation3.runtime.NavBackStack
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.model.Metric
@@ -56,7 +57,7 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 fun AnalyzeDataScreen(
   gameId: Int,
   eventId: Int,
-  navController: NavController,
+  backStack: NavBackStack,
   modifier: Modifier = Modifier,
 ) {
   val viewModel: AnalyzeDataViewModel = hiltViewModel()
@@ -70,18 +71,18 @@ fun AnalyzeDataScreen(
     modifier = modifier,
     topBar = {
       FRCKrawlerAppBar(
-        navController = navController,
+        backStack = backStack,
         title = {
           Text(stringResource(R.string.analyze_screen_title))
         },
         actions = {
           IconButton(
             onClick = {
-              navController.navigate(
+              backStack.add(
                 Screen.Export(
                   gameId = gameId,
                   eventId = eventId
-                ).route
+                )
               )
             }
           ) {
@@ -105,7 +106,7 @@ fun AnalyzeDataScreen(
         state = content,
         onSortSelected = viewModel::setSortMode,
         onFilterClick = { showFilterSheet = true },
-        onTeamClick = { team -> navController.navigate(Screen.TeamData(team).route) }
+        onTeamClick = { team -> backStack.add(Screen.TeamData(team)) }
       )
 
       if (showFilterSheet) {

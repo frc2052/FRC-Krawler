@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation3.runtime.NavBackStack
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.model.Metric
@@ -35,7 +36,7 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
 fun ScoutMatchScreen(
-  navController: NavController,
+  backStack: NavBackStack,
   metricSetId: Int,
   eventId: Int,
 ) {
@@ -58,7 +59,7 @@ fun ScoutMatchScreen(
     },
     topBar = {
       FRCKrawlerAppBar(
-        navController = navController,
+        backStack = backStack,
         title = {
           Text(stringResource(R.string.scout_screen_title))
         }
