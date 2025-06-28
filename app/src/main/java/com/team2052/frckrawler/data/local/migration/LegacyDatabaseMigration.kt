@@ -667,32 +667,45 @@ class LegacyDatabaseMigration @Inject constructor(
 
   private fun extractMetricDatumValueString(info: MigratedMetricsInfo, legacyId: Int, data: String): String? {
     val metadata = info.migratedMetrics[legacyId] ?: return null
-    val reader = JsonReader(StringReader(data))
-    reader.beginObject()
-    reader.nextName() // skip "value" key
-    return when (metadata.type) {
-      MetricType.Boolean -> {
-        reader.nextBoolean().toString()
-      }
-      MetricType.Counter, MetricType.Slider -> {
-        reader.nextInt().toString()
-      }
-      MetricType.Chooser, MetricType.Checkbox -> {
-        reader.beginArray()
-        val values = mutableListOf<Int>()
-        while (reader.hasNext()) {
-          values += reader.nextInt()
+
+    try {
+      val reader = JsonReader(StringReader(data))
+      reader.beginObject()
+      reader.nextName() // skip "value" key
+      return when (metadata.type) {
+        MetricType.Boolean -> {
+          reader.nextBoolean().toString()
         }
-        values.joinToString(separator = ",") {
-          metadata.stringListValues[it]
+
+        MetricType.Counter, MetricType.Slider -> {
+          reader.nextInt().toString()
+        }
+
+        MetricType.Chooser, MetricType.Checkbox -> {
+          reader.beginArray()
+          val values = mutableListOf<Int>()
+          while (reader.hasNext()) {
+            values += reader.nextInt()
+          }
+          values.joinToString(separator = ",") {
+            metadata.stringListValues[it]
+          }
+        }
+
+        MetricType.Stopwatch -> {
+          reader.nextDouble().toString()
+        }
+
+        MetricType.TextField -> {
+          reader.nextString()
         }
       }
-      MetricType.Stopwatch -> {
-        reader.nextDouble().toString()
-      }
-      MetricType.TextField -> {
-        reader.nextString()
-      }
+    } catch (e: Exception) {
+      throw MigrationException(
+        phase = "metric data",
+        message = "Failed to parse metric data for legacy ID $legacyId: $data",
+        cause = e
+      )
     }
   }
 
