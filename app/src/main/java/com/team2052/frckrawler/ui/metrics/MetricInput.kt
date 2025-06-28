@@ -2,12 +2,14 @@ package com.team2052.frckrawler.ui.metrics
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,7 +49,7 @@ fun MetricInput(
     }
 
     is Metric.SliderMetric -> {
-      MetricRow(
+      MetricColumn(
         modifier = modifier,
         metric = metric
       ) {
@@ -126,7 +128,8 @@ private fun MetricRow(
   ) {
     Text(
       text = metric.name,
-      style = MaterialTheme.typography.headlineSmall
+      style = MaterialTheme.typography.headlineSmall,
+      modifier = Modifier.weight(1f, fill = false)
     )
 
     Spacer(Modifier.width(16.dp))

@@ -112,3 +112,24 @@ private fun StopwatchMetricPreview() {
     }
   }
 }
+
+@FrcKrawlerPreview
+@Composable
+private fun StopwatchMetricPreviewWithLongName() {
+  FrcKrawlerTheme {
+    Surface {
+      MetricInput(
+        modifier = Modifier
+          .fillMaxWidth()
+          .background(MaterialTheme.colorScheme.surface),
+        metric = Metric.StopwatchMetric(
+          name = "Stopwatch metric with longer name to force wrapping",
+          enabled = true,
+          priority = 0
+        ),
+        state = "",
+        onStateChanged = {}
+      )
+    }
+  }
+}
