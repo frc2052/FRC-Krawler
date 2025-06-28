@@ -189,10 +189,29 @@ class LegacyDatabaseMigration @Inject constructor(
       while (moveToNext()) {
         val robotId = getInt(getColumnIndexOrThrow("ROBOT_ID"))
         val oldEventId = getInt(getColumnIndexOrThrow("EVENT_ID"))
-        val teamNumber = legacyDb.getTeamNumber(robotId)
-        val teamName = legacyDb.getTeamName(teamNumber)
 
+        // Skip robots at this event if the event doesn't exist in the old database
         val eventInfo = eventInfoMap[oldEventId] ?: continue
+
+        val teamNumber = try {
+          legacyDb.getTeamNumber(robotId)
+        } catch (e: Exception) {
+          throw MigrationException(
+            phase = "team at event",
+            message = "Failed to get team number for robot ID $robotId at event $oldEventId",
+            cause = e
+          )
+        }
+
+        val teamName = try {
+          legacyDb.getTeamName(teamNumber)
+        } catch (e: Exception) {
+          throw MigrationException(
+            phase = "team at event",
+            message = "Failed to get team name for team $teamNumber at event $oldEventId",
+            cause = e
+          )
+        }
 
         robotIdMap[robotId] = teamNumber.toString()
 
