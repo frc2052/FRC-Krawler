@@ -9,6 +9,7 @@ import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.EventDao
+import com.team2052.frckrawler.data.local.FRCKrawlerDatabase
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.MetricDao
@@ -23,6 +24,9 @@ import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.local.init.SeedDatabaseTask
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.StringReader
 import java.time.Instant
@@ -40,6 +44,7 @@ class LegacyDatabaseMigration @Inject constructor(
   private val metricDatumDao: MetricDatumDao,
   private val eventDao: EventDao,
   private val teamAtEventDao: TeamAtEventDao,
+  private val v4Db: FRCKrawlerDatabase,
 ) {
   companion object {
     private const val LEGACY_DB_NAME = "frc-krawler-database-v3"
@@ -55,34 +60,39 @@ class LegacyDatabaseMigration @Inject constructor(
   suspend fun migrate() {
     if (!requiresMigration()) return
 
-    // Make sure our reserved game/event/metrics are set up first
-    seedDatabaseTask.seed()
+    withContext(Dispatchers.IO) {
+      // Start with a clean slate in case we are trying to recover from a bad migration
+      v4Db.clearAllTables()
 
-    val legacyDb = LegacyDatabaseOpenHelper().readableDatabase
+      // Make sure our reserved game/event/metrics are set up first
+      seedDatabaseTask.seed()
 
-    Timber.d("migrating games")
-    val gameIdMap = migrateGames(legacyDb)
-    Timber.d("migrating events")
-    val eventIdMap = migrateEvents(legacyDb, gameIdMap)
-    Timber.d("migrating teams at events")
-    val robotIdMap = migrateTeamAtEvent(legacyDb, eventIdMap)
-    Timber.d("migrating metrics")
-    val metricsInfo = migrateMetrics(legacyDb, gameIdMap)
+      val legacyDb = LegacyDatabaseOpenHelper().readableDatabase
 
-    Timber.d("migrating match data")
-    migrateMatchMetricsData(legacyDb, robotIdMap, eventIdMap, metricsInfo)
-    Timber.d("migrating pit data")
-    migratePitMetricsData(legacyDb, robotIdMap, eventIdMap, metricsInfo)
+      Timber.d("migrating games")
+      val gameIdMap = migrateGames(legacyDb)
+      Timber.d("migrating events")
+      val eventIdMap = migrateEvents(legacyDb, gameIdMap)
+      Timber.d("migrating teams at events")
+      val robotIdMap = migrateTeamAtEvent(legacyDb, eventIdMap)
+      Timber.d("migrating metrics")
+      val metricsInfo = migrateMetrics(legacyDb, gameIdMap)
 
-    Timber.d("migrating match comments")
-    migrateMatchComments(legacyDb, robotIdMap, gameIdMap, eventIdMap, metricsInfo)
-    Timber.d("migrating pit comments")
-    migratePitComments(legacyDb, gameIdMap, eventIdMap, metricsInfo)
+      Timber.d("migrating match data")
+      migrateMatchMetricsData(legacyDb, robotIdMap, eventIdMap, metricsInfo)
+      Timber.d("migrating pit data")
+      migratePitMetricsData(legacyDb, robotIdMap, eventIdMap, metricsInfo)
 
-    Timber.d("finished migrating data")
-    legacyDb.close()
+      Timber.d("migrating match comments")
+      migrateMatchComments(legacyDb, robotIdMap, gameIdMap, eventIdMap, metricsInfo)
+      Timber.d("migrating pit comments")
+      migratePitComments(legacyDb, gameIdMap, eventIdMap, metricsInfo)
 
-    context.deleteDatabase(LEGACY_DB_NAME)
+      Timber.d("finished migrating data")
+      legacyDb.close()
+
+      context.deleteDatabase(LEGACY_DB_NAME)
+    }
   }
 
   // Returns map of old ID -> new ID
