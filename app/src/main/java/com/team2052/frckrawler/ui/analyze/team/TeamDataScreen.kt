@@ -2,6 +2,7 @@ package com.team2052.frckrawler.ui.analyze.team
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,10 +33,12 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.data.summary.DoubleSummaryValue
+import com.team2052.frckrawler.data.summary.OptionPercentageSummaryValue
 import com.team2052.frckrawler.data.summary.SummaryValue
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import java.lang.ProcessBuilder.Redirect.to
 
 @Composable
 fun TeamDataScreen(
@@ -109,22 +112,60 @@ private fun TeamEventSummary(
     )
 
     data.forEach { (metric, summary) ->
-      Row {
-        Text(
-          text = "${metric.name}:",
-          style = MaterialTheme.typography.bodyMedium,
-          fontWeight = FontWeight.Bold,
+      if (metric  is Metric.ChooserMetric || metric is Metric.CheckboxMetric || metric is Metric.TextFieldMetric) {
+        MultiLineSummary(
+          metricName = metric.name,
+          value = summary.asDisplayString()
         )
-        Spacer(Modifier.width(4.dp))
-        Text(
-          text = summary.asDisplayString(),
-          style = MaterialTheme.typography.bodyMedium,
+      } else {
+        SingleLineSummary(
+          metricName = metric.name,
+          value = summary.asDisplayString()
         )
       }
     }
   }
 }
 
+@Composable
+private fun SingleLineSummary(
+  metricName: String,
+  value: String,
+  modifier: Modifier = Modifier,
+) {
+  FlowRow(modifier) {
+    Text(
+      text = "${metricName}:",
+      style = MaterialTheme.typography.bodyMedium,
+      fontWeight = FontWeight.Bold,
+    )
+    Spacer(Modifier.width(4.dp))
+    Text(
+      text = value,
+      style = MaterialTheme.typography.bodyMedium,
+    )
+  }
+}
+
+@Composable
+private fun MultiLineSummary(
+  metricName: String,
+  value: String,
+  modifier: Modifier = Modifier,
+) {
+  Column(modifier) {
+    Text(
+      text = "${metricName}:",
+      style = MaterialTheme.typography.bodyMedium,
+      fontWeight = FontWeight.Bold,
+    )
+    Text(
+      modifier = Modifier.padding(start = 8.dp),
+      text = value,
+      style = MaterialTheme.typography.bodyMedium,
+    )
+  }
+}
 
 @Composable
 private fun EmptyBackground(
@@ -166,19 +207,32 @@ private fun TeamDataPreview() {
     range = 0..10,
   )
   val metric2 = Metric.BooleanMetric(
-    name = "Has wheels",
+    name = "Longer metric that will break to multiple lines with the value because it is long",
     priority = 1,
+    enabled = true,
+  )
+  val metric3 = Metric.ChooserMetric(
+    name = "Team color",
+    priority = 1,
+    options = listOf("Red", "Blue", "Green"),
     enabled = true,
   )
   val previewData = mapOf(
     event1 to mapOf(
       metric1 to DoubleSummaryValue(4.0, isPercent = false),
-      metric2 to DoubleSummaryValue(100.0, isPercent = true)
+      metric2 to DoubleSummaryValue(100.0, isPercent = true),
+      metric3 to OptionPercentageSummaryValue(
+        mapOf(
+          "Red" to 50.0,
+          "Blue" to 30.0,
+          "Green" to 20.0
+        ),
+      ),
     ),
 
     event2 to mapOf(
       metric1 to DoubleSummaryValue(4.0, isPercent = false),
-      metric2 to DoubleSummaryValue(100.0, isPercent = true)
+      metric2 to DoubleSummaryValue(100.0, isPercent = true),
     )
   )
 
