@@ -316,7 +316,15 @@ class LegacyDatabaseMigration @Inject constructor(
 
         val newMetricId = UUID.randomUUID()
         val metricType = legacyTypeToMetricType(type) ?: continue
-        val options = migrateOptions(metricType, data)
+        val options = try {
+          migrateOptions(metricType, data)
+        } catch(e: Exception) {
+          throw MigrationException(
+            phase = "metrics",
+            message = "Bad options for metric $oldId, type $metricType: $data",
+            cause = e
+          )
+        }
 
         metricsDao.insert(
           MetricRecord(
@@ -481,7 +489,7 @@ class LegacyDatabaseMigration @Inject constructor(
             metricId = metricId,
             eventId = eventId
           )
-        )
+          )
       }
     }
 
@@ -724,9 +732,9 @@ class LegacyDatabaseMigration @Inject constructor(
 
   @JsonClass(generateAdapter = true)
   data class MetricDataRange(
-    val min: Int,
-    val max: Int,
-    val inc: Int,
+    val min: Int = 0,
+    val max: Int = 1,
+    val inc: Int = 1,
   )
 
   inner class LegacyDatabaseOpenHelper : SQLiteOpenHelper(context, LEGACY_DB_NAME, null, 7) {
