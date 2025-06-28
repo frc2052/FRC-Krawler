@@ -52,7 +52,7 @@ nav3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.re
 nav3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3" }
 nav3-lifecycle = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "1.0.0-alpha02" }
 
-kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.8.1" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.9.0" }
 
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
 accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanist-swiperefresh" }
@@ -64,7 +64,7 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0"
 
-firebase-bom = "com.google.firebase:firebase-bom:33.15.0"
+firebase-bom = "com.google.firebase:firebase-bom:33.16.0"
 firebase-crashlytics      = { module = "com.google.firebase:firebase-crashlytics" }
 
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
@@ -99,7 +99,7 @@ ksp = "com.google.devtools.ksp:2.2.0-2.0.2"
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 room = { id = "androidx.room", version.ref = "room" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-googleServices = { id = "com.google.gms.google-services", version = "4.4.2" }
+googleServices = { id = "com.google.gms.google-services", version = "4.4.3" }
 firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.4" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version="2.2.0"}
 
