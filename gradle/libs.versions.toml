@@ -9,7 +9,7 @@ desugar_jdk_libs = "2.1.5"
 espresso = "3.6.1"
 junit = "4.13.2"
 kotlin = '2.2.0'
-compose = '1.7.8'
+compose = '1.8.3'
 coroutines = "1.10.2"
 lifecycle = "2.9.1"
 material = "1.12.0"
@@ -39,13 +39,14 @@ androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "mult
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "workmanager" }
 androidx-datastore = { module = "androidx.datastore:datastore-preferences", version = "1.1.7"}
 
-compose-materialIcons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "compose" }
-compose-materialIcons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
-compose-uiTooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
-compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
-compose-test = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+compose-bom = "androidx.compose:compose-bom:2025.06.01"
+compose-materialIcons-core = { module = "androidx.compose.material:material-icons-core" }
+compose-materialIcons-extended = { module = "androidx.compose.material:material-icons-extended" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-uiTooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-foundation = { module = "androidx.compose.foundation:foundation" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-test = { module = "androidx.compose.ui:ui-test-junit4" }
 compose-constraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.1.1"
 
 nav3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3" }

@@ -82,6 +82,7 @@ dependencies {
     implementation libs.material
 
     // Compose
+    implementation platform(libs.compose.bom)
     implementation libs.compose.ui
     implementation libs.compose.uiTooling
     implementation libs.compose.foundation
