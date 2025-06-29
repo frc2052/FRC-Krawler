@@ -7,5 +7,6 @@ enum class MetricType {
   Chooser,
   Checkbox,
   Stopwatch,
-  TextField
+  TextField,
+  SectionHeader,
 }

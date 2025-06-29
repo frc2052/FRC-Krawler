@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
@@ -44,7 +45,8 @@ class AnalyzeDataViewModel @Inject constructor(
 
   private val metrics = game.map {
     val pitMetrics = it.pitMetricsSetId?.let { pitMetricsSetId ->
-      metricRepository.getMetrics(pitMetricsSetId).first()
+      metricRepository.getMetrics(pitMetricsSetId)
+        .first()
     } ?: emptyList()
     val matchMetrics = it.matchMetricsSetId?.let { matchMetricsSetId ->
       metricRepository.getMetrics(matchMetricsSetId).first()
@@ -52,8 +54,10 @@ class AnalyzeDataViewModel @Inject constructor(
 
     val eventMetrics = pitMetrics + matchMetrics
 
-    // Sorting on a text field doesn't make much sense in our context
-    return@map eventMetrics.filterNot { metric -> metric is Metric.TextFieldMetric }
+    // Sorting on a text field or section header doesn't make much sense
+    return@map eventMetrics.filterNot { metric ->
+      metric is Metric.TextFieldMetric || metric is Metric.SectionHeader
+    }
   }
     .shareIn(viewModelScope, replay = 1, started = SharingStarted.Lazily)
 

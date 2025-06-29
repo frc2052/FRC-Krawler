@@ -16,5 +16,6 @@ fun Metric.getSummarizer(): MetricSummarizer {
     is Metric.CheckboxMetric -> StringOptionsMetricSummarizer
     is Metric.StopwatchMetric -> StringOptionsMetricSummarizer
     is Metric.TextFieldMetric -> FullStringMetricSummarizer
+    is Metric.SectionHeader -> NoOpSummarizer
   }
 }

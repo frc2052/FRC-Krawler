@@ -83,6 +83,13 @@ data class AddEditMetricScreenState(
         priority = priority,
         enabled = enabled
       )
+
+      MetricType.SectionHeader -> Metric.SectionHeader(
+        id = id,
+        name = name,
+        priority = priority,
+        enabled = enabled
+      )
     }
   }
 }

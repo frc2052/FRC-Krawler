@@ -404,6 +404,7 @@ private fun MetricListRow(
 
     is Metric.StopwatchMetric -> stringResource(R.string.metric_list_stopwatch_description)
     is Metric.TextFieldMetric -> stringResource(R.string.metric_list_textfield_description)
+    is Metric.SectionHeader -> stringResource(R.string.metric_list_header_description)
   }
 
   Column(

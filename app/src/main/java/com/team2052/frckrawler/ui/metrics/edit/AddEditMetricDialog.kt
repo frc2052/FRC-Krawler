@@ -416,6 +416,7 @@ private fun Metric.defaultValueForPreview(): String {
     is Metric.SliderMetric -> range.first.toString()
     is Metric.StopwatchMetric -> ""
     is Metric.TextFieldMetric -> ""
+    is Metric.SectionHeader -> ""
   }
 }
 

@@ -65,6 +65,13 @@ fun MetricRecord.toMetric(): Metric {
       priority = priority,
       enabled = enabled
     )
+
+    MetricType.SectionHeader -> Metric.SectionHeader(
+      id = id,
+      name = name,
+      priority = priority,
+      enabled = enabled
+    )
   }
 }
 
@@ -134,6 +141,16 @@ fun Metric.toMetricRecord(metricSetId: Int): MetricRecord {
       id = id,
       metricSetId = metricSetId,
       type = MetricType.TextField,
+      name = name,
+      priority = priority,
+      enabled = enabled,
+      options = null
+    )
+
+    is Metric.SectionHeader -> MetricRecord(
+      id = id,
+      metricSetId = metricSetId,
+      type = MetricType.SectionHeader,
       name = name,
       priority = priority,
       enabled = enabled,

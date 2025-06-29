@@ -77,6 +77,15 @@ sealed class Metric {
     override fun defaultValue() = ""
   }
 
+  data class SectionHeader(
+    override val id: String = "",
+    override val name: String,
+    override val priority: Int,
+    override val enabled: Boolean,
+  ) : Metric() {
+    override fun defaultValue(): String = ""
+  }
+
   fun getType(): MetricType = when (this) {
     is BooleanMetric -> MetricType.Boolean
     is CheckboxMetric -> MetricType.Checkbox
@@ -85,5 +94,6 @@ sealed class Metric {
     is SliderMetric -> MetricType.Slider
     is StopwatchMetric -> MetricType.Stopwatch
     is TextFieldMetric -> MetricType.TextField
+    is SectionHeader -> MetricType.SectionHeader
   }
 }

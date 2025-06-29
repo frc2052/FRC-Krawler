@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.data.model.MetricState
+import com.team2052.frckrawler.data.model.isSectionHeader
 import com.team2052.frckrawler.ui.metrics.MetricInput
+import com.team2052.frckrawler.ui.metrics.SectionHeader
 
 @Composable
 fun ScoutingForm(
@@ -34,16 +36,23 @@ fun ScoutingForm(
     }
 
     items(metrics) { metric ->
-      MetricInput(
-        modifier = Modifier.fillMaxWidth(),
-        metric = metric.metric,
-        state = metric.value,
-        onStateChanged = { newValue ->
-          onMetricStateChanged(
-            metric.copy(value = newValue)
-          )
-        }
-      )
+      if (metric.metric.isSectionHeader()) {
+        SectionHeader(
+          modifier = Modifier.fillMaxWidth(),
+          metric = metric.metric
+        )
+      } else {
+        MetricInput(
+          modifier = Modifier.fillMaxWidth(),
+          metric = metric.metric,
+          state = metric.value,
+          onStateChanged = { newValue ->
+            onMetricStateChanged(
+              metric.copy(value = newValue)
+            )
+          }
+        )
+      }
 
       HorizontalDivider()
     }

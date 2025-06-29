@@ -26,6 +26,10 @@ fun MetricInput(
   onStateChanged: (String) -> Unit
 ) {
   when (metric) {
+    is Metric.SectionHeader -> {
+      SectionHeader(modifier, metric)
+    }
+
     is Metric.BooleanMetric -> {
       MetricRow(
         modifier = modifier,

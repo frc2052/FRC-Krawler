@@ -414,7 +414,8 @@ class LegacyDatabaseMigration @Inject constructor(
     return when(type) {
       MetricType.Boolean,
         MetricType.Stopwatch,
-        MetricType.TextField  -> null
+        MetricType.TextField,
+        MetricType.SectionHeader -> null
       MetricType.Counter, MetricType.Slider -> {
         val adapter = moshi.adapter(MetricDataRange::class.java)
         val range = adapter.fromJson(options) ?: MetricDataRange(0, 10, 1)
@@ -699,6 +700,7 @@ class LegacyDatabaseMigration @Inject constructor(
         MetricType.TextField -> {
           reader.nextString()
         }
+        MetricType.SectionHeader -> { "" }
       }
     } catch (e: Exception) {
       throw MigrationException(

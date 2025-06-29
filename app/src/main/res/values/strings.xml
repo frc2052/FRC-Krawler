@@ -125,6 +125,7 @@
     <string name="metric_list_slider_description">Slider (min: %1$d, max: %2$d)</string>
     <string name="metric_list_stopwatch_description">Stopwatch</string>
     <string name="metric_list_textfield_description">Text field</string>
+    <string name="metric_list_header_description">Section header</string>
 
     <!-- Metric controls -->
     <string name="metric_stopwatch_start">start</string>
