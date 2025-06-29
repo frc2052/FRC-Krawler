@@ -4,8 +4,12 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
+import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat
+import androidx.core.content.res.TypedArrayUtils.getText
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.notifications.FrcKrawlerNotificationChannel
 import com.team2052.frckrawler.notifications.NotificationChannelManager
@@ -41,7 +45,16 @@ class SyncServerService : Service() {
     // We want to be able to finish syncing if the app goes in the background, so
     // we run in the foreground
     notificationChannelManager.ensureChannelsCreated()
-    startForeground(NotificationId.ServerServiceNotification, getForegroundNotification())
+
+    val serviceType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
+    } else 0
+
+    ServiceCompat.startForeground(
+      this,
+      NotificationId.ServerServiceNotification,
+      getForegroundNotification(),
+      serviceType)
 
     val extras = intent?.extras
       ?: throw IllegalStateException("SyncServerService request game and event ID extras")
