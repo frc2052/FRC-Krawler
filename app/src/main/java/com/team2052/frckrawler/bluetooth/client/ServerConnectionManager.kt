@@ -24,25 +24,12 @@ import kotlin.time.ExperimentalTime
 
 @SuppressLint("MissingPermission")
 class ServerConnectionManager internal @Inject constructor(
-  bluetoothAdapterOptional: Optional<BluetoothAdapter>,
   private val discoveryStrategy: ServerDiscoveryStrategy,
   @ApplicationContext private val context: Context
 ) {
 
   private val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
   private val coroutineContext = dispatcher + SupervisorJob()
-  private val bluetoothAdapter = bluetoothAdapterOptional.get()
-
-  /**
-   * Get a list of all paired bluetooth devices that are running FRCKrawler servers
-   */
-  fun getPairedFrcKrawlerServers(): List<BluetoothDevice> {
-    val pairedServers = bluetoothAdapter.bondedDevices.filter {
-      it.uuids.contains(ParcelUuid(BluetoothSyncConstants.Uuid))
-    }
-
-    return pairedServers
-  }
 
   /**
    * Connect to a new FRCKrawler server.
@@ -54,21 +41,15 @@ class ServerConnectionManager internal @Inject constructor(
   suspend fun connectToNewServer(
     activity: ComponentActivity
   ): ServerConnectionResult = withContext(coroutineContext) {
-    var deviceToPair: BluetoothDevice? = null
-    val pairedServers = getPairedFrcKrawlerServers()
-    if (pairedServers.isNotEmpty()) {
-      // TODO support multiple available servers
-      deviceToPair = pairedServers.first()
+    var deviceToPair: BluetoothDevice?
+    // TODO autoconnect running servers and previous servers
+
+    val discoveryResult = discoveryStrategy.launchDeviceDiscovery(activity)
+    if (discoveryResult is DeviceSelectionResult.Cancelled) {
+      return@withContext ServerConnectionResult.Cancelled(discoveryResult.message)
     }
 
-    if (deviceToPair == null) {
-      val discoveryResult = discoveryStrategy.launchDeviceDiscovery(activity)
-      if (discoveryResult is DeviceSelectionResult.Cancelled) {
-        return@withContext ServerConnectionResult.Cancelled(discoveryResult.message)
-      }
-
-      deviceToPair = (discoveryResult as DeviceSelectionResult.DeviceSelected).device
-    }
+    deviceToPair = (discoveryResult as DeviceSelectionResult.DeviceSelected).device
 
     val pairedDevice: BluetoothDevice
     if (deviceToPair.bondState != BluetoothDevice.BOND_BONDED) {
@@ -82,19 +63,6 @@ class ServerConnectionManager internal @Inject constructor(
     }
 
     return@withContext ServerConnectionResult.ServerConnected(pairedDevice)
-  }
-
-  @OptIn(ExperimentalTime::class)
-  private suspend fun pairDeviceWithTimeout(
-    device: BluetoothDevice
-  ): DevicePairingResult {
-    return try {
-      withTimeout(30.seconds) {
-        pairDevice(device)
-      }
-    } catch (e: TimeoutCancellationException) {
-      DevicePairingResult.TimedOut
-    }
   }
 
   private suspend fun pairDevice(
