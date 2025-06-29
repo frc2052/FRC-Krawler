@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE resources [
-    <!ENTITY appName "FRC Krawler">
-    <!ENTITY appVersion "v4.0">
-    <!ENTITY applicationID "com.team2052.frckrawler">
-]>
 
 <resources>
-    <string name="app_name">&appName;</string>
-    <string name="app_version">&appVersion;</string>
+    <string name="app_name">FRC Krawler</string>
 
     <!-- Common strings -->
     <string name="ok">OK</string>
