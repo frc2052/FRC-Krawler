@@ -65,7 +65,7 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0"
 
-firebase-bom = "com.google.firebase:firebase-bom:33.16.0"
+firebase-bom = "com.google.firebase:firebase-bom:34.0.0"
 firebase-crashlytics      = { module = "com.google.firebase:firebase-crashlytics" }
 
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
