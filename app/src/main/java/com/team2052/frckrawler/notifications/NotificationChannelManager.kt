@@ -16,15 +16,13 @@ class NotificationChannelManager @Inject constructor(
 
   fun ensureChannelsCreated() {
     FrcKrawlerNotificationChannel.entries.forEach { channel ->
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        notificationManager.createNotificationChannel(
-          NotificationChannel(
-            channel.id,
-            context.getText(channel.nameRes),
-            NotificationManager.IMPORTANCE_DEFAULT
-          )
+      notificationManager.createNotificationChannel(
+        NotificationChannel(
+          channel.id,
+          context.getText(channel.nameRes),
+          NotificationManager.IMPORTANCE_DEFAULT
         )
-      }
+      )
     }
   }
 }

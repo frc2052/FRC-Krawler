@@ -51,11 +51,7 @@ object BluetoothModule {
     @ApplicationContext context: Context
   ): ServerDiscoveryStrategy {
     return if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)) {
-      if (Build.VERSION.SDK_INT >= 26) {
-        CompanionDeviceServerDiscoveryStrategy()
-      } else {
-        ScanServerDiscoveryStrategy(context)
-      }
+      CompanionDeviceServerDiscoveryStrategy()
     } else {
       NoOpServerDiscoverStrategy
     }
