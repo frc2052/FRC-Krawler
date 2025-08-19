@@ -57,6 +57,12 @@ class LegacyDatabaseMigration @Inject constructor(
     return legacyDbFile.exists()
   }
 
+  suspend fun deleteDatabase() {
+    withContext(Dispatchers.IO) {
+      context.deleteDatabase(LEGACY_DB_NAME)
+    }
+  }
+
   suspend fun migrate() {
     if (!requiresMigration()) return
 

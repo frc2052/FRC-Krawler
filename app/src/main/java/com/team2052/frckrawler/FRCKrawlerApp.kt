@@ -20,7 +20,6 @@ class FRCKrawlerApp : Application(), Configuration.Provider {
       Timber.plant(Timber.DebugTree())
     }
     Timber.plant(FirebaseTree())
-    Timber.w("test message")
   }
 
   override val workManagerConfiguration: Configuration

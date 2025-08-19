@@ -25,8 +25,12 @@
 
     <string name="cd_drag">drag</string>
 
-
+    <!-- v3 Migration -->
     <string name="migrating_message">Migrating database to v4</string>
+    <string name="migration_failed_title">Error migrating data</string>
+    <string name="migration_failed_body">FRC Krawler was unable to migrate your database from v3 to v4. Please report this error at https://github.com/frc2052/FRC-Krawler or by emailing frckrawler@team2052.com and we will investigate further.\n\nAlternatively, click "delete data" to continue without migrating your previous data. All previous games, metrics, and scouting data will be lost.</string>
+    <string name="migration_failed_close">Close app</string>
+    <string name="migration_failed_delete_data">Delete data</string>
 
     <!--Mode Select-->
     <string name="mode_unavailable_no_bluetooth">Unavailable because this device does not support Bluetooth.</string>
