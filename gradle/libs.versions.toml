@@ -51,7 +51,7 @@ compose-constraintLayout = "androidx.constraintlayout:constraintlayout-compose:1
 
 nav3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3" }
 nav3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3" }
-nav3-lifecycle = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "1.0.0-alpha04" }
+nav3-lifecycle = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "2.10.0-alpha02" }
 
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.9.0" }
 
