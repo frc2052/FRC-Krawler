@@ -102,5 +102,5 @@ room = { id = "androidx.room", version.ref = "room" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 googleServices = { id = "com.google.gms.google-services", version = "4.4.3" }
 firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.6" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version="2.2.0"}
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version="2.2.10"}
 
