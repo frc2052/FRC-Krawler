@@ -37,7 +37,7 @@ androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "mult
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "workmanager" }
 androidx-datastore = { module = "androidx.datastore:datastore-preferences", version = "1.1.7"}
 
-compose-bom = "androidx.compose:compose-bom:2025.07.00"
+compose-bom = "androidx.compose:compose-bom:2025.08.00"
 compose-materialIcons-core = { module = "androidx.compose.material:material-icons-core" }
 compose-materialIcons-extended = { module = "androidx.compose.material:material-icons-extended" }
 compose-ui = { module = "androidx.compose.ui:ui" }
