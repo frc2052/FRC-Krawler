@@ -1,10 +1,13 @@
 package com.team2052.frckrawler.ui.modeSelect
 
+import android.content.Intent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,6 +23,7 @@ import androidx.compose.material.icons.outlined.Hub
 import androidx.compose.material.icons.outlined.TapAndPlay
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -32,9 +36,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation3.runtime.NavBackStack
@@ -163,6 +172,9 @@ private fun ModeSelectScreenContent(
         )
       },
     )
+
+    Spacer(modifier = Modifier.height(24.dp))
+    About()
   }
 }
 
@@ -450,6 +462,63 @@ private fun ScoutModeRadioGroup(
 
 private const val disabledAlpha = 0.38f
 
+@Composable
+private fun About() {
+  val context = LocalContext.current
+  Column(
+    modifier = Modifier.fillMaxWidth()
+      .padding(horizontal = 16.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    Text(
+      text = stringResource(R.string.about_text),
+      style = MaterialTheme.typography.bodySmall,
+      textAlign = TextAlign.Center,
+    )
+
+    Spacer(Modifier.height(4.dp))
+
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceEvenly,
+    ) {
+      TextButton(
+        onClick = {
+          context.startActivity(
+            Intent(Intent.ACTION_VIEW, "https://github.com/frc2052/FRC-Krawler".toUri())
+          )
+        }
+      ) {
+        Icon(
+          modifier = Modifier.size(24.dp),
+          painter = painterResource(R.drawable.github),
+          contentDescription = null,
+        )
+        Spacer(Modifier.width(8.dp))
+        Text( stringResource(R.string.about_github))
+      }
+
+      Spacer(Modifier.width(12.dp))
+
+      TextButton(
+        onClick = {
+          context.startActivity(
+            Intent(Intent.ACTION_VIEW, "https://www.team2052.com".toUri())
+          )
+        }
+      ) {
+        Icon(
+          modifier = Modifier.size(24.dp),
+          painter = painterResource(R.drawable.ic_logo),
+          contentDescription = null,
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(stringResource(R.string.about_website))
+      }
+    }
+  }
+}
+
 @FrcKrawlerPreview
 @Composable
 private fun ModeSelectScreenPreviewLight() {
@@ -519,6 +588,17 @@ private fun LocalScoutCardPreview() {
         gameEventState = gameEventState,
         navigate = {}
       )
+    }
+  }
+}
+
+
+@FrcKrawlerPreview
+@Composable
+private fun AboutPreview() {
+  FrcKrawlerTheme {
+    Surface {
+      About()
     }
   }
 }

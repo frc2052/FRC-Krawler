@@ -57,6 +57,11 @@
     <string name="mode_select_scout_match">Match</string>
     <string name="mode_select_scout_pit">Pit</string>
 
+    <!-- About -->
+    <string name="about_text">FRC Krawler is open source and is designed and built by FRC Team 2052, KnightKralwer from New Brighton, Minnesota</string>
+    <string name="about_github">GitHub</string>
+    <string name="about_website">team2052.com</string>
+
     <!--Scout Screens-->
     <string name="scout_screen_title">Scout</string>
     <string name="scout_team_label">Team</string>
