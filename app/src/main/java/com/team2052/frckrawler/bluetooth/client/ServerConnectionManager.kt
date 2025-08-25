@@ -38,7 +38,7 @@ class ServerConnectionManager internal @Inject constructor(
    */
   fun getPairedFrcKrawlerServers(): List<BluetoothDevice> {
     val pairedServers = bluetoothAdapter.bondedDevices.filter {
-      it.uuids.contains(ParcelUuid(BluetoothSyncConstants.Uuid))
+      it.uuids?.contains(ParcelUuid(BluetoothSyncConstants.Uuid)) == true
     }
 
     return pairedServers
