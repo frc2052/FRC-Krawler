@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
@@ -329,6 +330,11 @@ private fun MetricListContent(
           )
         }
       }
+    }
+
+    // Extra space at the bottom to ensure the drag handle isn't covered by the FAB
+    item {
+      Spacer(Modifier.height(64.dp))
     }
   }
 }
