@@ -45,6 +45,12 @@ you want to scout, and can be assigned as either the "match metrics" for a game,
 From the game configuration screen, tap "add" on the metric sets list to create a new metric set.
 Give your metric set a name and tap "save".
 
+!!! note
+
+    Before you start scouting, you must set at least one metric set as either the "match metrics"
+    or the "pit metrics" for a game. Tap on a metric set and use the toggle switches at the top to
+    set the metric set as the match or pit metrics.
+
 ![](../assets/images/setup/add_metric_set.png){: style="height:500px"}
 
 ## Add metrics

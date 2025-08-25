@@ -6,6 +6,8 @@ FRC Krawler is open source, offline-first, and is designed to be easy to use whi
 highly customizable to support gathering a wide variety of data to enable teams to make data-driven
 decisions during alliance selection.
 
+<a href="https://play.google.com/store/apps/details?id=com.team2052.frckrawler"><img alt="Get it on Google Play" src="./assets/images/google_play_badge.png"/></a>
+
 ## Device requirements
 FRC Krawler is only available for Android devices, and currently supports **Android 8.0 and above**. 
 An older version (3.3.10) of the app is still available that supports Android 5.0 and up. It functions

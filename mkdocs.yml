@@ -30,6 +30,7 @@ theme:
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      accent: amber
       toggle:
         icon: material/brightness-4
         name: Switch to system preference
@@ -51,6 +52,7 @@ markdown_extensions:
   - pymdownx.smartsymbols
   - tables
   - attr_list
+  - admonition
 
 plugins:
   - search
@@ -61,4 +63,9 @@ nav:
       - 'Report an issue': https://github.com/frc2052/FRC-Krawler/issues/new
     - 'Getting Started':
         - 'Setup': getting-started/setup.md
+        - 'Scouting with a server': getting-started/scouting-with-server.md
+        - 'Solo scouting': getting-started/solo-scouting.md
+        - 'Scouting': getting-started/scouting.md
+        - 'Metric types': getting-started/metric-types.md
+        - 'Exporting & analyzing data': getting-started/exporting.md
     - 'Glossary': glossary.md'
