@@ -38,7 +38,7 @@ internal class CompanionDeviceServerDiscoveryStrategy @Inject constructor() :
     deviceManager.associate(
       pairingRequest,
       object : CompanionDeviceManager.Callback() {
-        var failedResumed: Boolean = false
+        var resumed: Boolean = false
         
         // Called when a device is found. Launch the IntentSender so the user
         // can select the device they want to pair with.
@@ -48,16 +48,19 @@ internal class CompanionDeviceServerDiscoveryStrategy @Inject constructor() :
             ServerDiscoveryStrategy.LAUNCHER_KEY,
             ActivityResultContracts.StartIntentSenderForResult()
           ) {
-            if (!failedResumed) {
+            if (!resumed) {
               continuation.resume(getSelectionResult(it))
+              resumed = true
             }
           }
           launcher.launch(IntentSenderRequest.Builder(chooserLauncher).build())
         }
 
         override fun onFailure(error: CharSequence?) {
-          continuation.resume(DeviceSelectionResult.Cancelled(error))
-          failedResumed = true
+          if (!resumed) {
+            continuation.resume(DeviceSelectionResult.Cancelled(error))
+            resumed = true
+          }
         }
       }, null
     )
