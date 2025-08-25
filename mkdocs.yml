@@ -1,0 +1,64 @@
+site_name: FRC Krawler
+site_url: https://frc2052.github.io/FRC-Krawler
+repo_name: FRC-Krawler
+repo_url: https://github.com/frc2052/FRC-Krawler
+site_description: "FRC Krawler is a FIRST Robotics Competition scouting app developed by Team 2052 - KnightKrawler"
+site_author: FRC Team 2052 - KnightKrawler
+remote_branch: gh-pages
+
+theme:
+  name: 'material'
+  favicon: assets/images/2052_favicon.png
+  logo: assets/images/2052_logo.png
+  palette:
+
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      primary: custom
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      primary: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  features:
+    - navigation.tabs
+
+extra_css:
+  - assets/css/extra.css
+
+markdown_extensions:
+  - smarty
+  - toc:
+      permalink: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.smartsymbols
+  - tables
+  - attr_list
+
+plugins:
+  - search
+
+nav:
+    - 'Overview':
+      - 'Overview': index.md
+      - 'Report an issue': https://github.com/frc2052/FRC-Krawler/issues/new
+    - 'Getting Started':
+        - 'Setup': getting-started/setup.md
+    - 'Glossary': glossary.md'

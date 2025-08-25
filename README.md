@@ -29,5 +29,13 @@ Follow the instructions in step 3 to download the `google-services.json` file an
 Please feel free to open feature requests and bug reports here on GitHub! We'll do our best to 
 address them in a timely manner.
 
+## Buidling documentation
+Our docs site is published using [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+To get started, install python. Then run:
+```shell
+python3 -m venv venv
+source venv/bin/activate
+pip install mkdocs-material
 
-
+mkdocs serve
+```
