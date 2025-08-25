@@ -130,7 +130,7 @@ private fun AddEditMetricContent(
       FRCKrawlerTextField(
         value = state.name,
         onValueChange = onNameChange,
-        label = "Metric name"
+        label = stringResource(R.string.edit_metric_name_label)
       )
 
       Spacer(Modifier.height(8.dp))
