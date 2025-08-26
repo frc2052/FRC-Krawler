@@ -28,11 +28,10 @@ internal class CompanionDeviceServerDiscoveryStrategy @Inject constructor() :
     val deviceManager: CompanionDeviceManager =
       activity.getSystemService(Context.COMPANION_DEVICE_SERVICE) as CompanionDeviceManager
 
-    val deviceFilter = BluetoothDeviceFilter.Builder()
-      .build()
-
+    // Theoretically we could filter for our service ID, but that causes an NPE
+    // on older android versions: https://issuetracker.google.com/issues/124106032
+    // No device filter also allows us to pair without the server running
     val pairingRequest = AssociationRequest.Builder()
-      .addDeviceFilter(deviceFilter)
       .build()
 
     deviceManager.associate(
