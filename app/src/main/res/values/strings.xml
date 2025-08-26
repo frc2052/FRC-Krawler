@@ -96,6 +96,13 @@
     <string name="server_controls_title">Server controls</string>
     <string name="server_controls_game_label">Game: </string>
     <string name="server_controls_event_label">Event: </string>
+    <string name="server_controls_server_status_label">Server status: </string>
+    <string name="server_controls_server_start">Start Server</string>
+    <string name="server_controls_server_stop">Stop Server</string>
+    <string name="server_controls_server_state_starting">Starting</string>
+    <string name="server_controls_server_state_started">Started</string>
+    <string name="server_controls_server_state_stopping">Starting</string>
+    <string name="server_controls_server_state_stopped">Not running</string>
 
     <string name="game_list_empty_text">No games</string>
 
@@ -230,10 +237,6 @@
 
     <!-- Server syncing -->
     <string name="server_sync_notification_title">FRCKrawler Server Running</string>
-    <plurals name="server_sync_clients_connected">
-        <item quantity="one">%1$d scout connected</item>
-        <item quantity="other">%1$d scouts connected</item>
-    </plurals>
 
     <!-- Scout syncing -->
     <string name="scout_sync_notification_title">Syncing with server</string>

@@ -17,6 +17,7 @@ class SyncServerThread(
   context: Context,
   private val gameId: Int,
   private val eventId: Int,
+  private val statusProvider: ServerStatusProvider,
 ) : Thread("frckrawler-sync-server") {
 
   private val bluetoothManager: BluetoothManager =
@@ -31,24 +32,26 @@ class SyncServerThread(
   override fun run() {
     Timber.d("Opening server")
 
-    // TODO handle interrupt?
-    while (serverSocket == null) {
-      // TODO catch?
+    while (serverSocket == null && !isInterrupted) {
       serverSocket = bluetoothManager.adapter.listenUsingRfcommWithServiceRecord(
         BluetoothSyncConstants.ServiceName,
         BluetoothSyncConstants.Uuid
       )
     }
 
-    // TODO handle interrupt?
+    statusProvider.notifyServerStarted()
+
     // TODO log to a database for troubleshooting?
-    while (true) {
+    while (!interrupted()) {
       Timber.d("Still running")
       val clientSocket = serverSocket!!.accept()
       val clientDevice = clientSocket.remoteDevice
       Timber.d("Client connected: ${clientDevice.name}")
       syncWithClient(clientSocket)
     }
+
+    statusProvider.notifyServerStopped()
+    serverSocket?.close()
   }
 
   private fun syncWithClient(clientSocket: BluetoothSocket) {
@@ -74,7 +77,8 @@ class SyncServerThread(
 
     val device = clientSocket.remoteDevice
     scoutObserver.notifyScoutSynced(device.name, device.address, syncSucceeded)
+
+    clientSocket.close()
   }
 
-  // TODO handle closing sockets?
 }

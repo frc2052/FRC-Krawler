@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.bluetooth.server.ConnectedScoutObserver
+import com.team2052.frckrawler.bluetooth.server.ServerStatusProvider
 import com.team2052.frckrawler.bluetooth.server.SyncServiceController
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.EventDao
@@ -16,7 +17,9 @@ import com.team2052.frckrawler.data.model.RemoteScout
 import com.team2052.frckrawler.ui.permissions.PermissionManager
 import com.team2052.frckrawler.ui.permissions.RequiredPermissions
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Optional
 import javax.inject.Inject
@@ -29,8 +32,11 @@ class ServerHomeViewModel @Inject constructor(
   private val connectedScoutObserver: ConnectedScoutObserver,
   private val gameDao: GameDao,
   private val eventDao: EventDao,
+  private val serverStatusProvider: ServerStatusProvider,
 ) : ViewModel() {
   private val bluetoothAdapter = bluetoothAdapterOptional.get()
+
+  private var collectServerStatusJob: Job? = null
 
   var serverState by mutableStateOf(ServerState.DISABLED)
   var showPermissionRequests by mutableStateOf(false)
@@ -46,6 +52,14 @@ class ServerHomeViewModel @Inject constructor(
 
     viewModelScope.launch {
       event = eventDao.get(eventId)
+    }
+
+    viewModelScope.launch {
+      // TODO handle changing game/event
+      val alreadyRunning = serverStatusProvider.getStatusFlow().first()
+      if (alreadyRunning) {
+        serverState = ServerState.ENABLED
+      }
     }
   }
 
@@ -83,6 +97,12 @@ class ServerHomeViewModel @Inject constructor(
       return
     }
 
+    collectServerStatusJob = viewModelScope.launch {
+      serverStatusProvider.getStatusFlow().collectLatest { running ->
+        serverState = if (running) ServerState.ENABLED else ServerState.DISABLED
+      }
+    }
+
     serverState = ServerState.ENABLED
 
     viewModelScope.launch {
@@ -93,6 +113,8 @@ class ServerHomeViewModel @Inject constructor(
   }
 
   fun stopServer() {
+    collectServerStatusJob?.cancel()
+
     serverState = ServerState.DISABLING
 
     syncServiceController.stopServer()

@@ -35,6 +35,9 @@ class SyncServerService : Service() {
   @Inject
   internal lateinit var notificationChannelManager: NotificationChannelManager
 
+  @Inject
+  internal lateinit var statusProvider: ServerStatusProvider
+
   private lateinit var serverThread: SyncServerThread
 
   override fun onBind(intent: Intent): IBinder? {
@@ -65,11 +68,12 @@ class SyncServerService : Service() {
     return START_REDELIVER_INTENT
   }
 
-  private fun getForegroundNotification(): Notification {
-    // TODO format with actual number of connected clients
-    val notificationText =
-      resources.getQuantityString(R.plurals.server_sync_clients_connected, 0, 0)
+  override fun onDestroy() {
+    super.onDestroy()
+    stopServer()
+  }
 
+  private fun getForegroundNotification(): Notification {
     // TODO deep link to server screen
     val pendingIntent: PendingIntent =
       Intent(this, MainActivity::class.java).let { notificationIntent ->
@@ -81,7 +85,6 @@ class SyncServerService : Service() {
 
     return NotificationCompat.Builder(this, FrcKrawlerNotificationChannel.Sync.id)
       .setContentTitle(getText(R.string.server_sync_notification_title))
-      .setContentText(notificationText)
       .setSmallIcon(R.drawable.ic_logo)
       .setContentIntent(pendingIntent)
       .build()
@@ -91,7 +94,7 @@ class SyncServerService : Service() {
     gameId: Int,
     eventId: Int,
   ) {
-    serverThread = SyncServerThread(this, gameId, eventId)
+    serverThread = SyncServerThread(this, gameId, eventId, statusProvider)
     serverThread.start()
   }
 
