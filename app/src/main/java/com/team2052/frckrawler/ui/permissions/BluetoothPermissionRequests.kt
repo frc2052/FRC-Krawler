@@ -30,40 +30,40 @@ fun BluetoothPermissionRequestDialogs(
   onAllPermissionsGranted: () -> Unit,
   onCanceled: () -> Unit
 ) {
+  var hasReceivedResult by remember { mutableStateOf(false) }
+
   val permissions = rememberMultiplePermissionsState(
     permissions = when (deviceType) {
       DeviceType.Client -> RequiredPermissions.clientPermissions
       DeviceType.Server -> RequiredPermissions.serverPermissions
+    },
+    onPermissionsResult = {
+      hasReceivedResult = true
     }
   )
-  var hasShownRequest by remember { mutableStateOf(false) }
 
-  if (!hasShownRequest) {
-    if (permissions.shouldShowRationale) {
-      Alert(
-        confirm = { Text(stringResource(R.string.ok)) },
-        title = { Text(stringResource(R.string.bluetooth_permission_rationale_title)) },
-        description = {
-          val descriptionRes = when (deviceType) {
-            DeviceType.Client -> R.string.bluetooth_permission_rationale_description_client
-            DeviceType.Server -> R.string.bluetooth_permission_rationale_description_server
-          }
-          Text(stringResource(descriptionRes))
-        },
-        onStateChange = {
-          hasShownRequest = true
-          permissions.launchMultiplePermissionRequest()
+  if (permissions.shouldShowRationale) {
+    Alert(
+      confirm = { Text(stringResource(R.string.ok)) },
+      title = { Text(stringResource(R.string.bluetooth_permission_rationale_title)) },
+      description = {
+        val descriptionRes = when (deviceType) {
+          DeviceType.Client -> R.string.bluetooth_permission_rationale_description_client
+          DeviceType.Server -> R.string.bluetooth_permission_rationale_description_server
         }
-      )
-    } else {
-      LaunchedEffect(true) {
-        hasShownRequest = true
+        Text(stringResource(descriptionRes))
+      },
+      onStateChange = {
         permissions.launchMultiplePermissionRequest()
       }
+    )
+  } else {
+    LaunchedEffect(true) {
+      permissions.launchMultiplePermissionRequest()
     }
   }
 
-  if (hasShownRequest && permissions.revokedPermissions.isNotEmpty()) {
+  if (hasReceivedResult && !permissions.shouldShowRationale && permissions.revokedPermissions.isNotEmpty()) {
     val settingsIntent = getSettingsIntent()
     val context = LocalContext.current
 
