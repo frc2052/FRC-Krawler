@@ -11,26 +11,17 @@ object RequiredPermissions {
     listOf(
       android.Manifest.permission.BLUETOOTH_CONNECT,
     )
-  } else if (Build.VERSION.SDK_INT >= 26) {
+  } else {
     // We will use CompanionDeviceManager on API 26+
     emptyList()
-  } else {
-    listOf(
-      android.Manifest.permission.ACCESS_COARSE_LOCATION
-    )
   }
 
   val clientPermissions = if (Build.VERSION.SDK_INT >= 31) {
     listOf(
-      android.Manifest.permission.BLUETOOTH_SCAN,
       android.Manifest.permission.BLUETOOTH_CONNECT,
     )
-  } else if (Build.VERSION.SDK_INT >= 26) {
+  } else {
     // We will use CompanionDeviceManager on API 26+
     emptyList()
-  } else {
-    listOf(
-      android.Manifest.permission.ACCESS_COARSE_LOCATION
-    )
   }
 }

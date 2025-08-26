@@ -6,13 +6,8 @@
       android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
       android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
-      android:maxSdkVersion="26" />
 
     <!-- Modern Bluetooth permissions -->
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
-      android:usesPermissionFlags="neverForLocation"
-        tools:targetApi="31" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
