@@ -53,6 +53,7 @@ android {
 
     kotlinOptions {
         freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+        freeCompilerArgs = ['-XXLanguage:+PropertyParamAnnotationDefaultTargetMode']
     }
 }
 
