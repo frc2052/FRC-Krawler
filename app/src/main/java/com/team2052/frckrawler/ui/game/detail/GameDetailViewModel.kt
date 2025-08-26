@@ -77,6 +77,7 @@ class GameDetailViewModel @Inject constructor(
         )
       )
 
+      // Add default comment field
       metricDao.insert(
         MetricRecord(
           name = "Comments",
@@ -87,6 +88,14 @@ class GameDetailViewModel @Inject constructor(
           options = null
         )
       )
+
+      // Set this metric set as the default match metric set if there is none set
+      val game = gameDao.get(gameId)
+      if (game.matchMetricsSetId == null) {
+        gameDao.insert(
+          game.copy(matchMetricsSetId = setId.toInt())
+        )
+      }
     }
   }
 
