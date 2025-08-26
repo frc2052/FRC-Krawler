@@ -521,18 +521,20 @@ private fun About() {
 
 @FrcKrawlerPreview
 @Composable
-private fun ModeSelectScreenPreviewLight() {
+private fun ModeSelectScreenPreview() {
   val gameEventState = GameAndEventState().apply {
     availableGames = listOf(
       Game(name = "Crescendo")
     )
   }
   FrcKrawlerTheme {
-    ModeSelectScreenContent(
-      gameEventState = gameEventState,
-      isBluetoothAvailable = true,
-      navigate = {}
-    )
+    Surface {
+      ModeSelectScreenContent(
+        gameEventState = gameEventState,
+        isBluetoothAvailable = true,
+        navigate = {}
+      )
+    }
   }
 }
 
