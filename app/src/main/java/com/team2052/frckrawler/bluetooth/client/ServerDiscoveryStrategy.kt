@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
  *
  * On API 26+ we use [CompanionDeviceServerDiscoveryStrategy], which uses Android's
  * CompanionDeviceManager.
- * Below API 26 we fallback to regular ol' Bluetooth scanning.
  */
 interface ServerDiscoveryStrategy {
 
