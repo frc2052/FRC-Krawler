@@ -61,14 +61,4 @@ object NetworkModule {
   fun provideEventService(retrofit: Retrofit): EventService =
     retrofit.create(EventService::class.java)
 
-  @Provides
-  @Singleton
-  fun provideMatchService(retrofit: Retrofit): MatchService =
-    retrofit.create(MatchService::class.java)
-
-  @Provides
-  @Singleton
-  fun provideTeamService(retrofit: Retrofit): TeamService =
-    retrofit.create(TeamService::class.java)
-
 }
