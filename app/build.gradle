@@ -51,9 +51,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_21
     }
 
-    kotlinOptions {
-        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
-        freeCompilerArgs = ['-XXLanguage:+PropertyParamAnnotationDefaultTargetMode']
+    kotlin {
+        compilerOptions {
+            freeCompilerArgs.addAll([
+                "-Xopt-in=kotlin.RequiresOptIn",
+                "-XXLanguage:+PropertyParamAnnotationDefaultTargetMode"
+            ])
+        }
     }
 }
 
