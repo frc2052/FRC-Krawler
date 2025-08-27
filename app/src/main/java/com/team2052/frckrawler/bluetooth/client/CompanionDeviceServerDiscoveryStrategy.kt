@@ -3,22 +3,18 @@ package com.team2052.frckrawler.bluetooth.client
 import android.app.Activity
 import android.bluetooth.BluetoothDevice
 import android.companion.AssociationRequest
-import android.companion.BluetoothDeviceFilter
 import android.companion.CompanionDeviceManager
 import android.content.Context
 import android.content.IntentSender
-import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.content.IntentCompat
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-@RequiresApi(Build.VERSION_CODES.O)
 internal class CompanionDeviceServerDiscoveryStrategy @Inject constructor() :
   ServerDiscoveryStrategy {
 

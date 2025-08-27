@@ -72,7 +72,7 @@ class BluetoothDeviceChooserActivity : FragmentActivity() {
   }
 
   private fun cancelDeviceChooser() {
-    setResult(Activity.RESULT_CANCELED)
+    setResult(RESULT_CANCELED)
     finish()
   }
 
@@ -80,7 +80,7 @@ class BluetoothDeviceChooserActivity : FragmentActivity() {
     val data = Intent().apply {
       putExtra(EXTRA_DEVICE, device)
     }
-    setResult(Activity.RESULT_OK, data)
+    setResult(RESULT_OK, data)
     finish()
   }
 }

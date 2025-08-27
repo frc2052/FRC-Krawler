@@ -48,8 +48,6 @@ class ScoutSyncWorker @AssistedInject constructor(
     Timber.tag("client").d("starting sync")
     notificationChannelManager.ensureChannelsCreated()
     setForeground(getForegroundInfo())
-    // TODO fail fast on permissions?
-    // TODO ask for notification permission
 
     val serverAddress = inputData.getString(DATA_SERVER_ADDRESS)
     val serverDevice = bluetoothAdapter.getRemoteDevice(serverAddress)

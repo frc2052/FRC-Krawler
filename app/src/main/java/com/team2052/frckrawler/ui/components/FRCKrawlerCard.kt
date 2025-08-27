@@ -39,8 +39,6 @@ import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.theme.spaceLarge
 
-private val cardElevation = 4.dp
-
 @Composable
 fun ExpandableCardGroup(
   modifier: Modifier = Modifier,
@@ -63,8 +61,6 @@ fun ExpandableCardGroup(
 
 open class CardGroupBuilder {
   private var cards: MutableList<@Composable (Int) -> Unit> = mutableListOf()
-
-  var currentExpandedCardIndex = -1
 
   fun expandableCard(content: @Composable (Int) -> Unit) {
     cards += content

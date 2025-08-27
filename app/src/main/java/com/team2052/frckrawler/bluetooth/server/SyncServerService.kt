@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
-import androidx.core.content.res.TypedArrayUtils.getText
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.notifications.FrcKrawlerNotificationChannel
 import com.team2052.frckrawler.notifications.NotificationChannelManager
@@ -21,8 +20,6 @@ import javax.inject.Inject
 /**
  * Service that acts as a server for syncing with scouts. This server runs as a foreground service
  * to allow syncing even when the app is not in the foreground.
- *
- * TODO request notification permission
  */
 @AndroidEntryPoint
 class SyncServerService : Service() {

@@ -6,11 +6,4 @@ import com.squareup.moshi.JsonClass
 data class TbaSimpleEvent(
   val key: String,
   val name: String,
-) {
-  companion object {
-    fun fake() = TbaSimpleEvent(
-      key = "frc201234",
-      name = "201234",
-    )
-  }
-}
+)

@@ -10,17 +10,13 @@ import androidx.activity.ComponentActivity
 import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
 import java.util.Optional
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 
 @SuppressLint("MissingPermission")
 class ServerConnectionManager internal @Inject constructor(
@@ -69,7 +65,7 @@ class ServerConnectionManager internal @Inject constructor(
     val pairedDevice: BluetoothDevice
     if (deviceToPair.bondState != BluetoothDevice.BOND_BONDED) {
       val pairingResult = pairDevice(deviceToPair)
-      if (pairingResult !is DevicePairingResult.DeviceParied) {
+      if (pairingResult !is DevicePairingResult.DevicePaired) {
         return@withContext ServerConnectionResult.PairingFailed
       }
       pairedDevice = pairingResult.device
@@ -100,7 +96,7 @@ class ServerConnectionManager internal @Inject constructor(
   ): DevicePairingResult = suspendCoroutine { continuation ->
     var receiver = ServerPairingBroadcastReceiver(
       deviceToPair = device,
-      onBonded = { continuation.resume(DevicePairingResult.DeviceParied(device)) },
+      onBonded = { continuation.resume(DevicePairingResult.DevicePaired(device)) },
       onCanceled = { continuation.resume(DevicePairingResult.Cancelled) }
     )
 

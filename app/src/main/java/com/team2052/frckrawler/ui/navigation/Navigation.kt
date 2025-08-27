@@ -1,10 +1,7 @@
 package com.team2052.frckrawler.ui.navigation
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -22,16 +19,11 @@ import com.team2052.frckrawler.ui.game.detail.GameDetailScreen
 import com.team2052.frckrawler.ui.game.list.GameListScreen
 import com.team2052.frckrawler.ui.metrics.list.MetricsListScreen
 import com.team2052.frckrawler.ui.modeSelect.ModeSelectScreen
-import com.team2052.frckrawler.ui.navigation.Screen.Game
-import com.team2052.frckrawler.ui.navigation.Screen.GameList
 import com.team2052.frckrawler.ui.navigation.Screen.ModeSelect
-import com.team2052.frckrawler.ui.navigation.Screen.Server
 import com.team2052.frckrawler.ui.scout.match.ScoutMatchScreen
 import com.team2052.frckrawler.ui.scout.pit.ScoutPitScreen
 import com.team2052.frckrawler.ui.scout.remote.ScoutHomeScreen
 import com.team2052.frckrawler.ui.server.home.ServerHomeScreen
-
-private const val transitionDuration = 400
 
 @Composable
 fun Navigation() {
@@ -63,7 +55,7 @@ fun Navigation() {
         sharedAxisExitX(forward = false, slideDistance = slideDistance)
     },
     entryProvider = entryProvider {
-      entry<Screen.ModeSelect> {
+      entry<ModeSelect> {
         ModeSelectScreen(backStack = backStack)
       }
 

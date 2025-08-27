@@ -76,7 +76,7 @@ private fun StartScoutingCardPreview() {
       StartScoutingCard(
         icon = Icons.Default.EmojiEvents,
         label = "Start match scouting",
-        onClick = { /*TODO*/ },
+        onClick = { },
         enabled = true,
       )
     }
@@ -91,7 +91,7 @@ private fun StartScoutingCardDisabledPreview() {
       StartScoutingCard(
         icon = Icons.Default.EmojiEvents,
         label = "Start match scouting",
-        onClick = { /*TODO*/ },
+        onClick = { },
         enabled = false,
       )
     }

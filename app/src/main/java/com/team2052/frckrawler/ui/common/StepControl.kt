@@ -41,7 +41,7 @@ fun StepControl(
   range: IntRange = Int.MIN_VALUE..Int.MAX_VALUE
 ) {
   var isFocused by remember { mutableStateOf(false) }
-  var focusedValue by remember { mutableStateOf<String>("") }
+  var focusedValue by remember { mutableStateOf("") }
 
   Row(
     modifier = modifier,

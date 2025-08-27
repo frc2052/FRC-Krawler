@@ -1,7 +1,5 @@
 package com.team2052.frckrawler.ui.navigation
 
-import android.R.attr.data
-import android.R.attr.type
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 

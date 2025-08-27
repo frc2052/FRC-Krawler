@@ -1,10 +1,9 @@
 package com.team2052.frckrawler.bluetooth.operation
 
 import com.team2052.frckrawler.bluetooth.OperationResult
-import com.team2052.frckrawler.bluetooth.readResult
 import com.team2052.frckrawler.bluetooth.writeResult
 import okio.Buffer
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class SendConnectHandshakeTest {

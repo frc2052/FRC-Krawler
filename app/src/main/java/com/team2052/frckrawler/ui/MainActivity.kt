@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.ui
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MotionEvent
@@ -10,7 +9,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,7 +60,7 @@ class MainActivity : ComponentActivity() {
       val view = currentFocus
       if (view is ViewGroup) {
         view.clearFocus()
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
       }
     }

@@ -22,7 +22,7 @@ enum class OperationResult(val id: Int) {
 
   companion object {
     fun parse(value: Int): OperationResult {
-      return OperationResult.values().firstOrNull { it.id == value } ?: Unknown
+      return entries.firstOrNull { it.id == value } ?: Unknown
     }
   }
 }

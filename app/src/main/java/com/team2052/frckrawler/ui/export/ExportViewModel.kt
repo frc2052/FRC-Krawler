@@ -26,7 +26,6 @@ class ExportViewModel @Inject constructor(
   private val eventDao: EventDao,
   private val prefs: FrcKrawlerPreferences,
   private val exporter: DataExporter,
-  @ApplicationContext private val context: Context,
 ) : ViewModel() {
   var isExporting: Boolean by mutableStateOf(false)
   var game: Game? by mutableStateOf(null)

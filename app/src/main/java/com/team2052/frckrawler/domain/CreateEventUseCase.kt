@@ -5,9 +5,7 @@ import com.team2052.frckrawler.data.local.EventDao
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.remote.EventService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -57,7 +55,7 @@ class CreateEventUseCase @Inject constructor(
       }
 
     } catch (e: Exception) {
-      // TODO log this
+      Timber.w(e, "Error saving teams for event")
     }
   }
 }
