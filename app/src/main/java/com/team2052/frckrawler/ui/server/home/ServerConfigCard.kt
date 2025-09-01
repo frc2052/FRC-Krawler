@@ -46,9 +46,7 @@ internal fun ServerConfigCard(
       )
     },
   ) {
-    if (game == null || event == null) {
-      // TODO do we need a loading state? Hopefully not
-    } else {
+    if (game != null && event != null) {
       GameState(game)
       EventState(event)
       Spacer(Modifier.height(8.dp))
