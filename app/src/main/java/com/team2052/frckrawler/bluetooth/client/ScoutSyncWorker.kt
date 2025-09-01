@@ -55,22 +55,26 @@ class ScoutSyncWorker @AssistedInject constructor(
     val connection =
       serverDevice.createInsecureRfcommSocketToServiceRecord(BluetoothSyncConstants.Uuid)
 
-    // TODO catch exceptions, handle errors
-    connection.connect()
-    connection.use { socket ->
-      socket.bufferedIO { output, input ->
-        val operations = opFactory.createScoutOperations()
-        operations.forEach { op ->
-          Timber.d("Sync operation ${op.javaClass.simpleName} starting")
-          try {
-            val result = op.execute(output, input)
-            Timber.d("Sync operation ${op.javaClass.simpleName} result: $result")
-          } catch (e: Exception) {
-            Timber.d(e, "Sync operation ${op.javaClass.simpleName} failed")
-            return Result.failure()
+    try {
+      connection.connect()
+      connection.use { socket ->
+        socket.bufferedIO { output, input ->
+          val operations = opFactory.createScoutOperations()
+          operations.forEach { op ->
+            Timber.d("Sync operation ${op.javaClass.simpleName} starting")
+            try {
+              val result = op.execute(output, input)
+              Timber.d("Sync operation ${op.javaClass.simpleName} result: $result")
+            } catch (e: Exception) {
+              Timber.w(e, "Sync operation ${op.javaClass.simpleName} failed")
+              return Result.failure()
+            }
           }
         }
       }
+    } catch (e: Exception) {
+      Timber.w(e, "Failed to connect to server")
+      return Result.failure()
     }
 
     val data = Data.Builder()
