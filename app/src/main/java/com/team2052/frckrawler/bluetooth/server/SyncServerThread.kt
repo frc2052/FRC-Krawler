@@ -9,6 +9,7 @@ import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
 import com.team2052.frckrawler.bluetooth.OperationResult
 import com.team2052.frckrawler.bluetooth.bufferedIO
 import com.team2052.frckrawler.bluetooth.di.SyncEntryPoint
+import com.team2052.frckrawler.ui.server.home.ServerState
 import dagger.hilt.EntryPoints
 import timber.log.Timber
 
@@ -39,7 +40,9 @@ class SyncServerThread(
       )
     }
 
-    statusProvider.notifyServerStarted()
+    statusProvider.setState(
+      ServerState.Enabled(gameId = gameId, eventId = eventId)
+    )
 
     while (!interrupted()) {
       try {
@@ -55,8 +58,8 @@ class SyncServerThread(
       }
     }
 
-    statusProvider.notifyServerStopped()
     serverSocket?.close()
+    statusProvider.setState(ServerState.Disabled)
   }
 
   private fun syncWithClient(clientSocket: BluetoothSocket) {

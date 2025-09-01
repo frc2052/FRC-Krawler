@@ -14,6 +14,7 @@ import com.team2052.frckrawler.notifications.FrcKrawlerNotificationChannel
 import com.team2052.frckrawler.notifications.NotificationChannelManager
 import com.team2052.frckrawler.notifications.NotificationId
 import com.team2052.frckrawler.ui.MainActivity
+import com.team2052.frckrawler.ui.server.home.ServerState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -97,5 +98,6 @@ class SyncServerService : Service() {
 
   private fun stopServer() {
     serverThread.interrupt()
+    statusProvider.setState(ServerState.Disabled)
   }
 }

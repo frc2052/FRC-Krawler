@@ -27,6 +27,7 @@ import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
+import com.team2052.frckrawler.ui.server.home.ServerState
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import com.team2052.frckrawler.ui.theme.onBackgroundLight
 
@@ -99,20 +100,20 @@ private fun ServerState(
   serverState: ServerState,
 ) {
   val stateText = when (serverState) {
-    ServerState.ENABLED -> stringResource(R.string.server_controls_server_state_started)
-    ServerState.ENABLING -> stringResource(R.string.server_controls_server_state_starting)
-    ServerState.DISABLED -> stringResource(R.string.server_controls_server_state_stopped)
-    ServerState.DISABLING -> stringResource(R.string.server_controls_server_state_stopping)
+    is ServerState.Enabled -> stringResource(R.string.server_controls_server_state_started)
+    ServerState.Enabling -> stringResource(R.string.server_controls_server_state_starting)
+    ServerState.Disabled -> stringResource(R.string.server_controls_server_state_stopped)
+    ServerState.Disabling -> stringResource(R.string.server_controls_server_state_stopping)
   }
   val stateColor = when (serverState) {
-    ServerState.ENABLED -> Color(0xFF90C985)
-    ServerState.ENABLING, ServerState.DISABLING -> Color(0xFFE7C26C)
-    ServerState.DISABLED -> Color(0xFFFFAAAA)
+    is ServerState.Enabled -> Color(0xFF90C985)
+    ServerState.Enabling, ServerState.Disabling -> Color(0xFFE7C26C)
+    ServerState.Disabled -> Color(0xFFFFAAAA)
   }
   val stateContentColor = when (serverState) {
-    ServerState.ENABLED -> onBackgroundLight
-    ServerState.ENABLING, ServerState.DISABLING -> onBackgroundLight
-    ServerState.DISABLED -> onBackgroundLight
+    is ServerState.Enabled -> onBackgroundLight
+    ServerState.Enabling, ServerState.Disabling -> onBackgroundLight
+    ServerState.Disabled -> onBackgroundLight
   }
   Row(
     modifier = Modifier.semantics(mergeDescendants = true) {},
@@ -144,7 +145,7 @@ private fun ServerToggleButton(
   toggleServer: () -> Unit
 ) {
   // Disable while transitioning states
-  val enabled = serverState == ServerState.ENABLED || serverState == ServerState.DISABLED
+  val enabled = serverState is ServerState.Enabled || serverState == ServerState.Disabled
   Button(
     modifier = modifier,
     enabled = enabled,
@@ -152,9 +153,9 @@ private fun ServerToggleButton(
   ) {
     Text(
       when (serverState) {
-        ServerState.ENABLED, ServerState.ENABLING ->
+        is ServerState.Enabled, ServerState.Enabling ->
           stringResource(R.string.server_controls_server_stop)
-        ServerState.DISABLED, ServerState.DISABLING ->
+        ServerState.Disabled, ServerState.Disabling ->
           stringResource(R.string.server_controls_server_start)
       }
     )
@@ -166,7 +167,7 @@ private fun ServerToggleButton(
 private fun ServerConfigPreview() {
   FrcKrawlerTheme {
     ServerConfigCard(
-      serverState = ServerState.ENABLED,
+      serverState = ServerState.Enabled(1, 1),
       toggleServer = {},
       event = Event(
         name = "10,000 Lakes Regional",
@@ -184,7 +185,7 @@ private fun ServerConfigPreview() {
 private fun StateStarted() {
   FrcKrawlerTheme {
     Card {
-      ServerState(ServerState.ENABLED)
+      ServerState(ServerState.Enabled(1, 1))
     }
   }
 }
@@ -194,7 +195,7 @@ private fun StateStarted() {
 private fun StateStarting() {
   FrcKrawlerTheme {
     Card {
-      ServerState(ServerState.ENABLING)
+      ServerState(ServerState.Enabling)
     }
   }
 }
@@ -204,7 +205,7 @@ private fun StateStarting() {
 private fun StateStopped() {
   FrcKrawlerTheme {
     Card {
-      ServerState(ServerState.DISABLED)
+      ServerState(ServerState.Disabled)
     }
   }
 }
@@ -214,7 +215,7 @@ private fun StateStopped() {
 private fun StateStopping() {
   FrcKrawlerTheme {
     Card {
-      ServerState(ServerState.DISABLING)
+      ServerState(ServerState.Disabling)
     }
   }
 }

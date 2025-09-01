@@ -15,6 +15,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -77,13 +79,14 @@ fun ServerHomeScreen(
           .consumeWindowInsets(contentPadding)
           .padding(spaceLarge)
       ) {
+        val state by viewModel.serverState.collectAsState(ServerState.Disabled)
         ServerConfigCard(
           modifier = modifier,
-          serverState = viewModel.serverState,
+          serverState = state,
           event = viewModel.event,
           game = viewModel.game,
           toggleServer = {
-            if (viewModel.serverState == ServerState.ENABLED) {
+            if (state is ServerState.Enabled) {
               viewModel.stopServer()
             } else {
               viewModel.startServer()

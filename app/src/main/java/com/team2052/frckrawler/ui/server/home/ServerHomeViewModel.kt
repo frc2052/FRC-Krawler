@@ -38,7 +38,7 @@ class ServerHomeViewModel @Inject constructor(
 
   private var collectServerStatusJob: Job? = null
 
-  var serverState by mutableStateOf(ServerState.DISABLED)
+  val serverState = serverStatusProvider.getStatusFlow()
   var showPermissionRequests by mutableStateOf(false)
   var requestEnableBluetooth by mutableStateOf(false)
   var connectedScouts: List<RemoteScout> by mutableStateOf(emptyList())
@@ -55,10 +55,11 @@ class ServerHomeViewModel @Inject constructor(
     }
 
     viewModelScope.launch {
-      // TODO handle changing game/event
-      val alreadyRunning = serverStatusProvider.getStatusFlow().first()
-      if (alreadyRunning) {
-        serverState = ServerState.ENABLED
+      val currentState = serverStatusProvider.getStatusFlow().first()
+      if (currentState is ServerState.Enabled) {
+        if (currentState.gameId != gameId || currentState.eventId != eventId) {
+          stopServer()
+        }
       }
     }
   }
@@ -71,18 +72,18 @@ class ServerHomeViewModel @Inject constructor(
    * 5. State = enabled
    */
   fun startServer() {
-    serverState = ServerState.ENABLING
+    serverStatusProvider.setState(ServerState.Enabling)
 
     // Check location strategy worked
     if (!permissionManager.hasPermissions(RequiredPermissions.serverPermissions)) {
-      serverState = ServerState.DISABLED
+      serverStatusProvider.setState(ServerState.Disabled)
       showPermissionRequests = true
       return
     }
 
     // Request bluetooth if not all ready enabled
     if (!bluetoothAdapter.isEnabled) {
-      serverState = ServerState.DISABLED
+      serverStatusProvider.setState(ServerState.Disabled)
       requestEnableBluetooth = true
       return
     }
@@ -93,17 +94,9 @@ class ServerHomeViewModel @Inject constructor(
         eventId = event!!.id
       )
     } else {
-      serverState = ServerState.DISABLED
+      serverStatusProvider.setState(ServerState.Disabled)
       return
     }
-
-    collectServerStatusJob = viewModelScope.launch {
-      serverStatusProvider.getStatusFlow().collectLatest { running ->
-        serverState = if (running) ServerState.ENABLED else ServerState.DISABLED
-      }
-    }
-
-    serverState = ServerState.ENABLED
 
     viewModelScope.launch {
       connectedScoutObserver.devices.collectLatest {
@@ -114,12 +107,9 @@ class ServerHomeViewModel @Inject constructor(
 
   fun stopServer() {
     collectServerStatusJob?.cancel()
-
-    serverState = ServerState.DISABLING
+    serverStatusProvider.setState(ServerState.Disabling)
 
     syncServiceController.stopServer()
-
-    serverState = ServerState.DISABLED
   }
 
 }
