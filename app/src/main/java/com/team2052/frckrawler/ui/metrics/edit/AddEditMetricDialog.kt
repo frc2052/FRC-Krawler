@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.metrics.edit
 
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -243,7 +245,7 @@ private fun MetricTypeSelector(
       modifier = Modifier.alignByBaseline(),
       value = metricType,
       onValueChange = onMetricTypeSelected,
-      getValueLabel = { type -> type.name },
+      getValueLabel = { type -> type.getLabel() },
       dropdownItems = MetricType.entries
     )
   }
@@ -405,6 +407,19 @@ private fun DialogButtons(
       }
     }
   }
+}
+
+@Composable
+@ReadOnlyComposable
+private fun MetricType.getLabel(): String = when (this) {
+  MetricType.Boolean -> stringResource(R.string.metric_type_label_boolean)
+  MetricType.Checkbox -> stringResource(R.string.metric_type_label_checkbox)
+  MetricType.Chooser -> stringResource(R.string.metric_type_label_chooser)
+  MetricType.Counter -> stringResource(R.string.metric_type_label_counter)
+  MetricType.Slider -> stringResource(R.string.metric_type_label_slider)
+  MetricType.Stopwatch -> stringResource(R.string.metric_type_label_stopwatch)
+  MetricType.TextField -> stringResource(R.string.metric_type_label_textfield)
+  MetricType.SectionHeader -> stringResource(R.string.metric_type_label_section_header)
 }
 
 private fun Metric.defaultValueForPreview(): String {

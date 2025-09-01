@@ -151,6 +151,16 @@
     <string name="metric_list_textfield_description">Text field</string>
     <string name="metric_list_header_description">Section header</string>
 
+    <string name="metric_type_label_boolean">Boolean</string>
+    <string name="metric_type_label_checkbox">Checkbox</string>
+    <string name="metric_type_label_chooser">Chooser</string>
+    <string name="metric_type_label_counter">Counter</string>
+    <string name="metric_type_label_slider">Slider</string>
+    <string name="metric_type_label_stopwatch">Stopwatch</string>
+    <string name="metric_type_label_textfield">Text field</string>
+    <string name="metric_type_label_section_header">Section header</string>
+
+
     <!-- Metric controls -->
     <string name="metric_stopwatch_start">start</string>
     <string name="metric_stopwatch_pause">pause</string>

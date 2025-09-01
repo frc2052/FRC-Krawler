@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 fun <T> UnlabeledDropdown(
   modifier: Modifier = Modifier,
   value: T,
-  getValueLabel: (T) -> String,
+  getValueLabel: @Composable (T) -> String,
   onValueChange: (T) -> Unit,
   dropdownItems: List<T>,
 ) {
