@@ -41,13 +41,18 @@ class SyncServerThread(
 
     statusProvider.notifyServerStarted()
 
-    // TODO log to a database for troubleshooting?
     while (!interrupted()) {
-      Timber.d("Still running")
-      val clientSocket = serverSocket!!.accept()
-      val clientDevice = clientSocket.remoteDevice
-      Timber.d("Client connected: ${clientDevice.name}")
-      syncWithClient(clientSocket)
+      try {
+        val clientSocket = serverSocket!!.accept()
+        val clientDevice = clientSocket.remoteDevice
+        Timber.d("Client connected: ${clientDevice.name}")
+
+        syncWithClient(clientSocket)
+      } catch (e: Exception) {
+        Timber.w(e, "Failed to connect client")
+        break
+
+      }
     }
 
     statusProvider.notifyServerStopped()

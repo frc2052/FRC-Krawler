@@ -109,6 +109,7 @@
     <string name="server_connected_scouts_title">Connected Scouts</string>
     <string name="server_connected_scout_last_sync">Last sync: %1$s</string>
     <string name="server_connect_new_scouts_button">Connect new scouts</string>
+    <string name="server_scout_sync_failed">Last sync failed; try again</string>
 
     <!-- Game & Event selector -->
     <string name="game_event_no_metrics_warning">Warning: no pit or match metrics</string>

@@ -24,10 +24,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.android.material.color.MaterialColors
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.RemoteScout
 import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
+import com.team2052.frckrawler.ui.theme.StaticColors
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -102,12 +104,22 @@ private fun SyncedScout(
         )
       }
     }
-    Text(
-      text = stringResource(
-        R.string.server_connected_scout_last_sync, lastSyncText),
-      style = MaterialTheme.typography.bodyMedium,
-      fontStyle = FontStyle.Italic
-    )
+    if (!scout.lastSyncSuccessful) {
+      Text(
+        text = stringResource(R.string.server_scout_sync_failed),
+        style = MaterialTheme.typography.bodyMedium,
+        fontStyle = FontStyle.Italic,
+        color = MaterialTheme.colorScheme.error,
+      )
+    } else {
+      Text(
+        text = stringResource(
+          R.string.server_connected_scout_last_sync, lastSyncText
+        ),
+        style = MaterialTheme.typography.bodyMedium,
+        fontStyle = FontStyle.Italic
+      )
+    }
   }
 }
 
