@@ -3,6 +3,7 @@ package com.team2052.frckrawler.bluetooth.client
 import android.app.Activity
 import android.bluetooth.BluetoothDevice
 import android.companion.AssociationRequest
+import android.companion.BluetoothDeviceFilter
 import android.companion.CompanionDeviceManager
 import android.content.Context
 import android.content.IntentSender
@@ -27,7 +28,11 @@ internal class CompanionDeviceServerDiscoveryStrategy @Inject constructor() :
     // Theoretically we could filter for our service ID, but that causes an NPE
     // on older android versions: https://issuetracker.google.com/issues/124106032
     // No device filter also allows us to pair without the server running
+    val deviceFilter = BluetoothDeviceFilter.Builder()
+      .build()
+
     val pairingRequest = AssociationRequest.Builder()
+      .addDeviceFilter(deviceFilter)
       .build()
 
     deviceManager.associate(
