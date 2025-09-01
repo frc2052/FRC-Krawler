@@ -130,7 +130,7 @@
     <string name="metric_list_is_pit_set">Set as pit metrics for</string>
     <string name="metric_list_empty_text">No metrics</string>
 
-    <string name="edit_metric_name_label">Metric type:</string>
+    <string name="edit_metric_name_label">Metric name:</string>
     <string name="edit_metric_type_label">Metric type:</string>
     <string name="edit_metric_enabled_label">Enabled</string>
     <string name="edit_metric_preview_label">Preview</string>
