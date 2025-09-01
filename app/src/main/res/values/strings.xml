@@ -104,6 +104,12 @@
     <string name="server_controls_server_state_stopping">Stopping</string>
     <string name="server_controls_server_state_stopped">Not running</string>
 
+
+    <string name="server_notification_prompt_title">Enable notifications</string>
+    <string name="server_notification_prompt_body">Allow FRC Krawler to display server state in a notification to see server status while the app is in the background.</string>
+    <string name="server_notification_prompt_no">No Thanks</string>
+    <string name="server_notification_prompt_allow">Allow</string>
+
     <string name="game_list_empty_text">No games</string>
 
     <string name="server_connected_scouts_title">Connected Scouts</string>
@@ -247,4 +253,8 @@
     <!-- Notifications -->
     <string name="notification_channel_sync_name">Sync</string>
     <string name="notification_channel_sync_description">Data sync notifications</string>
+    <plurals name="server_sync_clients_connected">
+        <item quantity="one">%1$d scout connected</item>
+        <item quantity="other">%1$d scouts connected</item>
+    </plurals>
 </resources>

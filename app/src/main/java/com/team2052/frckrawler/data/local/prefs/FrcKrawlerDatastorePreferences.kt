@@ -20,11 +20,21 @@ class FrcKrawlerDatastorePreferences @Inject constructor(
   @ApplicationContext private val context: Context
 ) : FrcKrawlerPreferences {
   companion object {
+    private val HAS_DISMISSED_NOTIFICATION_PROMPT = booleanPreferencesKey("dismissed_notification_prompt")
     private val LAST_EVENT_ID_KEY = intPreferencesKey("last_event_id")
     private val LAST_GAME_ID_KEY = intPreferencesKey("last_game_id")
     private val EXPORT_INCLUDE_TEAM_NAMES = booleanPreferencesKey("export_include_team_names")
     private val EXPORT_INCLUDE_MATCH_METRICS = booleanPreferencesKey("export_include_match_metrics")
     private val EXPORT_INCLUDE_PIT_METRICS = booleanPreferencesKey("export_include_pit_metrics")
+  }
+
+  override val hasDismissedNotificationPrompt: Flow<Boolean> = context.dataStore.data
+    .map { data -> data[HAS_DISMISSED_NOTIFICATION_PROMPT] ?: true }
+
+  override suspend fun setHasDismissedNotificationPrompt(dismissed: Boolean) {
+    context.dataStore.edit { data ->
+      data[HAS_DISMISSED_NOTIFICATION_PROMPT] = dismissed
+    }
   }
 
   override val lastEventId: Flow<Int?> = context.dataStore.data

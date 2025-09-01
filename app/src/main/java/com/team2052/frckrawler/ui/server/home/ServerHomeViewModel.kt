@@ -13,11 +13,13 @@ import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.EventDao
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
+import com.team2052.frckrawler.data.local.prefs.FrcKrawlerPreferences
 import com.team2052.frckrawler.data.model.RemoteScout
 import com.team2052.frckrawler.ui.permissions.PermissionManager
 import com.team2052.frckrawler.ui.permissions.RequiredPermissions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -33,6 +35,7 @@ class ServerHomeViewModel @Inject constructor(
   private val gameDao: GameDao,
   private val eventDao: EventDao,
   private val serverStatusProvider: ServerStatusProvider,
+  private val prefs: FrcKrawlerPreferences,
 ) : ViewModel() {
   private val bluetoothAdapter = bluetoothAdapterOptional.get()
 
@@ -44,6 +47,7 @@ class ServerHomeViewModel @Inject constructor(
   var connectedScouts: List<RemoteScout> by mutableStateOf(emptyList())
   var game: Game? by mutableStateOf(null)
   var event: Event? by mutableStateOf(null)
+  var hasDismissedNotificationPrompt: Flow<Boolean> = prefs.hasDismissedNotificationPrompt
 
   fun loadGameAndEvent(gameId: Int, eventId: Int) {
     viewModelScope.launch {
@@ -110,6 +114,12 @@ class ServerHomeViewModel @Inject constructor(
     serverStatusProvider.setState(ServerState.Disabling)
 
     syncServiceController.stopServer()
+  }
+
+  fun dismissNotificationPrompt() {
+    viewModelScope.launch {
+      prefs.setHasDismissedNotificationPrompt(true)
+    }
   }
 
 }
