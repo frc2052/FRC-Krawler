@@ -21,7 +21,7 @@ moshi = '1.15.2'
 room = '2.7.2'
 hilt = "2.57.1"
 workmanager = '2.10.3'
-agp = "8.12.2"
+agp = "8.13.0"
 
 [libraries]
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
