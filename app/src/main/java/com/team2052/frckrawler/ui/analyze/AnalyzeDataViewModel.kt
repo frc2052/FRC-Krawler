@@ -8,6 +8,7 @@ import com.team2052.frckrawler.data.local.MetricDatum
 import com.team2052.frckrawler.data.local.MetricDatumDao
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.data.summary.EmptySummaryValue
 import com.team2052.frckrawler.data.summary.SummaryValue
 import com.team2052.frckrawler.data.summary.getSummarizer
 import com.team2052.frckrawler.repository.MetricRepository
@@ -64,7 +65,7 @@ class AnalyzeDataViewModel @Inject constructor(
   private val selectedMetricOption = MutableStateFlow<String?>(null)
   private val selectedMetricId = MutableStateFlow<String?>(null)
   private val selectedMetric = combine(metrics, selectedMetricId) { metrics, selectedMetricId ->
-    metrics.find { it.id == selectedMetricId } ?: metrics.first()
+    metrics.find { it.id == selectedMetricId } ?: metrics.firstOrNull()
   }
 
   private val teams = eventIdFlow.map { eventId ->
@@ -91,9 +92,12 @@ class AnalyzeDataViewModel @Inject constructor(
   ) { teams, data, filterState ->
     val teamSummaries = teams.map { team ->
       val teamMetricData = data.filter {
-        it.teamNumber == team.number && it.metricId == filterState.selectedMetric.id
+        it.teamNumber == team.number && it.metricId == filterState.selectedMetric?.id
       }
-      val summary = getSummaryValue(filterState.selectedMetric, teamMetricData)
+
+      val summary = if (filterState.selectedMetric != null) {
+        getSummaryValue(filterState.selectedMetric, teamMetricData)
+      } else EmptySummaryValue
 
       TeamMetricData(
         team = team,

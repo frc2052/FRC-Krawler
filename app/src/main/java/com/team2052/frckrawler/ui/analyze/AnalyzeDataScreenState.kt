@@ -16,7 +16,7 @@ sealed class AnalyzeDataScreenState{
 
 data class SortFilterState(
   val availableMetrics: List<Metric>,
-  val selectedMetric: Metric,
+  val selectedMetric: Metric?,
   val selectedMetricOption: String?,
   val sortMode: AnalyzeSortMode,
 )

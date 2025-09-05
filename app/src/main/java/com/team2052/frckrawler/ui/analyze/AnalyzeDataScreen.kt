@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -145,37 +148,40 @@ private fun AnalyzeScreenContent(
       state = state,
     )
 
-
-    val listState = rememberLazyListState()
-    // Keep current scroll position when reordering items
-    SideEffect {
-      listState.requestScrollToItem(
-        index = listState.firstVisibleItemIndex,
-        scrollOffset = listState.firstVisibleItemScrollOffset
-      )
-    }
-
-    LazyColumn(
-      modifier = Modifier
-        .padding(bottom = contentPadding.calculateBottomPadding())
-        .consumeWindowInsets(
-          PaddingValues(bottom = contentPadding.calculateBottomPadding())
-        ),
-      state = listState
-    ) {
-
-      items(
-        items = state.teamData,
-        key = { it.team.number }
-      ) { teamData ->
-        TeamDataRow(
-          data = teamData,
-          modifier = Modifier.fillMaxWidth()
-            .clickable(
-              onClick = { onTeamClick(teamData.team.number) }
-            )
+    if (state.teamData.isEmpty()) {
+      NoDataContent(Modifier.fillMaxSize())
+    } else {
+      val listState = rememberLazyListState()
+      // Keep current scroll position when reordering items
+      SideEffect {
+        listState.requestScrollToItem(
+          index = listState.firstVisibleItemIndex,
+          scrollOffset = listState.firstVisibleItemScrollOffset
         )
-        HorizontalDivider()
+      }
+
+      LazyColumn(
+        modifier = Modifier
+          .padding(bottom = contentPadding.calculateBottomPadding())
+          .consumeWindowInsets(
+            PaddingValues(bottom = contentPadding.calculateBottomPadding())
+          ),
+        state = listState
+      ) {
+
+        items(
+          items = state.teamData,
+          key = { it.team.number }
+        ) { teamData ->
+          TeamDataRow(
+            data = teamData,
+            modifier = Modifier.fillMaxWidth()
+              .clickable(
+                onClick = { onTeamClick(teamData.team.number) }
+              )
+          )
+          HorizontalDivider()
+        }
       }
     }
   }
@@ -207,6 +213,28 @@ private fun AnalyzeDataHeader(
   }
 }
 
+@Composable
+private fun NoDataContent(
+  modifier: Modifier,
+) {
+  Column(
+    modifier = modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    Icon(
+      modifier = Modifier.size(128.dp),
+      imageVector = Icons.Filled.Analytics,
+      tint = MaterialTheme.colorScheme.outlineVariant,
+      contentDescription = null
+    )
+    Text(
+      text = stringResource(R.string.analyze_team_no_data),
+      style = MaterialTheme.typography.headlineMedium
+    )
+  }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun AnalyzeFilterOptions(
@@ -215,6 +243,12 @@ private fun AnalyzeFilterOptions(
   onFilterClick: () -> Unit,
   onSortSelected: (AnalyzeSortMode) -> Unit,
 ) {
+  if (state.selectedMetric == null) {
+    // If we have sortable metrics, we always one selected.
+    // If there is no selected metric, that's an indicator we can't sort/filter
+    return
+  }
+
   Row(
     modifier = modifier,
   ) {
@@ -316,6 +350,32 @@ private fun AnalyzeScreenPreview() {
       availableMetrics = listOf(metric),
       selectedMetric = metric,
       selectedMetricOption = "Red",
+      sortMode = AnalyzeSortMode.Ascending,
+    ),
+  )
+  FrcKrawlerTheme {
+    Surface {
+      AnalyzeScreenContent(
+        state = state,
+        onFilterClick = {},
+        onSortSelected = {},
+        onTeamClick = {},
+      )
+    }
+  }
+}
+
+@Preview
+@Composable
+private fun AnalyzeScreenNoMetricsPreview() {
+  val state = AnalyzeDataScreenState.Content(
+    gameName = "Reefscape",
+    eventName = "Northern Lights",
+    teamData = emptyList(),
+    filterState = SortFilterState(
+      availableMetrics = emptyList(),
+      selectedMetric = null,
+      selectedMetricOption = null,
       sortMode = AnalyzeSortMode.Ascending,
     ),
   )
