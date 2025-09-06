@@ -8,6 +8,7 @@ plugins {
     alias libs.plugins.googleServices
     alias libs.plugins.firebaseCrashlytics
     alias libs.plugins.kotlin.serialization
+    alias libs.plugins.baselineprofile
 }
 
 android {
@@ -70,6 +71,7 @@ dependencies {
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
     implementation libs.androidx.multidex
+    implementation libs.androidx.profileinstaller
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
@@ -80,6 +82,7 @@ dependencies {
     implementation libs.androidx.lifecycle.runtime
     implementation libs.kotlin.stdlib.jdk7
     implementation libs.kotlinx.immutableCollections
+    baselineProfile project(':app:baselineprofile')
 
     coreLibraryDesugaring libs.desugar.jdk.libs
 

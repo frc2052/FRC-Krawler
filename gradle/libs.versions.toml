@@ -22,6 +22,10 @@ room = '2.7.2'
 hilt = "2.57.1"
 workmanager = '2.10.3'
 agp = "8.13.0"
+uiautomator = "2.3.0"
+benchmark-macro-junit4 = "1.4.0"
+baselineprofile = "1.4.0"
+profileinstaller = "1.4.1"
 
 [libraries]
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
@@ -92,6 +96,9 @@ timber = "com.jakewharton.timber:timber:5.0.1"
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
 ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
 junit = { module = "junit:junit", version.ref = "junit" }
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
+androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmark-macro-junit4" }
+androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
 
 [plugins]
 ksp = "com.google.devtools.ksp:2.2.10-2.0.2"
@@ -101,4 +108,5 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 googleServices = { id = "com.google.gms.google-services", version = "4.4.3" }
 firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.6" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version="2.2.10"}
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
 
