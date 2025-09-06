@@ -19,7 +19,7 @@ android {
         minSdkVersion 26
         compileSdk = 36
         targetSdkVersion 36
-        versionCode 55
+        versionCode 56
         versionName "4.0"
 
         def tbaKey = rootProject.ext.localProps.getProperty("frckrawler.tba-api-key")
