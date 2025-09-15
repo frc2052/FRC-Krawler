@@ -23,7 +23,7 @@ hilt = "2.57.1"
 workmanager = '2.10.3'
 agp = "8.13.0"
 uiautomator = "2.3.0"
-benchmark-macro-junit4 = "1.4.0"
+benchmark-macro-junit4 = "1.4.1"
 baselineprofile = "1.4.0"
 profileinstaller = "1.4.1"
 
