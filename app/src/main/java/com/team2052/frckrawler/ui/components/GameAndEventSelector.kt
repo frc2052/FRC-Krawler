@@ -142,7 +142,10 @@ class GameAndEventState {
   var hasTeams: Boolean by mutableStateOf(false)
 
   val isReadyForScouting by derivedStateOf {
-    selectedGame != null && selectedEvent != null && hasTeams
+    selectedGame != null
+      && selectedEvent != null
+      && hasTeams
+      && (selectedGame?.matchMetricsSetId != null || selectedGame?.pitMetricsSetId != null)
   }
 }
 

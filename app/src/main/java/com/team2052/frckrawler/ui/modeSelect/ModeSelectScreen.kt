@@ -337,6 +337,17 @@ private fun SoloScoutCard(
   modifier: Modifier = Modifier,
 ) {
   var scoutMode by remember { mutableStateOf(ScoutMode.Match) }
+  LaunchedEffect(gameEventState.selectedGame) {
+    val gameHasMatchMetrics = gameEventState.selectedGame?.matchMetricsSetId != null
+    val gameHasPitMetrics = gameEventState.selectedGame?.pitMetricsSetId != null
+
+    if (scoutMode == ScoutMode.Match && !gameHasMatchMetrics && gameHasPitMetrics) {
+      scoutMode = ScoutMode.Pit
+    } else if (scoutMode == ScoutMode.Pit && !gameHasPitMetrics && gameHasMatchMetrics) {
+      scoutMode = ScoutMode.Match
+    }
+  }
+
   ExpandableCard(
     modifier = modifier,
     header = {
