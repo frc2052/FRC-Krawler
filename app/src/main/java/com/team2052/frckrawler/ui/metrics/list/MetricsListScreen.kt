@@ -59,6 +59,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
@@ -81,7 +82,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MetricsListScreen(
   modifier: Modifier = Modifier,
-  backStack: NavBackStack,
+  backStack: NavBackStack<NavKey>,
   metricSetId: Int
 ) {
   val viewModel: MetricsListViewModel = hiltViewModel()

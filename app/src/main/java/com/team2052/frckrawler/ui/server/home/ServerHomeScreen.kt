@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -44,7 +45,7 @@ fun ServerHomeScreen(
   gameId: Int,
   eventId: Int,
   modifier: Modifier = Modifier,
-  backStack: NavBackStack,
+  backStack: NavBackStack<NavKey>,
 ) {
   val viewModel: ServerHomeViewModel = hiltViewModel()
 

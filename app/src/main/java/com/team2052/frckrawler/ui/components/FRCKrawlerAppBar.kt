@@ -18,17 +18,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import kotlin.collections.removeLastOrNull
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FRCKrawlerAppBar(
   modifier: Modifier = Modifier,
-  backStack: NavBackStack,
+  backStack: NavBackStack<NavKey>,
   navigation: @Composable () -> Unit = {
     DefaultNavigationButton(backStack)
   },
@@ -59,7 +61,7 @@ fun FRCKrawlerAppBar(
 
 @Composable
 private fun DefaultNavigationButton(
-  backStack: NavBackStack
+  backStack: NavBackStack<NavKey>
 ) {
   if (backStack.size > 1) {
     IconButton(onClick = { backStack.removeLastOrNull()}) {

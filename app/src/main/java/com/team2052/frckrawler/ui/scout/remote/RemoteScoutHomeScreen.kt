@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.MetricSet
@@ -37,7 +38,7 @@ import com.team2052.frckrawler.ui.theme.spaceLarge
 @Composable
 fun ScoutHomeScreen(
   modifier: Modifier = Modifier,
-  backStack: NavBackStack,
+  backStack: NavBackStack<NavKey>,
 ) {
   val viewModel: RemoteScoutViewModel = hiltViewModel()
 

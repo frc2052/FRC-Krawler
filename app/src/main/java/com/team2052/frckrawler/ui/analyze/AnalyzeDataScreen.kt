@@ -45,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.model.Metric
@@ -59,7 +60,7 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 fun AnalyzeDataScreen(
   gameId: Int,
   eventId: Int,
-  backStack: NavBackStack,
+  backStack: NavBackStack<NavKey>,
   modifier: Modifier = Modifier,
 ) {
   val viewModel: AnalyzeDataViewModel = hiltViewModel()

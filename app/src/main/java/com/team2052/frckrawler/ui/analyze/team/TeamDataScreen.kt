@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.model.Metric
@@ -35,12 +36,13 @@ import com.team2052.frckrawler.data.summary.OptionPercentageSummaryValue
 import com.team2052.frckrawler.data.summary.SummaryValue
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
+import com.team2052.frckrawler.ui.navigation.Screen
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
 fun TeamDataScreen(
   teamNumber: String,
-  backStack: NavBackStack,
+  backStack: NavBackStack<NavKey>,
   modifier: Modifier = Modifier
 ) {
   val viewModel: TeamDataViewModel = hiltViewModel()

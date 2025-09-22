@@ -53,6 +53,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
@@ -66,7 +67,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun GameDetailScreen(
   gameId: Int,
-  backStack: NavBackStack,
+  backStack: NavBackStack<NavKey>,
 ) {
   val scope = rememberCoroutineScope()
   val viewModel: GameDetailViewModel = hiltViewModel()
