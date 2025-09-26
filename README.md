@@ -4,6 +4,10 @@
 
 FRC Krawler is a *FIRST* Robotics Competition scouting app developed by Team 2052 - KnightKrawler.
 
+## Issues using the app?
+Please feel free to open feature requests and bug reports here on GitHub! We'll do our best to
+address them in a timely manner.
+
 ## Project setup
 You will need to set up some project secrets to properly build this project.
 
@@ -24,12 +28,8 @@ with a real one.
 Set up a Firebase project and [follow steps 1 & 2 here](https://firebase.google.com/docs/android/setup?authuser=1&hl=en#console) to add an Android app to your project.
 
 Follow the instructions in step 3 to download the `google-services.json` file and replace the one in this project at `app/google-services.json`.
-  
-## Issues?
-Please feel free to open feature requests and bug reports here on GitHub! We'll do our best to 
-address them in a timely manner.
 
-## Buidling documentation
+## Building documentation site
 Our docs site is published using [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
 To get started, install python. Then run:
 ```shell
