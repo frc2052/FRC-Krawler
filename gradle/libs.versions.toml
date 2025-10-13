@@ -105,7 +105,7 @@ ksp = "com.google.devtools.ksp:2.2.20-2.0.3"
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 room = { id = "androidx.room", version.ref = "room" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-googleServices = { id = "com.google.gms.google-services", version = "4.4.3" }
+googleServices = { id = "com.google.gms.google-services", version = "4.4.4" }
 firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.6" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version="2.2.20"}
 baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
