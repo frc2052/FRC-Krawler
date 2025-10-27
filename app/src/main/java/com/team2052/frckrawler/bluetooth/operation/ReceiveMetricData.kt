@@ -26,7 +26,6 @@ data class ReceiveMetricDataArgs(
 
 class ReceiveMetricData @AssistedInject constructor(
   @Assisted private val args: ReceiveMetricDataArgs,
-
   private val metricDatumDao: MetricDatumDao,
   private val moshi: Moshi,
 ) : SyncOperation {
