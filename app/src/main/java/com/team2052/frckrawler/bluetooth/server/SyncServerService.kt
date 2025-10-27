@@ -99,6 +99,7 @@ class SyncServerService : Service() {
   }
 
   private fun updateNotification(connectedScouts: Int) {
+    notificationChannelManager.ensureChannelsCreated()
     val notificationManager = getSystemService<NotificationManager>()
     notificationManager?.notify(
       NotificationId.ServerServiceNotification,
