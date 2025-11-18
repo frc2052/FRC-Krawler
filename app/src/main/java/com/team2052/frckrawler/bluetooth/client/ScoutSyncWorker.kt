@@ -46,7 +46,6 @@ class ScoutSyncWorker @AssistedInject constructor(
   @SuppressLint("MissingPermission")
   override suspend fun doWork(): Result {
     Timber.tag("client").d("starting sync")
-    notificationChannelManager.ensureChannelsCreated()
     setForeground(getForegroundInfo())
 
     val serverAddress = inputData.getString(DATA_SERVER_ADDRESS)
@@ -85,6 +84,7 @@ class ScoutSyncWorker @AssistedInject constructor(
   }
 
   override suspend fun getForegroundInfo(): ForegroundInfo {
+    notificationChannelManager.ensureChannelsCreated()
     val pendingIntent: PendingIntent =
       Intent(applicationContext, MainActivity::class.java).let { notificationIntent ->
         PendingIntent.getActivity(
