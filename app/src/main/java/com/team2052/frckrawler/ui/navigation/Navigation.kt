@@ -7,8 +7,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
-import androidx.navigation3.scene.rememberSceneSetupNavEntryDecorator
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.team2052.frckrawler.ui.analyze.AnalyzeDataScreen
 import com.team2052.frckrawler.ui.analyze.team.TeamDataScreen
@@ -35,8 +34,7 @@ fun Navigation() {
   
   NavDisplay(
     entryDecorators = listOf(
-      rememberSceneSetupNavEntryDecorator(),
-      rememberSavedStateNavEntryDecorator(),
+      rememberSaveableStateHolderNavEntryDecorator(),
       rememberViewModelStoreNavEntryDecorator(),
     ),
     backStack = backStack,
