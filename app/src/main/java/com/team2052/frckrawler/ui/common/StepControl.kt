@@ -107,8 +107,8 @@ fun StepControl(
     )
 
     IconButton(
-      onClick = { onValueChanged(value + range.step) },
-      enabled = range.contains(value + range.step)
+      onClick = { onValueChanged(value + step) },
+      enabled = range.contains(value + step)
     ) {
       Icon(
         imageVector = Icons.Default.Add,
