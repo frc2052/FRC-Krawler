@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 @Composable
@@ -37,7 +38,7 @@ fun SliderMetric(
       interactionSource = interactionSource,
       value = if (isDragging) sliderPosition else state.toFloat(),
       valueRange = range.first.toFloat()..range.last.toFloat(),
-      steps = range.count() - 2,
+      steps = max(0, range.count() - 2),
       onValueChange = {
         sliderPosition = it
         onStateChanged(sliderPosition.roundToInt())

@@ -95,7 +95,6 @@ class AddMetricViewModel @Inject constructor(
   }
 
   fun updateOptions(metricOptions: MetricOptions) {
-    // TODO validate that options type matches metrics type?
     _state.value = _state.value.copy(
       options = metricOptions
     )

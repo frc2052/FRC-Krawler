@@ -12,13 +12,15 @@ sealed class MetricOptions {
   }
 
   data class IntRange(val range: kotlin.ranges.IntRange = 0..10) : MetricOptions() {
-    override val isValid: Boolean = !range.isEmpty()
+    override val isValid: Boolean = !range.isEmpty() && range.first < range.last
   }
 
   data class SteppedIntRange(
     val range: kotlin.ranges.IntRange = 0..10,
     val step: Int = 1,
   ) : MetricOptions() {
-    override val isValid: Boolean = step > 0 && !range.isEmpty()
+    override val isValid: Boolean = step > 0
+      && !range.isEmpty()
+      && range.first < range.last
   }
 }

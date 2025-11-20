@@ -281,7 +281,7 @@ private fun IntRangeOptions(
       onValueChange = {
         val newFirst = it.toIntOrNull()
         newFirst?.let {
-          val newOptions = MetricOptions.IntRange(newFirst..options.range.last)
+          val newOptions = options.copy(range = options.range.updateFirst(newFirst))
           onOptionsChanged(newOptions)
         }
         // TODO validation messaging?
@@ -295,7 +295,7 @@ private fun IntRangeOptions(
       onValueChange = {
         val newLast = it.toIntOrNull()
         newLast?.let {
-          val newOptions = MetricOptions.IntRange(options.range.first..newLast)
+          val newOptions = options.copy(range = options.range.updateLast(newLast))
           onOptionsChanged(newOptions)
         }
         // TODO validation messaging?
@@ -318,10 +318,7 @@ private fun SteppedIntRangeOptions(
       onValueChange = {
         val newFirst = it.toIntOrNull()
         newFirst?.let {
-          val newOptions = options.copy(
-            range =
-            options.range
-          )
+          val newOptions = options.copy(range = options.range.updateFirst(newFirst))
           onOptionsChanged(newOptions)
         }
         // TODO validation messaging?
@@ -336,7 +333,7 @@ private fun SteppedIntRangeOptions(
       onValueChange = {
         val newLast = it.toIntOrNull()
         newLast?.let {
-          val newOptions = options.copy(range = options.range.first..newLast)
+          val newOptions = options.copy(range = options.range.updateLast(newLast))
           onOptionsChanged(newOptions)
         }
         // TODO validation messaging?
