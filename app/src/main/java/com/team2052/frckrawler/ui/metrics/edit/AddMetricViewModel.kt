@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.metrics.edit
 
+import android.R.attr.priority
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.data.local.MetricType
@@ -102,15 +103,30 @@ class AddMetricViewModel @Inject constructor(
 
   fun save() {
     viewModelScope.launch {
+      var shouldShiftDefaultCommentField = false
       val priority = if (_state.value.priority == -1) {
-        metricRepo.getMetricCount(metricSetId)
-      } else _state.value.priority
+        shouldShiftDefaultCommentField = metricRepo.isDefaultCommentFieldAtEnd(metricSetId)
+        val endPriority = metricRepo.getMetricCount(metricSetId) - 1
+        if (shouldShiftDefaultCommentField) {
+          // New metric goes before the comment field
+          endPriority - 1
+        } else {
+          // No comment field or it is not at the end - new metric goes at end
+          endPriority
+        }
+      } else {
+        _state.value.priority
+      }
       val metric = _state.value.toMetric(
         id = metricId,
         priority = priority
       )
 
       metricRepo.saveMetric(metric, metricSetId)
+
+      if (shouldShiftDefaultCommentField) {
+        metricRepo.moveDefaultCommentToEnd(metricSetId)
+      }
     }
   }
 

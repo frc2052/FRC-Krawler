@@ -30,6 +30,20 @@ class MetricRepository @Inject constructor(
     return metricDao.getMetricCount(metricSetId)
   }
 
+  suspend fun isDefaultCommentFieldAtEnd(metricSetId: Int): Boolean {
+    val count = getMetricCount(metricSetId)
+    val defaultCommentField = metricDao.getDefaultCommentsField(metricSetId)
+    return defaultCommentField != null && defaultCommentField.priority == count - 1
+  }
+
+  suspend fun moveDefaultCommentToEnd(metricSetId: Int) {
+    metricDao.getDefaultCommentsField(metricSetId)?.copy(
+      priority = getMetricCount(metricSetId)
+    )?.let {
+      metricDao.insert(it)
+    }
+  }
+
   suspend fun saveMetric(metric: Metric, metricSetId: Int) {
     metricDao.insert(metric.toMetricRecord(metricSetId))
   }

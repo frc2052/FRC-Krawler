@@ -51,4 +51,7 @@ interface MetricDao {
 
   @Query("SELECT COUNT(id) FROM metric WHERE metricSetId = :metricSetId")
   fun getMetricCountFlow(metricSetId: Int): Flow<Int>
+
+  @Query("SELECT * FROM metric WHERE name = \"Comments\" AND metricSetId = :metricSetId")
+  suspend fun getDefaultCommentsField(metricSetId: Int): MetricRecord?
 }
