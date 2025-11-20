@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.common
 
+import android.R.attr.enabled
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -47,14 +48,19 @@ fun StepControl(
     modifier = modifier,
     verticalAlignment = Alignment.CenterVertically
   ) {
+    val decrementEnabled = range.contains(value - step)
     IconButton(
       onClick = { onValueChanged(value - step) },
-      enabled = range.contains(value - step)
+      enabled = decrementEnabled
     ) {
       Icon(
         imageVector = Icons.Default.Remove,
         contentDescription = stringResource(R.string.step_control_decrease),
-        tint = MaterialTheme.colorScheme.primary
+        tint = if (decrementEnabled) {
+          MaterialTheme.colorScheme.primary
+        } else {
+          MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+        }
       )
     }
 
@@ -106,14 +112,19 @@ fun StepControl(
       }
     )
 
+    val incrementEnabled = range.contains(value + step)
     IconButton(
       onClick = { onValueChanged(value + step) },
-      enabled = range.contains(value + step)
+      enabled = incrementEnabled
     ) {
       Icon(
         imageVector = Icons.Default.Add,
         contentDescription = stringResource(R.string.step_control_increase),
-        tint = MaterialTheme.colorScheme.primary
+        tint = if (incrementEnabled) {
+          MaterialTheme.colorScheme.primary
+        } else {
+          MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+        }
       )
     }
   }
