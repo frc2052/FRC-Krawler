@@ -57,10 +57,33 @@ class AddMetricViewModel @Inject constructor(
   }
 
   fun updateType(type: MetricType) {
+    val currentOptions = _state.value.options
     val typeOptions = when (type) {
-      MetricType.Slider -> MetricOptions.IntRange()
-      MetricType.Counter -> MetricOptions.SteppedIntRange()
-      MetricType.Chooser, MetricType.Checkbox -> MetricOptions.StringList()
+      MetricType.Slider -> {
+        if (currentOptions is MetricOptions.SteppedIntRange) {
+          MetricOptions.IntRange(
+            range = currentOptions.range
+          )
+        } else {
+          MetricOptions.IntRange()
+        }
+      }
+      MetricType.Counter -> {
+        if (currentOptions is MetricOptions.IntRange) {
+          MetricOptions.SteppedIntRange(
+            range = currentOptions.range
+          )
+        } else {
+          MetricOptions.SteppedIntRange()
+        }
+      }
+      MetricType.Chooser, MetricType.Checkbox -> {
+        if (currentOptions is MetricOptions.StringList) {
+          currentOptions
+        } else {
+          MetricOptions.StringList()
+        }
+      }
       else -> MetricOptions.None
     }
     val newState = _state.value.copy(
