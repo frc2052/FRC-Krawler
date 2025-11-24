@@ -39,7 +39,7 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "workmanager" }
-androidx-datastore = { module = "androidx.datastore:datastore-preferences", version = "1.1.7"}
+androidx-datastore = { module = "androidx.datastore:datastore-preferences", version = "1.2.0"}
 
 compose-bom = "androidx.compose:compose-bom:2025.09.01"
 compose-materialIcons-core = { module = "androidx.compose.material:material-icons-core" }
