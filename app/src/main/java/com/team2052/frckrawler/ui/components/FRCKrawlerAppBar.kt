@@ -3,6 +3,7 @@ package com.team2052.frckrawler.ui.components
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -64,7 +65,12 @@ private fun DefaultNavigationButton(
   backStack: NavBackStack<NavKey>
 ) {
   if (backStack.size > 1) {
-    IconButton(onClick = { backStack.removeLastOrNull()}) {
+    IconButton(
+      // The back gesture can begin while trying to tap the back icon, which creates a conflict
+      // that can result in a blank or partially-animated screen
+      modifier = Modifier.systemGestureExclusion(),
+      onClick = { backStack.removeLastOrNull() },
+    ) {
       Icon(
         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = stringResource(R.string.navigate_up),
