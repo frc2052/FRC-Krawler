@@ -14,13 +14,14 @@ lifecycle = "2.9.4"
 material = "1.13.0"
 multidex = "2.0.1"
 nav3 = "1.0.0-rc01"
-okio = "3.16.2"
+okio = "3.16.4"
 retrofit = '3.0.0'
 okhttp = "5.3.1"
 moshi = '1.15.2'
-room = "2.8.3"
 metro = "0.7.7"
-workmanager = "2.10.5"
+room = "2.8.4"
+hilt = "2.57.2"
+workmanager = "2.11.0"
 agp = "8.13.1"
 uiautomator = "2.3.0"
 benchmark-macro-junit4 = "1.4.1"
@@ -37,7 +38,7 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "workmanager" }
-androidx-datastore = { module = "androidx.datastore:datastore-preferences", version = "1.1.7"}
+androidx-datastore = { module = "androidx.datastore:datastore-preferences", version = "1.2.0"}
 
 compose-bom = "androidx.compose:compose-bom:2025.09.01"
 compose-materialIcons-core = { module = "androidx.compose.material:material-icons-core" }
@@ -96,7 +97,7 @@ androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profi
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-test = { id = "com.android.test", version.ref = "agp" }
-ksp = "com.google.devtools.ksp:2.2.20-2.0.3"
+ksp = "com.google.devtools.ksp:2.3.3"
 room = { id = "androidx.room", version.ref = "room" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 googleServices = { id = "com.google.gms.google-services", version = "4.4.4" }
