@@ -7,12 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.team2052.frckrawler.di.viewmodel.ViewModelKey
+import com.team2052.frckrawler.di.viewmodel.ViewModelScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class GameListViewModel @Inject constructor(
+@ContributesIntoMap(ViewModelScope::class)
+@ViewModelKey(GameListViewModel::class)
+@Inject
+class GameListViewModel(
   private val gameDao: GameDao
 ) : ViewModel() {
   var state: GameListState by mutableStateOf(GameListState.Loading)
@@ -31,5 +35,4 @@ class GameListViewModel @Inject constructor(
       gameDao.insert(Game(name = name))
     }
   }
-
 }

@@ -8,15 +8,15 @@ import com.team2052.frckrawler.bluetooth.writeResult
 import com.team2052.frckrawler.data.local.MetricDatumDao
 import com.team2052.frckrawler.data.sync.MetricDataListPacket
 import com.team2052.frckrawler.data.sync.toData
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.runBlocking
 import okio.BufferedSink
 import okio.BufferedSource
 
 @AssistedFactory
-interface ReceiveMetricDataFactory {
+fun interface ReceiveMetricDataFactory {
   fun create(args: ReceiveMetricDataArgs): ReceiveMetricData
 }
 
@@ -24,7 +24,8 @@ data class ReceiveMetricDataArgs(
   val eventId: Int,
 )
 
-class ReceiveMetricData @AssistedInject constructor(
+@AssistedInject
+class ReceiveMetricData(
   @Assisted private val args: ReceiveMetricDataArgs,
   private val metricDatumDao: MetricDatumDao,
   private val moshi: Moshi,

@@ -4,10 +4,11 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import androidx.core.app.NotificationManagerCompat
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
+import com.team2052.frckrawler.di.ApplicationContext
+import dev.zacsweers.metro.Inject
 
-class NotificationChannelManager @Inject constructor(
+@Inject
+class NotificationChannelManager(
   @ApplicationContext private val context: Context
 ) {
 

@@ -22,13 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
+import com.team2052.frckrawler.di.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-
 
 @Composable
 fun AddEditTeamSheet(
@@ -36,7 +35,7 @@ fun AddEditTeamSheet(
   team: TeamAtEvent?,
   onClose: () -> Unit,
 ) {
-  val viewModel: AddEditTeamViewModel = hiltViewModel()
+  val viewModel: AddEditTeamViewModel = metroViewModel()
 
   var teamNumber: String? by remember { mutableStateOf(team?.number) }
   var teamName: String by remember { mutableStateOf(team?.name ?: "") }

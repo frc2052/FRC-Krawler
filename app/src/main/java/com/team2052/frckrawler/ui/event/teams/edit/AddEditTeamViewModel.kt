@@ -4,12 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.local.TeamAtEventDao
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.team2052.frckrawler.di.viewmodel.ViewModelKey
+import com.team2052.frckrawler.di.viewmodel.ViewModelScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class AddEditTeamViewModel @Inject constructor(
+@ContributesIntoMap(ViewModelScope::class)
+@ViewModelKey(AddEditTeamViewModel::class)
+@Inject
+class AddEditTeamViewModel(
   private val teamAtEventDao: TeamAtEventDao,
 ) : ViewModel() {
 

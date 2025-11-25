@@ -15,19 +15,23 @@ import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.prefs.FrcKrawlerPreferences
 import com.team2052.frckrawler.data.model.RemoteScout
+import com.team2052.frckrawler.di.viewmodel.ViewModelKey
+import com.team2052.frckrawler.di.viewmodel.ViewModelScope
 import com.team2052.frckrawler.ui.permissions.PermissionManager
 import com.team2052.frckrawler.ui.permissions.RequiredPermissions
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Optional
-import javax.inject.Inject
 
-@HiltViewModel
-class ServerHomeViewModel @Inject constructor(
+@ContributesIntoMap(ViewModelScope::class)
+@ViewModelKey(ServerHomeViewModel::class)
+@Inject
+class ServerHomeViewModel(
   bluetoothAdapterOptional: Optional<BluetoothAdapter>,
   private val permissionManager: PermissionManager,
   private val syncServiceController: SyncServiceController,
@@ -121,5 +125,4 @@ class ServerHomeViewModel @Inject constructor(
       prefs.setHasDismissedNotificationPrompt(true)
     }
   }
-
 }

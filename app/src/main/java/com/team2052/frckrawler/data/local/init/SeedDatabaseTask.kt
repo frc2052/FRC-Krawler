@@ -6,9 +6,10 @@ import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.MetricSet
 import com.team2052.frckrawler.data.local.MetricSetDao
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-data class SeedDatabaseTask @Inject constructor(
+@Inject
+data class SeedDatabaseTask(
   private val gameDao: GameDao,
   private val metricSetDao: MetricSetDao,
   private val eventDao: EventDao,

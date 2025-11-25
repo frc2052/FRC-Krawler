@@ -37,6 +37,8 @@
       android:supportsRtl="true"
       android:theme="@style/Theme.FRCKrawlerSplash"
       android:enableOnBackInvokedCallback="true"
+      android:appComponentFactory="com.team2052.frckrawler.di.FrcKrawlerAppComponentFactory"
+      tools:replace="android:appComponentFactory"
       tools:ignore="UnusedAttribute">
         <activity
           android:name=".ui.MainActivity"
@@ -49,11 +51,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity
-          android:name=".ui.bluetooth.chooser.BluetoothDeviceChooserActivity"
-          android:theme="@style/BluetoothDeviceChooser"
-          android:exported="false"/>
 
         <service
           android:name=".bluetooth.server.SyncServerService"

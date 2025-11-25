@@ -57,8 +57,6 @@ class SummaryValueSortKtTest {
       TeamMetricData(team3, DoubleSummaryValue(2.0, isPercent = false)),
     )
     val mapped = data.map { it.sortValue(AnalyzeSortMode.Descending, null) }
-    System.err.println(mapped)
-    System.err.println(mapped.sorted())
     val sorted = data.sortedByDescending { it.sortValue(AnalyzeSortMode.Descending, null) }
 
     val expected = listOf(

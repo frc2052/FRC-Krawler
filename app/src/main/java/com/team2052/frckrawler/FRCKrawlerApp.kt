@@ -1,18 +1,17 @@
 package com.team2052.frckrawler
 
 import android.app.Application
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import com.team2052.frckrawler.di.AppGraph
 import com.team2052.frckrawler.logging.FirebaseTree
-import dagger.hilt.android.HiltAndroidApp
+import dev.zacsweers.metro.createGraphFactory
 import timber.log.Timber
-import javax.inject.Inject
 
-@HiltAndroidApp
 class FRCKrawlerApp : Application(), Configuration.Provider {
 
-  @Inject
-  lateinit var workerFactory: HiltWorkerFactory
+  val appGraph by lazy {
+    createGraphFactory<AppGraph.Factory>().create(this)
+  }
 
   override fun onCreate() {
     super.onCreate()
@@ -24,6 +23,6 @@ class FRCKrawlerApp : Application(), Configuration.Provider {
 
   override val workManagerConfiguration: Configuration
     get() = Configuration.Builder()
-      .setWorkerFactory(workerFactory)
+      .setWorkerFactory(appGraph.workerFactory)
       .build()
 }

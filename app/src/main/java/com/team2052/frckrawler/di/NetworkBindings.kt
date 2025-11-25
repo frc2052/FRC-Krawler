@@ -4,27 +4,27 @@ import android.content.Context
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.team2052.frckrawler.data.adapter.ZonedDateTimeJsonAdapter
-import com.team2052.frckrawler.data.remote.*
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
+import com.team2052.frckrawler.data.remote.EventService
+import com.team2052.frckrawler.data.remote.TbaAuthInterceptor
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
-import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-object NetworkModule {
+@ContributesTo(AppScope::class)
+@BindingContainer
+object NetworkBindings {
 
   private const val BASE_TBA_URL = "https://www.thebluealliance.com/api/v3/"
 
   @Provides
-  @Singleton
+  @SingleIn(AppScope::class)
   fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
     return OkHttpClient.Builder()
       .addInterceptor(TbaAuthInterceptor())
@@ -38,7 +38,7 @@ object NetworkModule {
   }
 
   @Provides
-  @Singleton
+  @SingleIn(AppScope::class)
   fun provideMoshi(): Moshi {
     return Moshi.Builder()
       .add(KotlinJsonAdapterFactory())
@@ -47,7 +47,7 @@ object NetworkModule {
   }
 
   @Provides
-  @Singleton
+  @SingleIn(AppScope::class)
   fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
     return Retrofit.Builder()
       .baseUrl(BASE_TBA_URL)
@@ -57,8 +57,7 @@ object NetworkModule {
   }
 
   @Provides
-  @Singleton
+  @SingleIn(AppScope::class)
   fun provideEventService(retrofit: Retrofit): EventService =
     retrofit.create(EventService::class.java)
-
 }

@@ -9,9 +9,10 @@ import com.team2052.frckrawler.bluetooth.operation.ReceiveServerConfiguration
 import com.team2052.frckrawler.bluetooth.operation.SendConnectHandshake
 import com.team2052.frckrawler.bluetooth.operation.SendMetricData
 import com.team2052.frckrawler.bluetooth.operation.SendServerConfigurationFactory
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-class SyncOperationFactory @Inject constructor(
+@Inject
+class SyncOperationFactory(
   private val sendServerConfigurationFactory: SendServerConfigurationFactory,
   private val receiveServerConfiguration: ReceiveServerConfiguration,
   private val sendMetricData: SendMetricData,

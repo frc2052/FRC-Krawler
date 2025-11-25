@@ -9,12 +9,13 @@ import com.team2052.frckrawler.data.local.MetricDatum
 import com.team2052.frckrawler.data.local.MetricDatumDao
 import com.team2052.frckrawler.data.sync.MetricDataListPacket
 import com.team2052.frckrawler.data.sync.toDatumPackets
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.runBlocking
 import okio.BufferedSink
 import okio.BufferedSource
-import javax.inject.Inject
 
-class SendMetricData @Inject constructor(
+@Inject
+class SendMetricData(
   private val metricDatumDao: MetricDatumDao,
   private val moshi: Moshi,
 ) : SyncOperation {

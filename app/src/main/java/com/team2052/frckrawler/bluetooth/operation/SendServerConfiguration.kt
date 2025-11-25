@@ -15,9 +15,9 @@ import com.team2052.frckrawler.data.sync.GamePacket
 import com.team2052.frckrawler.data.sync.ServerConfigurationPacket
 import com.team2052.frckrawler.data.sync.TeamPacket
 import com.team2052.frckrawler.data.sync.toMetricPackets
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -28,7 +28,7 @@ import okio.BufferedSource
 
 
 @AssistedFactory
-interface SendServerConfigurationFactory {
+fun interface SendServerConfigurationFactory {
   fun create(gameAndEvent: GameAndEvent): SendServerConfiguration
 }
 
@@ -37,7 +37,8 @@ data class GameAndEvent(
   val eventId: Int,
 )
 
-class SendServerConfiguration @AssistedInject constructor(
+@AssistedInject
+class SendServerConfiguration(
   @Assisted private val gameAndEvent: GameAndEvent,
 
   private val gameDao: GameDao,

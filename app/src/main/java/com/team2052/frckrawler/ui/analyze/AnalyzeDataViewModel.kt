@@ -11,8 +11,11 @@ import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.data.summary.EmptySummaryValue
 import com.team2052.frckrawler.data.summary.SummaryValue
 import com.team2052.frckrawler.data.summary.getSummarizer
+import com.team2052.frckrawler.di.viewmodel.ViewModelKey
+import com.team2052.frckrawler.di.viewmodel.ViewModelScope
 import com.team2052.frckrawler.repository.MetricRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,10 +27,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class AnalyzeDataViewModel @Inject constructor(
+@ContributesIntoMap(ViewModelScope::class)
+@ViewModelKey(AnalyzeDataViewModel::class)
+@Inject
+class AnalyzeDataViewModel(
   private val gameDao: GameDao,
   private val eventDao: EventDao,
   private val teamAtEventDao: TeamAtEventDao,

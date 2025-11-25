@@ -24,9 +24,12 @@ import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.MetricDao
 import com.team2052.frckrawler.data.local.MetricDatumDao
+import com.team2052.frckrawler.di.viewmodel.ViewModelKey
+import com.team2052.frckrawler.di.viewmodel.ViewModelScope
 import com.team2052.frckrawler.ui.permissions.PermissionManager
 import com.team2052.frckrawler.ui.permissions.RequiredPermissions
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,11 +46,11 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.Optional
 import java.util.UUID
-import javax.inject.Inject
 
-// TODO cancel work if disconnected from server
-@HiltViewModel
-class RemoteScoutViewModel @Inject constructor(
+@ContributesIntoMap(ViewModelScope::class)
+@ViewModelKey(RemoteScoutViewModel::class)
+@Inject
+class RemoteScoutViewModel(
   bluetoothAdapterOptional: Optional<BluetoothAdapter>,
   private val permissionManager: PermissionManager,
   private val serverManager: ServerConnectionManager,
@@ -220,7 +223,6 @@ class RemoteScoutViewModel @Inject constructor(
   }
 
   private fun WorkInfo.isWaitingOrRunning() = state == WorkInfo.State.RUNNING
-          || state == WorkInfo.State.BLOCKED
-          || state == WorkInfo.State.ENQUEUED
-
+    || state == WorkInfo.State.BLOCKED
+    || state == WorkInfo.State.ENQUEUED
 }

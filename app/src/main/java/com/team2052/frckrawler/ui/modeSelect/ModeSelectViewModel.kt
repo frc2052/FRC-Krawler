@@ -9,19 +9,23 @@ import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.local.init.DatabaseInitializer
 import com.team2052.frckrawler.data.local.prefs.FrcKrawlerPreferences
+import com.team2052.frckrawler.di.viewmodel.ViewModelKey
+import com.team2052.frckrawler.di.viewmodel.ViewModelScope
 import com.team2052.frckrawler.ui.components.GameAndEventState
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltViewModel
-class ModeSelectViewModel @Inject constructor(
+@ContributesIntoMap(ViewModelScope::class)
+@ViewModelKey(ModeSelectViewModel::class)
+@Inject
+class ModeSelectViewModel(
   private val dbInitializer: DatabaseInitializer,
   private val gameDao: GameDao,
   private val eventDao: EventDao,

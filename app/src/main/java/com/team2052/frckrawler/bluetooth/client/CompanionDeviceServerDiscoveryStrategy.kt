@@ -12,12 +12,10 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.IntentCompat
-import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-internal class CompanionDeviceServerDiscoveryStrategy @Inject constructor() :
-  ServerDiscoveryStrategy {
+internal class CompanionDeviceServerDiscoveryStrategy : ServerDiscoveryStrategy {
 
   override suspend fun launchDeviceDiscovery(
     activity: ComponentActivity

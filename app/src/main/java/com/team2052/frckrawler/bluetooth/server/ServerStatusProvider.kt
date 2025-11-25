@@ -1,13 +1,15 @@
 package com.team2052.frckrawler.bluetooth.server
 
 import com.team2052.frckrawler.ui.server.home.ServerState
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ServerStatusProvider @Inject constructor() {
+@Inject
+@SingleIn(AppScope::class)
+class ServerStatusProvider {
   private val statusFlow = MutableStateFlow<ServerState>(ServerState.Disabled)
 
   fun setState(state: ServerState) {

@@ -8,18 +8,19 @@ import android.content.IntentFilter
 import android.os.ParcelUuid
 import androidx.activity.ComponentActivity
 import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.team2052.frckrawler.di.ApplicationContext
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.util.Optional
 import java.util.concurrent.Executors
-import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @SuppressLint("MissingPermission")
-class ServerConnectionManager internal @Inject constructor(
+@Inject
+class ServerConnectionManager(
   bluetoothAdapterOptional: Optional<BluetoothAdapter>,
   private val discoveryStrategy: ServerDiscoveryStrategy,
   @ApplicationContext private val context: Context

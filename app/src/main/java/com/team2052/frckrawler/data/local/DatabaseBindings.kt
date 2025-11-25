@@ -2,18 +2,18 @@ package com.team2052.frckrawler.data.local
 
 import android.content.Context
 import androidx.room.Room
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import com.team2052.frckrawler.di.ApplicationContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DatabaseModule {
+@ContributesTo(AppScope::class)
+@BindingContainer
+object DatabaseBindings {
   @Provides
-  @Singleton
+  @SingleIn(AppScope::class)
   fun provideFrcKrawlerDatabase(
     @ApplicationContext context: Context
   ): FRCKrawlerDatabase {
@@ -25,7 +25,7 @@ object DatabaseModule {
   }
 
   @Provides
-  @Singleton
+  @SingleIn(AppScope::class)
   fun provideMetricsSetDao(
     database: FRCKrawlerDatabase
   ): MetricSetDao {
@@ -33,7 +33,7 @@ object DatabaseModule {
   }
 
   @Provides
-  @Singleton
+  @SingleIn(AppScope::class)
   fun provideMetricsDao(
     database: FRCKrawlerDatabase
   ): MetricDao {
@@ -41,7 +41,7 @@ object DatabaseModule {
   }
 
   @Provides
-  @Singleton
+  @SingleIn(AppScope::class)
   fun provideGameDao(
     database: FRCKrawlerDatabase
   ): GameDao {
@@ -49,7 +49,7 @@ object DatabaseModule {
   }
 
   @Provides
-  @Singleton
+  @SingleIn(AppScope::class)
   fun provideEventDao(
     database: FRCKrawlerDatabase
   ): EventDao {
@@ -57,7 +57,7 @@ object DatabaseModule {
   }
 
   @Provides
-  @Singleton
+  @SingleIn(AppScope::class)
   fun provideTeamAtEventDao(
     database: FRCKrawlerDatabase
   ): TeamAtEventDao {
@@ -65,7 +65,7 @@ object DatabaseModule {
   }
 
   @Provides
-  @Singleton
+  @SingleIn(AppScope::class)
   fun provideMetricDatumDao(
     database: FRCKrawlerDatabase
   ): MetricDatumDao {

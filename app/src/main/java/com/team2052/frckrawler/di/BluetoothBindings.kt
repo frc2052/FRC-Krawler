@@ -7,18 +7,15 @@ import android.content.pm.PackageManager
 import com.team2052.frckrawler.bluetooth.client.CompanionDeviceServerDiscoveryStrategy
 import com.team2052.frckrawler.bluetooth.client.NoOpServerDiscoverStrategy
 import com.team2052.frckrawler.bluetooth.client.ServerDiscoveryStrategy
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
 import java.util.Optional
-import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-object BluetoothModule {
-  @Singleton
+@ContributesTo(AppScope::class)
+@BindingContainer
+object BluetoothBindings {
   @Provides
   fun provideBluetoothManager(
     @ApplicationContext context: Context
@@ -31,7 +28,6 @@ object BluetoothModule {
     }
   }
 
-  @Singleton
   @Provides
   fun provideBluetoothAdapter(
     manager: Optional<BluetoothManager>
@@ -43,7 +39,6 @@ object BluetoothModule {
     }
   }
 
-  @Singleton
   @Provides
   fun provideServerDiscoveryStrategy(
     @ApplicationContext context: Context

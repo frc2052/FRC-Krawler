@@ -23,7 +23,8 @@ import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.local.init.SeedDatabaseTask
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.team2052.frckrawler.di.ApplicationContext
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -32,9 +33,9 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.UUID
-import javax.inject.Inject
 
-class LegacyDatabaseMigration @Inject constructor(
+@Inject
+class LegacyDatabaseMigration(
   @ApplicationContext private val context: Context,
   private val seedDatabaseTask: SeedDatabaseTask,
   private val gameDao: GameDao,

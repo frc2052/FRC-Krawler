@@ -5,14 +5,15 @@ import com.team2052.frckrawler.data.local.EventDao
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.remote.EventService
+import dev.zacsweers.metro.Inject
 import timber.log.Timber
-import javax.inject.Inject
 
 /**
  * This use case supports creating an event. For events with a TBA event ID, this will also
  * download a team list.
  */
-class CreateEventUseCase @Inject constructor(
+@Inject
+class CreateEventUseCase(
   private val eventDao: EventDao,
   private val teamAtEventDao: TeamAtEventDao,
   private val eventService: EventService,

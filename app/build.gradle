@@ -1,149 +1,142 @@
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
-    alias libs.plugins.ksp
-    alias libs.plugins.hilt
-    alias libs.plugins.room
-    alias libs.plugins.compose.compiler
-    alias libs.plugins.googleServices
-    alias libs.plugins.firebaseCrashlytics
-    alias libs.plugins.kotlin.serialization
-    alias libs.plugins.baselineprofile
+  alias libs.plugins.android.application
+  alias libs.plugins.kotlin.android
+  alias libs.plugins.ksp
+  alias libs.plugins.metro
+  alias libs.plugins.room
+  alias libs.plugins.compose.compiler
+  alias libs.plugins.googleServices
+  alias libs.plugins.firebaseCrashlytics
+  alias libs.plugins.kotlin.serialization
+  alias libs.plugins.baselineprofile
 }
 
 android {
-    namespace 'com.team2052.frckrawler'
+  namespace 'com.team2052.frckrawler'
 
-    defaultConfig {
-        applicationId "com.team2052.frckrawler"
-        minSdkVersion 26
-        compileSdk = 36
-        targetSdkVersion 36
-        versionCode 60
-        versionName "4.0.4"
+  defaultConfig {
+    applicationId "com.team2052.frckrawler"
+    minSdkVersion 26
+    compileSdk = 36
+    targetSdkVersion 36
+    versionCode 60
+    versionName "4.0.4"
 
-        def tbaKey = rootProject.ext.localProps.getProperty("frckrawler.tba-api-key")
-                ?: project.findProperty("frckrawler.tba-api-key")
-                        ?: "no-api-key"
-        buildConfigField("String", "TBA_API_KEY", "\"$tbaKey\"")
+    def tbaKey = rootProject.ext.localProps.getProperty("frckrawler.tba-api-key")
+      ?: project.findProperty("frckrawler.tba-api-key")
+      ?: "no-api-key"
+    buildConfigField("String", "TBA_API_KEY", "\"$tbaKey\"")
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled true
+      proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
     }
-
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-        }
-        debug {
-            applicationIdSuffix ".debug"
-        }
+    debug {
+      applicationIdSuffix ".debug"
     }
+  }
 
-    buildFeatures {
-        viewBinding true
-        compose true
-        buildConfig true
-    }
+  buildFeatures {
+    viewBinding true
+    compose true
+    buildConfig true
+  }
 
-    compileOptions {
-        coreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
+  compileOptions {
+    coreLibraryDesugaringEnabled = true
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+  }
 
-    kotlin {
-        compilerOptions {
-            freeCompilerArgs.addAll([
-                "-Xopt-in=kotlin.RequiresOptIn",
-                "-XXLanguage:+PropertyParamAnnotationDefaultTargetMode"
-            ])
-        }
+  kotlin {
+    compilerOptions {
+      freeCompilerArgs.addAll([
+        "-Xopt-in=kotlin.RequiresOptIn",
+        "-XXLanguage:+PropertyParamAnnotationDefaultTargetMode"
+      ])
     }
+  }
 }
 
 room {
-    schemaDirectory "$projectDir/schemas"
+  schemaDirectory "$projectDir/schemas"
 }
 
 dependencies {
-    implementation libs.androidx.legacy
-    implementation libs.androidx.core
-    implementation libs.androidx.appcompat
-    implementation libs.androidx.multidex
-    implementation libs.androidx.profileinstaller
-    testImplementation libs.junit
-    androidTestImplementation libs.ext.junit
-    androidTestImplementation libs.espresso.core
+  implementation libs.androidx.legacy
+  implementation libs.androidx.core
+  implementation libs.androidx.appcompat
+  implementation libs.androidx.multidex
+  implementation libs.androidx.profileinstaller
+  testImplementation libs.junit
+  androidTestImplementation libs.ext.junit
+  androidTestImplementation libs.espresso.core
 
-    // Kotlin
-    implementation libs.kotlinx.coroutines.android
-    implementation libs.androidx.viewmodel
-    implementation libs.androidx.lifecycle.runtime
-    implementation libs.kotlin.stdlib.jdk7
-    implementation libs.kotlinx.immutableCollections
-    baselineProfile project(':app:baselineprofile')
+  // Kotlin
+  implementation libs.kotlinx.coroutines.android
+  implementation libs.androidx.viewmodel
+  implementation libs.androidx.lifecycle.runtime
+  implementation libs.kotlin.stdlib.jdk7
+  implementation libs.kotlinx.immutableCollections
+  baselineProfile project(':app:baselineprofile')
 
-    coreLibraryDesugaring libs.desugar.jdk.libs
+  coreLibraryDesugaring libs.desugar.jdk.libs
 
-    // UI
-    implementation libs.material
+  // UI
+  implementation libs.material
 
-    // Compose
-    implementation platform(libs.compose.bom)
-    implementation libs.compose.ui
-    implementation libs.compose.uiTooling
-    implementation libs.compose.foundation
-    implementation libs.compose.material3
-    implementation libs.compose.materialIcons.core
-    implementation libs.compose.materialIcons.extended
-    implementation libs.compose.constraintLayout
-    implementation libs.androidx.activity.compose
-    implementation libs.androidx.lifecycle.viewmodel.compose
-    implementation libs.androidx.datastore
-    implementation libs.accompanist.permissions
-    androidTestImplementation libs.compose.test
+  // Compose
+  implementation platform(libs.compose.bom)
+  implementation libs.compose.ui
+  implementation libs.compose.uiTooling
+  implementation libs.compose.foundation
+  implementation libs.compose.material3
+  implementation libs.compose.materialIcons.core
+  implementation libs.compose.materialIcons.extended
+  implementation libs.compose.constraintLayout
+  implementation libs.androidx.activity.compose
+  implementation libs.androidx.lifecycle.viewmodel.compose
+  implementation libs.androidx.datastore
+  implementation libs.accompanist.permissions
+  androidTestImplementation libs.compose.test
 
-    // Navigation
-    implementation(libs.nav3.runtime)
-    implementation(libs.nav3.ui)
-    implementation(libs.nav3.lifecycle)
-    implementation(libs.kotlinx.serialization.core)
+  // Navigation
+  implementation(libs.nav3.runtime)
+  implementation(libs.nav3.ui)
+  implementation(libs.nav3.lifecycle)
+  implementation(libs.kotlinx.serialization.core)
 
-    // Accompanist
-    implementation libs.accompanist.swiperefresh
+  // Accompanist
+  implementation libs.accompanist.swiperefresh
 
-    // Retrofit
-    implementation libs.retrofit.core
-    implementation libs.retrofit.moshi
-    implementation libs.okhttp.core
-    implementation libs.okhttp.logging
-    implementation libs.moshi.core
-    ksp libs.moshi.codegen
+  // Retrofit
+  implementation libs.retrofit.core
+  implementation libs.retrofit.moshi
+  implementation libs.okhttp.core
+  implementation libs.okhttp.logging
+  implementation libs.moshi.core
+  ksp libs.moshi.codegen
 
-    // Room
-    implementation libs.room.runtime
-    implementation libs.room.ktx
-    ksp libs.room.compiler
-    testImplementation libs.room.testing
+  // Room
+  implementation libs.room.runtime
+  implementation libs.room.ktx
+  ksp libs.room.compiler
+  testImplementation libs.room.testing
 
-    // Dagger - Hilt
-    implementation libs.hilt.android
-    ksp libs.hilt.androidCompiler
-    ksp libs.hilt.compiler
-    implementation libs.hilt.navigationCompose
+  implementation libs.okio
 
-    implementation libs.okio
+  // Firebase
+  implementation platform(libs.firebase.bom)
+  implementation libs.firebase.crashlytics
+  implementation libs.firebase.analytics
 
-    // Firebase
-    implementation platform(libs.firebase.bom)
-    implementation libs.firebase.crashlytics
-    implementation libs.firebase.analytics
+  // Work Manager
+  implementation libs.androidx.work.runtime
 
-    // Work Manager
-    implementation libs.androidx.work.runtime
-    implementation libs.hilt.work
-    
-    // Timber
-    implementation libs.timber
+  // Timber
+  implementation libs.timber
 }
