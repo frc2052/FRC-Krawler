@@ -2,6 +2,7 @@ package com.team2052.frckrawler.ui.game.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -23,6 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,10 +53,6 @@ fun GameListScreen(
 
   var addGameDialogOpen by remember { mutableStateOf(false) }
 
-  LaunchedEffect(true) {
-    viewModel.loadGames()
-  }
-
   Scaffold(
     modifier = modifier,
     topBar = {
@@ -71,7 +69,7 @@ fun GameListScreen(
       )
     },
   ) { contentPadding ->
-    val state = viewModel.state
+    val state = viewModel.state.collectAsState().value
     when (state) {
       is GameListState.Loading -> {
         // Just showing nothing is moderately better than flashing our empty state, and this should
