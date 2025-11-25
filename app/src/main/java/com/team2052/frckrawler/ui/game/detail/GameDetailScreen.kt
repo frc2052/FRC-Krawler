@@ -51,10 +51,10 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.di.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.event.add.AddEventSheetContent
@@ -70,7 +70,7 @@ fun GameDetailScreen(
   backStack: NavBackStack<NavKey>,
 ) {
   val scope = rememberCoroutineScope()
-  val viewModel: GameDetailViewModel = hiltViewModel()
+  val viewModel: GameDetailViewModel = metroViewModel()
   val state = viewModel.state.collectAsState().value
 
   var showAddEventSheet by remember { mutableStateOf(false) }

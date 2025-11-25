@@ -2,10 +2,11 @@ package com.team2052.frckrawler.bluetooth
 
 import android.content.Context
 import android.content.pm.PackageManager
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
+import com.team2052.frckrawler.di.ApplicationContext
+import dev.zacsweers.metro.Inject
 
-class BluetoothAvailabilityProvider @Inject constructor(
+@Inject
+class BluetoothAvailabilityProvider(
   @ApplicationContext val context: Context
 ) {
   val availability: BluetoothAvailability = BluetoothAvailability(

@@ -20,6 +20,7 @@ import com.team2052.frckrawler.data.sync.ServerConfigurationPacket
 import com.team2052.frckrawler.data.sync.TeamPacket
 import com.team2052.frckrawler.data.sync.toMetricPackets
 import com.team2052.frckrawler.data.sync.toRecords
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -27,9 +28,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okio.BufferedSink
 import okio.BufferedSource
-import javax.inject.Inject
 
-class ReceiveServerConfiguration @Inject constructor(
+@Inject
+class ReceiveServerConfiguration(
   private val gameDao: GameDao,
   private val metricDao: MetricDao,
   private val eventDao: EventDao,

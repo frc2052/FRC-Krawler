@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.ui.metrics.edit
 
-import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,10 +32,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.di.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.components.fields.UnlabeledDropdown
@@ -49,7 +48,7 @@ fun AddEditMetricDialog(
   metricSetId: Int,
   onClose: () -> Unit
 ) {
-  val viewModel: AddMetricViewModel = hiltViewModel()
+  val viewModel: AddMetricViewModel = metroViewModel()
   val state = viewModel.state.collectAsState().value
   var showDeleteConfirmation by remember { mutableStateOf(false) }
 

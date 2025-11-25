@@ -6,14 +6,18 @@ import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.EventDao
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.local.TeamAtEventDao
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.team2052.frckrawler.di.viewmodel.ViewModelKey
+import com.team2052.frckrawler.di.viewmodel.ViewModelScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class EventDetailsViewModel @Inject constructor(
+@ContributesIntoMap(ViewModelScope::class)
+@ViewModelKey(EventDetailsViewModel::class)
+@Inject
+class EventDetailsViewModel(
   private val eventDao: EventDao,
   private val teamAtEventDao: TeamAtEventDao,
 ) : ViewModel() {

@@ -7,10 +7,10 @@ import android.bluetooth.BluetoothSocket
 import android.content.Context
 import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
 import com.team2052.frckrawler.bluetooth.OperationResult
+import com.team2052.frckrawler.bluetooth.SyncOperationFactory
 import com.team2052.frckrawler.bluetooth.bufferedIO
-import com.team2052.frckrawler.bluetooth.di.SyncEntryPoint
 import com.team2052.frckrawler.ui.server.home.ServerState
-import dagger.hilt.EntryPoints
+import dev.zacsweers.metro.Inject
 import timber.log.Timber
 
 @SuppressLint("MissingPermission")
@@ -24,9 +24,8 @@ class SyncServerThread(
   private val bluetoothManager: BluetoothManager =
     context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
 
-  private val entryPoint = EntryPoints.get(context.applicationContext, SyncEntryPoint::class.java)
-  private val opFactory = entryPoint.syncOperationFactory()
-  private val scoutObserver = entryPoint.connectedScoutObserver()
+  @Inject private lateinit var opFactory: SyncOperationFactory
+  @Inject private lateinit var scoutObserver: ConnectedScoutObserver
 
   private var serverSocket: BluetoothServerSocket? = null
 

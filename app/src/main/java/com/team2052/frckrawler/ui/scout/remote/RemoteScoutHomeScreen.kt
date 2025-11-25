@@ -21,13 +21,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.MetricSet
 import com.team2052.frckrawler.data.model.DeviceType
+import com.team2052.frckrawler.di.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.StartScoutingCard
@@ -40,7 +40,7 @@ fun ScoutHomeScreen(
   modifier: Modifier = Modifier,
   backStack: NavBackStack<NavKey>,
 ) {
-  val viewModel: RemoteScoutViewModel = hiltViewModel()
+  val viewModel: RemoteScoutViewModel = metroViewModel()
 
   // Don't love this, but it is what we need
   val context = LocalActivity.current as ComponentActivity

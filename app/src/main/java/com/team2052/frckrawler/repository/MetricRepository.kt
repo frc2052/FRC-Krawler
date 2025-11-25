@@ -5,13 +5,15 @@ import com.team2052.frckrawler.data.local.MetricRecordId
 import com.team2052.frckrawler.data.local.transformer.toMetric
 import com.team2052.frckrawler.data.local.transformer.toMetricRecord
 import com.team2052.frckrawler.data.model.Metric
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class MetricRepository @Inject constructor(
+@Inject
+@SingleIn(AppScope::class)
+class MetricRepository(
   private val metricDao: MetricDao,
 ) {
 

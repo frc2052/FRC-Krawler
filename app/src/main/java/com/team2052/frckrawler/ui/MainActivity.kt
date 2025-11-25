@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui
 
+import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MotionEvent
@@ -14,18 +15,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.ViewModelProvider
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.migration.LegacyDatabaseMigration
+import com.team2052.frckrawler.di.ActivityKey
 import com.team2052.frckrawler.ui.migration.LegacyMigrationScreen
 import com.team2052.frckrawler.ui.navigation.Navigation
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
 
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-
-  @Inject lateinit var migration: LegacyDatabaseMigration
+@ContributesIntoMap(AppScope::class, binding<Activity>())
+@ActivityKey(MainActivity::class)
+@Inject
+class MainActivity(
+  private val viewModelFactory: ViewModelProvider.Factory,
+  private val migration: LegacyDatabaseMigration,
+) : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -66,4 +74,7 @@ class MainActivity : ComponentActivity() {
     }
     return super.dispatchTouchEvent(event)
   }
+
+  override val defaultViewModelProviderFactory: ViewModelProvider.Factory
+    get() = viewModelFactory
 }

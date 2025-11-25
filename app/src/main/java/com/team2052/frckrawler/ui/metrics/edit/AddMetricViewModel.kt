@@ -1,19 +1,22 @@
 package com.team2052.frckrawler.ui.metrics.edit
 
-import android.R.attr.priority
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.di.viewmodel.ViewModelKey
+import com.team2052.frckrawler.di.viewmodel.ViewModelScope
 import com.team2052.frckrawler.repository.MetricRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class AddMetricViewModel @Inject constructor(
+@ContributesIntoMap(ViewModelScope::class)
+@ViewModelKey(AddMetricViewModel::class)
+@Inject
+class AddMetricViewModel(
   private val metricRepo: MetricRepository
 ) : ViewModel() {
 
@@ -69,6 +72,7 @@ class AddMetricViewModel @Inject constructor(
           MetricOptions.IntRange()
         }
       }
+
       MetricType.Counter -> {
         if (currentOptions is MetricOptions.IntRange) {
           MetricOptions.SteppedIntRange(
@@ -78,6 +82,7 @@ class AddMetricViewModel @Inject constructor(
           MetricOptions.SteppedIntRange()
         }
       }
+
       MetricType.Chooser, MetricType.Checkbox -> {
         if (currentOptions is MetricOptions.StringList) {
           currentOptions
@@ -85,6 +90,7 @@ class AddMetricViewModel @Inject constructor(
           MetricOptions.StringList()
         }
       }
+
       else -> MetricOptions.None
     }
     val newState = _state.value.copy(

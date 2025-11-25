@@ -7,16 +7,20 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.team2052.frckrawler.di.ApplicationContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-import javax.inject.Singleton
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-@Singleton
-class FrcKrawlerDatastorePreferences @Inject constructor(
+@Inject
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
+class FrcKrawlerDatastorePreferences(
   @ApplicationContext private val context: Context
 ) : FrcKrawlerPreferences {
   companion object {

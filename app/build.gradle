@@ -2,7 +2,7 @@ plugins {
   alias libs.plugins.android.application
   alias libs.plugins.kotlin.android
   alias libs.plugins.ksp
-  alias libs.plugins.hilt
+  alias libs.plugins.metro
   alias libs.plugins.room
   alias libs.plugins.compose.compiler
   alias libs.plugins.googleServices
@@ -127,12 +127,6 @@ dependencies {
   ksp libs.room.compiler
   testImplementation libs.room.testing
 
-  // Dagger - Hilt
-  implementation libs.hilt.android
-  ksp libs.hilt.androidCompiler
-  ksp libs.hilt.compiler
-  implementation libs.hilt.navigationCompose
-
   implementation libs.okio
 
   // Firebase
@@ -142,7 +136,6 @@ dependencies {
 
   // Work Manager
   implementation libs.androidx.work.runtime
-  implementation libs.hilt.work
 
   // Timber
   implementation libs.timber

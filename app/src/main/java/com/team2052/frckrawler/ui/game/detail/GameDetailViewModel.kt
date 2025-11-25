@@ -11,7 +11,10 @@ import com.team2052.frckrawler.data.local.MetricSet
 import com.team2052.frckrawler.data.local.MetricSetDao
 import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.local.TeamAtEventDao
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.team2052.frckrawler.di.viewmodel.ViewModelKey
+import com.team2052.frckrawler.di.viewmodel.ViewModelScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,10 +26,11 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class GameDetailViewModel @Inject constructor(
+@ContributesIntoMap(ViewModelScope::class)
+@ViewModelKey(GameDetailViewModel::class)
+@Inject
+class GameDetailViewModel(
   private val gameDao: GameDao,
   private val eventDao: EventDao,
   private val teamAtEventDao: TeamAtEventDao,
@@ -134,5 +138,4 @@ class GameDetailViewModel @Inject constructor(
       }
     }
   }
-
 }

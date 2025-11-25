@@ -24,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -32,6 +31,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
+import com.team2052.frckrawler.di.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.StartScoutingCard
@@ -47,7 +47,7 @@ fun ServerHomeScreen(
   modifier: Modifier = Modifier,
   backStack: NavBackStack<NavKey>,
 ) {
-  val viewModel: ServerHomeViewModel = hiltViewModel()
+  val viewModel: ServerHomeViewModel = metroViewModel()
 
   Box {
     if (viewModel.showPermissionRequests) {

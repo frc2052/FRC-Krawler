@@ -13,41 +13,39 @@ import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.di.ServiceKey
 import com.team2052.frckrawler.notifications.FrcKrawlerNotificationChannel
 import com.team2052.frckrawler.notifications.NotificationChannelManager
 import com.team2052.frckrawler.notifications.NotificationId
 import com.team2052.frckrawler.ui.MainActivity
 import com.team2052.frckrawler.ui.server.home.ServerState
-import dagger.hilt.android.AndroidEntryPoint
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
-import javax.inject.Inject
 
 /**
  * Service that acts as a server for syncing with scouts. This server runs as a foreground service
  * to allow syncing even when the app is not in the foreground.
  */
-@AndroidEntryPoint
-class SyncServerService : Service() {
+@ContributesIntoMap(AppScope::class, binding<Service>())
+@ServiceKey(SyncServerService::class)
+@Inject
+class SyncServerService(
+  private val notificationChannelManager: NotificationChannelManager,
+  private val statusProvider: ServerStatusProvider,
+  private val connectedScoutObserver: ConnectedScoutObserver,
+) : Service() {
 
   companion object {
     internal const val EXTRA_GAME_ID = "game_id"
     internal const val EXTRA_EVENT_ID = "event_id"
   }
-
-  @Inject
-  internal lateinit var notificationChannelManager: NotificationChannelManager
-
-  @Inject
-  internal lateinit var statusProvider: ServerStatusProvider
-
-  @Inject
-  internal lateinit var connectedScoutObserver: ConnectedScoutObserver
 
   private lateinit var serverThread: SyncServerThread
 

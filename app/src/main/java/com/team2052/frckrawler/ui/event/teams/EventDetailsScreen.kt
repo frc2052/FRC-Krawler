@@ -42,17 +42,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
+import com.team2052.frckrawler.di.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.event.teams.edit.AddEditTeamSheet
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import kotlinx.coroutines.launch
-import kotlin.collections.removeLastOrNull
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +60,7 @@ fun EventTeamListScreen(
   backStack: NavBackStack<NavKey>,
 ) {
   val scope = rememberCoroutineScope()
-  val viewModel: EventDetailsViewModel = hiltViewModel()
+  val viewModel: EventDetailsViewModel = metroViewModel()
   var showEditTeamSheet by remember { mutableStateOf(false) }
   val editTeamSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   var teamBeingEdited: TeamAtEvent? by remember { mutableStateOf(null) }

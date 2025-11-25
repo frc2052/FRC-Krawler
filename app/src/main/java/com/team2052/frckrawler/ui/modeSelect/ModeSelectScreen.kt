@@ -44,12 +44,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.model.ScoutMode
+import com.team2052.frckrawler.di.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
@@ -67,7 +67,7 @@ fun ModeSelectScreen(
   modifier: Modifier = Modifier,
   backStack: NavBackStack<NavKey>,
 ) {
-  val viewModel: ModeSelectViewModel = hiltViewModel()
+  val viewModel: ModeSelectViewModel = metroViewModel()
 
   LaunchedEffect(true) {
     viewModel.ensureDatabaseInitialized()

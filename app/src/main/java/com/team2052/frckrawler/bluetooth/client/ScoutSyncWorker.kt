@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
@@ -17,19 +16,26 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
 import com.team2052.frckrawler.bluetooth.SyncOperationFactory
 import com.team2052.frckrawler.bluetooth.bufferedIO
+import com.team2052.frckrawler.di.ApplicationContext
+import com.team2052.frckrawler.di.work.MetroWorkerFactory
+import com.team2052.frckrawler.di.work.WorkerKey
 import com.team2052.frckrawler.notifications.FrcKrawlerNotificationChannel
 import com.team2052.frckrawler.notifications.NotificationChannelManager
 import com.team2052.frckrawler.notifications.NotificationId
 import com.team2052.frckrawler.ui.MainActivity
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
 import timber.log.Timber
 import java.time.Instant
 import java.util.Optional
 
-@HiltWorker
-class ScoutSyncWorker @AssistedInject constructor(
-  @Assisted appContext: Context,
+@AssistedInject
+class ScoutSyncWorker(
+  @ApplicationContext appContext: Context,
   @Assisted workerParams: WorkerParameters,
   bluetoothAdapterOptional: Optional<BluetoothAdapter>,
   private val opFactory: SyncOperationFactory,
@@ -110,4 +116,12 @@ class ScoutSyncWorker @AssistedInject constructor(
       serviceType
     )
   }
+
+  @WorkerKey(ScoutSyncWorker::class)
+  @ContributesIntoMap(
+    AppScope::class,
+    binding = binding<MetroWorkerFactory.WorkerInstanceFactory<*>>(),
+  )
+  @AssistedFactory
+  abstract class Factory : MetroWorkerFactory.WorkerInstanceFactory<ScoutSyncWorker>
 }

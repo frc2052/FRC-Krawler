@@ -4,16 +4,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.data.remote.EventService
 import com.team2052.frckrawler.data.remote.model.TbaSimpleEvent
+import com.team2052.frckrawler.di.viewmodel.ViewModelKey
+import com.team2052.frckrawler.di.viewmodel.ViewModelScope
 import com.team2052.frckrawler.domain.CreateEventUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.team2052.frckrawler.ui.analyze.team.TeamDataViewModel
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.Year
-import javax.inject.Inject
 
-@HiltViewModel
-class AddEventViewModel @Inject constructor(
+@ContributesIntoMap(ViewModelScope::class)
+@ViewModelKey(AddEventViewModel::class)
+@Inject
+class AddEventViewModel(
   private val eventService: EventService,
   private val createEventUseCase: CreateEventUseCase
 ) : ViewModel() {

@@ -57,21 +57,21 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.di.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.common.BasicDraggableContent
 import com.team2052.frckrawler.ui.common.DragDropState
 import com.team2052.frckrawler.ui.common.DraggableItem
 import com.team2052.frckrawler.ui.common.dragHandle
 import com.team2052.frckrawler.ui.common.rememberDragDropState
-import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricDialog
 import com.team2052.frckrawler.ui.metrics.edit.AddEditMetricMode
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
@@ -85,7 +85,7 @@ fun MetricsListScreen(
   backStack: NavBackStack<NavKey>,
   metricSetId: Int
 ) {
-  val viewModel: MetricsListViewModel = hiltViewModel()
+  val viewModel: MetricsListViewModel = metroViewModel()
   var showMetricSheet by remember { mutableStateOf(false) }
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   val scope = rememberCoroutineScope()

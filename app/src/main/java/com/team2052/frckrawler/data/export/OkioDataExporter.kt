@@ -13,8 +13,12 @@ import com.team2052.frckrawler.data.local.MetricDatumDao
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.local.prefs.FrcKrawlerPreferences
 import com.team2052.frckrawler.data.model.Metric
+import com.team2052.frckrawler.di.ApplicationContext
 import com.team2052.frckrawler.repository.MetricRepository
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Binds
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -23,9 +27,10 @@ import kotlinx.coroutines.withContext
 import okio.BufferedSink
 import okio.buffer
 import okio.sink
-import javax.inject.Inject
 
-class OkioDataExporter @Inject constructor(
+@ContributesBinding(AppScope::class)
+@Inject
+class OkioDataExporter(
   private val metricDatumDao: MetricDatumDao,
   private val teamAtEventDao: TeamAtEventDao,
   private val metricRepository: MetricRepository,
