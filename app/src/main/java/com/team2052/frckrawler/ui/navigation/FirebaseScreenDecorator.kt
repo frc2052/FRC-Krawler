@@ -1,15 +1,18 @@
 package com.team2052.frckrawler.ui.navigation
 
 import android.os.Bundle
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.core.os.bundleOf
 import androidx.navigation3.runtime.NavEntryDecorator
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 
+@Composable
 fun <T: Any> rememberFirebaseScreenDecorator(): FirebaseScreenDecorator<T> {
-    return FirebaseScreenDecorator()
+    return remember { FirebaseScreenDecorator() }
 }
 
 class FirebaseScreenDecorator<T: Any> : NavEntryDecorator<T>(
