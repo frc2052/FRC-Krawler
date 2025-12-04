@@ -5,8 +5,8 @@ import com.team2052.frckrawler.data.local.MetricDao
 import com.team2052.frckrawler.data.local.MetricDatumDao
 import com.team2052.frckrawler.data.local.MetricDatumGroup
 import com.team2052.frckrawler.data.local.TeamAtEventDao
-import com.team2052.frckrawler.di.viewmodel.ViewModelKey
-import com.team2052.frckrawler.di.viewmodel.ViewModelScope
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.AppScope
 import com.team2052.frckrawler.ui.scout.AbstractScoutMetricsViewModel
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ContributesIntoMap(ViewModelScope::class)
+@ContributesIntoMap(AppScope::class)
 @ViewModelKey(ScoutPitViewModel::class)
 @Inject
 class ScoutPitViewModel(

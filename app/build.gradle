@@ -127,6 +127,9 @@ dependencies {
   ksp libs.room.compiler
   testImplementation libs.room.testing
 
+  // Metro (dependency injection, note the plugin applies the core dependencies)
+  implementation libs.metrox.viewmodel.compose
+
   implementation libs.okio
 
   // Firebase

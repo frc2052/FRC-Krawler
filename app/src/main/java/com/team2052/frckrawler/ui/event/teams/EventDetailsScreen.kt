@@ -46,11 +46,11 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
-import com.team2052.frckrawler.di.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.event.teams.edit.AddEditTeamSheet
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

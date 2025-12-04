@@ -49,7 +49,7 @@ import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.model.ScoutMode
-import com.team2052.frckrawler.di.viewmodel.metroViewModel
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader

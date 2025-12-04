@@ -9,8 +9,8 @@ import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.local.init.DatabaseInitializer
 import com.team2052.frckrawler.data.local.prefs.FrcKrawlerPreferences
-import com.team2052.frckrawler.di.viewmodel.ViewModelKey
-import com.team2052.frckrawler.di.viewmodel.ViewModelScope
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.AppScope
 import com.team2052.frckrawler.ui.components.GameAndEventState
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ContributesIntoMap(ViewModelScope::class)
+@ContributesIntoMap(AppScope::class)
 @ViewModelKey(ModeSelectViewModel::class)
 @Inject
 class ModeSelectViewModel(

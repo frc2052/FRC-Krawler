@@ -11,8 +11,8 @@ import com.team2052.frckrawler.data.local.MetricSet
 import com.team2052.frckrawler.data.local.MetricSetDao
 import com.team2052.frckrawler.data.local.MetricType
 import com.team2052.frckrawler.data.local.TeamAtEventDao
-import com.team2052.frckrawler.di.viewmodel.ViewModelKey
-import com.team2052.frckrawler.di.viewmodel.ViewModelScope
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 
-@ContributesIntoMap(ViewModelScope::class)
+@ContributesIntoMap(AppScope::class)
 @ViewModelKey(GameDetailViewModel::class)
 @Inject
 class GameDetailViewModel(

@@ -12,18 +12,15 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import com.team2052.frckrawler.FRCKrawlerApp
 import com.team2052.frckrawler.R
-import com.team2052.frckrawler.di.ServiceKey
 import com.team2052.frckrawler.notifications.FrcKrawlerNotificationChannel
 import com.team2052.frckrawler.notifications.NotificationChannelManager
 import com.team2052.frckrawler.notifications.NotificationId
 import com.team2052.frckrawler.ui.MainActivity
 import com.team2052.frckrawler.ui.server.home.ServerState
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.MembersInjector
-import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
@@ -34,20 +31,17 @@ import kotlinx.coroutines.launch
  * Service that acts as a server for syncing with scouts. This server runs as a foreground service
  * to allow syncing even when the app is not in the foreground.
  */
-@ContributesIntoMap(AppScope::class, binding<Service>())
-@ServiceKey(SyncServerService::class)
-@Inject
-class SyncServerService(
-  private val notificationChannelManager: NotificationChannelManager,
-  private val statusProvider: ServerStatusProvider,
-  private val connectedScoutObserver: ConnectedScoutObserver,
-  private val threadInjector: MembersInjector<SyncServerThread>,
-) : Service() {
+class SyncServerService : Service() {
 
   companion object {
     internal const val EXTRA_GAME_ID = "game_id"
     internal const val EXTRA_EVENT_ID = "event_id"
   }
+
+  @Inject private lateinit var notificationChannelManager: NotificationChannelManager
+  @Inject private lateinit var statusProvider: ServerStatusProvider
+  @Inject private lateinit var connectedScoutObserver: ConnectedScoutObserver
+  @Inject private lateinit var threadInjector: MembersInjector<SyncServerThread>
 
   private lateinit var serverThread: SyncServerThread
 
@@ -55,6 +49,13 @@ class SyncServerService(
 
   override fun onBind(intent: Intent): IBinder? {
     return null
+  }
+
+  override fun onCreate() {
+    super.onCreate()
+
+    // TODO use metrox-android when we go to minSDk 28
+    (application as FRCKrawlerApp).appGraph.inject(this)
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

@@ -10,8 +10,8 @@ import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.data.summary.SummaryValue
 import com.team2052.frckrawler.data.summary.getSummarizer
-import com.team2052.frckrawler.di.viewmodel.ViewModelKey
-import com.team2052.frckrawler.di.viewmodel.ViewModelScope
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.AppScope
 import com.team2052.frckrawler.repository.MetricRepository
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-@ContributesIntoMap(ViewModelScope::class)
+@ContributesIntoMap(AppScope::class)
 @ViewModelKey(TeamDataViewModel::class)
 @Inject
 class TeamDataViewModel(

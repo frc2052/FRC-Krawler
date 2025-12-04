@@ -25,7 +25,7 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.data.model.MetricState
-import com.team2052.frckrawler.di.viewmodel.metroViewModel
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.common.StepControl
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar

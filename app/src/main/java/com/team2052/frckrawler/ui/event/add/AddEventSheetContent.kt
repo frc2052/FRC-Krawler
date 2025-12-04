@@ -42,7 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.remote.model.TbaSimpleEvent
-import com.team2052.frckrawler.di.viewmodel.metroViewModel
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerDropdown
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField

@@ -10,15 +10,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.team2052.frckrawler.FRCKrawlerApp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.migration.LegacyDatabaseMigration
-import com.team2052.frckrawler.di.ActivityKey
 import com.team2052.frckrawler.ui.migration.LegacyMigrationScreen
 import com.team2052.frckrawler.ui.navigation.Navigation
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
@@ -26,17 +28,19 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
+import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 
-@ContributesIntoMap(AppScope::class, binding<Activity>())
-@ActivityKey(MainActivity::class)
-@Inject
-class MainActivity(
-  private val viewModelFactory: ViewModelProvider.Factory,
-  private val migration: LegacyDatabaseMigration,
-) : ComponentActivity() {
+class MainActivity : ComponentActivity() {
+
+  @Inject private lateinit var viewModelFactory: MetroViewModelFactory
+  @Inject private lateinit var migration: LegacyDatabaseMigration
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    // TODO use metrox-android when we go to minSDk 28
+    (application as FRCKrawlerApp).appGraph.inject(this)
 
     // Reset the theme after the splash screen finishes
     setTheme(R.style.Theme_FRCKrawler)
@@ -48,15 +52,18 @@ class MainActivity(
     WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
 
     setContent {
-      FrcKrawlerTheme {
-        var requiresMigration by remember { mutableStateOf(migration.requiresMigration()) }
-        if (requiresMigration) {
-          LegacyMigrationScreen(
-            migration = migration,
-            onMigrationCompleted =  { requiresMigration = false }
-          )
-        } else {
-          Navigation()
+
+      CompositionLocalProvider(LocalMetroViewModelFactory provides viewModelFactory) {
+        FrcKrawlerTheme {
+          var requiresMigration by remember { mutableStateOf(migration.requiresMigration()) }
+          if (requiresMigration) {
+            LegacyMigrationScreen(
+              migration = migration,
+              onMigrationCompleted = { requiresMigration = false }
+            )
+          } else {
+            Navigation()
+          }
         }
       }
     }

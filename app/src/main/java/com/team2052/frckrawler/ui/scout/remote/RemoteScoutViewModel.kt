@@ -24,8 +24,8 @@ import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.MetricDao
 import com.team2052.frckrawler.data.local.MetricDatumDao
-import com.team2052.frckrawler.di.viewmodel.ViewModelKey
-import com.team2052.frckrawler.di.viewmodel.ViewModelScope
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.AppScope
 import com.team2052.frckrawler.ui.permissions.PermissionManager
 import com.team2052.frckrawler.ui.permissions.RequiredPermissions
 import dev.zacsweers.metro.ContributesIntoMap
@@ -47,7 +47,7 @@ import java.time.ZonedDateTime
 import java.util.Optional
 import java.util.UUID
 
-@ContributesIntoMap(ViewModelScope::class)
+@ContributesIntoMap(AppScope::class)
 @ViewModelKey(RemoteScoutViewModel::class)
 @Inject
 class RemoteScoutViewModel(

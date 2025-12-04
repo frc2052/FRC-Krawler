@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.data.remote.EventService
 import com.team2052.frckrawler.data.remote.model.TbaSimpleEvent
-import com.team2052.frckrawler.di.viewmodel.ViewModelKey
-import com.team2052.frckrawler.di.viewmodel.ViewModelScope
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.AppScope
 import com.team2052.frckrawler.domain.CreateEventUseCase
 import com.team2052.frckrawler.ui.analyze.team.TeamDataViewModel
 import dev.zacsweers.metro.ContributesIntoMap
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.Year
 
-@ContributesIntoMap(ViewModelScope::class)
+@ContributesIntoMap(AppScope::class)
 @ViewModelKey(AddEventViewModel::class)
 @Inject
 class AddEventViewModel(

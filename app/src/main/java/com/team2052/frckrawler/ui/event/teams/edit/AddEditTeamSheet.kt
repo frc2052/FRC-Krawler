@@ -24,7 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.TeamAtEvent
-import com.team2052.frckrawler.di.viewmodel.metroViewModel
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme

@@ -31,7 +31,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.model.DeviceType
-import com.team2052.frckrawler.di.viewmodel.metroViewModel
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.RequestEnableBluetooth
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.components.StartScoutingCard

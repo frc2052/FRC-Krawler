@@ -37,8 +37,6 @@
       android:supportsRtl="true"
       android:theme="@style/Theme.FRCKrawlerSplash"
       android:enableOnBackInvokedCallback="true"
-      android:appComponentFactory="com.team2052.frckrawler.di.FrcKrawlerAppComponentFactory"
-      tools:replace="android:appComponentFactory"
       tools:ignore="UnusedAttribute">
         <activity
           android:name=".ui.MainActivity"

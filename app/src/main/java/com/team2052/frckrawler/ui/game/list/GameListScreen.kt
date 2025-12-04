@@ -37,7 +37,7 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.Game
-import com.team2052.frckrawler.di.viewmodel.metroViewModel
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.game.AddGameDialog

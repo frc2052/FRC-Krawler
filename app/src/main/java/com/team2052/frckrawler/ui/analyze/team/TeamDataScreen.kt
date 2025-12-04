@@ -33,7 +33,7 @@ import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.data.summary.DoubleSummaryValue
 import com.team2052.frckrawler.data.summary.OptionPercentageSummaryValue
 import com.team2052.frckrawler.data.summary.SummaryValue
-import com.team2052.frckrawler.di.viewmodel.metroViewModel
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme

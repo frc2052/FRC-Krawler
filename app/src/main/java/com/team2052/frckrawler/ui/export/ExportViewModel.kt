@@ -13,14 +13,14 @@ import com.team2052.frckrawler.data.local.EventDao
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.prefs.FrcKrawlerPreferences
-import com.team2052.frckrawler.di.viewmodel.ViewModelKey
-import com.team2052.frckrawler.di.viewmodel.ViewModelScope
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-@ContributesIntoMap(ViewModelScope::class)
+@ContributesIntoMap(AppScope::class)
 @ViewModelKey(ExportViewModel::class)
 @Inject
 class ExportViewModel(

@@ -40,7 +40,7 @@ import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.export.ExportType
 import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.Game
-import com.team2052.frckrawler.di.viewmodel.metroViewModel
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.components.FRCKrawlerAppBar
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 

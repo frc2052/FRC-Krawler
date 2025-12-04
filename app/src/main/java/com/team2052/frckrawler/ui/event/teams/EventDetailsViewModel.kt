@@ -6,15 +6,15 @@ import com.team2052.frckrawler.data.local.Event
 import com.team2052.frckrawler.data.local.EventDao
 import com.team2052.frckrawler.data.local.TeamAtEvent
 import com.team2052.frckrawler.data.local.TeamAtEventDao
-import com.team2052.frckrawler.di.viewmodel.ViewModelKey
-import com.team2052.frckrawler.di.viewmodel.ViewModelScope
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-@ContributesIntoMap(ViewModelScope::class)
+@ContributesIntoMap(AppScope::class)
 @ViewModelKey(EventDetailsViewModel::class)
 @Inject
 class EventDetailsViewModel(

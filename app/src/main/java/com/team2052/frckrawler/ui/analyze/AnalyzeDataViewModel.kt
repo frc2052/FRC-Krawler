@@ -11,11 +11,11 @@ import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.data.summary.EmptySummaryValue
 import com.team2052.frckrawler.data.summary.SummaryValue
 import com.team2052.frckrawler.data.summary.getSummarizer
-import com.team2052.frckrawler.di.viewmodel.ViewModelKey
-import com.team2052.frckrawler.di.viewmodel.ViewModelScope
 import com.team2052.frckrawler.repository.MetricRepository
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.AppScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-@ContributesIntoMap(ViewModelScope::class)
+@ContributesIntoMap(AppScope::class)
 @ViewModelKey(AnalyzeDataViewModel::class)
 @Inject
 class AnalyzeDataViewModel(
