@@ -22,6 +22,7 @@ import com.team2052.frckrawler.ui.server.home.ServerState
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +41,7 @@ class SyncServerService(
   private val notificationChannelManager: NotificationChannelManager,
   private val statusProvider: ServerStatusProvider,
   private val connectedScoutObserver: ConnectedScoutObserver,
+  private val threadInjector: MembersInjector<SyncServerThread>,
 ) : Service() {
 
   companion object {
@@ -68,7 +70,8 @@ class SyncServerService(
       this,
       NotificationId.ServerServiceNotification,
       getForegroundNotification(0),
-      serviceType)
+      serviceType
+    )
 
     val extras = intent?.extras
       ?: throw IllegalStateException("SyncServerService requires game and event ID extras")
@@ -77,7 +80,8 @@ class SyncServerService(
     startServer(gameId, eventId)
 
     val hasNotificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      val permission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+      val permission =
+        ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
       permission == android.content.pm.PackageManager.PERMISSION_GRANTED
     } else true
     if (hasNotificationPermission) {
@@ -107,7 +111,11 @@ class SyncServerService(
 
   private fun getForegroundNotification(connectedScouts: Int): Notification {
     val notificationText =
-      resources.getQuantityString(R.plurals.server_sync_clients_connected, connectedScouts, connectedScouts)
+      resources.getQuantityString(
+        R.plurals.server_sync_clients_connected,
+        connectedScouts,
+        connectedScouts
+      )
 
     // TODO deep link to server screen
     val pendingIntent: PendingIntent =
@@ -131,6 +139,7 @@ class SyncServerService(
     eventId: Int,
   ) {
     serverThread = SyncServerThread(this, gameId, eventId, statusProvider)
+    threadInjector.injectMembers(serverThread)
     serverThread.start()
   }
 
