@@ -26,9 +26,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.android.material.color.MaterialColors
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.bluetooth.OperationResult
 import com.team2052.frckrawler.data.model.RemoteScout
 import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
+import com.team2052.frckrawler.ui.getResultText
 import com.team2052.frckrawler.ui.theme.StaticColors
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -94,19 +96,26 @@ private fun SyncedScout(
         style = MaterialTheme.typography.bodyLarge
       )
 
-      if (!scout.lastSyncSuccessful) {
+      if (scout.lastSyncResult != OperationResult.Success) {
         Spacer(Modifier.width(4.dp))
         Icon(
           modifier = Modifier.size(20.dp),
           imageVector = Icons.Default.Error,
-          contentDescription = "Failed to sync",
+          contentDescription = null,
           tint = MaterialTheme.colorScheme.error
         )
       }
     }
-    if (!scout.lastSyncSuccessful) {
+    if (scout.lastSyncResult != OperationResult.Success) {
+      val baseMessage = stringResource(R.string.server_scout_sync_failed)
+      val failureText = if (scout.lastSyncResult != OperationResult.Unknown) {
+        val reasonMessage = getResultText(scout.lastSyncResult)
+        "$baseMessage, $reasonMessage"
+      } else {
+        baseMessage
+      }
       Text(
-        text = stringResource(R.string.server_scout_sync_failed),
+        text = failureText,
         style = MaterialTheme.typography.bodyMedium,
         fontStyle = FontStyle.Italic,
         color = MaterialTheme.colorScheme.error,
@@ -135,7 +144,7 @@ private fun ConnectedScoutListPreview() {
           LocalDate.of(2025, Month.MARCH, 10),
           LocalTime.of(8, 52)
         ),
-        lastSyncSuccessful = true
+        lastSyncResult = OperationResult.Success
       ),
 
       RemoteScout(
@@ -145,7 +154,7 @@ private fun ConnectedScoutListPreview() {
           LocalDate.of(2025, Month.MARCH, 10),
           LocalTime.of(8, 52)
         ),
-        lastSyncSuccessful = false
+        lastSyncResult = OperationResult.VersionMismatch,
       ),
 
       RemoteScout(
@@ -155,7 +164,7 @@ private fun ConnectedScoutListPreview() {
           LocalDate.of(2025, Month.MARCH, 10),
           LocalTime.of(8, 52)
         ),
-        lastSyncSuccessful = true
+        lastSyncResult = OperationResult.Unknown
       )
     )
   )

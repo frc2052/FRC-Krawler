@@ -115,7 +115,7 @@
     <string name="server_connected_scouts_title">Connected Scouts</string>
     <string name="server_connected_scout_last_sync">Last sync: %1$s</string>
     <string name="server_connect_new_scouts_button">Connect new scouts</string>
-    <string name="server_scout_sync_failed">Last sync failed; try again</string>
+    <string name="server_scout_sync_failed">Last sync failed</string>
 
     <!-- Game & Event selector -->
     <string name="game_event_no_metrics_warning">Warning: no pit or match metrics</string>
@@ -259,6 +259,12 @@
     <string name="scout_sync_notification_title">Syncing with server</string>
     <string name="scout_pairing_failed">Pairing failed, please try again.</string>
     <string name="scout_paring_server_not_running">FRCKrawler server is not running on the selected device.\nPlease ensure it is running and try again.</string>
+    <string name="sync_failed">Sync failed</string>
+    <string name="sync_failed_version_mismatch">app versions do not match</string>
+    <string name="sync_failed_server_config_mismatch">scout/server configuration does not match</string>
+    <string name="sync_failed_save_config_error">error saving configuration</string>
+    <string name="sync_success">success</string>
+    <string name="sync_unknown">unknown failure</string>
 
     <!-- Notifications -->
     <string name="notification_channel_sync_name">Sync</string>

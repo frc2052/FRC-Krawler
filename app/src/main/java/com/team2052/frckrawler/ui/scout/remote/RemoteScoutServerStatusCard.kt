@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
@@ -29,9 +30,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.bluetooth.OperationResult
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.Card
 import com.team2052.frckrawler.ui.components.CardHeader
+import com.team2052.frckrawler.ui.getResultText
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -95,7 +98,7 @@ private fun ServerConnected(
 
     if (syncState is ServerSyncState.Synced && syncState.hasSyncFailure
       || syncState is ServerSyncState.NotSynced && syncState.hasSyncFailure) {
-      SyncFailedText()
+      SyncFailedText(syncState)
     }
 
     if (syncState is ServerSyncState.Synced) {
@@ -139,18 +142,36 @@ private fun ServerConnected(
 }
 
 @Composable
-private fun SyncFailedText() {
+private fun SyncFailedText(
+  syncState: ServerSyncState,
+) {
   Row(
     verticalAlignment = Alignment.CenterVertically
   ) {
     Icon(
       modifier = Modifier.size(24.dp),
       imageVector = Icons.Default.Error,
-      contentDescription = "Failed to sync",
+      contentDescription = null,
       tint = MaterialTheme.colorScheme.error
     )
     Spacer(Modifier.width(12.dp))
-    Text("Sync failed")
+    Text(getFailureText(syncState))
+  }
+}
+
+@ReadOnlyComposable
+@Composable
+private fun getFailureText(syncState: ServerSyncState): String {
+  val baseMessage = stringResource(R.string.sync_failed)
+  if (syncState is ServerSyncState.NotSynced
+    && syncState.failureReason != null
+    && syncState.failureReason != OperationResult.Unknown
+    && syncState.failureReason != OperationResult.Success
+  ) {
+    val reason = getResultText(syncState.failureReason)
+    return "$baseMessage, $reason"
+  } else {
+    return baseMessage
   }
 }
 

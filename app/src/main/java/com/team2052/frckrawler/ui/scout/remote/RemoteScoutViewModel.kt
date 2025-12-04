@@ -20,6 +20,7 @@ import androidx.work.workDataOf
 import com.team2052.frckrawler.bluetooth.client.ScoutSyncWorker
 import com.team2052.frckrawler.bluetooth.client.ServerConnectionManager
 import com.team2052.frckrawler.bluetooth.client.ServerConnectionResult
+import com.team2052.frckrawler.bluetooth.client.getFailureReason
 import com.team2052.frckrawler.data.local.Game
 import com.team2052.frckrawler.data.local.GameDao
 import com.team2052.frckrawler.data.local.MetricDao
@@ -84,12 +85,16 @@ class RemoteScoutViewModel(
     val lastSyncTime = getLastSyncTime(workInfos)
     val lastSyncInfo = workInfos.firstOrNull { it.id == lastSyncId }
     val lastSyncFailed = lastSyncInfo != null && lastSyncInfo.state == WorkInfo.State.FAILED
+    val failureReason = lastSyncInfo?.outputData?.getFailureReason()
     when {
       lastSyncId == null -> ServerSyncState.NotSynced(hasSyncFailure = false)
       workInfos.any { it.isWaitingOrRunning() } -> ServerSyncState.Syncing
       else -> {
         if (lastSyncTime == null) {
-          ServerSyncState.NotSynced(hasSyncFailure = lastSyncFailed)
+          ServerSyncState.NotSynced(
+            hasSyncFailure = lastSyncFailed,
+            failureReason = failureReason,
+          )
         } else {
           ServerSyncState.Synced(
             pendingDataCount = pendingMetrics.size,

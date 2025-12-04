@@ -62,7 +62,7 @@ class SyncServerThread(
   }
 
   private fun syncWithClient(clientSocket: BluetoothSocket) {
-    var syncSucceeded = true
+    var syncResult = OperationResult.Success
     clientSocket.bufferedIO { output, input ->
       val operations = opFactory.createServerOperations(gameId = gameId, eventId = eventId)
       operations.forEach { op ->
@@ -70,13 +70,14 @@ class SyncServerThread(
         try {
           val result = op.execute(output, input)
           if (result != OperationResult.Success) {
-            syncSucceeded = false
+            syncResult = result
             Timber.e("Sync operation ${op.javaClass.simpleName} failed: $result")
+            return@bufferedIO
           } else {
             Timber.i("Sync operation ${op.javaClass.simpleName} completed successfully")
           }
         } catch (e: Exception) {
-          syncSucceeded = false
+          syncResult = OperationResult.Unknown
           Timber.e(e, "Sync operation ${op.javaClass.simpleName} failed fatally")
           return@bufferedIO
         }
@@ -84,7 +85,7 @@ class SyncServerThread(
     }
 
     val device = clientSocket.remoteDevice
-    scoutObserver.notifyScoutSynced(device.name, device.address, syncSucceeded)
+    scoutObserver.notifyScoutSynced(device.name, device.address, syncResult)
 
     clientSocket.close()
   }

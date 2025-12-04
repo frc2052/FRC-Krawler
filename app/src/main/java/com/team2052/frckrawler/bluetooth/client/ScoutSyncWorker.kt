@@ -12,8 +12,10 @@ import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.bluetooth.BluetoothSyncConstants
+import com.team2052.frckrawler.bluetooth.OperationResult
 import com.team2052.frckrawler.bluetooth.SyncOperationFactory
 import com.team2052.frckrawler.bluetooth.bufferedIO
 import com.team2052.frckrawler.di.ApplicationContext
@@ -47,6 +49,7 @@ class ScoutSyncWorker(
   companion object {
     const val DATA_SERVER_ADDRESS = "server_address"
     const val RESULT_END_TIMESTAMP = "end_timestamp"
+    const val RESULT_FAILURE_CODE = "failure_code"
   }
 
   @SuppressLint("MissingPermission")
@@ -69,9 +72,13 @@ class ScoutSyncWorker(
             Timber.i("Sync operation ${op.javaClass.simpleName} starting")
             try {
               val result = op.execute(output, input)
+              if (result != OperationResult.Success) {
+                val data = workDataOf(RESULT_FAILURE_CODE to result.id)
+                return Result.failure(data)
+              }
               Timber.i("Sync operation ${op.javaClass.simpleName} result: $result")
             } catch (e: Exception) {
-              Timber.w(e, "Sync operation ${op.javaClass.simpleName} failed")
+              Timber.w(e, "Sync operation ${op.javaClass.simpleName} failed fatally")
               return Result.failure()
             }
           }

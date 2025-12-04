@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.bluetooth.server
 
+import com.team2052.frckrawler.bluetooth.OperationResult
 import com.team2052.frckrawler.data.model.RemoteScout
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -23,15 +24,15 @@ class ConnectedScoutObserver {
   val devices: Flow<List<RemoteScout>> = _devices.map { it.values.toList() }
 
   /**
-   * Notify this observer that a scout has synced
+   * Notify this observer that a scout has synced (or failed to do so)
    */
-  internal fun notifyScoutSynced(name: String, address: String, success: Boolean) {
+  internal fun notifyScoutSynced(name: String, address: String, result: OperationResult) {
     scope.launch {
       val deviceMap = _devices.value.toMutableMap()
       deviceMap[address] = RemoteScout(
         name = name,
         address = address,
-        lastSyncSuccessful = success
+        lastSyncResult = result
       )
       _devices.emit(deviceMap)
     }
