@@ -21,8 +21,11 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.team2052.frckrawler.FRCKrawlerApp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.local.migration.LegacyDatabaseMigration
+import com.team2052.frckrawler.links.Deeplinks
+import com.team2052.frckrawler.links.toNavKey
 import com.team2052.frckrawler.ui.migration.LegacyMigrationScreen
 import com.team2052.frckrawler.ui.navigation.Navigation
+import com.team2052.frckrawler.ui.navigation.Screen.ModeSelect
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -51,8 +54,9 @@ class MainActivity : ComponentActivity() {
 
     WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
 
-    setContent {
+    val initialScreen = intent?.data?.toNavKey() ?: ModeSelect
 
+    setContent {
       CompositionLocalProvider(LocalMetroViewModelFactory provides viewModelFactory) {
         FrcKrawlerTheme {
           var requiresMigration by remember { mutableStateOf(migration.requiresMigration()) }
@@ -62,7 +66,7 @@ class MainActivity : ComponentActivity() {
               onMigrationCompleted = { requiresMigration = false }
             )
           } else {
-            Navigation()
+            Navigation(initialScreen)
           }
         }
       }

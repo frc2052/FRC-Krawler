@@ -12,8 +12,10 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import androidx.core.net.toUri
 import com.team2052.frckrawler.FRCKrawlerApp
 import com.team2052.frckrawler.R
+import com.team2052.frckrawler.links.Deeplinks
 import com.team2052.frckrawler.notifications.FrcKrawlerNotificationChannel
 import com.team2052.frckrawler.notifications.NotificationChannelManager
 import com.team2052.frckrawler.notifications.NotificationId
@@ -67,18 +69,22 @@ class SyncServerService : Service() {
       ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
     } else 0
 
-    ServiceCompat.startForeground(
-      this,
-      NotificationId.ServerServiceNotification,
-      getForegroundNotification(0),
-      serviceType
-    )
-
     val extras = intent?.extras
       ?: throw IllegalStateException("SyncServerService requires game and event ID extras")
     val gameId = extras.getInt(EXTRA_GAME_ID)
     val eventId = extras.getInt(EXTRA_EVENT_ID)
     startServer(gameId, eventId)
+
+    ServiceCompat.startForeground(
+      this,
+      NotificationId.ServerServiceNotification,
+      getForegroundNotification(
+        connectedScouts = 0,
+        gameId = gameId,
+        eventId = eventId
+      ),
+      serviceType
+    )
 
     val hasNotificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       val permission =
@@ -88,7 +94,7 @@ class SyncServerService : Service() {
     if (hasNotificationPermission) {
       scope.launch {
         connectedScoutObserver.devices.collectLatest { devices ->
-          updateNotification(devices.size)
+          updateNotification(connectedScouts = devices.size, gameId = gameId, eventId = eventId)
         }
       }
     }
@@ -101,16 +107,28 @@ class SyncServerService : Service() {
     stopServer()
   }
 
-  private fun updateNotification(connectedScouts: Int) {
+  private fun updateNotification(
+    connectedScouts: Int,
+    gameId: Int,
+    eventId: Int,
+  ) {
     notificationChannelManager.ensureChannelsCreated()
     val notificationManager = getSystemService<NotificationManager>()
     notificationManager?.notify(
       NotificationId.ServerServiceNotification,
-      getForegroundNotification(connectedScouts)
+      getForegroundNotification(
+        connectedScouts = connectedScouts,
+        gameId = gameId,
+        eventId = eventId
+      )
     )
   }
 
-  private fun getForegroundNotification(connectedScouts: Int): Notification {
+  private fun getForegroundNotification(
+    connectedScouts: Int,
+    gameId: Int,
+    eventId: Int,
+  ): Notification {
     val notificationText =
       resources.getQuantityString(
         R.plurals.server_sync_clients_connected,
@@ -118,9 +136,12 @@ class SyncServerService : Service() {
         connectedScouts
       )
 
-    // TODO deep link to server screen
     val launchIntent: PendingIntent =
       Intent(this, MainActivity::class.java).let { notificationIntent ->
+        notificationIntent.data = Deeplinks.ServerHome.buildUpon()
+          .appendQueryParameter(Deeplinks.Params.GameId, gameId.toString())
+          .appendQueryParameter(Deeplinks.Params.EventId, eventId.toString())
+          .build()
         PendingIntent.getActivity(
           this, 0, notificationIntent,
           PendingIntent.FLAG_IMMUTABLE

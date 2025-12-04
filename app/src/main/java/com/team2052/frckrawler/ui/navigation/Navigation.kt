@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -24,13 +25,18 @@ import com.team2052.frckrawler.ui.scout.remote.ScoutHomeScreen
 import com.team2052.frckrawler.ui.server.home.ServerHomeScreen
 
 @Composable
-fun Navigation() {
+fun Navigation(
+  navKey: NavKey,
+) {
   val density = LocalDensity.current
   val slideDistance = remember(density) {
     with(density) { DFEAULT_SLIDE_DISTANCE.roundToPx() }
   }
 
-  val backStack = rememberNavBackStack(ModeSelect)
+  val syntheticBackStack = remember(navKey) {
+    buildSyntheticBackStack(navKey)
+  }
+  val backStack = rememberNavBackStack(*(syntheticBackStack.toTypedArray()))
   
   NavDisplay(
     entryDecorators = listOf(
@@ -134,4 +140,20 @@ fun Navigation() {
       }
     }
   )
+}
+
+private fun buildSyntheticBackStack(
+  startKey: NavKey,
+): List<NavKey> {
+  return buildList {
+    var node: NavKey? = startKey
+    while (node != null) {
+      // ensure the parent is added to the start of the list
+      add(0, node)
+      val parent = if (node is NavKeyWithParent) {
+        node.parent
+      } else null
+      node = parent
+    }
+  }
 }

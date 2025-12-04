@@ -33,7 +33,9 @@ sealed interface Screen : NavKey {
   data class Server(
     val gameId: Int,
     val eventId: Int,
-  ) : Screen
+  ) : Screen, NavKeyWithParent {
+    override val parent: NavKey = ModeSelect
+  }
 
   @Serializable
   data class Analyze(
