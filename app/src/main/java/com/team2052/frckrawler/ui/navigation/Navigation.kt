@@ -36,6 +36,7 @@ fun Navigation() {
     entryDecorators = listOf(
       rememberSaveableStateHolderNavEntryDecorator(),
       rememberViewModelStoreNavEntryDecorator(),
+      rememberFirebaseScreenDecorator(),
     ),
     backStack = backStack,
     onBack = { backStack.removeLastOrNull() },

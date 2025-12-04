@@ -69,9 +69,10 @@
           android:authorities="${applicationId}.androidx-startup"
           tools:node="remove" />
 
-
         <meta-data android:name="google_analytics_adid_collection_enabled"
             android:value="false" />
+        <meta-data android:name="google_analytics_automatic_screen_reporting_enabled"
+          android:value="false" />
     </application>
 
 </manifest>
