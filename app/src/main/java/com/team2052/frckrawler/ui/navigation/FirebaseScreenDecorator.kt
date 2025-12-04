@@ -18,7 +18,6 @@ class FirebaseScreenDecorator<T: Any> : NavEntryDecorator<T>(
       val bundle = bundleOf(
         FirebaseAnalytics.Param.SCREEN_NAME to entry.contentKey
       )
-      println("screen view ${entry.contentKey}")
       Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
     }
     entry.Content()
