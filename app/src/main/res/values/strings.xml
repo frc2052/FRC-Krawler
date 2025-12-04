@@ -254,6 +254,7 @@
 
     <!-- Server syncing -->
     <string name="server_sync_notification_title">FRCKrawler Server Running</string>
+    <string name="server_sync_notification_stop">Stop server</string>
 
     <!-- Scout syncing -->
     <string name="scout_sync_notification_title">Syncing with server</string>

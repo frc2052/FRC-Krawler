@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.app.Service
 import android.content.Context
+import com.team2052.frckrawler.bluetooth.server.StopServerBroadcastReceiver
 import com.team2052.frckrawler.bluetooth.server.SyncServerService
 import com.team2052.frckrawler.di.work.WorkProviders
 import com.team2052.frckrawler.ui.MainActivity
@@ -30,4 +31,5 @@ interface AppGraph : ViewModelGraph, WorkProviders {
 
   fun inject(mainActivity: MainActivity)
   fun inject(syncServerService: SyncServerService)
+  fun inject(stopReceiver: StopServerBroadcastReceiver)
 }

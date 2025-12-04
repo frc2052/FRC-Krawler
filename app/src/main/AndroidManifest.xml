@@ -56,6 +56,9 @@
           android:exported="false"
           android:foregroundServiceType="connectedDevice"/>
 
+        <receiver android:name=".bluetooth.server.StopServerBroadcastReceiver"
+          android:exported="false" />
+
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="connectedDevice"

@@ -119,7 +119,7 @@ class SyncServerService : Service() {
       )
 
     // TODO deep link to server screen
-    val pendingIntent: PendingIntent =
+    val launchIntent: PendingIntent =
       Intent(this, MainActivity::class.java).let { notificationIntent ->
         PendingIntent.getActivity(
           this, 0, notificationIntent,
@@ -127,11 +127,21 @@ class SyncServerService : Service() {
         )
       }
 
+    val stopIntent: PendingIntent =
+      Intent(this, StopServerBroadcastReceiver::class.java).let { stopServiceIntent ->
+        PendingIntent.getBroadcast(this, 0, stopServiceIntent, PendingIntent.FLAG_IMMUTABLE)
+      }
+
     return NotificationCompat.Builder(this, FrcKrawlerNotificationChannel.Sync.id)
       .setContentTitle(getText(R.string.server_sync_notification_title))
       .setContentText(notificationText)
       .setSmallIcon(R.drawable.ic_logo)
-      .setContentIntent(pendingIntent)
+      .setContentIntent(launchIntent)
+      .addAction(
+        R.drawable.ic_stop,
+        getString(R.string.server_sync_notification_stop),
+        stopIntent,
+      )
       .build()
   }
 
