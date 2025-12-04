@@ -75,26 +75,26 @@ class LegacyDatabaseMigration(
 
       val legacyDb = LegacyDatabaseOpenHelper().readableDatabase
 
-      Timber.d("migrating games")
+      Timber.i("migrating games")
       val gameIdMap = migrateGames(legacyDb)
-      Timber.d("migrating events")
+      Timber.i("migrating events")
       val eventIdMap = migrateEvents(legacyDb, gameIdMap)
-      Timber.d("migrating teams at events")
+      Timber.i("migrating teams at events")
       val robotIdMap = migrateTeamAtEvent(legacyDb, eventIdMap)
-      Timber.d("migrating metrics")
+      Timber.i("migrating metrics")
       val metricsInfo = migrateMetrics(legacyDb, gameIdMap)
 
-      Timber.d("migrating match data")
+      Timber.i("migrating match data")
       migrateMatchMetricsData(legacyDb, robotIdMap, eventIdMap, metricsInfo)
-      Timber.d("migrating pit data")
+      Timber.i("migrating pit data")
       migratePitMetricsData(legacyDb, robotIdMap, eventIdMap, metricsInfo)
 
-      Timber.d("migrating match comments")
+      Timber.i("migrating match comments")
       migrateMatchComments(legacyDb, robotIdMap, gameIdMap, eventIdMap, metricsInfo)
-      Timber.d("migrating pit comments")
+      Timber.i("migrating pit comments")
       migratePitComments(legacyDb, gameIdMap, eventIdMap, metricsInfo)
 
-      Timber.d("finished migrating data")
+      Timber.i("finished migrating data")
       legacyDb.close()
 
       context.deleteDatabase(LEGACY_DB_NAME)

@@ -66,10 +66,10 @@ class ScoutSyncWorker(
         socket.bufferedIO { output, input ->
           val operations = opFactory.createScoutOperations()
           operations.forEach { op ->
-            Timber.d("Sync operation ${op.javaClass.simpleName} starting")
+            Timber.i("Sync operation ${op.javaClass.simpleName} starting")
             try {
               val result = op.execute(output, input)
-              Timber.d("Sync operation ${op.javaClass.simpleName} result: $result")
+              Timber.i("Sync operation ${op.javaClass.simpleName} result: $result")
             } catch (e: Exception) {
               Timber.w(e, "Sync operation ${op.javaClass.simpleName} failed")
               return Result.failure()

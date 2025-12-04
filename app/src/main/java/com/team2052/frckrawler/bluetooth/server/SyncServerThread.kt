@@ -30,7 +30,7 @@ class SyncServerThread(
   private var serverSocket: BluetoothServerSocket? = null
 
   override fun run() {
-    Timber.d("Opening server")
+    Timber.i("Opening server")
 
     while (serverSocket == null && !isInterrupted) {
       serverSocket = bluetoothManager.adapter.listenUsingRfcommWithServiceRecord(
@@ -47,7 +47,7 @@ class SyncServerThread(
       try {
         val clientSocket = serverSocket!!.accept()
         val clientDevice = clientSocket.remoteDevice
-        Timber.d("Client connected: ${clientDevice.name}")
+        Timber.i("Client connected: ${clientDevice.name}")
 
         syncWithClient(clientSocket)
       } catch (e: Exception) {
@@ -66,14 +66,14 @@ class SyncServerThread(
     clientSocket.bufferedIO { output, input ->
       val operations = opFactory.createServerOperations(gameId = gameId, eventId = eventId)
       operations.forEach { op ->
-        Timber.d("Sync operation ${op.javaClass.simpleName} starting")
+        Timber.i("Sync operation ${op.javaClass.simpleName} starting")
         try {
           val result = op.execute(output, input)
           if (result != OperationResult.Success) {
             syncSucceeded = false
             Timber.e("Sync operation ${op.javaClass.simpleName} failed: $result")
           } else {
-            Timber.d("Sync operation ${op.javaClass.simpleName} completed successfully")
+            Timber.i("Sync operation ${op.javaClass.simpleName} completed successfully")
           }
         } catch (e: Exception) {
           syncSucceeded = false
