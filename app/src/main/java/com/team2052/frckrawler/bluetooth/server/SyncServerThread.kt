@@ -77,7 +77,8 @@ class SyncServerThread(
           }
         } catch (e: Exception) {
           syncSucceeded = false
-          Timber.e(e, "Sync operation ${op.javaClass.simpleName} failed")
+          Timber.e(e, "Sync operation ${op.javaClass.simpleName} failed fatally")
+          return@bufferedIO
         }
       }
     }
