@@ -11,6 +11,7 @@ import com.team2052.frckrawler.bluetooth.SyncOperationFactory
 import com.team2052.frckrawler.bluetooth.bufferedIO
 import com.team2052.frckrawler.ui.server.home.ServerState
 import dev.zacsweers.metro.Inject
+import okhttp3.internal.closeQuietly
 import timber.log.Timber
 
 @SuppressLint("MissingPermission")
@@ -29,8 +30,14 @@ class SyncServerThread(
 
   private var serverSocket: BluetoothServerSocket? = null
 
+  fun close() {
+    Timber.d("Closing server")
+    interrupt()
+    serverSocket?.closeQuietly()
+  }
+
   override fun run() {
-    Timber.i("Opening server")
+    Timber.d("Opening server")
 
     while (serverSocket == null && !isInterrupted) {
       serverSocket = bluetoothManager.adapter.listenUsingRfcommWithServiceRecord(
@@ -46,6 +53,13 @@ class SyncServerThread(
     while (!interrupted()) {
       try {
         val clientSocket = serverSocket!!.accept()
+
+        if (interrupted()) {
+          Timber.d("Server interrupted, closing client socket")
+          clientSocket.closeQuietly()
+          break
+        }
+
         val clientDevice = clientSocket.remoteDevice
         Timber.i("Client connected: ${clientDevice.name}")
 
@@ -57,7 +71,7 @@ class SyncServerThread(
       }
     }
 
-    serverSocket?.close()
+    serverSocket?.closeQuietly()
     statusProvider.setState(ServerState.Disabled)
   }
 

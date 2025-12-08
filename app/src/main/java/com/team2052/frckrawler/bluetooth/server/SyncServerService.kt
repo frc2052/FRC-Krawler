@@ -45,7 +45,7 @@ class SyncServerService : Service() {
   @Inject private lateinit var connectedScoutObserver: ConnectedScoutObserver
   @Inject private lateinit var threadInjector: MembersInjector<SyncServerThread>
 
-  private lateinit var serverThread: SyncServerThread
+  private var serverThread: SyncServerThread? = null
 
   private val scope = CoroutineScope(Dispatchers.Main)
 
@@ -170,14 +170,16 @@ class SyncServerService : Service() {
     gameId: Int,
     eventId: Int,
   ) {
-    serverThread = SyncServerThread(this, gameId, eventId, statusProvider)
-    threadInjector.injectMembers(serverThread)
-    serverThread.start()
+    val thread = SyncServerThread(this, gameId, eventId, statusProvider)
+    threadInjector.injectMembers(thread)
+    thread.start()
+    serverThread = thread
   }
 
   private fun stopServer() {
     scope.coroutineContext.cancelChildren()
-    serverThread.interrupt()
+    serverThread?.close()
+    serverThread = null
     statusProvider.setState(ServerState.Disabled)
   }
 }
