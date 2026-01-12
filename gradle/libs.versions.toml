@@ -98,7 +98,7 @@ androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profi
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-test = { id = "com.android.test", version.ref = "agp" }
-ksp = "com.google.devtools.ksp:2.3.3"
+ksp = "com.google.devtools.ksp:2.3.4"
 room = { id = "androidx.room", version.ref = "room" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 googleServices = { id = "com.google.gms.google-services", version = "4.4.4" }
