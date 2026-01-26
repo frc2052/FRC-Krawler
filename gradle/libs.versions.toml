@@ -53,7 +53,7 @@ nav3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.re
 nav3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3" }
 nav3-lifecycle = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "2.10.0" }
 
-kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.9.0" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.10.0" }
 
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
 accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanist-swiperefresh" }
