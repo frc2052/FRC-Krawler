@@ -47,7 +47,7 @@ class OkioDataExporter(
       val metricsAsync = async {
         data.map { it.metricId }
           .distinct()
-          .map { metricRepository.getMetric(it) }
+          .map { metricRepository.getMetric(it) ?: createDeletedMetricPlaceholder(it) }
       }
       val teamsAsync = async {
         teamAtEventDao.getAllTeams(eventId)
@@ -111,5 +111,16 @@ class OkioDataExporter(
     } else emptyList()
 
     return matchData + pitData
+  }
+
+  private fun createDeletedMetricPlaceholder(
+    id: String
+  ): Metric {
+    return Metric.TextFieldMetric(
+      id = id,
+      name = "<deleted>",
+      priority = Int.MAX_VALUE,
+      enabled = false
+    )
   }
 }

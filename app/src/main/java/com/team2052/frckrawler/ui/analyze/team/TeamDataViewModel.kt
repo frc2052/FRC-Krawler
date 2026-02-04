@@ -41,7 +41,7 @@ class TeamDataViewModel(
 
   private val metricsById = teamData.map {
     val metricIds = it.values.flatten().map { it.metricId }
-    val metrics = metricIds.map { metricRepository.getMetric(it) }
+    val metrics = metricIds.mapNotNull { metricRepository.getMetric(it) }
     metrics.associateBy { it.id }
   }.shareIn(viewModelScope, replay = 1, started = SharingStarted.Lazily)
 
