@@ -20,4 +20,7 @@ interface FrcKrawlerPreferences {
 
   val exportIncludePitMetrics: Flow<Boolean>
   suspend fun setExportIncludePitMetrics(includePitMetrics: Boolean)
+
+  val exportIncludeDeleted: Flow<Boolean>
+  suspend fun setExportIncludeDeleted(includeDeleted: Boolean)
 }

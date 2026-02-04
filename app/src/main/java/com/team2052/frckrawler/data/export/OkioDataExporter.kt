@@ -42,12 +42,17 @@ class OkioDataExporter(
       val includeTeamNames = prefs.exportIncludeTeamNames.first()
       val includeMatchMetrics = prefs.exportIncludeMatchMetrics.first()
       val includePitMetrics = prefs.exportIncludePitMetrics.first()
+      val includeDeleted = prefs.exportIncludeDeleted.first()
 
       val data = getMetricData(includeMatchMetrics, includePitMetrics, eventId)
       val metricsAsync = async {
         data.map { it.metricId }
           .distinct()
-          .map { metricRepository.getMetric(it) }
+          .mapNotNull {
+            val metric = metricRepository.getMetric(it)
+            val fallback = if (includeDeleted) createDeletedMetricPlaceholder(it) else null
+            return@mapNotNull metric ?: fallback
+          }
       }
       val teamsAsync = async {
         teamAtEventDao.getAllTeams(eventId)
@@ -111,5 +116,16 @@ class OkioDataExporter(
     } else emptyList()
 
     return matchData + pitData
+  }
+
+  private fun createDeletedMetricPlaceholder(
+    id: String
+  ): Metric {
+    return Metric.TextFieldMetric(
+      id = id,
+      name = "<deleted>",
+      priority = Int.MAX_VALUE,
+      enabled = false
+    )
   }
 }

@@ -35,6 +35,7 @@ class ExportViewModel(
   val includeTeamNames: Flow<Boolean> = prefs.exportIncludeTeamNames
   val includeMatchMetrics: Flow<Boolean> = prefs.exportIncludeMatchMetrics
   val includePitMetrics: Flow<Boolean> = prefs.exportIncludePitMetrics
+  val includeDeleted: Flow<Boolean> = prefs.exportIncludeDeleted
 
   fun loadGameAndEvent(gameId: Int, eventId: Int) {
     viewModelScope.launch {
@@ -61,6 +62,12 @@ class ExportViewModel(
   fun setIncludePitMetrics(includePitMetrics: Boolean) {
     viewModelScope.launch {
       prefs.setExportIncludePitMetrics(includePitMetrics)
+    }
+  }
+
+  fun setIncludeDeleted(includeDeleted: Boolean) {
+    viewModelScope.launch {
+      prefs.setExportIncludeDeleted(includeDeleted)
     }
   }
 

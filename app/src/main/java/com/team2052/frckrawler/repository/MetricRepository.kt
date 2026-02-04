@@ -17,8 +17,8 @@ class MetricRepository(
   private val metricDao: MetricDao,
 ) {
 
-  suspend fun getMetric(metricId: String): Metric {
-    return metricDao.getMetric(metricId).toMetric()
+  suspend fun getMetric(metricId: String): Metric? {
+    return metricDao.getMetric(metricId)?.toMetric()
   }
 
   fun getMetrics(metricSetId: Int): Flow<List<Metric>> {
