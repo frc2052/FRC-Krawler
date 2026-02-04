@@ -87,6 +87,7 @@ fun ExportDataScreen(
     val includeTeamNames by viewModel.includeTeamNames.collectAsState(true)
     val includeMatchMetrics by viewModel.includeMatchMetrics.collectAsState(true)
     val includePitMetrics by viewModel.includePitMetrics.collectAsState(true)
+    val includeDeleted by viewModel.includeDeleted.collectAsState(false)
 
     ExportScreenContent(
       game = viewModel.game,
@@ -104,6 +105,8 @@ fun ExportDataScreen(
       onIncludeMatchMetricsChanged = viewModel::setIncludeMatchMetrics,
       includePitMetrics = includePitMetrics,
       onIncludePitMetricsChanged = viewModel::setIncludePitMetrics,
+      includeDeleted = includeDeleted,
+      onIncludeDeletedChanged = viewModel::setIncludeDeleted,
       modifier = Modifier.fillMaxSize(),
       contentPadding = contentPadding
     )
@@ -124,6 +127,8 @@ private fun ExportScreenContent(
   onIncludeMatchMetricsChanged: (Boolean) -> Unit,
   includePitMetrics: Boolean,
   onIncludePitMetricsChanged: (Boolean) -> Unit,
+  includeDeleted: Boolean,
+  onIncludeDeletedChanged: (Boolean) -> Unit,
   onExportClicked: (ExportType) -> Unit,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(0.dp)
@@ -173,6 +178,11 @@ private fun ExportScreenContent(
       title = stringResource(R.string.export_include_pit_metrics),
       toggled = includePitMetrics,
       onToggle = onIncludePitMetricsChanged
+    )
+    ExportToggleOption(
+      title = stringResource(R.string.export_include_deleted),
+      toggled = includeDeleted,
+      onToggle = onIncludeDeletedChanged
     )
   }
 }
@@ -277,6 +287,8 @@ private fun ExportScreenPreview() {
         onIncludeMatchMetricsChanged = {},
         includePitMetrics = true,
         onIncludePitMetricsChanged = {},
+        includeDeleted = false,
+        onIncludeDeletedChanged = {},
         onExportClicked = {},
       )
     }

@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.data.local.prefs
 
+import android.R.attr.data
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -30,6 +31,7 @@ class FrcKrawlerDatastorePreferences(
     private val EXPORT_INCLUDE_TEAM_NAMES = booleanPreferencesKey("export_include_team_names")
     private val EXPORT_INCLUDE_MATCH_METRICS = booleanPreferencesKey("export_include_match_metrics")
     private val EXPORT_INCLUDE_PIT_METRICS = booleanPreferencesKey("export_include_pit_metrics")
+    private val EXPORT_INCLUDE_DELETED = booleanPreferencesKey("export_include_deleted")
   }
 
   override val hasDismissedNotificationPrompt: Flow<Boolean> = context.dataStore.data
@@ -95,6 +97,16 @@ class FrcKrawlerDatastorePreferences(
   override suspend fun setExportIncludePitMetrics(includePitMetrics: Boolean) {
     context.dataStore.edit { data ->
       data[EXPORT_INCLUDE_PIT_METRICS] = includePitMetrics
+    }
+  }
+
+  override val exportIncludeDeleted: Flow<Boolean> = context.dataStore.data
+  .map { data -> data[EXPORT_INCLUDE_DELETED] ?: false }
+
+
+  override suspend fun setExportIncludeDeleted(includeDeleted: Boolean) {
+    context.dataStore.edit { data ->
+      data[EXPORT_INCLUDE_DELETED] = includeDeleted
     }
   }
 }
