@@ -12,7 +12,6 @@ kotlin = '2.3.0'
 coroutines = "1.10.2"
 lifecycle = "2.10.0"
 material = "1.13.0"
-multidex = "2.0.1"
 nav3 = "1.0.0"
 okio = "3.16.4"
 retrofit = '3.0.0'
@@ -21,10 +20,10 @@ moshi = '1.15.2'
 metro = "0.10.2"
 room = "2.8.4"
 workmanager = "2.11.0"
-agp = "8.13.2"
+agp = "9.0.0"
 uiautomator = "2.3.0"
 benchmark-macro-junit4 = "1.4.1"
-baselineprofile = "1.4.1"
+baselineprofile = "1.5.0-alpha02"
 profileinstaller = "1.4.1"
 
 [libraries]
@@ -35,7 +34,6 @@ androidx-legacy = "androidx.legacy:legacy-support-v4:1.0.0"
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 androidx-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
-androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "workmanager" }
 androidx-datastore = { module = "androidx.datastore:datastore-preferences", version = "1.2.0"}
 
@@ -95,7 +93,6 @@ androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchm
 androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
 
 [plugins]
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-test = { id = "com.android.test", version.ref = "agp" }
 ksp = "com.google.devtools.ksp:2.3.4"
