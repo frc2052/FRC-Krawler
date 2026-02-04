@@ -1,6 +1,5 @@
 plugins {
   alias libs.plugins.android.application
-  alias libs.plugins.kotlin.android
   alias libs.plugins.ksp
   alias libs.plugins.metro
   alias libs.plugins.room
@@ -70,7 +69,6 @@ dependencies {
   implementation libs.androidx.legacy
   implementation libs.androidx.core
   implementation libs.androidx.appcompat
-  implementation libs.androidx.multidex
   implementation libs.androidx.profileinstaller
   testImplementation libs.junit
   androidTestImplementation libs.ext.junit
