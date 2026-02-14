@@ -4,12 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.data.remote.EventService
 import com.team2052.frckrawler.data.remote.model.TbaSimpleEvent
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import dev.zacsweers.metro.AppScope
 import com.team2052.frckrawler.domain.CreateEventUseCase
-import com.team2052.frckrawler.ui.analyze.team.TeamDataViewModel
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -81,6 +80,11 @@ class AddEventViewModel(
       tbaId = tbaSimpleEvent.key,
       gameId = gameId
     )
+
+
+    _state.value = _state.value.copy(
+      isSavingEvent = false
+    )
   }
 
   suspend fun saveManualEvent(gameId: Int, name: String) {
@@ -91,6 +95,10 @@ class AddEventViewModel(
     createEventUseCase(
       name = name,
       gameId = gameId
+    )
+
+    _state.value = _state.value.copy(
+      isSavingEvent = false
     )
   }
 }
