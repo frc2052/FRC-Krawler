@@ -10,11 +10,11 @@ import com.team2052.frckrawler.data.local.TeamAtEventDao
 import com.team2052.frckrawler.data.model.Metric
 import com.team2052.frckrawler.data.summary.SummaryValue
 import com.team2052.frckrawler.data.summary.getSummarizer
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import dev.zacsweers.metro.AppScope
 import com.team2052.frckrawler.repository.MetricRepository
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -77,7 +77,10 @@ class TeamDataViewModel(
   private suspend fun getTeamDataByEvent(teamNumber: String): Map<Event, List<MetricDatum>> {
     val allData = metricDataDao.getAllTeamDatum(teamNumber)
     val dataByEventId = allData.groupBy { it.eventId }
-    return dataByEventId.mapKeys { (id, _) -> eventDao.get(id) }
+    val teamByEventsOrNull = dataByEventId.mapKeys { (id, _) -> eventDao.getOrNull(id) }
+
+    @Suppress("UNCHECKED_CAST")
+    return teamByEventsOrNull.filterKeys { it != null } as Map<Event, List<MetricDatum>>
   }
 
   private fun summarizeTeamData(

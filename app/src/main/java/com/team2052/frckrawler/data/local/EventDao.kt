@@ -17,6 +17,9 @@ interface EventDao {
   @Query("SELECT * FROM event WHERE id = :id")
   suspend fun get(id: Int): Event
 
+  @Query("SELECT * FROM event WHERE id = :id")
+  suspend fun getOrNull(id: Int): Event?
+
   @Query("SELECT * FROM event WHERE gameId = :gameId")
   fun getAllForGame(gameId: Int): Flow<List<Event>>
 
