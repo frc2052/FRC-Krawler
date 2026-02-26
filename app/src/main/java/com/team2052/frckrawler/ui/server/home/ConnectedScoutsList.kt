@@ -43,6 +43,7 @@ private val TIME_FORMAT = DateTimeFormatter.ofPattern("h:mm a")
 @Composable
 internal fun ConnectedScoutsList(
   modifier: Modifier = Modifier,
+  enableConnectButton: Boolean,
   scouts: List<RemoteScout>
 ) {
   Card(
@@ -68,6 +69,7 @@ internal fun ConnectedScoutsList(
     ) {
       val context = LocalContext.current
       Button(
+        enabled = enableConnectButton,
         onClick = {
           val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
             putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60)
@@ -136,6 +138,7 @@ private fun SyncedScout(
 @Composable
 private fun ConnectedScoutListPreview() {
   ConnectedScoutsList(
+    enableConnectButton = true,
     scouts = listOf(
       RemoteScout(
         name = "Scout 1",

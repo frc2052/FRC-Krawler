@@ -123,7 +123,8 @@ fun ServerHomeScreen(
 
         ConnectedScoutsList(
           modifier = modifier,
-          scouts = viewModel.connectedScouts
+          enableConnectButton = state is ServerState.Enabled,
+          scouts = viewModel.connectedScouts,
         )
 
         Spacer(Modifier.height(16.dp))
