@@ -38,11 +38,11 @@ import java.util.Optional
 @AssistedInject
 class ScoutSyncWorker(
   @ApplicationContext appContext: Context,
-  @Assisted workerParams: WorkerParameters,
+  @Assisted params: WorkerParameters,
   bluetoothAdapterOptional: Optional<BluetoothAdapter>,
   private val opFactory: SyncOperationFactory,
   private val notificationChannelManager: NotificationChannelManager
-) : CoroutineWorker(appContext, workerParams) {
+) : CoroutineWorker(appContext, params) {
 
   private val bluetoothAdapter = bluetoothAdapterOptional.get()
 
