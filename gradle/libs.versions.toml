@@ -37,7 +37,7 @@ androidx-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", ve
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "workmanager" }
 androidx-datastore = { module = "androidx.datastore:datastore-preferences", version = "1.2.1"}
 
-compose-bom = "androidx.compose:compose-bom:2026.02.01"
+compose-bom = "androidx.compose:compose-bom:2026.03.00"
 compose-materialIcons-core = { module = "androidx.compose.material:material-icons-core" }
 compose-materialIcons-extended = { module = "androidx.compose.material:material-icons-extended" }
 compose-ui = { module = "androidx.compose.ui:ui" }
