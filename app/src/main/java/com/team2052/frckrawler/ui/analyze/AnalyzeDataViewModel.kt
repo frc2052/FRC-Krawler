@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @ContributesIntoMap(AppScope::class)
-@ViewModelKey(AnalyzeDataViewModel::class)
+@ViewModelKey
 @Inject
 class AnalyzeDataViewModel(
   private val gameDao: GameDao,

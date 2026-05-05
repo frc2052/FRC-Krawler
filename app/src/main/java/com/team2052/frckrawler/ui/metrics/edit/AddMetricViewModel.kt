@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @ContributesIntoMap(AppScope::class)
-@ViewModelKey(AddMetricViewModel::class)
+@ViewModelKey
 @Inject
 class AddMetricViewModel(
   private val metricRepo: MetricRepository

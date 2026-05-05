@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import java.util.Optional
 
 @ContributesIntoMap(AppScope::class)
-@ViewModelKey(ServerHomeViewModel::class)
+@ViewModelKey
 @Inject
 class ServerHomeViewModel(
   bluetoothAdapterOptional: Optional<BluetoothAdapter>,

@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @ContributesIntoMap(AppScope::class)
-@ViewModelKey(TeamDataViewModel::class)
+@ViewModelKey
 @Inject
 class TeamDataViewModel(
   private val eventDao: EventDao,

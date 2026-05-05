@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
-@ViewModelKey(ScoutMatchViewModel::class)
+@ViewModelKey
 @Inject
 class ScoutMatchViewModel(
   metricDao: MetricDao,

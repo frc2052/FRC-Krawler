@@ -11,7 +11,7 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.launch
 
 @ContributesIntoMap(AppScope::class)
-@ViewModelKey(AddEditTeamViewModel::class)
+@ViewModelKey
 @Inject
 class AddEditTeamViewModel(
   private val teamAtEventDao: TeamAtEventDao,

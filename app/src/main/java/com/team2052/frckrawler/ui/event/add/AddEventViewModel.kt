@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import java.time.Year
 
 @ContributesIntoMap(AppScope::class)
-@ViewModelKey(AddEventViewModel::class)
+@ViewModelKey
 @Inject
 class AddEventViewModel(
   private val eventService: EventService,

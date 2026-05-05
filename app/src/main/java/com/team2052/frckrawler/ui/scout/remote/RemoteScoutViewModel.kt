@@ -49,7 +49,7 @@ import java.util.Optional
 import java.util.UUID
 
 @ContributesIntoMap(AppScope::class)
-@ViewModelKey(RemoteScoutViewModel::class)
+@ViewModelKey
 @Inject
 class RemoteScoutViewModel(
   bluetoothAdapterOptional: Optional<BluetoothAdapter>,

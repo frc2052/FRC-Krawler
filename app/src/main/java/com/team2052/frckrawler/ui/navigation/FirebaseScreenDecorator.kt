@@ -18,9 +18,9 @@ fun <T: Any> rememberFirebaseScreenDecorator(): FirebaseScreenDecorator<T> {
 class FirebaseScreenDecorator<T: Any> : NavEntryDecorator<T>(
   decorate = { entry ->
     SideEffect {
-      val bundle = bundleOf(
-        FirebaseAnalytics.Param.SCREEN_NAME to entry.contentKey
-      )
+      val bundle = Bundle().apply {
+        putString(FirebaseAnalytics.Param.SCREEN_NAME, entry.contentKey.toString())
+      }
       Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
     }
     entry.Content()

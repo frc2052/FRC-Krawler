@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ContributesIntoMap(AppScope::class)
-@ViewModelKey(ModeSelectViewModel::class)
+@ViewModelKey
 @Inject
 class ModeSelectViewModel(
   private val dbInitializer: DatabaseInitializer,

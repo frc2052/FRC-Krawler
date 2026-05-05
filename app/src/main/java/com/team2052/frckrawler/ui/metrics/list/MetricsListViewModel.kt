@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 @ContributesIntoMap(AppScope::class)
-@ViewModelKey(MetricsListViewModel::class)
+@ViewModelKey
 @Inject
 class MetricsListViewModel(
   private val metricRepo: MetricRepository,

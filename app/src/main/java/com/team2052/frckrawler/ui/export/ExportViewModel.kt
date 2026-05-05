@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @ContributesIntoMap(AppScope::class)
-@ViewModelKey(ExportViewModel::class)
+@ViewModelKey
 @Inject
 class ExportViewModel(
   private val gameDao: GameDao,

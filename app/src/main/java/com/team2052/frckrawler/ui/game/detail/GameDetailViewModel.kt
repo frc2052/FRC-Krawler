@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 
 @ContributesIntoMap(AppScope::class)
-@ViewModelKey(GameDetailViewModel::class)
+@ViewModelKey
 @Inject
 class GameDetailViewModel(
   private val gameDao: GameDao,

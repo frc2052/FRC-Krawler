@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @ContributesIntoMap(AppScope::class)
-@ViewModelKey(EventDetailsViewModel::class)
+@ViewModelKey
 @Inject
 class EventDetailsViewModel(
   private val eventDao: EventDao,
