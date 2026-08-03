@@ -45,7 +45,7 @@ compose-uiTooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-foundation = { module = "androidx.compose.foundation:foundation" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
 compose-test = { module = "androidx.compose.ui:ui-test-junit4" }
-compose-constraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.1.1"
+compose-constraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.1.2"
 
 nav3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3" }
 nav3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3" }
