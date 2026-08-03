@@ -23,7 +23,7 @@ workmanager = "2.11.2"
 agp = "9.3.1"
 uiautomator = "2.4.0"
 benchmark-macro-junit4 = "1.4.1"
-baselineprofile = "1.5.0-alpha07"
+baselineprofile = "1.5.0-beta01"
 profileinstaller = "1.4.1"
 
 [libraries]
