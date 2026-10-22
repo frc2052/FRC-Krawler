@@ -42,11 +42,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.remote.model.TbaSimpleEvent
-import dev.zacsweers.metrox.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerDropdown
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.launch
 import java.time.Year
 
@@ -236,7 +236,8 @@ private fun AutoEventEntry(
               validity = !showEventError,
               label = stringResource(R.string.add_event_event_label),
               dropdownItems = events,
-              enabled = !areEventsLoading && !hasEventNetworkError
+              enabled = !areEventsLoading && !hasEventNetworkError,
+              searchable = true
             )
 
             Spacer(Modifier.width(8.dp))
