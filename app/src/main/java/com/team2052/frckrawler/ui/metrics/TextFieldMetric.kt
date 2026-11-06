@@ -3,6 +3,7 @@ package com.team2052.frckrawler.ui.metrics
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
@@ -14,13 +15,11 @@ import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
 
 @Composable
 fun TextFieldMetric(
-  state: String,
-  onStateChanged: (String) -> Unit
+  state: TextFieldState,
 ) {
   OutlinedTextField(
     modifier = Modifier.fillMaxWidth(),
-    value = state,
-    onValueChange = onStateChanged,
+    state = state,
     keyboardOptions = KeyboardOptions(
       capitalization = KeyboardCapitalization.Sentences
     )

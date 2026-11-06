@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -14,10 +15,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -35,7 +33,7 @@ fun AddGameDialog(
   onClose: () -> Unit
 ) {
   val focusRequester = remember { FocusRequester() }
-  var gameName by remember { mutableStateOf("") }
+  val gameName = rememberTextFieldState()
   Dialog(onDismissRequest = onClose) {
     LaunchedEffect(true) {
       focusRequester.requestFocus()
@@ -58,8 +56,7 @@ fun AddGameDialog(
         Box(modifier = Modifier.padding(horizontal = 24.dp)) {
           FRCKrawlerTextField(
             modifier = Modifier.focusRequester(focusRequester),
-            value = gameName,
-            onValueChange = { gameName = it },
+            state = gameName,
             label = stringResource(R.string.add_game_name)
           )
         }
@@ -76,7 +73,7 @@ fun AddGameDialog(
           TextButton(
             modifier = Modifier.padding(12.dp),
             onClick = {
-              onAddGame(gameName)
+              onAddGame(gameName.text.toString())
               onClose()
             }
           ) {

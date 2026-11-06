@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -37,8 +40,8 @@ fun AddEditTeamSheet(
 ) {
   val viewModel: AddEditTeamViewModel = metroViewModel()
 
-  var teamNumber: String? by remember { mutableStateOf(team?.number) }
-  var teamName: String by remember { mutableStateOf(team?.name ?: "") }
+  val teamNumber = rememberTextFieldState(team?.number ?: "")
+  val teamName = rememberTextFieldState(team?.name ?: "")
 
   Column {
     Text(
@@ -55,19 +58,17 @@ fun AddEditTeamSheet(
 
     AddEditTeamSheetContent(
       teamNumber = teamNumber,
-      onTeamNumberChanged = { teamNumber = it },
       teamName = teamName,
-      onTeamNameChanged = { teamName = it }
     )
 
     ActionButtons(
-      saveEnabled = teamNumber != null,
+      saveEnabled = teamNumber.text.isNotBlank(),
       onSaveClicked = {
-        teamNumber?.let { number ->
+        if (teamNumber.text.isNotBlank()) {
           viewModel.saveTeam(
             eventId = eventId,
-            teamNumber = number,
-            teamName = teamName
+            teamNumber = teamNumber.text.toString(),
+            teamName = teamName.text.toString()
           )
         }
         onClose()
@@ -84,22 +85,22 @@ fun AddEditTeamSheet(
 
 @Composable
 private fun AddEditTeamSheetContent(
-  teamNumber: String?,
-  onTeamNumberChanged: (String?) -> Unit,
-  teamName: String,
-  onTeamNameChanged: (String) -> Unit,
+  teamNumber: TextFieldState,
+  teamName: TextFieldState,
 ) {
   var hasNumberHadFocus by remember { mutableStateOf(false) }
   Column(
     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
   ) {
     FRCKrawlerTextField(
-      value = teamNumber ?: "",
-      onValueChange = { newText ->
-        val newNumber = newText.filter { it.isDigit() }
-        onTeamNumberChanged(newNumber)
+      state = teamNumber,
+      inputTransformation = InputTransformation {
+        val digitsOnly = asCharSequence().filter { it.isDigit() }
+        if (digitsOnly.length != length) {
+          replace(0, length, digitsOnly)
+        }
       },
-      isError = { hasNumberHadFocus && teamNumber == null },
+      isError = { hasNumberHadFocus && teamNumber.text.isBlank() },
       onFocusChange = { focused -> if (!hasNumberHadFocus && focused) hasNumberHadFocus = true },
       keyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Number
@@ -108,8 +109,7 @@ private fun AddEditTeamSheetContent(
     )
     Spacer(Modifier.height(16.dp))
     FRCKrawlerTextField(
-      value = teamName,
-      onValueChange = onTeamNameChanged,
+      state = teamName,
       label = stringResource(R.string.add_team_name_label)
     )
   }
@@ -169,10 +169,8 @@ private fun EditTeamPreview() {
   FrcKrawlerTheme {
     Surface {
       AddEditTeamSheetContent(
-        teamNumber = "2052",
-        onTeamNumberChanged = {},
-        teamName = "KnightKrawler",
-        onTeamNameChanged = {}
+        teamNumber = rememberTextFieldState("2052"),
+        teamName = rememberTextFieldState("KnightKrawler"),
       )
     }
   }

@@ -1,5 +1,6 @@
 package com.team2052.frckrawler.ui.metrics.edit
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2052.frckrawler.data.local.MetricType
@@ -43,7 +44,7 @@ class AddMetricViewModel(
     this.metricId = metric.id
 
     _state.value = AddEditMetricScreenState(
-      name = metric.name,
+      name = TextFieldState(metric.name),
       type = metric.getType(),
       priority = metric.priority,
       enabled = metric.enabled,
@@ -53,11 +54,6 @@ class AddMetricViewModel(
 
   fun setEnabled(enabled: Boolean) {
     _state.value = _state.value.copy(enabled = enabled)
-  }
-
-  fun updateName(name: String) {
-    // TODO add some visible validation messaging?
-    _state.value = _state.value.copy(name = name)
   }
 
   fun updateType(type: MetricType) {

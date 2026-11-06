@@ -1,10 +1,11 @@
 package com.team2052.frckrawler.ui.components.fields
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +31,7 @@ fun <T> FRCKrawlerDropdown(
   dropdownItems: List<T>,
 ) {
   var expanded by remember { mutableStateOf(false) }
+  val textFieldState = remember(value) { TextFieldState(getLabel(value)) }
 
   ExposedDropdownMenuBox(
     modifier = modifier,
@@ -41,8 +43,7 @@ fun <T> FRCKrawlerDropdown(
     FRCKrawlerTextField(
       modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled),
       readOnly = true,
-      value = getLabel(value),
-      onValueChange = { },
+      state = textFieldState,
       onFocusChange = onFocusChange,
       icon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
       validity = validity,

@@ -4,8 +4,10 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
@@ -27,9 +29,9 @@ import com.team2052.frckrawler.R
 
 @Composable
 fun FRCKrawlerTextField(
+  state: TextFieldState,
   modifier: Modifier = Modifier,
-  value: String,
-  onValueChange: (String) -> Unit,
+  inputTransformation: InputTransformation? = null,
   icon: @Composable () -> Unit = { },
   validity: Boolean = true,
   isError: (Boolean) -> Boolean = { false },
@@ -57,12 +59,10 @@ fun FRCKrawlerTextField(
 
   OutlinedTextField(
     modifier = modifier,
-    value = value,
-    onValueChange = {
-      onValueChange(it)
-    },
+    state = state,
     enabled = enabled,
     readOnly = readOnly,
+    inputTransformation = inputTransformation,
     label = { if (label != null) Text(label) },
     trailingIcon = {
       Crossfade(
@@ -79,8 +79,8 @@ fun FRCKrawlerTextField(
     },
     isError = errorCheck(),
     keyboardOptions = keyboardOptions,
-    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-    singleLine = true,
+    onKeyboardAction = { focusManager.clearFocus() },
+    lineLimits = TextFieldLineLimits.SingleLine,
     interactionSource = interactionSource,
     colors = OutlinedTextFieldDefaults.colors()
   )

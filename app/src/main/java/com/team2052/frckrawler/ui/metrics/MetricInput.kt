@@ -8,9 +8,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -106,9 +111,18 @@ fun MetricInput(
         modifier = modifier,
         metric = metric
       ) {
+        val textFieldState = rememberTextFieldState(state)
+        val currentOnStateChanged by rememberUpdatedState(onStateChanged)
+
+        LaunchedEffect(textFieldState) {
+          snapshotFlow { textFieldState.text.toString() }
+            .collect { newText ->
+              currentOnStateChanged(newText)
+            }
+        }
+
         TextFieldMetric(
-          state = state,
-          onStateChanged = onStateChanged
+          state = textFieldState,
         )
       }
     }

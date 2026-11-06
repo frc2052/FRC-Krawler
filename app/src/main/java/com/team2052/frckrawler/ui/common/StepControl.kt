@@ -1,6 +1,5 @@
 package com.team2052.frckrawler.ui.common
 
-import android.R.attr.enabled
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -10,6 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
@@ -42,7 +44,7 @@ fun StepControl(
   range: IntRange = Int.MIN_VALUE..Int.MAX_VALUE
 ) {
   var isFocused by remember { mutableStateOf(false) }
-  var focusedValue by remember { mutableStateOf("") }
+  val textFieldState = remember(value, isFocused) { TextFieldState(value.toString()) }
 
   Row(
     modifier = modifier,
@@ -65,49 +67,46 @@ fun StepControl(
     }
 
     BasicTextField(
+      state = textFieldState,
       modifier = Modifier
         .defaultMinSize(
           minWidth = 48.dp
         )
         .focusable()
         .onFocusChanged { focusState ->
-          if (!isFocused && focusState.hasFocus) {
-            // Gaining focus, copy current value to our temporary focused value
-            focusedValue = value.toString()
-          }
           if (isFocused && !focusState.hasFocus) {
             // Losing focus, use current value or minimum if the input is empty
-            onValueChanged(focusedValue.toIntOrNull() ?: range.first)
+            onValueChanged(textFieldState.text.toString().toIntOrNull() ?: range.first)
           }
 
           isFocused = focusState.hasFocus
         },
-      value = if (isFocused) focusedValue else value.toString(),
-      onValueChange = {
-        val newValue = it.filter { char -> char.isDigit() }.toIntOrNull()
-        focusedValue = newValue?.let {
+      inputTransformation = InputTransformation {
+        val newValue = asCharSequence().filter { char -> char.isDigit() }.toString().toIntOrNull()
+        val transformed = newValue?.let {
           when {
             newValue > range.last -> range.last
             newValue < range.first -> range.first
             else -> newValue
           }.toString()
         } ?: "" // Input isn't an int, use empty text
+        replace(0, length, transformed)
       },
       textStyle = MaterialTheme.typography.headlineSmall.copy(
         textAlign = TextAlign.Center,
         color = MaterialTheme.colorScheme.onSurface
       ),
-      singleLine = true,
+      lineLimits = TextFieldLineLimits.SingleLine,
       keyboardOptions = KeyboardOptions(
         autoCorrectEnabled = false,
         keyboardType = KeyboardType.Number,
       ),
-      decorationBox = { innerTextField ->
+      decorator = { innerTextField ->
         Box(
           modifier = Modifier.padding(horizontal = 2.dp)
             .width(IntrinsicSize.Min),
           contentAlignment = Alignment.Center,
-          content =  { innerTextField () }
+          content = { innerTextField() }
         )
       }
     )

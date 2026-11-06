@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -26,7 +28,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -63,7 +67,6 @@ fun AddEditMetricDialog(
     state = state,
     mode = mode,
     onEnabledChanged = { enabled -> viewModel.setEnabled(enabled) },
-    onNameChange = { viewModel.updateName(it) },
     onTypeChange = { viewModel.updateType(it) },
     onSaveClick = {
       viewModel.save()
@@ -103,7 +106,6 @@ private fun AddEditMetricContent(
   state: AddEditMetricScreenState,
   mode: AddEditMetricMode,
   onEnabledChanged: (Boolean) -> Unit,
-  onNameChange: (String) -> Unit,
   onTypeChange: (MetricType) -> Unit,
   onOptionsChange: (MetricOptions) -> Unit,
   onSaveClick: () -> Unit,
@@ -129,8 +131,7 @@ private fun AddEditMetricContent(
       modifier = Modifier.padding(horizontal = 16.dp)
     ) {
       FRCKrawlerTextField(
-        value = state.name,
-        onValueChange = onNameChange,
+        state = state.name,
         label = stringResource(R.string.edit_metric_name_label)
       )
 
@@ -256,13 +257,20 @@ private fun StringListOptions(
   options: MetricOptions.StringList,
   onOptionsChanged: (MetricOptions.StringList) -> Unit
 ) {
+  val textFieldState = rememberTextFieldState(options.options.joinToString(","))
+  val currentOnOptionsChanged by rememberUpdatedState(onOptionsChanged)
+
+  LaunchedEffect(textFieldState) {
+    snapshotFlow { textFieldState.text.toString() }
+      .collect { newText ->
+        val newOptions = MetricOptions.StringList(newText.split(","))
+        currentOnOptionsChanged(newOptions)
+      }
+  }
+
   FRCKrawlerTextField(
     modifier = modifier,
-    value = options.options.joinToString(","),
-    onValueChange = {
-      val newOptions = MetricOptions.StringList(it.split(","))
-      onOptionsChanged(newOptions)
-    },
+    state = textFieldState,
     label = "Comma separated list of options"
   )
 }
@@ -273,32 +281,32 @@ private fun IntRangeOptions(
   options: MetricOptions.IntRange,
   onOptionsChanged: (MetricOptions.IntRange) -> Unit
 ) {
+  val minState = rememberTextFieldState(options.range.first.toString())
+  val maxState = rememberTextFieldState(options.range.last.toString())
+  val currentOptions by rememberUpdatedState(options)
+  val currentOnOptionsChanged by rememberUpdatedState(onOptionsChanged)
+
+  LaunchedEffect(minState, maxState) {
+    snapshotFlow { minState.text.toString() to maxState.text.toString() }
+      .collect { (minText, maxText) ->
+        val newFirst = minText.toIntOrNull() ?: currentOptions.range.first
+        val newLast = maxText.toIntOrNull() ?: currentOptions.range.last
+        val newRange = currentOptions.range.updateFirst(newFirst).updateLast(newLast)
+        currentOnOptionsChanged(currentOptions.copy(range = newRange))
+        // TODO validation messaging?
+      }
+  }
+
   Column(modifier = modifier) {
     FRCKrawlerTextField(
       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-      value = options.range.first.toString(),
-      onValueChange = {
-        val newFirst = it.toIntOrNull()
-        newFirst?.let {
-          val newOptions = options.copy(range = options.range.updateFirst(newFirst))
-          onOptionsChanged(newOptions)
-        }
-        // TODO validation messaging?
-      },
+      state = minState,
       label = "Minimum"
     )
     FRCKrawlerTextField(
       modifier = Modifier.padding(top = 12.dp),
       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-      value = options.range.last.toString(),
-      onValueChange = {
-        val newLast = it.toIntOrNull()
-        newLast?.let {
-          val newOptions = options.copy(range = options.range.updateLast(newLast))
-          onOptionsChanged(newOptions)
-        }
-        // TODO validation messaging?
-      },
+      state = maxState,
       label = "Maximum"
     )
   }
@@ -310,48 +318,42 @@ private fun SteppedIntRangeOptions(
   options: MetricOptions.SteppedIntRange,
   onOptionsChanged: (MetricOptions.SteppedIntRange) -> Unit
 ) {
+  val minState = rememberTextFieldState(options.range.first.toString())
+  val maxState = rememberTextFieldState(options.range.last.toString())
+  val stepState = rememberTextFieldState(options.step.toString())
+  val currentOptions by rememberUpdatedState(options)
+  val currentOnOptionsChanged by rememberUpdatedState(onOptionsChanged)
+
+  LaunchedEffect(minState, maxState, stepState) {
+    snapshotFlow { Triple(minState.text.toString(), maxState.text.toString(), stepState.text.toString()) }
+      .collect { (minText, maxText, stepText) ->
+        val newFirst = minText.toIntOrNull() ?: currentOptions.range.first
+        val newLast = maxText.toIntOrNull() ?: currentOptions.range.last
+        val newStep = stepText.toIntOrNull() ?: currentOptions.step
+        val newRange = currentOptions.range.updateFirst(newFirst).updateLast(newLast)
+        currentOnOptionsChanged(currentOptions.copy(range = newRange, step = newStep))
+        // TODO validation messaging?
+      }
+  }
+
   Column(modifier = modifier) {
     FRCKrawlerTextField(
       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-      value = options.range.first.toString(),
-      onValueChange = {
-        val newFirst = it.toIntOrNull()
-        newFirst?.let {
-          val newOptions = options.copy(range = options.range.updateFirst(newFirst))
-          onOptionsChanged(newOptions)
-        }
-        // TODO validation messaging?
-      },
+      state = minState,
       label = "Minimum"
     )
 
     FRCKrawlerTextField(
       modifier = Modifier.padding(top = 12.dp),
       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-      value = options.range.last.toString(),
-      onValueChange = {
-        val newLast = it.toIntOrNull()
-        newLast?.let {
-          val newOptions = options.copy(range = options.range.updateLast(newLast))
-          onOptionsChanged(newOptions)
-        }
-        // TODO validation messaging?
-      },
+      state = maxState,
       label = "Maximum"
     )
 
     FRCKrawlerTextField(
       modifier = Modifier.padding(top = 12.dp),
       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-      value = options.step.toString(),
-      onValueChange = {
-        val newStep = it.toIntOrNull()
-        newStep?.let {
-          val newOptions = options.copy(step = newStep)
-          onOptionsChanged(newOptions)
-        }
-        // TODO validation messaging?
-      },
+      state = stepState,
       label = "Step size"
     )
   }
@@ -435,7 +437,7 @@ private fun Metric.defaultValueForPreview(): String {
 @Composable
 private fun BooleanMetricPreview() {
   val state = AddEditMetricScreenState(
-    name = "Sample boolean",
+    name = TextFieldState("Sample boolean"),
     type = MetricType.Boolean,
   )
   FrcKrawlerTheme {
@@ -444,7 +446,6 @@ private fun BooleanMetricPreview() {
         state = state,
         mode = AddEditMetricMode.New(),
         onEnabledChanged = {},
-        onNameChange = {},
         onTypeChange = {},
         onSaveClick = {},
         onCancelClick = {},

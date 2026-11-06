@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.BottomSheetDefaults
@@ -93,12 +95,12 @@ private fun AddEventSheetLayout(
   var selectedTabIndex by remember { mutableIntStateOf(0) }
   var autoEventSelectedYear: Int by remember { mutableIntStateOf(Year.now().value) }
   var autoEventSelectedEvent: TbaSimpleEvent? by remember { mutableStateOf(null) }
-  var manualEventName by remember { mutableStateOf("") }
+  val manualEventName = rememberTextFieldState()
 
   val saveEnabled by remember {
     derivedStateOf {
       val validAutoEvent = selectedTabIndex == 0 && autoEventSelectedYear != 0 && autoEventSelectedEvent != null
-      val validManualEvent = selectedTabIndex == 1 && manualEventName.isNotBlank()
+      val validManualEvent = selectedTabIndex == 1 && manualEventName.text.isNotBlank()
       (validAutoEvent || validManualEvent) && !state.isSavingEvent
     }
   }
@@ -140,7 +142,6 @@ private fun AddEventSheetLayout(
 
       1 -> ManualEventEntry(
         name = manualEventName,
-        onNameChanged = { manualEventName = it },
         isSavingEvent = state.isSavingEvent,
       )
     }
@@ -161,7 +162,7 @@ private fun AddEventSheetLayout(
         onClick = {
           when (selectedTabIndex) {
             0 -> autoEventSelectedEvent?.let { onSaveAutoEvent(it) }
-            1 -> onSaveManualEvent(manualEventName)
+            1 -> onSaveManualEvent(manualEventName.text.toString())
           }
         }
       ) {
@@ -273,8 +274,7 @@ private fun AutoEventEntry(
 
 @Composable
 private fun ManualEventEntry(
-  name: String,
-  onNameChanged: (String) -> Unit,
+  name: TextFieldState,
   isSavingEvent: Boolean,
 ) {
   var hasHadFocus by remember { mutableStateOf(false) }
@@ -287,9 +287,8 @@ private fun ManualEventEntry(
         SavingEvent()
       } else {
         FRCKrawlerTextField(
-          value = name,
-          onValueChange = onNameChanged,
-          isError = { hasHadFocus && name.isBlank() },
+          state = name,
+          isError = { hasHadFocus && name.text.isBlank() },
           onFocusChange = { focused -> if (!hasHadFocus && focused) hasHadFocus = true },
           label = stringResource(R.string.add_event_name_label)
         )
@@ -427,12 +426,11 @@ private fun AddEventSavingPreview() {
 @FrcKrawlerPreview
 @Composable
 private fun ManualEventEntryPreview() {
-  var name by remember { mutableStateOf("") }
+  val name = rememberTextFieldState()
   FrcKrawlerTheme {
     Surface {
       ManualEventEntry(
         name = name,
-        onNameChanged = { name = it },
         isSavingEvent = false
       )
     }
@@ -443,12 +441,11 @@ private fun ManualEventEntryPreview() {
 @FrcKrawlerPreview
 @Composable
 private fun ManualEventSavingPreview() {
-  var name by remember { mutableStateOf("") }
+  val name = rememberTextFieldState()
   FrcKrawlerTheme {
     Surface {
       ManualEventEntry(
         name = name,
-        onNameChanged = { name = it },
         isSavingEvent = true
       )
     }
