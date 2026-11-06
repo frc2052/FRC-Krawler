@@ -1,6 +1,8 @@
 package com.team2052.frckrawler.ui.event.add
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,20 +10,30 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
@@ -40,17 +52,29 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.team2052.frckrawler.R
 import com.team2052.frckrawler.data.remote.model.TbaSimpleEvent
-import dev.zacsweers.metrox.viewmodel.metroViewModel
 import com.team2052.frckrawler.ui.FrcKrawlerPreview
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerDropdown
 import com.team2052.frckrawler.ui.components.fields.FRCKrawlerTextField
+import com.team2052.frckrawler.ui.components.fields.buildHighlightedText
 import com.team2052.frckrawler.ui.theme.FrcKrawlerTheme
-import kotlinx.coroutines.launch
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import java.time.Year
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddEventSheetContent(
@@ -105,7 +129,9 @@ private fun AddEventSheetLayout(
     }
   }
 
-  Column {
+  Column(
+    modifier = Modifier.imePadding()
+  ) {
     Text(
       modifier = Modifier.padding(horizontal = 16.dp),
       text = stringResource(R.string.add_event_sheet_title),
@@ -120,30 +146,34 @@ private fun AddEventSheetLayout(
     )
     HorizontalDivider(color = MaterialTheme.colorScheme.primary)
 
-    when (selectedTabIndex) {
-      0 -> AutoEventEntry(
-        years = state.years,
-        selectedYear = autoEventSelectedYear,
-        onYearSelected = {
-          autoEventSelectedYear = it
-          autoEventSelectedEvent = null
-          onYearSelected(it)
-        },
-        events = state.events,
-        selectedEvent = autoEventSelectedEvent,
-        onEventSelected = { autoEventSelectedEvent = it },
-        areEventsLoading = state.areEventsLoading,
-        hasEventNetworkError = state.hasNetworkError,
-        isSavingEvent = state.isSavingEvent,
-        onRetryFetchEvents = {
-          onYearSelected(autoEventSelectedYear)
-        }
-      )
+    Box(
+      modifier = Modifier.weight(1f, fill = false)
+    ) {
+      when (selectedTabIndex) {
+        0 -> AutoEventEntry(
+          years = state.years,
+          selectedYear = autoEventSelectedYear,
+          onYearSelected = {
+            autoEventSelectedYear = it
+            autoEventSelectedEvent = null
+            onYearSelected(it)
+          },
+          events = state.events,
+          selectedEvent = autoEventSelectedEvent,
+          onEventSelected = { autoEventSelectedEvent = it },
+          areEventsLoading = state.areEventsLoading,
+          hasEventNetworkError = state.hasNetworkError,
+          isSavingEvent = state.isSavingEvent,
+          onRetryFetchEvents = {
+            onYearSelected(autoEventSelectedYear)
+          }
+        )
 
-      1 -> ManualEventEntry(
-        name = manualEventName,
-        isSavingEvent = state.isSavingEvent,
-      )
+        1 -> ManualEventEntry(
+          name = manualEventName,
+          isSavingEvent = state.isSavingEvent,
+        )
+      }
     }
 
     Row(
@@ -196,6 +226,7 @@ private fun AddEventTabs(
   }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AutoEventEntry(
   years: List<Int>,
@@ -209,6 +240,37 @@ private fun AutoEventEntry(
   hasEventNetworkError: Boolean,
   onRetryFetchEvents: () -> Unit
 ) {
+  val focusManager = LocalFocusManager.current
+  var isEventExpanded by remember { mutableStateOf(false) }
+  var isEditing by remember(selectedEvent) { mutableStateOf(false) }
+  var showEventError by remember { mutableStateOf(false) }
+  val eventFieldState = remember(selectedEvent) { TextFieldState(selectedEvent?.name ?: "") }
+  val eventsEnabled = !areEventsLoading && !hasEventNetworkError
+
+  val collapseEventList = {
+    isEventExpanded = false
+    isEditing = false
+    eventFieldState.setTextAndPlaceCursorAtEnd(selectedEvent?.name ?: "")
+    showEventError = selectedEvent == null
+    focusManager.clearFocus()
+  }
+
+  BackHandler(enabled = isEventExpanded) {
+    collapseEventList()
+  }
+
+  val filterQuery = if (isEditing) eventFieldState.text.toString() else ""
+  val filteredEvents = remember(events, filterQuery) {
+    val trimmed = filterQuery.trim()
+    if (trimmed.isEmpty()) {
+      events
+    } else {
+      events.filter { event ->
+        event.name.contains(trimmed, ignoreCase = true)
+      }
+    }
+  }
+
   Box(
     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
   ) {
@@ -217,27 +279,52 @@ private fun AutoEventEntry(
         SavingEvent()
       } else {
         Column {
-          FRCKrawlerDropdown(
-            value = selectedYear,
-            getLabel = { it.toString() },
-            onValueChange = { selected -> selected?.let { onYearSelected(it) } },
-            label = stringResource(R.string.add_event_year_label),
-            dropdownItems = years
-          )
+          AnimatedVisibility(visible = !isEventExpanded) {
+            FRCKrawlerDropdown(
+              value = selectedYear,
+              getLabel = { it.toString() },
+              onValueChange = { selected -> selected?.let { onYearSelected(it) } },
+              label = stringResource(R.string.add_event_year_label),
+              dropdownItems = years
+            )
+          }
 
           Row(
             verticalAlignment = Alignment.CenterVertically
           ) {
-            var showEventError by remember { mutableStateOf(false) }
-            FRCKrawlerDropdown(
-              value = selectedEvent,
-              getLabel = { it?.name ?: "" },
-              onValueChange = { selected -> selected?.let { onEventSelected(it) } },
-              onFocusChange = { showEventError = selectedEvent == null },
+            FRCKrawlerTextField(
+              state = eventFieldState,
+              inputTransformation = InputTransformation {
+                if (!asCharSequence().contentEquals(eventFieldState.text)) {
+                  isEditing = true
+                  isEventExpanded = true
+                }
+              },
+              onFocusChange = { focused ->
+                if (focused && eventsEnabled) {
+                  isEventExpanded = true
+                } else if (!focused && !isEventExpanded) {
+                  showEventError = selectedEvent == null
+                }
+              },
+              icon = {
+                IconButton(
+                  enabled = eventsEnabled,
+                  onClick = {
+                    if (isEventExpanded) {
+                      collapseEventList()
+                    } else {
+                      isEventExpanded = true
+                    }
+                  }
+                ) {
+                  ExposedDropdownMenuDefaults.TrailingIcon(expanded = isEventExpanded)
+                }
+              },
               validity = !showEventError,
+              isError = { validity -> !validity },
               label = stringResource(R.string.add_event_event_label),
-              dropdownItems = events,
-              enabled = !areEventsLoading && !hasEventNetworkError
+              enabled = eventsEnabled,
             )
 
             Spacer(Modifier.width(8.dp))
@@ -259,6 +346,82 @@ private fun AutoEventEntry(
             }
           }
 
+          AnimatedVisibility(
+            visible = isEventExpanded && eventsEnabled,
+            modifier = Modifier.weight(1f, fill = false),
+          ) {
+            Surface(
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp),
+              shape = MaterialTheme.shapes.extraSmall,
+              color = MenuDefaults.containerColor,
+              tonalElevation = MenuDefaults.TonalElevation,
+              shadowElevation = MenuDefaults.ShadowElevation,
+            ) {
+              if (filteredEvents.isEmpty()) {
+                DropdownMenuItem(
+                  text = {
+                    Text(
+                      text = stringResource(R.string.no_matching_events),
+                      style = MaterialTheme.typography.bodyMedium,
+                      color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                  },
+                  enabled = false,
+                  onClick = {},
+                )
+              } else {
+                val listState = rememberLazyListState()
+                val scrollbarColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                val consumeVerticalOverscroll = remember {
+                  object : NestedScrollConnection {
+                    override fun onPostScroll(
+                      consumed: Offset,
+                      available: Offset,
+                      source: NestedScrollSource,
+                    ): Offset = available.copy(x = 0f)
+
+                    override suspend fun onPostFling(
+                      consumed: Velocity,
+                      available: Velocity,
+                    ): Velocity = available.copy(x = 0f)
+                  }
+                }
+                LazyColumn(
+                  state = listState,
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .nestedScroll(consumeVerticalOverscroll)
+                    .verticalScrollbar(
+                      state = listState,
+                      color = scrollbarColor,
+                    )
+                ) {
+                  items(filteredEvents, key = { it.key }) { event ->
+                    DropdownMenuItem(
+                      text = {
+                        if (filterQuery.trim().isNotEmpty()) {
+                          Text(text = buildHighlightedText(event.name, filterQuery))
+                        } else {
+                          Text(event.name)
+                        }
+                      },
+                      onClick = {
+                        onEventSelected(event)
+                        eventFieldState.setTextAndPlaceCursorAtEnd(event.name)
+                        showEventError = false
+                        isEditing = false
+                        isEventExpanded = false
+                        focusManager.clearFocus()
+                      },
+                    )
+                  }
+                }
+              }
+            }
+          }
+
           if (hasEventNetworkError) {
             Spacer(Modifier.height(8.dp))
             Text(
@@ -270,6 +433,51 @@ private fun AutoEventEntry(
       }
     }
   }
+}
+
+private fun Modifier.verticalScrollbar(
+  state: LazyListState,
+  color: Color,
+  width: Dp = 4.dp,
+  endPadding: Dp = 2.dp,
+  verticalPadding: Dp = 4.dp,
+  minThumbHeight: Dp = 24.dp,
+): Modifier = drawWithContent {
+  drawContent()
+
+  val layoutInfo = state.layoutInfo
+  val visibleItems = layoutInfo.visibleItemsInfo
+  val totalItemsCount = layoutInfo.totalItemsCount
+  if (visibleItems.isEmpty() || totalItemsCount <= visibleItems.size) {
+    return@drawWithContent
+  }
+
+  val averageItemSize = visibleItems.sumOf { it.size }.toFloat() / visibleItems.size
+  val estimatedTotalSize = averageItemSize * totalItemsCount
+  val viewportHeight = size.height
+  val trackHeight = (viewportHeight - verticalPadding.toPx() * 2).coerceAtLeast(0f)
+  if (trackHeight <= 0f || estimatedTotalSize <= viewportHeight) {
+    return@drawWithContent
+  }
+
+  val thumbHeight = (trackHeight * (viewportHeight / estimatedTotalSize))
+    .coerceIn(minThumbHeight.toPx().coerceAtMost(trackHeight), trackHeight)
+
+  val firstItem = visibleItems.first()
+  val scrolledOffset = firstItem.index * averageItemSize - firstItem.offset
+  val maxScrollOffset = (estimatedTotalSize - viewportHeight).coerceAtLeast(1f)
+  val scrollFraction = (scrolledOffset / maxScrollOffset).coerceIn(0f, 1f)
+
+  val thumbWidthPx = width.toPx()
+  val thumbOffsetY = verticalPadding.toPx() + scrollFraction * (trackHeight - thumbHeight)
+  val thumbOffsetX = size.width - thumbWidthPx - endPadding.toPx()
+
+  drawRoundRect(
+    color = color,
+    topLeft = Offset(thumbOffsetX, thumbOffsetY),
+    size = Size(thumbWidthPx, thumbHeight),
+    cornerRadius = CornerRadius(thumbWidthPx / 2f),
+  )
 }
 
 @Composable
